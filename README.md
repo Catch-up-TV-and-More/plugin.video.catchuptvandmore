@@ -1,5 +1,4 @@
 # Catch-up TV & More
-
 ![Catch-up TV & More](https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore/raw/master/icon.png)
 
 ## Descritpion
