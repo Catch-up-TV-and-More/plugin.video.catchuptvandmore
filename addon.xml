@@ -27,7 +27,9 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
-[NEW] Add France Ô channel
+[Add channel] France Ô
+[Add channel] HD1
+[Add channel] L'Équipe
     </news> 
     <assets>
       <icon>icon.png</icon>
