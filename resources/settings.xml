@@ -68,6 +68,8 @@
             <setting label="Gulli" type="bool" id="channels.fr.gulli.gulli" default="true" visible="eq(-33,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.gulli.gulli.order" default="18"/>
             
+            <setting label="France Ô" type="bool" id="channels.fr.pluzz.franceo" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.franceo.order" default="19"/>            
 <!--         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
             <setting label="RTBF" type="bool" id="channels.be.rtbf.rtbf" default="true" visible="eq(-1,true)"/> -->

@@ -44,7 +44,8 @@ channels = {
         'channels.fr.bfmtv.bfmtv': 'BFM TV',
         'channels.fr.itele.itele': 'i-Télé',
         'channels.fr.c.cstar': 'CStar',
-        'channels.fr.gulli.gulli': 'Gulli'
+        'channels.fr.gulli.gulli': 'Gulli',
+        'channels.fr.pluzz.franceo': 'France Ô'
 
     }
 
