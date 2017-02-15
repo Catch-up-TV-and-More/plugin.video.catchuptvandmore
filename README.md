@@ -28,6 +28,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - i-Télé
 - CStar
 - Gulli
+- France Ô
+- HD1
+- L'Équipe
 
 ### Belgique — *Belgium*
 - *à venir* — *coming soon*
