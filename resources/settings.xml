@@ -73,6 +73,9 @@
 
             <setting label="HD1" type="bool" id="channels.fr.tf1.hd1" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1.hd1.order" default="20"/>            
+            <setting label="L'Équipe" type="bool" id="channels.fr.lequipe.lequipe" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.lequipe.lequipe.order" default="21"/>
+
 <!--         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
             <setting label="RTBF" type="bool" id="channels.be.rtbf.rtbf" default="true" visible="eq(-1,true)"/> -->
@@ -132,6 +135,9 @@
 
             <setting label="6ter" type="bool" id="channels.fr.6play.6ter" default="true" visible="false"/>
                 <setting label="30078" type="labelenum" id="channels.fr.6play.6ter.quality" visible="eq(-1,true) + eq(-31,true)" values="Auto|Force HD|Force SD"/>
+
+            <setting label="L'Équipe" type="bool" id="channels.fr.lequipe.lequipe" default="true" visible="false"/>
+                <setting label="30086" type="labelenum" id="channels.fr.lequipe.lequipe.quality" visible="eq(-1,true) + eq(-33,true)" values="HD+|HD|SD"/>
 
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>

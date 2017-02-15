@@ -139,6 +139,11 @@ msgctxt "#30085"
 msgid "NRJ 12: Video quality"
 msgstr ""
 
+msgctxt "#30086"
+msgid "L'Équipe: Video quality"
+msgstr ""
+
+
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"
