@@ -19,7 +19,7 @@
     with Catch-up TV & More; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
-import simpleplugin as sp
+from resources.lib import simpleplugin as sp
 import os
 
 plugin = sp.Plugin()

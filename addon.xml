@@ -4,11 +4,10 @@
        version="0.1.0"
        provider-name="SylvainCecchetto">
   <requires>
-    <import addon="xbmc.python" version="2.14.0"/>
-    <import addon="script.module.simpleplugin" version="1.6"/>
+    <import addon="xbmc.python" version="2.19.0"/>
     <import addon="script.module.beautifulsoup4" version="4.3.2"/>
-    <import addon="script.module.requests" version="1.1.0"/>
-    <import addon="script.module.simplejson"/>
+    <import addon="script.module.requests" version="2.9.1"/>
+    <import addon="script.module.simplejson" version="3.3.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
