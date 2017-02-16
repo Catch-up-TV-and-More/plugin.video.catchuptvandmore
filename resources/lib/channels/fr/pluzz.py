@@ -21,17 +21,28 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+# Recherche par texte
+# dernières vidéos de la chaine (triées par date ajout)
+    # tout
+    # catégorie ..
+# Liste A à Z
+# Si FR3 ou FR1 : Régions
+
+
 import json
 from resources.lib import utils
 from resources.lib import common
 
-channelCatalog = 'http://pluzz.webservices.francetelevisions.fr/' \
-                 'pluzz/liste/type/replay/nb/10000/chaine/%s'
+channel_catalog = 'http://pluzz.webservices.francetelevisions.fr/' \
+                  'pluzz/liste/type/replay/nb/10000/chaine/%s'
 
-showInfo = 'http://webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/' \
-           '?idDiffusion=%s&catalogue=Pluzz'
+show_info = 'http://webservices.francetelevisions.fr/tools/' \
+            'getInfosOeuvre/v2/?idDiffusion=%s&catalogue=Pluzz'
 
-imgURL = 'http://refonte.webservices.francetelevisions.fr%s'
+url_img = 'http://refonte.webservices.francetelevisions.fr%s'
+
+url_search = 'https://pluzz.webservices.francetelevisions.fr/' \
+             'mobile/recherche/nb/20/tri/date/requete/%s/debut/0'
 
 categories = {"france2": "France 2",
               "france3": "France 3",
@@ -65,38 +76,40 @@ def channel_entry(params):
         return list_videos(params)
     elif 'play' in params.next:
         return get_video_URL(params)
+    elif 'search' in params.next:
+        return search(params)
 
 
 @common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
-    uniqueItem = dict()
+    unique_item = dict()
 
-    realChannel = params.channel_name
+    real_channel = params.channel_name
     if params.channel_name == 'la_1ere':
-        realChannel = 'la_1ere_reunion%2C' \
-                      'la_1ere_guyane%2C' \
-                      'la_1ere_polynesie%2C' \
-                      'la_1ere_martinique%2C' \
-                      'la_1ere_mayotte%2C' \
-                      'la_1ere_nouvellecaledonie%2C' \
-                      'la_1ere_guadeloupe%2C' \
-                      'la_1ere_wallisetfutuna%2C' \
-                      'la_1ere_saintpierreetmiquelon'
+        real_channel = 'la_1ere_reunion%2C' \
+                       'la_1ere_guyane%2C' \
+                       'la_1ere_polynesie%2C' \
+                       'la_1ere_martinique%2C' \
+                       'la_1ere_mayotte%2C' \
+                       'la_1ere_nouvellecaledonie%2C' \
+                       'la_1ere_guadeloupe%2C' \
+                       'la_1ere_wallisetfutuna%2C' \
+                       'la_1ere_saintpierreetmiquelon'
 
-    url_json = channelCatalog % (realChannel)
-    filePath = utils.download_catalog(
+    url_json = channel_catalog % (real_channel)
+    file_path = utils.download_catalog(
         url_json,
         '%s.json' % (params.channel_name))
-    filPrgm = open(filePath).read()
-    jsonParser = json.loads(filPrgm)
-    emissions = jsonParser['reponse']['emissions']
+    file_prgm = open(file_path).read()
+    json_parser = json.loads(file_prgm)
+    emissions = json_parser['reponse']['emissions']
 
     if params.next == 'list_shows_1':
         for emission in emissions:
             rubrique = emission['rubrique'].encode('utf-8')
-            if rubrique not in uniqueItem:
-                uniqueItem[rubrique] = rubrique
+            if rubrique not in unique_item:
+                unique_item[rubrique] = rubrique
                 rubrique_title = change_to_nicer_name(rubrique)
 
                 shows.append({
@@ -107,6 +120,14 @@ def list_shows(params):
                         next='list_shows_2'
                     )
                 })
+
+        shows.append({
+            'label': common.addon.get_localized_string(30103),
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                next='search'
+            )
+        })
 
         sort_methods = (
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -127,9 +148,9 @@ def list_shows(params):
                     id_programme = emission['id_programme'].encode('utf-8')
                     if id_programme == '':
                         id_programme = emission['id_emission'].encode('utf-8')
-                    if id_programme not in uniqueItem:
-                        uniqueItem[id_programme] = id_programme
-                        icon = imgURL % (emission['image_large'])
+                    if id_programme not in unique_item:
+                        unique_item[id_programme] = id_programme
+                        icon = url_img % (emission['image_large'])
                         genre = emission['genre']
                         accroche_programme = emission['accroche_programme']
 
@@ -147,6 +168,7 @@ def list_shows(params):
                                 action='channel_entry',
                                 next='list_videos_1',
                                 id_programme=id_programme,
+                                search=False
                             ),
                             'info': info
                         })
@@ -175,47 +197,50 @@ def change_to_nicer_name(original_name):
 @common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    filePath = utils.download_catalog(
-        channelCatalog % (params.channel_name),
-        '%s.json' % (params.channel_name)
-    )
-    filPrgm = open(filePath).read()
-    jsonParser = json.loads(filPrgm)
-    emissions = jsonParser['reponse']['emissions']
+    if params.search:
+        file_path = params.file_search
+    else:
+        file_path = utils.download_catalog(
+            channel_catalog % (params.channel_name),
+            '%s.json' % (params.channel_name)
+        )
+    file_prgm = open(file_path).read()
+    json_parser = json.loads(file_prgm)
+    emissions = json_parser['reponse']['emissions']
     for emission in emissions:
         id_programme = emission['id_programme'].encode('utf-8')
         if id_programme == '':
             id_programme = emission['id_emission'].encode('utf-8')
-        if id_programme == params.id_programme:
+        if params.search or id_programme == params.id_programme:
             title = ''
             plot = ''
             duration = 0
             date = ''
             genre = ''
             id_diffusion = emission['id_diffusion']
-            filPrgm = utils.get_webcontent(
-                showInfo % (emission['id_diffusion']))
-            if(filPrgm != ''):
-                jsonParserShow = json.loads(filPrgm)
-                if jsonParserShow['synopsis']:
-                    plot = jsonParserShow['synopsis'].encode('utf-8')
-                if jsonParserShow['diffusion']['date_debut']:
-                    date = jsonParserShow['diffusion']['date_debut']
+            file_prgm = utils.get_webcontent(
+                show_info % (emission['id_diffusion']))
+            if(file_prgm != ''):
+                json_parserShow = json.loads(file_prgm)
+                if json_parserShow['synopsis']:
+                    plot = json_parserShow['synopsis'].encode('utf-8')
+                if json_parserShow['diffusion']['date_debut']:
+                    date = json_parserShow['diffusion']['date_debut']
                     date = date.encode('utf-8')
-                if jsonParserShow['real_duration']:
-                    duration = int(jsonParserShow['real_duration'])
-                if jsonParserShow['titre']:
-                    title = jsonParserShow['titre'].encode('utf-8')
-                if jsonParserShow['sous_titre']:
+                if json_parserShow['real_duration']:
+                    duration = int(json_parserShow['real_duration'])
+                if json_parserShow['titre']:
+                    title = json_parserShow['titre'].encode('utf-8')
+                if json_parserShow['sous_titre']:
                     title = ' '.join((
                         title,
                         '- [I]',
-                        jsonParserShow['sous_titre'].encode('utf-8'),
+                        json_parserShow['sous_titre'].encode('utf-8'),
                         '[/I]'))
 
-                if jsonParserShow['genre'] != '':
+                if json_parserShow['genre'] != '':
                     genre = \
-                        jsonParserShow['genre'].encode('utf-8')
+                        json_parserShow['genre'].encode('utf-8')
 
                 year = int(date[6:10])
                 day = date[:2]
@@ -224,7 +249,7 @@ def list_videos(params):
                 aired = '-'.join((str(year), month, day))
                 # date : string (%d.%m.%Y / 01.01.2009)
                 # aired : string (2008-12-07)
-                image = imgURL % (jsonParserShow['image'])
+                image = url_img % (json_parserShow['image'])
                 info = {
                     'video': {
                         'title': title,
@@ -263,11 +288,11 @@ def list_videos(params):
 
 @common.plugin.cached(common.cache_time)
 def get_video_URL(params):
-        filPrgm = utils.get_webcontent(showInfo % (params.id_diffusion))
-        jsonParser = json.loads(filPrgm)
+        file_prgm = utils.get_webcontent(show_info % (params.id_diffusion))
+        json_parser = json.loads(file_prgm)
         url_HD = ''
         url_SD = ''
-        for video in jsonParser['videos']:
+        for video in json_parser['videos']:
             if video['format'] == 'hls_v5_os':
                 url_HD = video['url']
             if video['format'] == 'm3u8-download':
@@ -280,3 +305,24 @@ def get_video_URL(params):
             return url_HD
         else:
             return url_SD
+
+
+def search(params):
+    keyboard = common.sp.xbmc.Keyboard(
+        default='',
+        title='',
+        hidden=False)
+    keyboard.doModal()
+    if keyboard.isConfirmed():
+        query = keyboard.getText()
+        json_path = utils.download_catalog(
+            url_search % query,
+            '%s_search.json' % params.channel_name,
+            force_dl=True)
+
+        params['search'] = True
+        params['file_search'] = json_path
+        return list_videos(params)
+
+    else:
+        return None

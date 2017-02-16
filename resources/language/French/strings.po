@@ -157,4 +157,8 @@ msgctxt "#30102"
 msgid "DRM protected video"
 msgstr "Vidéo protégée par DRM"
 
+msgctxt "#30103"
+msgid "Search"
+msgstr "Rechercher"
+
 
