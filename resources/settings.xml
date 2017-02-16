@@ -76,6 +76,9 @@
             <setting label="L'Équipe" type="bool" id="channels.fr.lequipe.lequipe" default="true" visible="eq(-39,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.lequipe.lequipe.order" default="21"/>
 
+            <setting label="6ter" type="bool" id="channels.fr.6play.6ter" default="true" visible="eq(-41,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.6ter.order" default="22"/>
+
 <!--         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
             <setting label="RTBF" type="bool" id="channels.be.rtbf.rtbf" default="true" visible="eq(-1,true)"/> -->

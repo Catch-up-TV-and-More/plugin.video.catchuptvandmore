@@ -47,7 +47,8 @@ channels = {
         'channels.fr.gulli.gulli': 'Gulli',
         'channels.fr.pluzz.franceo': 'France Ô',
         'channels.fr.tf1.hd1': 'HD1',
-        'channels.fr.lequipe.lequipe': 'L\'Équipe'
+        'channels.fr.lequipe.lequipe': 'L\'Équipe',
+        'channels.fr.6play.6ter': '6ter'
 
     }
 
