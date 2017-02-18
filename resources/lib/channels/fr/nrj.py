@@ -134,47 +134,74 @@ def list_videos(params):
     program_html = open(file_path).read()
     program_soup = bs(program_html, 'html.parser')
 
-    program_soup = program_soup.find(
+    program_soup_2 = program_soup.find(
         'section',
         class_='section-replay')
 
-    videos_soup = program_soup.find_all('div', class_='item')
+    if program_soup_2:
+        videos_soup = program_soup_2.find_all('div', class_='item')
+        for video in videos_soup:
+            title_soup = video.find(
+                'h3',
+                class_='thumbnail-title')
+            title = title_soup.get_text().encode('utf-8')
+            title = ' '.join(title.split())
 
-    for video in videos_soup:
-        title_soup = video.find(
-            'h3',
-            class_='thumbnail-title')
-        title = title_soup.get_text().encode('utf-8')
-        title = ' '.join(title.split())
+            url = title_soup.find('a')['href'].encode('utf-8')
+            img = video.find('img')['src'].encode('utf-8')
+            date = video.find('time').get_text().encode('utf-8').split(' ')[1]
+            date_splited = date.split('/')
+            day = date_splited[0]
+            mounth = date_splited[1]
+            year = date_splited[2]
 
-        url = title_soup.find('a')['href'].encode('utf-8')
-        img = video.find('img')['src'].encode('utf-8')
-        date = video.find('time').get_text().encode('utf-8').split(' ')[1]
-        date_splited = date.split('/')
-        day = date_splited[0]
-        mounth = date_splited[1]
-        year = date_splited[2]
+            date = '.'.join((day, mounth, year))
+            aired = '-'.join((year, mounth, day))
+            # date : string (%d.%m.%Y / 01.01.2009)
+            # aired : string (2008-12-07)
+            info = {
+                'video': {
+                    'title': title,
+                    'aired': aired,
+                    'date': date,
+                    'year': year
+                }
+            }
 
-        date = '.'.join((day, mounth, year))
-        aired = '-'.join((year, mounth, day))
-        # date : string (%d.%m.%Y / 01.01.2009)
-        # aired : string (2008-12-07)
+            videos.append({
+                'label': title,
+                'thumb': img,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='play',
+                    url_video=url
+                ),
+                'is_playable': True,
+                'info': info
+            })
+
+    else:
+        title_soup = program_soup.find(
+            'meta',
+            attrs={'itemprop': 'thumbnailUrl'})
+        title = title_soup['alt'].encode('utf-8')
+        img = title_soup['content'].encode('utf-8')
+        # TODO : desc, date, duration
         info = {
             'video': {
-                'title': title,
-                'aired': aired,
-                'date': date,
-                'year': year
+                'title': title
+                # 'aired': aired,
+                # 'date': date,
+                # 'year': year
             }
         }
-
         videos.append({
             'label': title,
             'thumb': img,
             'url': common.plugin.get_url(
                 action='channel_entry',
                 next='play',
-                url_video=url
+                url_video=params.url_program
             ),
             'is_playable': True,
             'info': info
