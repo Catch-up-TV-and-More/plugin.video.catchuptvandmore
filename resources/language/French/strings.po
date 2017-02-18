@@ -161,4 +161,8 @@ msgctxt "#30103"
 msgid "Search"
 msgstr "Rechercher"
 
+msgctxt "#30104"
+msgid "Last videos"
+msgstr "Dernières vidéos"
+
 

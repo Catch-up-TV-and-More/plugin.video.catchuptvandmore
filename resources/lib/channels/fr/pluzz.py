@@ -21,7 +21,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-# Recherche par texte
 # dernières vidéos de la chaine (triées par date ajout)
     # tout
     # catégorie ..
@@ -42,31 +41,52 @@ show_info = 'http://webservices.francetelevisions.fr/tools/' \
 url_img = 'http://refonte.webservices.francetelevisions.fr%s'
 
 url_search = 'https://pluzz.webservices.francetelevisions.fr/' \
-             'mobile/recherche/nb/20/tri/date/requete/%s/debut/0'
+             'mobile/recherche/nb/20/tri/date/requete/%s/debut/%s'
 
-categories = {"france2": "France 2",
-              "france3": "France 3",
-              "france4": "France 4",
-              "france5": "France 5",
-              "franceo": "France Ô",
-              "guadeloupe": "Guadeloupe 1ère",
-              "guyane": "Guyane 1ère",
-              "martinique": "Martinique 1ère",
-              "mayotte": "Mayotte 1ère",
-              "nouvellecaledonie": "Nouvelle Calédonie 1ère",
-              "polynesie": "Polynésie 1ère",
-              "reunion": "Réunion 1ère",
-              "saintpierreetmiquelon": "St-Pierre et Miquelon 1ère",
-              "wallisetfutuna": "Wallis et Futuna 1ère",
-              "sport": "Sport",
-              "info": "Info",
-              "documentaire": "Documentaire",
-              "seriefiction": "Série & fiction",
-              "magazine": "Magazine",
-              "jeunesse": "Jeunesse",
-              "divertissement": "Divertissement",
-              "jeu": "Jeu",
-              "culture": "Culture"}
+categories_display = {
+    "france2": "France 2",
+    "france3": "France 3",
+    "france4": "France 4",
+    "france5": "France 5",
+    "franceo": "France Ô",
+    "guadeloupe": "Guadeloupe 1ère",
+    "guyane": "Guyane 1ère",
+    "martinique": "Martinique 1ère",
+    "mayotte": "Mayotte 1ère",
+    "nouvellecaledonie": "Nouvelle Calédonie 1ère",
+    "polynesie": "Polynésie 1ère",
+    "reunion": "Réunion 1ère",
+    "saintpierreetmiquelon": "St-Pierre et Miquelon 1ère",
+    "wallisetfutuna": "Wallis et Futuna 1ère",
+    "sport": "Sport",
+    "info": "Info",
+    "documentaire": "Documentaire",
+    "seriefiction": "Série & fiction",
+    "magazine": "Magazine",
+    "jeunesse": "Jeunesse",
+    "divertissement": "Divertissement",
+    "jeu": "Jeu",
+    "culture": "Culture"
+}
+
+categories = {
+    'Toutes catégories': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/chaine/%s/nb/20/debut/%s',
+    'Info': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/info/nb/20/debut/%s',
+    'Documentaire': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/documentaire/nb/20/debut/%s',
+    'Série & Fiction': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/seriefiction/nb/20/debut/%s',
+    'Magazine': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/magazine/nb/20/debut/%s',
+    'Culture': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/culture/nb/20/debut/%s',
+    'Jeunesse': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/jeunesse/nb/20/debut/%s',
+    'Divertissement': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/divertissement/nb/20/debut/%s',
+    'Sport': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/sport/nb/20/debut/%s',
+    'Jeu': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/rubrique/jeu/nb/20/debut/%s',
+    'Version multilingue (VM)': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/filtre/multilingue/type/replay/nb/20/debut/%s',
+    'Sous-titrés': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/filtre/soustitrage/type/replay/nb/20/debut/%s',
+    'Audiodescription (AD)': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/filtre/audiodescription/type/replay/nb/20/debut/%s',
+    'Tous publics': 'https://pluzz.webservices.francetelevisions.fr/mobile/liste/type/replay/filtre/touspublics/nb/20/debut/%s'
+}
+
+
 
 
 def channel_entry(params):
@@ -80,7 +100,7 @@ def channel_entry(params):
         return search(params)
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
     unique_item = dict()
@@ -122,6 +142,16 @@ def list_shows(params):
                 })
 
         shows.append({
+            'label': common.addon.get_localized_string(30104),
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                next='list_videos_last',
+                search=False,
+                page='0'
+            )
+        })
+
+        shows.append({
             'label': common.addon.get_localized_string(30103),
             'url': common.plugin.get_url(
                 action='channel_entry',
@@ -129,14 +159,12 @@ def list_shows(params):
             )
         })
 
-        sort_methods = (
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
-
-        shows = common.plugin.create_listing(
+        return common.plugin.create_listing(
             shows,
-            sort_methods=sort_methods
+            sort_methods=(
+                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+                common.sp.xbmcplugin.SORT_METHOD_LABEL
+            )
         )
 
     elif params.next == 'list_shows_2':
@@ -168,41 +196,45 @@ def list_shows(params):
                                 action='channel_entry',
                                 next='list_videos_1',
                                 id_programme=id_programme,
-                                search=False
+                                search=False,
+                                page='0'
                             ),
                             'info': info
                         })
 
-        sort_methods = (
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
-
-        shows = common.plugin.create_listing(
+        return common.plugin.create_listing(
             shows,
             content='tvshows',
-            sort_methods=sort_methods
+            sort_methods=(
+                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+                common.sp.xbmcplugin.SORT_METHOD_LABEL
+            )
         )
 
-    return shows
 
-
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def change_to_nicer_name(original_name):
-    if original_name in categories:
-        return categories[original_name]
+    if original_name in categories_display:
+        return categories_display[original_name]
     return original_name
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    if params.search:
+    if params.search is True:
         file_path = params.file_search
+    elif 'last' in params.next:
+        print 'LASTTTT'
+        print params.page
+        file_path = utils.download_catalog(
+            url_last_videos % (params.channel_name, params.page),
+            '%s_%s_last.json' % (params.channel_name, params.page)
+        )
     else:
         file_path = utils.download_catalog(
-            channel_catalog % (params.channel_name),
-            '%s.json' % (params.channel_name)
+            channel_catalog % params.channel_name,
+            '%s.json' % params.channel_name
         )
     file_prgm = open(file_path).read()
     json_parser = json.loads(file_prgm)
@@ -211,13 +243,19 @@ def list_videos(params):
         id_programme = emission['id_programme'].encode('utf-8')
         if id_programme == '':
             id_programme = emission['id_emission'].encode('utf-8')
-        if params.search or id_programme == params.id_programme:
+        if params.search or 'last' in params.next or id_programme == params.id_programme:
             title = ''
             plot = ''
             duration = 0
             date = ''
             genre = ''
             id_diffusion = emission['id_diffusion']
+            chaine_id = emission['chaine_id'].encode('utf-8')
+
+            # If we are in search case, only add channel's shows
+            if not (params.search and chaine_id == params.channel_name):
+                continue
+
             file_prgm = utils.get_webcontent(
                 show_info % (emission['id_diffusion']))
             if(file_prgm != ''):
@@ -273,16 +311,33 @@ def list_videos(params):
                     'is_playable': True,
                     'info': info
                 })
+    if params.search is True:
+        json_path = params.file_search
+    else:
+        json_path = ''
 
-    sort_methods = (
-        common.sp.xbmcplugin.SORT_METHOD_DATE,
-        common.sp.xbmcplugin.SORT_METHOD_DURATION,
-        common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
-        common.sp.xbmcplugin.SORT_METHOD_UNSORTED
-    )
+    if params.search is True or 'last' in params.next:
+        # More videos...
+        videos.append({
+            'label': common.addon.get_localized_string(30100),
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                search=params.search,
+                next=params.next,
+                file_search=json_path,
+                page=str(int(params.page) + 20)
+            )
+
+        })
+
     return common.plugin.create_listing(
         videos,
-        sort_methods=sort_methods,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_DATE,
+            common.sp.xbmcplugin.SORT_METHOD_DURATION,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
+        ),
         content='tvshows')
 
 
@@ -316,11 +371,12 @@ def search(params):
     if keyboard.isConfirmed():
         query = keyboard.getText()
         json_path = utils.download_catalog(
-            url_search % query,
+            url_search % (query, params.page),
             '%s_search.json' % params.channel_name,
             force_dl=True)
 
         params['search'] = True
+        params['page'] = '0'
         params['file_search'] = json_path
         return list_videos(params)
 

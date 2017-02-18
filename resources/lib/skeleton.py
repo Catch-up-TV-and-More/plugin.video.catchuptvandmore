@@ -39,7 +39,7 @@ channels = {
         'channels.fr.6play.w9': 'W9',
         'channels.fr.tf1.tmc': 'TMC',
         'channels.fr.tf1.nt1': 'NT1',
-        'channels.fr.6play.nrj12': 'NRJ 12',
+        'channels.fr.nrj.nrj12': 'NRJ 12',
         'channels.fr.pluzz.france4': 'France 4',
         'channels.fr.bfmtv.bfmtv': 'BFM TV',
         'channels.fr.itele.itele': 'i-Télé',

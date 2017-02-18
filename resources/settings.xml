@@ -50,8 +50,8 @@
             <setting label="NT1" type="bool" id="channels.fr.tf1.nt1" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1.nt1.order" default="11"/>
             
-            <setting label="NRJ 12" type="bool" id="channels.fr.6play.nrj12" default="true" visible="eq(-23,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.nrj12.order" default="12"/>
+            <setting label="NRJ 12" type="bool" id="channels.fr.nrj.nrj12" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.nrj.nrj12.order" default="12"/>
             
             <setting label="France 4" type="bool" id="channels.fr.pluzz.france4" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france4.order" default="14"/>
@@ -121,8 +121,8 @@
             <setting label="NT1" type="bool" id="channels.fr.tf1.nt1" default="true" visible="false"/>
                 <setting label="30083" type="bool" id="channels.fr.tf1.nt1.bonus" default="true" visible="eq(-1,true) + eq(-19,true)"/>
 
-            <setting label="NRJ 12" type="bool" id="channels.fr.6play.nrj12" default="true" visible="false"/>
-                <setting label="30085" type="labelenum" id="channels.fr.6play.nrj12.quality" visible="eq(-1,true) + eq(-21,true)" values="Auto|Force HD|Force SD"/>
+            <setting label="NRJ 12" type="bool" id="channels.fr.nrj.nrj12" default="true" visible="false"/>
+                <setting label="30085" type="labelenum" id="channels.fr.nrj.nrj12.quality" visible="eq(-1,true) + eq(-21,true)" values="Auto|Force HD|Force SD"/>
 
             <setting label="France 4" type="bool" id="channels.fr.pluzz.france4" default="true" visible="false"/>
                 <setting label="30073" type="labelenum" id="channels.fr.pluzz.france4.quality" visible="eq(-1,true) + eq(-23,true)" values="HD|SD"/>
