@@ -67,24 +67,19 @@ def list_shows(params):
                 'url': common.plugin.get_url(
                     action='channel_entry',
                     url_category=url_category,
-                    next='list_shows_cat',
-                    title=title_category
+                    next='list_shows_programs',
+                    title_category=title_category
                 )
             })
 
-        return common.plugin.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            )
-        )
-
-    elif 'list_shows_cat' in params.next:
+    elif 'list_shows_programs' in params.next:
         # Build category's programs list
+        # (Crimes, tellement vrai, Le mad mag, ...)
         file_path = utils.download_catalog(
             url_root + params.url_category,
-            '%s_%s.html' % (params.channel_name, params.title),
+            '%s_%s_category.html' % (
+                params.channel_name,
+                params.title_category),
         )
         category_html = open(file_path).read()
         category_soup = bs(category_html, 'html.parser')
@@ -108,48 +103,219 @@ def list_shows(params):
                 'thumb': img,
                 'url': common.plugin.get_url(
                     action='channel_entry',
-                    next='list_videos',
+                    next='list_shows_seasons',
                     url_program=url,
-                    title=title
+                    title_program=title,
                 ),
             })
 
-        return common.plugin.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
-            ),
+    elif 'list_shows_seasons' in params.next:
+        file_path = utils.download_catalog(
+            url_root + params.url_program,
+            '%s_%s_program.html' % (
+                params.channel_name,
+                params.title_program),
         )
+        program_html = open(file_path).read()
+        program_soup = bs(program_html, 'html.parser')
+        program_url = program_soup.find(
+            'a',
+            class_='pushProgram-link')['href'].encode('utf-8')
+
+        file_path = utils.download_catalog(
+            url_root + program_url,
+            '%s_%s_program_fiche.html' % (
+                params.channel_name,
+                params.title_program),
+        )
+        program_html = open(file_path).read()
+        program_soup = bs(program_html, 'html.parser')
+
+        seasons_soup = program_soup.find(
+            'ul',
+            class_='seasonsBox-list')
+
+        if seasons_soup is not None:
+            for season in seasons_soup.find_all('li'):
+                title_season = season.find(
+                    'a').get_text().encode('utf-8')
+                season_url = season.find('a')['href'].encode('utf-8')
+
+                shows.append({
+                    'label': title_season,
+                    'url': common.plugin.get_url(
+                        action='channel_entry',
+                        next='list_shows_season_categories',
+                        season_url=season_url,
+                        title_program=params.title_program,
+                        title_season=title_season
+                    ),
+                })
+
+        else:
+            params['next'] = 'list_shows_season_categories'
+            params['season_url'] = program_url
+            params['title_program'] = params.title_program
+            params['title_season'] = 'no_season'
+            return list_shows(params)
+
+    elif 'list_shows_season_categories':
+        # Build program's categories
+        # (Les vidéos, les actus, les bonus, ...)
+        file_path = utils.download_catalog(
+            url_root + params.season_url,
+            '%s_%s_%s_program_season.html' % (
+                params.channel_name,
+                params.title_program,
+                params.title_season),
+        )
+        program_html = open(file_path).read()
+        program_soup = bs(program_html, 'html.parser')
+
+        # We have to find all 'flag-category' tag and all title h2
+
+        season_categories = {}
+        flag_categories_soup = program_soup.find_all(
+            'a',
+            attrs={'class': 'flag-category'})
+        for flag_category in flag_categories_soup:
+            season_category_title = flag_category.get_text().encode('utf-8')
+            if season_category_title == '':
+                season_category_title = 'No name'
+            season_categories[season_category_title] = 'flag_category'
+
+        titles_h2 = program_soup.find_all(
+            'h2',
+            attrs={'class': 'title-2'})
+
+        for title_h2 in titles_h2:
+            if 'itemprop' not in title_h2.attrs:
+                separator = title_h2.parent.find(
+                    'div',
+                    class_='separator-wrap')
+                if separator:
+                    url = separator.find('a')['href'].encode('utf-8')
+                    season_categories[title_h2.get_text().encode(
+                        'utf-8')] = url
+
+        for season_category_title, \
+                season_category_url in season_categories.iteritems():
+            shows.append({
+                'label': season_category_title,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='list_videos',
+                    season_category_url=season_category_url,
+                    season_url=params.season_url,
+                    season_category_title=season_category_title,
+                    page='1'
+                ),
+            })
+
+    return common.plugin.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
+        ),
+    )
+
 
 @common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
 
-    # Build program's videos list
-    file_path = utils.download_catalog(
-        url_root + params.url_program,
-        '%s_%s.html' % (params.channel_name, params.title),
-    )
-    program_html = open(file_path).read()
-    program_soup = bs(program_html, 'html.parser')
+    # flag_category case
+    if 'flag_category' in params.season_category_url:
+        program_html = utils.get_webcontent(
+            url_root + params.season_url
+        )
+        program_soup = bs(program_html, 'html.parser')
 
-    program_soup_2 = program_soup.find(
-        'section',
-        class_='section-replay')
-
-    if program_soup_2:
-        videos_soup = program_soup_2.find_all('div', class_='item')
+        videos_soup = program_soup.find_all(
+            'div',
+            attrs={'class': 'thumbnail', 'itemprop': 'video'})
         for video in videos_soup:
+            current_flag_category = video.find(
+                'a',
+                attrs={'class': 'flag-category'}).get_text().encode('utf-8')
+            if current_flag_category == '':
+                current_flag_category = 'No name'
+            if current_flag_category and current_flag_category \
+                    == params.season_category_title:
+
+                title_soup = video.find(
+                    'h3',
+                    class_='thumbnail-title')
+                url = title_soup.find('a')['href'].encode('utf-8')
+
+                title = title_soup.get_text().encode('utf-8')
+                title = ' '.join(title.split())
+
+                img = video.find('img')['src'].encode('utf-8')
+                try:
+                    date = video.find('time').get_text()
+                    date = date.encode('utf-8').split(' ')[1]
+                    date_splited = date.split('/')
+                    day = date_splited[0]
+                    mounth = date_splited[1]
+                    year = date_splited[2]
+                    # date : string (%d.%m.%Y / 01.01.2009)
+                    # aired : string (2008-12-07)
+                    date = '.'.join((day, mounth, year))
+                    aired = '-'.join((year, mounth, day))
+                except:
+                    date = ''
+                    aired = ''
+                    year = ''
+
+                info = {
+                    'video': {
+                        'title': title,
+                        'aired': aired,
+                        'date': date,
+                        'year': year
+                    }
+                }
+
+                videos.append({
+                    'label': title,
+                    'thumb': img,
+                    'url': common.plugin.get_url(
+                        action='channel_entry',
+                        next='play',
+                        url_video=url
+                    ),
+                    'is_playable': True,
+                    'info': info
+                })
+    # others url case
+    else:
+        program_html = utils.get_webcontent(
+            url_root + params.season_category_url + '?page=' + params.page
+        )
+        program_soup = bs(program_html, 'html.parser')
+
+        videos_soup = program_soup.find_all(
+            'div',
+            attrs={'class': 'item col-xs-6 col-md-4'})
+        for video in videos_soup:
+
             title_soup = video.find(
                 'h3',
                 class_='thumbnail-title')
+            url = title_soup.find('a')['href'].encode('utf-8')
+
             title = title_soup.get_text().encode('utf-8')
             title = ' '.join(title.split())
 
-            url = title_soup.find('a')['href'].encode('utf-8')
             img = video.find('img')['src'].encode('utf-8')
-            date = video.find('time').get_text().encode('utf-8').split(' ')[1]
+            try:
+                date = video.find('time').get_text()
+                date = date.encode('utf-8').split(' ')[1]
+            except:
+                date = video.find('time').get_text().encode('utf-8')
+
             date_splited = date.split('/')
             day = date_splited[0]
             mounth = date_splited[1]
@@ -180,31 +346,18 @@ def list_videos(params):
                 'info': info
             })
 
-    else:
-        title_soup = program_soup.find(
-            'meta',
-            attrs={'itemprop': 'thumbnailUrl'})
-        title = title_soup['alt'].encode('utf-8')
-        img = title_soup['content'].encode('utf-8')
-        # TODO : desc, date, duration
-        info = {
-            'video': {
-                'title': title
-                # 'aired': aired,
-                # 'date': date,
-                # 'year': year
-            }
-        }
+        # More videos...
         videos.append({
-            'label': title,
-            'thumb': img,
+            'label': common.addon.get_localized_string(30100),
             'url': common.plugin.get_url(
                 action='channel_entry',
-                next='play',
-                url_video=params.url_program
-            ),
-            'is_playable': True,
-            'info': info
+                next='list_videos',
+                season_category_url=params.season_category_url,
+                season_url=params.season_url,
+                season_category_title=params.season_category_title,
+                page=str(int(params.page) + 1),
+            )
+
         })
 
     return common.plugin.create_listing(
@@ -219,10 +372,13 @@ def list_videos(params):
 
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
+    if url_root in params.url_video:
+        url_video = params.url_video
+    else:
+        url_video = url_root + params.url_video
     video_html = utils.get_webcontent(
-        url_root + params.url_video)
+        url_video)
     video_soup = bs(video_html, 'html.parser')
-    print video_soup
     return video_soup.find(
         'meta',
         attrs={'itemprop': 'contentUrl'})['content'].encode('utf-8')
