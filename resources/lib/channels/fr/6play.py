@@ -343,10 +343,10 @@ def get_video_URL(params):
         utils.send_notification(common.addon.get_localized_string(30102))
         return ''
 
-    disered_quality = common.plugin.get_setting(
+    desired_quality = common.plugin.get_setting(
         params.channel_id + '.quality')
 
-    if disered_quality == 'Auto':
+    if desired_quality == 'Auto':
         return manifest_url
 
     root = common.os.path.dirname(manifest_url)
@@ -367,14 +367,14 @@ def get_video_URL(params):
         elif 'RESOLUTION=1080' in lines[k]:
             url_ultra_hd = root + '/' + lines[k + 1]
 
-    if disered_quality == 'Force HD':
+    if desired_quality == 'Force HD':
         if url_ultra_hd:
             return url_ultra_hd
         elif url_hd:
             return url_hd
         return manifest_url
 
-    elif disered_quality == 'Force SD':
+    elif desired_quality == 'Force SD':
         if url_ultra_sd:
             return url_ultra_sd
         elif url_sd:

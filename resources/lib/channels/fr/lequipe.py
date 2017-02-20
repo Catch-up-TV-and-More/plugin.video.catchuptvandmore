@@ -225,14 +225,14 @@ def get_video_url(params):
             url_hdplus = url
         url_default = url
 
-    disered_quality = common.plugin.get_setting(
+    desired_quality = common.plugin.get_setting(
         params.channel_id + '.quality')
 
-    if disered_quality == 'HD+' and url_hdplus is not None:
+    if desired_quality == 'HD+' and url_hdplus is not None:
         return url_hdplus
-    elif disered_quality == 'HD' and url_hd is not None:
+    elif desired_quality == 'HD' and url_hd is not None:
         return url_hd
-    elif disered_quality == 'SD' and url_sd is not None:
+    elif desired_quality == 'SD' and url_sd is not None:
         return url_sd
     else:
         return url_default

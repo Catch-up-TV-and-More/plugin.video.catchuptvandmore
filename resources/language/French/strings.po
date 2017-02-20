@@ -165,4 +165,16 @@ msgctxt "#30104"
 msgid "Last videos"
 msgstr "Dernières vidéos"
 
+msgctxt "#30105"
+msgid "From A to Z"
+msgstr "De A à Z"
+
+msgctxt "#30106"
+msgid "Ascending"
+msgstr "Ascendant"
+
+msgctxt "#30107"
+msgid "Descending"
+msgstr "Descendant"
+
 

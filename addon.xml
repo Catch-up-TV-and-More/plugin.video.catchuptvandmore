@@ -4,7 +4,7 @@
        version="0.1.2"
        provider-name="SylvainCecchetto">
   <requires>
-    <import addon="xbmc.python" version="2.14.0"/>
+    <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.beautifulsoup4" version="4.3.1"/>
     <import addon="script.module.requests" version="2.9.1"/>
     <import addon="script.module.simplejson" version="3.3.0"/>
@@ -28,7 +28,9 @@
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
 [Add channel] 6ter
-[Bug] NRJ 12 No video
+[Bug] NRJ 12: No video
+[Improvement] NRJ 12: Add listing for categories and seasons
+[Improvement] France Télévision (pluzz): Add search feature and "last videos" categories
     </news> 
     <assets>
       <icon>icon.png</icon>

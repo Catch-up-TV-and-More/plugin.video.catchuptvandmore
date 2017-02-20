@@ -230,28 +230,28 @@ def get_video_URL(params):
                     video_stream['protocol'] == 'HTTP':
                 url_sd_minus = video_stream['url'].encode('utf-8')
 
-    disered_quality = common.plugin.get_setting(
+    desired_quality = common.plugin.get_setting(
         params.channel_id + '.quality')
 
-    if disered_quality == 'Auto' and url_auto:
+    if desired_quality == 'Auto' and url_auto:
         return url_auto
 
-    if disered_quality == 'HD+' and url_hd_plus:
+    if desired_quality == 'HD+' and url_hd_plus:
         return url_hd_plus
     elif url_hd:
         return url_hd
 
-    if disered_quality == 'HD' and url_hd:
+    if desired_quality == 'HD' and url_hd:
         return url_hd
     elif url_hd_plus:
         return url_hd_plus
 
-    if disered_quality == 'SD' and url_sd:
+    if desired_quality == 'SD' and url_sd:
         return url_sd
     elif url_sd_minus:
         return url_sd_minus
 
-    if disered_quality == 'SD-' and url_sd_minus:
+    if desired_quality == 'SD-' and url_sd_minus:
         return url_sd_minus
     elif url_sd:
         return url_sd
