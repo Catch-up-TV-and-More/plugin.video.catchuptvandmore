@@ -31,6 +31,9 @@ from resources.lib import common
 
 channel_catalog = 'http://pluzz.webservices.francetelevisions.fr/' \
                   'pluzz/liste/type/replay/nb/10000/chaine/%s'
+# channel_catalog = 'https://pluzz.webservices.francetelevisions.fr/' \
+#                   'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s'
+# page inc: 20
 
 show_info = 'http://webservices.francetelevisions.fr/tools/' \
             'getInfosOeuvre/v2/?idDiffusion=%s&catalogue=Pluzz'
@@ -122,7 +125,7 @@ def change_to_nicer_name(original_name):
     return original_name
 
 
-#@common.plugin.cached(common.cache_time)
+@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
     unique_item = dict()
@@ -139,15 +142,16 @@ def list_shows(params):
                        'la_1ere_wallisetfutuna%2C' \
                        'la_1ere_saintpierreetmiquelon'
 
-    url_json = channel_catalog % (real_channel)
-    file_path = utils.download_catalog(
-        url_json,
-        '%s.json' % (params.channel_name))
-    file_prgm = open(file_path).read()
-    json_parser = json.loads(file_prgm)
-    emissions = json_parser['reponse']['emissions']
-
+    # Level 0
     if params.next == 'list_shows_1':
+        url_json = channel_catalog % (real_channel)
+        file_path = utils.download_catalog(
+            url_json,
+            '%s.json' % (
+                params.channel_name))
+        file_prgm = open(file_path).read()
+        json_parser = json.loads(file_prgm)
+        emissions = json_parser['reponse']['emissions']
         for emission in emissions:
             rubrique = emission['rubrique'].encode('utf-8')
             if rubrique not in unique_item:
@@ -159,7 +163,7 @@ def list_shows(params):
                     'url': common.plugin.get_url(
                         action='channel_entry',
                         rubrique=rubrique,
-                        next='list_shows_2'
+                        next='list_shows_2_cat'
                     )
                 })
 
@@ -192,32 +196,73 @@ def list_shows(params):
             )
         })
 
-    elif 'from_a_to_z' in params.next:
+    # level 1
+    elif 'list_shows_from_a_to_z' in params.next:
         shows.append({
             'label': common.addon.get_localized_string(30106),
             'url': common.plugin.get_url(
                 action='channel_entry',
-                next='list_videos_from_a_to_z',
+                next='list_shows_2_from_a_to_z_categories',
                 page='0',
                 url=url_alpha % ('asc', '%s'),
-                sens='asc'
+                sens='asc',
+                rubrique='no_rubrique'
             )
         })
         shows.append({
             'label': common.addon.get_localized_string(30107),
             'url': common.plugin.get_url(
                 action='channel_entry',
-                next='list_videos_from_a_to_z',
+                next='list_shows_2_from_a_to_z_categories',
                 page='0',
                 url=url_alpha % ('desc', '%s'),
-                sens='desc'
+                sens='desc',
+                rubrique='no_rubrique'
             )
         })
 
-    elif params.next == 'list_shows_2':
+    # level 1
+    elif 'list_shows_last' in params.next:
+        for title, url in categories.iteritems():
+            if 'Toutes catégories' in title:
+                url = url % (params.channel_name, '%s')
+            shows.append({
+                'label': title,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='list_videos_last',
+                    page='0',
+                    url=url,
+                    title=title
+                )
+            })
+
+    # level 1 or 2
+    elif 'list_shows_2' in params.next:
+        if 'list_shows_2_cat' in params.next:
+            url_json = channel_catalog % (real_channel)
+            file_path = utils.download_catalog(
+                url_json,
+                '%s.json' % (
+                    params.channel_name))
+        elif 'list_shows_2_from_a_to_z_categories' in params.next:
+            url_json = url_alpha % (params.sens, params.page)
+            file_path = utils.download_catalog(
+                url_json,
+                '%s_%s_%s_alpha.json' % (
+                    params.channel_name,
+                    params.sens,
+                    params.page))
+
+        file_prgm = open(file_path).read()
+        json_parser = json.loads(file_prgm)
+        emissions = json_parser['reponse']['emissions']
         for emission in emissions:
             rubrique = emission['rubrique'].encode('utf-8')
-            if rubrique == params.rubrique:
+            chaine_id = emission['chaine_id'].encode('utf-8')
+            if ('from_a_to_z' in params.next and
+                    chaine_id == params.channel_name) or \
+                    rubrique == params.rubrique:
                 titre_programme = emission['titre_programme'].encode('utf-8')
                 if titre_programme != '':
                     id_programme = emission['id_programme'].encode('utf-8')
@@ -248,6 +293,17 @@ def list_shows(params):
                             ),
                             'info': info
                         })
+        if params.next == 'list_shows_2_from_a_to_z_categories':
+            # More videos...
+            shows.append({
+                'label': common.addon.get_localized_string(30100),
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='list_shows_2_from_a_to_z_categories',
+                    sens=params.sens,
+                    page=str(int(params.page) + 100),
+                )
+            })
 
         return common.plugin.create_listing(
             shows,
@@ -258,21 +314,6 @@ def list_shows(params):
             )
         )
 
-    elif 'list_shows_last' in params.next:
-        for title, url in categories.iteritems():
-            if 'Toutes catégories' in title:
-                url = url % (params.channel_name, '%s')
-            shows.append({
-                'label': title,
-                'url': common.plugin.get_url(
-                    action='channel_entry',
-                    next='list_videos_last',
-                    page='0',
-                    url=url,
-                    title=title
-                )
-            })
-
     return common.plugin.create_listing(
         shows,
         sort_methods=(
@@ -282,7 +323,7 @@ def list_shows(params):
     )
 
 
-#@common.plugin.cached(common.cache_time)
+@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if 'search' in params.next:
@@ -334,8 +375,11 @@ def list_videos(params):
             id_diffusion = emission['id_diffusion']
             chaine_id = emission['chaine_id'].encode('utf-8')
 
-            # If we are in search case, only add channel's shows
-            if 'search' in params.next or 'from_a_to_z' in params.next:
+            # If we are in search or alpha or last videos cases,
+            # only add channel's shows
+            if 'search' in params.next or\
+                    'from_a_to_z' in params.next or\
+                    'last' in params.next:
                 if chaine_id != params.channel_name:
                     continue
 
