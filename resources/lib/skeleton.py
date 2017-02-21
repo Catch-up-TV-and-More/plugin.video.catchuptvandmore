@@ -23,7 +23,7 @@
 
 categories = {
     'main_menu.fr': 'French channels'
-#   'main_menu.be': 'Belgian channels'
+    # 'main_menu.be': 'Belgian channels'
 }
 
 channels = {

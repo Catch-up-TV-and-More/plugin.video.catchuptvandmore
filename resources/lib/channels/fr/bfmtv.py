@@ -58,7 +58,7 @@ def channel_entry(params):
         return get_video_URL(params)
 
 
-#@common.plugin.cached(common.cache_time)
+@common.plugin.cached(common.cache_time)
 def list_shows(params):
     # Create categories list
     shows = []
@@ -85,7 +85,8 @@ def list_shows(params):
                     category=category,
                     next='list_videos_1',
                     title=title,
-                    page='1'
+                    page='1',
+                    window_title=title
                 )
             })
 
@@ -131,7 +132,8 @@ def list_videos(params):
                     #'date': date,
                     'duration': duration,
                     #'year': year,
-                    'genre': category
+                    'genre': category,
+                    'mediatype': 'tvshow'
                 }
             }
 
@@ -156,7 +158,8 @@ def list_videos(params):
                 category=params.category,
                 next='list_videos_1',
                 title=title,
-                page=str(int(params.page) + 1)
+                page=str(int(params.page) + 1),
+                window_title=params.window_title
             )
 
         })

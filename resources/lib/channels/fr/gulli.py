@@ -81,7 +81,8 @@ def list_shows(params):
                     action='channel_entry',
                     category_url=category_url,
                     next='list_shows_cat',
-                    title=category_title
+                    title=category_title,
+                    window_title=category_title
                 )
             })
 
@@ -114,7 +115,8 @@ def list_shows(params):
                     action='channel_entry',
                     program_id=program_id,
                     next='list_videos',
-                    title=program_title
+                    title=program_title,
+                    window_title=program_title
                 )
             })
 
@@ -170,7 +172,8 @@ def list_videos(params):
                 'aired': aired,
                 'date': date,
                 # 'duration': duration,
-                'year': year
+                'year': year,
+                'mediatype': 'tvshow'
             }
         }
 

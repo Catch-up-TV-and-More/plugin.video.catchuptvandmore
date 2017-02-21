@@ -79,7 +79,10 @@ def list_shows(params):
                 category_url=category_url,
                 page='1',
                 category_name=category_name,
-                next='list_videos')})
+                next='list_videos',
+                window_title=category_name
+            )
+        })
 
     return common.plugin.create_listing(
         shows,
@@ -156,7 +159,8 @@ def list_videos(params):
                 'aired': aired,
                 'date': date,
                 'duration': duration,
-                'year': year
+                'year': year,
+                'mediatype': 'tvshow'
             }
         }
 

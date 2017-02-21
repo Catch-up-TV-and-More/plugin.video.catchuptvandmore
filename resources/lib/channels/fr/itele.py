@@ -62,7 +62,8 @@ def list_shows(params):
                     action='channel_entry',
                     category_url=category_url,
                     next='list_videos_cat',
-                    title=category_title
+                    title=category_title,
+                    window_title=category_title
                 )
             })
 
@@ -72,7 +73,8 @@ def list_shows(params):
                 action='channel_entry',
                 category_url='emissions',
                 next='list_shows_emissions',
-                title='Les Émissions'
+                title='Les Émissions',
+                window_title='Les Émissions'
             )
         })
 
@@ -91,7 +93,8 @@ def list_shows(params):
                 action='channel_entry',
                 category_url='http://service.itele.fr/iphone/dernieres_emissions?query=',
                 next='list_videos_cat',
-                title='À la Une'
+                title='À la Une',
+                window_title='À la Une'
             )
         })
 
@@ -101,7 +104,8 @@ def list_shows(params):
                 action='channel_entry',
                 category_url='http://service.itele.fr/iphone/emissions?query=magazines',
                 next='list_videos_cat',
-                title='Magazines'
+                title='Magazines',
+                window_title='Magazines'
             )
         })
 
@@ -111,7 +115,8 @@ def list_shows(params):
                 action='channel_entry',
                 category_url='http://service.itele.fr/iphone/emissions?query=chroniques',
                 next='list_videos_cat',
-                title='Chroniques'
+                title='Chroniques',
+                window_title='Chroniques'
             )
         })
 
@@ -158,7 +163,8 @@ def list_videos(params):
                     # 'date': date,
                     #'duration': duration,
                     #'year': year,
-                    'genre': category
+                    'genre': category,
+                    'mediatype': 'tvshow'
                 }
             }
 

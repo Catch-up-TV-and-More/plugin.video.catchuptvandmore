@@ -68,7 +68,8 @@ def list_shows(params):
                     action='channel_entry',
                     url_category=url_category,
                     next='list_shows_programs',
-                    title_category=title_category
+                    title_category=title_category,
+                    window_title=title_category
                 )
             })
 
@@ -106,6 +107,7 @@ def list_shows(params):
                     next='list_shows_seasons',
                     url_program=url,
                     title_program=title,
+                    window_title=title
                 ),
             })
 
@@ -148,7 +150,8 @@ def list_shows(params):
                         next='list_shows_season_categories',
                         season_url=season_url,
                         title_program=params.title_program,
-                        title_season=title_season
+                        title_season=title_season,
+                        window_title=title_season
                     ),
                 })
 
@@ -157,6 +160,7 @@ def list_shows(params):
             params['season_url'] = program_url
             params['title_program'] = params.title_program
             params['title_season'] = 'no_season'
+            params['window_title'] = params.window_title
             return list_shows(params)
 
     elif 'list_shows_season_categories':
@@ -208,7 +212,8 @@ def list_shows(params):
                     season_category_url=season_category_url,
                     season_url=params.season_url,
                     season_category_title=season_category_title,
-                    page='1'
+                    page='1',
+                    window_title=season_category_title
                 ),
             })
 
@@ -274,7 +279,8 @@ def list_videos(params):
                         'title': title,
                         'aired': aired,
                         'date': date,
-                        'year': year
+                        'year': year,
+                        'mediatype': 'tvshow'
                     }
                 }
 
@@ -330,7 +336,8 @@ def list_videos(params):
                     'title': title,
                     'aired': aired,
                     'date': date,
-                    'year': year
+                    'year': year,
+                    'mediatype': 'tvshow'
                 }
             }
 
@@ -356,6 +363,7 @@ def list_videos(params):
                 season_url=params.season_url,
                 season_category_title=params.season_category_title,
                 page=str(int(params.page) + 1),
+                window_title=params.window_title
             )
 
         })

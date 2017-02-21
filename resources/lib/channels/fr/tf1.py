@@ -66,15 +66,10 @@ def list_shows(params):
                 'url': common.plugin.get_url(
                     action='channel_entry',
                     category=category_url,
-                    next='list_shows_2')})
-
-        sort_methods = (
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL)
-
-        shows = common.plugin.create_listing(
-            shows,
-            sort_methods=sort_methods)
+                    next='list_shows_2',
+                    window_title=category_name
+                )
+            })
 
     elif params.next == 'list_shows_2':
         programs_soup = root_soup.find(
@@ -104,17 +99,18 @@ def list_shows(params):
                     'url': common.plugin.get_url(
                         action='channel_entry',
                         program_url=program_url,
-                        next='list_videos')})
+                        next='list_videos',
+                        window_title=program_name
+                    )
+                })
 
-        sort_methods = (
+    return common.plugin.create_listing(
+        shows,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL)
-
-        shows = common.plugin.create_listing(
-            shows,
-            sort_methods=sort_methods)
-
-    return shows
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
 
 
 @common.plugin.cached(common.cache_time)
@@ -192,7 +188,8 @@ def list_videos(params):
                         'aired': aired,
                         'date': date,
                         'duration': duration,
-                        'year': int(aired[:4])
+                        'year': int(aired[:4]),
+                        'mediatype': 'tvshow'
                     }
                 }
 
@@ -208,15 +205,14 @@ def list_videos(params):
                     'info': info
                 })
 
-    sort_methods = (
-        common.sp.xbmcplugin.SORT_METHOD_DATE,
-        common.sp.xbmcplugin.SORT_METHOD_DURATION,
-        common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
-        common.sp.xbmcplugin.SORT_METHOD_UNSORTED
-    )
     return common.plugin.create_listing(
         videos,
-        sort_methods=sort_methods,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_DATE,
+            common.sp.xbmcplugin.SORT_METHOD_DURATION,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+        ),
         content='tvshows')
 
 

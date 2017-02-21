@@ -73,7 +73,8 @@ def list_shows(params):
                             action='channel_entry',
                             url_page=url_page,
                             next='list_shows_2',
-                            title=title
+                            title=title,
+                            window_title=title
                         )
                     })
 
@@ -117,14 +118,14 @@ def list_shows(params):
                             action='channel_entry',
                             next='list_shows_3',
                             url_page=url_page,
-                            title=title
+                            title=title,
+                            window_title=title
                         ),
                         'info': info
                     })
 
         shows = common.plugin.create_listing(
             shows,
-            content='tvshows',
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                 common.sp.xbmcplugin.SORT_METHOD_LABEL
@@ -167,14 +168,14 @@ def list_shows(params):
                             next='list_videos',
                             url_page=params.url_page,
                             title=title,
-                            index_page=1
+                            index_page=1,
+                            window_title=title
                         ),
                         'info': info
                     })
 
             shows = common.plugin.create_listing(
                 shows,
-                content='tvshows',
                 sort_methods=(
                     common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                     common.sp.xbmcplugin.SORT_METHOD_LABEL
@@ -230,6 +231,8 @@ def list_videos(params):
                 'video': {
                     'title': title,
                     'plot': subtitle,
+                    'mediatype': 'tvshow'
+
                 }
             }
 
@@ -265,6 +268,7 @@ def list_videos(params):
                             'video': {
                                 'title': title,
                                 'plot': subtitle,
+                                'mediatype': 'tvshow'
                             }
                         }
 

@@ -6,7 +6,7 @@
         <!-- Hide main menu categories -->
         <setting label="30010" type="lsep"/>
             <setting label="30020" type="bool" id="main_menu.fr" default="true"/>
-<!--         <setting label="30021" type="bool" id="main_menu.be" default="true"/> -->
+            <!-- <setting label="30021" type="bool" id="main_menu.be" default="true"/> -->
     </category>
 
 

@@ -80,7 +80,8 @@ def list_shows(params):
                 code=code,
                 href=href,
                 next='list_videos',
-                title=label
+                title=label,
+                window_title=label
             ),
             'info': info
         })
@@ -162,7 +163,8 @@ def list_videos(params):
                 'season': season,
                 'episode': episode,
                 'playcount': views,
-                'director': director
+                'director': director,
+                'mediatype': 'tvshow'
             }
         }
 

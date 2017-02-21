@@ -163,7 +163,8 @@ def list_shows(params):
                     'url': common.plugin.get_url(
                         action='channel_entry',
                         rubrique=rubrique,
-                        next='list_shows_2_cat'
+                        next='list_shows_2_cat',
+                        window_title=rubrique_title
                     )
                 })
 
@@ -173,7 +174,8 @@ def list_shows(params):
             'url': common.plugin.get_url(
                 action='channel_entry',
                 next='list_shows_last',
-                page='0'
+                page='0',
+                window_title=common.addon.get_localized_string(30104)
             )
         })
 
@@ -183,7 +185,8 @@ def list_shows(params):
             'url': common.plugin.get_url(
                 action='channel_entry',
                 next='search',
-                page='0'
+                page='0',
+                window_title=common.addon.get_localized_string(30103)
             )
         })
 
@@ -193,6 +196,7 @@ def list_shows(params):
             'url': common.plugin.get_url(
                 action='channel_entry',
                 next='list_shows_from_a_to_z',
+                window_title=common.addon.get_localized_string(30105)
             )
         })
 
@@ -206,7 +210,8 @@ def list_shows(params):
                 page='0',
                 url=url_alpha % ('asc', '%s'),
                 sens='asc',
-                rubrique='no_rubrique'
+                rubrique='no_rubrique',
+                window_title=params.window_title
             )
         })
         shows.append({
@@ -217,7 +222,8 @@ def list_shows(params):
                 page='0',
                 url=url_alpha % ('desc', '%s'),
                 sens='desc',
-                rubrique='no_rubrique'
+                rubrique='no_rubrique',
+                window_title=params.window_title
             )
         })
 
@@ -233,7 +239,8 @@ def list_shows(params):
                     next='list_videos_last',
                     page='0',
                     url=url,
-                    title=title
+                    title=title,
+                    window_title=title
                 )
             })
 
@@ -289,7 +296,8 @@ def list_shows(params):
                                 next='list_videos_1',
                                 id_programme=id_programme,
                                 search=False,
-                                page='0'
+                                page='0',
+                                window_title=titre_programme
                             ),
                             'info': info
                         })
@@ -302,17 +310,9 @@ def list_shows(params):
                     next='list_shows_2_from_a_to_z_categories',
                     sens=params.sens,
                     page=str(int(params.page) + 100),
+                    window_title=params.window_title
                 )
             })
-
-        return common.plugin.create_listing(
-            shows,
-            content='tvshows',
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            )
-        )
 
     return common.plugin.create_listing(
         shows,
@@ -423,7 +423,8 @@ def list_videos(params):
                         'date': date,
                         'duration': duration,
                         'year': year,
-                        'genre': genre
+                        'genre': genre,
+                        'mediatype': 'tvshow'
                     }
                 }
 
@@ -448,6 +449,7 @@ def list_videos(params):
                 next='list_videos_search',
                 query=params.query,
                 page=str(int(params.page) + 20),
+                window_title=params.window_title
             )
         })
 
@@ -460,7 +462,8 @@ def list_videos(params):
                 url=params.url,
                 next=params.next,
                 page=str(int(params.page) + 20),
-                title=params.title
+                title=params.title,
+                window_title=params.window_title
             )
 
         })
