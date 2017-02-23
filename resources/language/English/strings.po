@@ -143,6 +143,9 @@ msgctxt "#30086"
 msgid "L'Équipe: Video quality"
 msgstr ""
 
+msgctxt "#30087"
+msgid "TF1: Video quality"
+msgstr ""
 
 
 # Others (from 30100 to 30140)
