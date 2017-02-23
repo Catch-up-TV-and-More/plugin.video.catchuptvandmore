@@ -24,6 +24,7 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 import re
+import ast
 
 auth = '?auth=1487366549-2688-mbe66p57-9b64a7bdc99718f9fc20facf756f8be9'
 
@@ -94,6 +95,9 @@ def list_shows(params):
 @common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
+
 
     url = params.category_url + params.page
     file_path = utils.download_catalog(
@@ -184,7 +188,9 @@ def list_videos(params):
             category_url=params.category_url,
             category_name=params.category_name,
             next='list_videos',
-            page=str(int(params.page) + 1)
+            page=str(int(params.page) + 1),
+            update_listing=True,
+            previous_listing=str(videos)
         ),
     })
 
@@ -197,7 +203,9 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_DURATION,
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
         ),
-        content='tvshows')
+        content='tvshows',
+        update_listing='update_listing' in params,
+    )
 
 
 @common.plugin.cached(common.cache_time)

@@ -49,7 +49,8 @@ categories = {
     url_category_query + 'INSOLITE': 'Insolite'
 }
 
-#@common.plugin.cached(common.cache_time)
+
+@common.plugin.cached(common.cache_time)
 def list_shows(params):
     # Create categories list
     shows = []
@@ -129,6 +130,7 @@ def list_shows(params):
         )
 
 
+@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if params.next == 'list_videos_cat':
@@ -147,7 +149,17 @@ def list_videos(params):
         for video in json_category:
             video_id = video['id_pfv'].encode('utf-8')
             category = video['category'].encode('utf-8')
-            date_time = video['date'].encode('utf-8')  # 2017-02-10 22:05:02
+            date_time = video['date'].encode('utf-8')
+            # 2017-02-10 22:05:02
+            date_time = date_time.split(' ')[0]
+            date_splited = date_time.split('-')
+            year = date_splited[0]
+            mounth = date_splited[1]
+            day = date_splited[2]
+            aired = '-'.join((year, mounth, day))
+            date = '.'.join((day, mounth, year))
+            # date : string (%d.%m.%Y / 01.01.2009)
+            # aired : string (2008-12-07)
             title = video['title'].encode('utf-8')
             description = video['description'].encode('utf-8')
             thumb = video['preview169'].encode('utf-8')
@@ -159,10 +171,10 @@ def list_videos(params):
                 'video': {
                     'title': title,
                     'plot': description,
-                    # 'aired': aired,
-                    # 'date': date,
+                    'aired': aired,
+                    'date': date,
                     #'duration': duration,
-                    #'year': year,
+                    'year': year,
                     'genre': category,
                     'mediatype': 'tvshow'
                 }
@@ -187,11 +199,10 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_DATE,
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
             common.sp.xbmcplugin.SORT_METHOD_GENRE,
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
         ),
         content='tvshows')
 
 
 def get_video_URL(params):
     return params.video_urlhd
-

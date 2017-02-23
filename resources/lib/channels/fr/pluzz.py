@@ -333,10 +333,9 @@ def list_shows(params):
 
 @common.plugin.cached(common.cache_time)
 def list_videos(params):
+    videos = []
     if 'previous_listing' in params:
         videos = ast.literal_eval(params['previous_listing'])
-    else:
-        videos = []
 
     if 'search' in params.next:
         file_path = utils.download_catalog(

@@ -23,6 +23,7 @@
 import json
 from resources.lib import utils
 from resources.lib import common
+import ast
 
 url_token = 'http://api.nextradiotv.com/bfmtv-applications/'
 
@@ -101,6 +102,9 @@ def list_shows(params):
 
 def list_videos(params):
     videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
+
     if params.next == 'list_videos_1':
         file_path = utils.download_catalog(
             url_show % (
@@ -159,7 +163,9 @@ def list_videos(params):
                 next='list_videos_1',
                 title=title,
                 page=str(int(params.page) + 1),
-                window_title=params.window_title
+                window_title=params.window_title,
+                update_listing=True,
+                previous_listing=str(videos)
             )
 
         })
@@ -173,7 +179,9 @@ def list_videos(params):
                 common.sp.xbmcplugin.SORT_METHOD_GENRE,
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED
             ),
-            content='tvshows')
+            content='tvshows',
+            update_listing='update_listing' in params,
+        )
 
 
 @common.plugin.cached(common.cache_time)
