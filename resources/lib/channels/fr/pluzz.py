@@ -28,6 +28,7 @@
 import json
 from resources.lib import utils
 from resources.lib import common
+import ast
 
 channel_catalog = 'http://pluzz.webservices.francetelevisions.fr/' \
                   'pluzz/liste/type/replay/nb/10000/chaine/%s'
@@ -128,6 +129,9 @@ def change_to_nicer_name(original_name):
 @common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
+    if 'previous_listing' in params:
+        shows = ast.literal_eval(params['previous_listing'])
+
     unique_item = dict()
 
     real_channel = params.channel_name
@@ -310,7 +314,10 @@ def list_shows(params):
                     next='list_shows_2_from_a_to_z_categories',
                     sens=params.sens,
                     page=str(int(params.page) + 100),
-                    window_title=params.window_title
+                    window_title=params.window_title,
+                    rubrique='no_rubrique',
+                    update_listing=True,
+                    previous_listing=str(shows)
                 )
             })
 
@@ -319,13 +326,18 @@ def list_shows(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        update_listing='update_listing' in params,
     )
 
 
 @common.plugin.cached(common.cache_time)
 def list_videos(params):
-    videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
+    else:
+        videos = []
+
     if 'search' in params.next:
         file_path = utils.download_catalog(
             url_search % (params.query, params.page),
@@ -359,6 +371,7 @@ def list_videos(params):
     file_prgm = open(file_path).read()
     json_parser = json.loads(file_prgm)
     emissions = json_parser['reponse']['emissions']
+
     for emission in emissions:
         id_programme = emission['id_programme'].encode('utf-8')
         if id_programme == '':
@@ -449,7 +462,10 @@ def list_videos(params):
                 next='list_videos_search',
                 query=params.query,
                 page=str(int(params.page) + 20),
-                window_title=params.window_title
+                window_title=params.window_title,
+                update_listing=True,
+                previous_listing=str(videos)
+
             )
         })
 
@@ -463,7 +479,9 @@ def list_videos(params):
                 next=params.next,
                 page=str(int(params.page) + 20),
                 title=params.title,
-                window_title=params.window_title
+                window_title=params.window_title,
+                update_listing=True,
+                previous_listing=str(videos)
             )
 
         })
@@ -476,7 +494,9 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_DURATION,
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
         ),
-        content='tvshows')
+        content='tvshows',
+        update_listing='update_listing' in params,
+    )
 
 
 @common.plugin.cached(common.cache_time)
