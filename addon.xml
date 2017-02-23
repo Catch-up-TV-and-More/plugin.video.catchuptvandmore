@@ -32,6 +32,7 @@
 [Improvement] NRJ 12: Add listing for categories and seasons
 [Improvement] France Télévision (pluzz): Add search feature and "last videos" categories
 [Bug] TF1: Video URL failed
+[Bug] Gulli: Doesn't work
     </news> 
     <assets>
       <icon>icon.png</icon>
