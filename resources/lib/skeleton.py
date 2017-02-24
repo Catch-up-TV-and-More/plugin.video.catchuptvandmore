@@ -49,7 +49,8 @@ channels = {
         'channels.fr.tf1.hd1': 'HD1',
         'channels.fr.lequipe.lequipe': 'L\'Équipe',
         'channels.fr.6play.6ter': '6ter',
-        'channels.fr.numero23.numero23': 'Numéro 23'
+        'channels.fr.numero23.numero23': 'Numéro 23',
+        'channels.fr.nrj.cherie25': 'Chérie 25'
 
     }
 
