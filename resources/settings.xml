@@ -79,6 +79,9 @@
             <setting label="6ter" type="bool" id="channels.fr.6play.6ter" default="true" visible="eq(-41,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.6ter.order" default="22"/>
 
+            <setting label="Numéro 23" type="bool" id="channels.fr.numero23.numero23" default="true" visible="eq(-43,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.numero23.numero23.order" default="23"/>
+
 <!--         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
             <setting label="RTBF" type="bool" id="channels.be.rtbf.rtbf" default="true" visible="eq(-1,true)"/> -->
@@ -142,6 +145,9 @@
 
             <setting label="L'Équipe" type="bool" id="channels.fr.lequipe.lequipe" default="true" visible="false"/>
                 <setting label="30086" type="labelenum" id="channels.fr.lequipe.lequipe.quality" visible="eq(-1,true) + eq(-34,true)" values="HD+|HD|SD"/>
+
+            <setting label="Numéro 23" type="bool" id="channels.fr.numero23.numero23" default="true" visible="false"/>
+                <setting label="30088" type="labelenum" id="channels.fr.numero23.numero23.quality" visible="eq(-1,true) + eq(-36,true)" values="HD+|HD|SD"/>
 
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>

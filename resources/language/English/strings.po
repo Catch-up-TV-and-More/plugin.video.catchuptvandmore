@@ -147,6 +147,9 @@ msgctxt "#30087"
 msgid "TF1: Video quality"
 msgstr ""
 
+msgctxt "#30088"
+msgid "Numéro 23: Video quality"
+msgstr ""
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"
@@ -179,4 +182,8 @@ msgstr ""
 
 msgctxt "#30107"
 msgid "Descending"
+msgstr ""
+
+msgctxt "#30108"
+msgid "More programs..."
 msgstr ""
