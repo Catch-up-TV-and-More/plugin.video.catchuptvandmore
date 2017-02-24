@@ -295,13 +295,15 @@ def list_shows(params):
                         shows.append({
                             'label': titre_programme,
                             'thumb': icon,
+                            'fanart': icon,
                             'url': common.plugin.get_url(
                                 action='channel_entry',
                                 next='list_videos_1',
                                 id_programme=id_programme,
                                 search=False,
                                 page='0',
-                                window_title=titre_programme
+                                window_title=titre_programme,
+                                fanart=icon
                             ),
                             'info': info
                         })
@@ -419,6 +421,29 @@ def list_videos(params):
                     genre = \
                         json_parserShow['genre'].encode('utf-8')
 
+                episode = 0
+                if 'episode' in json_parserShow:
+                    episode = json_parserShow['episode']
+
+                season = 0
+                if 'saison' in json_parserShow:
+                    season = json_parserShow['saison']
+
+                cast = []
+                director = ''
+                personnes = json_parserShow['personnes']
+                for personne in personnes:
+                    fonctions = ' '.join(
+                        x.encode('utf-8') for x in personne['fonctions'])
+                    if 'Acteur' in fonctions:
+                        cast.append(
+                            personne['nom'].encode(
+                                'utf-8') + ' ' + personne['prenom'].encode(
+                                    'utf-8'))
+                    elif 'Réalisateur' in fonctions:
+                        director = personne['nom'].encode(
+                            'utf-8') + ' ' + personne['prenom'].encode('utf-8')
+
                 year = int(date[6:10])
                 day = date[:2]
                 month = date[3:5]
@@ -426,7 +451,10 @@ def list_videos(params):
                 aired = '-'.join((str(year), month, day))
                 # date : string (%d.%m.%Y / 01.01.2009)
                 # aired : string (2008-12-07)
-                image = url_img % (json_parserShow['image'])
+
+                # image = url_img % (json_parserShow['image'])
+                image = json_parserShow['image_secure']
+
                 info = {
                     'video': {
                         'title': title,
@@ -436,12 +464,17 @@ def list_videos(params):
                         'duration': duration,
                         'year': year,
                         'genre': genre,
-                        'mediatype': 'tvshow'
+                        'mediatype': 'tvshow',
+                        'season': season,
+                        'episode': episode,
+                        'cast': cast,
+                        'director': director
                     }
                 }
 
                 videos.append({
                     'label': title,
+                    'fanart': image,
                     'thumb': image,
                     'url': common.plugin.get_url(
                         action='channel_entry',
@@ -491,7 +524,9 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_DATE,
             common.sp.xbmcplugin.SORT_METHOD_DURATION,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
+            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
+            common.sp.xbmcplugin.SORT_METHOD_EPISODE
+
         ),
         content='tvshows',
         update_listing='update_listing' in params,
