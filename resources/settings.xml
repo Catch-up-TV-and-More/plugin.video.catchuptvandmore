@@ -117,7 +117,7 @@
             <setting label="Arte" type="bool" id="channels.fr.arte.arte" default="true" visible="false"/>
                 <setting label="30079" type="labelenum" id="channels.fr.arte.arte.quality" visible="eq(-1,true) + eq(-13,true)" values="Auto|HD+|HD|SD|SD-"/>
 
-            <setting label="30080" type="labelenum" id="channels.fr.arte.arte.language" visible="eq(-2,true) + eq(-14,true)" values="Auto|fr|de|en|es|pl"/>
+            <setting label="30080" type="labelenum" id="channels.fr.arte.arte.language" visible="eq(-2,true) + eq(-14,true)" values="Auto|fr|de"/>
 
             <setting label="W9" type="bool" id="channels.fr.6play.w9" default="true" visible="false"/>
                 <setting label="30077" type="labelenum" id="channels.fr.6play.W9.quality" visible="eq(-1,true) + eq(-16,true)" values="Auto|Force HD|Force SD"/>
