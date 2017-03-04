@@ -228,7 +228,6 @@ def get_video_url(params):
         r'{"type":"video/mp4","url":"(.*?)"}],"(.*?)":').findall(html_daily)
 
     for url, quality in urls_mp4:
-        print quality
         if quality == '480':
             url_sd = url
         elif quality == '720':

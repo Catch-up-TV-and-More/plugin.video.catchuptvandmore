@@ -192,7 +192,6 @@ def get_video_url(params):
     file_medias = utils.get_webcontent(
         params.url)
     json_parser = json.loads(file_medias)
-    print params.url
 
     url_auto = ''
     url_hd_plus = ''

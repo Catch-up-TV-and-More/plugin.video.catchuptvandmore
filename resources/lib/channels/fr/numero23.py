@@ -139,7 +139,6 @@ def list_shows(params):
     )
 
 
-
 @common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []

@@ -142,7 +142,6 @@ def get_webcontent(
 
     elif request_type == 'post':
         r = requests.post(url, headers=headers, data=post_dic, params=params)
-        print repr(r.url)
 
     return r.content
 
