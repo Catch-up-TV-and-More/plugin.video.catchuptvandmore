@@ -4,7 +4,7 @@
        version="0.1.2"
        provider-name="SylvainCecchetto">
   <requires>
-    <import addon="xbmc.python" version="2.25.0"/>
+    <import addon="xbmc.python" version="2.24.0"/>
     <import addon="script.module.beautifulsoup4" version="4.3.1"/>
     <import addon="script.module.requests" version="2.9.1"/>
     <import addon="script.module.simplejson" version="3.3.0"/>
