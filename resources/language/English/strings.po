@@ -143,7 +143,13 @@ msgctxt "#30086"
 msgid "L'Équipe: Video quality"
 msgstr ""
 
+msgctxt "#30087"
+msgid "TF1: Video quality"
+msgstr ""
 
+msgctxt "#30088"
+msgid "Numéro 23: Video quality"
+msgstr ""
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"
@@ -158,4 +164,26 @@ msgctxt "#30102"
 msgid "DRM protected video"
 msgstr ""
 
+msgctxt "#30103"
+msgid "Search"
+msgstr ""
 
+msgctxt "#30104"
+msgid "Last videos"
+msgstr ""
+
+msgctxt "#30105"
+msgid "From A to Z"
+msgstr ""
+
+msgctxt "#30106"
+msgid "Ascending"
+msgstr ""
+
+msgctxt "#30107"
+msgid "Descending"
+msgstr ""
+
+msgctxt "#30108"
+msgid "More programs..."
+msgstr ""

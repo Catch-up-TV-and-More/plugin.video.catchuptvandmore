@@ -77,7 +77,8 @@ def list_shows(params):
                     action='channel_entry',
                     slug=slug,
                     next='list_shows_2',
-                    title=title
+                    title=title,
+                    window_title=title
                 )
             })
 
@@ -113,7 +114,8 @@ def list_shows(params):
                             id=id,
                             videos_recent=videos_recent,
                             slug=slug,
-                            title=title
+                            title=title,
+                            window_title=title
                         )
                     })
 
@@ -169,7 +171,8 @@ def list_videos(params):
                 'duration': duration,
                 'year': year,
                 'genre': category,
-                'playcount': views
+                'playcount': views,
+                'mediatype': 'tvshow'
             }
         }
 
@@ -198,7 +201,6 @@ def list_videos(params):
         content='tvshows')
 
 
-
 @common.plugin.cached(common.cache_time)
 def get_video_URL(params):
     file_video = utils.get_webcontent(
@@ -206,4 +208,3 @@ def get_video_URL(params):
     )
     video_json = json.loads(file_video)
     return video_json['main']['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
-

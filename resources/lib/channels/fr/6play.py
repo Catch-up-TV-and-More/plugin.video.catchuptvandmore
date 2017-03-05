@@ -106,7 +106,8 @@ def list_shows(params):
                     action='channel_entry',
                     category_id=category_id,
                     next='list_shows_2',
-                    title=category_name
+                    title=category_name,
+                    window_title=category_name
                 )
             })
 
@@ -155,14 +156,14 @@ def list_shows(params):
                     program_img=program_img,
                     program_fanart=program_fanart,
                     program_desc=program_desc,
-                    title=program_title
+                    title=program_title,
+                    window_title=program_title
                 ),
                 'info': info
             })
 
         shows = common.plugin.create_listing(
             shows,
-            content='tvshows',
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                 common.sp.xbmcplugin.SORT_METHOD_LABEL
@@ -194,7 +195,8 @@ def list_shows(params):
                     action='channel_entry',
                     next='list_videos',
                     program_id=params.program_id,
-                    sub_category_id=sub_category_id
+                    sub_category_id=sub_category_id,
+                    window_title=sub_category_title
                 ),
                 'info': info
             })
@@ -213,7 +215,8 @@ def list_shows(params):
                 action='channel_entry',
                 next='list_videos',
                 program_id=params.program_id,
-                sub_category_id='null'
+                sub_category_id='null',
+                window_title=params.window_title
 
             ),
             'info': info
@@ -221,7 +224,6 @@ def list_shows(params):
 
         shows = common.plugin.create_listing(
             shows,
-            content='tvshows',
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                 common.sp.xbmcplugin.SORT_METHOD_LABEL
@@ -282,7 +284,8 @@ def list_videos(params):
                 'aired': aired,
                 'date': date,
                 'duration': duration,
-                'year': year
+                'year': year,
+                'mediatype': 'tvshow'
             }
         }
 
@@ -343,10 +346,10 @@ def get_video_URL(params):
         utils.send_notification(common.addon.get_localized_string(30102))
         return ''
 
-    disered_quality = common.plugin.get_setting(
+    desired_quality = common.plugin.get_setting(
         params.channel_id + '.quality')
 
-    if disered_quality == 'Auto':
+    if desired_quality == 'Auto':
         return manifest_url
 
     root = common.os.path.dirname(manifest_url)
@@ -367,14 +370,14 @@ def get_video_URL(params):
         elif 'RESOLUTION=1080' in lines[k]:
             url_ultra_hd = root + '/' + lines[k + 1]
 
-    if disered_quality == 'Force HD':
+    if desired_quality == 'Force HD':
         if url_ultra_hd:
             return url_ultra_hd
         elif url_hd:
             return url_hd
         return manifest_url
 
-    elif disered_quality == 'Force SD':
+    elif desired_quality == 'Force SD':
         if url_ultra_sd:
             return url_ultra_sd
         elif url_sd:

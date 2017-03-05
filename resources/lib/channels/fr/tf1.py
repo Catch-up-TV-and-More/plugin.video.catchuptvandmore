@@ -24,8 +24,17 @@
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
+import json
 
 url_root = "http://www.tf1.fr/"
+url_time = 'http://www.wat.tv/servertime2/'
+url_token = 'http://api.wat.tv/services/Delivery'
+
+secret_key = 'W3m0#1mFI'
+app_name = 'sdk/Iphone/1.0'
+version = '2.1.3'
+hosting_application_name = 'com.tf1.applitf1'
+hosting_application_version = '7.0.4'
 
 
 def channel_entry(params):
@@ -66,15 +75,10 @@ def list_shows(params):
                 'url': common.plugin.get_url(
                     action='channel_entry',
                     category=category_url,
-                    next='list_shows_2')})
-
-        sort_methods = (
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL)
-
-        shows = common.plugin.create_listing(
-            shows,
-            sort_methods=sort_methods)
+                    next='list_shows_2',
+                    window_title=category_name
+                )
+            })
 
     elif params.next == 'list_shows_2':
         programs_soup = root_soup.find(
@@ -104,17 +108,18 @@ def list_shows(params):
                     'url': common.plugin.get_url(
                         action='channel_entry',
                         program_url=program_url,
-                        next='list_videos')})
+                        next='list_videos',
+                        window_title=program_name
+                    )
+                })
 
-        sort_methods = (
+    return common.plugin.create_listing(
+        shows,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL)
-
-        shows = common.plugin.create_listing(
-            shows,
-            sort_methods=sort_methods)
-
-    return shows
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
 
 
 @common.plugin.cached(common.cache_time)
@@ -192,7 +197,8 @@ def list_videos(params):
                         'aired': aired,
                         'date': date,
                         'duration': duration,
-                        'year': int(aired[:4])
+                        'year': int(aired[:4]),
+                        'mediatype': 'tvshow'
                     }
                 }
 
@@ -208,15 +214,14 @@ def list_videos(params):
                     'info': info
                 })
 
-    sort_methods = (
-        common.sp.xbmcplugin.SORT_METHOD_DATE,
-        common.sp.xbmcplugin.SORT_METHOD_DURATION,
-        common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
-        common.sp.xbmcplugin.SORT_METHOD_UNSORTED
-    )
     return common.plugin.create_listing(
         videos,
-        sort_methods=sort_methods,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_DATE,
+            common.sp.xbmcplugin.SORT_METHOD_DURATION,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+        ),
         content='tvshows')
 
 
@@ -234,4 +239,43 @@ def get_video_url(params):
 
     video_id = data_src[-8:]
 
-    return 'http://wat.tv/get/ipad/' + video_id + '.m3u8'
+    timeserver = str(utils.get_webcontent(url_time))
+
+    auth_key = '%s-%s-%s-%s-%s' % (
+        video_id,
+        secret_key,
+        app_name,
+        secret_key,
+        timeserver
+    )
+
+    auth_key = common.sp.md5(auth_key).hexdigest()
+    auth_key = auth_key + '/' + timeserver
+
+    post_data = {
+        'appName': app_name,
+        'method': 'getUrl',
+        'mediaId': video_id,
+        'authKey': auth_key,
+        'version': version,
+        'hostingApplicationName': hosting_application_name,
+        'hostingApplicationVersion': hosting_application_version
+    }
+
+    url_video = utils.get_webcontent(
+        url=url_token,
+        request_type='post',
+        post_dic=post_data)
+    url_video = json.loads(url_video)
+    url_video = url_video['message'].replace('\\', '')
+
+    desired_quality = common.plugin.get_setting(
+        params.channel_id + '.quality')
+
+    if desired_quality == 'Force HD':
+        try:
+            url_video = url_video.split('&bwmax')[0]
+        except:
+            pass
+
+    return url_video

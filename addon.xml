@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.1"
+       version="0.1.2"
        provider-name="SylvainCecchetto">
   <requires>
-    <import addon="xbmc.python" version="2.14.0"/>
+    <import addon="xbmc.python" version="2.24.0"/>
     <import addon="script.module.beautifulsoup4" version="4.3.1"/>
     <import addon="script.module.requests" version="2.9.1"/>
     <import addon="script.module.simplejson" version="3.3.0"/>
@@ -27,9 +27,16 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
-[Add channel] France Ô
-[Add channel] HD1
-[Add channel] L'Équipe
+[Add channel] 6ter
+[Bug] NRJ 12: No video
+[Improvement] NRJ 12: Add listing for categories and seasons
+[Improvement] France Télévision (pluzz): Add search feature and "last videos" categories
+[Bug] TF1: Video URL failed
+[Bug] Gulli: Doesn't work
+[Add channel] Numéro 23
+[Add channel] Chérie 25
+[Bug] Arte: Doesn't work
+[Bug] Canal+: Bug with subcategories
     </news> 
     <assets>
       <icon>icon.png</icon>
