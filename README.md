@@ -31,6 +31,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France Ô
 - HD1
 - L'Équipe
+- 6ter
+- Numéro 23
+- Chérie 25
 
 ### Belgique — *Belgium*
 - *à venir* — *coming soon*
