@@ -22,8 +22,8 @@
 
 
 categories = {
-    'main_menu.fr': 'French channels'
-    # 'main_menu.be': 'Belgian channels'
+    'main_menu.fr': 'French channels',
+    'main_menu.be': 'Belgian channels'
 }
 
 channels = {
@@ -52,9 +52,9 @@ channels = {
         'channels.fr.numero23.numero23': 'Numéro 23',
         'channels.fr.nrj.cherie25': 'Chérie 25'
 
-    }
+    },
 
-    # 'main_menu.be': {
-    #     'channels.be.rtbf.rtbf': 'RTBF'
-    # }
+    'main_menu.be': {
+        'channels.be.rtl.rtltvi': 'RTL-TVI'
+    }
 }

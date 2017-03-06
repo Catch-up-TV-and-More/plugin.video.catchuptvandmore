@@ -187,6 +187,6 @@ msgstr "Descendant"
 
 msgctxt "#30108"
 msgid "More programs..."
-msgstr "Plus de programes..."
+msgstr "Plus de programmes..."
 
 
