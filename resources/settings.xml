@@ -89,7 +89,13 @@
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
-            <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-1,true)"/>
+<!--             <setting label="La Une" type="bool" id="channels.be.rtbf.laune" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.laune.order" default="1"/>
+            
+            <setting label="La Deux" type="bool" id="channels.be.rtbf.ladeux" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.ladeux.order" default="2"/>
+             -->
+            <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="3"/>
 
 
@@ -103,7 +109,8 @@
         <setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
             
             <setting label="TF1" type="bool" id="channels.fr.tf1.tf1" default="true" visible="false"/>
-                <setting label="30070" type="bool" id="channels.fr.tf1.tf1.bonus" default="true" visible="eq(-1,true) + eq(-2,true)"/>
+                <!-- <setting label="30070" type="bool" id="channels.fr.tf1.tf1.bonus" default="true" visible="eq(-1,true) + eq(-2,true)"/> -->
+                <setting label="30070" type="bool" id="channels.fr.tf1.tf1.bonus" default="true" visible="false"/>
                 <setting label="30087" type="labelenum" id="channels.fr.tf1.tf1.quality" visible="eq(-2,true) + eq(-3,true)" values="Force HD|Auto"/>  
 
             <setting label="France 2" type="bool" id="channels.fr.pluzz.france2" default="true" visible="false"/>

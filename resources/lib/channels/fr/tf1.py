@@ -40,6 +40,8 @@ hosting_application_version = '7.0.4'
 def channel_entry(params):
     if 'list_shows' in params.next:
         return list_shows(params)
+    elif 'list_videos_categories' in params.next:
+        return list_videos_categories(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
@@ -48,7 +50,7 @@ def channel_entry(params):
         return None
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
 
@@ -108,7 +110,7 @@ def list_shows(params):
                     'url': common.plugin.get_url(
                         action='channel_entry',
                         program_url=program_url,
-                        next='list_videos',
+                        next='list_videos_categories',
                         window_title=program_name
                     )
                 })
@@ -122,14 +124,52 @@ def list_shows(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
+def list_videos_categories(params):
+    videos_categories = []
+    url = ''.join((
+        url_root,
+        params.program_url,
+        '/videos'))
+    program_html = utils.get_webcontent(url)
+    program_soup = bs(program_html, 'html.parser')
+
+    filters_1_soup = program_soup.find(
+        'ul',
+        class_='filters_1')
+    for li in filters_1_soup.find_all('li'):
+        category_title = li.get_text().encode('utf-8')
+        category_id = li.find('a')['data-filter'].encode('utf-8')
+        videos_categories.append({
+                    'label': category_title,
+                    'url': common.plugin.get_url(
+                        action='channel_entry',
+                        program_url=params.program_url,
+                        next='list_videos',
+                        window_title=category_title,
+                        category_id=category_id
+                    )
+                })
+    return common.plugin.create_listing(
+        videos_categories,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
+
+
+
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
 
     url = ''.join((
         url_root,
         params.program_url,
-        '/videos'))
+        '/videos/',
+        '?filter=',
+        params.category_id))
     program_html = utils.get_webcontent(url)
     program_soup = bs(program_html, 'html.parser')
 
@@ -138,81 +178,76 @@ def list_videos(params):
         class_='grid')
 
     for li in grid.find_all('li'):
-        video_type_string = li.find('strong').get_text().encode('utf-8')
-        video_type = video_type_string.lower()
+        video_type_string = li.find('div', class_='description').find('a')['data-xiti-libelle'].encode('utf-8')
+        video_type_string = video_type_string.split('-')[0]
 
-        if 'playlist' not in video_type:
-            if 'replay' in video_type or \
-               'video' in video_type or \
-               common.plugin.get_setting(params.channel_id + '.bonus'):
+        if 'Playlist' not in video_type_string:
+            title = li.find(
+                'p',
+                class_='title').get_text().encode('utf-8')
 
-                title = li.find(
+            try:
+                stitle = li.find(
                     'p',
-                    class_='title').get_text().encode('utf-8')
+                    class_='stitle').get_text().encode('utf-8')
+            except:
+                stitle = ''
 
-                try:
-                    stitle = li.find(
-                        'p',
-                        class_='stitle').get_text().encode('utf-8')
-                except:
-                    stitle = ''
-
-                try:
-                    duration = li.find(
-                        'span',
-                        attrs={'data-format': 'duration'})
-                    duration = int(duration.get_text().encode('utf-8'))
-                except:
-                    duration = 0
-
-                img = li.find('img')
-                try:
-                    img = img['data-srcset'].encode('utf-8')
-                except:
-                    img = img['srcset'].encode('utf-8')
-
-                img = 'http:' + img.split(',')[-1].split(' ')[0]
-
-                aired = li.find(
+            try:
+                duration = li.find(
                     'span',
-                    attrs={'data-format': None, 'class': 'momentDate'})
-                aired = aired.get_text().encode('utf-8')
-                aired = aired.split('T')[0]
+                    attrs={'data-format': 'duration'})
+                duration = int(duration.get_text().encode('utf-8'))
+            except:
+                duration = 0
 
-                day = aired.split('-')[2]
-                mounth = aired.split('-')[1]
-                year = aired.split('-')[0]
-                date = '.'.join((day, mounth, year))
-                # date : string (%d.%m.%Y / 01.01.2009)
-                # aired : string (2008-12-07)
-                program_id = li.find('a')['href'].encode('utf-8')
+            img = li.find('img')
+            try:
+                img = img['data-srcset'].encode('utf-8')
+            except:
+                img = img['srcset'].encode('utf-8')
 
-                if 'replay' not in video_type and 'video' not in video_type:
-                    title = title + ' - [I]' + video_type_string + '[/I]'
+            img = 'http:' + img.split(',')[-1].split(' ')[0]
 
-                info = {
-                    'video': {
-                        'title': title,
-                        'plot': stitle,
-                        'aired': aired,
-                        'date': date,
-                        'duration': duration,
-                        'year': int(aired[:4]),
-                        'mediatype': 'tvshow'
-                    }
+            # aired = li.find(
+            #     'span',
+            #     attrs={'data-format': None, 'class': 'momentDate'})
+            # aired = aired.get_text().encode('utf-8')
+            # aired = aired.split('T')[0]
+            aired = ''
+
+            # day = aired.split('-')[2]
+            # mounth = aired.split('-')[1]
+            # year = aired.split('-')[0]
+            # date = '.'.join((day, mounth, year))
+            date =''
+            # date : string (%d.%m.%Y / 01.01.2009)
+            # aired : string (2008-12-07)
+            program_id = li.find('a')['href'].encode('utf-8')
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': stitle,
+                    'aired': aired,
+                    'date': date,
+                    'duration': duration,
+                    #'year': int(aired[:4]),
+                    'mediatype': 'tvshow'
                 }
+            }
 
-                videos.append({
-                    'label': title,
-                    'thumb': img,
-                    'url': common.plugin.get_url(
-                        action='channel_entry',
-                        next='play',
-                        program_id=program_id,
-                    ),
-                    'is_playable': True,
-                    'info': info
-                })
+            videos.append({
+                'label': title,
+                'thumb': img,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='play',
+                    program_id=program_id,
+                ),
+                'is_playable': True,
+                'info': info
+            })
 
     return common.plugin.create_listing(
         videos,

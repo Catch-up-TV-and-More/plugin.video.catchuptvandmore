@@ -55,6 +55,8 @@ channels = {
     },
 
     'main_menu.be': {
+       # 'channels.be.rtbf.laune': 'La Une',
+       # 'channels.be.rtbf.ladeux': 'La Deux',
         'channels.be.rtl.rtltvi': 'RTL-TVI'
     }
 }
