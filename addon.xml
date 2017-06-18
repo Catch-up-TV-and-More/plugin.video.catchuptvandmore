@@ -26,17 +26,9 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
+[Bug] L'équipe: Fix video quality selection
+[Improvement] Numéro 23: Better categories listing
 [Add channel] RTL-TVI
-[Add channel] 6ter
-[Bug] NRJ 12: No video
-[Improvement] NRJ 12: Add listing for categories and seasons
-[Improvement] France Télévision (pluzz): Add search feature and "last videos" categories
-[Bug] TF1: Video URL failed
-[Bug] Gulli: Doesn't work
-[Add channel] Numéro 23
-[Add channel] Chérie 25
-[Bug] Arte: Doesn't work
-[Bug] Canal+: Bug with subcategories
     </news> 
     <assets>
       <icon>icon.png</icon>
