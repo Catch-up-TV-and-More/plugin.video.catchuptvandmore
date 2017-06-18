@@ -28,6 +28,7 @@
     <news>
 [Bug] L'équipe: Fix video quality selection
 [Improvement] Numéro 23: Better categories listing
+[Bug] TF1: Fix wrong Video URL format
     </news> 
     <assets>
       <icon>icon.png</icon>
