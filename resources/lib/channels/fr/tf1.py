@@ -50,7 +50,7 @@ def channel_entry(params):
         return None
 
 
-#@common.plugin.cached(common.cache_time)
+@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
 
@@ -128,7 +128,6 @@ def list_shows(params):
 def list_videos_categories(params):
     videos_categories = []
     url = ''.join((
-        url_root,
         params.program_url,
         '/videos'))
     program_html = utils.get_webcontent(url)
@@ -165,7 +164,6 @@ def list_videos(params):
     videos = []
 
     url = ''.join((
-        url_root,
         params.program_url,
         '/videos/',
         '?filter=',
