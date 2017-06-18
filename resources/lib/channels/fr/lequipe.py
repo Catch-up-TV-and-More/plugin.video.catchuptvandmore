@@ -227,6 +227,11 @@ def get_video_url(params):
     urls_mp4 = re.compile(
         r'{"type":"video/mp4","url":"(.*?)"}],"(.*?)":').findall(html_daily)
 
+    url_sd = ""
+    url_hd = ""
+    url_hdplus = ""
+    url_default = ""
+
     for url, quality in urls_mp4:
         if quality == '480':
             url_sd = url
@@ -239,11 +244,11 @@ def get_video_url(params):
     desired_quality = common.plugin.get_setting(
         params.channel_id + '.quality')
 
-    if desired_quality == 'HD+' and url_hdplus is not None:
+    if desired_quality == 'HD+' and url_hdplus:
         return url_hdplus
-    elif desired_quality == 'HD' and url_hd is not None:
+    elif desired_quality == 'HD' and url_hd:
         return url_hd
-    elif desired_quality == 'SD' and url_sd is not None:
+    elif desired_quality == 'SD' and url_sd:
         return url_sd
     else:
         return url_default
