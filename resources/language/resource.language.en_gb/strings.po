@@ -155,6 +155,19 @@ msgctxt "#30088"
 msgid "Numéro 23: Video quality"
 msgstr ""
 
+msgctxt "#30089"
+msgid "TMC: Video quality"
+msgstr ""
+
+msgctxt "#30090"
+msgid "NT1: Video quality"
+msgstr ""
+
+msgctxt "#30091"
+msgid "NT1: Video quality"
+msgstr ""
+
+
 # Others (from 30100 to 30140)
 msgctxt "#30100"
 msgid "More videos..."
