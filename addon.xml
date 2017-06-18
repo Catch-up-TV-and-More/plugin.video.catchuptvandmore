@@ -28,7 +28,11 @@
     <news>
 [Bug] L'équipe: Fix video quality selection
 [Improvement] Numéro 23: Better categories listing
+<<<<<<< HEAD
 [Add channel] RTL-TVI
+=======
+[Bug] TF1: Fix wrong Video URL format
+>>>>>>> 5396b9f... [Bug] TF1 Url bis bis
     </news> 
     <assets>
       <icon>icon.png</icon>
