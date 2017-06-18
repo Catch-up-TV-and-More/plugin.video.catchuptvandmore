@@ -23,10 +23,9 @@
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
-import ast
 import re
 
-url_root = 'http://www.numero23.fr/replay/'
+url_root = 'http://www.numero23.fr/programmes/'
 
 
 def channel_entry(params):
@@ -43,12 +42,6 @@ def channel_entry(params):
 @common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
-    if 'previous_listing' in params:
-        shows = ast.literal_eval(params['previous_listing'])
-    unique_item = {}
-    if 'unique_item' in params:
-        unique_item = ast.literal_eval(params['unique_item'])
-
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
             url_root,
@@ -58,76 +51,62 @@ def list_shows(params):
 
         categories_soup = root_soup.find(
             'div',
-            class_='nav-programs'
+            class_='content'
         )
 
-        for category in categories_soup.find_all('a'):
-            category_name = category.find('span').get_text().encode('utf-8')
-            category_url = category['href'].encode('utf-8')
+        for category in categories_soup.find_all('h2'):
+            category_name = category.get_text().encode('utf-8')
+            category_hash = common.sp.md5(category_name).hexdigest()
 
             shows.append({
                 'label': category_name,
                 'url': common.plugin.get_url(
                     action='channel_entry',
-                    category_url=category_url,
-                    next='list_shows_cat',
+                    category_hash=category_hash,
+                    next='list_shows_pgms',
                     window_title=category_name,
                     category_name=category_name,
-                    page='1'
                 )
             })
 
-    elif params.next == 'list_shows_cat':
-        url_splited = params.category_url.split('?')
-        url_category = url_splited[0] + 'page/' + \
-            params.page + '/?' + url_splited[1]
+    elif params.next == 'list_shows_pgms':
         file_path = utils.download_catalog(
-            url_category,
-            '%s_%s.html' % (params.channel_name, params.category_name)
-        )
-        category_html = open(file_path).read()
-        category_soup = bs(category_html, 'html.parser')
+            url_root,
+            params.channel_name + '.html')
+        root_html = open(file_path).read()
+        root_soup = bs(root_html, 'html.parser')
 
-        programs_soup = category_soup.find(
+        categories_soup = root_soup.find(
             'div',
-            class_='videos replay'
+            class_='content'
         )
-        for program in programs_soup.find_all('div', class_='program'):
-            program_name_url = program.find('h3').find('a')
-            program_name = program_name_url.get_text().encode('utf-8')
-            if program_name not in unique_item:
-                unique_item[program_name] = program_name
-                program_url = program_name_url['href'].encode('utf-8')
-                program_img = program.find('img')['src'].encode('utf-8')
 
-                shows.append({
-                    'label': program_name,
-                    'thumb': program_img,
-                    'url': common.plugin.get_url(
-                        action='channel_entry',
-                        program_url=program_url,
-                        next='list_videos',
-                        window_title=program_name,
-                        program_name=program_name
-                    )
-                })
+        for category in categories_soup.find_all('h2'):
+            category_name = category.get_text().encode('utf-8')
+            category_hash = common.sp.md5(category_name).hexdigest()
 
-        # More videos...
-        shows.append({
-            'label': common.addon.get_localized_string(30108),
-            'url': common.plugin.get_url(
-                action='channel_entry',
-                next='list_shows_cat',
-                page=str(int(params.page) + 1),
-                window_title=params.window_title,
-                update_listing=True,
-                unique_item=str(unique_item),
-                category_url=params.category_url,
-                category_name=params.category_name,
-                previous_listing=str(shows)
+            print category_hash
+            print params.category_hash
 
-            )
-        })
+            if params.category_hash == category_hash:
+                programs = category.find_next('div')
+                for program in programs.find_all('div', class_='program'):
+                    program_name_url = program.find('h3').find('a')
+                    program_name = program_name_url.get_text().encode('utf-8')
+                    program_url = program_name_url['href'].encode('utf-8')
+                    program_img = program.find('img')['src'].encode('utf-8')
+
+                    shows.append({
+                        'label': program_name,
+                        'thumb': program_img,
+                        'url': common.plugin.get_url(
+                            action='channel_entry',
+                            program_url=program_url,
+                            next='list_videos',
+                            window_title=program_name,
+                            program_name=program_name
+                        )
+                    })
 
     return common.plugin.create_listing(
         shows,
@@ -135,7 +114,6 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        update_listing='update_listing' in params,
     )
 
 
@@ -210,6 +188,11 @@ def get_video_url(params):
     urls_mp4 = re.compile(
         r'{"type":"video/mp4","url":"(.*?)"}],"(.*?)"').findall(html_daily)
 
+    url_sd = ""
+    url_hd = ""
+    url_hdplus = ""
+    url_default = ""
+
     for url, quality in urls_mp4:
         if quality == '480':
             url_sd = url
@@ -217,18 +200,16 @@ def get_video_url(params):
             url_hd = url
         elif quality == '1080':
             url_hdplus = url
-        else:
-            continue
         url_default = url
 
     desired_quality = common.plugin.get_setting(
         params.channel_id + '.quality')
 
-    if desired_quality == 'HD+' and url_hdplus is not None:
+    if desired_quality == 'HD+' and url_hdplus:
         return url_hdplus
-    elif desired_quality == 'HD' and url_hd is not None:
+    elif desired_quality == 'HD' and url_hd:
         return url_hd
-    elif desired_quality == 'SD' and url_sd is not None:
+    elif desired_quality == 'SD' and url_sd:
         return url_sd
     else:
         return url_default
