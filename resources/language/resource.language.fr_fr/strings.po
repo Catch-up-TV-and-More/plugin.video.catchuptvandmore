@@ -151,6 +151,18 @@ msgctxt "#30088"
 msgid "Numéro 23: Video quality"
 msgstr "Numéro 23 : Qualité vidéo"
 
+msgctxt "#30089"
+msgid "TMC: Video quality"
+msgstr "TMC : Qualité vidéo"
+
+msgctxt "#30090"
+msgid "NT1: Video quality"
+msgstr "NT1 : Qualité vidéo"
+
+msgctxt "#30091"
+msgid "HD1: Video quality"
+msgstr "HD1 : Qualité vidéo"
+
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"

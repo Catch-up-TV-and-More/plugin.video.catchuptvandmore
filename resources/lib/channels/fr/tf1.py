@@ -140,15 +140,15 @@ def list_videos_categories(params):
         category_title = li.get_text().encode('utf-8')
         category_id = li.find('a')['data-filter'].encode('utf-8')
         videos_categories.append({
-                    'label': category_title,
-                    'url': common.plugin.get_url(
-                        action='channel_entry',
-                        program_url=params.program_url,
-                        next='list_videos',
-                        window_title=category_title,
-                        category_id=category_id
-                    )
-                })
+            'label': category_title,
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                program_url=params.program_url,
+                next='list_videos',
+                window_title=category_title,
+                category_id=category_id
+            )
+        })
     return common.plugin.create_listing(
         videos_categories,
         sort_methods=(
@@ -156,7 +156,6 @@ def list_videos_categories(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
     )
-
 
 
 @common.plugin.cached(common.cache_time)
