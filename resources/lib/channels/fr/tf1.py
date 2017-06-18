@@ -260,7 +260,12 @@ def list_videos(params):
 
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    url = url_root + params.program_id
+    if "http" not in params.program_id:
+        if params.program_id[0] == '/':
+            params.program_id = params.program_id[1:]
+        url = url_root + params.program_id
+    else:
+        url = params.program_id
     video_html = utils.get_webcontent(url)
     video_html_soup = bs(video_html, 'html.parser')
 
