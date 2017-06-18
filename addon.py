@@ -21,8 +21,12 @@
 """
 
 import imp
+import YDStreamUtils
+import YDStreamExtractor
 from resources.lib import skeleton
 from resources.lib import common
+
+YDStreamExtractor.disableDASHVideo(True)
 
 # Useful path
 lib_path = common.sp.xbmc.translatePath(
@@ -195,13 +199,7 @@ def list_channels(params):
     )
 
 
-@common.plugin.action()
-def channel_entry(params):
-    """
-    Last plugin action function in addon.py.
-    Now we are going into the channel python file.
-    The channel file can return folder or not item ; playable or not item
-    """
+def get_channel_module(params):
     if 'channel_name' in params and \
             'channel_module' in params and \
             'channel_id' in params and \
@@ -231,9 +229,19 @@ def channel_entry(params):
             lib_path,
             channel_module.replace('.', '/') + '.py'))
 
-    channel = imp.load_source(
+    return imp.load_source(
         channel_name,
         channel_path)
+
+
+@common.plugin.action()
+def channel_entry(params):
+    """
+    Last plugin action function in addon.py.
+    Now we are going into the channel python file.
+    The channel file can return folder or not item ; playable or not item
+    """
+    channel = get_channel_module(params)
 
     # Let's go to the channel file ...
     return channel.channel_entry(params)
@@ -274,6 +282,36 @@ def hide(params):
 
     common.plugin.set_setting(params.item_id, False)
     common.sp.xbmc.executebuiltin('XBMC.Container.Refresh()')
+    return None
+
+
+@common.plugin.action()
+def download_video(params):
+    #  Ici on a seulement le lien de la page web où se trouve la video
+    #  Il faut appeller la fonction get_video_url de la chaine concernée pour avoir l'URL finale de la vidéo
+    channel = get_channel_module(params)
+    url_video = channel.get_video_url(params)
+
+    #  Maintenant on peut télécharger la vidéo
+
+    print 'URL_VIDEO to download ' + url_video
+
+    vid = YDStreamExtractor.getVideoInfo(url_video, quality=3)
+    path = "/tmp"
+
+    with YDStreamUtils.DownloadProgress() as prog:  # This gives a progress dialog interface ready to use
+        try:
+            YDStreamExtractor.setOutputCallback(prog)
+            result = YDStreamExtractor.downloadVideo(vid, path)
+            if result:
+                # success
+                full_path_to_file = result.filepath
+            elif result.status != 'canceled':
+                # download failed
+                error_message = result.message
+        finally:
+            YDStreamExtractor.setOutputCallback(None)
+
     return None
 
 

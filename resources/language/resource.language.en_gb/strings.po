@@ -63,6 +63,10 @@ msgctxt "#30042"
 msgid "Hide"
 msgstr ""
 
+msgctxt "#30043"
+msgid "Download"
+msgstr ""
+
 
 # Dialog boxes (from 30050 to 30069)
 msgctxt "#30050"
