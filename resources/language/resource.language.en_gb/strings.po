@@ -164,7 +164,7 @@ msgid "NT1: Video quality"
 msgstr ""
 
 msgctxt "#30091"
-msgid "NT1: Video quality"
+msgid "HD1: Video quality"
 msgstr ""
 
 
