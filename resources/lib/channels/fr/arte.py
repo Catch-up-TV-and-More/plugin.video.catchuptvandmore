@@ -76,7 +76,10 @@ def list_shows(params):
         emission_dict['duration'] = emission['videoDurationSeconds']
         emission_dict['video_url'] = emission['videoPlayerUrl'].encode('utf-8')
         emission_dict['image'] = emission['programImage'].encode('utf-8')
-        emission_dict['genre'] = emission['genre'].encode('utf-8')
+        try:
+            emission_dict['genre'] = emission['genre'].encode('utf-8')
+        except:
+            emission_dict['genre'] = 'Unknown'
         try:
             emission_dict['director'] = emission['director'].encode('utf-8')
         except:
