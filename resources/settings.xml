@@ -122,7 +122,7 @@
                 <setting label="30089" type="labelenum" id="channels.fr.tf1.tmc.quality" visible="eq(-1,true) + eq(-17,true)" values="Force HD|Auto"/>  
 
             <setting label="NT1" type="bool" id="channels.fr.tf1.nt1" default="true" visible="false"/>
-                <setting label="30090" type="labelenum" id="channels.fr.tf1.nt1.quality" visible="eq(-1,true) + eq(-9,true)" values="Force HD|Auto"/>  
+                <setting label="30090" type="labelenum" id="channels.fr.tf1.nt1.quality" visible="eq(-1,true) + eq(-19,true)" values="Force HD|Auto"/>  
 
             <setting label="NRJ 12" type="bool" id="channels.fr.nrj.nrj12" default="true" visible="false"/>
                 <setting label="30085" type="labelenum" id="channels.fr.nrj.nrj12.quality" visible="eq(-1,true) + eq(-21,true)" values="Auto|Force HD|Force SD"/>
