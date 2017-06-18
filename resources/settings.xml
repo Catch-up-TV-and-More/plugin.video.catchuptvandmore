@@ -6,7 +6,7 @@
         <!-- Hide main menu categories -->
         <setting label="30010" type="lsep"/>
             <setting label="30020" type="bool" id="main_menu.fr" default="true"/>
-            <!-- <setting label="30021" type="bool" id="main_menu.be" default="true"/> -->
+            <setting label="30021" type="bool" id="main_menu.be" default="true"/>
     </category>
 
 
@@ -85,9 +85,19 @@
             
             <setting label="Chérie 25" type="bool" id="channels.fr.nrj.cherie25" default="true" visible="eq(-45,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.nrj.cherie25.order" default="25"/>
-<!--         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        
+
+        <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
-            <setting label="RTBF" type="bool" id="channels.be.rtbf.rtbf" default="true" visible="eq(-1,true)"/> -->
+<!--             <setting label="La Une" type="bool" id="channels.be.rtbf.laune" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.laune.order" default="1"/>
+            
+            <setting label="La Deux" type="bool" id="channels.be.rtbf.ladeux" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.ladeux.order" default="2"/>
+             -->
+            <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="3"/>
+
 
     </category>
 
