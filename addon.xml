@@ -31,8 +31,9 @@
 [Bug] L'équipe: Fix video quality selection
 [Improvement] Numéro 23: Better categories listing
 [Add channel] RTL-TVI
-[Bug] TF1: Fix wrong Video URL format
+[Bug] TF1 group: Fix wrong Video URL format
 [Bug] TMC, NT1 and HD1: Fix missing setting to set video quality
+[Improvement] TF1 group: Add missing date and duration for videos
     </news> 
     <assets>
       <icon>icon.png</icon>
