@@ -158,7 +158,7 @@ def list_videos_categories(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
 
@@ -191,10 +191,12 @@ def list_videos(params):
                 stitle = ''
 
             try:
-                duration = li.find(
-                    'span',
-                    attrs={'data-format': 'duration'})
-                duration = int(duration.get_text().encode('utf-8'))
+                duration_soup = li.find(
+                    'p',
+                    class_='uptitle').find(
+                        'span',
+                        class_='momentDate')
+                duration = int(duration_soup.get_text().encode('utf-8'))
             except:
                 duration = 0
 
@@ -206,20 +208,26 @@ def list_videos(params):
 
             img = 'http:' + img.split(',')[-1].split(' ')[0]
 
-            # aired = li.find(
-            #     'span',
-            #     attrs={'data-format': None, 'class': 'momentDate'})
-            # aired = aired.get_text().encode('utf-8')
-            # aired = aired.split('T')[0]
-            aired = ''
+            try:
+                date_soup = li.find(
+                    'div',
+                    class_='text').find(
+                        'p',
+                        class_='uptitle').find('span')
 
-            # day = aired.split('-')[2]
-            # mounth = aired.split('-')[1]
-            # year = aired.split('-')[0]
-            # date = '.'.join((day, mounth, year))
-            date =''
-            # date : string (%d.%m.%Y / 01.01.2009)
-            # aired : string (2008-12-07)
+                aired = date_soup['data-date'].encode('utf-8').split('T')[0]
+                day = aired.split('-')[2]
+                mounth = aired.split('-')[1]
+                year = aired.split('-')[0]
+                date = '.'.join((day, mounth, year))
+                # date : string (%d.%m.%Y / 01.01.2009)
+                # aired : string (2008-12-07)
+
+            except:
+                date = ''
+                aired = ''
+                year = 0
+
             program_id = li.find('a')['href'].encode('utf-8')
 
             info = {
@@ -229,7 +237,7 @@ def list_videos(params):
                     'aired': aired,
                     'date': date,
                     'duration': duration,
-                    #'year': int(aired[:4]),
+                    'year': int(aired[:4]),
                     'mediatype': 'tvshow'
                 }
             }
