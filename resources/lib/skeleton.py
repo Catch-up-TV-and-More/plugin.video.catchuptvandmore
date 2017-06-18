@@ -22,8 +22,7 @@
 
 
 categories = {
-    'main_menu.fr': 'French channels',
-    'main_menu.be': 'Belgian channels'
+    'main_menu.fr': 'French channels'
 }
 
 channels = {
@@ -51,12 +50,5 @@ channels = {
         'channels.fr.6play.6ter': '6ter',
         'channels.fr.numero23.numero23': 'Numéro 23',
         'channels.fr.nrj.cherie25': 'Chérie 25'
-
-    },
-
-    'main_menu.be': {
-       # 'channels.be.rtbf.laune': 'La Une',
-       # 'channels.be.rtbf.ladeux': 'La Deux',
-        'channels.be.rtl.rtltvi': 'RTL-TVI'
     }
 }
