@@ -32,6 +32,7 @@
 [Improvement] Numéro 23: Better categories listing
 [Add channel] RTL-TVI
 [Bug] TF1: Fix wrong Video URL format
+[Bug] TMC, NT1 and HD1: Fix missing setting to set video quality
     </news> 
     <assets>
       <icon>icon.png</icon>
