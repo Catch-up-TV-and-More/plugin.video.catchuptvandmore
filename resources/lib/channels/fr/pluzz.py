@@ -30,6 +30,11 @@ from resources.lib import utils
 from resources.lib import common
 import ast
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
+
 channel_catalog = 'http://pluzz.webservices.francetelevisions.fr/' \
                   'pluzz/liste/type/replay/nb/10000/chaine/%s'
 # channel_catalog = 'https://pluzz.webservices.francetelevisions.fr/' \
@@ -114,7 +119,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
-        return get_video_URL(params)
+        return get_video_url(params)
     elif 'search' in params.next:
         return search(params)
 
@@ -333,7 +338,7 @@ def list_shows(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if 'previous_listing' in params:
@@ -471,6 +476,17 @@ def list_videos(params):
                         'director': director
                     }
                 }
+                
+                # Nouveau pour ajouter le menu pour télécharger la vidéo
+                context_menu = []
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                        action='download_video',
+                        id_diffusion=id_diffusion) + ')'
+                )
+                context_menu.append(download_video)
+                # Fin
 
                 videos.append({
                     'label': title,
@@ -482,7 +498,8 @@ def list_videos(params):
                         id_diffusion=id_diffusion
                     ),
                     'is_playable': True,
-                    'info': info
+                    'info': info,
+                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
 
     if 'search' in params.next:
@@ -534,7 +551,7 @@ def list_videos(params):
 
 
 @common.plugin.cached(common.cache_time)
-def get_video_URL(params):
+def get_video_url(params):
         file_prgm = utils.get_webcontent(show_info % (params.id_diffusion))
         json_parser = json.loads(file_prgm)
         url_HD = ''
