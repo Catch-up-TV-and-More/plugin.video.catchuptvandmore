@@ -36,7 +36,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
-        return get_video_URL(params)
+        return get_video_url(params)
 
 
 secret_key = '19nBVBxv791Xs'
