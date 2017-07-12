@@ -297,7 +297,7 @@ def download_video(params):
     print 'URL_VIDEO to download ' + url_video
 
     vid = YDStreamExtractor.getVideoInfo(url_video, quality=3)
-    path = "/tmp"
+    path = common.plugin.get_setting('dlFolder')
 
     with YDStreamUtils.DownloadProgress() as prog:  # This gives a progress dialog interface ready to use
         try:
