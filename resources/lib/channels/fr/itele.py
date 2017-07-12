@@ -24,6 +24,10 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
 
 def channel_entry(params):
     if 'list_shows' in params.next:
@@ -31,7 +35,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
-        return get_video_URL(params)
+        return get_video_url(params)
 
 
 url_category_query = 'http://service.itele.fr/iphone/categorie_news?query='
@@ -130,7 +134,7 @@ def list_shows(params):
         )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if params.next == 'list_videos_cat':
@@ -180,6 +184,17 @@ def list_videos(params):
                 }
             }
 
+	    # Nouveau pour ajouter le menu pour télécharger la vidéo
+	    context_menu = []
+	    download_video = (
+		_('Download'),
+		'XBMC.RunPlugin(' + common.plugin.get_url(
+		    action='download_video',
+		    video_urlhd=video_url) + ')'
+	    )
+	    context_menu.append(download_video)
+	    # Fin
+
             videos.append({
                 'label': title,
                 'thumb': thumb,
@@ -190,7 +205,8 @@ def list_videos(params):
                     video_urlhd=video_url
                 ),
                 'is_playable': True,
-                'info': info
+                'info': info,
+                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
 
     return common.plugin.create_listing(
@@ -204,5 +220,5 @@ def list_videos(params):
         content='tvshows')
 
 
-def get_video_URL(params):
+def get_video_url(params):
     return params.video_urlhd
