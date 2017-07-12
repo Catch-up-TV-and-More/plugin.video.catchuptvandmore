@@ -269,7 +269,7 @@ def list_shows(params):
                 return list_shows(params)
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if 'previous_listing' in params:
