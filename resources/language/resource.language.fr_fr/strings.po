@@ -29,6 +29,9 @@ msgctxt "#30002"
 msgid "Quality and content"
 msgstr "Qualité et contenu"
 
+msgctxt "#30003"
+msgid "Download"
+msgstr "Téléchargement"
 
 # Settings line separators (from 30010 to 30019)
 msgctxt "#30010"
@@ -39,6 +42,9 @@ msgctxt "#30011"
 msgid "Hide channels from categories"
 msgstr "Masquer des chaînes des catégories"
 
+msgctxt "#30012"
+msgid "To configure YTDL go settings of script.module.youtube.dl"
+msgstr "Pour configurer YTDL aller dans la configuration de script.module.youtube.dl"
 
 # Main categories (from 30020 to 30039)
 msgctxt "#30020"
@@ -204,5 +210,11 @@ msgstr "Descendant"
 msgctxt "#30108"
 msgid "More programs..."
 msgstr "Plus de programmes..."
+
+# Download (from 30200 to 30240)
+
+msgctxt "#30200"
+msgid "Folder to Download"
+msgstr "Répertoire de téléchargement"
 
 
