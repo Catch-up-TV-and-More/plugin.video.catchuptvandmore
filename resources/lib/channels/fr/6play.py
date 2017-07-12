@@ -26,6 +26,10 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
 
 # Url to get channel's categories
 # e.g. Info, Divertissement, Séries, ...
@@ -74,7 +78,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
-        return get_video_URL(params)
+        return get_video_url(params)
 
 
 @common.plugin.cached(common.cache_time)
@@ -233,7 +237,7 @@ def list_shows(params):
     return shows
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
 
@@ -288,6 +292,17 @@ def list_videos(params):
                 'mediatype': 'tvshow'
             }
         }
+        
+        # Nouveau pour ajouter le menu pour télécharger la vidéo
+        context_menu = []
+        download_video = (
+	    _('Download'),
+	    'XBMC.RunPlugin(' + common.plugin.get_url(
+		action='download_video',
+		video_id=video_id) + ')'
+	)
+	context_menu.append(download_video)
+	# Fin
 
         videos.append({
             'label': title,
@@ -298,7 +313,8 @@ def list_videos(params):
                 video_id=video_id,
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
         })
 
     return common.plugin.create_listing(
@@ -313,7 +329,7 @@ def list_videos(params):
 
 
 @common.plugin.cached(common.cache_time)
-def get_video_URL(params):
+def get_video_url(params):
     video_json = utils.get_webcontent(
         url_json_video % (params.video_id),
         random_ua=True)
