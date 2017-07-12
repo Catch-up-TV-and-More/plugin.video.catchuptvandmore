@@ -26,6 +26,11 @@ from resources.lib import utils
 from resources.lib import common
 import json
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
+
 url_root = "http://www.tf1.fr/"
 url_time = 'http://www.wat.tv/servertime2/'
 url_token = 'http://api.wat.tv/services/Delivery'
@@ -158,7 +163,7 @@ def list_videos_categories(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
 
@@ -242,6 +247,17 @@ def list_videos(params):
                 }
             }
 
+	    # Nouveau pour ajouter le menu pour télécharger la vidéo
+	    context_menu = []
+	    download_video = (
+		_('Download'),
+                'XBMC.RunPlugin(' + common.plugin.get_url(
+                    action='download_video',
+                    program_id=program_id) + ')'
+            )
+            context_menu.append(download_video)
+            # Fin
+
             videos.append({
                 'label': title,
                 'thumb': img,
@@ -251,7 +267,8 @@ def list_videos(params):
                     program_id=program_id,
                 ),
                 'is_playable': True,
-                'info': info
+                'info': info,
+		'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
 
     return common.plugin.create_listing(
