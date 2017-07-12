@@ -164,4 +164,10 @@
     </category>
     
 
+	<!-- Download ... -->
+	<category label="30003">
+		<setting label="30012" type="lsep"/>
+		<setting label="30200" type="folder" id="dlFolder" source="auto" option="writeable"/>
+	</category>
+
 </settings>
