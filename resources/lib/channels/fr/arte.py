@@ -21,6 +21,7 @@
 """
 
 import json
+import xbmcgui
 from resources.lib import utils
 from resources.lib import common
 
@@ -213,52 +214,21 @@ def get_video_url(params):
         params.url)
     json_parser = json.loads(file_medias)
 
-    url_auto = ''
-    url_hd_plus = ''
-    url_hd = ''
-    url_sd = ''
-    url_sd_minus = ''
+    url_selected = ''    
     video_streams = json_parser['videoJsonPlayer']['VSR']
 
-    if 'HLS_SQ_1' in video_streams:
-        url_auto = video_streams['HLS_SQ_1']['url'].encode('utf-8')
+    all_datas_videos_http = []
 
-    if 'HTTP_MP4_SQ_1' in video_streams:
-        url_hd_plus = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
+    for video in video_streams:
+	if not video.find("HTTP"):
+		datas = json_parser['videoJsonPlayer']['VSR'][video]
+		new_list_item = xbmcgui.ListItem()
+		new_list_item.setLabel(datas['quality'] + " (" + datas['versionLibelle'] + ")")
+		new_list_item.setPath(datas['url'])
+		all_datas_videos_http.append(new_list_item)
 
-    if 'HTTP_MP4_EQ_1' in video_streams:
-        url_hd = video_streams['HTTP_MP4_EQ_1']['url'].encode('utf-8')
+    seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos_http)
 
-    if 'HTTP_MP4_HQ_1' in video_streams:
-        url_sd = video_streams['HTTP_MP4_HQ_1']['url'].encode('utf-8')
+    url_selected = all_datas_videos_http[seleted_item].getPath().encode('utf-8')
 
-    if 'HTTP_MP4_MQ_1' in video_streams:
-        url_sd_minus = video_streams['HTTP_MP4_MQ_1']['url'].encode('utf-8')
-
-    desired_quality = common.plugin.get_setting(
-        params.channel_id + '.quality')
-
-    if desired_quality == 'Auto' and url_auto:
-        return url_auto
-
-    if desired_quality == 'HD+' and url_hd_plus:
-        return url_hd_plus
-    elif url_hd:
-        return url_hd
-
-    if desired_quality == 'HD' and url_hd:
-        return url_hd
-    elif url_hd_plus:
-        return url_hd_plus
-
-    if desired_quality == 'SD' and url_sd:
-        return url_sd
-    elif url_sd_minus:
-        return url_sd_minus
-
-    if desired_quality == 'SD-' and url_sd_minus:
-        return url_sd_minus
-    elif url_sd:
-        return url_sd
-
-    return url_auto
+    return url_selected
