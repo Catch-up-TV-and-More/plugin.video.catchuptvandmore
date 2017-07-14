@@ -101,7 +101,7 @@
     <category label="30002">
 	
 	<setting label="Quality" type="lsep" />
-	<setting label="30087" type="labelenum" id="quality" values="BEST|SD|DIALOG"/>  
+	<setting label="30087" type="labelenum" id="quality" values="BEST|DEFAULT|DIALOG"/>  
         
 	<setting label="Content" type="lsep" />
         <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
