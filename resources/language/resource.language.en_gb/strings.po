@@ -26,7 +26,7 @@ msgid "Channels"
 msgstr ""
 
 msgctxt "#30002"
-msgid "Quality and content"
+msgid "Quality and Content"
 msgstr ""
 
 msgctxt "#30003"
@@ -85,94 +85,13 @@ msgstr ""
 
 
 # Settings quality and content (from 30070 to 30099)
-msgctxt "#30070"
-msgid "TF1: Show bonus videos"
-msgstr ""
-
-msgctxt "#30071"
-msgid "France 2: Video quality"
-msgstr ""
-
-msgctxt "#30072"
-msgid "France 3: Video quality"
-msgstr ""
-
-msgctxt "#30073"
-msgid "France 4: Video quality"
-msgstr ""
-
-msgctxt "#30074"
-msgid "France 5: Video quality"
-msgstr ""
-
-msgctxt "#30075"
-msgid "France Ô: Video quality"
-msgstr ""
-
-msgctxt "#30076"
-msgid "M6: Video quality"
-msgstr ""
-
-msgctxt "#30077"
-msgid "W9: Video quality"
-msgstr ""
-
-msgctxt "#30078"
-msgid "6ter: Video quality"
-msgstr ""
-
-msgctxt "#30079"
-msgid "Arte: Video quality"
-msgstr ""
-
 msgctxt "#30080"
-msgid "Arte: Language"
-msgstr ""
-
-msgctxt "#30081"
-msgid "BFM TV: Video quality"
-msgstr ""
-
-msgctxt "#30082"
-msgid "TMC: Show bonus videos"
-msgstr ""
-
-msgctxt "#30083"
-msgid "NT1: Show bonus videos"
-msgstr ""
-
-msgctxt "#30084"
-msgid "HD1: Show bonus videos"
-msgstr ""
-
-msgctxt "#30085"
-msgid "NRJ 12: Video quality"
-msgstr ""
-
-msgctxt "#30086"
-msgid "L'Équipe: Video quality"
+msgid "Arte: Choose Channel (FR|DE)"
 msgstr ""
 
 msgctxt "#30087"
-msgid "TF1: Video quality"
+msgid "Video quality (BEST|DEFAULT|DIALOG)"
 msgstr ""
-
-msgctxt "#30088"
-msgid "Numéro 23: Video quality"
-msgstr ""
-
-msgctxt "#30089"
-msgid "TMC: Video quality"
-msgstr ""
-
-msgctxt "#30090"
-msgid "NT1: Video quality"
-msgstr ""
-
-msgctxt "#30091"
-msgid "HD1: Video quality"
-msgstr ""
-
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"
