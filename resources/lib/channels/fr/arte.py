@@ -208,7 +208,7 @@ def list_videos(params):
             content='tvshows')
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     file_medias = utils.get_webcontent(
         params.url)
@@ -220,10 +220,10 @@ def get_video_url(params):
     all_datas_videos_http = []
 
     for video in video_streams:
-	if not video.find("HTTP"):
+	if not video.find("HLS"):
 		datas = json_parser['videoJsonPlayer']['VSR'][video]
 		new_list_item = xbmcgui.ListItem()
-		new_list_item.setLabel(datas['quality'] + " (" + datas['versionLibelle'] + ")")
+		new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
 		new_list_item.setPath(datas['url'])
 		all_datas_videos_http.append(new_list_item)
 
