@@ -26,6 +26,7 @@
 
 
 import json
+import xbmcgui
 from resources.lib import utils
 from resources.lib import common
 import ast
@@ -550,25 +551,30 @@ def list_videos(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def get_video_url(params):
         file_prgm = utils.get_webcontent(show_info % (params.id_diffusion))
         json_parser = json.loads(file_prgm)
-        url_HD = ''
-        url_SD = ''
-        for video in json_parser['videos']:
-            if video['format'] == 'hls_v5_os':
-                url_HD = video['url']
-            if video['format'] == 'm3u8-download':
-                url_SD = video['url']
+        
+	url_selected = ''
+	
+	all_datas_videos = []
+	
+	for video in json_parser['videos']:
+	    if video['format'] == 'hls_v5_os' or video['format'] == 'm3u8-download':
+		new_list_item = xbmcgui.ListItem()
+		if video['format'] == 'hls_v5_os':
+		    new_list_item.setLabel("HD")
+		else:
+		    new_list_item.setLabel("SD")
+		new_list_item.setPath(video['url'])
+		all_datas_videos.append(new_list_item)
+		
+	seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
-        desired_quality = common.plugin.get_setting(
-            params.channel_id + '.quality')
-
-        if desired_quality == 'HD' and url_HD is not None:
-            return url_HD
-        else:
-            return url_SD
+	url_selected = all_datas_videos[seleted_item].getPath()
+	
+	return url_selected
 
 
 def search(params):

@@ -217,7 +217,7 @@ def get_video_url(params):
     url_selected = ''    
     video_streams = json_parser['videoJsonPlayer']['VSR']
 
-    all_datas_videos_http = []
+    all_datas_videos = []
 
     for video in video_streams:
 	if not video.find("HLS"):
@@ -225,10 +225,10 @@ def get_video_url(params):
 		new_list_item = xbmcgui.ListItem()
 		new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
 		new_list_item.setPath(datas['url'])
-		all_datas_videos_http.append(new_list_item)
+		all_datas_videos.append(new_list_item)
 
-    seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos_http)
+    seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
-    url_selected = all_datas_videos_http[seleted_item].getPath().encode('utf-8')
+    url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
 
     return url_selected
