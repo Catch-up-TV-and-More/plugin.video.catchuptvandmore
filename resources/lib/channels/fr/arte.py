@@ -22,6 +22,7 @@
 
 import json
 import xbmcgui
+#import m3u8
 from resources.lib import utils
 from resources.lib import common
 
@@ -37,19 +38,29 @@ _ = common.addon.initialize_gettext()
 
 url_replay = 'https://www.arte.tv/papi/tvguide/videos/' \
              'ARTE_PLUS_SEVEN/%s.json?includeLongRights=true'
+
+url_live_arte_fr = 'http://artelive-lh.akamaihd.net/i/' \
+		   'artelive_fr@344805/index_1_av-b.m3u8?sd=10&rebase=on'
+		   
+url_live_arte_de = 'http://artelive-lh.akamaihd.net/i/' \
+		   'artelive_de@393591/index_1_av-b.m3u8?sd=10&rebase=on'
 # Valid languages: F or D
 
 
 def channel_entry(params):
+    # A decommencter quand on es bloquer "Live FR"
+    #return get_video_url(params)
     if 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+    
 
-
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
     emissions_list = []
@@ -58,17 +69,10 @@ def list_shows(params):
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
 
-    if desired_language == 'Auto':
-        if params.channel_country == 'fr':
-            desired_language = 'F'
-        elif params.channel_country == 'de':
-            desired_language = 'D'
-    elif desired_language == 'fr':
+    if desired_language == 'FR':
         desired_language = 'F'
-    elif desired_language == 'de':
-        desired_language = 'D'
     else:
-        desired_language = 'F'
+        desired_language = 'D'
 
     file_path = utils.download_catalog(
         url_replay % desired_language,
@@ -123,6 +127,16 @@ def list_shows(params):
                 window_title=category
             ),
         })
+    
+    shows.append({
+	'label' : 'Live',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='live_cat',
+	    category='live arte',
+	    window_title='live'
+	),
+    })
 
     return common.plugin.create_listing(
         shows,
@@ -187,7 +201,7 @@ def list_videos(params):
                     'thumb': emission['image'],
                     'url': common.plugin.get_url(
                         action='channel_entry',
-                        next='play',
+                        next='play_replay',
                         url=emission['video_url'],
                     ),
                     'is_playable': True,
@@ -207,36 +221,67 @@ def list_videos(params):
             ),
             content='tvshows')
 
+#@common.plugin.cached(common.cache_time)
+def list_live(params):
+    lives = []
+    
+    lives.append({
+	'label': 'Live FR',
+	'url' : common.plugin.get_url(
+	    action='channel_entry',
+	    next='play_live',
+	    url=url_live_arte_fr,
+	),
+	'is_playable': True
+    })
+    
+    lives.append({
+	'label': 'Live DE',
+	'url' : common.plugin.get_url(
+	    action='channel_entry',
+	    next='play_live',
+	    url=url_live_arte_de,
+	),
+	'is_playable': True
+    })
+    
+    return common.plugin.create_listing(
+	lives)
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    file_medias = utils.get_webcontent(
-        params.url)
-    json_parser = json.loads(file_medias)
-
-    url_selected = ''    
-    video_streams = json_parser['videoJsonPlayer']['VSR']
     
-    desired_quality = common.plugin.get_setting('quality')
+    if params.next == 'play_replay':
+	file_medias = utils.get_webcontent(
+	    params.url)
+	json_parser = json.loads(file_medias)
 
-    if desired_quality == "DIALOG":
-	all_datas_videos = []
+	url_selected = ''    
+	video_streams = json_parser['videoJsonPlayer']['VSR']
+	
+	desired_quality = common.plugin.get_setting('quality')
 
-	for video in video_streams:
-	    if not video.find("HLS"):
-		    datas = json_parser['videoJsonPlayer']['VSR'][video]
-		    new_list_item = xbmcgui.ListItem()
-		    new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
-		    new_list_item.setPath(datas['url'])
-		    all_datas_videos.append(new_list_item)
+	if desired_quality == "DIALOG":
+	    all_datas_videos = []
 
-	seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+	    for video in video_streams:
+		if not video.find("HLS"):
+			datas = json_parser['videoJsonPlayer']['VSR'][video]
+			new_list_item = xbmcgui.ListItem()
+			new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
+			new_list_item.setPath(datas['url'])
+			all_datas_videos.append(new_list_item)
 
-	url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
-    
-    elif desired_quality == "BEST":
-	url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
-    else:
-	url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
+	    seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
-    return url_selected
+	    url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
+	
+	elif desired_quality == "BEST":
+	    url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
+	else:
+	    url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
+
+	return url_selected
+    elif params.next == 'play_live':
+	return params.url
+
