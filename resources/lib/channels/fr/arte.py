@@ -22,7 +22,6 @@
 
 import json
 import xbmcgui
-#import m3u8
 from resources.lib import utils
 from resources.lib import common
 
@@ -48,8 +47,7 @@ url_live_arte_de = 'http://artelive-lh.akamaihd.net/i/' \
 
 
 def channel_entry(params):
-    # A decommencter quand on es bloquer "Live FR"
-    #return get_video_url(params)
+
     if 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
@@ -57,7 +55,7 @@ def channel_entry(params):
     elif 'live' in params.next:
 	return list_live(params)
     elif 'play' in params.next:
-        return get_video_url(params)
+        return get_video_url(params)	
     
 
 #@common.plugin.cached(common.cache_time)
@@ -201,7 +199,7 @@ def list_videos(params):
                     'thumb': emission['image'],
                     'url': common.plugin.get_url(
                         action='channel_entry',
-                        next='play_replay',
+                        next='play_r',
                         url=emission['video_url'],
                     ),
                     'is_playable': True,
@@ -226,32 +224,37 @@ def list_live(params):
     lives = []
     
     lives.append({
-	'label': 'Live FR',
+	'label': 'ARTE Live FR',
 	'url' : common.plugin.get_url(
 	    action='channel_entry',
-	    next='play_live',
+	    next='play_l',
 	    url=url_live_arte_fr,
 	),
 	'is_playable': True
     })
     
     lives.append({
-	'label': 'Live DE',
+	'label': 'ARTE Live DE',
 	'url' : common.plugin.get_url(
 	    action='channel_entry',
-	    next='play_live',
+	    next='play_l',
 	    url=url_live_arte_de,
 	),
 	'is_playable': True
     })
     
     return common.plugin.create_listing(
-	lives)
+	lives,
+	sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     
-    if params.next == 'play_replay':
+    if params.next == 'play_r':
 	file_medias = utils.get_webcontent(
 	    params.url)
 	json_parser = json.loads(file_medias)
@@ -282,6 +285,6 @@ def get_video_url(params):
 	    url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
 
 	return url_selected
-    elif params.next == 'play_live':
+    elif params.next == 'play_l':
 	return params.url
 
