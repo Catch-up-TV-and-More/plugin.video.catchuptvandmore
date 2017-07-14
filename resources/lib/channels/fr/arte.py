@@ -216,19 +216,27 @@ def get_video_url(params):
 
     url_selected = ''    
     video_streams = json_parser['videoJsonPlayer']['VSR']
+    
+    desired_quality = common.plugin.get_setting('quality')
 
-    all_datas_videos = []
+    if desired_quality == "DIALOG":
+	all_datas_videos = []
 
-    for video in video_streams:
-	if not video.find("HLS"):
-		datas = json_parser['videoJsonPlayer']['VSR'][video]
-		new_list_item = xbmcgui.ListItem()
-		new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
-		new_list_item.setPath(datas['url'])
-		all_datas_videos.append(new_list_item)
+	for video in video_streams:
+	    if not video.find("HLS"):
+		    datas = json_parser['videoJsonPlayer']['VSR'][video]
+		    new_list_item = xbmcgui.ListItem()
+		    new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
+		    new_list_item.setPath(datas['url'])
+		    all_datas_videos.append(new_list_item)
 
-    seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+	seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
-    url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
+	url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
+    
+    elif desired_quality == "BEST":
+	url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
+    else:
+	url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
 
     return url_selected
