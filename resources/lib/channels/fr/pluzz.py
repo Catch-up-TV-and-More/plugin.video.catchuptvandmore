@@ -602,7 +602,7 @@ def list_live(params):
     url_json_live = channel_live % (real_channel)
     file_path_live = utils.download_catalog(
             url_json_live,
-            '%s.json' % (
+            'live_%s.json' % (
                 params.channel_name))
     file_prgm_live = open(file_path_live).read()
     json_parser_live = json.loads(file_prgm_live)
@@ -620,13 +620,15 @@ def list_live(params):
 	id_diffusion = emission['id_diffusion']
 	chaine_id = emission['chaine_id'].encode('utf-8')
 
-	#if emission['synopsis']:
-	#    plot = emission['synopsis'].encode('utf-8')
-	#if emission['diffusion']['date_debut']:
-	#    date = emission['diffusion']['date_debut']
-	#    date = date.encode('utf-8')
-	#if emission['real_duration']:
-	#    duration = int(emission['real_duration'])
+	if emission['accroche']:
+	    plot = emission['accroche'].encode('utf-8')
+	elif emission['accroche_programme']:
+	    plot = emission['accroche_programme'].encode('utf-8')
+	if emission['date_diffusion']:
+	    date = emission['date_diffusion']
+	    date = date.encode('utf-8')
+	if emission['duree']:
+	    duration = int(emission['duree'])
 	if emission['titre']:
 	    title = emission['titre'].encode('utf-8')
 	#if emission['sous_titre']:
@@ -671,8 +673,8 @@ def list_live(params):
 	# date : string (%d.%m.%Y / 01.01.2009)
 	# aired : string (2008-12-07)
 
-	# image = url_img % (json_parserShow['image'])
-	image = emission['image_small']
+	image = url_img % (emission['image_large'])
+	#image = emission['image_small']
 
 	info = {
 	    'video': {
@@ -680,7 +682,7 @@ def list_live(params):
 		'plot': plot,
 		#'aired': aired,
 		'date': date,
-		#'duration': duration,
+		'duration': duration,
 		#'year': year,
 		'genre': genre,
 		'mediatype': 'tvshow',
