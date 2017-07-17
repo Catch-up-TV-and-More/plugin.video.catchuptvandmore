@@ -175,22 +175,39 @@ def list_channels(params):
 
         icon = media_channel_path + '.png'
         fanart = media_channel_path + '_fanart.png'
-
-        listing.append({
-            'icon': icon,
-            'fanart': fanart,
-            'label': title,
-            'url': common.plugin.get_url(
-                action='channel_entry',
-                next='list_shows_1',
-                channel_name=channel_name,
-                channel_module=channel_module,
-                channel_id=channel_id,
-                channel_country=channel_country,
-                window_title=title
-            ),
-            'context_menu': context_menu
-        })
+	
+	if 'pluzz' in channel_module or 'arte' in channel_module:
+	    listing.append({
+		'icon': icon,
+		'fanart': fanart,
+		'label': title,
+		'url': common.plugin.get_url(
+		    action='channel_entry',
+		    next='mode_replay_live',
+		    channel_name=channel_name,
+		    channel_module=channel_module,
+		    channel_id=channel_id,
+		    channel_country=channel_country,
+		    window_title=title
+		),
+		'context_menu': context_menu
+	    })
+	else:
+	    listing.append({
+		'icon': icon,
+		'fanart': fanart,
+		'label': title,
+		'url': common.plugin.get_url(
+		    action='channel_entry',
+		    next='list_shows_1',
+		    channel_name=channel_name,
+		    channel_module=channel_module,
+		    channel_id=channel_id,
+		    channel_country=channel_country,
+		    window_title=title
+		),
+		'context_menu': context_menu
+	    })
 
     return common.plugin.create_listing(
         listing,
