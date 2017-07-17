@@ -38,8 +38,7 @@ _ = common.addon.initialize_gettext()
 url_replay = 'https://www.arte.tv/papi/tvguide/videos/' \
              'ARTE_PLUS_SEVEN/%s.json?includeLongRights=true'
 
-url_live_arte = 'http://artelive-lh.akamaihd.net/i/' \
-		   '%s/%s?sd=10&rebase=on'
+url_live_arte = 'http://artelive-lh.akamaihd.net/i/%s/master.m3u8'
 
 live_fr = 'artelive_fr@344805'
 live_de = 'artelive_de@393591'
@@ -247,42 +246,22 @@ def list_videos(params):
 def list_live(params):
     lives = []
     
-    sd='index_3_av-p.m3u8'
-    hd='index_1_av-p.m3u8'
-    
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
     
-    url_live_hd = ''
+    url_live = ''
     
     if desired_language == 'D':
-	url_live_hd = url_live_arte % (live_de,hd)
+	url_live = url_live_arte % (live_de)
     else:
-	url_live_hd = url_live_arte % (live_fr,hd)
+	url_live = url_live_arte % (live_fr)
     
     lives.append({
-	'label': 'ARTE Live HD',
+	'label': 'ARTE Live',
 	'url' : common.plugin.get_url(
 	    action='channel_entry',
 	    next='play_l',
-	    url=url_live_hd,
-	),
-	'is_playable': True
-    })
-    
-    url_live_sd = ''
-    
-    if desired_language == 'D':
-	url_live_sd = url_live_arte % (live_de,sd)
-    else:
-	url_live_sd = url_live_arte % (live_fr,sd)
-    
-    lives.append({
-	'label': 'ARTE Live SD',
-	'url' : common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_l',
-	    url=url_live_sd,
+	    url=url_live,
 	),
 	'is_playable': True
     })
