@@ -89,6 +89,9 @@
 	    <setting label="La 1ère (Outre-Mer)" type="bool" id="channels.fr.pluzz.la_1ere" default="true" visible="eq(-47,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.la_1ere" default="27"/>
 	    
+	    <setting label="France Info" type="bool" id="channels.fr.pluzz.franceinfo" default="true" visible="eq(-49,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.franceinfo" default="28"/>
+	    
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
