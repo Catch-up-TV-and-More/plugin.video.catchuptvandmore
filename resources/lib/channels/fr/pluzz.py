@@ -119,7 +119,9 @@ categories = {
 
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+	return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
@@ -137,6 +139,40 @@ def change_to_nicer_name(original_name):
         return categories_display[original_name]
     return original_name
 
+
+#@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay 
+    modes.append({
+	'label' : 'Replay',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='list_shows_1',
+	    category='Replay',
+	    window_title='Replay'
+	),
+    })
+    
+    # Add Live 
+    modes.append({
+	'label' : 'Live TV',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='live_cat',
+	    category='Live',
+	    window_title='Live'
+	),
+    })
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
@@ -160,19 +196,7 @@ def list_shows(params):
 
     # Level 0
     if params.next == 'list_shows_1':
-	
-	# Add Live 
-	if params.channel_name != 'la_1ere':
-	    shows.append({
-		'label' : 'Live TV',
-		'url': common.plugin.get_url(
-		    action='channel_entry',
-		    next='live_cat',
-		    category='live',
-		    window_title='live'
-		),
-	    })
-	
+		
         url_json = channel_catalog % (real_channel)
         file_path = utils.download_catalog(
             url_json,
@@ -598,27 +622,27 @@ def list_live(params):
 
 	#if emission['synopsis']:
 	#    plot = emission['synopsis'].encode('utf-8')
-	if emission['diffusion']['date_debut']:
-	    date = emission['diffusion']['date_debut']
-	    date = date.encode('utf-8')
-	if emission['real_duration']:
-	    duration = int(emission['real_duration'])
+	#if emission['diffusion']['date_debut']:
+	#    date = emission['diffusion']['date_debut']
+	#    date = date.encode('utf-8')
+	#if emission['real_duration']:
+	#    duration = int(emission['real_duration'])
 	if emission['titre']:
 	    title = emission['titre'].encode('utf-8')
-	if emission['sous_titre']:
-	    title = ' '.join((
-		title,
-		'- [I]',
-		emission['sous_titre'].encode('utf-8'),
-		'[/I]'))
+	#if emission['sous_titre']:
+	#    title = ' '.join((
+	#	title,
+	#	'- [I]',
+	#	emission['sous_titre'].encode('utf-8'),
+	#	'[/I]'))
 
 	if emission['genre'] != '':
 	    genre = \
 		emission['genre'].encode('utf-8')
 
 	episode = 0
-	if 'episode' in json_parserShow:
-	    episode = json_parserShow['episode']
+	if 'episode' in emission:
+	    episode = emission['episode']
 
 	season = 0
 	if 'saison' in emission:
@@ -626,38 +650,38 @@ def list_live(params):
 
 	cast = []
 	director = ''
-	personnes = emission['personnes']
-	for personne in personnes:
-	    fonctions = ' '.join(
-		x.encode('utf-8') for x in personne['fonctions'])
-	    if 'Acteur' in fonctions:
-		cast.append(
-		    personne['nom'].encode(
-			'utf-8') + ' ' + personne['prenom'].encode(
-			    'utf-8'))
-	    elif 'Réalisateur' in fonctions:
-		director = personne['nom'].encode(
-		    'utf-8') + ' ' + personne['prenom'].encode('utf-8')
+	#personnes = emission['personnes']
+	#for personne in personnes:
+	#    fonctions = ' '.join(
+	#	x.encode('utf-8') for x in personne['fonctions'])
+	#    if 'Acteur' in fonctions:
+	#	cast.append(
+	#	    personne['nom'].encode(
+	#		'utf-8') + ' ' + personne['prenom'].encode(
+	#		    'utf-8'))
+	#    elif 'Réalisateur' in fonctions:
+	#	director = personne['nom'].encode(
+	#	    'utf-8') + ' ' + personne['prenom'].encode('utf-8')
 
-	year = int(date[6:10])
-	day = date[:2]
-	month = date[3:5]
-	date = '.'.join((day, month, str(year)))
-	aired = '-'.join((str(year), month, day))
+	#year = int(date[6:10])
+	#day = date[:2]
+	#month = date[3:5]
+	#date = '.'.join((day, month, str(year)))
+	#aired = '-'.join((str(year), month, day))
 	# date : string (%d.%m.%Y / 01.01.2009)
 	# aired : string (2008-12-07)
 
 	# image = url_img % (json_parserShow['image'])
-	image = emission['image_secure']
+	image = emission['image_small']
 
 	info = {
 	    'video': {
 		'title': title,
 		'plot': plot,
-		'aired': aired,
+		#'aired': aired,
 		'date': date,
-		'duration': duration,
-		'year': year,
+		#'duration': duration,
+		#'year': year,
 		'genre': genre,
 		'mediatype': 'tvshow',
 		'season': season,

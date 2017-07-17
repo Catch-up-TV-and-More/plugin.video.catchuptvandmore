@@ -38,17 +38,19 @@ _ = common.addon.initialize_gettext()
 url_replay = 'https://www.arte.tv/papi/tvguide/videos/' \
              'ARTE_PLUS_SEVEN/%s.json?includeLongRights=true'
 
-url_live_arte_fr = 'http://artelive-lh.akamaihd.net/i/' \
-		   'artelive_fr@344805/index_1_av-b.m3u8?sd=10&rebase=on'
-		   
-url_live_arte_de = 'http://artelive-lh.akamaihd.net/i/' \
-		   'artelive_de@393591/index_1_av-b.m3u8?sd=10&rebase=on'
+url_live_arte = 'http://artelive-lh.akamaihd.net/i/' \
+		   '%s/%s?sd=10&rebase=on'
+
+live_fr = 'artelive_fr@344805'
+live_de = 'artelive_de@393591'
 # Valid languages: F or D
 
 
 def channel_entry(params):
 
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+	return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
@@ -56,7 +58,39 @@ def channel_entry(params):
 	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)	
+
+#@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
     
+    # Add Replay 
+    modes.append({
+	'label' : 'Replay',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='list_shows_1',
+	    category='Replay',
+	    window_title='Replay'
+	),
+    })
+    
+    modes.append({
+	'label' : 'Live TV',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='live_cat',
+	    category='Live',
+	    window_title='Live'
+	),
+    })
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
@@ -67,10 +101,10 @@ def list_shows(params):
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
 
-    if desired_language == 'FR':
-        desired_language = 'F'
-    else:
+    if desired_language == 'DE':
         desired_language = 'D'
+    else:
+        desired_language = 'F'
 
     file_path = utils.download_catalog(
         url_replay % desired_language,
@@ -125,16 +159,6 @@ def list_shows(params):
                 window_title=category
             ),
         })
-    
-    shows.append({
-	'label' : 'Live',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='live arte',
-	    window_title='live'
-	),
-    })
 
     return common.plugin.create_listing(
         shows,
@@ -223,26 +247,46 @@ def list_videos(params):
 def list_live(params):
     lives = []
     
+    sd='index_3_av-p.m3u8'
+    hd='index_1_av-p.m3u8'
+    
+    desired_language = common.plugin.get_setting(
+        params.channel_id + '.language')
+    
+    url_live_hd = ''
+    
+    if desired_language == 'D':
+	url_live_hd = url_live_arte % (live_de,hd)
+    else:
+	url_live_hd = url_live_arte % (live_fr,hd)
+    
     lives.append({
-	'label': 'ARTE Live FR',
+	'label': 'ARTE Live HD',
 	'url' : common.plugin.get_url(
 	    action='channel_entry',
 	    next='play_l',
-	    url=url_live_arte_fr,
+	    url=url_live_hd,
 	),
 	'is_playable': True
     })
     
+    url_live_sd = ''
+    
+    if desired_language == 'D':
+	url_live_sd = url_live_arte % (live_de,sd)
+    else:
+	url_live_sd = url_live_arte % (live_fr,sd)
+    
     lives.append({
-	'label': 'ARTE Live DE',
+	'label': 'ARTE Live SD',
 	'url' : common.plugin.get_url(
 	    action='channel_entry',
 	    next='play_l',
-	    url=url_live_arte_de,
+	    url=url_live_sd,
 	),
 	'is_playable': True
     })
-    
+        
     return common.plugin.create_listing(
 	lives,
 	sort_methods=(
