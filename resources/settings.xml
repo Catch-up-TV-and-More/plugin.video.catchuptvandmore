@@ -86,17 +86,20 @@
             <setting label="Chérie 25" type="bool" id="channels.fr.nrj.cherie25" default="true" visible="eq(-45,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.nrj.cherie25.order" default="23"/>
 	    
-	    	<setting label="La 1ère (Outre-Mer)" type="bool" id="channels.fr.pluzz.la_1ere" default="true" visible="eq(-47,true)"/>
+	    <setting label="La 1ère (Outre-Mer)" type="bool" id="channels.fr.pluzz.la_1ere" default="true" visible="eq(-47,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.la_1ere.order" default="24"/>
 	    
-	    	<setting label="France Info" type="bool" id="channels.fr.pluzz.franceinfo" default="true" visible="eq(-49,true)"/>
+	    <setting label="France Info" type="bool" id="channels.fr.pluzz.franceinfo" default="true" visible="eq(-49,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.franceinfo.order" default="25"/>
 	    
-	    	<setting label="BFM Business" type="bool" id="channels.fr.bfmtv.bfmbusiness" default="true" visible="eq(-51,true)"/>
+	    <setting label="BFM Business" type="bool" id="channels.fr.bfmtv.bfmbusiness" default="true" visible="eq(-51,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.bfmbusiness.order" default="26"/>
 	    
-	    	<setting label="RMC" type="bool" id="channels.fr.bfmtv.rmc" default="true" visible="eq(-53,true)"/>
+	    <setting label="RMC" type="bool" id="channels.fr.bfmtv.rmc" default="true" visible="eq(-53,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.rmc.order" default="27"/>
+	    
+	    <setting label="01Net TV" type="bool" id="channels.fr.bfmtv.01net" default="true" visible="eq(-55,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.bfmtv.01net.order" default="28"/>
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
