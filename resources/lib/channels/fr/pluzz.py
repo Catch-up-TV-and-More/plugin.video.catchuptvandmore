@@ -640,12 +640,6 @@ def list_live(params):
 		duration = int(emission['duree'])
 	    if emission['titre']:
 		title = emission['titre'].encode('utf-8')
-	    #if emission['sous_titre']:
-	    #    title = ' '.join((
-	    #	title,
-	    #	'- [I]',
-	    #	emission['sous_titre'].encode('utf-8'),
-	    #	'[/I]'))
 
 	    if emission['genre'] != '':
 		genre = \
@@ -661,38 +655,27 @@ def list_live(params):
 
 	    cast = []
 	    director = ''
-	    #personnes = emission['personnes']
-	    #for personne in personnes:
-	    #    fonctions = ' '.join(
-	    #	x.encode('utf-8') for x in personne['fonctions'])
-	    #    if 'Acteur' in fonctions:
-	    #	cast.append(
-	    #	    personne['nom'].encode(
-	    #		'utf-8') + ' ' + personne['prenom'].encode(
-	    #		    'utf-8'))
-	    #    elif 'Réalisateur' in fonctions:
-	    #	director = personne['nom'].encode(
-	    #	    'utf-8') + ' ' + personne['prenom'].encode('utf-8')
+	    if emission['realisateurs'] in emission:
+		director = emission['realisateurs'].encode('utf-8')
+	    if emission['acteurs'] in emission:
+		cast.append(emission['acteurs'].encode('utf-8'))
 
-	    #year = int(date[6:10])
-	    #day = date[:2]
-	    #month = date[3:5]
-	    #date = '.'.join((day, month, str(year)))
-	    #aired = '-'.join((str(year), month, day))
-	    # date : string (%d.%m.%Y / 01.01.2009)
-	    # aired : string (2008-12-07)
+	    year = int(date[:4])
+	    month = int(date[5:7])
+	    day = int(date[8:10])
+	    aired = '-'.join((str(year), str(month), str(day)))
+
 
 	    image = url_img % (emission['image_large'])
-	    #image = emission['image_small']
 
 	    info = {
 		'video': {
 		    'title': title,
 		    'plot': plot,
-		    #'aired': aired,
+		    'aired': aired,
 		    'date': date,
 		    'duration': duration,
-		    #'year': year,
+		    #year': year,
 		    'genre': genre,
 		    'mediatype': 'tvshow',
 		    'season': season,
@@ -719,23 +702,13 @@ def list_live(params):
 		'video': {
 		    'title': title,
 		    'plot': plot,
-		    #'aired': aired,
 		    'date': date,
-		    'duration': duration,
-		    #'year': year,
-		    #'genre': genre,
-		    #'mediatype': 'tvshow',
-		    #'season': season,
-		    #'episode': episode,
-		    #'cast': cast,
-		    #'director': director
+		    'duration': duration
 		}
 	    }
 
 	lives.append({
 	    'label': 'Open Stream',
-	    #'fanart': image,
-	    #'thumb': image,
 	    'url': common.plugin.get_url(
 		action='channel_entry',
 		next='play_l'
@@ -756,7 +729,7 @@ def list_live(params):
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     
-    if params.next == 'play_r':
+    if params.next == 'play_r' or params.next == 'download_video':
         file_prgm = utils.get_webcontent(show_info % (params.id_diffusion))
         json_parser = json.loads(file_prgm)
 	

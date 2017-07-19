@@ -277,7 +277,7 @@ def list_live(params):
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     
-    if params.next == 'play_r':
+    if params.next == 'play_r' or params.next == 'download_video':
 	file_medias = utils.get_webcontent(
 	    params.url)
 	json_parser = json.loads(file_medias)
