@@ -25,6 +25,11 @@ from resources.lib import utils
 from resources.lib import common
 import ast
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
+
 url_token = 'http://api.nextradiotv.com/bfmtv-applications/'
 
 url_menu = 'http://www.bfmtv.com/static/static-mobile/bfmtv/' \
@@ -56,7 +61,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
-        return get_video_URL(params)
+        return get_video_url(params)
 
 
 @common.plugin.cached(common.cache_time)
@@ -100,7 +105,7 @@ def list_shows(params):
         )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if 'previous_listing' in params:
@@ -141,7 +146,18 @@ def list_videos(params):
                     'mediatype': 'tvshow'
                 }
             }
-
+            
+	    # Nouveau pour ajouter le menu pour télécharger la vidéo
+	    context_menu = []
+	    download_video = (
+		_('Download'),
+		'XBMC.RunPlugin(' + common.plugin.get_url(
+		    action='download_video',
+		    video_id=video_id) + ')'
+	    )
+	    context_menu.append(download_video)
+	    # Fin
+	
             videos.append({
                 'label': title,
                 'thumb': image,
@@ -152,7 +168,8 @@ def list_videos(params):
                     video_id_ext=video_id_ext
                 ),
                 'is_playable': True,
-                'info': info
+                'info': info,
+                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
 
         # More videos...
@@ -186,7 +203,7 @@ def list_videos(params):
 
 
 @common.plugin.cached(common.cache_time)
-def get_video_URL(params):
+def get_video_url(params):
     file_medias = utils.get_webcontent(
         url_video % (get_token(), params.video_id))
     json_parser = json.loads(file_medias)
@@ -208,27 +225,9 @@ def get_video_URL(params):
             url_hd_plus = media['video_url'].encode('utf-8')
         url_default = media['video_url'].encode('utf-8')
 
-    desired_quality = common.plugin.get_setting(
-        params.channel_id + '.quality')
+    desired_quality = common.plugin.get_setting('quality')
 
-    if desired_quality == 'HD+' and url_hd_plus:
+    if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_hd_plus != '':
         return url_hd_plus
-    elif url_hd:
-        return url_hd
-
-    if desired_quality == 'HD' and url_hd:
-        return url_hd
-    elif url_hd_plus:
-        return url_hd_plus
-
-    if desired_quality == 'SD' and url_sd:
-        return url_sd
-    elif url_sd_minus:
-        return url_sd_minus
-
-    if desired_quality == 'SD-' and url_sd_minus:
-        return url_sd_minus
-    elif url_sd:
-        return url_sd
-
-    return url_default
+    else:
+        return url_default

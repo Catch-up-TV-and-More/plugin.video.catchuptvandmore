@@ -24,6 +24,11 @@ from resources.lib import utils
 from resources.lib import common
 from bs4 import BeautifulSoup as bs
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
+
 url_replay = 'http://www.nrj-play.fr/%s/replay'
 # channel_name (nrj12, ...)
 
@@ -226,7 +231,7 @@ def list_shows(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
 
@@ -284,6 +289,17 @@ def list_videos(params):
                     }
                 }
 
+		# Nouveau pour ajouter le menu pour télécharger la vidéo
+		context_menu = []
+		download_video = (
+		    _('Download'),
+		    'XBMC.RunPlugin(' + common.plugin.get_url(
+			action='download_video',
+			url_video=url) + ')'
+		)
+		context_menu.append(download_video)
+		# Fin
+
                 videos.append({
                     'label': title,
                     'thumb': img,
@@ -293,7 +309,8 @@ def list_videos(params):
                         url_video=url
                     ),
                     'is_playable': True,
-                    'info': info
+                    'info': info,
+                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
     # others url case
     else:
@@ -340,6 +357,17 @@ def list_videos(params):
                     'mediatype': 'tvshow'
                 }
             }
+	    
+	    # Nouveau pour ajouter le menu pour télécharger la vidéo
+	    context_menu = []
+	    download_video = (
+		_('Download'),
+		'XBMC.RunPlugin(' + common.plugin.get_url(
+		    action='download_video',
+		    url_video=url) + ')'
+	    )
+	    context_menu.append(download_video)
+	    # Fin
 
             videos.append({
                 'label': title,
@@ -350,7 +378,8 @@ def list_videos(params):
                     url_video=url
                 ),
                 'is_playable': True,
-                'info': info
+                'info': info,
+		'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
 
         # More videos...
@@ -386,6 +415,10 @@ def get_video_url(params):
         url_video = url_root + params.url_video
     video_html = utils.get_webcontent(
         url_video)
+    
+    if params.next == 'download_video':
+	return url_video
+	
     video_soup = bs(video_html, 'html.parser')
     return video_soup.find(
         'meta',
