@@ -25,32 +25,28 @@ from resources.lib import utils
 from resources.lib import common
 import ast
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
-
-url_token = 'http://api.nextradiotv.com/bfmtv-applications/'
+url_token = 'http://api.nextradiotv.com/%s-applications/'
+#channel
 
 url_menu = 'http://www.bfmtv.com/static/static-mobile/bfmtv/' \
            'ios-smartphone/v0/configuration.json'
 
-url_replay = 'http://api.nextradiotv.com/bfmtv-applications/%s/' \
+url_replay = 'http://api.nextradiotv.com/%s-applications/%s/' \
              'getPage?pagename=replay'
-# token
+# channel, token
 
-url_show = 'http://api.nextradiotv.com/bfmtv-applications/%s/' \
+url_show = 'http://api.nextradiotv.com/%s-applications/%s/' \
            'getVideosList?category=%s&count=100&page=%s'
-# token, category, page_number
+# channel, token, category, page_number
 
-url_video = 'http://api.nextradiotv.com/bfmtv-applications/%s/' \
+url_video = 'http://api.nextradiotv.com/%s-applications/%s/' \
             'getVideo?idVideo=%s'
-# token, video_id
+# channel, token, video_id
 
 
 @common.plugin.cached(common.cache_time)
-def get_token():
-    file_token = utils.get_webcontent(url_token)
+def get_token(channel_name):
+    file_token = utils.get_webcontent(url_token % (channel_name))
     token_json = json.loads(file_token)
     return token_json['session']['token'].encode('utf-8')
 
@@ -71,7 +67,7 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
-            url_replay % get_token(),
+            url_replay % (params.channel_name, get_token(params.channel_name)),
             '%s.json' % (params.channel_name))
         file_categories = open(file_path).read()
         json_categories = json.loads(file_categories)
@@ -114,7 +110,8 @@ def list_videos(params):
     if params.next == 'list_videos_1':
         file_path = utils.download_catalog(
             url_show % (
-                get_token(),
+                params.channel_name, 
+		get_token(params.channel_name),
                 params.category,
                 params.page),
             '%s_%s_%s.json' % (
@@ -146,18 +143,7 @@ def list_videos(params):
                     'mediatype': 'tvshow'
                 }
             }
-            
-	    # Nouveau pour ajouter le menu pour télécharger la vidéo
-	    context_menu = []
-	    download_video = (
-		_('Download'),
-		'XBMC.RunPlugin(' + common.plugin.get_url(
-		    action='download_video',
-		    video_id=video_id) + ')'
-	    )
-	    context_menu.append(download_video)
-	    # Fin
-	
+            	
             videos.append({
                 'label': title,
                 'thumb': image,
@@ -168,8 +154,7 @@ def list_videos(params):
                     video_id_ext=video_id_ext
                 ),
                 'is_playable': True,
-                'info': info,
-                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                'info': info
             })
 
         # More videos...
@@ -205,7 +190,7 @@ def list_videos(params):
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
     file_medias = utils.get_webcontent(
-        url_video % (get_token(), params.video_id))
+        url_video % (params.channel_name, get_token(params.channel_name), params.video_id))
     json_parser = json.loads(file_medias)
 
     url_hd_plus = ''
