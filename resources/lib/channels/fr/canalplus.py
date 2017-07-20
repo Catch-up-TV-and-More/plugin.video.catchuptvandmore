@@ -26,6 +26,10 @@ from resources.lib import utils
 from resources.lib import common
 import ast
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
 
 url_auth = 'http://service.mycanal.fr/authenticate.json/iphone/' \
            '1.6?highResolution=1&isActivated=0&isAuthenticated=0&paired=0'
@@ -40,7 +44,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
-        return get_video_URL(params)
+        return get_video_url(params)
 
 
 def get_token():
@@ -265,7 +269,7 @@ def list_shows(params):
                 return list_shows(params)
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if 'previous_listing' in params:
@@ -353,6 +357,17 @@ def list_videos(params):
 
                 }
             }
+            
+	    # Nouveau pour ajouter le menu pour télécharger la vidéo
+	    context_menu = []
+	    download_video = (
+		_('Download'),
+		'XBMC.RunPlugin(' + common.plugin.get_url(
+		    action='download_video',
+		    url_media=url_media) + ')'
+	    )
+	    context_menu.append(download_video)
+	    # Fin
 
             videos.append({
                 'label': title,
@@ -366,7 +381,8 @@ def list_videos(params):
                     fanart=params.fanart
                 ),
                 'info': info,
-                'is_playable': True
+                'is_playable': True,
+                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
 
         if more_videos is True:
@@ -400,7 +416,7 @@ def list_videos(params):
 
 
 @common.plugin.cached(common.cache_time)
-def get_video_URL(params):
+def get_video_url(params):
     file_path = utils.get_webcontent(params.url_media)
     media_json = json.loads(file_path)
     url = media_json['detail']['informations']['VoD']['videoURL'].encode('utf-8')

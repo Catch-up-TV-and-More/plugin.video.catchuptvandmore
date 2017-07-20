@@ -25,6 +25,11 @@ from resources.lib import utils
 from resources.lib import common
 import re
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
+
 url_root = 'http://www.numero23.fr/programmes/'
 
 
@@ -117,7 +122,7 @@ def list_shows(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
 
@@ -148,6 +153,17 @@ def list_videos(params):
             }
         }
 
+        # Nouveau pour ajouter le menu pour télécharger la vidéo
+        context_menu = []
+        download_video = (
+	    _('Download'),
+	    'XBMC.RunPlugin(' + common.plugin.get_url(
+		action='download_video',
+		video_url=video_url) + ')'
+	)
+	context_menu.append(download_video)
+	# Fin
+
         videos.append({
             'label': video_title,
             'thumb': video_img,
@@ -157,7 +173,8 @@ def list_videos(params):
                 video_url=video_url
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
         })
 
     return common.plugin.create_listing(
@@ -182,34 +199,32 @@ def get_video_url(params):
 
     html_daily = utils.get_webcontent(
         url_daily,)
-
-    html_daily = html_daily.replace('\\', '')
-
-    urls_mp4 = re.compile(
-        r'{"type":"video/mp4","url":"(.*?)"}],"(.*?)"').findall(html_daily)
-
-    url_sd = ""
-    url_hd = ""
-    url_hdplus = ""
-    url_default = ""
-
-    for url, quality in urls_mp4:
-        if quality == '480':
-            url_sd = url
-        elif quality == '720':
-            url_hd = url
-        elif quality == '1080':
-            url_hdplus = url
-        url_default = url
-
-    desired_quality = common.plugin.get_setting(
-        params.channel_id + '.quality')
-
-    if desired_quality == 'HD+' and url_hdplus:
-        return url_hdplus
-    elif desired_quality == 'HD' and url_hd:
-        return url_hd
-    elif desired_quality == 'SD' and url_sd:
-        return url_sd
+    
+    if params.next == 'download_video':
+	return url_daily
     else:
-        return url_default
+	html_daily = html_daily.replace('\\', '')
+
+	urls_mp4 = re.compile(
+	    r'{"type":"video/mp4","url":"(.*?)"}],"(.*?)"').findall(html_daily)
+
+	url_sd = ""
+	url_hd = ""
+	url_hdplus = ""
+	url_default = ""
+
+	for url, quality in urls_mp4:
+	    if quality == '480':
+		url_sd = url
+	    elif quality == '720':
+		url_hd = url
+	    elif quality == '1080':
+		url_hdplus = url
+	    url_default = url
+
+	desired_quality = common.plugin.get_setting('quality')
+
+	if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_hdplus:
+	    return url_hdplus
+	else:
+	    return url_default

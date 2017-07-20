@@ -50,7 +50,12 @@ channels = {
         'channels.fr.lequipe.lequipe': 'L\'Équipe',
         'channels.fr.6play.6ter': '6ter',
         'channels.fr.numero23.numero23': 'Numéro 23',
-        'channels.fr.nrj.cherie25': 'Chérie 25'
+        'channels.fr.nrj.cherie25': 'Chérie 25',
+	'channels.fr.pluzz.la_1ere': 'La 1ère (Outre-Mer)',
+	'channels.fr.pluzz.franceinfo': 'France Info',
+	'channels.fr.bfmtv.bfmbusiness': 'BFM Business',
+	'channels.fr.bfmtv.rmc': 'RMC',
+	'channels.fr.bfmtv.01net': '01Net TV'
 
     },
 

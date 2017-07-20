@@ -26,9 +26,12 @@ msgid "Channels"
 msgstr "Chaînes"
 
 msgctxt "#30002"
-msgid "Quality and content"
-msgstr "Qualité et contenu"
+msgid "Quality and Content"
+msgstr "Qualité et Contenu"
 
+msgctxt "#30003"
+msgid "Download"
+msgstr "Téléchargement"
 
 # Settings line separators (from 30010 to 30019)
 msgctxt "#30010"
@@ -39,6 +42,9 @@ msgctxt "#30011"
 msgid "Hide channels from categories"
 msgstr "Masquer des chaînes des catégories"
 
+msgctxt "#30012"
+msgid "To configure YTDL go settings of script.module.youtube.dl"
+msgstr "Pour configurer YTDL aller dans la configuration de script.module.youtube.dl"
 
 # Main categories (from 30020 to 30039)
 msgctxt "#30020"
@@ -79,94 +85,13 @@ msgstr "Pour réactiver les éléments masqués rendez-vous dans les réglages d
 
 
 # Settings quality and content (from 30070 to 30099)
-msgctxt "#30070"
-msgid "TF1: Show bonus videos"
-msgstr "TF1 : Afficher les vidéos bonus"
-
-msgctxt "#30071"
-msgid "France 2: Video quality"
-msgstr "France 2 : Qualité vidéo"
-
-msgctxt "#30072"
-msgid "France 3: Video quality"
-msgstr "France 3 : Qualité vidéo"
-
-msgctxt "#30073"
-msgid "France 4: Video quality"
-msgstr "France 4 : Qualité vidéo"
-
-msgctxt "#30074"
-msgid "France 5: Video quality"
-msgstr "France 5 : Qualité vidéo"
-
-msgctxt "#30075"
-msgid "France Ô: Video quality"
-msgstr "France Ô : Qualité vidéo"
-
-msgctxt "#30076"
-msgid "M6: Video quality"
-msgstr "M6 : Qualité vidéo"
-
-msgctxt "#30077"
-msgid "W9: Video quality"
-msgstr "W9 : Qualité vidéo"
-
-msgctxt "#30078"
-msgid "6ter: Video quality"
-msgstr "6ter : Qualité vidéo"
-
-msgctxt "#30079"
-msgid "Arte: Video quality"
-msgstr "Arte : Qualité vidéo"
-
 msgctxt "#30080"
-msgid "Arte: Language"
-msgstr "Arte : Langue"
-
-msgctxt "#30081"
-msgid "BFM TV: Video quality"
-msgstr "BFM TV : Qualité vidéo"
-
-msgctxt "#30082"
-msgid "TMC: Show bonus videos"
-msgstr "TMC : Afficher les vidéos bonus"
-
-msgctxt "#30083"
-msgid "NT1: Show bonus videos"
-msgstr "NT1 : Afficher les vidéos bonus"
-
-msgctxt "#30084"
-msgid "HD1: Show bonus videos"
-msgstr "HD1 : Afficher les vidéos bonus"
-
-msgctxt "#30085"
-msgid "NRJ 12: Video quality"
-msgstr "NRJ 12 : Qualité vidéo"
-
-msgctxt "#30086"
-msgid "L'Équipe: Video quality"
-msgstr "L'Équipe : Qualité vidéo"
+msgid "Arte: Choose Channel (FR|DE)"
+msgstr "Arte: Choix de la chaine (FR|DE)"
 
 msgctxt "#30087"
-msgid "TF1: Video quality"
-msgstr "TF1 : Qualité vidéo"
-
-msgctxt "#30088"
-msgid "Numéro 23: Video quality"
-msgstr "Numéro 23 : Qualité vidéo"
-
-msgctxt "#30089"
-msgid "TMC: Video quality"
-msgstr "TMC : Qualité vidéo"
-
-msgctxt "#30090"
-msgid "NT1: Video quality"
-msgstr "NT1 : Qualité vidéo"
-
-msgctxt "#30091"
-msgid "HD1: Video quality"
-msgstr "HD1 : Qualité vidéo"
-
+msgid "Video quality (BEST|DEFAULT|DIALOG)"
+msgstr "Qualité Video (BEST|DEFAULT|DIALOG)"
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"
@@ -204,5 +129,11 @@ msgstr "Descendant"
 msgctxt "#30108"
 msgid "More programs..."
 msgstr "Plus de programmes..."
+
+# Download (from 30200 to 30240)
+
+msgctxt "#30200"
+msgid "Folder to Download"
+msgstr "Répertoire de téléchargement"
 
 

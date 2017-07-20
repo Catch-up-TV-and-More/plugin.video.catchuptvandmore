@@ -175,22 +175,39 @@ def list_channels(params):
 
         icon = media_channel_path + '.png'
         fanart = media_channel_path + '_fanart.png'
-
-        listing.append({
-            'icon': icon,
-            'fanart': fanart,
-            'label': title,
-            'url': common.plugin.get_url(
-                action='channel_entry',
-                next='list_shows_1',
-                channel_name=channel_name,
-                channel_module=channel_module,
-                channel_id=channel_id,
-                channel_country=channel_country,
-                window_title=title
-            ),
-            'context_menu': context_menu
-        })
+	
+	if 'pluzz' in channel_module or 'arte' in channel_module:
+	    listing.append({
+		'icon': icon,
+		'fanart': fanart,
+		'label': title,
+		'url': common.plugin.get_url(
+		    action='channel_entry',
+		    next='mode_replay_live',
+		    channel_name=channel_name,
+		    channel_module=channel_module,
+		    channel_id=channel_id,
+		    channel_country=channel_country,
+		    window_title=title
+		),
+		'context_menu': context_menu
+	    })
+	else:
+	    listing.append({
+		'icon': icon,
+		'fanart': fanart,
+		'label': title,
+		'url': common.plugin.get_url(
+		    action='channel_entry',
+		    next='list_shows_1',
+		    channel_name=channel_name,
+		    channel_module=channel_module,
+		    channel_id=channel_id,
+		    channel_country=channel_country,
+		    window_title=title
+		),
+		'context_menu': context_menu
+	    })
 
     return common.plugin.create_listing(
         listing,
@@ -290,6 +307,7 @@ def download_video(params):
     #  Ici on a seulement le lien de la page web où se trouve la video
     #  Il faut appeller la fonction get_video_url de la chaine concernée pour avoir l'URL finale de la vidéo
     channel = get_channel_module(params)
+    params.next = 'download_video'
     url_video = channel.get_video_url(params)
 
     #  Maintenant on peut télécharger la vidéo
@@ -297,7 +315,7 @@ def download_video(params):
     print 'URL_VIDEO to download ' + url_video
 
     vid = YDStreamExtractor.getVideoInfo(url_video, quality=3)
-    path = "/tmp"
+    path = common.plugin.get_setting('dlFolder')
 
     with YDStreamUtils.DownloadProgress() as prog:  # This gives a progress dialog interface ready to use
         try:

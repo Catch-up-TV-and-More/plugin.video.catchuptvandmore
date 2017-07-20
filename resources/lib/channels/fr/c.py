@@ -24,6 +24,10 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
 
 url_root = 'http://lab.canal-plus.pro/web/app_prod.php/api/replay/%s'
 # Channel id :
@@ -52,7 +56,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
-        return get_video_URL(params)
+        return get_video_url(params)
 
 
 @common.plugin.cached(common.cache_time)
@@ -128,7 +132,7 @@ def list_shows(params):
         )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     file_path = utils.download_catalog(
@@ -176,6 +180,17 @@ def list_videos(params):
             }
         }
 
+	# Nouveau pour ajouter le menu pour télécharger la vidéo
+	context_menu = []
+	download_video = (
+	    _('Download'),
+	    'XBMC.RunPlugin(' + common.plugin.get_url(
+		action='download_video',
+		id=id) + ')'
+	)
+	context_menu.append(download_video)
+	# Fin
+
         videos.append({
             'label': title,
             'thumb': thumb,
@@ -185,7 +200,8 @@ def list_videos(params):
                 id=id,
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
         })
 
     return common.plugin.create_listing(
@@ -202,7 +218,7 @@ def list_videos(params):
 
 
 @common.plugin.cached(common.cache_time)
-def get_video_URL(params):
+def get_video_url(params):
     file_video = utils.get_webcontent(
         url_video % (get_channel_id(params), params.id)
     )

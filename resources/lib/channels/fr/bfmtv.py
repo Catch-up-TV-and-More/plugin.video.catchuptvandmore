@@ -25,27 +25,28 @@ from resources.lib import utils
 from resources.lib import common
 import ast
 
-url_token = 'http://api.nextradiotv.com/bfmtv-applications/'
+url_token = 'http://api.nextradiotv.com/%s-applications/'
+#channel
 
 url_menu = 'http://www.bfmtv.com/static/static-mobile/bfmtv/' \
            'ios-smartphone/v0/configuration.json'
 
-url_replay = 'http://api.nextradiotv.com/bfmtv-applications/%s/' \
+url_replay = 'http://api.nextradiotv.com/%s-applications/%s/' \
              'getPage?pagename=replay'
-# token
+# channel, token
 
-url_show = 'http://api.nextradiotv.com/bfmtv-applications/%s/' \
+url_show = 'http://api.nextradiotv.com/%s-applications/%s/' \
            'getVideosList?category=%s&count=100&page=%s'
-# token, category, page_number
+# channel, token, category, page_number
 
-url_video = 'http://api.nextradiotv.com/bfmtv-applications/%s/' \
+url_video = 'http://api.nextradiotv.com/%s-applications/%s/' \
             'getVideo?idVideo=%s'
-# token, video_id
+# channel, token, video_id
 
 
 @common.plugin.cached(common.cache_time)
-def get_token():
-    file_token = utils.get_webcontent(url_token)
+def get_token(channel_name):
+    file_token = utils.get_webcontent(url_token % (channel_name))
     token_json = json.loads(file_token)
     return token_json['session']['token'].encode('utf-8')
 
@@ -56,7 +57,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'play' in params.next:
-        return get_video_URL(params)
+        return get_video_url(params)
 
 
 @common.plugin.cached(common.cache_time)
@@ -66,7 +67,7 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
-            url_replay % get_token(),
+            url_replay % (params.channel_name, get_token(params.channel_name)),
             '%s.json' % (params.channel_name))
         file_categories = open(file_path).read()
         json_categories = json.loads(file_categories)
@@ -100,7 +101,7 @@ def list_shows(params):
         )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if 'previous_listing' in params:
@@ -109,7 +110,8 @@ def list_videos(params):
     if params.next == 'list_videos_1':
         file_path = utils.download_catalog(
             url_show % (
-                get_token(),
+                params.channel_name, 
+		get_token(params.channel_name),
                 params.category,
                 params.page),
             '%s_%s_%s.json' % (
@@ -141,7 +143,7 @@ def list_videos(params):
                     'mediatype': 'tvshow'
                 }
             }
-
+            	
             videos.append({
                 'label': title,
                 'thumb': image,
@@ -186,9 +188,9 @@ def list_videos(params):
 
 
 @common.plugin.cached(common.cache_time)
-def get_video_URL(params):
+def get_video_url(params):
     file_medias = utils.get_webcontent(
-        url_video % (get_token(), params.video_id))
+        url_video % (params.channel_name, get_token(params.channel_name), params.video_id))
     json_parser = json.loads(file_medias)
 
     url_hd_plus = ''
@@ -208,27 +210,9 @@ def get_video_URL(params):
             url_hd_plus = media['video_url'].encode('utf-8')
         url_default = media['video_url'].encode('utf-8')
 
-    desired_quality = common.plugin.get_setting(
-        params.channel_id + '.quality')
+    desired_quality = common.plugin.get_setting('quality')
 
-    if desired_quality == 'HD+' and url_hd_plus:
+    if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_hd_plus != '':
         return url_hd_plus
-    elif url_hd:
-        return url_hd
-
-    if desired_quality == 'HD' and url_hd:
-        return url_hd
-    elif url_hd_plus:
-        return url_hd_plus
-
-    if desired_quality == 'SD' and url_sd:
-        return url_sd
-    elif url_sd_minus:
-        return url_sd_minus
-
-    if desired_quality == 'SD-' and url_sd_minus:
-        return url_sd_minus
-    elif url_sd:
-        return url_sd
-
-    return url_default
+    else:
+        return url_default
