@@ -21,9 +21,15 @@
 '''
 
 import json
+import xbmcgui
 from resources.lib import utils
 from resources.lib import common
 import ast
+
+
+# TODO
+# Add Live TV
+# Add RMCDECOUVERTE / Find API RMCDECOUVERTE ? BS ?
 
 url_token = 'http://api.nextradiotv.com/%s-applications/'
 #channel
@@ -187,32 +193,34 @@ def list_videos(params):
         )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     file_medias = utils.get_webcontent(
         url_video % (params.channel_name, get_token(params.channel_name), params.video_id))
     json_parser = json.loads(file_medias)
 
-    url_hd_plus = ''
-    url_hd = ''
-    url_sd = ''
-    url_sd_minus = ''
-    url_default = ''
-
-    for media in json_parser['video']['medias']:
-        if media['frame_height'] == 270:
-            url_sd_minus = media['video_url'].encode('utf-8')
-        elif media['frame_height'] == 360:
-            url_sd = media['video_url'].encode('utf-8')
-        elif media['frame_height'] == 720:
-            url_hd = media['video_url'].encode('utf-8')
-        elif media['frame_height'] == 1080:
-            url_hd_plus = media['video_url'].encode('utf-8')
-        url_default = media['video_url'].encode('utf-8')
-
+    video_streams = json_parser['video']['medias']
+	
     desired_quality = common.plugin.get_setting('quality')
+	
+    if desired_quality == "DIALOG":
+	all_datas_videos = []
+	for datas in video_streams:
+	    new_list_item = xbmcgui.ListItem()
+	    new_list_item.setLabel("Video Height : " + str(datas['frame_height']) + " (Encoding : " + str(datas['encoding_rate']) + ")")
+	    new_list_item.setPath(datas['video_url'])
+	    all_datas_videos.append(new_list_item)
+		
+	seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+		
+	return all_datas_videos[seleted_item].getPath().encode('utf-8')
 
-    if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_hd_plus != '':
-        return url_hd_plus
+    elif desired_quality == 'BEST':
+	#GET LAST NODE (VIDEO BEST QUALITY)
+	url_best_quality = ''
+	for datas in video_streams:
+	    url_best_quality = datas['video_url'].encode('utf-8')
+	return url_best_quality
     else:
-        return url_default
+	#DEFAULT VIDEO
+        return json_parser['video']['video_url'].encode('utf-8')
