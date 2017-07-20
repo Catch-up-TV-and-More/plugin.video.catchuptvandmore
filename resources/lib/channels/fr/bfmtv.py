@@ -30,6 +30,7 @@ import ast
 # TODO
 # Add Live TV
 # Add RMCDECOUVERTE / Find API RMCDECOUVERTE ? BS ?
+# Add Download Video
 
 url_token = 'http://api.nextradiotv.com/%s-applications/'
 #channel
