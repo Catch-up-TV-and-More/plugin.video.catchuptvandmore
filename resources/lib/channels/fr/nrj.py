@@ -24,6 +24,11 @@ from resources.lib import utils
 from resources.lib import common
 import xml.etree.ElementTree as ET
 
+# TODO
+# FIX DOWNLOAD MODE
+# Add LIVE TV
+# Refactor ALL_VIDEO / VIDEO BY CATEGORIES
+
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -70,6 +75,7 @@ def list_shows(params):
 	# Build categories list (Tous les programmes, Séries, ...)
 	collections = xmlElements.findall("collection")
 	
+	# Pour avoir toutes les videos certaines videos ont des categories non presentes dans cette URL 'url_collection_api'
 	state_video = 'ALL_VIDEOS'
 	
 	shows.append({
@@ -292,4 +298,5 @@ def list_videos(params):
 
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
+    # Just One format of each video (no need of QUALITY)
     return params.url_video
