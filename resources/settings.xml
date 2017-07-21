@@ -100,6 +100,12 @@
 	    
 	    <setting label="01Net TV" type="bool" id="channels.fr.bfmtv.01net" default="true" visible="eq(-55,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.01net.order" default="28"/>
+	    
+	    <setting label="Tfou" type="bool" id="channels.fr.tf1.tfou" default="true" visible="eq(-57,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1.tfou.order" default="29"/>
+	    
+	    <setting label="Xtra" type="bool" id="channels.fr.tf1.xtra" default="true" visible="eq(-59,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1.xtra.order" default="30"/>
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
