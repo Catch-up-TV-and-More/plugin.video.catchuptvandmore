@@ -57,7 +57,8 @@ channels = {
 	'channels.fr.bfmtv.rmc': 'RMC',
 	'channels.fr.bfmtv.01net': '01Net TV',
 	'channels.fr.tf1.tfou': 'Tfou',
-	'channels.fr.tf1.xtra': 'Xtra'
+	'channels.fr.tf1.xtra': 'Xtra',
+	'channels.fr.tf1.lci': 'LCI'
 	
     },
 
