@@ -43,6 +43,9 @@ url_collection_api = 'http://www.nrj-play.fr/%s/api/getreplaytvcollection'
 url_replay_api = 'http://www.nrj-play.fr/%s/api/getreplaytvlist'
 # channel_name (nrj12, ...)
 
+url_get_api_live = 'http://www.nrj-play.fr/sitemap.xml'
+# NOT_USED in this script (link api, live and more)
+
 url_root = 'http://www.nrj-play.fr'
 
 
