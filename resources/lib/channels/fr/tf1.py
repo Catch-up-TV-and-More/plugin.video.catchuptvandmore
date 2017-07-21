@@ -26,6 +26,10 @@ from resources.lib import utils
 from resources.lib import common
 import json
 
+# TODO
+# LIVE TV get video ID from WebPage (Hack in action)
+# Rework QUALITY
+
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -34,6 +38,8 @@ _ = common.addon.initialize_gettext()
 url_root = "http://www.tf1.fr/"
 url_time = 'http://www.wat.tv/servertime2/'
 url_token = 'http://api.wat.tv/services/Delivery'
+url_live_tv = 'https://www.tf1.fr/%s/direct'
+url_live_info = 'https://www.wat.tv/interface/contentv4/L_%s?context=MYTF1'
 
 secret_key = 'W3m0#1mFI'
 app_name = 'sdk/Iphone/1.0'
@@ -43,17 +49,56 @@ hosting_application_version = '7.0.4'
 
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+	return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos_categories' in params.next:
         return list_videos_categories(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
         return None
 
+@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay 
+    if params.channel_name != 'lci':
+	modes.append({
+	    'label' : 'Replay',
+	    'url': common.plugin.get_url(
+		action='channel_entry',
+		next='list_shows_1',
+		category='Replay',
+		window_title='Replay'
+	    ),
+	})
+    
+    # Add Live 
+    if params.channel_name != 'tfou' or params.channel_name != 'xtra':
+	modes.append({
+	    'label' : 'Live TV',
+	    'url': common.plugin.get_url(
+		action='channel_entry',
+		next='live_cat',
+		category='Live',
+		window_title='Live'
+	    ),
+	})
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 @common.plugin.cached(common.cache_time)
 def list_shows(params):
@@ -263,7 +308,7 @@ def list_videos(params):
                 'thumb': img,
                 'url': common.plugin.get_url(
                     action='channel_entry',
-                    next='play',
+                    next='play_r',
                     program_id=program_id,
                 ),
                 'is_playable': True,
@@ -281,63 +326,164 @@ def list_videos(params):
         ),
         content='tvshows')
 
-
-@common.plugin.cached(common.cache_time)
-def get_video_url(params):
-    if "http" not in params.program_id:
-        if params.program_id[0] == '/':
-            params.program_id = params.program_id[1:]
-        url = url_root + params.program_id
-    else:
-        url = params.program_id
-    video_html = utils.get_webcontent(url)
-    video_html_soup = bs(video_html, 'html.parser')
-
-    iframe_player_soup = video_html_soup.find(
-        'div',
-        class_='iframe_player')
-
-    data_src = iframe_player_soup['data-src'].encode('utf-8')
-
-    video_id = data_src[-8:]
-
-    timeserver = str(utils.get_webcontent(url_time))
-
-    auth_key = '%s-%s-%s-%s-%s' % (
-        video_id,
-        secret_key,
-        app_name,
-        secret_key,
-        timeserver
+#@common.plugin.cached(common.cache_time)
+def list_live(params):
+    lives = []
+    
+    real_channel = params.channel_name
+    
+    if real_channel == 'tf1':
+	real_channel = 'TF1'
+    elif real_channel == 'tmc':
+	real_channel = 'TMC'
+    elif real_channel == 'nt1':
+	real_channel = 'NT1'
+    elif real_channel == 'hd1':
+	real_channel = 'HD1'
+    elif real_channel == 'lci':
+	real_channel = 'LCI'
+    
+    lives.append({
+	'label': '%s Live' % real_channel,
+	'url' : common.plugin.get_url(
+	    action='channel_entry',
+	    next='play_l',
+	),
+	'is_playable': True
+    })
+	
+    
+    return common.plugin.create_listing(
+	lives,
+	sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
     )
 
-    auth_key = common.sp.md5(auth_key).hexdigest()
-    auth_key = auth_key + '/' + timeserver
+#@common.plugin.cached(common.cache_time)
+def get_video_url(params):
+    
+    if params.next == 'play_r' or params.next == 'download_video':
+	if "http" not in params.program_id:
+	    if params.program_id[0] == '/':
+		params.program_id = params.program_id[1:]
+	    url = url_root + params.program_id
+	else:
+	    url = params.program_id
+	video_html = utils.get_webcontent(url)
+	video_html_soup = bs(video_html, 'html.parser')
 
-    post_data = {
-        'appName': app_name,
-        'method': 'getUrl',
-        'mediaId': video_id,
-        'authKey': auth_key,
-        'version': version,
-        'hostingApplicationName': hosting_application_name,
-        'hostingApplicationVersion': hosting_application_version
-    }
+	iframe_player_soup = video_html_soup.find(
+	    'div',
+	    class_='iframe_player')
 
-    url_video = utils.get_webcontent(
-        url=url_token,
-        request_type='post',
-        post_dic=post_data)
-    url_video = json.loads(url_video)
-    url_video = url_video['message'].replace('\\', '')
+	data_src = iframe_player_soup['data-src'].encode('utf-8')
 
-    desired_quality = common.plugin.get_setting(
-        params.channel_id + '.quality')
+	video_id = data_src[-8:]
 
-    if desired_quality == 'Force HD':
-        try:
-            url_video = url_video.split('&bwmax')[0]
-        except:
-            pass
+	timeserver = str(utils.get_webcontent(url_time))
 
-    return url_video
+	auth_key = '%s-%s-%s-%s-%s' % (
+	    video_id,
+	    secret_key,
+	    app_name,
+	    secret_key,
+	    timeserver
+	)
+
+	auth_key = common.sp.md5(auth_key).hexdigest()
+	auth_key = auth_key + '/' + timeserver
+
+	post_data = {
+	    'appName': app_name,
+	    'method': 'getUrl',
+	    'mediaId': video_id,
+	    'authKey': auth_key,
+	    'version': version,
+	    'hostingApplicationName': hosting_application_name,
+	    'hostingApplicationVersion': hosting_application_version
+	}
+
+	url_video = utils.get_webcontent(
+	    url=url_token,
+	    request_type='post',
+	    post_dic=post_data)
+	url_video = json.loads(url_video)
+	url_video = url_video['message'].replace('\\', '')
+
+	desired_quality = common.plugin.get_setting('quality')
+
+	if desired_quality == 'BEST' or desired_quality == 'DIALOG':
+	    try:
+		url_video = url_video.split('&bwmax')[0]
+	    except:
+		pass
+
+	return url_video
+    
+    elif params.next == 'play_l':
+	
+	#video_html = utils.get_webcontent(url_live_tv % params.channel_name)
+	#video_html_soup = bs(video_html, 'html.parser')
+
+	#iframe_player_soup = video_html_soup.find(
+	#    'div',
+	#    class_='iframe_player')
+
+	#data_src = iframe_player_soup['data-src'].encode('utf-8')
+
+	#video_id = data_src[-8:]
+	
+	video_id = ''
+	real_channel = params.channel_name
+	if real_channel == 'tf1':
+	    video_id = 'L_TF1'
+	elif real_channel == 'tmc':
+	    video_id = 'L_TMC'
+	elif real_channel == 'nt1':
+	    video_id = 'L_NT1'
+	elif real_channel == 'hd1':
+	    video_id = 'L_HD1'
+	elif real_channel == 'lci':
+	    video_id = 'L_LCI'
+
+	timeserver = str(utils.get_webcontent(url_time))
+
+	auth_key = '%s-%s-%s-%s-%s' % (
+	    video_id,
+	    secret_key,
+	    app_name,
+	    secret_key,
+	    timeserver
+	)
+
+	auth_key = common.sp.md5(auth_key).hexdigest()
+	auth_key = auth_key + '/' + timeserver
+
+	post_data = {
+	    'appName': app_name,
+	    'method': 'getUrl',
+	    'mediaId': video_id,
+	    'authKey': auth_key,
+	    'version': version,
+	    'hostingApplicationName': hosting_application_name,
+	    'hostingApplicationVersion': hosting_application_version
+	}
+
+	url_video = utils.get_webcontent(
+	    url=url_token,
+	    request_type='post',
+	    post_dic=post_data)
+	url_video = json.loads(url_video)
+	url_video = url_video['message'].replace('\\', '')
+
+	desired_quality = common.plugin.get_setting('quality')
+
+	if desired_quality == 'BEST' or desired_quality == 'DIALOG':
+	    try:
+		url_video = url_video.split('&bwmax')[0]
+	    except:
+		pass
+	
+	return url_video 
