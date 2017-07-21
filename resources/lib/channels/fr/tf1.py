@@ -81,7 +81,7 @@ def mode_replay_live(params):
 	})
     
     # Add Live 
-    if params.channel_name != 'tfou' or params.channel_name != 'xtra':
+    if params.channel_name != 'tfou' and params.channel_name != 'xtra':
 	modes.append({
 	    'label' : 'Live TV',
 	    'url': common.plugin.get_url(
