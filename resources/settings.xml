@@ -106,6 +106,9 @@
 	    
 	    <setting label="Xtra" type="bool" id="channels.fr.tf1.xtra" default="true" visible="eq(-59,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1.xtra.order" default="30"/>
+	    
+	    <setting label="LCI" type="bool" id="channels.fr.tf1.lci" default="true" visible="eq(-61,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1.lci.order" default="31"/>
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
