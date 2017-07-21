@@ -698,6 +698,9 @@ def list_live(params):
 		'info': info
 	    })
     else:
+	
+	title = '%s Live' % params.channel_name 
+	
 	info = {
 		'video': {
 		    'title': title,
@@ -708,7 +711,7 @@ def list_live(params):
 	    }
 
 	lives.append({
-	    'label': 'Open Stream',
+	    'label': title,
 	    'url': common.plugin.get_url(
 		action='channel_entry',
 		next='play_l'
