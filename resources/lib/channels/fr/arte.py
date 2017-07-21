@@ -37,13 +37,10 @@ _ = common.addon.initialize_gettext()
 
 url_replay = 'https://www.arte.tv/papi/tvguide/videos/' \
              'ARTE_PLUS_SEVEN/%s.json?includeLongRights=true'
+# Langue, ...
 
-url_live_arte = 'http://artelive-lh.akamaihd.net/i/%s/master.m3u8'
-
-live_fr = 'artelive_fr@344805'
-live_de = 'artelive_de@393591'
-# Valid languages: F or D
-
+url_live_arte = 'https://api.arte.tv/api/player/v1/livestream/%s'
+# Langue, ...
 
 def channel_entry(params):
 
@@ -249,21 +246,49 @@ def list_live(params):
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
     
+    if desired_language == 'DE':
+        desired_language = 'de'
+    else:
+        desired_language = 'fr'
+    
     url_live = ''
     
-    if desired_language == 'D':
-	url_live = url_live_arte % (live_de)
+    file_path = utils.download_catalog(
+        url_live_arte % desired_language,
+        '%s_%s_live.json' % (params.channel_name, desired_language)
+    )
+    file_live = open(file_path).read()
+    json_parser = json.loads(file_live)
+    
+    title = json_parser["videoJsonPlayer"]["VTI"].encode('utf-8')
+    img = json_parser["videoJsonPlayer"]["VTU"]["IUR"].encode('utf-8')
+    plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
+    duration = 0
+    duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
+    if desired_language == 'de':
+	url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_2"]["url"]
     else:
-	url_live = url_live_arte % (live_fr)
+	url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
+    
+    info = {
+	'video': {
+	    'title': title,
+	    'plot': plot,
+	    'duration': duration
+	}
+    }
     
     lives.append({
-	'label': 'ARTE Live',
+	'label': title,
+	'fanart': img,
+	'thumb': img,
 	'url' : common.plugin.get_url(
 	    action='channel_entry',
 	    next='play_l',
 	    url=url_live,
 	),
-	'is_playable': True
+	'is_playable': True,
+	'info': info
     })
         
     return common.plugin.create_listing(
