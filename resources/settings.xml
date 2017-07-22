@@ -109,6 +109,9 @@
 	    
 	    <setting label="LCI" type="bool" id="channels.fr.tf1.lci" default="true" visible="eq(-61,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1.lci.order" default="31"/>
+	    
+	    <setting label="LCP Assemblée Nationale" type="bool" id="channels.fr.lcp.lcp" default="true" visible="eq(-63,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.lcp.lcp.order" default="32"/>
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
