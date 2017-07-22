@@ -58,7 +58,8 @@ channels = {
 	'channels.fr.bfmtv.01net': '01Net TV',
 	'channels.fr.tf1.tfou': 'Tfou',
 	'channels.fr.tf1.xtra': 'Xtra',
-	'channels.fr.tf1.lci': 'LCI'
+	'channels.fr.tf1.lci': 'LCI',
+	'channels.fr.lcp.lcp': 'LCP Assemblée Nationale'
 	
     },
 
