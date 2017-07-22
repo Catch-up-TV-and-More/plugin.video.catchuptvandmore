@@ -156,8 +156,8 @@ def mode_replay_live(params):
 	    'url': common.plugin.get_url(
 		action='channel_entry',
 		next='list_shows_1',
-		category='Replay',
-		window_title='Replay'
+		category='%s Replay' % params.channel_name.upper(),
+		window_title='%s Replay' % params.channel_name.upper()
 	    ),
 	})
     
@@ -168,8 +168,8 @@ def mode_replay_live(params):
 	    'url': common.plugin.get_url(
 		action='channel_entry',
 		next='live_cat',
-		category='Live',
-		window_title='Live'
+		category='%s Live TV' % params.channel_name.upper(),
+		window_title='%s Live TV' % params.channel_name.upper()
 	    ),
 	})
     
