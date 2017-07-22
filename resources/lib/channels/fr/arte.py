@@ -265,10 +265,7 @@ def list_live(params):
     plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
     duration = 0
     duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
-    if desired_language == 'de':
-	url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_2"]["url"]
-    else:
-	url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
+    url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
     
     info = {
 	'video': {
