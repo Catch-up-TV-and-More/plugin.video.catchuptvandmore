@@ -25,6 +25,7 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 import json
+import md5
 
 # TODO
 # LIVE TV get video ID from WebPage (Hack in action)
@@ -39,13 +40,16 @@ url_root = "http://www.tf1.fr/"
 url_time = 'http://www.wat.tv/servertime2/'
 url_token = 'http://api.wat.tv/services/Delivery'
 url_live_tv = 'https://www.tf1.fr/%s/direct'
-url_live_info = 'https://www.wat.tv/interface/contentv4/L_%s?context=MYTF1'
+url_live_info = 'https://api.mytf1.tf1.fr/live/2/%s'
+url_api_image = 'http://api.mytf1.tf1.fr/image'
 
 secret_key = 'W3m0#1mFI'
 app_name = 'sdk/Iphone/1.0'
 version = '2.1.3'
 hosting_application_name = 'com.tf1.applitf1'
 hosting_application_version = '7.0.4'
+img_width = 640
+img_height = 360 
 
 
 def channel_entry(params):
@@ -329,27 +333,50 @@ def list_videos(params):
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
     lives = []
+       
+    file_path = utils.download_catalog(
+        url_live_info % params.channel_name,
+        '%s_info_live.json' % (params.channel_name)
+    )
+    file_info_live = open(file_path).read()
+    json_parser = json.loads(file_info_live)
+        
+    title = json_parser["current"]["title"].encode('utf-8') + ' - ' + json_parser["current"]["episode"].encode('utf-8')
+    try:
+	plot = json_parser["current"]["description"].encode('utf-8')
+    except:
+	plot = ''
+	
+    duration = 0
+    #duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
     
-    real_channel = params.channel_name
+    # Get Image (Code java found in a Forum)
+    id_image = json_parser["current"]["image"].encode('utf-8')
+    valueMD5 = md5.new(str(img_width) + str(img_height) + id_image + 'elk45sz6ers68').hexdigest()
+    valueMD5 = valueMD5[:6]
+    try:
+	img = url_api_image + '/' + str(img_width)  + '/' + str(img_height) + '/' + id_image + '/' + str(valueMD5)
+    except:
+	img = '' 	
     
-    if real_channel == 'tf1':
-	real_channel = 'TF1'
-    elif real_channel == 'tmc':
-	real_channel = 'TMC'
-    elif real_channel == 'nt1':
-	real_channel = 'NT1'
-    elif real_channel == 'hd1':
-	real_channel = 'HD1'
-    elif real_channel == 'lci':
-	real_channel = 'LCI'
+    info = {
+	'video': {
+	    'title': title,
+	    'plot': plot,
+	    'duration': duration
+	}
+    }
     
     lives.append({
-	'label': '%s Live' % real_channel,
+	'label': title,
+	'fanart': img,
+	'thumb': img,
 	'url' : common.plugin.get_url(
 	    action='channel_entry',
 	    next='play_l',
 	),
-	'is_playable': True
+	'is_playable': True,
+	'info': info
     })
 	
     
@@ -435,18 +462,8 @@ def get_video_url(params):
 
 	#video_id = data_src[-8:]
 	
-	video_id = ''
+	video_id = 'L_%s' % params.channel_name.upper()
 	real_channel = params.channel_name
-	if real_channel == 'tf1':
-	    video_id = 'L_TF1'
-	elif real_channel == 'tmc':
-	    video_id = 'L_TMC'
-	elif real_channel == 'nt1':
-	    video_id = 'L_NT1'
-	elif real_channel == 'hd1':
-	    video_id = 'L_HD1'
-	elif real_channel == 'lci':
-	    video_id = 'L_LCI'
 
 	timeserver = str(utils.get_webcontent(url_time))
 
@@ -482,7 +499,7 @@ def get_video_url(params):
 
 	if desired_quality == 'BEST' or desired_quality == 'DIALOG':
 	    try:
-		url_video = url_video.split('&bwmax')[0]
+		url_video = url_video.split('&bwmax')[0] 
 	    except:
 		pass
 	
