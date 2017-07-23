@@ -177,7 +177,8 @@ def list_channels(params):
         fanart = media_channel_path + '_fanart.png'
 	
 	if 'pluzz' in channel_module or 'arte' in channel_module \
-	    or 'tf1' in channel_module or 'lcp' in channel_module:
+	    or 'tf1' in channel_module or 'lcp' in channel_module \
+	    or 'numero23' in channel_module:
 	    listing.append({
 		'icon': icon,
 		'fanart': fanart,
