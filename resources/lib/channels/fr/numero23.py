@@ -28,7 +28,6 @@ import json
 import xbmcgui
 
 # TODO
-# ADD More Button (Replay) for getting all videos (Show just 10 first videos)
 # Fix text in <span> in some menu
 # Get more info Live TV (picture, plot)
 
@@ -140,56 +139,68 @@ def list_shows(params):
 def list_videos(params):
     videos = []
 
+    paged = 1
+    url_replay_paged = params.url + '&paged=' + str(paged)
+
     file_path = utils.download_catalog(
-        params.url,
-        '%s_%s.html' % (params.channel_name, params.category_name)
+        url_replay_paged,
+        '%s_%s_%s.html' % (params.channel_name, params.category_name, str(paged))
     )
     program_html = open(file_path).read()
     program_soup = bs(program_html, 'html.parser')
 
-    videos_soup = program_soup.find_all('div', class_='box program')
+    videos_soup = program_soup.find_all('div', class_='program sticky video')
 
-    if len(videos_soup) == 0:
-        videos_soup = program_soup.find_all(
-            'div', class_='program sticky video')
+    while len(videos_soup) != 0:
+	for video in videos_soup:
+	    video_title = video.find(
+		'p', class_="red").get_text().encode('utf-8').replace(
+		    '\n', ' ').replace('\r', ' ').rstrip('\r\n')
+	    video_img = video.find('img')['src'].encode('utf-8')
+	    video_id = video.find('div', class_="player")['data-id-video'].encode('utf-8')
 
-    for video in videos_soup:
-        video_title = video.find(
-            'p', class_="red").get_text().encode('utf-8').replace(
-                '\n', ' ').replace('\r', ' ').rstrip('\r\n')
-        video_img = video.find('img')['src'].encode('utf-8')
-        video_id = video.find('div', class_="player")['data-id-video'].encode('utf-8')
+	    info = {
+		'video': {
+		    'title': video_title,
+		    'mediatype': 'tvshow'
+		}
+	    }
 
-        info = {
-            'video': {
-                'title': video_title,
-                'mediatype': 'tvshow'
-            }
-        }
+	    # Nouveau pour ajouter le menu pour télécharger la vidéo
+	    context_menu = []
+	    download_video = (
+		_('Download'),
+		'XBMC.RunPlugin(' + common.plugin.get_url(
+		    action='download_video',
+		    video_id=video_id) + ')'
+	    )
+	    context_menu.append(download_video)
+	    # Fin
 
-        # Nouveau pour ajouter le menu pour télécharger la vidéo
-        context_menu = []
-        download_video = (
-	    _('Download'),
-	    'XBMC.RunPlugin(' + common.plugin.get_url(
-		action='download_video',
-		video_id=video_id) + ')'
+	    videos.append({
+		'label': video_title,
+		'thumb': video_img,
+		'url': common.plugin.get_url(
+		    action='channel_entry',
+		    next='play_r',
+		    video_id=video_id
+		),
+		'is_playable': True,
+		'info': info,
+		'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+	    })
+	paged = paged + 1
+	
+	url_replay_paged = params.url + '&paged=' + str(paged)
+
+	file_path = utils.download_catalog(
+	    url_replay_paged,
+	    '%s_%s_%s.html' % (params.channel_name, params.category_name, str(paged))
 	)
-	context_menu.append(download_video)
-	# Fin
+	program_html = open(file_path).read()
+	program_soup = bs(program_html, 'html.parser')
 
-        videos.append({
-            'label': video_title,
-            'thumb': video_img,
-            'url': common.plugin.get_url(
-                action='channel_entry',
-                next='play_r',
-                video_id=video_id
-            ),
-            'is_playable': True,
-            'info': info,
-            'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
-        })
+	videos_soup = program_soup.find_all('div', class_='program sticky video')
 
     return common.plugin.create_listing(
         videos,
