@@ -24,6 +24,11 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 import re
+import json
+
+# TODO
+# Rework Replay (most category are empty and lot it and miss)
+# Get more info Live TV (picture, plot)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -32,17 +37,59 @@ _ = common.addon.initialize_gettext()
 
 url_root = 'http://www.numero23.fr/programmes/'
 
+url_info_live_json = 'http://www.numero23.fr/wp-content/cache/n23-direct.json'
+# Title, DailyMotion Id (Video)
+
+url_dailymotion_embed = 'http://www.dailymotion.com/embed/video/%s'
+# Video_id
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+	return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
         return None
 
+#@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay 
+    modes.append({
+	'label' : 'Replay',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='list_shows_1',
+	    category='%s Replay' % params.channel_name.upper(),
+	    window_title='%s Replay' % params.channel_name.upper()
+	),
+    })
+    
+    # Add Live 
+    modes.append({
+	'label' : 'Live TV',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='live_cat',
+	    category='%s Live TV' % params.channel_name.upper(),
+	    window_title='%s Live TV' % params.channel_name.upper()
+	),
+    })
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 @common.plugin.cached(common.cache_time)
 def list_shows(params):
@@ -185,46 +232,110 @@ def list_videos(params):
         ),
         content='tvshows')
 
+#@common.plugin.cached(common.cache_time)
+def list_live(params):
+    
+    lives = []
+    
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
+    
+    file_path = utils.download_catalog(
+        url_info_live_json,
+        '%s_info_live.json' % (params.channel_name)
+    )
+    file_info_live = open(file_path).read()
+    json_parser = json.loads(file_info_live)
+        
+    title = json_parser["titre"].encode('utf-8')
+    
+    video_id = json_parser["video"].encode('utf-8')
+    
+    url_live = url_dailymotion_embed % video_id
+    
+    info = {
+	'video': {
+	    'title': title,
+	    'plot': plot,
+	    'duration': duration
+	}
+    }
+    
+    lives.append({
+	'label': title,
+	'fanart': img,
+	'thumb': img,
+	'url' : common.plugin.get_url(
+	    action='channel_entry',
+	    next='play_l',
+	    url=url_live,
+	),
+	'is_playable': True,
+	'info': info
+    })
+    
+    return common.plugin.create_listing(
+	lives,
+	sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
 
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    video_html = utils.get_webcontent(
-        params.video_url
-    )
-    video_soup = bs(video_html, 'html.parser')
-    video_id = video_soup.find(
-        'div', class_='video')['data-video-id'].encode('utf-8')
-
-    url_daily = 'http://www.dailymotion.com/embed/video/' + video_id
-
-    html_daily = utils.get_webcontent(
-        url_daily,)
     
-    if params.next == 'download_video':
-	return url_daily
-    else:
-	html_daily = html_daily.replace('\\', '')
+    if params.next == 'play_r':
+	video_html = utils.get_webcontent(
+	    params.video_url
+	)
+	video_soup = bs(video_html, 'html.parser')
+	video_id = video_soup.find(
+	    'div', class_='video')['data-video-id'].encode('utf-8')
 
-	urls_mp4 = re.compile(
-	    r'{"type":"video/mp4","url":"(.*?)"}],"(.*?)"').findall(html_daily)
+	url_daily = url_dailymotion_embed % video_id
 
-	url_sd = ""
-	url_hd = ""
-	url_hdplus = ""
-	url_default = ""
-
-	for url, quality in urls_mp4:
-	    if quality == '480':
-		url_sd = url
-	    elif quality == '720':
-		url_hd = url
-	    elif quality == '1080':
-		url_hdplus = url
-	    url_default = url
-
-	desired_quality = common.plugin.get_setting('quality')
-
-	if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_hdplus:
-	    return url_hdplus
+	html_daily = utils.get_webcontent(
+	    url_daily,)
+	
+	if params.next == 'download_video':
+	    return url_daily
 	else:
-	    return url_default
+	    html_daily = html_daily.replace('\\', '')
+
+	    urls_mp4 = re.compile(
+		r'{"type":"video/mp4","url":"(.*?)"}],"(.*?)"').findall(html_daily)
+
+	    url_sd = ""
+	    url_hd = ""
+	    url_hdplus = ""
+	    url_default = ""
+
+	    for url, quality in urls_mp4:
+		if quality == '480':
+		    url_sd = url
+		elif quality == '720':
+		    url_hd = url
+		elif quality == '1080':
+		    url_hdplus = url
+		url_default = url
+
+	    desired_quality = common.plugin.get_setting('quality')
+
+	    if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_hdplus:
+		return url_hdplus
+	    else:
+		return url_default
+
+    elif params.next == 'play_l':
+		
+	html_live = utils.get_webcontent(params.url)
+	html_live = html_live.replace('\\', '')
+
+	url_live = re.compile(r'{"type":"application/x-mpegURL","url":"(.*?)"}]}').findall(html_live)
+	
+	# Just one flux no quality to choose
+	return url_live[0]
