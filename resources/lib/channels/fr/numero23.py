@@ -28,7 +28,6 @@ import json
 import xbmcgui
 
 # TODO
-# Fix text in <span> in some menu
 # Get more info Live TV (picture, plot)
 
 # Initialize GNU gettext emulation in addon
@@ -108,7 +107,7 @@ def list_shows(params):
         )
 
         for category in categories_soup.find_all('a'):
-            category_name = category.get_text().encode('utf-8').replace(
+            category_name = category.find('span').get_text().encode('utf-8').replace(
 				'\n', ' ').replace('\r', ' ').rstrip('\r\n')
             category_hash = common.sp.md5(category_name).hexdigest()
 	    
@@ -153,15 +152,19 @@ def list_videos(params):
 
     while len(videos_soup) != 0:
 	for video in videos_soup:
-	    video_title = video.find(
-		'p', class_="red").get_text().encode('utf-8').replace(
-		    '\n', ' ').replace('\r', ' ').rstrip('\r\n')
+	    video_title = video.find('h3').find('a').get_text().encode('utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n') \
+			    + ' - ' + video.find('p', class_="red").get_text().encode('utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n')
 	    video_img = video.find('img')['src'].encode('utf-8')
 	    video_id = video.find('div', class_="player")['data-id-video'].encode('utf-8')
+	    video_duration = 0 # video.find('p').find('strong').get_text()
 
 	    info = {
 		'video': {
 		    'title': video_title,
+		    #'aired': aired,
+		    #'date': date,
+		    'duration': video_duration,
+		    #'year': year,
 		    'mediatype': 'tvshow'
 		}
 	    }
@@ -180,6 +183,7 @@ def list_videos(params):
 	    videos.append({
 		'label': video_title,
 		'thumb': video_img,
+		'fanart': video_img,
 		'url': common.plugin.get_url(
 		    action='channel_entry',
 		    next='play_r',

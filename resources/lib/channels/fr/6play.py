@@ -26,6 +26,10 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
+# TODO
+# LIVE TV protected by #EXT-X-FAXS-CM
+# https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
+
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -386,16 +390,9 @@ def get_video_url(params):
         elif 'RESOLUTION=1080' in lines[k]:
             url_ultra_hd = root + '/' + lines[k + 1]
 
-    if desired_quality == 'Force HD':
-        if url_ultra_hd:
-            return url_ultra_hd
-        elif url_hd:
-            return url_hd
-        return manifest_url
+    desired_quality = common.plugin.get_setting('quality')
 
-    elif desired_quality == 'Force SD':
-        if url_ultra_sd:
-            return url_ultra_sd
-        elif url_sd:
-            return url_sd
+    if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_ultra_hd:
+        return url_ultra_hd
+    else:
         return manifest_url
