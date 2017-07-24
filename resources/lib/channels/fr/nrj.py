@@ -26,7 +26,7 @@ import xml.etree.ElementTree as ET
 
 # TODO
 # FIX DOWNLOAD MODE
-# Add LIVE TV
+# Add LIVE TV (Used Token to work)
 # Refactor ALL_VIDEO / VIDEO BY CATEGORIES
 
 # Initialize GNU gettext emulation in addon
@@ -43,8 +43,16 @@ url_collection_api = 'http://www.nrj-play.fr/%s/api/getreplaytvcollection'
 url_replay_api = 'http://www.nrj-play.fr/%s/api/getreplaytvlist'
 # channel_name (nrj12, ...)
 
+url_all_video = 'http://www.nrj-play.fr/sitemap-videos.xml'
+# Basculer sur ce mode si getreplaytvlist toujours ko ? perte des collections 
+
 url_get_api_live = 'http://www.nrj-play.fr/sitemap.xml'
 # NOT_USED in this script (link api, live and more)
+
+url_token = 'https://www.nrj-play.fr/compte/session'
+# TODO add account for using Live Direct
+
+url_live = 'http://www.nrj-play.fr/nrj12/direct'
 
 url_root = 'http://www.nrj-play.fr'
 
@@ -79,7 +87,7 @@ def list_shows(params):
 	collections = xmlElements.findall("collection")
 	
 	# Pour avoir toutes les videos certaines videos ont des categories non presentes dans cette URL 'url_collection_api'
-	state_video = 'ALL_VIDEOS'
+	state_video = 'Tous les programmes'
 	
 	shows.append({
 	    'label': state_video,
@@ -117,7 +125,8 @@ def list_shows(params):
 	state_video = 'VIDEOS_BY_CATEGORY'
 	
 	for collection in collections:
-	    if params.category_name == collection.findtext("category").encode('utf-8') or (params.category_name == 'NO_CATEGORY' and collection.findtext("category").encode('utf-8') == ''):
+	    if params.category_name == collection.findtext("category").encode('utf-8') \
+		or (params.category_name == 'NO_CATEGORY' and collection.findtext("category").encode('utf-8') == ''):
 		name_program = collection.findtext("name").encode('utf-8')
 		img_program = collection.findtext("picture")
 		id_program = collection.get("id")
@@ -160,7 +169,7 @@ def list_videos(params):
     programs = xmlElements.findall("program")
         
     for program in programs:
-	if params.state_video == 'ALL_VIDEOS':
+	if params.state_video == 'Tous les programmes':
 	    
 	    # Title
 	    title = program.findtext("title").encode('utf-8') + " - " + program.findtext("subtitle").encode('utf-8')
