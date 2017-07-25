@@ -24,11 +24,11 @@
 from resources.lib import utils
 from resources.lib import common
 import re
+from bs4 import BeautifulSoup as bs
 
 # TODO 
 # Replay add emissions
 # Add info LIVE TV
-# LIVE TV : Find Regexp to find embeded url or video_id
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -104,11 +104,13 @@ def list_live(params):
     url_live = ''
     
     html_live = utils.get_webcontent(url_live_site)
+    root_soup = bs(html_live, 'html.parser')
+    live_soup = root_soup.find(
+        'iframe',
+        class_='embed-responsive-item')
     
-    # Find Regexp for find embeded url
-    #url_daily = re.compile(r'<iframe src="//(.*?)"', re.DOTALL).findall(html_live)[0]
-    #url_live = 'http://' + url_daily
-    url_live = 'http://www.dailymotion.com/embed/video/xji3qy?autoplay=1'
+    url_live_embeded = live_soup.get('src')
+    url_live = 'http:%s' %  url_live_embeded
     
     title = '%s Live' % params.channel_name.upper() 
     
