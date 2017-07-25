@@ -25,7 +25,6 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 import json
-import md5
 
 # TODO
 # LIVE TV get video ID from WebPage (Hack in action)
@@ -352,7 +351,7 @@ def list_live(params):
     
     # Get Image (Code java found in a Forum)
     id_image = json_parser["current"]["image"].encode('utf-8')
-    valueMD5 = md5.new(str(img_width) + str(img_height) + id_image + 'elk45sz6ers68').hexdigest()
+    valueMD5 = common.sp.md5(str(img_width) + str(img_height) + id_image + 'elk45sz6ers68').hexdigest()
     valueMD5 = valueMD5[:6]
     try:
 	img = url_api_image + '/' + str(img_width)  + '/' + str(img_height) + '/' + id_image + '/' + str(valueMD5)
