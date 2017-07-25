@@ -110,7 +110,7 @@ def list_live(params):
     #url_live = 'http://' + url_daily
     url_live = 'http://www.dailymotion.com/embed/video/xji3qy?autoplay=1'
     
-    title = '%s Live' % params.channel_name 
+    title = '%s Live' % params.channel_name.upper() 
     
     info = {
 	'video': {
