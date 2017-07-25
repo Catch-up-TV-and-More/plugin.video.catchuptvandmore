@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 # TODO
 # FIX DOWNLOAD MODE
 # Add LIVE TV (Used Token to work)
-# Replay More work todo (collection/better title)
+# Replay More work todo (collection)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -120,12 +120,14 @@ def list_videos(params):
 	    check_string = '%s/replay/' % params.channel_name
 	    if url_site.count(check_string) > 0:
 		
+		# Title
+		title_list = url_site.rsplit('/', 1)
+		title = title_list[1]		
+		title = title.replace("-", " ").upper()
+		
 		videos_node = program.findall("{http://www.google.com/schemas/sitemap-video/1.1}video")
 		for video_node in videos_node:
-		    # Title
-		    title_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}title")
-		    title = title_node.text
-			
+		
 		    # Duration
 		    duration = 0
 			
