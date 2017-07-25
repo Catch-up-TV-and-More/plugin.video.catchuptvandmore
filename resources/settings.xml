@@ -59,8 +59,8 @@
             <setting label="BFM TV" type="bool" id="channels.fr.bfmtv.bfmtv" default="true" visible="eq(-27,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.bfmtv.order" default="14"/>
             
-            <setting label="i-Télé" type="bool" id="channels.fr.itele.itele" default="true" visible="eq(-29,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.itele.itele.order" default="15"/>
+            <setting label="CNews" type="bool" id="channels.fr.cnews.cnews" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.cnews.cnews.order" default="15"/>
             
             <setting label="CStar" type="bool" id="channels.fr.c.cstar" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.c.cstar.order" default="16"/>
@@ -112,6 +112,9 @@
 	    
 	    <setting label="LCP Assemblée Nationale" type="bool" id="channels.fr.lcp.lcp" default="true" visible="eq(-63,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.lcp.lcp.order" default="32"/>
+	    
+	    <!--<setting label="Comic" type="bool" id="channels.fr.6play.comic" default="true" visible="eq(-65,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.comic.order" default="33"/>-->
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
