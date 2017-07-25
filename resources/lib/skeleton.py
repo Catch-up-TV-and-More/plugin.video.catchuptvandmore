@@ -42,7 +42,7 @@ channels = {
         'channels.fr.nrj.nrj12': 'NRJ 12',
         'channels.fr.pluzz.france4': 'France 4',
         'channels.fr.bfmtv.bfmtv': 'BFM TV',
-        'channels.fr.itele.itele': 'i-Télé',
+        'channels.fr.cnews.cnews': 'CNews',
         'channels.fr.c.cstar': 'CStar',
         'channels.fr.gulli.gulli': 'Gulli',
         'channels.fr.pluzz.franceo': 'France Ô',
@@ -59,7 +59,8 @@ channels = {
 	'channels.fr.tf1.tfou': 'Tfou',
 	'channels.fr.tf1.xtra': 'Xtra',
 	'channels.fr.tf1.lci': 'LCI',
-	'channels.fr.lcp.lcp': 'LCP Assemblée Nationale'
+	'channels.fr.lcp.lcp': 'LCP Assemblée Nationale'#,
+	#'channels.fr.6play.comic': 'comic'
 	
     },
 
