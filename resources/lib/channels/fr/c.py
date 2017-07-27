@@ -59,6 +59,8 @@ url_replay_c8_cstar_root = 'http://lab.canal-plus.pro/web/app_prod.php/api/repla
 # cstar : 2
 url_replay_c8_cstar_shows = 'http://lab.canal-plus.pro/web/app_prod.php/api/pfv/list/%s/%s'
 # channel_id/show_id
+url_replay_c8_cstar_video = 'http://lab.canal-plus.pro/web/app_prod.php/api/pfv/video/%s/%s'
+# channel_id/video_id
 
 # Replay CNews 
 url_replay_cnews = 'http://service.itele.fr/iphone/categorie_news?query='
@@ -99,6 +101,14 @@ def get_token():
     token_json = json.loads(token_json)
     token = token_json['token']
     return token
+
+def get_channel_id(params):
+    if params.channel_name == 'c8':
+        return '1'
+    elif params.channel_name == 'cstar':
+        return '2'
+    else:
+        return '1'
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
@@ -198,6 +208,59 @@ def list_shows(params):
             )
         })
     ################### END CNEWS ###########################
+    
+    ################### BEGIN C8 and CStar ##################
+    elif params.next == 'list_shows_1' and (params.channel_name == 'c8' or params.channel_name == 'cstar'):
+        file_path = utils.download_catalog(
+            url_replay_c8_cstar_root % get_channel_id(params),
+            '%s.json' % (params.channel_name))
+        file_categories = open(file_path).read()
+        json_categories = json.loads(file_categories)
+
+        for categories in json_categories:
+            title = categories['title'].encode('utf-8')
+            slug = categories['slug'].encode('utf-8')
+
+            shows.append({
+                'label': title,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    slug=slug,
+                    next='list_shows_2',
+                    title=title,
+                    window_title=title
+                )
+            })
+
+    elif params.next == 'list_shows_2' and (params.channel_name == 'c8' or params.channel_name == 'cstar'):
+        # Create category's programs list
+        file_path = utils.download_catalog(
+            url_replay_c8_cstar_root % get_channel_id(params),
+            '%s_%s.json' % (params.channel_name, params.slug))
+        file_categories = open(file_path).read()
+        json_categories = json.loads(file_categories)
+
+        for categories in json_categories:
+            if categories['slug'].encode('utf-8') == params.slug:
+                for programs in categories['programs']:
+                    id = str(programs['id'])
+                    title = programs['title'].encode('utf-8')
+                    slug = programs['slug'].encode('utf-8')
+                    videos_recent = str(programs['videos_recent'])
+
+                    shows.append({
+                        'label': title,
+                        'url': common.plugin.get_url(
+                            action='channel_entry',
+                            next='list_videos_cat',
+                            id=id,
+                            videos_recent=videos_recent,
+                            slug=slug,
+                            title=title,
+                            window_title=title
+                        )
+                    })
+    ################### END C8 and CStar ##################
 
     return common.plugin.create_listing(
             shows,
@@ -286,14 +349,87 @@ def list_videos(params):
             })
     ################### END CNEWS ###########################
 	
+    ################### BEGIN C8 and CStar ##################
+    elif params.next == 'list_videos_cat' and (params.channel_name == 'c8' or params.channel_name == 'cstar'):
+	file_path = utils.download_catalog(
+	    url_replay_c8_cstar_shows % (get_channel_id(params), params.videos_recent),
+	    '%s_%s.json' % (params.channel_name, params.videos_recent))
+	file_videos = open(file_path).read()
+	videos_json = json.loads(file_videos)
+
+	for video in videos_json:
+	    id = video['ID'].encode('utf-8')
+	    try:
+		duration = int(video['DURATION'].encode('utf-8'))
+	    except:
+		duration = 0
+	    description = video['INFOS']['DESCRIPTION'].encode('utf-8')
+	    views = int(video['INFOS']['NB_VUES'].encode('utf-8'))
+	    try:
+		date_video = video['INFOS']['DIFFUSION']['DATE'].encode('utf-8')  # 31/12/2017
+	    except:
+		date_video = "00/00/0000"
+	    day = date_video.split('/')[0]
+	    mounth = date_video.split('/')[1]
+	    year = date_video.split('/')[2]
+	    aired = '-'.join((day, mounth, year))
+	    date = date_video.replace('/', '.')
+	    title = video['INFOS']['TITRAGE']['TITRE'].encode('utf-8')
+	    subtitle = video['INFOS']['TITRAGE']['SOUS_TITRE'].encode('utf-8')
+	    thumb = video['MEDIA']['IMAGES']['GRAND'].encode('utf-8')
+	    category = video['RUBRIQUAGE']['CATEGORIE'].encode('utf-8')
+
+	    if subtitle:
+		title = title + ' - [I]' + subtitle + '[/I]'
+
+	    info = {
+		'video': {
+		    'title': title,
+		    'plot': description,
+		    'aired': aired,
+		    'date': date,
+		    'duration': duration,
+		    'year': year,
+		    'genre': category,
+		    'playcount': views,
+		    'mediatype': 'tvshow'
+		}
+	    }
+
+	    # Nouveau pour ajouter le menu pour télécharger la vidéo
+	    context_menu = []
+	    download_video = (
+		_('Download'),
+		'XBMC.RunPlugin(' + common.plugin.get_url(
+		    action='download_video',
+		    id=id) + ')'
+	    )
+	    context_menu.append(download_video)
+	    # Fin
+
+	    videos.append({
+		'label': title,
+		'thumb': thumb,
+		'url': common.plugin.get_url(
+		    action='channel_entry',
+		    next='play_r',
+		    id=id,
+		),
+		'is_playable': True,
+		'info': info,
+		'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+	    })
+    ################### END C8 and CStar ##################
     
     return common.plugin.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_DATE,
+            common.sp.xbmcplugin.SORT_METHOD_DURATION,
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
             common.sp.xbmcplugin.SORT_METHOD_GENRE,
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_PLAYCOUNT,
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows')
     
@@ -387,6 +523,13 @@ def get_video_url(params):
     
     if (params.next == 'play_r' and params.channel_name == 'cnews') or (params.next == 'download_mode' and params.channel_name == 'cnews'):
 	return params.video_urlhd
+    elif (params.next == 'play_r' and (params.channel_name == 'c8' or params.channel_name == 'cstar')) \
+	 or (params.next == 'download_mode' and (params.channel_name == 'c8' or params.channel_name == 'cstar')):
+	file_video = utils.get_webcontent(
+	    url_replay_c8_cstar_video % (get_channel_id(params), params.id)
+	)
+	video_json = json.loads(file_video)
+	return video_json['main']['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
     elif params.next == 'play_l':
 	return params.url
 	
