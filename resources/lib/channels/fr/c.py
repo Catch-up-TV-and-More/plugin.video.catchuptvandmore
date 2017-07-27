@@ -27,11 +27,11 @@ import re
 import json
 
 # TODO 
-# Replay 
-# Download Mode
+# Replay (cplus, c8 et cstar)
+# Download Mode (cplus, c8, cstar, cnews)
 # Find API for all channel (JSON) get Replay/Live ? 
 # Get URL Live FROM SITE
-# QUALITY TODO
+# QUALITY
 
 # URL :
 
@@ -44,14 +44,43 @@ url_live_c8 = 'http://www.c8.fr/pid5323-c8-live.html'
 url_live_cstar = 'http://www.cstar.fr/pid5322-cstar-live.html'
 url_live_cnews = 'http://www.cnews.fr/direct'
 
-# Replay :
-url_replay_cplus = ''
-url_replay_c8 = ''
-url_replay_cstar = ''
-url_replay_cnews = ''
+# Replay Cplus :
+url_replay_cplus_auth = 'http://service.mycanal.fr/authenticate.json/iphone/' \
+			'1.6?highResolution=1&isActivated=0&isAuthenticated=0&paired=0'
+
+url_replay_cplus_categories = 'http://service.mycanal.fr/page/%s/4578.json?' \
+			      'cache=60000&nbContent=96'
+# Token
+
+# Replay C8 & CStar
+url_replay_c8_cstar_root = 'http://lab.canal-plus.pro/web/app_prod.php/api/replay/%s'
+# Channel id :
+# c8 : 1
+# cstar : 2
+url_replay_c8_cstar_shows = 'http://lab.canal-plus.pro/web/app_prod.php/api/pfv/list/%s/%s'
+# channel_id/show_id
+
+# Replay CNews 
+url_replay_cnews = 'http://service.itele.fr/iphone/categorie_news?query='
+categories_cnews = {
+    'http://service.itele.fr/iphone/topnews': 'La Une',
+    url_replay_cnews + 'FRANCE': 'France',
+    url_replay_cnews + 'MONDE': 'Monde',
+    url_replay_cnews + 'POLITIQUE': 'Politique',
+    url_replay_cnews + 'JUSTICE': 'Justice',
+    url_replay_cnews + 'ECONOMIE': 'Économie',
+    url_replay_cnews + 'SPORT': 'Sport',
+    url_replay_cnews + 'CULTURE': 'Culture',
+    url_replay_cnews + 'INSOLITE': 'Insolite'
+}
 
 # Replay/Live => Parameters Channel, VideoId
 url_info_content = 'http://service.canal-plus.com/video/rest/getVideos/%s/%s?format=json'
+
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -64,6 +93,12 @@ def channel_entry(params):
 	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+
+def get_token():
+    token_json = utils.get_webcontent(url_auth)
+    token_json = json.loads(token_json)
+    token = token_json['token']
+    return token
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
@@ -101,11 +136,166 @@ def mode_replay_live(params):
     
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
-    return None
+    # Create categories list
+    shows = []
+    
+    ################### BEGIN CNEWS ###########################
+    if params.next == 'list_shows_1' and params.channel_name == 'cnews':
+        for category_url, category_title in categories_cnews.iteritems():
+            shows.append({
+                'label': category_title,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    category_url=category_url,
+                    next='list_videos_cat',
+                    title=category_title,
+                    window_title=category_title
+                )
+            })
+
+        shows.append({
+            'label': 'Les Émissions',
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                category_url='emissions',
+                next='list_shows_emissions',
+                title='Les Émissions',
+                window_title='Les Émissions'
+            )
+        })
+
+    elif params.next == 'list_shows_emissions' and params.channel_name == 'cnews':
+        shows.append({
+            'label': 'À la Une',
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                category_url='http://service.itele.fr/iphone/dernieres_emissions?query=',
+                next='list_videos_cat',
+                title='À la Une',
+                window_title='À la Une'
+            )
+        })
+
+        shows.append({
+            'label': 'Magazines',
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                category_url='http://service.itele.fr/iphone/emissions?query=magazines',
+                next='list_videos_cat',
+                title='Magazines',
+                window_title='Magazines'
+            )
+        })
+
+        shows.append({
+            'label': 'Chroniques',
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                category_url='http://service.itele.fr/iphone/emissions?query=chroniques',
+                next='list_videos_cat',
+                title='Chroniques',
+                window_title='Chroniques'
+            )
+        })
+    ################### END CNEWS ###########################
+
+    return common.plugin.create_listing(
+            shows,
+            sort_methods=(
+                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+                common.sp.xbmcplugin.SORT_METHOD_LABEL
+            )
+        )
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
-    return None
+    # Create list video
+    videos = []
+    
+    ################### BEGIN CNEWS ###########################
+    if params.next == 'list_videos_cat' and params.channel_name == 'cnews':
+	file_path = utils.download_catalog(
+            params.category_url,
+            '%s_%s.json' % (params.channel_name, params.title))
+        file = open(file_path).read()
+        json_category = json.loads(file)
+
+        if 'news' in json_category:
+            json_category = json_category['news']
+        elif 'videos' in json_category:
+            json_category = json_category['videos']
+        elif 'topnews' in json_category:
+            json_category = json_category['topnews']
+        for video in json_category:
+            video_id = video['id_pfv'].encode('utf-8')
+            category = video['category'].encode('utf-8')
+            date_time = video['date'].encode('utf-8')
+            # 2017-02-10 22:05:02
+            date_time = date_time.split(' ')[0]
+            date_splited = date_time.split('-')
+            year = date_splited[0]
+            mounth = date_splited[1]
+            day = date_splited[2]
+            aired = '-'.join((year, mounth, day))
+            date = '.'.join((day, mounth, year))
+            # date : string (%d.%m.%Y / 01.01.2009)
+            # aired : string (2008-12-07)
+            title = video['title'].encode('utf-8')
+            description = video['description'].encode('utf-8')
+            thumb = video['preview169'].encode('utf-8')
+            video_url = video['video_urlhd'].encode('utf-8')
+            if not video_url:
+                video_url = 'no_video'
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': description,
+                    'aired': aired,
+                    'date': date,
+                    #'duration': duration,
+                    'year': year,
+                    'genre': category,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+	    # Nouveau pour ajouter le menu pour télécharger la vidéo
+	    context_menu = []
+	    download_video = (
+		_('Download'),
+		'XBMC.RunPlugin(' + common.plugin.get_url(
+		    action='download_video',
+		    video_urlhd=video_url) + ')'
+	    )
+	    context_menu.append(download_video)
+	    # Fin
+
+            videos.append({
+                'label': title,
+                'thumb': thumb,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    video_id=video_id,
+                    video_urlhd=video_url
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+            })
+    ################### END CNEWS ###########################
+	
+    
+    return common.plugin.create_listing(
+        videos,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_DATE,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
+            common.sp.xbmcplugin.SORT_METHOD_GENRE,
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+        ),
+        content='tvshows')
     
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
@@ -195,6 +385,8 @@ def list_live(params):
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     
-    if params.next == 'play_l':
+    if (params.next == 'play_r' and params.channel_name == 'cnews') or (params.next == 'download_mode' and params.channel_name == 'cnews'):
+	return params.video_urlhd
+    elif params.next == 'play_l':
 	return params.url
 	
