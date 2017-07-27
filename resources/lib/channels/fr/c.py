@@ -25,9 +25,10 @@ from resources.lib import utils
 from resources.lib import common
 import re
 import json
+import ast
 
 # TODO 
-# Replay (cplus, c8 et cstar)
+# Replay (More Refactoring todo)
 # Download Mode (cplus, c8, cstar, cnews)
 # Find API for all channel (JSON) get Replay/Live ? 
 # Get URL Live FROM SITE
@@ -97,7 +98,7 @@ def channel_entry(params):
         return get_video_url(params)
 
 def get_token():
-    token_json = utils.get_webcontent(url_auth)
+    token_json = utils.get_webcontent(url_replay_cplus_auth)
     token_json = json.loads(token_json)
     token = token_json['token']
     return token
@@ -261,6 +262,212 @@ def list_shows(params):
                         )
                     })
     ################### END C8 and CStar ##################
+    
+    ################### BEGIN CANAL + ##################
+    elif params.next == 'list_shows_1' and params.channel_name == 'cplus':
+        if 'url_page' not in params:
+            params.url_page = url_replay_cplus_categories % get_token()
+        if 'title' not in params:
+            params.title = 'root'
+        if 'fanart' in params:
+            fanart = params.fanart
+        else:
+            fanart = ''
+
+        file_path = utils.download_catalog(
+            params.url_page,
+            '%s_%s_%s.json' % (
+                params.channel_name,
+                params.title,
+                common.sp.md5(params.url_page).hexdigest()))
+        file_shows = open(file_path).read()
+        shows_json = json.loads(file_shows)
+        if 'strates' in shows_json:
+            strates = shows_json['strates']
+            if len(strates) == 1 and 'textList_like' not in params:
+                params['title'] = strates[0]['title'].encode('utf-8')
+                params['next'] = 'list_shows_2'
+                return list_shows(params)
+            elif len(strates) == 2 and 'textList_like' not in params:
+                for strate in strates:
+                    if strate['type'].encode('utf-8') != 'carrousel':
+                        params['title'] = strate['title'].encode('utf-8')
+                        params['next'] = 'list_shows_2'
+                        return list_shows(params)
+
+            for strate in strates:
+                if strate['type'] == 'carrousel':
+                    for content in strate['contents']:
+                        fanart = content['URLImage'].encode('utf-8')
+                # Main categories e.g. Séries, Humour, Sport
+                if 'textList_like' in params and params.textList_like is True:
+                    if 'title' in strate and \
+                            strate['title'].encode('utf-8') == params.title:
+                        for content in strate['contents']:
+                            title = content['title'].encode('utf-8')
+                            url_page = content[
+                                'onClick']['URLPage'].encode('utf-8')
+                            try:
+                                subtitle = content['subtitle'].encode('utf-8')
+                            except:
+                                subtitle = ''
+                            try:
+                                img = content['URLImage'].encode('utf-8')
+                            except:
+                                img = ''
+
+                            info = {
+                                'video': {
+                                    'title': title,
+                                    'plot': subtitle,
+                                }
+                            }
+
+                            shows.append({
+                                'label': title,
+                                'thumb': img,
+                                'url': common.plugin.get_url(
+                                    action='channel_entry',
+                                    url_page=url_page,
+                                    next='list_shows_1',
+                                    title=title,
+                                    window_title=title,
+                                    fanart=fanart
+                                ),
+                                'info': info
+                            })
+                else:
+                    if strate['type'] == 'textList':
+                        for content in strate['contents']:
+                            title = content['title'].encode('utf-8')
+                            url_page = content[
+                                'onClick']['URLPage'].encode('utf-8')
+                            try:
+                                subtitle = content['subtitle'].encode('utf-8')
+                            except:
+                                subtitle = ''
+                            try:
+                                img = content['URLImage'].encode('utf-8')
+                            except:
+                                img = ''
+
+                            info = {
+                                'video': {
+                                    'title': title,
+                                    'plot': subtitle,
+                                }
+                            }
+
+                            shows.append({
+                                'label': title,
+                                'thumb': img,
+                                'url': common.plugin.get_url(
+                                    action='channel_entry',
+                                    url_page=url_page,
+                                    next='list_shows_1',
+                                    title=title,
+                                    window_title=title,
+                                    fanart=fanart
+                                ),
+                                'info': info
+                            })
+                    # Videos, e.g. "Ne manquez pas"
+                    elif strate['type'] == 'contentGrid':
+                        title = strate['title'].encode('utf-8')
+                        shows.append({
+                            'label': title,
+                            'url': common.plugin.get_url(
+                                action='channel_entry',
+                                url_page=params.url_page,
+                                next='list_shows_2',
+                                title=title,
+                                window_title=title,
+                            )
+                        })
+                    # Other levels (subcategories, ...) e.g. "Top emissions"
+                    elif strate['type'] == 'contentRow':
+                        title = strate['title'].encode('utf-8')
+                        shows.append({
+                            'label': title,
+                            'url': common.plugin.get_url(
+                                action='channel_entry',
+                                url_page=params.url_page,
+                                next='list_shows_2',
+                                title=title,
+                                window_title=title,
+                            )
+                        })
+        elif 'textList_like' not in params:
+            for content in shows_json['contents']:
+                title = content['title'].encode('utf-8')
+                params['title'] = title
+                params['next'] = 'list_shows_2'
+                return list_shows(params)
+
+        else:
+            for content in shows_json['contents']:
+                title = content['title'].encode('utf-8')
+                url_page = content[
+                    'onClick']['URLPage'].encode('utf-8')
+                try:
+                    subtitle = content['subtitle'].encode('utf-8')
+                except:
+                    subtitle = ''
+                try:
+                    img = content['URLImage'].encode('utf-8')
+                except:
+                    img = ''
+
+                info = {
+                    'video': {
+                        'title': title,
+                        'plot': subtitle,
+                    }
+                }
+
+                shows.append({
+                    'label': title,
+                    'thumb': img,
+                    'url': common.plugin.get_url(
+                        action='channel_entry',
+                        url_page=url_page,
+                        next='list_shows_1',
+                        title=title,
+                        window_title=title,
+                        fanart=fanart
+                    ),
+                    'info': info
+                })
+
+    elif params.next == 'list_shows_2' and params.channel_name == 'cplus':
+        file_path = utils.download_catalog(
+            params.url_page,
+            '%s_%s_%s.json' % (
+                params.channel_name,
+                params.title,
+                common.sp.md5(params.url_page).hexdigest()))
+        file_shows = open(file_path).read()
+        shows_json = json.loads(file_shows)
+
+        if 'strates' in shows_json:
+            strates = shows_json['strates']
+            for strate in strates:
+                if 'title' in strate and \
+                        strate['title'].encode('utf-8') == params.title:
+                    contents = strate['contents']
+        else:
+            contents = shows_json['contents']
+        for content in contents:
+            if 'type' in content and \
+                    content['type'].encode('utf-8') == 'quicktime':
+                return list_videos(params)
+            else:
+                params['textList_like'] = True
+                params['title'] = params.title
+                params['next'] = 'list_shows_1'
+                return list_shows(params)
+		
+    ################### END CANAL + ##################
 
     return common.plugin.create_listing(
             shows,
@@ -276,7 +483,7 @@ def list_videos(params):
     videos = []
     
     ################### BEGIN CNEWS ###########################
-    if params.next == 'list_videos_cat' and params.channel_name == 'cnews':
+    if params.channel_name == 'cnews':
 	file_path = utils.download_catalog(
             params.category_url,
             '%s_%s.json' % (params.channel_name, params.title))
@@ -350,7 +557,7 @@ def list_videos(params):
     ################### END CNEWS ###########################
 	
     ################### BEGIN C8 and CStar ##################
-    elif params.next == 'list_videos_cat' and (params.channel_name == 'c8' or params.channel_name == 'cstar'):
+    elif params.channel_name == 'c8' or params.channel_name == 'cstar':
 	file_path = utils.download_catalog(
 	    url_replay_c8_cstar_shows % (get_channel_id(params), params.videos_recent),
 	    '%s_%s.json' % (params.channel_name, params.videos_recent))
@@ -420,6 +627,141 @@ def list_videos(params):
 		'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
 	    })
     ################### END C8 and CStar ##################
+    
+    ################### BEGIN Canal + ################## 
+    elif params.channel_name == 'cplus':
+	if 'previous_listing' in params:
+	    videos = ast.literal_eval(params['previous_listing'])
+	file_path = utils.download_catalog(
+	    params.url_page,
+	    '%s_%s_%s.json' % (
+		params.channel_name,
+		params.title,
+		common.sp.md5(params.url_page).hexdigest()))
+	file_videos = open(file_path).read()
+	videos_json = json.loads(file_videos)
+	more_videos = True
+	fanart = ''
+
+	if 'strates' in videos_json:
+	    for strate in videos_json['strates']:
+		if strate['type'] == 'carrousel':
+		    for content in strate['contents']:
+			fanart = content['URLImage'].encode('utf-8')
+
+		# Check if we are in the correct cotegory
+		if 'title' in strate and \
+			strate['title'].encode('utf-8') == params.title:
+
+		    # If we have lot of videos ...
+		    if 'URLPage' in strate['paging']:
+			url = strate['paging']['URLPage'].encode('utf-8')
+			url = url + '&indexPage=1'
+			params['url_page'] = url
+			params['fanart'] = fanart
+			return list_videos(params)
+
+		    # Else show only this videos
+		    else:
+			for content in strate['contents']:
+			    title = content['title'].encode('utf-8')
+			    try:
+				subtitle = content['subtitle'].encode('utf-8')
+			    except:
+				subtitle = ''
+			    img = content['URLImage'].encode('utf-8')
+			    url_media = content['onClick']['URLPage'].encode('utf-8')
+
+			    info = {
+				'video': {
+				    'title': title,
+				    'plot': subtitle,
+				    'mediatype': 'tvshow'
+
+				}
+			    }
+
+			    videos.append({
+				'label': title,
+				'thumb': img,
+				'fanart': fanart,
+				'url': common.plugin.get_url(
+				    action='channel_entry',
+				    next='play',
+				    url_media=url_media,
+				    url_page=params.url_page,
+				    title=title
+				),
+				'info': info,
+				'is_playable': True
+			    })
+	else:
+	    if len(videos_json['contents']) == 0:
+		more_videos = False
+	    for content in videos_json['contents']:
+		title = content['title'].encode('utf-8')
+		try:
+		    subtitle = content['subtitle'].encode('utf-8')
+		except:
+		    subtitle = ''
+		img = content['URLImage'].encode('utf-8')
+		url_media = content['onClick']['URLPage'].encode('utf-8')
+
+		info = {
+		    'video': {
+			'title': title,
+			'plot': subtitle,
+			'mediatype': 'tvshow'
+
+		    }
+		}
+		
+		# Nouveau pour ajouter le menu pour télécharger la vidéo
+		context_menu = []
+		download_video = (
+		    _('Download'),
+		    'XBMC.RunPlugin(' + common.plugin.get_url(
+			action='download_video',
+			url_media=url_media) + ')'
+		)
+		context_menu.append(download_video)
+		# Fin
+
+		videos.append({
+		    'label': title,
+		    'thumb': img,
+		    'fanart': params.fanart,
+		    'url': common.plugin.get_url(
+			action='channel_entry',
+			next='play_r',
+			url_media=url_media,
+			title=title,
+			fanart=params.fanart
+		    ),
+		    'info': info,
+		    'is_playable': True,
+		    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+		})
+
+	    if more_videos is True:
+		# More videos...
+		current_index_page = int(params.url_page[-1])
+		videos.append({
+		    'fanart': params.fanart,
+		    'label': common.addon.get_localized_string(30100),
+		    'url': common.plugin.get_url(
+			action='channel_entry',
+			next='list_videos',
+			title=params.title,
+			url_page=params.url_page[:-1] + str(
+			    current_index_page + 1),
+			update_listing=True,
+			previous_listing=str(videos),
+			fanart=params.fanart
+		    ),
+
+		})
+    ################### END Canal + ##################
     
     return common.plugin.create_listing(
         videos,
@@ -521,8 +863,10 @@ def list_live(params):
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     
+    # CNews
     if (params.next == 'play_r' and params.channel_name == 'cnews') or (params.next == 'download_mode' and params.channel_name == 'cnews'):
 	return params.video_urlhd
+    # C8 & CStar
     elif (params.next == 'play_r' and (params.channel_name == 'c8' or params.channel_name == 'cstar')) \
 	 or (params.next == 'download_mode' and (params.channel_name == 'c8' or params.channel_name == 'cstar')):
 	file_video = utils.get_webcontent(
@@ -530,6 +874,13 @@ def get_video_url(params):
 	)
 	video_json = json.loads(file_video)
 	return video_json['main']['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
+    # Canal +
+    elif (params.next == 'play_r' and params.channel_name == 'cplus') or (params.next == 'download_mode' and params.channel_name == 'cplus'):
+	file_path = utils.get_webcontent(params.url_media)
+	media_json = json.loads(file_path)
+	url = media_json['detail']['informations']['VoD']['videoURL'].encode('utf-8')
+	return url
+    # Live CPlus, C8, CStar and CNews
     elif params.next == 'play_l':
 	return params.url
 	
