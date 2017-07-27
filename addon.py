@@ -178,7 +178,8 @@ def list_channels(params):
 	
 	if 'pluzz' in channel_module or 'arte' in channel_module \
 	    or 'tf1' in channel_module or 'lcp' in channel_module \
-	    or 'numero23' in channel_module or 'gulli' in channel_module:
+	    or 'numero23' in channel_module or 'gulli' in channel_module \
+	    or 'c' in channel_module:
 	    listing.append({
 		'icon': icon,
 		'fanart': fanart,
