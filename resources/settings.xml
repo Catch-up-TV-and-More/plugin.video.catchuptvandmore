@@ -26,8 +26,8 @@
             <setting label="France 3" type="bool" id="channels.fr.pluzz.france3" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3.order" default="3"/>
             
-            <setting label="Canal +" type="bool" id="channels.fr.canalplus.canalplus" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.canalplus.canalplus.order" default="4"/>
+            <setting label="Canal +" type="bool" id="channels.fr.c.cplus" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.c.cplus.order" default="4"/>
             
             <setting label="France 5" type="bool" id="channels.fr.pluzz.france5" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france5.order" default="5"/>
@@ -59,8 +59,8 @@
             <setting label="BFM TV" type="bool" id="channels.fr.bfmtv.bfmtv" default="true" visible="eq(-27,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.bfmtv.order" default="14"/>
             
-            <setting label="CNews" type="bool" id="channels.fr.cnews.cnews" default="true" visible="eq(-29,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.cnews.cnews.order" default="15"/>
+            <setting label="CNews" type="bool" id="channels.fr.c.cnews" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.c.cnews.order" default="15"/>
             
             <setting label="CStar" type="bool" id="channels.fr.c.cstar" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.c.cstar.order" default="16"/>
