@@ -113,6 +113,9 @@
 	    <setting label="LCP Assemblée Nationale" type="bool" id="channels.fr.lcp.lcp" default="true" visible="eq(-63,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.lcp.lcp.order" default="32"/>
 	    
+	    <setting label="RMC Découverte HD24" type="bool" id="channels.fr.bfmtv.rmcdecouverte" default="true" visible="eq(-65,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.bfmtv.rmcdecouverte.order" default="33"/>
+	    
 	    <!--<setting label="Comic" type="bool" id="channels.fr.6play.comic" default="true" visible="eq(-65,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.comic.order" default="33"/>-->
 
