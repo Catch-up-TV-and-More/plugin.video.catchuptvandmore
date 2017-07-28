@@ -26,8 +26,8 @@
             <setting label="France 3" type="bool" id="channels.fr.pluzz.france3" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3.order" default="3"/>
             
-            <setting label="Canal +" type="bool" id="channels.fr.c.cplus" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.c.cplus.order" default="4"/>
+            <setting label="Canal +" type="bool" id="channels.fr.groupecanal.cplus" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cplus.order" default="4"/>
             
             <setting label="France 5" type="bool" id="channels.fr.pluzz.france5" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france5.order" default="5"/>
@@ -38,8 +38,8 @@
             <setting label="Arte" type="bool" id="channels.fr.arte.arte" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.arte.arte.order" default="7"/>
             
-            <setting label="C8" type="bool" id="channels.fr.c.c8" default="true" visible="eq(-15,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.c.c8.order" default="8"/>
+            <setting label="C8" type="bool" id="channels.fr.groupecanal.c8" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.c8.order" default="8"/>
             
             <setting label="W9" type="bool" id="channels.fr.6play.w9" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.w9.order" default="9"/>
@@ -59,11 +59,11 @@
             <setting label="BFM TV" type="bool" id="channels.fr.bfmtv.bfmtv" default="true" visible="eq(-27,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.bfmtv.order" default="14"/>
             
-            <setting label="CNews" type="bool" id="channels.fr.c.cnews" default="true" visible="eq(-29,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.c.cnews.order" default="15"/>
+            <setting label="CNews" type="bool" id="channels.fr.groupecanal.cnews" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cnews.order" default="15"/>
             
-            <setting label="CStar" type="bool" id="channels.fr.c.cstar" default="true" visible="eq(-31,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.c.cstar.order" default="16"/>
+            <setting label="CStar" type="bool" id="channels.fr.groupecanal.cstar" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cstar.order" default="16"/>
             
             <setting label="Gulli" type="bool" id="channels.fr.gulli.gulli" default="true" visible="eq(-33,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.gulli.gulli.order" default="17"/>
