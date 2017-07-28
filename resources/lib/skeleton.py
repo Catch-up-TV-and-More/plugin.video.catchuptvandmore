@@ -59,7 +59,8 @@ channels = {
 	'channels.fr.tf1.tfou': 'Tfou',
 	'channels.fr.tf1.xtra': 'Xtra',
 	'channels.fr.tf1.lci': 'LCI',
-	'channels.fr.lcp.lcp': 'LCP Assemblée Nationale'#,
+	'channels.fr.lcp.lcp': 'LCP Assemblée Nationale',
+	'channels.fr.bfmtv.rmcdecouverte': 'RMC Découverte HD24'#,
 	#'channels.fr.6play.comic': 'comic'
 	
     },
