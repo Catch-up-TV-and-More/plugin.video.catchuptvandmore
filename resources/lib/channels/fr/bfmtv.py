@@ -173,6 +173,9 @@ def list_videos(params):
     videos = []
     
     # TODO GET on WebPage
+    # data-account="1969646226001" data-player="HyW8Pbfyx"
+    # http://players.brightcove.net/1969646226001/HyW8Pbfyx_default/index.min.js
+    # "policyKey:" in js file
     policy_key = 'BCpkADawqM3-H-cGaUXCjg2IuDbluEd1BT3q086vXDTLVFgA2eMaNF90cjMkry6ebdIkVw6TIyYe1T-krizHY64cZrpBGZeq9AfATMPoQSDwPZysf9srEJaU9rRevqraXlqFQ8eRh5WJ_vG4'
     
     if params.channel_name == 'rmcdecouverte':
@@ -187,6 +190,7 @@ def list_videos(params):
 	data_account = data_video_soup['data-account']
 	data_video_id = data_video_soup['data-video-id']
 	
+	# Method to get JSON from 'edge.api.brightcove.com'
 	file_json = utils.download_catalog(
 	    url_video_json_rmcdecouverte % (data_account,data_video_id),
 	    '%s_%s_replay.json' % (data_account,data_video_id),
