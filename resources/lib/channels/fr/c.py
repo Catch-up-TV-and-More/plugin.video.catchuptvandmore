@@ -864,18 +864,18 @@ def list_live(params):
 def get_video_url(params):
     
     # CNews
-    if (params.next == 'play_r' and params.channel_name == 'cnews') or (params.next == 'download_mode' and params.channel_name == 'cnews'):
+    if (params.next == 'play_r' and params.channel_name == 'cnews') or (params.next == 'download_video' and params.channel_name == 'cnews'):
 	return params.video_urlhd
     # C8 & CStar
     elif (params.next == 'play_r' and (params.channel_name == 'c8' or params.channel_name == 'cstar')) \
-	 or (params.next == 'download_mode' and (params.channel_name == 'c8' or params.channel_name == 'cstar')):
+	 or (params.next == 'download_video' and (params.channel_name == 'c8' or params.channel_name == 'cstar')):
 	file_video = utils.get_webcontent(
 	    url_replay_c8_cstar_video % (get_channel_id(params), params.id)
 	)
 	video_json = json.loads(file_video)
 	return video_json['main']['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
     # Canal +
-    elif (params.next == 'play_r' and params.channel_name == 'cplus') or (params.next == 'download_mode' and params.channel_name == 'cplus'):
+    elif (params.next == 'play_r' and params.channel_name == 'cplus') or (params.next == 'download_video' and params.channel_name == 'cplus'):
 	file_path = utils.get_webcontent(params.url_media)
 	media_json = json.loads(file_path)
 	url = media_json['detail']['informations']['VoD']['videoURL'].encode('utf-8')
