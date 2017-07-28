@@ -29,7 +29,6 @@ import ast
 
 # TODO 
 # Replay (More Refactoring todo)
-# Download Mode (cplus, c8, cstar, cnews)
 # Find API for all channel (JSON) get Replay/Live ? 
 # Get URL Live FROM SITE
 # QUALITY
