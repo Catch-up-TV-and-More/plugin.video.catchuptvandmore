@@ -54,16 +54,17 @@ def channel_entry(params):
 def mode_replay_live(params):
     modes = []
     
-    # Add Replay 
-    modes.append({
-	'label' : 'Replay',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='list_shows_1',
-	    category='%s Replay' % params.channel_name.upper(),
-	    window_title='%s Replay' % params.channel_name.upper()
-	),
-    })
+    # Add Replay Desactiver
+    if params.channel_name != 'lcp':
+	modes.append({
+	    'label' : 'Replay',
+	    'url': common.plugin.get_url(
+		action='channel_entry',
+		next='list_shows_1',
+		category='%s Replay' % params.channel_name.upper(),
+		window_title='%s Replay' % params.channel_name.upper()
+	    ),
+	})
     
     # Add Live 
     modes.append({
