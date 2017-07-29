@@ -134,17 +134,26 @@
 	    <setting label="Comic (6play)" type="bool" id="channels.fr.6play.comedy" default="true" visible="eq(-77,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.comedy.order" default="39"/>
 	    
-	    <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-79,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="40"/>
+	    <setting label="France24" type="bool" id="channels.fr.france24.france24" default="true" visible="eq(-79,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.france24.france24.order" default="40"/>
 	    
-	    <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-81,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="41"/>-->
+	    <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-81,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="41"/>
+	    
+	    <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-83,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="42"/>-->
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
             
-	    	<setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-1,true)"/>
+	    <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="1"/>
+	    
+	    <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="2"/>
+	    
+	    <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="3"/>
 
 
     </category>
@@ -160,6 +169,7 @@
         <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
 	<setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
 	    <setting label="30080" type="labelenum" id="channels.fr.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
+	    <setting label="30081" type="labelenum" id="channels.fr.france24.france24.language" visible="eq(-3,true)" values="FR|EN|AR"/>
 	
 	<setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
