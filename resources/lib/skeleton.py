@@ -60,8 +60,13 @@ channels = {
 	'channels.fr.tf1.xtra': 'Xtra',
 	'channels.fr.tf1.lci': 'LCI',
 	'channels.fr.lcp.lcp': 'LCP Assemblée Nationale',
-	'channels.fr.bfmtv.rmcdecouverte': 'RMC Découverte HD24'#,
-	#'channels.fr.6play.comic': 'comic'
+	'channels.fr.bfmtv.rmcdecouverte': 'RMC Découverte HD24',
+	'channels.fr.6play.stories': 'Stories (6play)',
+	'channels.fr.6play.bruce': 'Bruce (6play)',
+	'channels.fr.6play.crazy_kitchen': 'Crazy Kitchen (6play)',
+	'channels.fr.6play.home': 'Home Time (6play)',
+	'channels.fr.6play.styles': 'Sixième Style (6play)',
+	'channels.fr.6play.comedy': 'Comic (6play)'
 	
     },
 
