@@ -133,6 +133,12 @@
 	    
 	    <setting label="Comic (6play)" type="bool" id="channels.fr.6play.comedy" default="true" visible="eq(-77,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.comedy.order" default="39"/>
+	    
+	    <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-79,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="40"/>
+	    
+	    <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-81,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="41"/>-->
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
