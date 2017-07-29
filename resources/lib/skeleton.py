@@ -66,15 +66,19 @@ channels = {
 	'channels.fr.6play.crazy_kitchen': 'Crazy Kitchen (6play)',
 	'channels.fr.6play.home': 'Home Time (6play)',
 	'channels.fr.6play.styles': 'Sixième Style (6play)',
-	'channels.fr.6play.comedy': 'Comic (6play)'#,
+	'channels.fr.6play.comedy': 'Comic (6play)',
+	'channels.fr.france24.france24': 'France24'#,
 	#'channels.fr.6play.teva': 'Teva', #To Test with 6play Account with purshase Teva channel (scrapping working)
 	#'channels.fr.6play.parispremiere': 'Paris Première' #To Test with 6play Account with purshase Paris Premiere channel (scrapping working)
 	
     },
 
     'main_menu.be': {
-       # 'channels.be.rtbf.laune': 'La Une',
-       # 'channels.be.rtbf.ladeux': 'La Deux',
-        'channels.be.rtl.rtltvi': 'RTL-TVI'
+	#'channels.be.rtbf.laune': 'La Une',
+	#'channels.be.rtbf.ladeux': 'La Deux',
+	#'channels.be.rtbf.latrois': 'La Trois',
+        'channels.be.rtl.rtltvi': 'RTL-TVI',
+	'channels.be.rtl.plugrtl': 'PLUG RTL',
+	'channels.be.rtl.clubrtl': 'CLUB RTL'
     }
 }
