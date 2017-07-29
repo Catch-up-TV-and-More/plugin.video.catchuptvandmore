@@ -39,7 +39,7 @@ _ = common.addon.initialize_gettext()
 # e.g. Info, Divertissement, Séries, ...
 # We get an id by category
 url_root = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
-           'm6group_web/services/%sreplay/folders?limit=999&offset=0'
+           'm6group_web/services/%s/folders?limit=999&offset=0'
 
 # Url to get catgory's programs
 # e.g. Le meilleur patissier, La france à un incroyable talent, ...
@@ -90,8 +90,17 @@ def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
+	
+	url_root_site = ''
+	if params.channel_name == 'stories' or params.channel_name == 'bruce' \
+	   or params.channel_name == 'crazy_kitchen' or params.channel_name == 'home' \
+	   or params.channel_name == 'styles' or params.channel_name == 'comedy':
+	    url_root_site = url_root % params.channel_name
+	else:
+	    url_root_site = url_root % (params.channel_name + 'replay')
+	
         file_path = utils.download_catalog(
-            url_root % (params.channel_name),
+            url_root_site,
             '%s.json' % (params.channel_name),
             random_ua=True)
         file_prgm = open(file_path).read()
@@ -139,6 +148,7 @@ def list_shows(params):
             program_desc = array['description'].encode('utf-8')
             program_imgs = array['images']
             program_img = ''
+	    program_fanart = ''
             for img in program_imgs:
                 if img['role'].encode('utf-8') == 'vignette':
                     external_key = img['external_key'].encode('utf-8')
@@ -182,12 +192,19 @@ def list_shows(params):
         program_json = utils.get_webcontent(
             url_subcategory % (params.program_id),
             random_ua=True)
-
+	
         json_parser = json.loads(program_json)
+	
+	try:	    
+	    program_fanart = params.program_fanart
+	except:
+	    pass
+	    program_fanart = ''
+	
         for sub_category in json_parser['program_subcats']:
             sub_category_id = str(sub_category['id'])
             sub_category_title = sub_category['title'].encode('utf-8')
-
+	    
             info = {
                 'video': {
                     'title': sub_category_title,
@@ -198,7 +215,7 @@ def list_shows(params):
             shows.append({
                 'label': sub_category_title,
                 'thumb': params.program_img,
-                'fanart': params.program_fanart,
+                'fanart': program_fanart,
                 'url': common.plugin.get_url(
                     action='channel_entry',
                     next='list_videos',
@@ -218,7 +235,7 @@ def list_shows(params):
         shows.append({
             'label': common.addon.get_localized_string(30101),
             'thumb': params.program_img,
-            'fanart': params.program_fanart,
+            'fanart': program_fanart,
             'url': common.plugin.get_url(
                 action='channel_entry',
                 next='list_videos',
