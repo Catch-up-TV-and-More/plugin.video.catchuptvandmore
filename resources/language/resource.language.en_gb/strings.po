@@ -89,6 +89,10 @@ msgctxt "#30080"
 msgid "Arte: Choose Channel (FR|DE)"
 msgstr ""
 
+msgctxt "#30081"
+msgid "France24: Choose Channel (FR|EN|AR)"
+msgstr ""
+
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
 msgstr ""
