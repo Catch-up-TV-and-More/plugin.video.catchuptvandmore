@@ -25,6 +25,12 @@ from resources.lib import utils
 from resources.lib import common
 import re
 import ast
+import xbmcgui
+
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
 
 auth = '?auth=1487366549-2688-mbe66p57-9b64a7bdc99718f9fc20facf756f8be9'
 
@@ -92,7 +98,7 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL))
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     if 'previous_listing' in params:
@@ -167,6 +173,17 @@ def list_videos(params):
                 'mediatype': 'tvshow'
             }
         }
+        
+        # Nouveau pour ajouter le menu pour télécharger la vidéo
+        context_menu = []
+        download_video = (
+	    _('Download'),
+	    'XBMC.RunPlugin(' + common.plugin.get_url(
+		action='download_video',
+		url=url) + ')'
+	)
+	context_menu.append(download_video)
+	# Fin
 
         videos.append({
             'label': title,
@@ -177,7 +194,8 @@ def list_videos(params):
                 url=url
             ),
             'is_playable': True,
-            'info': info
+            'info': info#,
+            #'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
         })
 
     # More videos...
@@ -208,7 +226,7 @@ def list_videos(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     url = url_root + params.url
     html_video_equipe = utils.get_webcontent(
@@ -224,31 +242,26 @@ def get_video_url(params):
 
     html_daily = html_daily.replace('\\', '')
 
-    urls_mp4 = re.compile(
-        r'{"type":"video/mp4","url":"(.*?)"}],"(.*?)":').findall(html_daily)
-
-    url_sd = ""
-    url_hd = ""
-    url_hdplus = ""
-    url_default = ""
-
-    for url, quality in urls_mp4:
-        if quality == '480':
-            url_sd = url
-        elif quality == '720':
-            url_hd = url
-        elif quality == '1080':
-            url_hdplus = url
-        url_default = url
-
-    desired_quality = common.plugin.get_setting(
-        params.channel_id + '.quality')
-
-    if desired_quality == 'HD+' and url_hdplus:
-        return url_hdplus
-    elif desired_quality == 'HD' and url_hd:
-        return url_hd
-    elif desired_quality == 'SD' and url_sd:
-        return url_sd
+    all_url_video = re.compile(r'"type":"video/mp4","url":"(.*?)"').findall(html_daily)
+    
+    desired_quality = common.plugin.get_setting('quality')
+	
+    if desired_quality == "DIALOG":
+	all_datas_videos = []
+	for datas in all_url_video:
+	    new_list_item = xbmcgui.ListItem()
+	    datas_quality = re.search('H264-(.+?)/', datas).group(1)
+	    new_list_item.setLabel('H264-' + datas_quality)
+	    new_list_item.setPath(datas)
+	    all_datas_videos.append(new_list_item)
+			
+	seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+			
+	return all_datas_videos[seleted_item].getPath().encode('utf-8')
+    elif desired_quality == 'BEST':
+	#Last video in the Best
+	for datas in all_url_video:
+	    url = datas
+	return url
     else:
-        return url_default
+	return all_url_video[0]
