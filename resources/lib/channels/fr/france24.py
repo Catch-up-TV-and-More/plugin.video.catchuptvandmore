@@ -23,20 +23,21 @@
 
 from resources.lib import utils
 from resources.lib import common
-import re
+import json
 from bs4 import BeautifulSoup as bs
 
 # TODO 
 # Replay add emissions
 # Add info LIVE TV
+# Select Language settings not show
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
 _ = common.addon.initialize_gettext()
 
-url_live_site = ''
-url_dailymotion_embed = ''
+url_live_site = 'http://www.france24.com/%s/'
+# Language
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -104,8 +105,30 @@ def list_live(params):
     img = ''
     url_live = ''
     
+    desired_language = common.plugin.get_setting(
+        params.channel_id + '.language')
     
-    title = '%s Live' % params.channel_name.upper() 
+    if desired_language == 'FR':
+	title = '%s Français Live' % (params.channel_name.upper())
+    elif desired_language == 'EN':
+	title = '%s English Live' % (params.channel_name.upper())
+    elif desired_language == 'AR':
+	title = '%s عربية Live' % (params.channel_name.upper())
+    
+    url_live = url_live_site % desired_language.lower()
+    
+    file_path = utils.download_catalog(
+        url_live,
+        '%s_%s_live.html' % (params.channel_name,desired_language.lower())
+    )
+    html_live = open(file_path).read()
+    root_soup = bs(html_live, 'html.parser')
+    
+    json_parser = json.loads(root_soup.select_one("script[type=application/json]").text)
+    media_datas_list = json_parser['medias']['media']['media_sources']['media_source']
+    for datas in media_datas_list:
+	if datas['source']:
+	    url_live = datas['source']
     
     info = {
 	'video': {
@@ -140,6 +163,5 @@ def list_live(params):
 def get_video_url(params):
     
     if params.next == 'play_l':
-		
-	return None
+	return params.url
 
