@@ -66,7 +66,9 @@ channels = {
 	'channels.fr.6play.crazy_kitchen': 'Crazy Kitchen (6play)',
 	'channels.fr.6play.home': 'Home Time (6play)',
 	'channels.fr.6play.styles': 'Sixième Style (6play)',
-	'channels.fr.6play.comedy': 'Comic (6play)'
+	'channels.fr.6play.comedy': 'Comic (6play)'#,
+	#'channels.fr.6play.teva': 'Teva', #To Test with 6play Account with purshase Teva channel (scrapping working)
+	#'channels.fr.6play.parispremiere': 'Paris Première' #To Test with 6play Account with purshase Paris Premiere channel (scrapping working)
 	
     },
 
