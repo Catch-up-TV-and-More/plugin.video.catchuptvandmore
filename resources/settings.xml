@@ -116,8 +116,23 @@
 	    <setting label="RMC Découverte HD24" type="bool" id="channels.fr.bfmtv.rmcdecouverte" default="true" visible="eq(-65,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.rmcdecouverte.order" default="33"/>
 	    
-	    <!--<setting label="Comic" type="bool" id="channels.fr.6play.comic" default="true" visible="eq(-65,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.comic.order" default="33"/>-->
+	    <setting label="Stories (6play)" type="bool" id="channels.fr.6play.stories" default="true" visible="eq(-67,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.stories.order" default="34"/>
+	    
+	    <setting label="Bruce (6play)" type="bool" id="channels.fr.6play.bruce" default="true" visible="eq(-69,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.bruce.order" default="35"/>
+	    
+	    <setting label="Crazy Kitchen (6play)" type="bool" id="channels.fr.6play.crazy_kitchen" default="true" visible="eq(-71,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.crazy_kitchen.order" default="36"/>
+	    
+	    <setting label="Home Time (6play)" type="bool" id="channels.fr.6play.home" default="true" visible="eq(-73,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.home.order" default="37"/>
+	    
+	    <setting label="Sixième Style (6play)" type="bool" id="channels.fr.6play.styles" default="true" visible="eq(-75,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.styles.order" default="38"/>
+	    
+	    <setting label="Comic (6play)" type="bool" id="channels.fr.6play.comedy" default="true" visible="eq(-77,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.comedy.order" default="39"/>
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
