@@ -7,6 +7,7 @@
         <setting label="30010" type="lsep"/>
             <setting label="30020" type="bool" id="main_menu.fr" default="true"/>
             <setting label="30021" type="bool" id="main_menu.be" default="true"/>
+	    <setting label="30022" type="bool" id="main_menu.jp" default="true"/>
     </category>
 
 
@@ -154,7 +155,12 @@
 	    
 	    <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="3"/>
-
+	
+	<setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
+	
+	    <setting label="NHK World" type="bool" id="channels.jp.nhk.nhkworld" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhkworld.order" default="1"/>
 
     </category>
 
@@ -173,6 +179,9 @@
 	
 	<setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
+	
+	<setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
 	
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>

@@ -55,6 +55,10 @@ msgctxt "#30021"
 msgid "Belgian channels"
 msgstr ""
 
+msgctxt "#30022"
+msgid "Japanese channels"
+msgstr ""
+
 
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"

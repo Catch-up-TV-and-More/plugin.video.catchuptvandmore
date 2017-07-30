@@ -23,7 +23,8 @@
 
 categories = {
     'main_menu.fr': 'French channels',
-    'main_menu.be': 'Belgian channels'
+    'main_menu.be': 'Belgian channels',
+    'main_menu.jp': 'Japanese channels'
 }
 
 channels = {
@@ -80,5 +81,10 @@ channels = {
         'channels.be.rtl.rtltvi': 'RTL-TVI',
 	'channels.be.rtl.plugrtl': 'PLUG RTL',
 	'channels.be.rtl.clubrtl': 'CLUB RTL'
+    },
+    
+    'main_menu.jp': {
+        'channels.jp.nhk.nhkworld': 'NHK World'
+	
     }
 }
