@@ -31,7 +31,6 @@ import json
 # TODO 
 # Use some API to simplify
 # Add info LIVE TV
-# Replay OLD Video DailyMotion KO but it is OK in download mode (more work todo to build url)
 
 # LCP contient deux sources de video pour les replays
 # New : play1.qbrick.com
@@ -528,9 +527,9 @@ def get_video_url(params):
 	    html_video = utils.get_webcontent(url_video_embed)
 	    html_video = html_video.replace('\\', '')
 	    
-	    # More work todo url is not OK
-	    all_url_video = re.compile(r'{"type":"application/x-mpegURL","url":"(.*?)"').findall(html_video)
-	    url = all_url_video[0] + '&bs=1'
+	    all_url_video = re.compile(r'"type":"video/mp4","url":"(.*?)"').findall(html_video)
+	    for datas in all_url_video:
+		url = datas
 	else:
 	    #get videoId and accountId
 	    videoId, accountId = re.compile(r'embed/(.*?)/(.*?)/').findall(url_video_embed)[0]
