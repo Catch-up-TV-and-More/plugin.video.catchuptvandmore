@@ -126,8 +126,8 @@ def list_shows(params):
 		    'label': category_name,
 		    'url': common.plugin.get_url(
 			action='channel_entry',
-			category_url=category_url,
-			category_name=category_name,
+			actualites_url=category_url,
+			actualites_name=category_name,
 			page='0',
 			next='list_videos_actualites',
 			window_title=category_name
@@ -138,8 +138,8 @@ def list_shows(params):
 		    'label': category_name,
 		    'url': common.plugin.get_url(
 			action='channel_entry',
-			category_url=category_url,
-			category_name=category_name,
+			documentaires_url=category_url,
+			documentaires_name=category_name,
 			page='0',
 			next='list_videos_documentaires',
 			window_title=category_name
@@ -196,15 +196,15 @@ def list_videos(params):
     if params.next == 'list_videos_documentaires':
 	
 	if params.page == 0:
-	    url = params.category_url
+	    url = params.documentaires_url
 	else:
-	    url = params.category_url + '?page=' + str(params.page)
+	    url = params.documentaires_url + '?page=' + str(params.page)
 	
 	file_path = utils.download_catalog(
 	    url,
 	    '%s_%s_%s.html' % (
 		params.channel_name,
-		params.category_name,
+		params.documentaires_name,
 		params.page))
 	root_html = open(file_path).read()
 	root_soup = bs(root_html, 'html.parser')
@@ -264,8 +264,8 @@ def list_videos(params):
 	    'label': common.addon.get_localized_string(30100),
 	    'url': common.plugin.get_url(
 		action='channel_entry',
-		category_url=params.category_url,
-		category_name=params.category_name,
+		documentaires_url=params.documentaires_url,
+		documentaires_name=params.documentaires_name,
 		next='list_videos_documentaires',
 		page=str(int(params.page) + 1),
 		update_listing=True,
@@ -276,15 +276,15 @@ def list_videos(params):
     elif params.next == 'list_videos_actualites':
 	
 	if params.page == 0:
-	    url = params.category_url
+	    url = params.actualites_url
 	else:
-	    url = params.category_url + '?page=' + str(params.page)
+	    url = params.actualites_url + '?page=' + str(params.page)
 	
 	file_path = utils.download_catalog(
 	    url,
 	    '%s_%s_%s.html' % (
 		params.channel_name,
-		params.category_name,
+		params.actualites_name,
 		params.page))
 	root_html = open(file_path).read()
 	root_soup = bs(root_html, 'html.parser')
@@ -344,8 +344,8 @@ def list_videos(params):
 	    'label': common.addon.get_localized_string(30100),
 	    'url': common.plugin.get_url(
 		action='channel_entry',
-		category_url=params.category_url,
-		category_name=params.category_name,
+		actualites_url=params.actualites_url,
+		actualites_name=params.actualites_name,
 		next='list_videos_actualites',
 		page=str(int(params.page) + 1),
 		update_listing=True,
@@ -521,10 +521,10 @@ def get_video_url(params):
 	
 	if 'dailymotion' in url_video_embed:
 	    
-	    url_video_embed = 'http:%s' %  url_video_embed
+	    url_video_embed_http = 'http:%s' %  url_video_embed
 	    if params.next == 'download_video':
-		return url_video_embed
-	    html_video = utils.get_webcontent(url_video_embed)
+		return url_video_embed_http
+	    html_video = utils.get_webcontent(url_video_embed_http)
 	    html_video = html_video.replace('\\', '')
 	    
 	    all_url_video = re.compile(r'"type":"video/mp4","url":"(.*?)"').findall(html_video)
