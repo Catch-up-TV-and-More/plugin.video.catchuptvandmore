@@ -31,6 +31,11 @@ import json
 # TODO 
 # Use some API to simplify
 # Add info LIVE TV
+# Replay OLD Video DailyMotion KO but it is OK in download mode (more work todo to build url)
+
+# LCP contient deux sources de video pour les replays
+# New : play1.qbrick.com
+# Old : www.dailymotion.com
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -515,18 +520,30 @@ def get_video_url(params):
 	html_video = utils.get_webcontent(params.url_video)
 	url_video_embed = re.compile(r'<iframe src="(.*?)"').findall(html_video)[0]
 	
-	#get videoId and accountId
-	videoId, accountId = re.compile(r'embed/(.*?)/(.*?)/').findall(url_video_embed)[0]
-	
-	html_json = utils.get_webcontent(url_video_replay % (videoId, accountId))
-	
-	html_json_2 = re.compile(r'\((.*?)\);').findall(html_json)[0]
-	json_parser = json.loads(html_json_2)
-	
-	for playlist in json_parser['Playlist']:
-	    datas_video = playlist['MediaFiles']['M3u8']
-	    for data in datas_video:
-		url = data['Url']
+	if 'dailymotion' in url_video_embed:
+	    
+	    url_video_embed = 'http:%s' %  url_video_embed
+	    if params.next == 'download_video':
+		return url_video_embed
+	    html_video = utils.get_webcontent(url_video_embed)
+	    html_video = html_video.replace('\\', '')
+	    
+	    # More work todo url is not OK
+	    all_url_video = re.compile(r'{"type":"application/x-mpegURL","url":"(.*?)"').findall(html_video)
+	    url = all_url_video[0] + '&bs=1'
+	else:
+	    #get videoId and accountId
+	    videoId, accountId = re.compile(r'embed/(.*?)/(.*?)/').findall(url_video_embed)[0]
+	    
+	    html_json = utils.get_webcontent(url_video_replay % (videoId, accountId))
+	    
+	    html_json_2 = re.compile(r'\((.*?)\);').findall(html_json)[0]
+	    json_parser = json.loads(html_json_2)
+	    
+	    for playlist in json_parser['Playlist']:
+		datas_video = playlist['MediaFiles']['M3u8']
+		for data in datas_video:
+		    url = data['Url']
 	
 	return url
     
