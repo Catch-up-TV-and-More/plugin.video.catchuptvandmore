@@ -68,6 +68,21 @@ categories = {
     'http://www.lcp.fr/documentaires' : 'Documentaires'
 }
 
+correct_mounth = {
+    'janvier' : '01',
+    'février' : '02',
+    'mars' : '03',
+    'avril' : '04',
+    'mai' : '05',
+    'juin' : '06',
+    'juillet' : '07',
+    'août' : '08',
+    'septembre' : '09',
+    'octobre' : '10',
+    'novembre' : '11',
+    'décembre' : '12'
+}
+
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
@@ -214,11 +229,19 @@ def list_videos(params):
 	for video in video_soup:
         
 	    title = video.find('h2').find('a').get_text().encode('utf-8')
-	    aired = ''
-	    date = '' 
+	    value_date = video.find('div', class_="content").find('span', class_="date").get_text().encode('utf-8')
+	    date = value_date.split(' ')
+	    day = date[0]
+	    try:
+		mounth = correct_mounth[date[1]]
+	    except:
+		mounth = '00'
+	    year = date[2]
+
+	    date = '.'.join((day, mounth, year))
+	    aired = '-'.join((year, mounth, day))
 	    duration = 0
-	    #duration = int(video.find(div, class_="content").find(div, class_="duration").find('div').find('span').get_text()) * 60 
-	    year = ''
+	    duration = int(video.find('div', class_="content").find('div', class_="duration").find('div').find('span').get_text()) * 60
 	    img = video.find('a').find('img')['src'].encode('utf-8')
 	    url_video = url_root + video['about'].encode('utf-8')
 	    
@@ -294,10 +317,10 @@ def list_videos(params):
 	for video in video_soup:
         
 	    title = video.find('h2').find('a').get_text().encode('utf-8')
-	    aired = ''
+	    aired = video.find('div', class_="content").find('div', class_="field field_submitted").get_text()
 	    date = '' 
 	    duration = 0
-	    year = ''
+	    year = int(aired.split('/',-1)[2])
 	    img = video.find('a').find('img')['src'].encode('utf-8')
 	    
 	    url_video = url_root + video['about'].encode('utf-8')
@@ -386,10 +409,19 @@ def list_videos(params):
 	for video in video_soup:
         
 	    title = video.find('h2').find('a').get_text().encode('utf-8') + ' - ' + video.find('h4').find('a').get_text().encode('utf-8')
-	    aired = ''
-	    date = '' 
+	    value_date = video.find('div', class_="content").find('span', class_="date").get_text().encode('utf-8')
+	    date = value_date.split(' ')
+	    day = date[0]
+	    try:
+		mounth = correct_mounth[date[1]]
+	    except:
+		mounth = '00'
+	    year = date[2]
+
+	    date = '.'.join((day, mounth, year))
+	    aired = '-'.join((year, mounth, day))
 	    duration = 0
-	    year = ''
+	    duration = int(video.find('div', class_="content").find('div', class_="duration").find('div').find('span').get_text()) * 60
 	    img = video.find('a').find('img')['src'].encode('utf-8')
 	    
 	    url_video = url_root + video['about'].encode('utf-8')
