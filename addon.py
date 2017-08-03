@@ -68,8 +68,22 @@ def root(params):
                     action='hide',
                     item_id=category_id) + ')'
             )
+	    
+	    media_country_path = common.sp.xbmc.translatePath(
+            common.sp.os.path.join(
+                media_path,
+                'country'
+            ))
+	    
+	    short_name_country = category_id[-2:]
+	    
+	    icon = media_country_path + ('/%s.png' % short_name_country)
+	    fanart = media_country_path + ('/%s_fanart.png' % short_name_country)
+	    
             context_menu.append(hide)
             listing.append({
+		'icon': icon,
+		'fanart': fanart,
                 'label': _(string_id),
                 'url': common.plugin.get_url(
                     action='list_channels',
