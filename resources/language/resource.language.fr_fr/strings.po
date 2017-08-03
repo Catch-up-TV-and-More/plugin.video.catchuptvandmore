@@ -59,6 +59,10 @@ msgctxt "#30022"
 msgid "Japanese channels"
 msgstr "Chaînes japonaises"
 
+msgctxt "#30023"
+msgid "European channels"
+msgstr "Chaînes européennes"
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"
@@ -89,12 +93,16 @@ msgstr "Pour réactiver les éléments masqués rendez-vous dans les réglages d
 
 # Settings quality and content (from 30070 to 30099)
 msgctxt "#30080"
-msgid "Arte: Choose Channel (FR|DE)"
-msgstr "Arte: Choix de la chaine (FR|DE)"
+msgid "Arte: Choose Channel"
+msgstr "Arte: Choix de la chaine"
 
 msgctxt "#30081"
-msgid "France24: Choose Channel (FR|EN|AR)"
-msgstr "France24: Choix de la Channel (FR|EN|AR)"
+msgid "France24: Choose Channe"
+msgstr "France24: Choix de la chaine"
+
+msgctxt "#30082"
+msgid "Euronews: Choose Channel"
+msgstr "Euronews: Choix de la chaine"
 
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"

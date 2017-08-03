@@ -59,6 +59,9 @@ msgctxt "#30022"
 msgid "Japanese channels"
 msgstr ""
 
+msgctxt "#30023"
+msgid "European channels"
+msgstr ""
 
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
@@ -90,11 +93,15 @@ msgstr ""
 
 # Settings quality and content (from 30070 to 30099)
 msgctxt "#30080"
-msgid "Arte: Choose Channel (FR|DE)"
+msgid "Arte: Choose Channel"
 msgstr ""
 
 msgctxt "#30081"
-msgid "France24: Choose Channel (FR|EN|AR)"
+msgid "France24: Choose Channel"
+msgstr ""
+
+msgctxt "#30082"
+msgid "Euronews: Choose Channel"
 msgstr ""
 
 msgctxt "#30087"

@@ -180,7 +180,8 @@ def list_channels(params):
 	    or 'tf1' in channel_module or 'lcp' in channel_module \
 	    or 'numero23' in channel_module or 'groupecanal' in channel_module \
 	    or 'gulli' in channel_module or 'lequipe' in channel_module \
-	    or 'france24' in channel_module or 'nhk' in channel_module:
+	    or 'france24' in channel_module or 'nhk' in channel_module \
+	    or 'euronews' in channel_module:
 	    listing.append({
 		'icon': icon,
 		'fanart': fanart,

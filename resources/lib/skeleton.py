@@ -24,7 +24,8 @@
 categories = {
     'main_menu.fr': 'French channels',
     'main_menu.be': 'Belgian channels',
-    'main_menu.jp': 'Japanese channels'
+    'main_menu.jp': 'Japanese channels',
+    'main_menu.eu': 'European channels'
 }
 
 channels = {
@@ -85,6 +86,11 @@ channels = {
     
     'main_menu.jp': {
         'channels.jp.nhk.nhkworld': 'NHK World'
+	
+    },
+    
+    'main_menu.eu': {
+        'channels.eu.euronews.euronews': 'Euronews'
 	
     }
 }
