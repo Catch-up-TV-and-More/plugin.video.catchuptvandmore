@@ -27,6 +27,7 @@ import xml.etree.ElementTree as ET
 import re
 import json
 import base64
+import time
 
 # TODO 
 # Get or generate videoPcode ?
@@ -203,6 +204,15 @@ def list_videos(params):
 		plot = episode["description_clean"].encode('utf-8')
 		duration = 0
 		duration = episode["movie_duration"]
+		
+		value_date = time.strftime('%d %m %Y', time.localtime(int(str(episode["onair"])[:-3])))
+		date = str(value_date).split(' ')
+		day = date[0]
+		mounth = date[1]
+		year = date[2]
+
+		date = '.'.join((day, mounth, year))
+		aired = '-'.join((year, mounth, day))
 			
 		info = {
 		    'video': {
@@ -211,10 +221,10 @@ def list_videos(params):
 			#'episode': episode_number,
 			#'season': season_number,
 			#'rating': note,
-			#'aired': aired,
-			#'date': date,
+			'aired': aired,
+			'date': date,
 			'duration': duration,
-			#'year': year,
+			'year': year,
 			'mediatype': 'tvshow'
 		    }
 		}
