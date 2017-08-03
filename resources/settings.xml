@@ -192,7 +192,7 @@
 	
 	<setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
-	    <setting label="30082" type="labelenum" id="channels.eu.euronews.euronews.language" visible="eq(-1,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|EL|HU"/>
+	    <setting label="30082" type="labelenum" id="channels.eu.euronews.euronews.language" visible="eq(-1,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
 	
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>
