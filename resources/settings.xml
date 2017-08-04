@@ -147,15 +147,42 @@
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
+	
+	    <setting label="La Une" type="bool" id="channels.be.rtbf.laune" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.laune.order" default="1"/>
+	    
+	    <setting label="La Deux" type="bool" id="channels.be.rtbf.ladeux" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.ladeux.order" default="2"/>
+	    
+	    <setting label="La Trois" type="bool" id="channels.be.rtbf.latrois" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.latrois.order" default="3"/>
+	    
+	    <setting label="La Première" type="bool" id="channels.be.rtbf.lapremiere" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.lapremiere.order" default="4"/>
+	    
+	    <setting label="Vivacité" type="bool" id="channels.be.rtbf.vivacite" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.vivacite.order" default="5"/>
+	    
+	    <setting label="Musiq 3" type="bool" id="channels.be.rtbf.musiq3" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.musiq3.order" default="6"/>
+	    
+	    <setting label="Classic 21" type="bool" id="channels.be.rtbf.classic21" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.classic21.order" default="7"/>
+	    
+	    <setting label="Pure FM" type="bool" id="channels.be.rtbf.purefm" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.purefm.order" default="8"/>
+	    
+	    <setting label="TARMAC" type="bool" id="channels.be.rtbf.tarmac" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.tarmac.order" default="9"/>
             
-	    <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="1"/>
+	    <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="10"/>
 	    
-	    <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="2"/>
+	    <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="11"/>
 	    
-	    <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="3"/>
+	    <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="12"/>
 	
 	<setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
@@ -181,8 +208,9 @@
 	<setting label="Content" type="lsep" />
         <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
 	<setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
+	
 	    <setting label="30080" type="labelenum" id="channels.fr.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
-	    <setting label="30081" type="labelenum" id="channels.fr.france24.france24.language" visible="eq(-5,true)" values="FR|EN|AR"/>
+	    <setting label="30081" type="labelenum" id="channels.fr.france24.france24.language" visible="eq(-3,true)" values="FR|EN|AR"/>
 	
 	<setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
