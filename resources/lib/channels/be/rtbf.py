@@ -259,10 +259,10 @@ def list_videos(params):
 
 def format_date(date):
     date_list = date.split('T')
-    date_dmy = date_list[0].replace('-','/')
+    #date_dmy = date_list[0].replace('-','/') (TODO keep date or not ?)
     date_hour = date_list[1][:5]
         
-    return date_dmy + ' ' + date_hour
+    return date_hour
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
