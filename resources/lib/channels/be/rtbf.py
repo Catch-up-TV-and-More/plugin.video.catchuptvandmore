@@ -26,6 +26,7 @@ from resources.lib import common
 import ast
 import re
 import json
+import time
 
 # TODO (More Work TODO)
 # Add categories 
@@ -83,6 +84,11 @@ def list_shows(params):
             '%s_categories.json' % params.channel_name)
         categories_json = open(file_path).read()
         categories = json.loads(categories_json)
+	
+	# Build list category
+	#for category in categories['item']:
+	#    if category['@attributes']['id'] == 'category':
+		
 
         for category in categories['item']:
             if category['@attributes']['id'] == 'emission':
@@ -90,46 +96,35 @@ def list_shows(params):
                     '@attributes']['name'].encode('utf-8')
                 category_url = category[
                     '@attributes']['url'].encode('utf-8')
-                shows.append({
-                    'label': category_title,
-                    'url': common.plugin.get_url(
-                        category_title=category_title,
-                        action='channel_entry',
-                        category_url=category_url,
-                        next='list_shows_cat',
-                        window_title=category_title
-                    )
-                })
 
-    elif params.next == 'list_shows_cat':
-        file_path = utils.download_catalog(
-            params.category_url,
-            '%s_%s.html' % (
-                params.channel_name,
-                params.category_title))
-        category_html = open(file_path).read()
-        category_soup = bs(category_html, 'html.parser')
+		file_path = utils.download_catalog(
+		    category_url,
+		    '%s_%s.html' % (
+			params.channel_name,
+			category_title))
+		category_html = open(file_path).read()
+		category_soup = bs(category_html, 'html.parser')
 
-	emissions_soup = category_soup.find_all('article', class_="rtbf-media-item col-xxs-12 ")
-	
-	for emission in emissions_soup:
-	    
-	    channel_emission = emission.find('div', class_="rtbf-media-item__meta-bottom").get_text().encode('utf-8')
-	    if channel_filter[params.channel_name] in channel_emission:
-	    
-		emission_title = emission.find('h4').get_text().encode('utf-8')
-		data_id = emission['data-id']
-	    
-		shows.append({
-		    'label': emission_title,
-		    'url': common.plugin.get_url(
-			emission_title=emission_title,
-			action='channel_entry',
-			data_id=data_id,
-			next='list_videos',
-			window_title=emission_title
-		    )
-		})
+		emissions_soup = category_soup.find_all('article', class_="rtbf-media-item col-xxs-12 ")
+		
+		for emission in emissions_soup:
+		    
+		    channel_emission = emission.find('div', class_="rtbf-media-item__meta-bottom").get_text().encode('utf-8')
+		    if channel_filter[params.channel_name] in channel_emission:
+		    
+			emission_title = emission.find('h4').get_text().encode('utf-8')
+			data_id = emission['data-id']
+		    
+			shows.append({
+			    'label': emission_title,
+			    'url': common.plugin.get_url(
+				emission_title=emission_title,
+				action='channel_entry',
+				data_id=data_id,
+				next='list_videos',
+				window_title=emission_title
+			    )
+			})
 
     return common.plugin.create_listing(
         shows,
@@ -165,6 +160,15 @@ def list_videos(params):
 	duration = 0
 	duration = video_data["durations"]
 	
+	value_date = time.strftime('%d %m %Y', time.localtime(video_data["liveFrom"]))
+	date = str(value_date).split(' ')
+	day = date[0]
+	mounth = date[1]
+	year = date[2]
+
+	date = '.'.join((day, mounth, year))
+	aired = '-'.join((year, mounth, day))
+	
 	info = {
 	    'video': {
 		'title': title,
@@ -172,10 +176,10 @@ def list_videos(params):
 		#'episode': episode_number,
 		#'season': season_number,
 		#'rating': note,
-		#'aired': aired,
-		#'date': date,
+		'aired': aired,
+		'date': date,
 		'duration': duration,
-		#'year': year,
+		'year': year,
 		'mediatype': 'tvshow'
 	    }
 	}
