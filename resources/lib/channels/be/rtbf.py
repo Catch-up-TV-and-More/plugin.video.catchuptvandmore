@@ -47,6 +47,9 @@ url_json_emissions_by_id = 'https://www.rtbf.be/api/media/video?method=getVideoL
 
 url_root_image_rtbf = 'https://ds1.static.rtbf.be'
 
+url_json_live =	'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&partner_key=82ed2c5b7df0a9334dfbda21eccd8427'
+# TODO get Partener_KEY
+
 channel_filter = {
     'laune': 'La Une',
     'ladeux': 'La Deux',
@@ -63,15 +66,52 @@ channel_filter = {
 
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+	return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
         return None
 
+#@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay 
+    modes.append({
+	'label' : 'Replay',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='list_shows_1',
+	    category='%s Replay' % params.channel_name.upper(),
+	    window_title='%s Replay' % params.channel_name.upper()
+	),
+    })
+    
+    # Add Live 
+    modes.append({
+	'label' : 'Live TV',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='live_cat',
+	    category='%s Live TV' % params.channel_name.upper(),
+	    window_title='%s Live TV' % params.channel_name.upper()
+	),
+    })
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
@@ -217,6 +257,121 @@ def list_videos(params):
 	),
 	content='tvshows')
 
+def format_date(date):
+    date_list = date.split('T')
+    date_dmy = date_list[0].replace('-','/')
+    date_hour = date_list[1][:5]
+        
+    return date_dmy + ' ' + date_hour
+
+#@common.plugin.cached(common.cache_time)
+def list_live(params):
+    
+    lives = []
+    
+    title = ''
+    subtitle = ' - '
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
+    
+    file_path = utils.download_catalog(
+	url_json_live,
+	'%s_live.json' % (params.channel_name))
+    live_json = open(file_path).read()
+    live_jsonparser = json.loads(live_json)
+    
+    channel_live_in_process = False
+    
+    for live in live_jsonparser:
+	#check in live for this channel today + print start_date
+	if type(live["channel"]) is dict:
+	    live_channel = live["channel"]["label"]
+	    if channel_filter[params.channel_name] in live_channel:
+		start_date_value = format_date(live["start_date"])
+		end_date_value = format_date(live["end_date"])
+		title = live["title"] + ' - Debut : ' + start_date_value + ' - Fin : ' + end_date_value
+		url_live = live["url_streaming"]["url_hls"]
+		plot = live["description"].encode('utf-8')
+		img = live["images"]["illustration"]["16x9"]["1248x702"]
+
+		info = {
+		    'video': {
+			'title': title,
+			'plot': plot,
+			'duration': duration
+		    }
+		}
+		
+		lives.append({
+		    'label': title,
+		    'fanart': img,
+		    'thumb': img,
+		    'url' : common.plugin.get_url(
+			action='channel_entry',
+			next='play_l',
+			url_live=url_live,
+		    ),
+		    'is_playable': True,
+		    'info': info
+		})
+	else:
+	    #add exclusivity
+	    start_date_value = format_date(live["start_date"])
+	    end_date_value = format_date(live["end_date"])
+	    title = 'Exclu Auvio : ' + live["title"] + ' - Debut : ' + start_date_value + ' - Fin : ' + end_date_value
+	    url_live = live["url_streaming"]["url_hls"]
+	    plot = live["description"].encode('utf-8')
+	    img = live["images"]["illustration"]["16x9"]["1248x702"]
+
+	    info = {
+		'video': {
+		    'title': title,
+		    'plot': plot,
+		    'duration': duration
+		}
+	    }
+		
+	    lives.append({
+		'label': title,
+		'fanart': img,
+		'thumb': img,
+		'url' : common.plugin.get_url(
+		    action='channel_entry',
+		    next='play_l',
+		    url_live=url_live,
+		),
+		'is_playable': True,
+		'info': info
+	    })
+    
+    if len(lives) == 0:
+	
+	title = 'No Live for %s Today' % params.channel_name.upper()
+	
+	lives.append({
+	    'label': title,
+	    'url' : common.plugin.get_url(
+		action='channel_entry',
+		next='play_l',
+	    ),
+	    'is_playable': False,
+	    'info': info
+	})
+    
+    return common.plugin.create_listing(
+	lives,
+	sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
+
+
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    return params.url_video
+    if params.next == 'play_l':
+	return params.url_live
+    elif params.next == 'play_r':
+	return params.url_video
