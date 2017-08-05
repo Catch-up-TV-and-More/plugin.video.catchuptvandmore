@@ -85,6 +85,7 @@ channels = {
 	'channels.be.rtbf.classic21': 'Classic 21',
 	'channels.be.rtbf.purefm': 'Pure FM',
 	'channels.be.rtbf.tarmac': 'TARMAC',
+	'channels.be.rtbf.webcreation': 'Webcréation (RTBF)',
         'channels.be.rtl.rtltvi': 'RTL-TVI',
 	'channels.be.rtl.plugrtl': 'PLUG RTL',
 	'channels.be.rtl.clubrtl': 'CLUB RTL'

@@ -55,8 +55,9 @@ channel_filter = {
     'vivacite' : 'Vivacité',
     'musiq3' : 'Musiq 3',
     'classic21' : 'Classic 21',
-    'purefm' : 'PURE',
-    'tarmac' : 'TARMAC'
+    'purefm' : 'Pure',
+    'tarmac' : 'TARMAC',
+    'webcreation' : 'Webcréation'
 	
 }
 
@@ -84,11 +85,6 @@ def list_shows(params):
             '%s_categories.json' % params.channel_name)
         categories_json = open(file_path).read()
         categories = json.loads(categories_json)
-	
-	# Build list category
-	#for category in categories['item']:
-	#    if category['@attributes']['id'] == 'category':
-		
 
         for category in categories['item']:
             if category['@attributes']['id'] == 'emission':

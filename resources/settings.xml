@@ -174,15 +174,18 @@
 	    
 	    <setting label="TARMAC" type="bool" id="channels.be.rtbf.tarmac" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtbf.tarmac.order" default="9"/>
+	    
+	    <setting label="Webcréation (RTBF)" type="bool" id="channels.be.rtbf.webcreation" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.webcreation.order" default="10"/>
             
-	    <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-19,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="10"/>
+	    <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="11"/>
 	    
-	    <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-21,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="11"/>
+	    <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="12"/>
 	    
-	    <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-23,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="12"/>
+	    <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="13"/>
 	
 	<setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
