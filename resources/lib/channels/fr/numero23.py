@@ -29,6 +29,7 @@ import xbmcgui
 
 # TODO
 # Get more info Live TV (picture, plot)
+# Get year from Replay
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -56,6 +57,21 @@ def channel_entry(params):
         return get_video_url(params)
     else:
         return None
+
+correct_month = {
+    'janvier' : '01',
+    'février' : '02',
+    'mars' : '03',
+    'avril' : '04',
+    'mai' : '05',
+    'juin' : '06',
+    'juillet' : '07',
+    'août' : '08',
+    'septembre' : '09',
+    'octobre' : '10',
+    'novembre' : '11',
+    'décembre' : '12'
+}
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
@@ -152,19 +168,40 @@ def list_videos(params):
 
     while len(videos_soup) != 0:
 	for video in videos_soup:
+	    
+	    info_video = video.find_all('p')
+	    
 	    video_title = video.find('h3').find('a').get_text().encode('utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n') \
 			    + ' - ' + video.find('p', class_="red").get_text().encode('utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n')
 	    video_img = video.find('img')['src'].encode('utf-8')
 	    video_id = video.find('div', class_="player")['data-id-video'].encode('utf-8')
-	    video_duration = 0 # video.find('p').find('strong').get_text()
+	    video_duration = 0 
+	    video_duration_list = str(info_video[3]).replace("<p><strong>",'').replace("</strong></p>",'').split(':')
+	    if len(video_duration_list) > 2:
+		video_duration = int(video_duration_list[0]) * 3600 + int(video_duration_list[1]) * 60 + int(video_duration_list[2])
+	    else:
+		video_duration = int(video_duration_list[0]) * 60 + int(video_duration_list[1])
+
+	    # get month and day on the page
+	    date_list = str(info_video[2]).replace("<p>",'').replace("</p>",'').split(' ')
+	    day = date_list[2]
+	    try:
+		mounth = correct_month[date_list[3]]
+	    except:
+		mounth = '00'
+	    # get year ?
+	    year = '2017'
+
+	    date = '.'.join((day, mounth, year))
+	    aired = '-'.join((year, mounth, day))
 
 	    info = {
 		'video': {
 		    'title': video_title,
-		    #'aired': aired,
-		    #'date': date,
+		    'aired': aired,
+		    'date': date,
 		    'duration': video_duration,
-		    #'year': year,
+		    'year': year,
 		    'mediatype': 'tvshow'
 		}
 	    }
