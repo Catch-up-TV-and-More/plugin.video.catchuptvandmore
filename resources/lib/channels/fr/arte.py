@@ -262,7 +262,11 @@ def list_live(params):
     
     title = json_parser["videoJsonPlayer"]["VTI"].encode('utf-8')
     img = json_parser["videoJsonPlayer"]["VTU"]["IUR"].encode('utf-8')
-    plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
+    plot = ''
+    try:
+	plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
+    except:
+	plot = ''
     duration = 0
     duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
     url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]

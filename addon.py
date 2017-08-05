@@ -195,7 +195,8 @@ def list_channels(params):
 	    or 'numero23' in channel_module or 'groupecanal' in channel_module \
 	    or 'gulli' in channel_module or 'lequipe' in channel_module \
 	    or 'france24' in channel_module or 'nhk' in channel_module \
-	    or 'euronews' in channel_module or 'rtbf' in channel_module:
+	    or 'euronews' in channel_module or 'rtbf' in channel_module \
+	    or 'nrj' in channel_module:
 	    listing.append({
 		'icon': icon,
 		'fanart': fanart,
