@@ -257,12 +257,16 @@ def list_videos(params):
 	),
 	content='tvshows')
 
-def format_date(date):
+def format_hours(date):
     date_list = date.split('T')
-    #date_dmy = date_list[0].replace('-','/') (TODO keep date or not ?)
     date_hour = date_list[1][:5]
-        
     return date_hour
+
+def format_day(date):
+    date_list = date.split('T')
+    date_dmy = date_list[0].replace('-','/') 
+    return date_dmy
+    
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
@@ -287,11 +291,12 @@ def list_live(params):
     for live in live_jsonparser:
 	#check in live for this channel today + print start_date
 	if type(live["channel"]) is dict:
-	    live_channel = live["channel"]["label"]
+	    live_channel = live["channel"]["label"].encode('utf-8')
 	    if channel_filter[params.channel_name] in live_channel:
-		start_date_value = format_date(live["start_date"])
-		end_date_value = format_date(live["end_date"])
-		title = live["title"] + ' - Debut : ' + start_date_value + ' - Fin : ' + end_date_value
+		start_date_value = format_hours(live["start_date"])
+		end_date_value = format_hours(live["end_date"])
+		day_value = format_day(live["start_date"])
+		title = live["title"] + ' - ' + day_value + ' - Periode : ' + start_date_value + ' - ' + end_date_value
 		url_live = live["url_streaming"]["url_hls"]
 		plot = live["description"].encode('utf-8')
 		img = live["images"]["illustration"]["16x9"]["1248x702"]
@@ -317,10 +322,11 @@ def list_live(params):
 		    'info': info
 		})
 	else:
-	    #add exclusivity
-	    start_date_value = format_date(live["start_date"])
-	    end_date_value = format_date(live["end_date"])
-	    title = 'Exclu Auvio : ' + live["title"] + ' - Debut : ' + start_date_value + ' - Fin : ' + end_date_value
+	    #add exclusivity of Auvio
+	    start_date_value = format_hours(live["start_date"])
+	    end_date_value = format_hours(live["end_date"])
+	    day_value = format_day(live["start_date"])
+	    title = 'Exclu Auvio : ' + live["title"] + ' - ' + day_value + ' - Periode : ' + start_date_value + ' - ' + end_date_value
 	    url_live = live["url_streaming"]["url_hls"]
 	    plot = live["description"].encode('utf-8')
 	    img = live["images"]["illustration"]["16x9"]["1248x702"]
@@ -348,7 +354,7 @@ def list_live(params):
     
     if len(lives) == 0:
 	
-	title = 'No Live for %s Today' % params.channel_name.upper()
+	title = 'No Live TV for %s Today' % params.channel_name.upper()
 	
 	lives.append({
 	    'label': title,
