@@ -189,7 +189,7 @@ def list_videos(params):
 	    url = '' #program.find("offres").find("offre").find("videos").findtext("video)
 	    for i in program.find("offres").findall("offre"):
 		
-		date_value = i.findtext("broadcastdate")
+		date_value = i.get("startdate")
 		date_value_list = date_value.split(' ')[0].split('-')
 		day = date_value_list[2]
 		mounth = date_value_list[1]
@@ -264,7 +264,7 @@ def list_videos(params):
 	    url = '' #program.find("offres").find("offre").find("videos").findtext("video)
 	    for i in program.find("offres").findall("offre"):
 		
-		date_value = i.findtext("broadcastdate")
+		date_value = i.get("startdate")
 		date_value_list = date_value.split(' ')[0].split('-')
 		day = date_value_list[2]
 		mounth = date_value_list[1]
