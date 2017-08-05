@@ -30,9 +30,9 @@ import time
 
 # TODO (More Work TODO)
 # Add categories 
-# Add Live TV
 # Add geoblock (info in JSON)
 # Add Quality Mode
+# get Partener_KEY (for Live)
 # etc ...
 
 # Initialize GNU gettext emulation in addon

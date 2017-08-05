@@ -178,7 +178,7 @@ def list_videos(params):
 	    duration = 0
 	    if program.findtext("duration"):
 		try:
-		    duration = int(program.findtext("duration"))
+		    duration = int(program.findtext("duration")) * 60
 		except ValueError:
 		    pass      # or whatever
 	    
@@ -188,6 +188,16 @@ def list_videos(params):
 	    # Url Video
 	    url = '' #program.find("offres").find("offre").find("videos").findtext("video)
 	    for i in program.find("offres").findall("offre"):
+		
+		date_value = i.findtext("broadcastdate")
+		date_value_list = date_value.split(' ')[0].split('-')
+		day = date_value_list[2]
+		mounth = date_value_list[1]
+		year = date_value_list[0]
+
+		date = '.'.join((day, mounth, year))
+		aired = '-'.join((year, mounth, day))
+		
 		for j in i.find("videos").findall("video"):
 		    url = j.text.encode('utf-8')
 	    
@@ -202,9 +212,9 @@ def list_videos(params):
 		    'title': title,
 		    'plot': plot,
 		    'duration': duration,
-		    #'aired': aired,
-		    #'date': date,
-		    #'year': year,
+		    'aired': aired,
+		    'date': date,
+		    'year': year,
 		    'mediatype': 'tvshow'
 		}
 	    }
@@ -243,7 +253,7 @@ def list_videos(params):
 	    duration = 0
 	    if program.findtext("duration"):
 		try:
-		    duration = int(program.findtext("duration"))
+		    duration = int(program.findtext("duration")) * 60
 		except ValueError:
 		    pass      # or whatever
 	    
@@ -253,6 +263,16 @@ def list_videos(params):
 	    # Url Video
 	    url = '' #program.find("offres").find("offre").find("videos").findtext("video)
 	    for i in program.find("offres").findall("offre"):
+		
+		date_value = i.findtext("broadcastdate")
+		date_value_list = date_value.split(' ')[0].split('-')
+		day = date_value_list[2]
+		mounth = date_value_list[1]
+		year = date_value_list[0]
+
+		date = '.'.join((day, mounth, year))
+		aired = '-'.join((year, mounth, day))
+		
 		for j in i.find("videos").findall("video"):
 		    url = j.text.encode('utf-8')
 	    
@@ -267,9 +287,9 @@ def list_videos(params):
 		    'title': title,
 		    'plot': plot,
 		    'duration': duration,
-		    #'aired': aired,
-		    #'date': date,
-		    #'year': year,
+		    'aired': aired,
+		    'date': date,
+		    'year': year,
 		    'mediatype': 'tvshow'
 		}
 	    }
@@ -302,9 +322,12 @@ def list_videos(params):
     return common.plugin.create_listing(
         videos,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_DATE,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
+	    common.sp.xbmcplugin.SORT_METHOD_DURATION,
+	    common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
+	    common.sp.xbmcplugin.SORT_METHOD_GENRE,
+	    common.sp.xbmcplugin.SORT_METHOD_PLAYCOUNT,
+	    common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows')
 
