@@ -23,6 +23,8 @@
 from resources.lib import utils
 from resources.lib import common
 import xml.etree.ElementTree as ET
+from bs4 import BeautifulSoup as bs
+import json
 
 # TODO
 # FIX DOWNLOAD MODE
@@ -49,24 +51,69 @@ url_all_video = 'http://www.nrj-play.fr/sitemap-videos.xml'
 url_get_api_live = 'http://www.nrj-play.fr/sitemap.xml'
 # NOT_USED in this script (link api, live and more)
 
-url_token = 'https://www.nrj-play.fr/compte/session'
+url_compte_login = 'https://www.nrj-play.fr/compte/login'
 # TODO add account for using Live Direct
 
-url_live = 'http://www.nrj-play.fr/nrj12/direct'
+url_compte_session = 'https://www.nrj-play.fr/compte/session'
+# TODO add account for using Live Direct
+
+url_live_with_token = 'http://www.nrj-play.fr/compte/live?&channel=%s'
+# channel (nrj12, ...) - call this url after get session (url live with token inside this page)
 
 url_root = 'http://www.nrj-play.fr'
 
+login = 'XXXXX'
+password = 'XXXXX'
+token = 'XXXXXXX'
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+	return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
         return None
 
+
+#@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay Desactiver
+    modes.append({
+	'label' : 'Replay',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='list_shows_1',
+	    category='%s Replay' % params.channel_name.upper(),
+	    window_title='%s Replay' % params.channel_name.upper()
+	),
+    })
+    
+    # Add Live 
+    modes.append({
+	'label' : 'Live TV',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='live_cat',
+	    category='%s Live TV' % params.channel_name.upper(),
+	    window_title='%s Live TV' % params.channel_name.upper()
+	),
+    })
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
@@ -236,7 +283,7 @@ def list_videos(params):
 		'thumb': img,
 		'url': common.plugin.get_url(
 		    action='channel_entry',
-		    next='play',
+		    next='play_r',
 		    url_video=url
 		),
 		'is_playable': True,
@@ -311,7 +358,7 @@ def list_videos(params):
 		'thumb': img,
 		'url': common.plugin.get_url(
 		    action='channel_entry',
-		    next='play',
+		    next='play_r',
 		    url_video=url
 		),
 		'is_playable': True,
@@ -331,7 +378,68 @@ def list_videos(params):
         ),
         content='tvshows')
 
+#@common.plugin.cached(common.cache_time)
+def list_live(params):
+    
+    lives = []
+    
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
+    
+    # Call session https://www.nrj-play.fr/compte/session before this code
+    
+    file_path = utils.download_catalog(
+	url_live_with_token % params.channel_name,
+	'%s_live_with_token.html' % params.channel_name,
+    )
+    live_with_token_html = open(file_path).read()
+    root_soup = bs(live_with_token_html, 'html.parser')
+    live_soup = root_soup.find('iframe', class_='embed-responsive-item')
+    
+    url_live_json = live_soup.get('data-options')
+    url_live_json_jsonparser = json.loads(url_live_json)
+    
+    url_live = url_live_json_jsonparser["file"]
+    
+    title = '%s Live' % params.channel_name.upper() 
+    
+    info = {
+	'video': {
+	    'title': title,
+	    'plot': plot,
+	    'duration': duration
+	}
+    }
+    
+    lives.append({
+	'label': title,
+	'fanart': img,
+	'thumb': img,
+	'url' : common.plugin.get_url(
+	    action='channel_entry',
+	    next='play_l',
+	    url_live=url_live,
+	),
+	'is_playable': True,
+	'info': info
+    })
+    
+    return common.plugin.create_listing(
+	lives,
+	sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
+
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    # Just One format of each video (no need of QUALITY)
-    return params.url_video
+    
+    if params.next == 'play_r':
+	# Just One format of each video (no need of QUALITY)
+	return params.url_video
+    elif params.next == 'play_l':
+	return params.url_live
