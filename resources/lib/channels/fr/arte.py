@@ -263,10 +263,10 @@ def list_live(params):
     title = json_parser["videoJsonPlayer"]["VTI"].encode('utf-8')
     img = json_parser["videoJsonPlayer"]["VTU"]["IUR"].encode('utf-8')
     plot = ''
-    try:
+    if 'V7T' in json_parser["videoJsonPlayer"]:
+	plot = json_parser["videoJsonPlayer"]["V7T"].encode('utf-8')
+    elif 'VDE' in json_parser["videoJsonPlayer"]:
 	plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
-    except:
-	plot = ''
     duration = 0
     duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
     url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
