@@ -139,11 +139,14 @@
 	    <setting label="France24" type="bool" id="channels.fr.france24.france24" default="true" visible="eq(-79,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.france24.france24.order" default="40"/>
 	    
-	    <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-81,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="41"/>
+	    <setting label="Public Sénat" type="bool" id="channels.fr.publicsenat.publicsenat" default="true" visible="eq(-81,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.publicsenat.publicsenat.order" default="41"/>
 	    
-	    <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-83,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="42"/>-->
+	    <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-83,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="42"/>
+	    
+	    <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-85,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="43"/>-->
 
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
