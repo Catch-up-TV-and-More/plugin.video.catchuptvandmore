@@ -26,13 +26,16 @@ from resources.lib import utils
 from resources.lib import common
 import ast
 from bs4 import BeautifulSoup as bs
+import time
+import re
 
 
 # TODO
-# Add Live TV (Done for RMCDecouverte | Todo Other channels)
+# Add Live TV (Done for RMCDecouverte, BFMTV | Todo Other channels (BFM PARIS, BFM SPORT and BFM Business)
 # RMC DECOUVERTE (Get Policy Key from WebSite)
 # Add Download Video
 
+# BFMTV, RMC, ONENET, etc ...
 url_token = 'http://api.nextradiotv.com/%s-applications/'
 #channel
 
@@ -50,6 +53,18 @@ url_show = 'http://api.nextradiotv.com/%s-applications/%s/' \
 url_video = 'http://api.nextradiotv.com/%s-applications/%s/' \
             'getVideo?idVideo=%s'
 # channel, token, video_id
+
+# URL Live
+url_live_onenet = 'http://www.01net.com/mediaplayer/live-video/'
+
+url_live_bfmtv = 'http://www.bfmtv.com/mediaplayer/live-video/'
+url_live_bfm_paris = 'http://www.bfmtv.com/mediaplayer/live-bfm-paris/'
+
+url_live_bfmbusiness = 'http://bfmbusiness.bfmtv.com/mediaplayer/live-video/'
+
+url_live_bfm_sport = 'http://rmcsport.bfmtv.com/mediaplayer/live-bfm-sport/'
+
+
 
 # RMC Decouverte
 url_replay_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-replay/'
@@ -109,7 +124,7 @@ def mode_replay_live(params):
     })
     
     # Add Live 
-    if params.channel_name == 'rmcdecouverte':
+    if params.channel_name != 'rmc':
 	modes.append({
 	    'label' : 'Live TV',
 	    'url': common.plugin.get_url(
@@ -135,47 +150,33 @@ def list_shows(params):
 
     if params.channel_name == 'rmcdecouverte':
 	
-	if params.next == 'list_shows_1':
-	    title = 'Toutes les Vidéos'
+	file_path = utils.download_catalog(
+	    url_replay_rmcdecouverte,
+	    '%s_replay.html' % (params.channel_name))
+	program_html = open(file_path).read()
 	    
+	program_soup = bs(program_html, 'html.parser')
+	videos_soup = program_soup.find_all('article', class_='art-c modulx2-5 bg-color-rub0-1 box-shadow relative')
+	for video in videos_soup:
+	    video_id = video.find('figure').find('a')['href'].split('&', 1 )[0].rsplit('=',1)[1]
+	    video_img = video.find('figure').find('a').find('img')['data-original']
+	    video_titles = video.find('div', class_="art-body").find('a').find('h2').get_text().encode('utf-8').replace('\n', ' ').replace('\r', ' ').split(' ')
+	    video_title = ''
+	    for i in video_titles:
+		video_title = video_title + ' ' + i.strip()
+		
 	    shows.append({
-		'label': title,
+		'label': video_title,
+		'thumb': video_img,
 		'url': common.plugin.get_url(
 		    action='channel_entry',
-		    next='list_shows_2',
-		    title=title,
-		    page='1',
-		    window_title=title
+		    next='list_videos_1',
+		    video_id = video_id,
+		    title=video_title,
+		    page='2',
+		    window_title=video_title
 		)
 	    })
-	elif params.next == 'list_shows_2':
-	    file_path = utils.download_catalog(
-		url_replay_rmcdecouverte,
-		'%s_replay.html' % (params.channel_name))
-	    program_html = open(file_path).read()
-	    
-	    program_soup = bs(program_html, 'html.parser')
-	    videos_soup = program_soup.find_all('article', class_='art-c modulx2-5 bg-color-rub0-1 box-shadow relative')
-	    for video in videos_soup:
-		video_id = video.find('figure').find('a')['href'].split('&', 1 )[0].rsplit('=',1)[1]
-		video_img = video.find('figure').find('a').find('img')['data-original']
-		video_titles = video.find('div', class_="art-body").find('a').find('h2').get_text().encode('utf-8').replace('\n', ' ').replace('\r', ' ').split(' ')
-		video_title = ''
-		for i in video_titles:
-		    video_title = video_title + ' ' + i.strip()
-		
-		shows.append({
-		    'label': video_title,
-		    'thumb': video_img,
-		    'url': common.plugin.get_url(
-			action='channel_entry',
-			next='list_videos_1',
-			video_id = video_id,
-			title=video_title,
-			page='2',
-			window_title=video_title
-		    )
-		})
 		
     else:
 	if params.next == 'list_shows_1':
@@ -333,15 +334,24 @@ def list_videos(params):
 		begin_date = video['begin_date'] # 1486725600,
 		image = video['image'].encode('utf-8')
 		duration = video['video_duration_ms'] / 1000
+		
+		value_date = time.strftime('%d %m %Y', time.localtime(video["begin_date"]))
+		date = str(value_date).split(' ')
+		day = date[0]
+		mounth = date[1]
+		year = date[2]
+
+		date = '.'.join((day, mounth, year))
+		aired = '-'.join((year, mounth, day))
 
 		info = {
 		    'video': {
 			'title': title,
 			'plot': description,
-			#'aired': aired,
-			#'date': date,
+			'aired': aired,
+			'date': date,
 			'duration': duration,
-			#'year': year,
+			'year': year,
 			'genre': category,
 			'mediatype': 'tvshow'
 		    }
@@ -363,7 +373,7 @@ def list_videos(params):
 		    'thumb': image,
 		    'url': common.plugin.get_url(
 			action='channel_entry',
-			next='play',
+			next='play_r',
 			video_id=video_id,
 			video_id_ext=video_id_ext
 		    ),
@@ -459,11 +469,96 @@ def list_live(params):
 	    'url' : common.plugin.get_url(
 		action='channel_entry',
 		next='play_l',
-		video_url=url_live,
+		url_live=url_live,
 	    ),
 	    'is_playable': True,
 	    'info': info
 	})
+	
+    else:
+	if params.channel_name == 'bfmtv':
+	    
+	    # BFMTV
+	    file_path = utils.download_catalog(
+		url_live_bfmtv,
+		'%s_live.html' % (params.channel_name))
+	    live_html = open(file_path).read()
+	    
+	    url_live = re.compile(r'file: \'(.*?)\'').findall(live_html)[0]
+	    
+	    title = '%s Live' % params.channel_name.upper()
+	    
+	    info = {
+		'video': {
+		    'title': title,
+		    'plot': plot,
+		    'duration': duration
+		}
+	    }
+	    
+	    lives.append({
+		'label': title,
+		'fanart': img,
+		'thumb': img,
+		'url' : common.plugin.get_url(
+		    action='channel_entry',
+		    next='play_l',
+		    url_live=url_live,
+		),
+		'is_playable': True,
+		'info': info
+	    })
+	    
+	    #BFM PARIS
+	    file_paris_path = utils.download_catalog(
+		url_live_bfm_paris,
+		'bfm_paris_live.html')
+	    live_paris_html = open(file_paris_path).read()
+	    
+	    live_paris_soup = bs(live_paris_html, 'html.parser')
+	    data_live_paris_soup = live_paris_soup.find('div', class_='BCLvideoWrapper')
+	    
+	    # TODO
+	    #<div  class="BCLvideoWrapper" id="video5152968636001">
+	    #<script src="http://www.bfmtv.com/static/nxt-video/next-player.js" data-holder="video5152968636001" data-account="5132998232001" data-player="H1bPo8t6" data-video-id="5152968636001" ></script>
+	    #</div>
+	    
+	    #BFM SPORT
+	    file_sport_path = utils.download_catalog(
+		url_live_bfm_sport,
+		'bfm_sport_live.html')
+	    live_sport_html = open(file_sport_path).read()
+	    
+	    live_sport_soup = bs(live_sport_html, 'html.parser')
+	    data_live_sport_soup = live_sport_soup.find('div', class_='BCLvideoWrapper')
+	    
+	    # TODO
+	    #<div  class="BCLvideoWrapper" id="video5152968636001">
+	    #<script src="http://www.bfmtv.com/static/nxt-video/next-player.js" data-holder="video5152968636001" data-account="5132998232001" data-player="H1bPo8t6" data-video-id="5152968636001" ></script>
+	    #</div>
+	    
+	elif params.channel_name == 'bfmbusiness':
+	    
+	    #BFM PARIS
+	    file_path = utils.download_catalog(
+		url_live_bfmbusiness,
+		'%s_live.html' % (params.channel_name))
+	    live_html = open(file_path).read()
+	    
+	    live_soup = bs(live_html, 'html.parser')
+	    data_live_soup = live_soup.find('div', class_='BCLvideoWrapper')
+	    
+	    # TODO
+	    #<div  class="BCLvideoWrapper" id="video5152968636001">
+	    #<script src="http://www.bfmtv.com/static/nxt-video/next-player.js" data-holder="video5152968636001" data-account="5132998232001" data-player="H1bPo8t6" data-video-id="5152968636001" ></script>
+	    #</div>
+	    
+	    return None
+	elif params.channel_name == '01net':
+	    
+	    # TODO
+	    
+	    return None
     
     return common.plugin.create_listing(
 	lives,
@@ -475,8 +570,10 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    if params.channel_name == 'rmcdecouverte':
+    if params.channel_name == 'rmcdecouverte' and params.next == 'play_r':
 	return params.video_url
+    elif params.next == 'play_l':
+	return params.url_live
     else:
 	file_medias = utils.get_webcontent(
 	    url_video % (params.channel_name, get_token(params.channel_name), params.video_id))
