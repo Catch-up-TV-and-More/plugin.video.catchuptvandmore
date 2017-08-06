@@ -356,6 +356,14 @@ def list_live(params):
 	
 	title = 'No Live TV for %s Today' % params.channel_name.upper()
 	
+	info = {
+	    'video': {
+		'title': title,
+		'plot': plot,
+		'duration': duration
+	    }
+	}
+	
 	lives.append({
 	    'label': title,
 	    'url' : common.plugin.get_url(
