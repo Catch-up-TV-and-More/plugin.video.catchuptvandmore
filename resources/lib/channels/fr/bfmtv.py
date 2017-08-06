@@ -29,8 +29,8 @@ from bs4 import BeautifulSoup as bs
 
 
 # TODO
-# Add Live TV
-# RMC DECOUVERTE (Get Policy Key from WebSite and get duration, aired for info video)
+# Add Live TV (Done for RMCDecouverte | Todo Other channels)
+# RMC DECOUVERTE (Get Policy Key from WebSite)
 # Add Download Video
 
 url_token = 'http://api.nextradiotv.com/%s-applications/'
@@ -57,8 +57,16 @@ url_replay_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-replay/'
 url_video_html_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-replay/?id=%s'
 # VideoId_html
 
+url_live_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-direct/'
+
 url_video_json_rmcdecouverte = 'https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s'
 # IdAccount, VideoId
+
+# TODO GET on WebPage
+# data-account="1969646226001" data-player="HyW8Pbfyx"
+# http://players.brightcove.net/1969646226001/HyW8Pbfyx_default/index.min.js
+# "policyKey:" in js file
+policy_key = 'BCpkADawqM3-H-cGaUXCjg2IuDbluEd1BT3q086vXDTLVFgA2eMaNF90cjMkry6ebdIkVw6TIyYe1T-krizHY64cZrpBGZeq9AfATMPoQSDwPZysf9srEJaU9rRevqraXlqFQ8eRh5WJ_vG4'
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -74,13 +82,51 @@ def get_token(channel_name):
 
 
 def channel_entry(params):
+    if 'mode_replay_live' in params.next:
+	return mode_replay_live(params)
     if 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
+#@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay Desactiver
+    modes.append({
+	'label' : 'Replay',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='list_shows_1',
+	    category='%s Replay' % params.channel_name.upper(),
+	    window_title='%s Replay' % params.channel_name.upper()
+	),
+    })
+    
+    # Add Live 
+    if params.channel_name == 'rmcdecouverte':
+	modes.append({
+	    'label' : 'Live TV',
+	    'url': common.plugin.get_url(
+		action='channel_entry',
+		next='live_cat',
+		category='%s Live TV' % params.channel_name.upper(),
+		window_title='%s Live TV' % params.channel_name.upper()
+	    ),
+	})
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
@@ -172,12 +218,6 @@ def list_shows(params):
 def list_videos(params):
     videos = []
     
-    # TODO GET on WebPage
-    # data-account="1969646226001" data-player="HyW8Pbfyx"
-    # http://players.brightcove.net/1969646226001/HyW8Pbfyx_default/index.min.js
-    # "policyKey:" in js file
-    policy_key = 'BCpkADawqM3-H-cGaUXCjg2IuDbluEd1BT3q086vXDTLVFgA2eMaNF90cjMkry6ebdIkVw6TIyYe1T-krizHY64cZrpBGZeq9AfATMPoQSDwPZysf9srEJaU9rRevqraXlqFQ8eRh5WJ_vG4'
-    
     if params.channel_name == 'rmcdecouverte':
 	file_path = utils.download_catalog(
 	    url_video_html_rmcdecouverte % (params.video_id),
@@ -214,21 +254,29 @@ def list_videos(params):
 	    video_img = poster["src"]
 	video_plot = json_parser["long_description"].encode('utf-8')
 	video_duration = 0
-	# TODO DUration "duration":3080613 => Determiner la valeur
-	#video_duration = json_parser["duration"] / 1000
+	video_duration = json_parser["duration"] / 1000
 	video_url = ''
 	for url in json_parser["sources"]:
 	    if 'type' in url:
 		video_url = url["src"].encode('utf-8')
+		
+	date_value_list = json_parser["published_at"].split('T')[0].split('-')
+	
+	day = date_value_list[2]
+	mounth = date_value_list[1]
+	year = date_value_list[0]
+
+	date = '.'.join((day, mounth, year))
+	aired = '-'.join((year, mounth, day))
 
 	info = {
 	    'video': {
 		'title': video_title,
-		#'aired': aired,
-		#'date': date,
+		'aired': aired,
+		'date': date,
 		'duration': video_duration,
 		'plot': video_plot,
-		#'year': year,
+		'year': year,
 		'mediatype': 'tvshow'
 	    }
 	}
@@ -353,6 +401,77 @@ def list_videos(params):
 	update_listing='update_listing' in params,
     )
 
+#@common.plugin.cached(common.cache_time)
+def list_live(params):
+    
+    lives = []
+    
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
+    
+    if params.channel_name == 'rmcdecouverte':
+	
+	file_path = utils.download_catalog(
+	    url_live_rmcdecouverte,
+	    '%s_live.html' % (params.channel_name))
+	live_html = open(file_path).read()
+	    
+	live_soup = bs(live_html, 'html.parser')
+	data_live_soup = live_soup.find('div', class_='next-player')
+	
+	data_account = data_live_soup['data-account']
+	data_video_id = data_live_soup['data-video-id']
+	
+	# Method to get JSON from 'edge.api.brightcove.com'
+	file_json = utils.download_catalog(
+	    url_video_json_rmcdecouverte % (data_account,data_video_id),
+	    '%s_%s_live.json' % (data_account,data_video_id),
+	    force_dl=False,
+	    request_type='get',
+	    post_dic={},
+	    random_ua=False,
+	    specific_headers={'Accept': 'application/json;pk=%s' % policy_key},
+	    params={})
+	video_json = open(file_json).read()
+	json_parser = json.loads(video_json)
+    
+	title = json_parser["name"]
+	plot = json_parser["long_description"].encode('utf-8')
+	
+	for url in json_parser["sources"]:
+	    url_live = url["src"].encode('utf-8')
+	
+	info = {
+	    'video': {
+		'title': title,
+		'plot': plot,
+		'duration': duration
+	    }
+	}
+	
+	lives.append({
+	    'label': title,
+	    'fanart': img,
+	    'thumb': img,
+	    'url' : common.plugin.get_url(
+		action='channel_entry',
+		next='play_l',
+		video_url=url_live,
+	    ),
+	    'is_playable': True,
+	    'info': info
+	})
+    
+    return common.plugin.create_listing(
+	lives,
+	sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):

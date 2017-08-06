@@ -62,9 +62,9 @@ url_live_with_token = 'http://www.nrj-play.fr/compte/live?&channel=%s'
 
 url_root = 'http://www.nrj-play.fr'
 
-login = 'XXXXX'
-password = 'XXXXX'
-token = 'XXXXXXX'
+login = 'XXXXXXX'
+password = 'XXXXXXXXXX'
+token = 'XXXXXXXXXX'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -97,15 +97,16 @@ def mode_replay_live(params):
     })
     
     # Add Live 
-    modes.append({
-	'label' : 'Live TV',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='%s Live TV' % params.channel_name.upper(),
-	    window_title='%s Live TV' % params.channel_name.upper()
-	),
-    })
+    if params.channel_name != 'nrj12' and params.channel_name != 'cherie25':
+	modes.append({
+	    'label' : 'Live TV',
+	    'url': common.plugin.get_url(
+		action='channel_entry',
+		next='live_cat',
+		category='%s Live TV' % params.channel_name.upper(),
+		window_title='%s Live TV' % params.channel_name.upper()
+	    ),
+	})
     
     return common.plugin.create_listing(
         modes,
