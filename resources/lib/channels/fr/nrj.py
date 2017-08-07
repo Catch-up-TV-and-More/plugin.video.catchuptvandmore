@@ -26,6 +26,7 @@ import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup as bs
 import json
 import requests
+import re
 
 # TODO
 # FIX DOWNLOAD MODE
@@ -55,16 +56,13 @@ url_get_api_live = 'http://www.nrj-play.fr/sitemap.xml'
 url_compte_login = 'https://www.nrj-play.fr/compte/login'
 # TODO add account for using Live Direct
 
-url_compte_session = 'https://www.nrj-play.fr/compte/session'
-# TODO add account for using Live Direct
-
 url_live_with_token = 'http://www.nrj-play.fr/compte/live?channel=%s'
 # channel (nrj12, ...) - call this url after get session (url live with token inside this page)
 
 url_root = 'http://www.nrj-play.fr'
 
-login = '************'
-password = '************'
+login = '**************'
+password = '*************'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -97,16 +95,15 @@ def mode_replay_live(params):
     })
     
     # Add Live 
-    if params.channel_name != 'nrj12' and params.channel_name != 'cherie25':
-	modes.append({
-	    'label' : 'Live TV',
-	    'url': common.plugin.get_url(
-		action='channel_entry',
-		next='live_cat',
-		category='%s Live TV' % params.channel_name.upper(),
-		window_title='%s Live TV' % params.channel_name.upper()
-	    ),
-	})
+    modes.append({
+	'label' : 'Live TV',
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='live_cat',
+	    category='%s Live TV' % params.channel_name.upper(),
+	    window_title='%s Live TV' % params.channel_name.upper()
+	),
+    })
     
     return common.plugin.create_listing(
         modes,
@@ -390,16 +387,10 @@ def list_live(params):
     img = ''
     url_live = ''
     
-    # Call session https://www.nrj-play.fr/compte/session before this code
+    session_requests = requests.session()
+    result = session_requests.get(url_compte_login)
     
-    # Get Token Hidden before login (GET)
-    file_path_login = utils.download_catalog(
-	url_compte_login,
-	'%s_live_get_login.html' % params.channel_name,
-    )
-    html_login = open(file_path).read()
-    
-    token_form_login = re.compile(r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(html_login)[0]
+    token_form_login = re.compile(r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(result.text)[0]
     
     # Build PAYLOAD
     payload = {
@@ -408,24 +399,19 @@ def list_live(params):
         "login_form[_token]": token_form_login
     }
     
-    # POST LOGIN
-    #session_requests = requests.session()
-    #result = session_requests.post(url_compte_login, data = payload, headers = dict(referer = url_compte_login))
+    # LOGIN
+    result_2 = session_requests.post(url_compte_login, data = payload, headers = dict(referer = url_compte_login))
     
-    return None
+    # GET page with url_live with the session logged
+    result_3 = session_requests.get(url_live_with_token % (params.channel_name), headers = dict(referer = url_live_with_token % (params.channel_name)))
     
-    #file_path = utils.download_catalog(
-    #	url_live_with_token % params.channel_name,
-    #	'%s_live_with_token.html' % params.channel_name,
-    #)
-    #live_with_token_html = open(file_path).read()
-    #root_soup = bs(live_with_token_html, 'html.parser')
-    #live_soup = root_soup.find('iframe', class_='embed-responsive-item')
+    root_soup = bs(result_3.text, 'html.parser')
+    live_soup = root_soup.find('div', class_="player")
     
-    #url_live_json = live_soup.get('data-options')
-    #url_live_json_jsonparser = json.loads(url_live_json)
+    url_live_json = live_soup.get('data-options')
+    url_live_json_jsonparser = json.loads(url_live_json)
     
-    #url_live = url_live_json_jsonparser["file"]
+    url_live = url_live_json_jsonparser["file"]
     
     title = '%s Live' % params.channel_name.upper() 
     
