@@ -28,7 +28,6 @@ from bs4 import BeautifulSoup as bs
 import ast
 
 # TODO 
-# Add replay
 # Add info LIVE TV
 
 # Initialize GNU gettext emulation in addon
