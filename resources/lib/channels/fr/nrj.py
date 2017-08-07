@@ -25,6 +25,7 @@ from resources.lib import common
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup as bs
 import json
+import requests
 
 # TODO
 # FIX DOWNLOAD MODE
@@ -57,14 +58,13 @@ url_compte_login = 'https://www.nrj-play.fr/compte/login'
 url_compte_session = 'https://www.nrj-play.fr/compte/session'
 # TODO add account for using Live Direct
 
-url_live_with_token = 'http://www.nrj-play.fr/compte/live?&channel=%s'
+url_live_with_token = 'http://www.nrj-play.fr/compte/live?channel=%s'
 # channel (nrj12, ...) - call this url after get session (url live with token inside this page)
 
 url_root = 'http://www.nrj-play.fr'
 
-login = 'XXXXXXX'
-password = 'XXXXXXXXXX'
-token = 'XXXXXXXXXX'
+login = '************'
+password = '************'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -392,18 +392,40 @@ def list_live(params):
     
     # Call session https://www.nrj-play.fr/compte/session before this code
     
-    file_path = utils.download_catalog(
-	url_live_with_token % params.channel_name,
-	'%s_live_with_token.html' % params.channel_name,
+    # Get Token Hidden before login (GET)
+    file_path_login = utils.download_catalog(
+	url_compte_login,
+	'%s_live_get_login.html' % params.channel_name,
     )
-    live_with_token_html = open(file_path).read()
-    root_soup = bs(live_with_token_html, 'html.parser')
-    live_soup = root_soup.find('iframe', class_='embed-responsive-item')
+    html_login = open(file_path).read()
     
-    url_live_json = live_soup.get('data-options')
-    url_live_json_jsonparser = json.loads(url_live_json)
+    token_form_login = re.compile(r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(html_login)[0]
     
-    url_live = url_live_json_jsonparser["file"]
+    # Build PAYLOAD
+    payload = {
+        "login_form[email]": login, 
+        "login_form[password]": password, 
+        "login_form[_token]": token_form_login
+    }
+    
+    # POST LOGIN
+    #session_requests = requests.session()
+    #result = session_requests.post(url_compte_login, data = payload, headers = dict(referer = url_compte_login))
+    
+    return None
+    
+    #file_path = utils.download_catalog(
+    #	url_live_with_token % params.channel_name,
+    #	'%s_live_with_token.html' % params.channel_name,
+    #)
+    #live_with_token_html = open(file_path).read()
+    #root_soup = bs(live_with_token_html, 'html.parser')
+    #live_soup = root_soup.find('iframe', class_='embed-responsive-item')
+    
+    #url_live_json = live_soup.get('data-options')
+    #url_live_json_jsonparser = json.loads(url_live_json)
+    
+    #url_live = url_live_json_jsonparser["file"]
     
     title = '%s Live' % params.channel_name.upper() 
     
