@@ -33,6 +33,37 @@ _ = common.addon.initialize_gettext()
 url_json_lives = 'https://services.vrt.be/videoplayer/r/live.json'
 # All lives in this JSON
 
+#To get videoid :
+# Authentication
+# https://accounts.vrt.be/accounts.login?context=%s&saveResponseID=%s % (contextid)
+	# FORM DATA
+	#loginID: ***********
+	#password:**********
+	#sessionExpiration:-2
+	#targetEnv:jssdk
+	#include:profile,data
+	#includeUserInfo:true
+	#APIKey:3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG (how to get?)
+	#includeSSOToken:true
+	#sdk:js_7.3.30
+	#authMode:cookie
+	#pageURL:https://www.vrt.be/vrtnu/a-z/100-jaar-slag-bij-passendale/2017/100-jaar-slag-bij-passendale-s2017/
+	#format:jsonp
+	#callback:gigya.callback
+	#context:%s (how to get ?)
+	#utf8:✓
+# https://accounts.vrt.be/socialize.getSavedResponse?APIKey=3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG&saveResponseID=%s&noAuth=true&sdk=js_7.3.30&format=jsonp&callback=gigya.callback&context=%s
+#  Context id, 
+## https://token.vrt.be/
+# https://token.vrt.be/
+
+#After Authentification (go to this url)
+#(go to this url) https://www.vrt.be/vrtnu/a-z/ (select a show)
+# url_show + .securevideo.json
+# exemple https://www.vrt.be/vrtnu/a-z/100-jaar-slag-bij-passendale/2017/100-jaar-slag-bij-passendale-s2017.securevideo.json => get videoid
+url_video_vod_json = 'https://mediazone.vrt.be/api/v1/vrtvideo/assets/%s'
+# Video ID
+
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
 	return mode_replay_live(params)
