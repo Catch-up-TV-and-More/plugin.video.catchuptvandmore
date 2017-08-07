@@ -89,7 +89,10 @@ channels = {
 	'channels.be.rtbf.webcreation': 'Webcréation (RTBF)',
         'channels.be.rtl.rtltvi': 'RTL-TVI',
 	'channels.be.rtl.plugrtl': 'PLUG RTL',
-	'channels.be.rtl.clubrtl': 'CLUB RTL'
+	'channels.be.rtl.clubrtl': 'CLUB RTL',
+	'channels.be.vrt.een': 'Eén',
+	'channels.be.vrt.canvas': 'Canvas',
+	'channels.be.vrt.ketnet': 'Ketnet'
 	    
     },
     
