@@ -33,6 +33,10 @@ msgctxt "#30003"
 msgid "Download"
 msgstr ""
 
+msgctxt "#30004"
+msgid "Accounts"
+msgstr ""
+
 # Settings line separators (from 30010 to 30019)
 msgctxt "#30010"
 msgid "Hide main menu categories"

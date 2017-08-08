@@ -61,9 +61,6 @@ url_live_with_token = 'http://www.nrj-play.fr/compte/live?channel=%s'
 
 url_root = 'http://www.nrj-play.fr'
 
-login = '**************'
-password = '*************'
-
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
 	return mode_replay_live(params)
@@ -394,8 +391,8 @@ def list_live(params):
     
     # Build PAYLOAD
     payload = {
-        "login_form[email]": login, 
-        "login_form[password]": password, 
+        "login_form[email]": common.plugin.get_setting(params.channel_id.rsplit('.',1)[0] + '.login'), 
+        "login_form[password]": common.plugin.get_setting(params.channel_id.rsplit('.',1)[0] + '.password'), 
         "login_form[_token]": token_form_login
     }
     

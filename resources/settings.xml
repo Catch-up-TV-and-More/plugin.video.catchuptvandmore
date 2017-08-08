@@ -241,10 +241,30 @@
     </category>
     
 
-	<!-- Download ... -->
-	<category label="30003">
-		<setting label="30012" type="lsep"/>
-		<setting label="30200" type="folder" id="dlFolder" source="auto" option="writeable"/>
-	</category>
+    <!-- Download ... -->
+    <category label="30003">
+	<setting label="30012" type="lsep"/>
+	<setting label="30200" type="folder" id="dlFolder" source="auto" option="writeable"/>
+    </category>
+
+    <!-- Account ... -->
+    <category label="30004">
+	
+	<setting label="Accounts" type="lsep" />
+        <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
+	<setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
+	    <setting label="NRJ Login" type="text" id="channels.fr.nrj.login" visible="eq(-1,true)" defaut=""/>
+	    <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-3,true)" values=""/>
+	
+	<setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
+	
+	<setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
+	
+	<setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
+	
+    </category>
 
 </settings>
