@@ -254,7 +254,7 @@
         <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
 	<setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
 	    <setting label="NRJ Login" type="text" id="channels.fr.nrj.login" visible="eq(-1,true)" defaut=""/>
-	    <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-3,true)" values=""/>
+	    <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-3,true)" defaut=""/>
 	
 	<setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
