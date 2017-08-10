@@ -92,7 +92,10 @@ channels = {
 	'channels.be.rtl.clubrtl': 'CLUB RTL',
 	'channels.be.vrt.een': 'Eén',
 	'channels.be.vrt.canvas': 'Canvas',
-	'channels.be.vrt.ketnet': 'Ketnet'
+	'channels.be.vrt.ketnet': 'Ketnet',
+	'channels.be.vrt.sporza': 'Sporza',
+	'channels.be.vrt.mnm': 'MNM',
+	'channels.be.vrt.stubru': 'Studio-Brussel'
 	    
     },
     
