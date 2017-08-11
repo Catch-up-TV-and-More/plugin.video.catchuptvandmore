@@ -199,14 +199,14 @@
 	    <setting label="Ketnet" type="bool" id="channels.be.vrt.ketnet" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.vrt.ketnet.order" default="16"/>
 	    
-	    <setting label="Sporza" type="bool" id="channels.be.vrt.sporza" default="true" visible="eq(-27,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.sporza.order" default="14"/>
+	    <setting label="Sporza" type="bool" id="channels.be.vrt.sporza" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.sporza.order" default="17"/>
 	    
-	    <setting label="MNM" type="bool" id="channels.be.vrt.mnm" default="true" visible="eq(-29,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.mnm.order" default="15"/>
+	    <setting label="MNM" type="bool" id="channels.be.vrt.mnm" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.mnm.order" default="18"/>
 	    
-	    <setting label="Studio-Brussel" type="bool" id="channels.be.vrt.stubru" default="true" visible="eq(-31,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.stubru.order" default="16"/>
+	    <setting label="Studio-Brussel" type="bool" id="channels.be.vrt.stubru" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.stubru.order" default="19"/>
 	
 	<setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
