@@ -29,10 +29,6 @@ import json
 import base64
 import time
 
-# TODO 
-# Get or generate videoPcode ?
-# Live Info (Duration, Aired Date)
-
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -313,7 +309,10 @@ def list_live(params):
 	if info_live["subtitle"] != '':
 	    subtitle = subtitle + info_live["subtitle"].encode('utf-8')
 	title = info_live["title"].encode('utf-8') + subtitle
-	plot = info_live["description"].encode('utf-8')
+	
+	start_date = time.strftime('%H:%M', time.localtime(int(str(info_live["pubDate"])[:-3])))
+	end_date = time.strftime('%H:%M', time.localtime(int(str(info_live["endDate"])[:-3])))
+	plot = start_date + ' - ' + end_date + '\n ' + info_live["description"].encode('utf-8')
 	img = url_root + info_live["thumbnail"].encode('utf-8')
 	break
 
