@@ -32,8 +32,8 @@ import re
 
 # TODO
 # Add Live TV (ONENET ???)
-# RMC DECOUVERTE (Get Policy Key from WebSite)
-# Add Download Video
+# RMC DECOUVERTE, BFM TV, PARIS, RMCSPORT, etc ... (Get Policy Key from WebSite)
+# Add Download Video (BFMTV, 01net, RMC, BFMBUSINESS)
 
 # BFMTV, RMC, ONENET, etc ...
 url_token = 'http://api.nextradiotv.com/%s-applications/'
@@ -177,7 +177,7 @@ def list_shows(params):
 		    next='list_videos_1',
 		    video_id = video_id,
 		    title=video_title,
-		    page='2',
+		    page='1',
 		    window_title=video_title
 		)
 	    })
@@ -292,7 +292,7 @@ def list_videos(params):
 	    _('Download'),
 	    'XBMC.RunPlugin(' + common.plugin.get_url(
 		action='download_video',
-		video_url=video_url) + ')'
+		video_id=params.video_id) + ')'
 	)
 	context_menu.append(download_video)
 	# Fin
@@ -701,9 +701,11 @@ def list_live(params):
 def get_video_url(params):
     if params.next == 'play_l':
 	return params.url_live
-    if params.channel_name == 'rmcdecouverte' and params.next == 'play_r':
+    elif params.channel_name == 'rmcdecouverte' and params.next == 'play_r':
 	return params.video_url
-    elif params.channel_name != 'rmcdecouverte' and params.next == 'play_r':
+    elif params.channel_name == 'rmcdecouverte' and params.next == 'download_video':
+	return url_video_html_rmcdecouverte % (params.video_id)
+    elif params.channel_name != 'rmcdecouverte' and (params.next == 'play_r' or params.next == 'download_video'):
 	file_medias = utils.get_webcontent(
 	    url_video % (params.channel_name, get_token(params.channel_name), params.video_id))
 	json_parser = json.loads(file_medias)
