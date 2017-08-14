@@ -32,7 +32,6 @@ import time
 # Add categories 
 # Add geoblock (info in JSON)
 # Add Quality Mode
-# get Partener_KEY (for Live)
 # etc ...
 
 # Initialize GNU gettext emulation in addon
@@ -47,8 +46,10 @@ url_json_emissions_by_id = 'https://www.rtbf.be/api/media/video?method=getVideoL
 
 url_root_image_rtbf = 'https://ds1.static.rtbf.be'
 
-url_json_live =	'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&partner_key=82ed2c5b7df0a9334dfbda21eccd8427'
-# TODO get Partener_KEY
+url_json_live =	'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&partner_key=%s'
+# partener_key
+
+url_partener_key = 'https://sgc.static.rtbf.be/js/3/2/32c0278d72748b29373ec0565ebe573f_ssl.js'
 
 channel_filter = {
     'laune': 'La Une',
@@ -78,6 +79,17 @@ def channel_entry(params):
         return get_video_url(params)
     else:
         return None
+
+def get_partener_key(params):
+    # Get partener key
+    file_path_js = utils.download_catalog(
+	url_partener_key,
+	'%s_partener_key.js' % params.channel_name,
+    )
+    partener_key_js = open(file_path_js).read()
+    
+    partener_key = re.compile('partner_key: \'(.+?)\'').findall(partener_key_js)
+    return partener_key[0]
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
@@ -281,7 +293,7 @@ def list_live(params):
     url_live = ''
     
     file_path = utils.download_catalog(
-	url_json_live,
+	url_json_live % (get_partener_key(params)),
 	'%s_live.json' % (params.channel_name))
     live_json = open(file_path).read()
     live_jsonparser = json.loads(live_json)
