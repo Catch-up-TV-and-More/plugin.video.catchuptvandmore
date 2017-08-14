@@ -77,7 +77,7 @@ categories_cnews = {
 }
 
 # Replay/Live => Parameters Channel, VideoId
-url_info_content = 'http://service.canal-plus.com/video/rest/getVideos/%s/%s?format=json'
+url_info_content = 'http://service.canal-plus.com/video/rest/getvideosliees/%s/%s?format=json'
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English

@@ -27,7 +27,6 @@ from resources.lib import common
 import json
 
 # TODO
-# LIVE TV get video ID from WebPage (Hack in action)
 # Rework QUALITY
 
 # Initialize GNU gettext emulation in addon
@@ -341,10 +340,11 @@ def list_live(params):
     json_parser = json.loads(file_info_live)
         
     title = json_parser["current"]["title"].encode('utf-8') + ' - ' + json_parser["current"]["episode"].encode('utf-8')
-    try:
-	plot = json_parser["current"]["description"].encode('utf-8')
-    except:
-	plot = ''
+    if "description" in json_parser["current"]:
+	plot = json_parser["current"]["humanStartDate"].encode('utf-8') + ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8') \
+	       + '\n ' + json_parser["current"]["description"].encode('utf-8')
+    else:
+	plot = json_parser["current"]["humanStartDate"].encode('utf-8') + ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8')
 	
     duration = 0
     #duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
@@ -450,17 +450,7 @@ def get_video_url(params):
     
     elif params.next == 'play_l':
 	
-	#video_html = utils.get_webcontent(url_live_tv % params.channel_name)
-	#video_html_soup = bs(video_html, 'html.parser')
-
-	#iframe_player_soup = video_html_soup.find(
-	#    'div',
-	#    class_='iframe_player')
-
-	#data_src = iframe_player_soup['data-src'].encode('utf-8')
-
-	#video_id = data_src[-8:]
-	
+	# Video_ID 'L_%CHANNEL_NAME%'
 	video_id = 'L_%s' % params.channel_name.upper()
 	real_channel = params.channel_name
 
