@@ -628,16 +628,18 @@ def list_live(params):
 		id_programme = emission['id_emission'].encode('utf-8')
 	    id_diffusion = emission['id_diffusion']
 	    chaine_id = emission['chaine_id'].encode('utf-8')
+	    
+	    start_time_emission = 'Debut: ' + emission['date_diffusion'].split('T')[1].encode('utf-8')
 
 	    if emission['accroche']:
-		plot = emission['accroche'].encode('utf-8')
+		plot = start_time_emission + '\n ' + emission['accroche'].encode('utf-8')
 	    elif emission['accroche_programme']:
-		plot = emission['accroche_programme'].encode('utf-8')
+		plot = start_time_emission + '\n ' + emission['accroche_programme'].encode('utf-8')
 	    if emission['date_diffusion']:
 		date = emission['date_diffusion']
 		date = date.encode('utf-8')
 	    if emission['duree']:
-		duration = int(emission['duree'])
+		duration = int(emission['duree']) * 60
 	    if emission['titre']:
 		title = emission['titre'].encode('utf-8')
 
