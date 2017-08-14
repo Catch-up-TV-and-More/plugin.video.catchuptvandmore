@@ -56,14 +56,12 @@ url_all_vod_nhk = 'https://api.nhk.or.jp/%s/vodesdlist/v1/all/all/all.json?apike
 # Channel_Name, apikey
 
 url_video_vod = 'https://player.ooyala.com/sas/player_api/v2/authorization/embed_code/%s/%s?device=html5&domain=www3.nhk.or.jp'
-# videoPcode, Videoid
+# pcode, Videoid
+
+url_get_pcode = 'https://www3.nhk.or.jp/%s/common/player/tv/v4/stable/4.14.8/nw_vod_player.js'
+# Channel_Name...
 
 location = ['world']
-
-# videoPcode semble identique pour toutes les videos (voir comment le générer) ?
-#https://player.ooyala.com/sas/player_api/v2/authorization/embed_code/lqcGIyOmhVSXLwE8dLZfLLZRPaye/RzdHAzYzE6wrCc6s-SjJ5sv89V-D64O2?device=html5&domain=www3.nhk.or.jp
-#https://player.ooyala.com/sas/player_api/v2/authorization/embed_code/lqcGIyOmhVSXLwE8dLZfLLZRPaye/8xeWIzYzE6IgB5LnLxPU_IBrNZUHK0eh?device=html5&domain=www3.nhk.or.jp
-videoPcode = 'lqcGIyOmhVSXLwE8dLZfLLZRPaye'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -76,6 +74,17 @@ def channel_entry(params):
 	return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+
+def get_pcode(params):
+    # Get apikey
+    file_path_js = utils.download_catalog(
+	url_get_pcode % params.channel_name,
+	'%s_pcode.js' % params.channel_name,
+    )
+    pcode_js = open(file_path_js).read()
+    
+    pcode = re.compile('pcode: "(.+?)"').findall(pcode_js)
+    return pcode[0]
 
 def get_api_key(params):
     # Get apikey
@@ -344,7 +353,7 @@ def get_video_url(params):
     if params.next == 'play_r' or params.next == 'download_video':
 	url = ''
 	file_path = utils.download_catalog(
-	    url_video_vod % (videoPcode, params.video_id),
+	    url_video_vod % (get_pcode(params), params.video_id),
 	    '%s_%s_video_vod.json' % (params.channel_name, params.video_id)
 	)
 	video_vod = open(file_path).read()
