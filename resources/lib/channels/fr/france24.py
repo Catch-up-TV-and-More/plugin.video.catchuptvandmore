@@ -29,8 +29,9 @@ import time
 import re
 
 # TODO 
-# Replay | (just 5 first episodes) Add More Button (with api) to download just some part ? (More Work TODO)
+# Replay (emission) | (just 5 first episodes) Add More Button (with api) to download just some part ? (More Work TODO)
 # Add info LIVE TV (picture, plot)
+# Add Video, Last JT, Last ECO, Last Meteo
 # Select Language settings not show
 
 # Initialize GNU gettext emulation in addon
