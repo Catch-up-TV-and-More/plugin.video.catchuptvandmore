@@ -31,7 +31,6 @@ import re
 
 # TODO
 # Add Live TV (ONENET ???)
-# Add Download Video (BFMTV, 01net, RMC, BFMBUSINESS)
 
 # BFMTV, RMC, ONENET, etc ...
 url_token = 'http://api.nextradiotv.com/%s-applications/'
@@ -707,6 +706,9 @@ def get_video_url(params):
 	    url_video % (params.channel_name, get_token(params.channel_name), params.video_id))
 	json_parser = json.loads(file_medias)
 
+	if params.next == 'download_video':
+	    return json_parser['video']['long_url'].encode('utf-8')
+	
 	video_streams = json_parser['video']['medias']
 	    
 	desired_quality = common.plugin.get_setting('quality')
