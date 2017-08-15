@@ -26,10 +26,11 @@ from resources.lib import common
 import json
 from bs4 import BeautifulSoup as bs
 import time
+import re
 
 # TODO 
 # Replay | (just 5 first episodes) Add More Button (with api) to download just some part ? (More Work TODO)
-# Add info LIVE TV | get some url with title of the programm todo
+# Add info LIVE TV (picture, plot)
 # Select Language settings not show
 
 # Initialize GNU gettext emulation in addon
@@ -231,13 +232,6 @@ def list_live(params):
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
     
-    if desired_language == 'FR':
-	title = '%s Français Live' % (params.channel_name.upper())
-    elif desired_language == 'EN':
-	title = '%s English Live' % (params.channel_name.upper())
-    elif desired_language == 'AR':
-	title = '%s عربية Live' % (params.channel_name.upper())
-    
     url_live = url_live_site % desired_language.lower()
     
     file_path = utils.download_catalog(
@@ -252,6 +246,9 @@ def list_live(params):
     for datas in media_datas_list:
 	if datas['source']:
 	    url_live = datas['source']
+    
+    live_info = utils.get_webcontent(url_info_live % (desired_language.lower()))
+    title = re.compile('id="main-player-playing-value">(.+?)<').findall(live_info)[0]
     
     info = {
 	'video': {
