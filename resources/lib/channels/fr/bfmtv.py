@@ -29,10 +29,8 @@ from bs4 import BeautifulSoup as bs
 import time
 import re
 
-
 # TODO
 # Add Live TV (ONENET ???)
-# RMC DECOUVERTE, BFM TV, PARIS, RMCSPORT, etc ... (Get Policy Key from WebSite)
 # Add Download Video (BFMTV, 01net, RMC, BFMBUSINESS)
 
 # BFMTV, RMC, ONENET, etc ...
@@ -73,32 +71,26 @@ url_video_html_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-repla
 
 url_live_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-direct/'
 
-url_video_json_brightcove = 'https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s'
-# IdAccount, VideoId
+url_js_policy_key = 'http://players.brightcove.net/%s/%s_default/index.min.js'
+# AccountId, PlayerId
 
-# TODO GET on WebPage
-# http://www.bfmtv.com/static/nxt-video/next-player.js
-# data-account="1969646226001" data-player="HyW8Pbfyx"
-# http://players.brightcove.net/1969646226001/HyW8Pbfyx_default/index.min.js
-policy_key_rmcdecouverte = 'BCpkADawqM3-H-cGaUXCjg2IuDbluEd1BT3q086vXDTLVFgA2eMaNF90cjMkry6ebdIkVw6TIyYe1T-krizHY64cZrpBGZeq9AfATMPoQSDwPZysf9srEJaU9rRevqraXlqFQ8eRh5WJ_vG4'
-# http://players.brightcove.net/5132998232001/H1bPo8t6_default/index.min.js
-policy_key_bfm_paris = 'BCpkADawqM0RiLcP6KRpGsChxc22noAw3ToAh8rf0VHlztqFamhYjQp9YnzzGiQCPMK96xr-odcWxJeO40hEC3IYE6c2aDwaxpM6dCuPdKZyTxu1LGwPwPE_cCR7TGMoqN-vVMLUsVGWTDc-'
-# http://players.brightcove.net/876450612001/HycrnmXI_default/index.min.js
-policy_key_bfm_business = 'BCpkADawqM3_4isNOefOD4AsaEOnzDif2SQ4dnvjWcDr_CwFPth4Hsegvmj5ExVKIvekBgpbCWj_wIAtWSFr2zX1_R6whQDCmdU_BJYPklIQLDk8mz9XUB5O8K4'
-# http://players.brightcove.net/5067014665001/HkaQBbByx_default/index.min.js
-policy_key_rmc_bfm_sport = 'BCpkADawqM2psaKJomAFikWbax2Dc3YuDb10bdaP3W_GsZ8qwCD4oMviyl5JGr8j5DsWRBYlv0WwDrQSCDFjOFYAu2PL86duVCVlPfcHGALSBlA6JleKzBMFNjJri6oszo-GbSctlfsv8v3_'
+url_video_json_brightcove = 'https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s'
+# AccountId, VideoId
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
 _ = common.addon.initialize_gettext()
 
-
 #@common.plugin.cached(common.cache_time)
 def get_token(channel_name):
     file_token = utils.get_webcontent(url_token % (channel_name))
     token_json = json.loads(file_token)
     return token_json['session']['token'].encode('utf-8')
+
+def get_policy_key(data_account, data_player):
+    file_js = utils.get_webcontent(url_js_policy_key % (data_account, data_player))
+    return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -234,6 +226,7 @@ def list_videos(params):
 	
 	data_account = data_video_soup['data-account']
 	data_video_id = data_video_soup['data-video-id']
+	data_player = data_video_soup['data-player']
 	
 	# Method to get JSON from 'edge.api.brightcove.com'
 	file_json = utils.download_catalog(
@@ -243,7 +236,7 @@ def list_videos(params):
 	    request_type='get',
 	    post_dic={},
 	    random_ua=False,
-	    specific_headers={'Accept': 'application/json;pk=%s' % policy_key_rmcdecouverte},
+	    specific_headers={'Accept': 'application/json;pk=%s' % (get_policy_key(data_account,data_player))},
 	    params={})
 	video_json = open(file_json).read()
 	json_parser = json.loads(video_json)
@@ -438,6 +431,7 @@ def list_live(params):
 	
 	data_account = data_live_soup['data-account']
 	data_video_id = data_live_soup['data-video-id']
+	data_player = data_live_soup['data-player']
 	
 	# Method to get JSON from 'edge.api.brightcove.com'
 	file_json = utils.download_catalog(
@@ -447,7 +441,7 @@ def list_live(params):
 	    request_type='get',
 	    post_dic={},
 	    random_ua=False,
-	    specific_headers={'Accept': 'application/json;pk=%s' % policy_key_rmcdecouverte},
+	    specific_headers={'Accept': 'application/json;pk=%s' % (get_policy_key(data_account,data_player))},
 	    params={})
 	video_json = open(file_json).read()
 	json_parser = json.loads(video_json)
@@ -525,6 +519,7 @@ def list_live(params):
 	    
 	    data_account_paris = data_live_paris_soup.find('script')['data-account']
 	    data_video_id_paris = data_live_paris_soup.find('script')['data-video-id']
+	    data_player_paris = data_live_paris_soup.find('script')['data-player']
 	    
 	    # Method to get JSON from 'edge.api.brightcove.com'
 	    file_json_paris = utils.download_catalog(
@@ -534,7 +529,7 @@ def list_live(params):
 		request_type='get',
 		post_dic={},
 		random_ua=False,
-		specific_headers={'Accept': 'application/json;pk=%s' % policy_key_bfm_paris},
+		specific_headers={'Accept': 'application/json;pk=%s' % (get_policy_key(data_account_paris,data_player_paris))},
 		params={})
 	    video_json_paris = open(file_json_paris).read()
 	    json_parser_paris = json.loads(video_json_paris)
@@ -581,6 +576,7 @@ def list_live(params):
 	    
 	    data_account = data_live_soup.find('script')['data-account']
 	    data_video_id = data_live_soup.find('script')['data-video-id']
+	    data_player = data_live_soup.find('script')['data-player']
 	    
 	    # Method to get JSON from 'edge.api.brightcove.com'
 	    file_json = utils.download_catalog(
@@ -590,7 +586,7 @@ def list_live(params):
 		request_type='get',
 		post_dic={},
 		random_ua=False,
-		specific_headers={'Accept': 'application/json;pk=%s' % policy_key_bfm_business},
+		specific_headers={'Accept': 'application/json;pk=%s' % (get_policy_key(data_account,data_player))},
 		params={})
 	    video_json = open(file_json).read()
 	    json_parser = json.loads(video_json)
@@ -639,6 +635,7 @@ def list_live(params):
 	    
 	    data_account = data_live_soup.find('script')['data-account']
 	    data_video_id = data_live_soup.find('script')['data-video-id']
+	    data_player = data_live_soup.find('script')['data-player']
 	    
 	    # Method to get JSON from 'edge.api.brightcove.com'
 	    file_json = utils.download_catalog(
@@ -648,7 +645,7 @@ def list_live(params):
 		request_type='get',
 		post_dic={},
 		random_ua=False,
-		specific_headers={'Accept': 'application/json;pk=%s' % policy_key_rmc_bfm_sport},
+		specific_headers={'Accept': 'application/json;pk=%s' % (get_policy_key(data_account,data_player))},
 		params={})
 	    video_json = open(file_json).read()
 	    json_parser = json.loads(video_json)
