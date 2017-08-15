@@ -54,7 +54,7 @@ url_all_vod_nhk = 'https://api.nhk.or.jp/%s/vodesdlist/v1/all/all/all.json?apike
 url_video_vod = 'https://player.ooyala.com/sas/player_api/v2/authorization/embed_code/%s/%s?device=html5&domain=www3.nhk.or.jp'
 # pcode, Videoid
 
-url_get_pcode = 'https://www3.nhk.or.jp/%s/common/player/tv/v4/stable/4.14.8/nw_vod_player.js'
+url_get_js_pcode = 'https://www3.nhk.or.jp/%s/common/player/tv/vod/'
 # Channel_Name...
 
 location = ['world']
@@ -72,13 +72,23 @@ def channel_entry(params):
         return get_video_url(params)
 
 def get_pcode(params):
+    # Get js file
+    file_path = utils.download_catalog(
+	url_get_js_pcode % params.channel_name,
+	'%s_js.html' % params.channel_name,
+    )
+    file_js = open(file_path).read()
+    js_file = re.compile('<script src="\/(.+?)"').findall(file_js)
+    
+    # Get last JS script
+    url_get_pcode = url_root + js_file[len(js_file)-1]
+    
     # Get apikey
     file_path_js = utils.download_catalog(
-	url_get_pcode % params.channel_name,
+	url_get_pcode,
 	'%s_pcode.js' % params.channel_name,
     )
     pcode_js = open(file_path_js).read()
-    
     pcode = re.compile('pcode: "(.+?)"').findall(pcode_js)
     return pcode[0]
 
