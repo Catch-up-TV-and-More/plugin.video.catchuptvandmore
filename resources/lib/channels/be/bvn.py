@@ -143,14 +143,12 @@ def list_shows(params):
     elif params.next == 'list_shows_2':
 	file_path_2 = utils.download_catalog(
             params.url_category,
-            '%s_program_list_episodes.html' % params.channel_name)
+            '%s_%s_list_episodes.html' % (params.channel_name,params.url_category))
         episodes_html = open(file_path_2).read()
         episodes_soup = bs(episodes_html, 'html.parser')
 	
 	shows_soup = episodes_soup.find(
             'div',
-            #id_='video-carousel-part0'#,
-	    #class_='custom-carousel carousel slide'
 	    class_='active item'
 	)
 
@@ -175,7 +173,6 @@ def list_shows(params):
             })
 	
 	# TODO Add More Button ?
-	# Clean if return ?
 	
     return common.plugin.create_listing(
         shows,
