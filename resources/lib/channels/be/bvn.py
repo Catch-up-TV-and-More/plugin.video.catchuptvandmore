@@ -25,6 +25,7 @@ from resources.lib import common
 import re
 import json
 from bs4 import BeautifulSoup as bs
+import time
 
 # TODO
 # Info live (title, picture, plot)
@@ -46,10 +47,12 @@ json_live_token = 'https://services.dacast.com/token/i/b/%s/%s/%s'
 # Id in 3 part
 
 # REPLAY :
+url_token = 'https://ida.omroep.nl/app.php/auth'
 url_programs = 'https://www.bvn.tv/programmas'
-url_info_replay = 'https://e.omroep.nl/metadata/%s'
-# Id Video
-
+url_info_replay = 'https://e.omroep.nl/metadata/%s?callback=jsonpCallback%s5910'
+# Id Video, time
+url_video_replay = 'https://ida.omroep.nl/app.php/%s?adaptive=yes&token=%s'
+# Id Video, Token
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -186,12 +189,21 @@ def list_shows(params):
 def list_videos(params):
     videos = []
     
+    # get token 
+    file_path_json_token = utils.download_catalog(
+	url_token,
+	'%s_replay_token.json' % (params.channel_name))
+    replay_json_token = open(file_path_json_token).read()
+    replay_jsonparser_token = json.loads(replay_json_token)
+    
+    token = replay_jsonparser_token["token"]
+    
     # get info replay
     file_path_info_replay = utils.download_catalog(
-	url_info_replay % (params.id_episode),
+	url_info_replay % (params.id_episode,str(time.time()).replace('.','')),
 	'%s_%s_info_replay.js' % (params.channel_name,params.id_episode))
     info_replay_js = open(file_path_info_replay).read()
-    info_replay_json = re.compile(r'parseMetadata\((.*?)\)').findall(info_replay_js)[0]
+    info_replay_json = re.compile(r'\((.*?)\)').findall(info_replay_js)[0]
     info_replay_jsonparser = json.loads(info_replay_json)
     
     title = info_replay_jsonparser["titel"].encode('utf-8') + ' ' +  info_replay_jsonparser["aflevering_titel"].encode('utf-8')
@@ -210,8 +222,27 @@ def list_videos(params):
     date = '.'.join((day, mounth, year))
     aired = '-'.join((year, mounth, day))
     
-    # Buil URL (https://github.com/Reino17/BatchGemist/blob/master/batchgemist_notes.txt)
-    url_hls = ''
+    # Get HLS link
+    file_path_video_replay = utils.download_catalog(
+	url_video_replay % (params.id_episode,token),
+	'%s_%s_video_replay.js' % (params.channel_name,params.id_episode))
+    video_replay_json = open(file_path_video_replay).read()
+    video_replay_jsonparser = json.loads(video_replay_json)
+    
+    url_json_url_hls = ''
+    
+    for video in video_replay_jsonparser["items"][0]:
+	url_json_url_hls = video["url"].encode('utf-8')
+	break
+    
+    file_path_hls_replay = utils.download_catalog(
+	url_json_url_hls + 'jsonpCallback%s5910' % (str(time.time()).replace('.','')),
+	'%s_%s_hls_replay.js' % (params.channel_name,params.id_episode))
+    hls_replay_js = open(file_path_hls_replay).read()
+    hls_replay_json = re.compile(r'\((.*?)\)').findall(hls_replay_js)[0]
+    hls_replay_jsonparser = json.loads(hls_replay_json)
+    
+    url_hls = hls_replay_jsonparser["url"].encode('utf-8')
     
     info = {
 	'video': {
