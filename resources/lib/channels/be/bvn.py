@@ -24,26 +24,32 @@ from resources.lib import utils
 from resources.lib import common
 import re
 import json
+from bs4 import BeautifulSoup as bs
 
 # TODO
 # Info live (title, picture, plot)
-# Add replay
+# Add More-Button to get all replay
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
 _ = common.addon.initialize_gettext()
 
+url_root = 'https://www.bvn.tv'
+
+#LIVE :
 url_live_site = 'https://www.bvn.tv/bvnlive'
 # Get Id
-
 json_live = 'https://json.dacast.com/b/%s/%s/%s'
 # Id in 3 part
-
 json_live_token = 'https://services.dacast.com/token/i/b/%s/%s/%s'
 # Id in 3 part
 
+# REPLAY :
 url_programs = 'https://www.bvn.tv/programmas'
+url_info_replay = 'https://e.omroep.nl/metadata/%s'
+# Id Video
+
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
@@ -64,15 +70,15 @@ def mode_replay_live(params):
     modes = []
     
     # Add Replay 
-    #modes.append({
-    #	'label' : 'Replay',
-    #	'url': common.plugin.get_url(
-    #	    action='channel_entry',
-    #	    next='list_shows_1',
-    #	    category='%s Replay' % params.channel_name.upper(),
-    #	    window_title='%s Replay' % params.channel_name.upper()
-    #	),
-    #})
+    modes.append({
+    	'label' : 'Replay',
+    	'url': common.plugin.get_url(
+    	    action='channel_entry',
+    	    next='list_shows_1',
+    	    category='%s Replay' % params.channel_name.upper(),
+    	    window_title='%s Replay' % params.channel_name.upper()
+    	),
+    })
     
     # Add Live 
     modes.append({
@@ -97,13 +103,167 @@ def mode_replay_live(params):
 def list_shows(params):
     shows = []
     
-    return None
+    if params.next == 'list_shows_1':
+	file_path = utils.download_catalog(
+            url_programs,
+            '%s_programs.html' % params.channel_name)
+        programs_html = open(file_path).read()
+        programs_soup = bs(programs_html, 'html.parser')
+	
+	categories_soup = programs_soup.find(
+            'ul',
+            class_='program-video-list'
+        )
+
+        for category in categories_soup.find_all('a'):
+            category_name = category.find('span').get_text().encode('utf-8').replace(
+				'\n', ' ').replace('\r', ' ').rstrip('\r\n')
+            category_img =  url_root + category.find('img').get('src').encode('utf-8')
+	    
+	    url_category = url_root + category.get('href').encode('utf-8')
+
+            shows.append({
+                'label': category_name,
+		'thumb' : category_img,
+		'fanart' : category_img,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='list_shows_2',
+		    url_category=url_category,
+                    window_title=category_name,
+                    category_name=category_name,
+                )
+            })
+    
+	# TODO Add More Button
+    
+    elif params.next == 'list_shows_2':
+	file_path_2 = utils.download_catalog(
+            params.url_category,
+            '%s_program_list_episodes.html' % params.channel_name)
+        episodes_html = open(file_path_2).read()
+        episodes_soup = bs(episodes_html, 'html.parser')
+	
+	shows_soup = episodes_soup.find(
+            'div',
+            #id_='video-carousel-part0'#,
+	    #class_='custom-carousel carousel slide'
+	    class_='active item'
+	)
+
+        for episode in shows_soup.find_all('a'):
+            episode_name = episode.find('img').get('title').encode('utf-8')
+            episode_img =  url_root + episode.find('img').get('src').encode('utf-8')
+	    	    
+	    id_episode_list = episode.get('href').encode('utf-8').rsplit('/')
+	    id_episode = id_episode_list[len(id_episode_list)-1]
+	    
+            shows.append({
+                'label': episode_name,
+		'thumb' : episode_img,
+		'fanart' : episode_img,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='list_videos_cat',
+		    id_episode=id_episode,
+                    window_title=episode_name,
+                    episode_name=episode_name,
+                )
+            })
+	
+	# TODO Add More Button ?
+	# Clean if return ?
+	
+    return common.plugin.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
     
-    return None
+    # get info replay
+    file_path_info_replay = utils.download_catalog(
+	url_info_replay % (params.id_episode),
+	'%s_%s_info_replay.js' % (params.channel_name,params.id_episode))
+    info_replay_js = open(file_path_info_replay).read()
+    info_replay_json = re.compile(r'parseMetadata\((.*?)\)').findall(info_replay_js)[0]
+    info_replay_jsonparser = json.loads(info_replay_json)
+    
+    title = info_replay_jsonparser["titel"].encode('utf-8') + ' ' +  info_replay_jsonparser["aflevering_titel"].encode('utf-8')
+    img = info_replay_jsonparser["images"][0]["url"].encode('utf-8')
+    
+    plot = info_replay_jsonparser["info"].encode('utf-8')
+    duration = 0
+    duration = int(info_replay_jsonparser["tijdsduur"].split(':')[0]) * 3600 + int(info_replay_jsonparser["tijdsduur"].split(':')[1]) * 60 \
+	       + int(info_replay_jsonparser["tijdsduur"].split(':')[2])
+		
+    value_date = info_replay_jsonparser["gidsdatum"].split('-')
+    day = value_date[2]
+    mounth = value_date[1]
+    year = value_date[0]
+
+    date = '.'.join((day, mounth, year))
+    aired = '-'.join((year, mounth, day))
+    
+    # Buil URL (https://github.com/Reino17/BatchGemist/blob/master/batchgemist_notes.txt)
+    url_hls = ''
+    
+    info = {
+	'video': {
+	    'title': title,
+	    'plot': plot,
+	    #'episode': episode_number,
+	    #'season': season_number,
+	    #'rating': note,
+	    'aired': aired,
+	    'date': date,
+	    'duration': duration,
+	    'year': year,
+	    'mediatype': 'tvshow'
+	}
+    }
+
+    # Nouveau pour ajouter le menu pour télécharger la vidéo
+    context_menu = []
+    download_video = (
+	_('Download'),
+	'XBMC.RunPlugin(' + common.plugin.get_url(
+	    action='download_video',
+	    url_hls=url_hls) + ')'
+	)
+    context_menu.append(download_video)
+    # Fin
+
+    videos.append({
+	'label': title,
+	'thumb': img,
+	'fanart': img,
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='play_r',
+	    url_hls=url_hls
+	),
+	'is_playable': True,
+	'info': info,
+	'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+    })
+    
+    return common.plugin.create_listing(
+	videos,
+	sort_methods=(
+	    common.sp.xbmcplugin.SORT_METHOD_DATE,
+	    common.sp.xbmcplugin.SORT_METHOD_DURATION,
+	    common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
+	    common.sp.xbmcplugin.SORT_METHOD_GENRE,
+	    common.sp.xbmcplugin.SORT_METHOD_PLAYCOUNT,
+	    common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+	),
+	content='tvshows')
     
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
@@ -173,3 +333,5 @@ def list_live(params):
 def get_video_url(params):
     if params.next == 'play_l':
 	return params.url_live
+    elif params.next == 'play_r' or params.next == 'download_video':
+	return params.url_hls
