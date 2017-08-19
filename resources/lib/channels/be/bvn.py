@@ -178,7 +178,7 @@ def list_videos(params):
 	    url_info_replay % (id_episode,str(time.time()).replace('.','')),
 	    '%s_%s_info_replay.js' % (params.channel_name,id_episode))
 	info_replay_js = open(file_path_info_replay).read()
-	info_replay_json = re.compile(r'\((.*?)\)').findall(info_replay_js)[0]
+	info_replay_json = re.compile(r'\((.*?)\)\n').findall(info_replay_js)[0]
 	info_replay_jsonparser = json.loads(info_replay_json)
 	
 	title = info_replay_jsonparser["titel"].encode('utf-8') + ' ' +  info_replay_jsonparser["aflevering_titel"].encode('utf-8')
@@ -220,7 +220,8 @@ def list_videos(params):
 	    hls_replay_json = re.compile(r'\((.*?)\)').findall(hls_replay_js)[0]
 	    hls_replay_jsonparser = json.loads(hls_replay_json)
 	    
-	    url_hls = hls_replay_jsonparser["url"].encode('utf-8')
+	    if 'url' in hls_replay_jsonparser:
+		url_hls = hls_replay_jsonparser["url"].encode('utf-8')
 	
 	info = {
 	    'video': {
