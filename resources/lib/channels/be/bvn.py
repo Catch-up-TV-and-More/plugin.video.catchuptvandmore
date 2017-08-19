@@ -29,7 +29,8 @@ import time
 
 # TODO
 # Info live (title, picture, plot)
-# Add More-Button to get all replay
+# Find JS with categories with text, ... ? more reliable  
+# Fix errors, show error, etc ...
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -112,18 +113,16 @@ def list_shows(params):
             '%s_programs.html' % params.channel_name)
         programs_html = open(file_path).read()
         programs_soup = bs(programs_html, 'html.parser')
+	list_js  = programs_soup.find_all("script")
+	# 7ème script contient la liste des categories au format json
+	json_categories = list_js[6].prettify().replace('</script>','').replace('<script>','').replace('var programList = ','').replace('\n','').replace('\r','').replace(',]',']')
 	
-	categories_soup = programs_soup.find(
-            'ul',
-            class_='program-video-list'
-        )
+	json_categories_jsonparser = json.loads(json_categories)
 
-        for category in categories_soup.find_all('a'):
-            category_name = category.find('span').get_text().encode('utf-8').replace(
-				'\n', ' ').replace('\r', ' ').rstrip('\r\n')
-            category_img =  url_root + category.find('img').get('src').encode('utf-8')
-	    
-	    url_category = url_root + category.get('href').encode('utf-8')
+        for category in json_categories_jsonparser["programmings"]:
+            category_name = category["title"]
+            category_img =  url_root + category["image"]
+	    category_url = url_root + '/programma/' + category["description"]
 
             shows.append({
                 'label': category_name,
@@ -131,48 +130,12 @@ def list_shows(params):
 		'fanart' : category_img,
                 'url': common.plugin.get_url(
                     action='channel_entry',
-                    next='list_shows_2',
-		    url_category=url_category,
+                    next='list_videos_cat',
+		    category_url=category_url,
                     window_title=category_name,
                     category_name=category_name,
                 )
             })
-    
-	# TODO Add More Button
-    
-    elif params.next == 'list_shows_2':
-	file_path_2 = utils.download_catalog(
-            params.url_category,
-            '%s_%s_list_episodes.html' % (params.channel_name,params.url_category))
-        episodes_html = open(file_path_2).read()
-        episodes_soup = bs(episodes_html, 'html.parser')
-	
-	shows_soup = episodes_soup.find(
-            'div',
-	    class_='active item'
-	)
-
-        for episode in shows_soup.find_all('a'):
-            episode_name = episode.find('img').get('title').encode('utf-8')
-            episode_img =  url_root + episode.find('img').get('src').encode('utf-8')
-	    	    
-	    id_episode_list = episode.get('href').encode('utf-8').rsplit('/')
-	    id_episode = id_episode_list[len(id_episode_list)-1]
-	    
-            shows.append({
-                'label': episode_name,
-		'thumb' : episode_img,
-		'fanart' : episode_img,
-                'url': common.plugin.get_url(
-                    action='channel_entry',
-                    next='list_videos_cat',
-		    id_episode=id_episode,
-                    window_title=episode_name,
-                    episode_name=episode_name,
-                )
-            })
-	
-	# TODO Add More Button ?
 	
     return common.plugin.create_listing(
         shows,
@@ -186,100 +149,119 @@ def list_shows(params):
 def list_videos(params):
     videos = []
     
-    # get token 
-    file_path_json_token = utils.download_catalog(
-	url_token,
-	'%s_replay_token.json' % (params.channel_name))
-    replay_json_token = open(file_path_json_token).read()
-    replay_jsonparser_token = json.loads(replay_json_token)
-    
-    token = replay_jsonparser_token["token"]
-    
-    # get info replay
-    file_path_info_replay = utils.download_catalog(
-	url_info_replay % (params.id_episode,str(time.time()).replace('.','')),
-	'%s_%s_info_replay.js' % (params.channel_name,params.id_episode))
-    info_replay_js = open(file_path_info_replay).read()
-    info_replay_json = re.compile(r'\((.*?)\)').findall(info_replay_js)[0]
-    info_replay_jsonparser = json.loads(info_replay_json)
-    
-    title = info_replay_jsonparser["titel"].encode('utf-8') + ' ' +  info_replay_jsonparser["aflevering_titel"].encode('utf-8')
-    img = info_replay_jsonparser["images"][0]["url"].encode('utf-8')
-    
-    plot = info_replay_jsonparser["info"].encode('utf-8')
-    duration = 0
-    duration = int(info_replay_jsonparser["tijdsduur"].split(':')[0]) * 3600 + int(info_replay_jsonparser["tijdsduur"].split(':')[1]) * 60 \
-	       + int(info_replay_jsonparser["tijdsduur"].split(':')[2])
-		
-    value_date = info_replay_jsonparser["gidsdatum"].split('-')
-    day = value_date[2]
-    mounth = value_date[1]
-    year = value_date[0]
+    file_path_2 = utils.download_catalog(
+	params.category_url,
+	'%s_%s_list_episodes.html' % (params.channel_name,params.category_url))
+    episodes_html = open(file_path_2).read()
+    episodes_soup = bs(episodes_html, 'html.parser')
+	
+    shows_soup = episodes_soup.find(
+	'div',
+	class_='active item'
+    )
 
-    date = '.'.join((day, mounth, year))
-    aired = '-'.join((year, mounth, day))
-    
-    # Get HLS link
-    file_path_video_replay = utils.download_catalog(
-	url_video_replay % (params.id_episode,token),
-	'%s_%s_video_replay.js' % (params.channel_name,params.id_episode))
-    video_replay_json = open(file_path_video_replay).read()
-    video_replay_jsonparser = json.loads(video_replay_json)
-    
-    url_json_url_hls = ''
-    
-    for video in video_replay_jsonparser["items"][0]:
-	url_json_url_hls = video["url"].encode('utf-8')
-	break
-    
-    file_path_hls_replay = utils.download_catalog(
-	url_json_url_hls + 'jsonpCallback%s5910' % (str(time.time()).replace('.','')),
-	'%s_%s_hls_replay.js' % (params.channel_name,params.id_episode))
-    hls_replay_js = open(file_path_hls_replay).read()
-    hls_replay_json = re.compile(r'\((.*?)\)').findall(hls_replay_js)[0]
-    hls_replay_jsonparser = json.loads(hls_replay_json)
-    
-    url_hls = hls_replay_jsonparser["url"].encode('utf-8')
-    
-    info = {
-	'video': {
-	    'title': title,
-	    'plot': plot,
-	    #'episode': episode_number,
-	    #'season': season_number,
-	    #'rating': note,
-	    'aired': aired,
-	    'date': date,
-	    'duration': duration,
-	    'year': year,
-	    'mediatype': 'tvshow'
+    for episode in shows_soup.find_all('a'):
+	id_episode_list = episode.get('href').encode('utf-8').rsplit('/')
+	id_episode = id_episode_list[len(id_episode_list)-1]
+	    
+	# get token 
+	file_path_json_token = utils.download_catalog(
+	    url_token,
+	    '%s_replay_token.json' % (params.channel_name))
+	replay_json_token = open(file_path_json_token).read()
+	replay_jsonparser_token = json.loads(replay_json_token)
+	
+	token = replay_jsonparser_token["token"]
+	
+	# get info replay
+	file_path_info_replay = utils.download_catalog(
+	    url_info_replay % (id_episode,str(time.time()).replace('.','')),
+	    '%s_%s_info_replay.js' % (params.channel_name,id_episode))
+	info_replay_js = open(file_path_info_replay).read()
+	info_replay_json = re.compile(r'\((.*?)\)').findall(info_replay_js)[0]
+	info_replay_jsonparser = json.loads(info_replay_json)
+	
+	title = info_replay_jsonparser["titel"].encode('utf-8') + ' ' +  info_replay_jsonparser["aflevering_titel"].encode('utf-8')
+	img = ''
+	if 'images' in info_replay_jsonparser:
+	    img = info_replay_jsonparser["images"][0]["url"].encode('utf-8')
+	
+	plot = info_replay_jsonparser["info"].encode('utf-8')
+	duration = 0
+	duration = int(info_replay_jsonparser["tijdsduur"].split(':')[0]) * 3600 + int(info_replay_jsonparser["tijdsduur"].split(':')[1]) * 60 \
+		   + int(info_replay_jsonparser["tijdsduur"].split(':')[2])
+		    
+	value_date = info_replay_jsonparser["gidsdatum"].split('-')
+	day = value_date[2]
+	mounth = value_date[1]
+	year = value_date[0]
+
+	date = '.'.join((day, mounth, year))
+	aired = '-'.join((year, mounth, day))
+	
+	# Get HLS link
+	file_path_video_replay = utils.download_catalog(
+	    url_video_replay % (id_episode,token),
+	    '%s_%s_video_replay.js' % (params.channel_name,id_episode))
+	video_replay_json = open(file_path_video_replay).read()
+	video_replay_jsonparser = json.loads(video_replay_json)
+	
+	url_hls = ''
+	
+	if 'items' in video_replay_jsonparser:
+	    for video in video_replay_jsonparser["items"][0]:
+		url_json_url_hls = video["url"].encode('utf-8')
+		break
+	    
+	    file_path_hls_replay = utils.download_catalog(
+		url_json_url_hls + 'jsonpCallback%s5910' % (str(time.time()).replace('.','')),
+		'%s_%s_hls_replay.js' % (params.channel_name,id_episode))
+	    hls_replay_js = open(file_path_hls_replay).read()
+	    hls_replay_json = re.compile(r'\((.*?)\)').findall(hls_replay_js)[0]
+	    hls_replay_jsonparser = json.loads(hls_replay_json)
+	    
+	    url_hls = hls_replay_jsonparser["url"].encode('utf-8')
+	
+	info = {
+	    'video': {
+		'title': title,
+		'plot': plot,
+		#'episode': episode_number,
+		#'season': season_number,
+		#'rating': note,
+		'aired': aired,
+		'date': date,
+		'duration': duration,
+		'year': year,
+		'mediatype': 'tvshow'
+	    }
 	}
-    }
 
-    # Nouveau pour ajouter le menu pour télécharger la vidéo
-    context_menu = []
-    download_video = (
-	_('Download'),
-	'XBMC.RunPlugin(' + common.plugin.get_url(
-	    action='download_video',
-	    url_hls=url_hls) + ')'
-	)
-    context_menu.append(download_video)
-    # Fin
-
-    videos.append({
-	'label': title,
-	'thumb': img,
-	'fanart': img,
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_r',
-	    url_hls=url_hls
-	),
-	'is_playable': True,
-	'info': info,
-	'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
-    })
+	# Nouveau pour ajouter le menu pour télécharger la vidéo
+	context_menu = []
+	download_video = (
+	    _('Download'),
+	    'XBMC.RunPlugin(' + common.plugin.get_url(
+		action='download_video',
+		url_hls=url_hls) + ')'
+	    )
+	context_menu.append(download_video)
+	# Fin
+	
+	if url_hls != '':
+	    videos.append({
+		'label': title,
+		'thumb': img,
+		'fanart': img,
+		'url': common.plugin.get_url(
+		    action='channel_entry',
+		    next='play_r',
+		    url_hls=url_hls
+		),
+		'is_playable': True,
+		'info': info,
+		'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+	    })
     
     return common.plugin.create_listing(
 	videos,
