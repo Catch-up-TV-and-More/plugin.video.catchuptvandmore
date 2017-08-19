@@ -207,6 +207,9 @@
 	    
 	    <setting label="Studio-Brussel" type="bool" id="channels.be.vrt.stubru" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.vrt.stubru.order" default="19"/>
+	    
+	    <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="20"/>
 	
 	<setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>

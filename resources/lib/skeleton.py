@@ -95,7 +95,8 @@ channels = {
 	'channels.be.vrt.ketnet': 'Ketnet',
 	'channels.be.vrt.sporza': 'Sporza',
 	'channels.be.vrt.mnm': 'MNM',
-	'channels.be.vrt.stubru': 'Studio-Brussel'
+	'channels.be.vrt.stubru': 'Studio-Brussel',
+	'channels.be.bvn.bvn': 'BVN'
 	    
     },
     
