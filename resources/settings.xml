@@ -9,6 +9,7 @@
             <setting label="30021" type="bool" id="main_menu.be" default="true"/>
 	    <setting label="30022" type="bool" id="main_menu.jp" default="true"/>
 	    <setting label="30023" type="bool" id="main_menu.eu" default="true"/>
+	    <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
     </category>
 
 
@@ -222,6 +223,12 @@
 	
 	    <setting label="Euronews" type="bool" id="channels.eu.euronews.euronews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.euronews.euronews.order" default="1"/>
+	
+	<setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
+	
+	    <setting label="Sky News" type="bool" id="channels.uk.sky.skynews" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.sky.skynews.order" default="1"/>
 
     </category>
 
@@ -248,6 +255,9 @@
 	<setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
 	    <setting label="30082" type="labelenum" id="channels.eu.euronews.euronews.language" visible="eq(-1,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
+	
+	<setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
 	
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>
@@ -276,6 +286,9 @@
 	
 	<setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
+	
+	<setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
 	
     </category>
 

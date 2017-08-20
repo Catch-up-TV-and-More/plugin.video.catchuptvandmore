@@ -25,7 +25,9 @@ categories = {
     'main_menu.fr': 'French channels',
     'main_menu.be': 'Belgian channels',
     'main_menu.jp': 'Japanese channels',
-    'main_menu.eu': 'European channels'
+    'main_menu.eu': 'European channels',
+    'main_menu.uk': 'United Kingdom channels'
+    
 }
 
 channels = {
@@ -107,6 +109,11 @@ channels = {
     
     'main_menu.eu': {
         'channels.eu.euronews.euronews': 'Euronews'
+	
+    },
+    
+    'main_menu.uk': {
+        'channels.uk.sky.skynews': 'Sky News'
 	
     }
 }
