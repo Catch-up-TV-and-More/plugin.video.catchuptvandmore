@@ -26,7 +26,8 @@ categories = {
     'main_menu.be': 'Belgian channels',
     'main_menu.jp': 'Japanese channels',
     'main_menu.eu': 'European channels',
-    'main_menu.uk': 'United Kingdom channels'
+    'main_menu.uk': 'United Kingdom channels',
+    'main_menu.us': 'United States channels'
     
 }
 
@@ -114,6 +115,11 @@ channels = {
     
     'main_menu.uk': {
         'channels.uk.sky.skynews': 'Sky News'
+	
+    },
+    
+    'main_menu.us': {
+        'channels.us.sundancetv.sundancetv': 'Sundance TV'
 	
     }
 }

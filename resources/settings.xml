@@ -10,6 +10,7 @@
 	    <setting label="30022" type="bool" id="main_menu.jp" default="true"/>
 	    <setting label="30023" type="bool" id="main_menu.eu" default="true"/>
 	    <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
+	    <setting label="30025" type="bool" id="main_menu.us" default="true"/>
     </category>
 
 
@@ -229,7 +230,13 @@
 	
 	    <setting label="Sky News" type="bool" id="channels.uk.sky.skynews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.uk.sky.skynews.order" default="1"/>
-
+	
+	<setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30025" type="bool" id="main_menu.us" default="true" visible="false"/>
+	
+	    <setting label="Sundance TV" type="bool" id="channels.us.sundancetv.sundancetv" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.us.sundancetv.sundancetv.order" default="1"/>
+	    
     </category>
 
 
@@ -258,6 +265,9 @@
 	
 	<setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
+	
+	<setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30025" type="bool" id="main_menu.us" default="true" visible="false"/>
 	
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>
@@ -289,6 +299,9 @@
 	
 	<setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
+	
+	<setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30025" type="bool" id="main_menu.us" default="true" visible="false"/>
 	
     </category>
 
