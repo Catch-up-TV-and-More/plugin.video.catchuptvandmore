@@ -49,7 +49,7 @@ url_root_image_rtbf = 'https://ds1.static.rtbf.be'
 url_json_live =	'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&partner_key=%s'
 # partener_key
 
-url_partener_key = 'https://sgc.static.rtbf.be/js/3/2/32c0278d72748b29373ec0565ebe573f_ssl.js'
+url_partener_key = 'https://sgc.static.rtbf.be/js/6/9/69271e0439992a9865eca423af5dd501_ssl.js'
 
 channel_filter = {
     'laune': 'La Une',
