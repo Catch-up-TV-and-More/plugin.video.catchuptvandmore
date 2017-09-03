@@ -180,38 +180,36 @@
 	    <setting label="TARMAC" type="bool" id="channels.be.rtbf.tarmac" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtbf.tarmac.order" default="9"/>
 	    
-	    <setting label="Webcréation (RTBF)" type="bool" id="channels.be.rtbf.webcreation" default="true" visible="eq(-19,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtbf.webcreation.order" default="10"/>
             
-	    <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-21,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="11"/>
+	    <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="10"/>
 	    
-	    <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-23,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="12"/>
+	    <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="11"/>
 	    
-	    <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-25,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="13"/>
+	    <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="12"/>
 	    
-	    <setting label="Eén" type="bool" id="channels.be.vrt.een" default="true" visible="eq(-27,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.een.order" default="14"/>
+	    <setting label="Eén" type="bool" id="channels.be.vrt.een" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.een.order" default="13"/>
 	    
-	    <setting label="Canvas" type="bool" id="channels.be.vrt.canvas" default="true" visible="eq(-29,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.canvas.order" default="15"/>
+	    <setting label="Canvas" type="bool" id="channels.be.vrt.canvas" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.canvas.order" default="14"/>
 	    
-	    <setting label="Ketnet" type="bool" id="channels.be.vrt.ketnet" default="true" visible="eq(-31,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.ketnet.order" default="16"/>
+	    <setting label="Ketnet" type="bool" id="channels.be.vrt.ketnet" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.ketnet.order" default="15"/>
 	    
-	    <setting label="Sporza" type="bool" id="channels.be.vrt.sporza" default="true" visible="eq(-33,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.sporza.order" default="17"/>
+	    <setting label="Sporza" type="bool" id="channels.be.vrt.sporza" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.sporza.order" default="16"/>
 	    
-	    <setting label="MNM" type="bool" id="channels.be.vrt.mnm" default="true" visible="eq(-35,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.mnm.order" default="18"/>
+	    <setting label="MNM" type="bool" id="channels.be.vrt.mnm" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.mnm.order" default="17"/>
 	    
-	    <setting label="Studio-Brussel" type="bool" id="channels.be.vrt.stubru" default="true" visible="eq(-37,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.stubru.order" default="19"/>
+	    <setting label="Studio-Brussel" type="bool" id="channels.be.vrt.stubru" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.stubru.order" default="18"/>
 	    
-	    <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-39,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="20"/>
+	    <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="19"/>
 	
 	<setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>

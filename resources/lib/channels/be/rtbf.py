@@ -32,7 +32,7 @@ import time
 # Add categories 
 # Add geoblock (info in JSON)
 # Add Quality Mode
-# etc ...
+# Add Next Button (for Replay Channel)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -41,8 +41,14 @@ _ = common.addon.initialize_gettext()
 
 url_json_categories = 'https://www.rtbf.be/news/api/menu?site=media'
 
+url_archive_replay = 'https://www.rtbf.be/auvio/archives?cid=%s&type=video&contentType=complete'
+# channel Id
+
 url_json_emissions_by_id = 'https://www.rtbf.be/api/media/video?method=getVideoListByEmissionOrdered&args[]=%s'
 # emission_id
+
+url_json_video_by_id = 'https://www.rtbf.be/api/media/video?method=getVideoDetail&args[]=%s'
+# video_id
 
 url_root_image_rtbf = 'https://ds1.static.rtbf.be'
 
@@ -62,6 +68,20 @@ channel_filter = {
     'purefm' : 'Pure',
     'tarmac' : 'TARMAC',
     'webcreation' : 'Webcréation'
+	
+}
+
+channel_id = {
+    'laune': '1',
+    'ladeux': '2',
+    'latrois': '3',
+    'lapremiere' : '17',
+    'vivacite' : '10',
+    'musiq3' : '8',
+    'classic21' : '7',
+    'purefm' : '9',
+    'tarmac' : '34'#,
+    #'webcreation' : 'Webcréation'
 	
 }
 
@@ -132,55 +152,42 @@ def list_shows(params):
     #     shows = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_shows_1':
-        file_path = utils.download_catalog(
-            url_json_categories,
-            '%s_categories.json' % params.channel_name)
-        categories_json = open(file_path).read()
-        categories = json.loads(categories_json)
-
-        for category in categories['item']:
-            if category['@attributes']['id'] == 'emission':
-                category_title = category[
-                    '@attributes']['name'].encode('utf-8')
-                category_url = category[
-                    '@attributes']['url'].encode('utf-8')
-
-		file_path = utils.download_catalog(
-		    category_url,
-		    '%s_%s.html' % (
-			params.channel_name,
-			category_title))
-		category_html = open(file_path).read()
-		category_soup = bs(category_html, 'html.parser')
-
-		emissions_soup = category_soup.find_all('article', class_="rtbf-media-item col-xxs-12 ")
-		
-		for emission in emissions_soup:
-		    
-		    channel_emission = emission.find('div', class_="rtbf-media-item__meta-bottom").get_text().encode('utf-8')
-		    if channel_filter[params.channel_name] in channel_emission:
-		    
-			emission_title = emission.find('h4').get_text().encode('utf-8')
-			data_id = emission['data-id']
-		    
-			shows.append({
-			    'label': emission_title,
-			    'url': common.plugin.get_url(
-				emission_title=emission_title,
-				action='channel_entry',
-				data_id=data_id,
-				next='list_videos',
-				window_title=emission_title
-			    )
-			})
+        	
+	channel_id_value = channel_id[params.channel_name]
+	
+	file_path = utils.download_catalog(
+            url_archive_replay % channel_id_value,
+            '%s_replay_%s.html' % (params.channel_name,channel_id_value))
+        programs_html = open(file_path).read()
+	
+	programs_soup = bs(programs_html, 'html.parser')
+	programs = programs_soup.find_all('article', class_="col-xs-12 rtbf-media-li rtbf-media-item js-card js-card-media")
+	
+	for program in programs:
+	
+	    program_title = program.find('a', class_='www-faux-link').get('title')
+	    data_id = program.get('data-id')
+	    
+	    shows.append({
+		'label': program_title,
+		'url': common.plugin.get_url(
+		    emission_title=program_title,
+		    action='channel_entry',
+		    data_id=data_id,
+		    next='list_videos',
+		    window_title=program_title
+		)
+	    })
+	
+	# TODO add Next Button
 
     return common.plugin.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        update_listing='update_listing' in params
+        )#,
+        #update_listing='update_listing' in params
     )
 
 
@@ -189,73 +196,72 @@ def list_videos(params):
     videos = []
     
     file_path = utils.download_catalog(
-	url_json_emissions_by_id % params.data_id,
+	url_json_video_by_id % params.data_id,
 	'%s_%s.json' % (
 	    params.channel_name,
 	    params.data_id))
     videos_json = open(file_path).read()
     videos_jsonparser = json.loads(videos_json)
     
-    all_videos_data =  videos_jsonparser["data"]
-    for video_data in all_videos_data:
+    video_data =  videos_jsonparser["data"]
 	
-	title = video_data["title"].encode('utf-8')
-	img = url_root_image_rtbf + video_data["thumbnail"]["full_medium"]
-	url_video = video_data["urlHls"]
-	plot = ''
-	if video_data["description"]:
-	    plot = video_data["description"].encode('utf-8')
-	duration = 0
-	duration = video_data["durations"]
+    title = video_data["title"].encode('utf-8')
+    img = url_root_image_rtbf + video_data["thumbnail"]["full_medium"]
+    url_video = video_data["urlHls"]
+    plot = ''
+    if video_data["description"]:
+	plot = video_data["description"].encode('utf-8')
+    duration = 0
+    duration = video_data["durations"]
 	
-	value_date = time.strftime('%d %m %Y', time.localtime(video_data["liveFrom"]))
-	date = str(value_date).split(' ')
-	day = date[0]
-	mounth = date[1]
-	year = date[2]
+    value_date = time.strftime('%d %m %Y', time.localtime(video_data["liveFrom"]))
+    date = str(value_date).split(' ')
+    day = date[0]
+    mounth = date[1]
+    year = date[2]
 
-	date = '.'.join((day, mounth, year))
-	aired = '-'.join((year, mounth, day))
+    date = '.'.join((day, mounth, year))
+    aired = '-'.join((year, mounth, day))
 	
-	info = {
-	    'video': {
-		'title': title,
-		'plot': plot,
-		#'episode': episode_number,
-		#'season': season_number,
-		#'rating': note,
-		'aired': aired,
-		'date': date,
-		'duration': duration,
-		'year': year,
-		'mediatype': 'tvshow'
-	    }
+    info = {
+	'video': {
+	    'title': title,
+	    'plot': plot,
+	    #'episode': episode_number,
+	    #'season': season_number,
+	    #'rating': note,
+	    'aired': aired,
+	    'date': date,
+	    'duration': duration,
+	    'year': year,
+	    'mediatype': 'tvshow'
 	}
+    }
 
-	# Nouveau pour ajouter le menu pour télécharger la vidéo
-	context_menu = []
-	download_video = (
-	    _('Download'),
-	    'XBMC.RunPlugin(' + common.plugin.get_url(
-		action='download_video',
-		url_video=url_video) + ')'
-	)
-	context_menu.append(download_video)
-	# Fin
+    # Nouveau pour ajouter le menu pour télécharger la vidéo
+    context_menu = []
+    download_video = (
+	_('Download'),
+	'XBMC.RunPlugin(' + common.plugin.get_url(
+	    action='download_video',
+	    url_video=url_video) + ')'
+    )
+    context_menu.append(download_video)
+    # Fin
 
-	videos.append({
-	    'label': title,
-	    'thumb': img,
-	    'fanart': img,
-	    'url': common.plugin.get_url(
-		action='channel_entry',
-		next='play_r',
-		url_video=url_video
-	    ),
-	    'is_playable': True,
-	    'info': info,
-	    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
-	})
+    videos.append({
+	'label': title,
+	'thumb': img,
+	'fanart': img,
+	'url': common.plugin.get_url(
+	    action='channel_entry',
+	    next='play_r',
+	    url_video=url_video
+	),
+	'is_playable': True,
+	'info': info,
+	'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+    })
     
     return common.plugin.create_listing(
 	videos,
