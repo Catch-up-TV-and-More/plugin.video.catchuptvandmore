@@ -27,9 +27,8 @@ import re
 
 # TODO
 # Add Live TV 
-# Get url_video_stream or pubId (?)
-# More videos for shorts
-# Add replay shows (not working)
+# More videos buttons for shorts
+# Get url_video_stream or pubId (shows and movies)
 
 url_root = "http://www.sundance.tv"
 
@@ -129,16 +128,16 @@ def list_shows(params):
 		)
 	    })
 	
-	#video_title = 'Shows'
-	#shows.append({
-	    #'label': video_title,
-	    #'url': common.plugin.get_url(
-		#action='channel_entry',
-		#next='list_shows_2',
-		    #title=video_title,
-		    #window_title=video_title
-		#)
-	    #})
+	video_title = 'Shows'
+	shows.append({
+	    'label': video_title,
+	    'url': common.plugin.get_url(
+		action='channel_entry',
+		next='list_shows_2',
+		    title=video_title,
+		    window_title=video_title
+		)
+	    })
     
     elif params.next == 'list_shows_2':
 	file_path = utils.download_catalog(
@@ -153,7 +152,7 @@ def list_shows(params):
 	    
 	    show_title = show.find('a').find('div').get_text().encode('utf-8')
 	    show_img = show.find('div', class_='poster').find('a').find('img').get('src')
-	    show_url = url_shows + show.find_all('a', class_='episode _ca-registered-click-link-event')[0].get('href').split('/')[1]
+	    show_url = url_shows + show.find_all('a', class_='episode')[0].get('href').split('/')[2]
 	
 	    shows.append({
 		'label': show_title,
@@ -325,15 +324,23 @@ def list_videos(params):
 	replay_show_episodes_html = open(file_path).read()
 	
 	replay_show_episodes_soup = bs(replay_show_episodes_html, 'html.parser')
-	list_episodes = replay_show_episodes_soup.find_all('div', class_='cfct-module sc-video-tout')
+	list_episodes = replay_show_episodes_soup.find_all('a', class_='video-link related-triple')
 	
 	for episode in list_episodes:
 	    
-	    video_title = episode.find('a').find('div').find('div', class_='tout-content').find('div', class_='video-title').find('h3').get_text().encode('utf-8')
+	    video_img = ''
+	    video_img = episode.find('div').find('img').get('src').encode('utf-8')
+	    video_url = ''
+	    video_id = episode.get('href').split('/',6)[-2]
+	    video_url = url_video_stream % (video_id,pubId_movie_show)
+	    
+	    video_title = ''
+	    video_title = episode.find('div').find('div', class_='video-text').find('div', class_='video-text-play-btn').find('h4').get_text().encode('utf-8')
 	    video_duration = 0
-	    video_plot = episode.find('a').find('div').find('div', class_='tout-content').find('div', class_='season-ep').get_text().strip().encode('utf-8')
-	    video_img = episode.find('a').find('div').find('div').find('img').get('src').encode('utf-8')
-	    video_url = url_video_stream % (episode.find('a').get('href').split('/',6)[-2],pubId_movie_show)
+	    video_plot = ''
+	    video_datas = replay_show_episodes_soup.find(id="video-%s-hover" % video_id)
+	    video_plot = video_datas.find('p', class_="video-availability-window").get_text().strip().encode('utf-8') + '\n' + \
+			 video_datas.find('p', class_="video-description").get_text().strip().encode('utf-8')
 	    
 	    info = {
 		'video': {
