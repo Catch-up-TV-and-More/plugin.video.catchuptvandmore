@@ -56,7 +56,7 @@ url_root_image_rtbf = 'https://ds1.static.rtbf.be'
 url_json_live =	'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&partner_key=%s'
 # partener_key
 
-url_partener_key = 'https://sgc.static.rtbf.be/js/6/9/69271e0439992a9865eca423af5dd501_ssl.js'
+url_root_live = 'https://www.rtbf.be/auvio/direct#/'
 
 channel_filter = {
     'laune': 'La Une',
@@ -102,15 +102,32 @@ def channel_entry(params):
         return None
 
 def get_partener_key(params):
-    # Get partener key
-    file_path_js = utils.download_catalog(
-	url_partener_key,
-	'%s_partener_key.js' % params.channel_name,
-    )
-    partener_key_js = open(file_path_js).read()
     
-    partener_key = re.compile('partner_key: \'(.+?)\'').findall(partener_key_js)
-    return partener_key[0]
+    file_path_root_live = utils.download_catalog(
+	url_root_live,
+	'%s_root_live.html' % params.channel_name,
+    )
+    html_root_live = open(file_path_root_live).read()
+    
+    list_js_files = re.compile(r'<script type="text\/javascript" src="(.*?)">').findall(html_root_live)
+    
+    partener_key_value = ''
+    i = 0
+    
+    for js_file in list_js_files:
+	# Get partener key
+	file_path_js = utils.download_catalog(
+	    js_file,
+	    '%s_partener_key_%s.js' % (params.channel_name, str(i)),
+	)
+	partener_key_js = open(file_path_js).read()
+	
+	partener_key = re.compile('partner_key: \'(.+?)\'').findall(partener_key_js)
+	if len(partener_key) > 0:
+	    partener_key_value = partener_key[0]
+	i = i + 1
+    
+    return partener_key_value
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
