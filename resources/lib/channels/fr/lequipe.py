@@ -30,6 +30,7 @@ import xbmcgui
 # TODO
 # Lot Code DailyMotion are present in some channel (create function to pass video_id from each channel using DailyMotion) 
 # Get Info Live
+# Get video from each button (js mode) ?
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -44,11 +45,8 @@ url_dailymotion_embed = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
 
 categories = {
-    'https://www.lequipe.fr/lachainelequipe/morevideos/0/': 'Tout',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/1/': 'L\'Équipe du soir',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/62/': 'L\'Équipe Type',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/88/': 'L\'Équipe Enquête',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/46/': 'Esprit Bleu'
+    'https://www.lequipe.fr/lachainelequipe/': 'Tout'
+    # TODO Add JS button ?
 }
 
 correct_mounth = {
@@ -115,7 +113,7 @@ def mode_replay_live(params):
         ),
     )
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
 
@@ -176,40 +174,28 @@ def list_videos(params):
         img = colead__image.find(
             'img')['data-src'].encode('utf-8')
 
-        views = colead__image.find(
-            'span',
-            class_='colead__layerText--topright'
-        ).get_text().encode('utf-8')
-
-        views = [int(s) for s in views.split() if s.isdigit()]
-        views = views[0]
-
         date = colead__image.find(
             'span',
-            class_='colead__layerText--bottomleft'
-        ).get_text().encode('utf-8')  # 10 FÉVR. 2017 | 08:20
-        date = date.split(' ')
+            class_='colead__layerText colead__layerText--bottomleft'
+        ).get_text().strip().encode('utf-8')  # 07/09/17 | 01 min
+        date = date.split('/')
         day = date[0]
-        try:
-            mounth = correct_mounth[date[1]]
-        except:
-            mounth = '00'
-        year = date[2]
+	mounth = date[1]
+        year = '20' + date[2].split(' ')[0]
 
         date = '.'.join((day, mounth, year))
         aired = '-'.join((year, mounth, day))
 
         duration_string = colead__image.find(
             'span',
-            class_='colead__layerText--bottomright'
-        ).get_text().encode('utf-8')
-        duration_list = duration_string.split(':')
-        duration = int(duration_list[0]) * 60 + int(duration_list[1])
-
+            class_='colead__layerText colead__layerText--bottomleft'
+        ).get_text().strip().encode('utf-8')
+        duration_list = duration_string.split(' ')
+        duration = int(duration_list[2])
+    
         info = {
             'video': {
                 'title': title,
-                'playcount': views,
                 'aired': aired,
                 'date': date,
                 'duration': duration,
