@@ -30,7 +30,7 @@ import xbmcgui
 # TODO
 # Lot Code DailyMotion are present in some channel (create function to pass video_id from each channel using DailyMotion) 
 # Get Info Live
-# Get video from each button (js mode) ?
+# Fix More Video TODO javascript:void(0);
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -45,8 +45,15 @@ url_dailymotion_embed = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
 
 categories = {
-    'https://www.lequipe.fr/lachainelequipe/': 'Tout'
-    # TODO Add JS button ?
+    'https://www.lequipe.fr/lachainelequipe/morevideos/0': 'Tout',
+    'https://www.lequipe.fr/lachainelequipe/morevideos/1': 'L\'Équipe du soir',
+    'https://www.lequipe.fr/lachainelequipe/morevideos/98': 'L\'Équipe d\'Estelle',
+    'https://www.lequipe.fr/lachainelequipe/morevideos/95': 'L\'Équipe Vintage',
+    'https://www.lequipe.fr/lachainelequipe/morevideos/88': 'L\'Équipe Enquête',
+    'https://www.lequipe.fr/lachainelequipe/morevideos/82': 'L\'Équipe Explore',
+    'https://www.lequipe.fr/lachainelequipe/morevideos/28': 'Les Grands Docs',
+    'https://www.lequipe.fr/lachainelequipe/morevideos/42': 'Emission Spéciale'
+ 
 }
 
 correct_mounth = {
@@ -124,7 +131,7 @@ def list_shows(params):
             'url': common.plugin.get_url(
                 action='channel_entry',
                 category_url=category_url,
-                page='1',
+                #page='1',
                 category_name=category_name,
                 next='list_videos',
                 window_title=category_name
@@ -145,13 +152,12 @@ def list_videos(params):
         videos = ast.literal_eval(params['previous_listing'])
 
 
-    url = params.category_url + params.page
+    url = params.category_url #+ params.page
     file_path = utils.download_catalog(
         url,
-        '%s_%s_%s.html' % (
+        '%s_%s.html' % (
             params.channel_name,
-            params.category_name,
-            params.page))
+            params.category_name))
     root_html = open(file_path).read()
     root_soup = bs(root_html, 'html.parser')
 
@@ -228,7 +234,7 @@ def list_videos(params):
             'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
         })
 
-    # More videos...
+    # More videos... TODO javascript:void(0);
     videos.append({
         'label': common.addon.get_localized_string(30100),
         'url': common.plugin.get_url(
@@ -236,7 +242,7 @@ def list_videos(params):
             category_url=params.category_url,
             category_name=params.category_name,
             next='list_videos',
-            page=str(int(params.page) + 1),
+	    #page=str(int(params.page) + 1),
             update_listing=True,
             previous_listing=str(videos)
         ),
