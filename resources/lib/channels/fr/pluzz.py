@@ -21,51 +21,52 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+# TO DO
 # Liste A à Z
 # Si FR3 ou FR1 : Régions
 
-
 import json
+import ast
 import xbmcgui
 from resources.lib import utils
 from resources.lib import common
-import ast
+
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
 _ = common.addon.initialize_gettext()
 
-channel_catalog = 'http://pluzz.webservices.francetelevisions.fr/' \
+CHANNEL_CATALOG = 'http://pluzz.webservices.francetelevisions.fr/' \
                   'pluzz/liste/type/replay/nb/10000/chaine/%s'
 
-channel_live = 'http://pluzz.webservices.francetelevisions.fr/' \
+CHANNEL_LIVE = 'http://pluzz.webservices.francetelevisions.fr/' \
                'pluzz/liste/type/live/nb/10000/chaine/%s'
 
-# channel_catalog = 'https://pluzz.webservices.francetelevisions.fr/' \
+# CHANNEL_CATALOG = 'https://pluzz.webservices.francetelevisions.fr/' \
 #                   'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s'
 # page inc: 20
 
-show_info = 'http://webservices.francetelevisions.fr/tools/' \
+SHOW_INFO = 'http://webservices.francetelevisions.fr/tools/' \
             'getInfosOeuvre/v2/?idDiffusion=%s&catalogue=Pluzz'
 
-live_info = 'http://webservices.francetelevisions.fr/tools/' \
+LIVE_INFO = 'http://webservices.francetelevisions.fr/tools/' \
             'getInfosOeuvre/v2/?idDiffusion=SIM_%s'
 
-hdfauth_url = 'http://hdfauth.francetv.fr/esi/TA?format=json&url=%s'
+HDFAUTH_URL = 'http://hdfauth.francetv.fr/esi/TA?format=json&url=%s'
 
-url_img = 'http://refonte.webservices.francetelevisions.fr%s'
+URL_IMG = 'http://refonte.webservices.francetelevisions.fr%s'
 
-url_search = 'https://pluzz.webservices.francetelevisions.fr/' \
+URL_SEARCH = 'https://pluzz.webservices.francetelevisions.fr/' \
              'mobile/recherche/nb/20/tri/date/requete/%s/debut/%s'
 
-url_alpha = 'https://pluzz.webservices.francetelevisions.fr/' \
+URL_ALPHA = 'https://pluzz.webservices.francetelevisions.fr/' \
             'mobile/liste/type/replay/tri/alpha/sens/%s/nb/100/' \
             'debut/%s/lastof/1'
 # sens: asc or desc
 # page inc: 100
 
-categories_display = {
+CATEGORIES_DISPLAY = {
     "france2": "France 2",
     "france3": "France 3",
     "france4": "France 4",
@@ -91,41 +92,42 @@ categories_display = {
     "culture": "Culture"
 }
 
-categories = {
+CATEGORIES = {
     'Toutes catégories': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s',
+                         'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s',
     'Info': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/info/nb/20/debut/%s',
+            'mobile/liste/type/replay/rubrique/info/nb/20/debut/%s',
     'Documentaire': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/documentaire/nb/20/debut/%s',
+                    'mobile/liste/type/replay/rubrique/documentaire/nb/20/debut/%s',
     'Série & Fiction': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/seriefiction/nb/20/debut/%s',
+                        'mobile/liste/type/replay/rubrique/seriefiction/nb/20/debut/%s',
     'Magazine': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/magazine/nb/20/debut/%s',
+                'mobile/liste/type/replay/rubrique/magazine/nb/20/debut/%s',
     'Culture': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/culture/nb/20/debut/%s',
+                'mobile/liste/type/replay/rubrique/culture/nb/20/debut/%s',
     'Jeunesse': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/jeunesse/nb/20/debut/%s',
+                'mobile/liste/type/replay/rubrique/jeunesse/nb/20/debut/%s',
     'Divertissement': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/divertissement/nb/20/debut/%s',
+                      'mobile/liste/type/replay/rubrique/divertissement/nb/20/debut/%s',
     'Sport': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/sport/nb/20/debut/%s',
+             'mobile/liste/type/replay/rubrique/sport/nb/20/debut/%s',
     'Jeu': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/rubrique/jeu/nb/20/debut/%s',
+           'mobile/liste/type/replay/rubrique/jeu/nb/20/debut/%s',
     'Version multilingue (VM)': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/filtre/multilingue/type/replay/nb/20/debut/%s',
+                                'mobile/liste/filtre/multilingue/type/replay/nb/20/debut/%s',
     'Sous-titrés': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/filtre/soustitrage/type/replay/nb/20/debut/%s',
+                   'mobile/liste/filtre/soustitrage/type/replay/nb/20/debut/%s',
     'Audiodescription (AD)': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/filtre/audiodescription/type/replay/nb/20/debut/%s',
+                             'mobile/liste/filtre/audiodescription/type/replay/nb/20/debut/%s',
     'Tous publics': 'https://pluzz.webservices.francetelevisions.fr/'
-    'mobile/liste/type/replay/filtre/touspublics/nb/20/debut/%s'
+                    'mobile/liste/type/replay/filtre/touspublics/nb/20/debut/%s'
 }
 
 
 def channel_entry(params):
-    if 'mode_replay_live' in params.next:
-        return mode_replay_live(params)
+    """Entry function of the module"""
+    if 'root' in params.next:
+        return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
@@ -140,13 +142,13 @@ def channel_entry(params):
 
 #@common.plugin.cached(common.cache_time)
 def change_to_nicer_name(original_name):
-    if original_name in categories_display:
-        return categories_display[original_name]
+    if original_name in CATEGORIES_DISPLAY:
+        return CATEGORIES_DISPLAY[original_name]
     return original_name
 
 
 #@common.plugin.cached(common.cache_time)
-def mode_replay_live(params):
+def root(params):
     modes = []
 
     # Add Replay
@@ -204,7 +206,7 @@ def list_shows(params):
     # Level 0
     if params.next == 'list_shows_1':
 
-        url_json = channel_catalog % (real_channel)
+        url_json = CHANNEL_CATALOG % (real_channel)
         file_path = utils.download_catalog(
             url_json,
             '%s.json' % (
@@ -266,9 +268,9 @@ def list_shows(params):
             'label': common.addon.get_localized_string(30106),
             'url': common.plugin.get_url(
                 action='channel_entry',
-                next='list_shows_2_from_a_to_z_categories',
+                next='list_shows_2_from_a_to_z_CATEGORIES',
                 page='0',
-                url=url_alpha % ('asc', '%s'),
+                url=URL_ALPHA % ('asc', '%s'),
                 sens='asc',
                 rubrique='no_rubrique',
                 window_title=params.window_title
@@ -278,9 +280,9 @@ def list_shows(params):
             'label': common.addon.get_localized_string(30107),
             'url': common.plugin.get_url(
                 action='channel_entry',
-                next='list_shows_2_from_a_to_z_categories',
+                next='list_shows_2_from_a_to_z_CATEGORIES',
                 page='0',
-                url=url_alpha % ('desc', '%s'),
+                url=URL_ALPHA % ('desc', '%s'),
                 sens='desc',
                 rubrique='no_rubrique',
                 window_title=params.window_title
@@ -289,7 +291,7 @@ def list_shows(params):
 
     # level 1
     elif 'list_shows_last' in params.next:
-        for title, url in categories.iteritems():
+        for title, url in CATEGORIES.iteritems():
             if 'Toutes catégories' in title:
                 url = url % (params.channel_name, '%s')
             shows.append({
@@ -307,13 +309,13 @@ def list_shows(params):
     # level 1 or 2
     elif 'list_shows_2' in params.next:
         if 'list_shows_2_cat' in params.next:
-            url_json = channel_catalog % (real_channel)
+            url_json = CHANNEL_CATALOG % (real_channel)
             file_path = utils.download_catalog(
                 url_json,
                 '%s.json' % (
                     params.channel_name))
-        elif 'list_shows_2_from_a_to_z_categories' in params.next:
-            url_json = url_alpha % (params.sens, params.page)
+        elif 'list_shows_2_from_a_to_z_CATEGORIES' in params.next:
+            url_json = URL_ALPHA % (params.sens, params.page)
             file_path = utils.download_catalog(
                 url_json,
                 '%s_%s_%s_alpha.json' % (
@@ -337,7 +339,7 @@ def list_shows(params):
                         id_programme = emission['id_emission'].encode('utf-8')
                     if id_programme not in unique_item:
                         unique_item[id_programme] = id_programme
-                        icon = url_img % (emission['image_large'])
+                        icon = URL_IMG % (emission['image_large'])
                         genre = emission['genre']
                         accroche_programme = emission['accroche_programme']
 
@@ -363,13 +365,13 @@ def list_shows(params):
                             ),
                             'info': info
                         })
-        if params.next == 'list_shows_2_from_a_to_z_categories':
+        if params.next == 'list_shows_2_from_a_to_z_CATEGORIES':
             # More videos...
             shows.append({
                 'label': common.addon.get_localized_string(30100),
                 'url': common.plugin.get_url(
                     action='channel_entry',
-                    next='list_shows_2_from_a_to_z_categories',
+                    next='list_shows_2_from_a_to_z_CATEGORIES',
                     sens=params.sens,
                     page=str(int(params.page) + 100),
                     window_title=params.window_title,
@@ -397,7 +399,7 @@ def list_videos(params):
 
     if 'search' in params.next:
         file_path = utils.download_catalog(
-            url_search % (params.query, params.page),
+            URL_SEARCH % (params.query, params.page),
             '%s_%s_search.json' % (params.channel_name, params.query),
             force_dl=True
         )
@@ -422,7 +424,7 @@ def list_videos(params):
 
     else:
         file_path = utils.download_catalog(
-            channel_catalog % params.channel_name,
+            CHANNEL_CATALOG % params.channel_name,
             '%s.json' % params.channel_name
         )
     file_prgm = open(file_path).read()
@@ -454,7 +456,7 @@ def list_videos(params):
                     continue
 
             file_prgm = utils.get_webcontent(
-                show_info % (emission['id_diffusion']))
+                SHOW_INFO % (emission['id_diffusion']))
             if(file_prgm != ''):
                 json_parserShow = json.loads(file_prgm)
                 if json_parserShow['synopsis']:
@@ -508,7 +510,7 @@ def list_videos(params):
                 # date : string (%d.%m.%Y / 01.01.2009)
                 # aired : string (2008-12-07)
 
-                # image = url_img % (json_parserShow['image'])
+                # image = URL_IMG % (json_parserShow['image'])
                 image = json_parserShow['image_secure']
 
                 info = {
@@ -613,7 +615,7 @@ def list_live(params):
     genre = ''
 
     if real_channel != 'franceinfo':
-        url_json_live = channel_live % (real_channel)
+        url_json_live = CHANNEL_LIVE % (real_channel)
         file_path_live = utils.download_catalog(
                 url_json_live,
                 'live_%s.json' % (
@@ -668,7 +670,7 @@ def list_live(params):
             aired = '-'.join((str(year), str(month), str(day)))
 
 
-            image = url_img % (emission['image_large'])
+            image = URL_IMG % (emission['image_large'])
 
             info = {
                 'video': {
@@ -735,7 +737,7 @@ def list_live(params):
 def get_video_url(params):
 
     if params.next == 'play_r' or params.next == 'download_video':
-        file_prgm = utils.get_webcontent(show_info % (params.id_diffusion))
+        file_prgm = utils.get_webcontent(SHOW_INFO % (params.id_diffusion))
         json_parser = json.loads(file_prgm)
 
         desired_quality = common.plugin.get_setting('quality')
@@ -772,7 +774,7 @@ def get_video_url(params):
 
     elif params.next == 'play_l':
 
-        file_prgm = utils.get_webcontent(live_info % (params.channel_name))
+        file_prgm = utils.get_webcontent(LIVE_INFO % (params.channel_name))
         json_parser = json.loads(file_prgm)
 
         url_selected = ''
@@ -781,7 +783,7 @@ def get_video_url(params):
             if video['format'] == 'hls_v5_os':
                 url_protected = video['url']
 
-        file_prgm2 = utils.get_webcontent(hdfauth_url % (url_protected))
+        file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_protected))
         json_parser2 = json.loads(file_prgm2)
 
         return json_parser2['url']

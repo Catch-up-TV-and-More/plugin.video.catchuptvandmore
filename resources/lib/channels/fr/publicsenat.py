@@ -42,8 +42,8 @@ url_live_site = 'https://www.publicsenat.fr/direct'
 url_dailymotion_embed = 'http://www.dailymotion.com/embed/video/%s'
 
 def channel_entry(params):
-    if 'mode_replay_live' in params.next:
-        return mode_replay_live(params)
+    if 'root' in params.next:
+        return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
@@ -76,7 +76,7 @@ correct_month = {
 }
 
 #@common.plugin.cached(common.cache_time)
-def mode_replay_live(params):
+def root(params):
     modes = []
 
     # Add Replay

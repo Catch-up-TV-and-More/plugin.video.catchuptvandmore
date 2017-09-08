@@ -65,8 +65,8 @@ url_video_vod_json = 'https://mediazone.vrt.be/api/v1/vrtvideo/assets/%s'
 # Video ID
 
 def channel_entry(params):
-    if 'mode_replay_live' in params.next:
-        return mode_replay_live(params)
+    if 'root' in params.next:
+        return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
@@ -79,7 +79,7 @@ def channel_entry(params):
         return None
 
 #@common.plugin.cached(common.cache_time)
-def mode_replay_live(params):
+def root(params):
     modes = []
 
     # Add Replay

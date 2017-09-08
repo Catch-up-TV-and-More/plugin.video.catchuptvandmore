@@ -57,7 +57,7 @@ IMG_HEIGHT = 360
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
-        return mode_replay_live(params)
+        return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos_categories' in params.next:
@@ -71,7 +71,7 @@ def channel_entry(params):
     return None
 
 #@common.plugin.cached(common.cache_time)
-def mode_replay_live(params):
+def root(params):
     """Add Replay and Live in the listing"""
     modes = []
 

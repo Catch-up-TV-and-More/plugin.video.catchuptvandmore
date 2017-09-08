@@ -61,8 +61,8 @@ url_live_with_token = 'http://www.nrj-play.fr/compte/live?channel=%s'
 url_root = 'http://www.nrj-play.fr'
 
 def channel_entry(params):
-    if 'mode_replay_live' in params.next:
-        return mode_replay_live(params)
+    if 'root' in params.next:
+        return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
@@ -76,7 +76,7 @@ def channel_entry(params):
 
 
 #@common.plugin.cached(common.cache_time)
-def mode_replay_live(params):
+def root(params):
     modes = []
 
     # Add Replay with Categories

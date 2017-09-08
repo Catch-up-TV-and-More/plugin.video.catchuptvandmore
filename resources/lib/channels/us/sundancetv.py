@@ -54,8 +54,8 @@ def get_policy_key(data_account, data_player):
     return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
 
 def channel_entry(params):
-    if 'mode_replay_live' in params.next:
-        return mode_replay_live(params)
+    if 'root' in params.next:
+        return root(params)
     if 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
@@ -66,7 +66,7 @@ def channel_entry(params):
         return get_video_url(params)
 
 #@common.plugin.cached(common.cache_time)
-def mode_replay_live(params):
+def root(params):
     modes = []
 
     # Add Replay
