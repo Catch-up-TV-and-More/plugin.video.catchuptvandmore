@@ -46,10 +46,10 @@ url_live_cnews = 'http://www.cnews.fr/direct'
 
 # Replay Cplus :
 url_replay_cplus_auth = 'http://service.mycanal.fr/authenticate.json/iphone/' \
-			'1.6?highResolution=1&isActivated=0&isAuthenticated=0&paired=0'
+                        '1.6?highResolution=1&isActivated=0&isAuthenticated=0&paired=0'
 
 url_replay_cplus_categories = 'http://service.mycanal.fr/page/%s/4578.json?' \
-			      'cache=60000&nbContent=96'
+                              'cache=60000&nbContent=96'
 # Token
 
 # Replay C8 & CStar
@@ -86,13 +86,13 @@ _ = common.addon.initialize_gettext()
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -116,24 +116,24 @@ def mode_replay_live(params):
     
     # Add Replay 
     modes.append({
-	'label' : 'Replay',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='list_shows_1',
-	    category='%s Replay' % params.channel_name.upper(),
-	    window_title='%s Replay' % params.channel_name.upper()
-	),
+        'label' : 'Replay',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
     })
     
     # Add Live 
     modes.append({
-	'label' : 'Live TV',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='%s Live TV' % params.channel_name.upper(),
-	    window_title='%s Live TV' % params.channel_name.upper()
-	),
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
     })
     
     return common.plugin.create_listing(
@@ -465,7 +465,7 @@ def list_shows(params):
                 params['title'] = params.title
                 params['next'] = 'list_shows_1'
                 return list_shows(params)
-		
+                
     ################### END CANAL + ##################
 
     return common.plugin.create_listing(
@@ -483,7 +483,7 @@ def list_videos(params):
     
     ################### BEGIN CNEWS ###########################
     if params.channel_name == 'cnews':
-	file_path = utils.download_catalog(
+        file_path = utils.download_catalog(
             params.category_url,
             '%s_%s.json' % (params.channel_name, params.title))
         file = open(file_path).read()
@@ -529,16 +529,16 @@ def list_videos(params):
                 }
             }
 
-	    # Nouveau pour ajouter le menu pour télécharger la vidéo
-	    context_menu = []
-	    download_video = (
-		_('Download'),
-		'XBMC.RunPlugin(' + common.plugin.get_url(
-		    action='download_video',
-		    video_urlhd=video_url) + ')'
-	    )
-	    context_menu.append(download_video)
-	    # Fin
+            # Nouveau pour ajouter le menu pour télécharger la vidéo
+            context_menu = []
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.plugin.get_url(
+                    action='download_video',
+                    video_urlhd=video_url) + ')'
+            )
+            context_menu.append(download_video)
+            # Fin
 
             videos.append({
                 'label': title,
@@ -554,212 +554,212 @@ def list_videos(params):
                 'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
     ################### END CNEWS ###########################
-	
+        
     ################### BEGIN C8 and CStar ##################
     elif params.channel_name == 'c8' or params.channel_name == 'cstar':
-	file_path = utils.download_catalog(
-	    url_replay_c8_cstar_shows % (get_channel_id(params), params.videos_recent),
-	    '%s_%s.json' % (params.channel_name, params.videos_recent))
-	file_videos = open(file_path).read()
-	videos_json = json.loads(file_videos)
+        file_path = utils.download_catalog(
+            url_replay_c8_cstar_shows % (get_channel_id(params), params.videos_recent),
+            '%s_%s.json' % (params.channel_name, params.videos_recent))
+        file_videos = open(file_path).read()
+        videos_json = json.loads(file_videos)
 
-	for video in videos_json:
-	    id = video['ID'].encode('utf-8')
-	    try:
-		duration = int(video['DURATION'].encode('utf-8'))
-	    except:
-		duration = 0
-	    description = video['INFOS']['DESCRIPTION'].encode('utf-8')
-	    views = int(video['INFOS']['NB_VUES'].encode('utf-8'))
-	    try:
-		date_video = video['INFOS']['DIFFUSION']['DATE'].encode('utf-8')  # 31/12/2017
-	    except:
-		date_video = "00/00/0000"
-	    day = date_video.split('/')[0]
-	    mounth = date_video.split('/')[1]
-	    year = date_video.split('/')[2]
-	    aired = '-'.join((day, mounth, year))
-	    date = date_video.replace('/', '.')
-	    title = video['INFOS']['TITRAGE']['TITRE'].encode('utf-8')
-	    subtitle = video['INFOS']['TITRAGE']['SOUS_TITRE'].encode('utf-8')
-	    thumb = video['MEDIA']['IMAGES']['GRAND'].encode('utf-8')
-	    category = video['RUBRIQUAGE']['CATEGORIE'].encode('utf-8')
+        for video in videos_json:
+            id = video['ID'].encode('utf-8')
+            try:
+                duration = int(video['DURATION'].encode('utf-8'))
+            except:
+                duration = 0
+            description = video['INFOS']['DESCRIPTION'].encode('utf-8')
+            views = int(video['INFOS']['NB_VUES'].encode('utf-8'))
+            try:
+                date_video = video['INFOS']['DIFFUSION']['DATE'].encode('utf-8')  # 31/12/2017
+            except:
+                date_video = "00/00/0000"
+            day = date_video.split('/')[0]
+            mounth = date_video.split('/')[1]
+            year = date_video.split('/')[2]
+            aired = '-'.join((day, mounth, year))
+            date = date_video.replace('/', '.')
+            title = video['INFOS']['TITRAGE']['TITRE'].encode('utf-8')
+            subtitle = video['INFOS']['TITRAGE']['SOUS_TITRE'].encode('utf-8')
+            thumb = video['MEDIA']['IMAGES']['GRAND'].encode('utf-8')
+            category = video['RUBRIQUAGE']['CATEGORIE'].encode('utf-8')
 
-	    if subtitle:
-		title = title + ' - [I]' + subtitle + '[/I]'
+            if subtitle:
+                title = title + ' - [I]' + subtitle + '[/I]'
 
-	    info = {
-		'video': {
-		    'title': title,
-		    'plot': description,
-		    'aired': aired,
-		    'date': date,
-		    'duration': duration,
-		    'year': year,
-		    'genre': category,
-		    'playcount': views,
-		    'mediatype': 'tvshow'
-		}
-	    }
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': description,
+                    'aired': aired,
+                    'date': date,
+                    'duration': duration,
+                    'year': year,
+                    'genre': category,
+                    'playcount': views,
+                    'mediatype': 'tvshow'
+                }
+            }
 
-	    # Nouveau pour ajouter le menu pour télécharger la vidéo
-	    context_menu = []
-	    download_video = (
-		_('Download'),
-		'XBMC.RunPlugin(' + common.plugin.get_url(
-		    action='download_video',
-		    id=id) + ')'
-	    )
-	    context_menu.append(download_video)
-	    # Fin
+            # Nouveau pour ajouter le menu pour télécharger la vidéo
+            context_menu = []
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.plugin.get_url(
+                    action='download_video',
+                    id=id) + ')'
+            )
+            context_menu.append(download_video)
+            # Fin
 
-	    videos.append({
-		'label': title,
-		'thumb': thumb,
-		'url': common.plugin.get_url(
-		    action='channel_entry',
-		    next='play_r',
-		    id=id,
-		),
-		'is_playable': True,
-		'info': info,
-		'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
-	    })
+            videos.append({
+                'label': title,
+                'thumb': thumb,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    id=id,
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+            })
     ################### END C8 and CStar ##################
     
     ################### BEGIN Canal + ################## 
     elif params.channel_name == 'cplus':
-	if 'previous_listing' in params:
-	    videos = ast.literal_eval(params['previous_listing'])
-	file_path = utils.download_catalog(
-	    params.url_page,
-	    '%s_%s_%s.json' % (
-		params.channel_name,
-		params.title,
-		common.sp.md5(params.url_page).hexdigest()))
-	file_videos = open(file_path).read()
-	videos_json = json.loads(file_videos)
-	more_videos = True
-	fanart = ''
+        if 'previous_listing' in params:
+            videos = ast.literal_eval(params['previous_listing'])
+        file_path = utils.download_catalog(
+            params.url_page,
+            '%s_%s_%s.json' % (
+                params.channel_name,
+                params.title,
+                common.sp.md5(params.url_page).hexdigest()))
+        file_videos = open(file_path).read()
+        videos_json = json.loads(file_videos)
+        more_videos = True
+        fanart = ''
 
-	if 'strates' in videos_json:
-	    for strate in videos_json['strates']:
-		if strate['type'] == 'carrousel':
-		    for content in strate['contents']:
-			fanart = content['URLImage'].encode('utf-8')
+        if 'strates' in videos_json:
+            for strate in videos_json['strates']:
+                if strate['type'] == 'carrousel':
+                    for content in strate['contents']:
+                        fanart = content['URLImage'].encode('utf-8')
 
-		# Check if we are in the correct cotegory
-		if 'title' in strate and \
-			strate['title'].encode('utf-8') == params.title:
+                # Check if we are in the correct cotegory
+                if 'title' in strate and \
+                        strate['title'].encode('utf-8') == params.title:
 
-		    # If we have lot of videos ...
-		    if 'URLPage' in strate['paging']:
-			url = strate['paging']['URLPage'].encode('utf-8')
-			url = url + '&indexPage=1'
-			params['url_page'] = url
-			params['fanart'] = fanart
-			return list_videos(params)
+                    # If we have lot of videos ...
+                    if 'URLPage' in strate['paging']:
+                        url = strate['paging']['URLPage'].encode('utf-8')
+                        url = url + '&indexPage=1'
+                        params['url_page'] = url
+                        params['fanart'] = fanart
+                        return list_videos(params)
 
-		    # Else show only this videos
-		    else:
-			for content in strate['contents']:
-			    title = content['title'].encode('utf-8')
-			    try:
-				subtitle = content['subtitle'].encode('utf-8')
-			    except:
-				subtitle = ''
-			    img = content['URLImage'].encode('utf-8')
-			    url_media = content['onClick']['URLPage'].encode('utf-8')
+                    # Else show only this videos
+                    else:
+                        for content in strate['contents']:
+                            title = content['title'].encode('utf-8')
+                            try:
+                                subtitle = content['subtitle'].encode('utf-8')
+                            except:
+                                subtitle = ''
+                            img = content['URLImage'].encode('utf-8')
+                            url_media = content['onClick']['URLPage'].encode('utf-8')
 
-			    info = {
-				'video': {
-				    'title': title,
-				    'plot': subtitle,
-				    'mediatype': 'tvshow'
+                            info = {
+                                'video': {
+                                    'title': title,
+                                    'plot': subtitle,
+                                    'mediatype': 'tvshow'
 
-				}
-			    }
+                                }
+                            }
 
-			    videos.append({
-				'label': title,
-				'thumb': img,
-				'fanart': fanart,
-				'url': common.plugin.get_url(
-				    action='channel_entry',
-				    next='play',
-				    url_media=url_media,
-				    url_page=params.url_page,
-				    title=title
-				),
-				'info': info,
-				'is_playable': True
-			    })
-	else:
-	    if len(videos_json['contents']) == 0:
-		more_videos = False
-	    for content in videos_json['contents']:
-		title = content['title'].encode('utf-8')
-		try:
-		    subtitle = content['subtitle'].encode('utf-8')
-		except:
-		    subtitle = ''
-		img = content['URLImage'].encode('utf-8')
-		url_media = content['onClick']['URLPage'].encode('utf-8')
+                            videos.append({
+                                'label': title,
+                                'thumb': img,
+                                'fanart': fanart,
+                                'url': common.plugin.get_url(
+                                    action='channel_entry',
+                                    next='play',
+                                    url_media=url_media,
+                                    url_page=params.url_page,
+                                    title=title
+                                ),
+                                'info': info,
+                                'is_playable': True
+                            })
+        else:
+            if len(videos_json['contents']) == 0:
+                more_videos = False
+            for content in videos_json['contents']:
+                title = content['title'].encode('utf-8')
+                try:
+                    subtitle = content['subtitle'].encode('utf-8')
+                except:
+                    subtitle = ''
+                img = content['URLImage'].encode('utf-8')
+                url_media = content['onClick']['URLPage'].encode('utf-8')
 
-		info = {
-		    'video': {
-			'title': title,
-			'plot': subtitle,
-			'mediatype': 'tvshow'
+                info = {
+                    'video': {
+                        'title': title,
+                        'plot': subtitle,
+                        'mediatype': 'tvshow'
 
-		    }
-		}
-		
-		# Nouveau pour ajouter le menu pour télécharger la vidéo
-		context_menu = []
-		download_video = (
-		    _('Download'),
-		    'XBMC.RunPlugin(' + common.plugin.get_url(
-			action='download_video',
-			url_media=url_media) + ')'
-		)
-		context_menu.append(download_video)
-		# Fin
+                    }
+                }
+                
+                # Nouveau pour ajouter le menu pour télécharger la vidéo
+                context_menu = []
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                        action='download_video',
+                        url_media=url_media) + ')'
+                )
+                context_menu.append(download_video)
+                # Fin
 
-		videos.append({
-		    'label': title,
-		    'thumb': img,
-		    'fanart': params.fanart,
-		    'url': common.plugin.get_url(
-			action='channel_entry',
-			next='play_r',
-			url_media=url_media,
-			title=title,
-			fanart=params.fanart
-		    ),
-		    'info': info,
-		    'is_playable': True,
-		    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
-		})
+                videos.append({
+                    'label': title,
+                    'thumb': img,
+                    'fanart': params.fanart,
+                    'url': common.plugin.get_url(
+                        action='channel_entry',
+                        next='play_r',
+                        url_media=url_media,
+                        title=title,
+                        fanart=params.fanart
+                    ),
+                    'info': info,
+                    'is_playable': True,
+                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                })
 
-	    if more_videos is True:
-		# More videos...
-		current_index_page = int(params.url_page[-1])
-		videos.append({
-		    'fanart': params.fanart,
-		    'label': common.addon.get_localized_string(30100),
-		    'url': common.plugin.get_url(
-			action='channel_entry',
-			next='list_videos',
-			title=params.title,
-			url_page=params.url_page[:-1] + str(
-			    current_index_page + 1),
-			update_listing=True,
-			previous_listing=str(videos),
-			fanart=params.fanart
-		    ),
+            if more_videos is True:
+                # More videos...
+                current_index_page = int(params.url_page[-1])
+                videos.append({
+                    'fanart': params.fanart,
+                    'label': common.addon.get_localized_string(30100),
+                    'url': common.plugin.get_url(
+                        action='channel_entry',
+                        next='list_videos',
+                        title=params.title,
+                        url_page=params.url_page[:-1] + str(
+                            current_index_page + 1),
+                        update_listing=True,
+                        previous_listing=str(videos),
+                        fanart=params.fanart
+                    ),
 
-		})
+                })
     ################### END Canal + ##################
     
     return common.plugin.create_listing(
@@ -787,13 +787,13 @@ def list_live(params):
     
     url_live_html = ''
     if params.channel_name == 'cplus':
-	url_live_html = url_live_cplus
+        url_live_html = url_live_cplus
     elif params.channel_name == 'c8':
-	url_live_html = url_live_c8
+        url_live_html = url_live_c8
     elif params.channel_name == 'cstar':
-	url_live_html = url_live_cstar
+        url_live_html = url_live_cstar
     elif params.channel_name == 'cnews':
-	url_live_html = url_live_cnews
+        url_live_html = url_live_cnews
     
     file_path_html = utils.download_catalog(
         url_live_html,
@@ -804,19 +804,19 @@ def list_live(params):
     video_id_re = ''
     
     if params.channel_name == 'cnews':
-	video_id_re = re.compile(r'content: \'(.*?)\'').findall(html_live)
+        video_id_re = re.compile(r'content: \'(.*?)\'').findall(html_live)
     else :
-	video_id_re = re.compile(r'\bdata-video="(?P<video_id>[0-9]+)"').findall(html_live)
+        video_id_re = re.compile(r'\bdata-video="(?P<video_id>[0-9]+)"').findall(html_live)
     
     channel_name_catalog = ''
     if params.channel_name == 'cplus':
-	channel_name_catalog = params.channel_name
+        channel_name_catalog = params.channel_name
     elif params.channel_name == 'c8':
-	channel_name_catalog = 'd8'
+        channel_name_catalog = 'd8'
     elif params.channel_name == 'cstar':
-	channel_name_catalog = 'd17'
+        channel_name_catalog = 'd17'
     elif params.channel_name == 'cnews':
-	channel_name_catalog = 'itele'
+        channel_name_catalog = 'itele'
     
     file_path_json = utils.download_catalog(
         url_info_content % (channel_name_catalog, video_id_re[0]),
@@ -831,29 +831,29 @@ def list_live(params):
     url_live = json_parser["MEDIA"]["VIDEOS"]["IPAD"].encode('utf-8')
     
     info = {
-	'video': {
-	    'title': title,
-	    'plot': plot,
-	    'duration': duration
-	}
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
     }
     
     lives.append({
-	'label': title,
-	'fanart': img,
-	'thumb': img,
-	'url' : common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_l',
-	    url=url_live,
-	),
-	'is_playable': True,
-	'info': info
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.plugin.get_url(
+            action='channel_entry',
+            next='play_l',
+            url=url_live,
+        ),
+        'is_playable': True,
+        'info': info
     })
     
     return common.plugin.create_listing(
-	lives,
-	sort_methods=(
+        lives,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
@@ -864,22 +864,22 @@ def get_video_url(params):
     
     # CNews
     if (params.next == 'play_r' and params.channel_name == 'cnews') or (params.next == 'download_video' and params.channel_name == 'cnews'):
-	return params.video_urlhd
+        return params.video_urlhd
     # C8 & CStar
     elif (params.next == 'play_r' and (params.channel_name == 'c8' or params.channel_name == 'cstar')) \
-	 or (params.next == 'download_video' and (params.channel_name == 'c8' or params.channel_name == 'cstar')):
-	file_video = utils.get_webcontent(
-	    url_replay_c8_cstar_video % (get_channel_id(params), params.id)
-	)
-	video_json = json.loads(file_video)
-	return video_json['main']['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
+         or (params.next == 'download_video' and (params.channel_name == 'c8' or params.channel_name == 'cstar')):
+        file_video = utils.get_webcontent(
+            url_replay_c8_cstar_video % (get_channel_id(params), params.id)
+        )
+        video_json = json.loads(file_video)
+        return video_json['main']['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
     # Canal +
     elif (params.next == 'play_r' and params.channel_name == 'cplus') or (params.next == 'download_video' and params.channel_name == 'cplus'):
-	file_path = utils.get_webcontent(params.url_media)
-	media_json = json.loads(file_path)
-	url = media_json['detail']['informations']['VoD']['videoURL'].encode('utf-8')
-	return url
+        file_path = utils.get_webcontent(params.url_media)
+        media_json = json.loads(file_path)
+        url = media_json['detail']['informations']['VoD']['videoURL'].encode('utf-8')
+        return url
     # Live CPlus, C8, CStar and CNews
     elif params.next == 'play_l':
-	return params.url
-	
+        return params.url
+        

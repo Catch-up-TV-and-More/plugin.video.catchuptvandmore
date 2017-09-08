@@ -39,13 +39,13 @@ url_live_api = 'http://%s.euronews.com/api/watchlive.json'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -55,25 +55,25 @@ def mode_replay_live(params):
     
     # Add Replay Desactiver
     if params.channel_name != 'euronews':
-	modes.append({
-	    'label' : 'Replay',
-	    'url': common.plugin.get_url(
-		action='channel_entry',
-		next='list_shows_1',
-		category='%s Replay' % params.channel_name.upper(),
-		window_title='%s Replay' % params.channel_name.upper()
-	    ),
-	})
+        modes.append({
+            'label' : 'Replay',
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                next='list_shows_1',
+                category='%s Replay' % params.channel_name.upper(),
+                window_title='%s Replay' % params.channel_name.upper()
+            ),
+        })
     
     # Add Live 
     modes.append({
-	'label' : 'Live TV',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='%s Live TV' % params.channel_name.upper(),
-	    window_title='%s Live TV' % params.channel_name.upper()
-	),
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
     })
     
     return common.plugin.create_listing(
@@ -107,37 +107,37 @@ def list_live(params):
         params.channel_id + '.language')
     
     if desired_language == 'FR':
-	title = '%s Français Live' % (params.channel_name.upper())
+        title = '%s Français Live' % (params.channel_name.upper())
     elif desired_language == 'EN':
-	title = '%s English Live' % (params.channel_name.upper())
+        title = '%s English Live' % (params.channel_name.upper())
     elif desired_language == 'AR':
-	title = '%s عربية Live' % (params.channel_name.upper())
+        title = '%s عربية Live' % (params.channel_name.upper())
     elif desired_language == 'DE':
-	title = '%s Deutsch Live' % (params.channel_name.upper())
+        title = '%s Deutsch Live' % (params.channel_name.upper())
     elif desired_language == 'IT':
-	title = '%s Italiano Live' % (params.channel_name.upper())
+        title = '%s Italiano Live' % (params.channel_name.upper())
     elif desired_language == 'ES':
-	title = '%s Español Live' % (params.channel_name.upper())
+        title = '%s Español Live' % (params.channel_name.upper())
     elif desired_language == 'PT':
-	title = '%s Português Live' % (params.channel_name.upper())
+        title = '%s Português Live' % (params.channel_name.upper())
     elif desired_language == 'RU':
-	title = '%s Русский Live' % (params.channel_name.upper())
+        title = '%s Русский Live' % (params.channel_name.upper())
     elif desired_language == 'TR':
-	title = '%s Türkçe Live' % (params.channel_name.upper())
+        title = '%s Türkçe Live' % (params.channel_name.upper())
     elif desired_language == 'FA':
-	title = '%s فارسی Live' % (params.channel_name.upper())
+        title = '%s فارسی Live' % (params.channel_name.upper())
     elif desired_language == 'GR':
-	title = '%s Ελληνικά Live' % (params.channel_name.upper())
+        title = '%s Ελληνικά Live' % (params.channel_name.upper())
     elif desired_language == 'HU':
-	title = '%s Magyar Nyelv Live' % (params.channel_name.upper())
+        title = '%s Magyar Nyelv Live' % (params.channel_name.upper())
     
     if desired_language == 'EN':
-	url_live_json = url_live_api % 'www'
+        url_live_json = url_live_api % 'www'
     elif desired_language == 'AR':
-	url_live_json = url_live_api % 'arabic'
+        url_live_json = url_live_api % 'arabic'
     else:
-	url_live_json = url_live_api % desired_language.lower()
-	
+        url_live_json = url_live_api % desired_language.lower()
+        
     file_path = utils.download_catalog(
         url_live_json,
         '%s_%s_live.json' % (params.channel_name,desired_language.lower())
@@ -156,29 +156,29 @@ def list_live(params):
     url_live = json_parser_2["primary"]
     
     info = {
-	'video': {
-	    'title': title,
-	    'plot': plot,
-	    'duration': duration
-	}
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
     }
     
     lives.append({
-	'label': title,
-	'fanart': img,
-	'thumb': img,
-	'url' : common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_l',
-	    url=url_live,
-	),
-	'is_playable': True,
-	'info': info
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.plugin.get_url(
+            action='channel_entry',
+            next='play_l',
+            url=url_live,
+        ),
+        'is_playable': True,
+        'info': info
     })
     
     return common.plugin.create_listing(
-	lives,
-	sort_methods=(
+        lives,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
@@ -188,5 +188,5 @@ def list_live(params):
 def get_video_url(params):
     
     if params.next == 'play_l':
-	return params.url
+        return params.url
 

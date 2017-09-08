@@ -45,15 +45,15 @@ url_live_arte = 'https://api.arte.tv/api/player/v1/livestream/%s'
 def channel_entry(params):
 
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
-        return get_video_url(params)	
+        return get_video_url(params)        
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
@@ -61,23 +61,23 @@ def mode_replay_live(params):
     
     # Add Replay 
     modes.append({
-	'label' : 'Replay',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='list_shows_1',
-	    category='%s Replay' % params.channel_name.upper(),
-	    window_title='%s Replay' % params.channel_name.upper()
-	),
+        'label' : 'Replay',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
     })
     
     modes.append({
-	'label' : 'Live TV',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='%s Live TV' % params.channel_name.upper(),
-	    window_title='%s Live TV' % params.channel_name.upper()
-	),
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
     })
     
     return common.plugin.create_listing(
@@ -264,37 +264,37 @@ def list_live(params):
     img = json_parser["videoJsonPlayer"]["VTU"]["IUR"].encode('utf-8')
     plot = ''
     if 'V7T' in json_parser["videoJsonPlayer"]:
-	plot = json_parser["videoJsonPlayer"]["V7T"].encode('utf-8')
+        plot = json_parser["videoJsonPlayer"]["V7T"].encode('utf-8')
     elif 'VDE' in json_parser["videoJsonPlayer"]:
-	plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
+        plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
     duration = 0
     duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
     url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
     
     info = {
-	'video': {
-	    'title': title,
-	    'plot': plot,
-	    'duration': duration
-	}
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
     }
     
     lives.append({
-	'label': title,
-	'fanart': img,
-	'thumb': img,
-	'url' : common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_l',
-	    url=url_live,
-	),
-	'is_playable': True,
-	'info': info
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.plugin.get_url(
+            action='channel_entry',
+            next='play_l',
+            url=url_live,
+        ),
+        'is_playable': True,
+        'info': info
     })
         
     return common.plugin.create_listing(
-	lives,
-	sort_methods=(
+        lives,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
@@ -304,36 +304,36 @@ def list_live(params):
 def get_video_url(params):
     
     if params.next == 'play_r' or params.next == 'download_video':
-	file_medias = utils.get_webcontent(
-	    params.url)
-	json_parser = json.loads(file_medias)
+        file_medias = utils.get_webcontent(
+            params.url)
+        json_parser = json.loads(file_medias)
 
-	url_selected = ''    
-	video_streams = json_parser['videoJsonPlayer']['VSR']
-	
-	desired_quality = common.plugin.get_setting('quality')
+        url_selected = ''    
+        video_streams = json_parser['videoJsonPlayer']['VSR']
+        
+        desired_quality = common.plugin.get_setting('quality')
 
-	if desired_quality == "DIALOG":
-	    all_datas_videos = []
+        if desired_quality == "DIALOG":
+            all_datas_videos = []
 
-	    for video in video_streams:
-		if not video.find("HLS"):
-			datas = json_parser['videoJsonPlayer']['VSR'][video]
-			new_list_item = xbmcgui.ListItem()
-			new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
-			new_list_item.setPath(datas['url'])
-			all_datas_videos.append(new_list_item)
+            for video in video_streams:
+                if not video.find("HLS"):
+                        datas = json_parser['videoJsonPlayer']['VSR'][video]
+                        new_list_item = xbmcgui.ListItem()
+                        new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
+                        new_list_item.setPath(datas['url'])
+                        all_datas_videos.append(new_list_item)
 
-	    seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+            seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
-	    url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
-	
-	elif desired_quality == "BEST":
-	    url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
-	else:
-	    url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
+            url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
+        
+        elif desired_quality == "BEST":
+            url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
+        else:
+            url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
 
-	return url_selected
+        return url_selected
     elif params.next == 'play_l':
-	return params.url
+        return params.url
 

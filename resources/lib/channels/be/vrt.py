@@ -36,22 +36,22 @@ url_json_lives = 'https://services.vrt.be/videoplayer/r/live.json'
 #To get videoid :
 # Authentication
 # https://accounts.vrt.be/accounts.login?context=%s&saveResponseID=%s % (contextid)
-	# FORM DATA
-	#loginID: ***********
-	#password:**********
-	#sessionExpiration:-2
-	#targetEnv:jssdk
-	#include:profile,data
-	#includeUserInfo:true
-	#APIKey:3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG (how to get?)
-	#includeSSOToken:true
-	#sdk:js_7.3.30
-	#authMode:cookie
-	#pageURL:https://www.vrt.be/vrtnu/a-z/100-jaar-slag-bij-passendale/2017/100-jaar-slag-bij-passendale-s2017/
-	#format:jsonp
-	#callback:gigya.callback
-	#context:%s (how to get ?)
-	#utf8:✓
+        # FORM DATA
+        #loginID: ***********
+        #password:**********
+        #sessionExpiration:-2
+        #targetEnv:jssdk
+        #include:profile,data
+        #includeUserInfo:true
+        #APIKey:3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG (how to get?)
+        #includeSSOToken:true
+        #sdk:js_7.3.30
+        #authMode:cookie
+        #pageURL:https://www.vrt.be/vrtnu/a-z/100-jaar-slag-bij-passendale/2017/100-jaar-slag-bij-passendale-s2017/
+        #format:jsonp
+        #callback:gigya.callback
+        #context:%s (how to get ?)
+        #utf8:✓
 # https://accounts.vrt.be/socialize.getSavedResponse?APIKey=3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG&saveResponseID=%s&noAuth=true&sdk=js_7.3.30&format=jsonp&callback=gigya.callback&context=%s
 #  Context id, 
 ## https://token.vrt.be/
@@ -66,42 +66,42 @@ url_video_vod_json = 'https://mediazone.vrt.be/api/v1/vrtvideo/assets/%s'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
         return None
-	
+        
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
     
     # Add Replay 
     #modes.append({
-    #	'label' : 'Replay',
-    #	'url': common.plugin.get_url(
-    #	    action='channel_entry',
-    #	    next='list_shows_1',
-    #	    category='%s Replay' % params.channel_name.upper(),
-    #	    window_title='%s Replay' % params.channel_name.upper()
-    #	),
+    #        'label' : 'Replay',
+    #        'url': common.plugin.get_url(
+    #            action='channel_entry',
+    #            next='list_shows_1',
+    #            category='%s Replay' % params.channel_name.upper(),
+    #            window_title='%s Replay' % params.channel_name.upper()
+    #        ),
     #})
     
     # Add Live 
     modes.append({
-	'label' : 'Live TV',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='%s Live TV' % params.channel_name.upper(),
-	    window_title='%s Live TV' % params.channel_name.upper()
-	),
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
     })
     
     return common.plugin.create_listing(
@@ -136,8 +136,8 @@ def list_live(params):
     url_live = ''
     
     file_path = utils.download_catalog(
-	url_json_lives,
-	'%s_live.json' % (params.channel_name))
+        url_json_lives,
+        '%s_live.json' % (params.channel_name))
     lives_json = open(file_path).read()
     lives_json = lives_json.replace(')','').replace('parseLiveJson(','')
     lives_jsonparser = json.loads(lives_json)
@@ -145,31 +145,31 @@ def list_live(params):
     url_live = lives_jsonparser["vualto_%s" % (params.channel_name)]["hls"]
     
     title = '%s Live' % params.channel_name.upper() 
-	
+        
     info = {
-	'video': {
-	    'title': title,
-	    'plot': plot,
-	    'duration': duration
-	}
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
     }
     
     lives.append({
-	'label': title,
-	'fanart': img,
-	'thumb': img,
-	'url' : common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_l',
-	    url_live=url_live,
-	),
-	'is_playable': True,
-	'info': info
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.plugin.get_url(
+            action='channel_entry',
+            next='play_l',
+            url_live=url_live,
+        ),
+        'is_playable': True,
+        'info': info
     })
     
     return common.plugin.create_listing(
-	lives,
-	sort_methods=(
+        lives,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
@@ -178,4 +178,4 @@ def list_live(params):
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     if params.next == 'play_l':
-	return params.url_live
+        return params.url_live

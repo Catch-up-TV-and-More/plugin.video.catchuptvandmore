@@ -78,13 +78,13 @@ url_img = 'https://images.6play.fr/v1/images/%s/raw'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -95,13 +95,13 @@ def mode_replay_live(params):
     
     # Add Replay
     modes.append({
-	'label' : 'Replay',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='list_shows_1',
-	    category='%s Replay' % params.channel_name.upper(),
-	    window_title='%s Replay' % params.channel_name.upper()
-	),
+        'label' : 'Replay',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
     })
     
     return common.plugin.create_listing(
@@ -117,15 +117,15 @@ def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
-	
-	url_root_site = ''
-	if params.channel_name == 'stories' or params.channel_name == 'bruce' \
-	   or params.channel_name == 'crazy_kitchen' or params.channel_name == 'home' \
-	   or params.channel_name == 'styles' or params.channel_name == 'comedy':
-	    url_root_site = url_root % params.channel_name
-	else:
-	    url_root_site = url_root % (params.channel_name + 'replay')
-	
+        
+        url_root_site = ''
+        if params.channel_name == 'stories' or params.channel_name == 'bruce' \
+           or params.channel_name == 'crazy_kitchen' or params.channel_name == 'home' \
+           or params.channel_name == 'styles' or params.channel_name == 'comedy':
+            url_root_site = url_root % params.channel_name
+        else:
+            url_root_site = url_root % (params.channel_name + 'replay')
+        
         file_path = utils.download_catalog(
             url_root_site,
             '%s.json' % (params.channel_name),
@@ -175,7 +175,7 @@ def list_shows(params):
             program_desc = array['description'].encode('utf-8')
             program_imgs = array['images']
             program_img = ''
-	    program_fanart = ''
+            program_fanart = ''
             for img in program_imgs:
                 if img['role'].encode('utf-8') == 'vignette':
                     external_key = img['external_key'].encode('utf-8')
@@ -219,19 +219,19 @@ def list_shows(params):
         program_json = utils.get_webcontent(
             url_subcategory % (params.program_id),
             random_ua=True)
-	
+        
         json_parser = json.loads(program_json)
-	
-	try:	    
-	    program_fanart = params.program_fanart
-	except:
-	    pass
-	    program_fanart = ''
-	
+        
+        try:            
+            program_fanart = params.program_fanart
+        except:
+            pass
+            program_fanart = ''
+        
         for sub_category in json_parser['program_subcats']:
             sub_category_id = str(sub_category['id'])
             sub_category_title = sub_category['title'].encode('utf-8')
-	    
+            
             info = {
                 'video': {
                     'title': sub_category_title,
@@ -344,13 +344,13 @@ def list_videos(params):
         # Nouveau pour ajouter le menu pour télécharger la vidéo
         context_menu = []
         download_video = (
-	    _('Download'),
-	    'XBMC.RunPlugin(' + common.plugin.get_url(
-		action='download_video',
-		video_id=video_id) + ')'
-	)
-	context_menu.append(download_video)
-	# Fin
+            _('Download'),
+            'XBMC.RunPlugin(' + common.plugin.get_url(
+                action='download_video',
+                video_id=video_id) + ')'
+        )
+        context_menu.append(download_video)
+        # Fin
 
         videos.append({
             'label': title,

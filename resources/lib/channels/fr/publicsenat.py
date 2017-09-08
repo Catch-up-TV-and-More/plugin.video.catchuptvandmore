@@ -43,13 +43,13 @@ url_dailymotion_embed = 'http://www.dailymotion.com/embed/video/%s'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -57,7 +57,7 @@ categories = {
     'https://www.publicsenat.fr/recherche/type/episode/field_theme/politique-4127?sort_by=pse_search_date_publication' : 'Politique',
     'https://www.publicsenat.fr/recherche/type/episode/field_theme/societe-4126?sort_by=pse_search_date_publication' : 'Société',
     'https://www.publicsenat.fr/recherche/type/episode/field_theme/debat-4128?sort_by=pse_search_date_publication' : 'Débat'
-	
+        
 }
 
 correct_month = {
@@ -81,24 +81,24 @@ def mode_replay_live(params):
     
     # Add Replay
     modes.append({
-	'label' : 'Replay',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='list_shows_1',
-	    category='%s Replay' % params.channel_name.upper(),
-	    window_title='%s Replay' % params.channel_name.upper()
-	),
+        'label' : 'Replay',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
     })
     
     # Add Live 
     modes.append({
-	'label' : 'Live TV',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='%s Live TV' % params.channel_name.upper(),
-	    window_title='%s Live TV' % params.channel_name.upper()
-	),
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
     })
     
     return common.plugin.create_listing(
@@ -114,27 +114,27 @@ def list_shows(params):
     shows = []
     
     if params.next == 'list_shows_1':
-	
-	for category_url, category_name in categories.iteritems():
-	    
-	    shows.append({
-		'label': category_name,
-		'url': common.plugin.get_url(
-		    action='channel_entry',
-		    category_url=category_url,
-		    category_name=category_name,
-		    page='0',
-		    next='list_videos_1',
-		    window_title=category_name
-		)
-	    })
+        
+        for category_url, category_name in categories.iteritems():
+            
+            shows.append({
+                'label': category_name,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    category_url=category_url,
+                    category_name=category_name,
+                    page='0',
+                    next='list_videos_1',
+                    window_title=category_name
+                )
+            })
     
     return common.plugin.create_listing(
-	shows,
-	sort_methods=(
-	    common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-	    common.sp.xbmcplugin.SORT_METHOD_LABEL
-	)
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
     )
 
 #@common.plugin.cached(common.cache_time)
@@ -146,111 +146,111 @@ def list_videos(params):
         videos = ast.literal_eval(params['previous_listing'])
     
     url = params.category_url + '&page=' + str(params.page)
-	
+        
     file_path = utils.download_catalog(
-	url,
-	'%s_%s_%s.html' % (
-	    params.channel_name,
-	    params.category_name,
-	    params.page))
+        url,
+        '%s_%s_%s.html' % (
+            params.channel_name,
+            params.category_name,
+            params.page))
     root_html = open(file_path).read()
     root_soup = bs(root_html, 'html.parser')
     
     if params.category_name == 'Politique':
-	video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4127 clearfix")
+        video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4127 clearfix")
     elif params.category_name == 'Société':
-	video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4126 clearfix")
+        video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4126 clearfix")
     elif params.category_name == 'Débat':
-	video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4128 clearfix")
+        video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4128 clearfix")
     
     for video in video_soup:
-	
-	# Test Existing Video
-	if video.find('div', class_="content").find('div', class_="right").find('div', class_="wrapper-duree"):
-	    
-	    title = ''
-	    if video.find('div', class_="content").find('div', class_="field field-name-title-field field-type-text field-label-hidden"):
-		title = video.find('div', class_="content").find('div', class_="field field-name-field-ref-emission field-type-entityreference field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8') + ' - ' \
-			+ video.find('div', class_="content").find('div', class_="field field-name-title-field field-type-text field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
-	    else:
-		title = video.find('div', class_="content").find('div', class_="field field-name-field-ref-emission field-type-entityreference field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
-	    
-	    img = ''
-	    if video.find('div', class_="content").find('div', class_="wrapper-visuel").find('div', class_="scald-atom video").find('div', class_="field field-name-scald-thumbnail field-type-image field-label-hidden"):
-		img = video.find('div', class_="content").find('div', class_="wrapper-visuel").find('div', class_="scald-atom video").find('div', class_="field field-name-scald-thumbnail field-type-image field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").find('img').get('src')
-	    
-	    plot = ''
-	    if video.find('div', class_="content").find('div', class_="field field-name-field-contenu field-type-text-long field-label-hidden"):
-		plot = video.find('div', class_="content").find('div', class_="field field-name-field-contenu field-type-text-long field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
-	    
-	    
-	    value_date = video.find('div', class_="content").find('div', class_="first-diffusion").get_text().encode('utf-8')
-	    date = value_date.split(' ')
-	    day = date[2]
-	    try:
-		mounth = correct_month[date[3]]
-	    except:
-		mounth = '00'
-	    year = date[4]
+        
+        # Test Existing Video
+        if video.find('div', class_="content").find('div', class_="right").find('div', class_="wrapper-duree"):
+            
+            title = ''
+            if video.find('div', class_="content").find('div', class_="field field-name-title-field field-type-text field-label-hidden"):
+                title = video.find('div', class_="content").find('div', class_="field field-name-field-ref-emission field-type-entityreference field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8') + ' - ' \
+                        + video.find('div', class_="content").find('div', class_="field field-name-title-field field-type-text field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
+            else:
+                title = video.find('div', class_="content").find('div', class_="field field-name-field-ref-emission field-type-entityreference field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
+            
+            img = ''
+            if video.find('div', class_="content").find('div', class_="wrapper-visuel").find('div', class_="scald-atom video").find('div', class_="field field-name-scald-thumbnail field-type-image field-label-hidden"):
+                img = video.find('div', class_="content").find('div', class_="wrapper-visuel").find('div', class_="scald-atom video").find('div', class_="field field-name-scald-thumbnail field-type-image field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").find('img').get('src')
+            
+            plot = ''
+            if video.find('div', class_="content").find('div', class_="field field-name-field-contenu field-type-text-long field-label-hidden"):
+                plot = video.find('div', class_="content").find('div', class_="field field-name-field-contenu field-type-text-long field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
+            
+            
+            value_date = video.find('div', class_="content").find('div', class_="first-diffusion").get_text().encode('utf-8')
+            date = value_date.split(' ')
+            day = date[2]
+            try:
+                mounth = correct_month[date[3]]
+            except:
+                mounth = '00'
+            year = date[4]
 
-	    date = '.'.join((day, mounth, year))
-	    aired = '-'.join((year, mounth, day))
-	    
-	    duration = 0
-	    duration = int(video.find('div', class_="content").find('div', class_="right").find('div', class_="wrapper-duree").get_text().encode('utf-8')[:-3]) * 60
-	    
-	    
-	    url_video = url_root + video.find('div', class_="content").find('a').get('href').encode('utf-8')
-	    
-	    info = {
-		'video': {
-		    'title': title,
-		    'aired': aired,
-		    'date': date,
-		    'duration': duration,
-		    'year': year,
-		    'plot' : plot,
-		    'mediatype': 'tvshow'
-		}
-	    }
-		
-	    # Nouveau pour ajouter le menu pour télécharger la vidéo
-	    context_menu = []
-	    download_video = (
-		_('Download'),
-		'XBMC.RunPlugin(' + common.plugin.get_url(
-		    action='download_video',
-		    url_video=url_video) + ')'
-	    )
-	    context_menu.append(download_video)
-	    # Fin
+            date = '.'.join((day, mounth, year))
+            aired = '-'.join((year, mounth, day))
+            
+            duration = 0
+            duration = int(video.find('div', class_="content").find('div', class_="right").find('div', class_="wrapper-duree").get_text().encode('utf-8')[:-3]) * 60
+            
+            
+            url_video = url_root + video.find('div', class_="content").find('a').get('href').encode('utf-8')
+            
+            info = {
+                'video': {
+                    'title': title,
+                    'aired': aired,
+                    'date': date,
+                    'duration': duration,
+                    'year': year,
+                    'plot' : plot,
+                    'mediatype': 'tvshow'
+                }
+            }
+                
+            # Nouveau pour ajouter le menu pour télécharger la vidéo
+            context_menu = []
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.plugin.get_url(
+                    action='download_video',
+                    url_video=url_video) + ')'
+            )
+            context_menu.append(download_video)
+            # Fin
 
-	    videos.append({
-		'label': title,
-		'thumb': img,
-		'fanart': img,
-		'url': common.plugin.get_url(
-		    action='channel_entry',
-		    next='play_r',
-		    url_video=url_video
-		),
-		'is_playable': True,
-		'info': info,
-		'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
-	    })
-	
+            videos.append({
+                'label': title,
+                'thumb': img,
+                'fanart': img,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    url_video=url_video
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+            })
+        
     # More videos...
     videos.append({
-	'label': common.addon.get_localized_string(30100),
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    category_url=params.category_url,
-	    category_name=params.category_name,
-	    next='list_videos_1',
-	    page=str(int(params.page) + 1),
-	    update_listing=True,
-	    previous_listing=str(videos)
-	),
+        'label': common.addon.get_localized_string(30100),
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            category_url=params.category_url,
+            category_name=params.category_name,
+            next='list_videos_1',
+            page=str(int(params.page) + 1),
+            update_listing=True,
+            previous_listing=str(videos)
+        ),
     })
     
     return common.plugin.create_listing(
@@ -288,29 +288,29 @@ def list_live(params):
     title = '%s Live' % params.channel_name.upper() 
     
     info = {
-	'video': {
-	    'title': title,
-	    'plot': plot,
-	    'duration': duration
-	}
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
     }
     
     lives.append({
-	'label': title,
-	'fanart': img,
-	'thumb': img,
-	'url' : common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_l',
-	    url=url_live,
-	),
-	'is_playable': True,
-	'info': info
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.plugin.get_url(
+            action='channel_entry',
+            next='play_l',
+            url=url_live,
+        ),
+        'is_playable': True,
+        'info': info
     })
     
     return common.plugin.create_listing(
-	lives,
-	sort_methods=(
+        lives,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
@@ -320,36 +320,36 @@ def list_live(params):
 def get_video_url(params):
     
     if params.next == 'play_r' or params.next == 'download_video':
-	
-	url = ''
-	
-	html_video = utils.get_webcontent(params.url_video)
-	ur_video_soup = bs(html_video, 'html.parser')
-	urlembeded_videos_soup = ur_video_soup.find_all('iframe')
-	
-	for url in urlembeded_videos_soup:
-	    url_video_embed = url.get('src').encode('utf-8')
-	    break # get first video hard to find by another method
-	
-	    
-	url_video_embed_http = url_video_embed
-	if params.next == 'download_video':
-	    return url_video_embed_http
-	html_video = utils.get_webcontent(url_video_embed_http)
-	html_video = html_video.replace('\\', '')
-	    
-	all_url_video = re.compile(r'"type":"video/mp4","url":"(.*?)"').findall(html_video)
-	for datas in all_url_video:
-	    url = datas
+        
+        url = ''
+        
+        html_video = utils.get_webcontent(params.url_video)
+        ur_video_soup = bs(html_video, 'html.parser')
+        urlembeded_videos_soup = ur_video_soup.find_all('iframe')
+        
+        for url in urlembeded_videos_soup:
+            url_video_embed = url.get('src').encode('utf-8')
+            break # get first video hard to find by another method
+        
+            
+        url_video_embed_http = url_video_embed
+        if params.next == 'download_video':
+            return url_video_embed_http
+        html_video = utils.get_webcontent(url_video_embed_http)
+        html_video = html_video.replace('\\', '')
+            
+        all_url_video = re.compile(r'"type":"video/mp4","url":"(.*?)"').findall(html_video)
+        for datas in all_url_video:
+            url = datas
 
-	return url
+        return url
     
     elif params.next == 'play_l':
-		
-	html_live = utils.get_webcontent(params.url)
-	html_live = html_live.replace('\\', '')
+                
+        html_live = utils.get_webcontent(params.url)
+        html_live = html_live.replace('\\', '')
 
-	url_live = re.compile(r'{"type":"application/x-mpegURL","url":"(.*?)"}]}').findall(html_live)
-	
-	# Just one flux no quality to choose
-	return url_live[0]
+        url_live = re.compile(r'{"type":"application/x-mpegURL","url":"(.*?)"}]}').findall(html_live)
+        
+        # Just one flux no quality to choose
+        return url_live[0]

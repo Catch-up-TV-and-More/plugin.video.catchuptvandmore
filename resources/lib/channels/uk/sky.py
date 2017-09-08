@@ -33,13 +33,13 @@ url_live_skynews = 'http://news.sky.com/watch-live'
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -50,24 +50,24 @@ def mode_replay_live(params):
     
     # Add Replay Desactiver
     #modes.append({
-    #	'label' : 'Replay',
-    #	'url': common.plugin.get_url(
-    #	    action='channel_entry',
-    #	    next='list_shows_1',
-    #	    category='%s Replay' % params.channel_name.upper(),
-    #	    window_title='%s Replay' % params.channel_name.upper()
-    #	),
+    #        'label' : 'Replay',
+    #        'url': common.plugin.get_url(
+    #            action='channel_entry',
+    #            next='list_shows_1',
+    #            category='%s Replay' % params.channel_name.upper(),
+    #            window_title='%s Replay' % params.channel_name.upper()
+    #        ),
     #})
     
     # Add Live 
     modes.append({
-	'label' : 'Live TV',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='%s Live TV' % params.channel_name.upper(),
-	    window_title='%s Live TV' % params.channel_name.upper()
-	),
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
     })
     
     return common.plugin.create_listing(
@@ -106,36 +106,36 @@ def list_live(params):
         
     # Get URL Live
     file_path = utils.download_catalog(
-	url_live_skynews,
-	'%s_live.html' % params.channel_name,
+        url_live_skynews,
+        '%s_live.html' % params.channel_name,
     )
     live_html = open(file_path).read()
     url_live = 'plugin://plugin.video.youtube/?action=play_video&videoid=' + re.compile(r'<iframe src="\/\/www.youtube.com\/embed\/(.*?)\?').findall(live_html)[0]
     
     info = {
-	'video': {
-	    'title': title,
-	    'plot': plot,
-	    'duration': duration
-	}
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
     }
     
     lives.append({
-	'label': title,
-	'fanart': img,
-	'thumb': img,
-	'url' : common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_l',
-	    url=url_live,
-	),
-	'is_playable': True,
-	'info': info
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.plugin.get_url(
+            action='channel_entry',
+            next='play_l',
+            url=url_live,
+        ),
+        'is_playable': True,
+        'info': info
     })
     
     return common.plugin.create_listing(
-	lives,
-	sort_methods=(
+        lives,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
@@ -145,5 +145,5 @@ def list_live(params):
 def get_video_url(params):
     
     if params.next == 'play_l':
-	return params.url
-	
+        return params.url
+        
