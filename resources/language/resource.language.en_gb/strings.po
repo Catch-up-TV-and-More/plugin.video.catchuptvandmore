@@ -104,6 +104,14 @@ msgstr ""
 
 
 # Settings quality and content (from 30070 to 30099)
+msgctxt "#30070"
+msgid "Video quality"
+msgstr ""
+
+msgctxt "#30071"
+msgid "Contents"
+msgstr ""
+
 msgctxt "#30080"
 msgid "Arte: Choose Channel"
 msgstr ""

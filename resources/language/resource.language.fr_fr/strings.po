@@ -104,21 +104,29 @@ msgstr "Pour réactiver les éléments masqués rendez-vous dans les réglages d
 
 
 # Settings quality and content (from 30070 to 30099)
+msgctxt "#30070"
+msgid "Video quality"
+msgstr "Qualité vidéo"
+
+msgctxt "#30071"
+msgid "Contents"
+msgstr "Contenus"
+
 msgctxt "#30080"
 msgid "Arte: Choose Channel"
-msgstr "Arte: Choix de la chaine"
+msgstr "Arte : Choix de la chaîne"
 
 msgctxt "#30081"
-msgid "France24: Choose Channe"
-msgstr "France24: Choix de la chaine"
+msgid "France24: Choose Channel"
+msgstr "France24 : Choix de la chaîne"
 
 msgctxt "#30082"
 msgid "Euronews: Choose Channel"
-msgstr "Euronews: Choix de la chaine"
+msgstr "Euronews : Choix de la chaîne"
 
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
-msgstr "Qualité Video (BEST|DEFAULT|DIALOG)"
+msgstr "Qualité Vidéo (BEST|DEFAULT|DIALOG)"
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"
