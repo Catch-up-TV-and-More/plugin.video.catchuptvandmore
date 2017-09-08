@@ -28,7 +28,6 @@ categories = {
     'main_menu.eu': 'European channels',
     'main_menu.uk': 'United Kingdom channels',
     'main_menu.us': 'United States channels'
-    
 }
 
 channels = {
@@ -56,69 +55,63 @@ channels = {
         'channels.fr.6play.6ter': '6ter',
         'channels.fr.numero23.numero23': 'Numéro 23',
         'channels.fr.nrj.cherie25': 'Chérie 25',
-	'channels.fr.pluzz.la_1ere': 'La 1ère (Outre-Mer)',
-	'channels.fr.pluzz.franceinfo': 'France Info',
-	'channels.fr.bfmtv.bfmbusiness': 'BFM Business',
-	'channels.fr.bfmtv.rmc': 'RMC',
-	'channels.fr.bfmtv.01net': '01Net TV',
-	'channels.fr.tf1.tfou': 'Tfou (MYTF1)',
-	'channels.fr.tf1.xtra': 'Xtra (MYTF1)',
-	'channels.fr.tf1.lci': 'LCI',
-	'channels.fr.lcp.lcp': 'LCP Assemblée Nationale',
-	'channels.fr.bfmtv.rmcdecouverte': 'RMC Découverte HD24',
-	'channels.fr.6play.stories': 'Stories (6play)',
-	'channels.fr.6play.bruce': 'Bruce (6play)',
-	'channels.fr.6play.crazy_kitchen': 'Crazy Kitchen (6play)',
-	'channels.fr.6play.home': 'Home Time (6play)',
-	'channels.fr.6play.styles': 'Sixième Style (6play)',
-	'channels.fr.6play.comedy': 'Comic (6play)',
-	'channels.fr.france24.france24': 'France24',
-	'channels.fr.publicsenat.publicsenat': 'Public Sénat'#,
-	#'channels.fr.6play.teva': 'Teva', #To Test with 6play Account with purshase Teva channel (scrapping working)
-	#'channels.fr.6play.parispremiere': 'Paris Première' #To Test with 6play Account with purshase Paris Premiere channel (scrapping working)
-	
+        'channels.fr.pluzz.la_1ere': 'La 1ère (Outre-Mer)',
+        'channels.fr.pluzz.franceinfo': 'France Info',
+        'channels.fr.bfmtv.bfmbusiness': 'BFM Business',
+        'channels.fr.bfmtv.rmc': 'RMC',
+        'channels.fr.bfmtv.01net': '01Net TV',
+        'channels.fr.tf1.tfou': 'Tfou (MYTF1)',
+        'channels.fr.tf1.xtra': 'Xtra (MYTF1)',
+        'channels.fr.tf1.lci': 'LCI',
+        'channels.fr.lcp.lcp': 'LCP Assemblée Nationale',
+        'channels.fr.bfmtv.rmcdecouverte': 'RMC Découverte HD24',
+        'channels.fr.6play.stories': 'Stories (6play)',
+        'channels.fr.6play.bruce': 'Bruce (6play)',
+        'channels.fr.6play.crazy_kitchen': 'Crazy Kitchen (6play)',
+        'channels.fr.6play.home': 'Home Time (6play)',
+        'channels.fr.6play.styles': 'Sixième Style (6play)',
+        'channels.fr.6play.comedy': 'Comic (6play)',
+        'channels.fr.france24.france24': 'France24',
+        'channels.fr.publicsenat.publicsenat': 'Public Sénat'#,
+        #'channels.fr.6play.teva': 'Teva', #To Test with 6play Account with purshase Teva channel (scrapping working)
+        #'channels.fr.6play.parispremiere': 'Paris Première' #To Test with 6play Account with purshase Paris Premiere channel (scrapping working) 
     },
 
     'main_menu.be': {
-	'channels.be.rtbf.laune': 'La Une',
-	'channels.be.rtbf.ladeux': 'La Deux',
-	'channels.be.rtbf.latrois': 'La Trois',
-	'channels.be.rtbf.lapremiere': 'La Première',
-	'channels.be.rtbf.vivacite': 'Vivacité',
-	'channels.be.rtbf.musiq3': 'Musiq 3',
-	'channels.be.rtbf.classic21': 'Classic 21',
-	'channels.be.rtbf.purefm': 'Pure FM',
-	'channels.be.rtbf.tarmac': 'TARMAC',
+        'channels.be.rtbf.laune': 'La Une',
+        'channels.be.rtbf.ladeux': 'La Deux',
+        'channels.be.rtbf.latrois': 'La Trois',
+        'channels.be.rtbf.lapremiere': 'La Première',
+        'channels.be.rtbf.vivacite': 'Vivacité',
+        'channels.be.rtbf.musiq3': 'Musiq 3',
+        'channels.be.rtbf.classic21': 'Classic 21',
+        'channels.be.rtbf.purefm': 'Pure FM',
+        'channels.be.rtbf.tarmac': 'TARMAC',
         'channels.be.rtl.rtltvi': 'RTL-TVI',
-	'channels.be.rtl.plugrtl': 'PLUG RTL',
-	'channels.be.rtl.clubrtl': 'CLUB RTL',
-	'channels.be.vrt.een': 'Eén',
-	'channels.be.vrt.canvas': 'Canvas',
-	'channels.be.vrt.ketnet': 'Ketnet',
-	'channels.be.vrt.sporza': 'Sporza',
-	'channels.be.vrt.mnm': 'MNM',
-	'channels.be.vrt.stubru': 'Studio-Brussel',
-	'channels.be.bvn.bvn': 'BVN'
-	    
+        'channels.be.rtl.plugrtl': 'PLUG RTL',
+        'channels.be.rtl.clubrtl': 'CLUB RTL',
+        'channels.be.vrt.een': 'Eén',
+        'channels.be.vrt.canvas': 'Canvas',
+        'channels.be.vrt.ketnet': 'Ketnet',
+        'channels.be.vrt.sporza': 'Sporza',
+        'channels.be.vrt.mnm': 'MNM',
+        'channels.be.vrt.stubru': 'Studio-Brussel',
+        'channels.be.bvn.bvn': 'BVN'
     },
-    
+
     'main_menu.jp': {
         'channels.jp.nhk.nhkworld': 'NHK World'
-	
     },
-    
+
     'main_menu.eu': {
         'channels.eu.euronews.euronews': 'Euronews'
-	
     },
-    
+
     'main_menu.uk': {
         'channels.uk.sky.skynews': 'Sky News'
-	
     },
     
     'main_menu.us': {
         'channels.us.sundancetv.sundancetv': 'Sundance TV'
-	
     }
 }

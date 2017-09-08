@@ -131,7 +131,7 @@ def list_channels(params):
         # channel_id = channels.fr.6play.w9
         [
             channel_type,  # channels
-            channel_country,  # fr
+            channel_category,  # fr
             channel_file,  # 6play
             channel_name  # w9
         ] = channel_id.split('.')
@@ -139,14 +139,14 @@ def list_channels(params):
         # channel_module = channels.fr.6play
         channel_module = '.'.join((
             channel_type,
-            channel_country,
+            channel_category,
             channel_file))
 
         media_channel_path = common.sp.xbmc.translatePath(
             common.sp.os.path.join(
                 media_path,
                 channel_type,
-                channel_country,
+                channel_category,
                 channel_name
             ))
 
@@ -188,22 +188,22 @@ def list_channels(params):
 
         icon = media_channel_path + '.png'
         fanart = media_channel_path + '_fanart.png'
-    
-    listing.append({
-        'icon': icon,
-        'fanart': fanart,
-        'label': title,
-        'url': common.plugin.get_url(
-        action='channel_entry',
-        next='mode_replay_live',
-        channel_name=channel_name,
-        channel_module=channel_module,
-        channel_id=channel_id,
-        channel_country=channel_country,
-        window_title=title
-        ),
-        'context_menu': context_menu
-    })
+
+        listing.append({
+            'icon': icon,
+            'fanart': fanart,
+            'label': title,
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                next='mode_replay_live',
+                channel_name=channel_name,
+                channel_module=channel_module,
+                channel_id=channel_id,
+                channel_category=channel_category,
+                window_title=title
+            ),
+            'context_menu': context_menu
+        })
 
     return common.plugin.create_listing(
         listing,
@@ -216,26 +216,26 @@ def get_channel_module(params):
     if 'channel_name' in params and \
             'channel_module' in params and \
             'channel_id' in params and \
-            'channel_country' in params:
+            'channel_category' in params:
         channel_name = params.channel_name
         channel_module = params.channel_module
         channel_id = params.channel_id
-        channel_country = params.channel_country
+        channel_category = params.channel_category
         with common.plugin.get_storage() as storage:
             storage['last_channel_name'] = channel_name
             storage['last_channel_module'] = channel_module
             storage['last_channel_id'] = channel_id
-            storage['last_channel_country'] = channel_country
+            storage['last_channel_category'] = channel_category
     else:
         with common.plugin.get_storage() as storage:
             channel_name = storage['last_channel_name']
             channel_module = storage['last_channel_module']
             channel_id = storage['last_channel_id']
-            channel_country = storage['last_channel_country']
+            channel_category = storage['last_channel_category']
 
     params['channel_name'] = channel_name
     params['channel_id'] = channel_id
-    params['channel_country'] = channel_country
+    params['channel_category'] = channel_category
 
     channel_path = common.sp.xbmc.translatePath(
         common.sp.os.path.join(
