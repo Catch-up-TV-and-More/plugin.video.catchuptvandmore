@@ -68,22 +68,21 @@ def root(params):
                     action='hide',
                     item_id=category_id) + ')'
             )
-	    
-	    media_country_path = common.sp.xbmc.translatePath(
-            common.sp.os.path.join(
-                media_path,
-                'country'
-            ))
-	    
-	    short_name_country = category_id[-2:]
-	    
-	    icon = media_country_path + ('/%s.png' % short_name_country)
-	    fanart = media_country_path + ('/%s_fanart.png' % short_name_country)
-	    
+            media_category_path = common.sp.xbmc.translatePath(
+                common.sp.os.path.join(
+                    media_path,
+                    'categories',
+                    category_id[-2:]
+                )
+            )
+
+            icon = media_category_path + '.png'
+            fanart = media_category_path + '_fanart.png'
+
             context_menu.append(hide)
             listing.append({
-		'icon': icon,
-		'fanart': fanart,
+                'icon': icon,
+                'fanart': fanart,
                 'label': _(string_id),
                 'url': common.plugin.get_url(
                     action='list_channels',
@@ -189,22 +188,22 @@ def list_channels(params):
 
         icon = media_channel_path + '.png'
         fanart = media_channel_path + '_fanart.png'
-	
-	listing.append({
-	    'icon': icon,
-	    'fanart': fanart,
-	    'label': title,
-	    'url': common.plugin.get_url(
-		action='channel_entry',
-		next='mode_replay_live',
-		channel_name=channel_name,
-		channel_module=channel_module,
-		channel_id=channel_id,
-		channel_country=channel_country,
-		window_title=title
-	    ),
-	    'context_menu': context_menu
-	})
+    
+    listing.append({
+        'icon': icon,
+        'fanart': fanart,
+        'label': title,
+        'url': common.plugin.get_url(
+        action='channel_entry',
+        next='mode_replay_live',
+        channel_name=channel_name,
+        channel_module=channel_module,
+        channel_id=channel_id,
+        channel_country=channel_country,
+        window_title=title
+        ),
+        'context_menu': context_menu
+    })
 
     return common.plugin.create_listing(
         listing,
