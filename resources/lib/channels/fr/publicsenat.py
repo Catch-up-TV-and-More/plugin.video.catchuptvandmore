@@ -27,7 +27,7 @@ import re
 from bs4 import BeautifulSoup as bs
 import ast
 
-# TODO 
+# TODO
 # Add info LIVE TV
 
 # Initialize GNU gettext emulation in addon
@@ -57,7 +57,7 @@ categories = {
     'https://www.publicsenat.fr/recherche/type/episode/field_theme/politique-4127?sort_by=pse_search_date_publication' : 'Politique',
     'https://www.publicsenat.fr/recherche/type/episode/field_theme/societe-4126?sort_by=pse_search_date_publication' : 'Société',
     'https://www.publicsenat.fr/recherche/type/episode/field_theme/debat-4128?sort_by=pse_search_date_publication' : 'Débat'
-        
+
 }
 
 correct_month = {
@@ -78,7 +78,7 @@ correct_month = {
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
+
     # Add Replay
     modes.append({
         'label' : 'Replay',
@@ -89,8 +89,8 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -100,7 +100,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -112,11 +112,11 @@ def mode_replay_live(params):
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
-    
+
     if params.next == 'list_shows_1':
-        
+
         for category_url, category_name in categories.iteritems():
-            
+
             shows.append({
                 'label': category_name,
                 'url': common.plugin.get_url(
@@ -128,7 +128,7 @@ def list_shows(params):
                     window_title=category_name
                 )
             })
-    
+
     return common.plugin.create_listing(
         shows,
         sort_methods=(
@@ -139,14 +139,14 @@ def list_shows(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
-    
+
     videos = []
-    
+
     if 'previous_listing' in params:
         videos = ast.literal_eval(params['previous_listing'])
-    
+
     url = params.category_url + '&page=' + str(params.page)
-        
+
     file_path = utils.download_catalog(
         url,
         '%s_%s_%s.html' % (
@@ -155,35 +155,35 @@ def list_videos(params):
             params.page))
     root_html = open(file_path).read()
     root_soup = bs(root_html, 'html.parser')
-    
+
     if params.category_name == 'Politique':
         video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4127 clearfix")
     elif params.category_name == 'Société':
         video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4126 clearfix")
     elif params.category_name == 'Débat':
         video_soup = root_soup.find_all('article', class_="node node-episode node-episode-pse-search-result theme-4128 clearfix")
-    
+
     for video in video_soup:
-        
+
         # Test Existing Video
         if video.find('div', class_="content").find('div', class_="right").find('div', class_="wrapper-duree"):
-            
+
             title = ''
             if video.find('div', class_="content").find('div', class_="field field-name-title-field field-type-text field-label-hidden"):
                 title = video.find('div', class_="content").find('div', class_="field field-name-field-ref-emission field-type-entityreference field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8') + ' - ' \
                         + video.find('div', class_="content").find('div', class_="field field-name-title-field field-type-text field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
             else:
                 title = video.find('div', class_="content").find('div', class_="field field-name-field-ref-emission field-type-entityreference field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
-            
+
             img = ''
             if video.find('div', class_="content").find('div', class_="wrapper-visuel").find('div', class_="scald-atom video").find('div', class_="field field-name-scald-thumbnail field-type-image field-label-hidden"):
                 img = video.find('div', class_="content").find('div', class_="wrapper-visuel").find('div', class_="scald-atom video").find('div', class_="field field-name-scald-thumbnail field-type-image field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").find('img').get('src')
-            
+
             plot = ''
             if video.find('div', class_="content").find('div', class_="field field-name-field-contenu field-type-text-long field-label-hidden"):
                 plot = video.find('div', class_="content").find('div', class_="field field-name-field-contenu field-type-text-long field-label-hidden").find('div', class_="field-items").find('div', class_="field-item even").get_text().encode('utf-8')
-            
-            
+
+
             value_date = video.find('div', class_="content").find('div', class_="first-diffusion").get_text().encode('utf-8')
             date = value_date.split(' ')
             day = date[2]
@@ -195,13 +195,13 @@ def list_videos(params):
 
             date = '.'.join((day, mounth, year))
             aired = '-'.join((year, mounth, day))
-            
+
             duration = 0
             duration = int(video.find('div', class_="content").find('div', class_="right").find('div', class_="wrapper-duree").get_text().encode('utf-8')[:-3]) * 60
-            
-            
+
+
             url_video = url_root + video.find('div', class_="content").find('a').get('href').encode('utf-8')
-            
+
             info = {
                 'video': {
                     'title': title,
@@ -213,7 +213,7 @@ def list_videos(params):
                     'mediatype': 'tvshow'
                 }
             }
-                
+
             # Nouveau pour ajouter le menu pour télécharger la vidéo
             context_menu = []
             download_video = (
@@ -238,7 +238,7 @@ def list_videos(params):
                 'info': info,
                 'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
-        
+
     # More videos...
     videos.append({
         'label': common.addon.get_localized_string(30100),
@@ -252,7 +252,7 @@ def list_videos(params):
             previous_listing=str(videos)
         ),
     })
-    
+
     return common.plugin.create_listing(
         videos,
         sort_methods=(
@@ -265,28 +265,28 @@ def list_videos(params):
         content='tvshows',
         update_listing='update_listing' in params,
     )
-    
+
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-    
+
     lives = []
-    
+
     title = ''
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     html_live = utils.get_webcontent(url_live_site)
     root_soup = bs(html_live, 'html.parser')
     live_soup = root_soup.find(
         'div',
         class_='iframe-responsive')
-    
+
     url_live = live_soup.find('iframe').get('src')
-    
-    title = '%s Live' % params.channel_name.upper() 
-    
+
+    title = '%s Live' % params.channel_name.upper()
+
     info = {
         'video': {
             'title': title,
@@ -294,7 +294,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -307,7 +307,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -318,38 +318,38 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     if params.next == 'play_r' or params.next == 'download_video':
-        
+
         url = ''
-        
+
         html_video = utils.get_webcontent(params.url_video)
         ur_video_soup = bs(html_video, 'html.parser')
         urlembeded_videos_soup = ur_video_soup.find_all('iframe')
-        
+
         for url in urlembeded_videos_soup:
             url_video_embed = url.get('src').encode('utf-8')
             break # get first video hard to find by another method
-        
-            
+
+
         url_video_embed_http = url_video_embed
         if params.next == 'download_video':
             return url_video_embed_http
         html_video = utils.get_webcontent(url_video_embed_http)
         html_video = html_video.replace('\\', '')
-            
+
         all_url_video = re.compile(r'"type":"video/mp4","url":"(.*?)"').findall(html_video)
         for datas in all_url_video:
             url = datas
 
         return url
-    
+
     elif params.next == 'play_l':
-                
+
         html_live = utils.get_webcontent(params.url)
         html_live = html_live.replace('\\', '')
 
         url_live = re.compile(r'{"type":"application/x-mpegURL","url":"(.*?)"}]}').findall(html_live)
-        
+
         # Just one flux no quality to choose
         return url_live[0]

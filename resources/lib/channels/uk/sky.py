@@ -47,7 +47,7 @@ def channel_entry(params):
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
+
     # Add Replay Desactiver
     #modes.append({
     #        'label' : 'Replay',
@@ -58,8 +58,8 @@ def mode_replay_live(params):
     #            window_title='%s Replay' % params.channel_name.upper()
     #        ),
     #})
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -69,7 +69,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -81,29 +81,29 @@ def mode_replay_live(params):
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
-    
+
     return None
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    
+
     return None
-    
+
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-    
+
     lives = []
-    
+
     title = ''
     subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     title = '%s Live' % (params.channel_name.upper())
-        
+
     # Get URL Live
     file_path = utils.download_catalog(
         url_live_skynews,
@@ -111,7 +111,7 @@ def list_live(params):
     )
     live_html = open(file_path).read()
     url_live = 'plugin://plugin.video.youtube/?action=play_video&videoid=' + re.compile(r'<iframe src="\/\/www.youtube.com\/embed\/(.*?)\?').findall(live_html)[0]
-    
+
     info = {
         'video': {
             'title': title,
@@ -119,7 +119,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -132,7 +132,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -143,7 +143,7 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     if params.next == 'play_l':
         return params.url
-        
+

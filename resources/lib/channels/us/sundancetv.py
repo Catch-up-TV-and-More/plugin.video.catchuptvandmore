@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup as bs
 import re
 
 # TODO
-# Add Live TV 
+# Add Live TV
 # More videos buttons for shorts
 # Get url_video_stream or pubId (shows and movies)
 
@@ -68,7 +68,7 @@ def channel_entry(params):
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
+
     # Add Replay
     modes.append({
         'label' : 'Replay',
@@ -79,8 +79,8 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
-    # Add Live 
+
+    # Add Live
     #modes.append({
         #'label' : 'Live TV',
         #'url': common.plugin.get_url(
@@ -90,7 +90,7 @@ def mode_replay_live(params):
             #window_title='%s Live TV' % params.channel_name.upper()
         #),
     #})
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -105,7 +105,7 @@ def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
-                
+
         video_title = 'Movies'
         shows.append({
             'label': video_title,
@@ -116,7 +116,7 @@ def list_shows(params):
                     window_title=video_title
                 )
             })
-        
+
         video_title = 'Shorts'
         shows.append({
             'label': video_title,
@@ -127,7 +127,7 @@ def list_shows(params):
                     window_title=video_title
                 )
             })
-        
+
         video_title = 'Shows'
         shows.append({
             'label': video_title,
@@ -138,22 +138,22 @@ def list_shows(params):
                     window_title=video_title
                 )
             })
-    
+
     elif params.next == 'list_shows_2':
         file_path = utils.download_catalog(
             url_shows,
             '%s_replay_shows.html' % (params.channel_name))
         replay_shows_html = open(file_path).read()
-        
+
         replay_shows_soup = bs(replay_shows_html, 'html.parser')
         datas_shows_soup = replay_shows_soup.find_all('div', class_='listings')
-        
+
         for show in datas_shows_soup:
-            
+
             show_title = show.find('a').find('div').get_text().encode('utf-8')
             show_img = show.find('div', class_='poster').find('a').find('img').get('src')
             show_url = url_shows + show.find_all('a', class_='episode')[0].get('href').split('/')[2]
-        
+
             shows.append({
                 'label': show_title,
                 'thumb': show_img,
@@ -165,7 +165,7 @@ def list_shows(params):
                         window_title=show_title
                     )
                 })
-    
+
     return common.plugin.create_listing(
         shows,
         sort_methods=(
@@ -178,32 +178,32 @@ def list_shows(params):
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    
+
     if params.next == 'list_videos_movies':
         file_path = utils.download_catalog(
             url_movies,
             '%s_replay_movies.html' % (params.channel_name))
         replay_movies_html = open(file_path).read()
-            
+
         replay_movies_soup = bs(replay_movies_html, 'html.parser')
         url_movies_soup = replay_movies_soup.find('div', class_='listings')
-        
+
         list_movies = url_movies_soup.find_all('a')
-        
+
         for movie in list_movies:
-            
+
             url_movie = url_root + movie.get('href')
             movie_id = ''
             movie_id = re.compile(r'\/watch-now\/movie\/(.*?)\/').findall(movie.get('href'))[0]
-            
+
             file_path_movie = utils.download_catalog(
                 url_movie,
                 '%s_replay_%s.html' % (params.channel_name,movie_id))
             replay_movie_html = open(file_path_movie).read()
-            
+
             replay_movie_soup = bs(replay_movie_html, 'html.parser')
             datas_movie_soup = replay_movie_soup.find('div', class_='video-page-tout')
-                    
+
             video_title = datas_movie_soup.find('a').find('div', class_='video-player-right').find('h4').get_text().strip().encode('utf-8')
             video_plot = datas_movie_soup.find('a').find('div', class_='video-player-right').find('p', class_='video-aired').get_text().strip().encode('utf-8') \
                          + '\n' + datas_movie_soup.find('a').find('div', class_='video-player-right').find('p', class_='').get_text().strip().encode('utf-8')
@@ -246,18 +246,18 @@ def list_videos(params):
                 'info': info,
                 'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
-            
+
     elif params.next == 'list_videos_shorts':
         file_path = utils.download_catalog(
             url_shorts,
             '%s_replay_shorts.html' % (params.channel_name))
         replay_shorts_html = open(file_path).read()
-            
-        replay_shorts_soup = bs(replay_shorts_html, 'html.parser')        
+
+        replay_shorts_soup = bs(replay_shorts_html, 'html.parser')
         list_shorts = replay_shorts_soup.find_all('div', class_='box box-media-item clearfix ')
-        
+
         for short in list_shorts:
-                    
+
             video_title = short.find('h3', class_='title').find('a').get_text().strip().encode('utf-8')
             video_plot = ''
             video_plot = short.find('a').find('img').get('alt').encode('utf-8')
@@ -266,17 +266,17 @@ def list_videos(params):
             video_img = short.find('a').find('img').get('src').encode('utf-8')
             video_url = ''
             url_short = short.find('a').get('href').encode('utf-8')
-            
+
             file_path_short = utils.download_catalog(
                 url_short,
                 '%s_replay_%s.html' % (params.channel_name,video_title))
             replay_short_html = open(file_path_short).read()
-            
+
             short_videoid = re.compile(r'\&videoId=(.*?)\&').findall(replay_short_html)[0]
             short_pubid = re.compile(r'\&publisherID=(.*?)\&').findall(replay_short_html)[0]
-            
+
             video_url = url_video_stream % (short_videoid,short_pubid)
-            
+
             info = {
                 'video': {
                     'title': video_title,
@@ -313,27 +313,27 @@ def list_videos(params):
                 'info': info,
                 'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
-            
+
             # TODO add More Button
-    
+
     elif params.next == 'list_videos_show':
-        
+
         file_path = utils.download_catalog(
             params.show_url,
             '%s_replay_%s_episodes.html' % (params.channel_name,params.title))
         replay_show_episodes_html = open(file_path).read()
-        
+
         replay_show_episodes_soup = bs(replay_show_episodes_html, 'html.parser')
         list_episodes = replay_show_episodes_soup.find_all('a', class_='video-link related-triple')
-        
+
         for episode in list_episodes:
-            
+
             video_img = ''
             video_img = episode.find('div').find('img').get('src').encode('utf-8')
             video_url = ''
             video_id = episode.get('href').split('/',6)[-2]
             video_url = url_video_stream % (video_id,pubId_movie_show)
-            
+
             video_title = ''
             video_title = episode.find('div').find('div', class_='video-text').find('div', class_='video-text-play-btn').find('h4').get_text().encode('utf-8')
             video_duration = 0
@@ -341,7 +341,7 @@ def list_videos(params):
             video_datas = replay_show_episodes_soup.find(id="video-%s-hover" % video_id)
             video_plot = video_datas.find('p', class_="video-availability-window").get_text().strip().encode('utf-8') + '\n' + \
                          video_datas.find('p', class_="video-description").get_text().strip().encode('utf-8')
-            
+
             info = {
                 'video': {
                     'title': video_title,
@@ -394,25 +394,25 @@ def list_videos(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-    
+
     lives = []
-    
+
     title = ''
     subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     title = '%s Live' % (params.channel_name.upper())
-        
+
     # Get URL Live
     file_path = utils.download_catalog(
         url_live_sundance,
         '%s_live.html' % (params.channel_name))
     live_html = open(file_path).read()
     url_live = url_video_stream % re.compile(r'data-video_id="(.*?)"').findall(live_html)[0]
-    
+
     info = {
         'video': {
             'title': title,
@@ -420,7 +420,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -433,7 +433,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(

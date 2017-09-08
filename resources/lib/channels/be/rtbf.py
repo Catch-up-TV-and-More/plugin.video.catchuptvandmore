@@ -29,7 +29,7 @@ import json
 import time
 
 # TODO (More Work TODO)
-# Add categories 
+# Add categories
 # Add geoblock (info in JSON)
 # Add Quality Mode
 # Add return to previous date
@@ -69,7 +69,7 @@ channel_filter = {
     'purefm' : 'Pure',
     'tarmac' : 'TARMAC',
     'webcreation' : 'Webcréation'
-        
+
 }
 
 channel_id = {
@@ -83,7 +83,7 @@ channel_id = {
     'purefm' : '9',
     'tarmac' : '34'#,
     #'webcreation' : 'Webcréation'
-        
+
 }
 
 
@@ -102,18 +102,18 @@ def channel_entry(params):
         return None
 
 def get_partener_key(params):
-    
+
     file_path_root_live = utils.download_catalog(
         url_root_live,
         '%s_root_live.html' % params.channel_name,
     )
     html_root_live = open(file_path_root_live).read()
-    
+
     list_js_files = re.compile(r'<script type="text\/javascript" src="(.*?)">').findall(html_root_live)
-    
+
     partener_key_value = ''
     i = 0
-    
+
     for js_file in list_js_files:
         # Get partener key
         file_path_js = utils.download_catalog(
@@ -121,19 +121,19 @@ def get_partener_key(params):
             '%s_partener_key_%s.js' % (params.channel_name, str(i)),
         )
         partener_key_js = open(file_path_js).read()
-        
+
         partener_key = re.compile('partner_key: \'(.+?)\'').findall(partener_key_js)
         if len(partener_key) > 0:
             partener_key_value = partener_key[0]
         i = i + 1
-    
+
     return partener_key_value
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
-    # Add Replay 
+
+    # Add Replay
     modes.append({
         'label' : 'Replay',
         'url': common.plugin.get_url(
@@ -143,8 +143,8 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -154,7 +154,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -170,9 +170,9 @@ def list_shows(params):
         #shows = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_shows_1':
-        
+
         program_title = 'Toutes les videos'
-        
+
         shows.append({
             'label': program_title,
             'url': common.plugin.get_url(
@@ -197,27 +197,27 @@ def list_shows(params):
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    
+
     if params.next == 'list_videos_1':
-    
+
         channel_id_value = channel_id[params.channel_name]
-        
+
         file_path = utils.download_catalog(
             url_replay % (channel_id_value),
             '%s_replay_%s.html' % (params.channel_name,channel_id_value))
         programs_html = open(file_path).read()
-        
+
         programs_soup = bs(programs_html, 'html.parser')
-        
+
         if params.channel_name == 'lapremiere':
             programs = programs_soup.find_all('article', class_="col-xs-12 rtbf-media-li rtbf-media-li--replay ")
         else:
             programs = programs_soup.find_all('article', class_="col-xs-12 rtbf-media-li rtbf-media-li--replay")
-        
+
         for program in programs:
-        
+
             data_id = program.find('a').get('href').split('id=')[1]
-            
+
             file_path = utils.download_catalog(
                 url_json_video_by_id % data_id,
                 '%s_%s.json' % (
@@ -225,7 +225,7 @@ def list_videos(params):
                     data_id))
             videos_json = open(file_path).read()
             videos_jsonparser = json.loads(videos_json)
-            
+
             if videos_jsonparser["data"] is not None:
                 video_data = videos_jsonparser["data"]
                 if video_data["subtitle"]:
@@ -239,7 +239,7 @@ def list_videos(params):
                     plot = video_data["description"].encode('utf-8')
                 duration = 0
                 duration = video_data["durations"]
-                    
+
                 value_date = time.strftime('%d %m %Y', time.localtime(video_data["liveFrom"]))
                 date = str(value_date).split(' ')
                 day = date[0]
@@ -248,7 +248,7 @@ def list_videos(params):
 
                 date = '.'.join((day, mounth, year))
                 aired = '-'.join((year, mounth, day))
-                    
+
                 info = {
                     'video': {
                         'title': title,
@@ -288,7 +288,7 @@ def list_videos(params):
                     'info': info,
                     'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
-        
+
         videos.append({
             'label': 'Jour précédent',
             'url': common.plugin.get_url(
@@ -299,7 +299,7 @@ def list_videos(params):
                 update_listing=True
             )
         })
-    
+
     return common.plugin.create_listing(
         videos,
         sort_methods=(
@@ -316,30 +316,30 @@ def format_hours(date):
 
 def format_day(date):
     date_list = date.split('T')
-    date_dmy = date_list[0].replace('-','/') 
+    date_dmy = date_list[0].replace('-','/')
     return date_dmy
-    
+
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-    
+
     lives = []
-    
+
     title = ''
     subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     file_path = utils.download_catalog(
         url_json_live % (get_partener_key(params)),
         '%s_live.json' % (params.channel_name))
     live_json = open(file_path).read()
     live_jsonparser = json.loads(live_json)
-    
+
     channel_live_in_process = False
-    
+
     for live in live_jsonparser:
         #check in live for this channel today + print start_date
         if type(live["channel"]) is dict:
@@ -362,7 +362,7 @@ def list_live(params):
                         'duration': duration
                     }
                 }
-                
+
                 lives.append({
                     'label': title,
                     'fanart': img,
@@ -394,7 +394,7 @@ def list_live(params):
                     'duration': duration
                 }
             }
-                
+
             lives.append({
                 'label': title,
                 'fanart': img,
@@ -407,11 +407,11 @@ def list_live(params):
                 'is_playable': True,
                 'info': info
             })
-    
+
     if len(lives) == 0:
-        
+
         title = 'No Live TV for %s Today' % params.channel_name.upper()
-        
+
         info = {
             'video': {
                 'title': title,
@@ -419,7 +419,7 @@ def list_live(params):
                 'duration': duration
             }
         }
-        
+
         lives.append({
             'label': title,
             'url' : common.plugin.get_url(
@@ -429,7 +429,7 @@ def list_live(params):
             'is_playable': False,
             'info': info
         })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(

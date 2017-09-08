@@ -28,7 +28,7 @@ import ast
 import xbmcgui
 
 # TODO
-# Lot Code DailyMotion are present in some channel (create function to pass video_id from each channel using DailyMotion) 
+# Lot Code DailyMotion are present in some channel (create function to pass video_id from each channel using DailyMotion)
 # Get Info Live
 # Fix More Video TODO javascript:void(0);
 
@@ -53,7 +53,7 @@ categories = {
     'https://www.lequipe.fr/lachainelequipe/morevideos/82': 'L\'Équipe Explore',
     'https://www.lequipe.fr/lachainelequipe/morevideos/28': 'Les Grands Docs',
     'https://www.lequipe.fr/lachainelequipe/morevideos/42': 'Emission Spéciale'
- 
+
 }
 
 correct_mounth = {
@@ -89,8 +89,8 @@ def channel_entry(params):
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
-    # Add Replay 
+
+    # Add Replay
     modes.append({
         'label' : 'Replay',
         'url': common.plugin.get_url(
@@ -100,8 +100,8 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -111,7 +111,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -166,12 +166,12 @@ def list_videos(params):
         class_='colead')
 
     for program in category_soup:
-        
+
         #Get Video_ID
         url = url_root + program['href'].encode('utf-8')
         html_video_equipe = utils.get_webcontent(url)
         video_id = re.compile(r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?', re.DOTALL).findall(html_video_equipe)[0]
-        
+
         title = program.find(
             'h2').get_text().encode('utf-8')
         colead__image = program.find(
@@ -198,7 +198,7 @@ def list_videos(params):
         ).get_text().strip().encode('utf-8')
         duration_list = duration_string.split(' ')
         duration = int(duration_list[2])
-    
+
         info = {
             'video': {
                 'title': title,
@@ -209,7 +209,7 @@ def list_videos(params):
                 'mediatype': 'tvshow'
             }
         }
-        
+
         # Nouveau pour ajouter le menu pour télécharger la vidéo
         context_menu = []
         download_video = (
@@ -263,9 +263,9 @@ def list_videos(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-    
+
     lives = []
-    
+
     title = ''
     plot = ''
     duration = 0
@@ -273,12 +273,12 @@ def list_live(params):
     url_live = ''
     video_id = ''
     url_live = ''
-    
+
     html_live_equipe = utils.get_webcontent(url_live_lequipe)
     video_id = re.compile(r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?', re.DOTALL).findall(html_live_equipe)[0]
 
-    title = '%s Live' % params.channel_name.upper() 
-    
+    title = '%s Live' % params.channel_name.upper()
+
     info = {
         'video': {
             'title': title,
@@ -286,7 +286,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -299,7 +299,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -312,22 +312,22 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     url_video = url_dailymotion_embed % params.video_id
-        
+
     file_path = utils.download_catalog(
         url_video,
         '%s_%s.html' % (params.channel_name, params.video_id)
     )
-    
+
     desired_quality = common.plugin.get_setting('quality')
-    
+
     if params.next == 'download_video':
             return url_video
     else:
         html_video = utils.get_webcontent(url_video)
         html_video = html_video.replace('\\', '')
-                        
+
         if params.next == 'play_l':
             all_url_video = re.compile(r'{"type":"application/x-mpegURL","url":"(.*?)"').findall(html_video)
             # Just One Quality
@@ -342,9 +342,9 @@ def get_video_url(params):
                     new_list_item.setLabel('H264-' + datas_quality)
                     new_list_item.setPath(datas)
                     all_datas_videos.append(new_list_item)
-                        
+
                 seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
-                        
+
                 return all_datas_videos[seleted_item].getPath().encode('utf-8')
             elif desired_quality == 'BEST':
                 #Last video in the Best

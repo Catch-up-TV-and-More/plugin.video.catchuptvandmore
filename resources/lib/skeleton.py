@@ -74,7 +74,7 @@ channels = {
         'channels.fr.france24.france24': 'France24',
         'channels.fr.publicsenat.publicsenat': 'Public Sénat'#,
         #'channels.fr.6play.teva': 'Teva', #To Test with 6play Account with purshase Teva channel (scrapping working)
-        #'channels.fr.6play.parispremiere': 'Paris Première' #To Test with 6play Account with purshase Paris Premiere channel (scrapping working) 
+        #'channels.fr.6play.parispremiere': 'Paris Première' #To Test with 6play Account with purshase Paris Premiere channel (scrapping working)
     },
 
     'main_menu.be': {
@@ -110,7 +110,7 @@ channels = {
     'main_menu.uk': {
         'channels.uk.sky.skynews': 'Sky News'
     },
-    
+
     'main_menu.us': {
         'channels.us.sundancetv.sundancetv': 'Sundance TV'
     }

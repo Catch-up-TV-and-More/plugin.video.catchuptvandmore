@@ -47,7 +47,7 @@ url_replay_api = 'http://www.nrj-play.fr/%s/api/getreplaytvlist'
 # channel_name (nrj12, ...) - HTTP 500 non stable
 
 url_all_video = 'http://www.nrj-play.fr/sitemap-videos.xml'
-# Meilleur stabilité mais perte des collections 
+# Meilleur stabilité mais perte des collections
 
 url_get_api_live = 'http://www.nrj-play.fr/sitemap.xml'
 # NOT_USED in this script (link api, live and more)
@@ -78,7 +78,7 @@ def channel_entry(params):
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
+
     # Add Replay with Categories
     modes.append({
         'label' : 'Replay',
@@ -89,7 +89,7 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
+
     # Add Replay
     modes.append({
         'label' : 'Replay sans categorie',
@@ -100,8 +100,8 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -111,7 +111,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -123,12 +123,12 @@ def mode_replay_live(params):
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
-        
+
     if 'list_shows_without_categories' in params.next:
-        
-        # Pour avoir toutes les videos 
+
+        # Pour avoir toutes les videos
         state_video = 'Toutes les videos (sans les categories)'
-        
+
         shows.append({
             'label': state_video,
             'url': common.plugin.get_url(
@@ -139,7 +139,7 @@ def list_shows(params):
                 window_title=state_video
             )
         })
-    
+
     else:
         unique_item = dict()
 
@@ -148,16 +148,16 @@ def list_shows(params):
             '%s_collection.xml' % params.channel_name,
         )
         collection_xml = open(file_path).read()
-            
+
         xmlElements = ET.XML(collection_xml)
-        
+
         if 'list_shows_1' in params.next:
             # Build categories list (Tous les programmes, Séries, ...)
             collections = xmlElements.findall("collection")
-            
+
             # Pour avoir toutes les videos, certaines videos ont des categories non presentes dans cette URL 'url_collection_api'
             state_video = 'Toutes les videos'
-            
+
             shows.append({
                 'label': state_video,
                 'url': common.plugin.get_url(
@@ -168,9 +168,9 @@ def list_shows(params):
                     window_title=state_video
                 )
             })
-                    
+
             for collection in collections:
-                
+
                 category_name = collection.findtext("category").encode('utf-8')
                 if category_name not in unique_item:
                     if category_name == '':
@@ -186,20 +186,20 @@ def list_shows(params):
                             window_title=category_name
                         )
                     })
-            
+
         elif 'list_shows_programs' in params.next:
             # Build programm list (Tous les programmes, Séries, ...)
             collections = xmlElements.findall("collection")
-            
+
             state_video = 'VIDEOS_BY_CATEGORY'
-            
+
             for collection in collections:
                 if params.category_name == collection.findtext("category").encode('utf-8') \
                     or (params.category_name == 'NO_CATEGORY' and collection.findtext("category").encode('utf-8') == ''):
                     name_program = collection.findtext("name").encode('utf-8')
                     img_program = collection.findtext("picture")
                     id_program = collection.get("id")
-                    
+
                     shows.append({
                         'label': name_program,
                         'thumb': img_program,
@@ -212,7 +212,7 @@ def list_shows(params):
                             window_title=name_program
                         )
                     })
-        
+
     return common.plugin.create_listing(
         shows,
         sort_methods=(
@@ -225,49 +225,49 @@ def list_shows(params):
 def list_videos(params):
     videos = []
 
-    if params.state_video == 'Toutes les videos (sans les categories)':    
-        
+    if params.state_video == 'Toutes les videos (sans les categories)':
+
         file_path = utils.download_catalog(
             url_all_video,
             '%s_all_video.xml' % params.channel_name,
         )
         replay_xml = open(file_path).read()
-            
+
         xmlElements = ET.XML(replay_xml)
-        
+
         programs = xmlElements.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url")
-        
+
         for program in programs:
-        
+
             url_site = program.findtext("{http://www.sitemaps.org/schemas/sitemap/0.9}loc").encode('utf-8')
             check_string = '%s/replay/' % params.channel_name
             if url_site.count(check_string) > 0:
-                
+
                 # Title
                 title = url_site.rsplit('/', 1)[1].replace("-", " ").upper()
-                
+
                 video_node = program.findall("{http://www.google.com/schemas/sitemap-video/1.1}video")[0]
-                        
+
                 # Duration
                 duration = 0
-                        
+
                 # Image
                 img = ''
                 img_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}thumbnail_loc")
                 img = img_node.text.encode('utf-8')
-                        
+
                 # Url Video
                 url = ''
                 url_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}content_loc")
                 url = url_node.text.encode('utf-8')
-                    
+
                 # Plot
                 plot = ''
                 plot_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}description")
                 if plot_node.text:
                     plot = plot_node.text.encode('utf-8')
-                        
-                # Date 
+
+                # Date
                 value_date = ''
                 value_date_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}publication_date")
                 value_date = value_date_node.text.encode('utf-8')
@@ -277,7 +277,7 @@ def list_videos(params):
                 year = date[0]
                 date = '.'.join((day, mounth, year))
                 aired = '-'.join((year, mounth, day))
-                                
+
                 info = {
                     'video': {
                         'title': title,
@@ -314,24 +314,24 @@ def list_videos(params):
                     'info': info,
                     'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
-    
+
     else:
         file_path = utils.download_catalog(
             url_replay_api % params.channel_name,
             '%s_replay.xml' % params.channel_name,
         )
         replay_xml = open(file_path).read()
-            
+
         xmlElements = ET.XML(replay_xml)
-        
+
         programs = xmlElements.findall("program")
-            
+
         for program in programs:
             if params.state_video == 'Toutes les videos':
-                
+
                 # Title
                 title = program.findtext("title").encode('utf-8') + " - " + program.findtext("subtitle").encode('utf-8')
-                
+
                 # Duration
                 duration = 0
                 if program.findtext("duration"):
@@ -339,14 +339,14 @@ def list_videos(params):
                         duration = int(program.findtext("duration")) * 60
                     except ValueError:
                         pass      # or whatever
-                
+
                 # Image
                 img = program.find("photos").findtext("photo")
-                
+
                 # Url Video
                 url = '' #program.find("offres").find("offre").find("videos").findtext("video)
                 for i in program.find("offres").findall("offre"):
-                    
+
                     date_value = i.get("startdate")
                     date_value_list = date_value.split(' ')[0].split('-')
                     day = date_value_list[2]
@@ -355,16 +355,16 @@ def list_videos(params):
 
                     date = '.'.join((day, mounth, year))
                     aired = '-'.join((year, mounth, day))
-                    
+
                     for j in i.find("videos").findall("video"):
                         url = j.text.encode('utf-8')
-                
+
                 # Plot
                 plot = ''
                 for i in program.find("stories").findall("story"):
                     if int(i.get("maxlength")) == 680:
                         plot= i.text.encode('utf-8')
-                        
+
                 info = {
                     'video': {
                         'title': title,
@@ -401,12 +401,12 @@ def list_videos(params):
                     'info': info,
                     'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
-                
+
             elif params.id_program == program.get("IDSERIE"):
-                
+
                 # Title
                 title = program.findtext("title").encode('utf-8') + " - " + program.findtext("subtitle").encode('utf-8')
-                
+
                 # Duration
                 duration = 0
                 if program.findtext("duration"):
@@ -414,14 +414,14 @@ def list_videos(params):
                         duration = int(program.findtext("duration")) * 60
                     except ValueError:
                         pass      # or whatever
-                
+
                 # Image
                 img = program.find("photos").findtext("photo")
-                
+
                 # Url Video
                 url = '' #program.find("offres").find("offre").find("videos").findtext("video)
                 for i in program.find("offres").findall("offre"):
-                    
+
                     date_value = i.get("startdate")
                     date_value_list = date_value.split(' ')[0].split('-')
                     day = date_value_list[2]
@@ -430,16 +430,16 @@ def list_videos(params):
 
                     date = '.'.join((day, mounth, year))
                     aired = '-'.join((year, mounth, day))
-                    
+
                     for j in i.find("videos").findall("video"):
                         url = j.text.encode('utf-8')
-                
+
                 # Plot
                 plot = ''
                 for i in program.find("stories").findall("story"):
                     if int(i.get("maxlength")) == 680:
                         plot= i.text.encode('utf-8')
-                
+
                 info = {
                     'video': {
                         'title': title,
@@ -476,7 +476,7 @@ def list_videos(params):
                     'info': info#,
                     #'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
-    
+
     return common.plugin.create_listing(
         videos,
         sort_methods=(
@@ -491,43 +491,43 @@ def list_videos(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-    
+
     lives = []
-    
+
     title = ''
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     session_requests = requests.session()
     result = session_requests.get(url_compte_login)
-    
+
     token_form_login = re.compile(r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(result.text)[0]
-    
+
     # Build PAYLOAD
     payload = {
-        "login_form[email]": common.plugin.get_setting(params.channel_id.rsplit('.',1)[0] + '.login'), 
-        "login_form[password]": common.plugin.get_setting(params.channel_id.rsplit('.',1)[0] + '.password'), 
+        "login_form[email]": common.plugin.get_setting(params.channel_id.rsplit('.',1)[0] + '.login'),
+        "login_form[password]": common.plugin.get_setting(params.channel_id.rsplit('.',1)[0] + '.password'),
         "login_form[_token]": token_form_login
     }
-    
+
     # LOGIN
     result_2 = session_requests.post(url_compte_login, data = payload, headers = dict(referer = url_compte_login))
-    
+
     # GET page with url_live with the session logged
     result_3 = session_requests.get(url_live_with_token % (params.channel_name), headers = dict(referer = url_live_with_token % (params.channel_name)))
-    
+
     root_soup = bs(result_3.text, 'html.parser')
     live_soup = root_soup.find('div', class_="player")
-    
+
     url_live_json = live_soup.get('data-options')
     url_live_json_jsonparser = json.loads(url_live_json)
-    
+
     url_live = url_live_json_jsonparser["file"]
-    
-    title = '%s Live' % params.channel_name.upper() 
-    
+
+    title = '%s Live' % params.channel_name.upper()
+
     info = {
         'video': {
             'title': title,
@@ -535,7 +535,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -548,7 +548,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -559,7 +559,7 @@ def list_live(params):
 
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     if params.next == 'play_r' or params.next == 'download_video':
         # Just One format of each video (no need of QUALITY)
         return params.url_video

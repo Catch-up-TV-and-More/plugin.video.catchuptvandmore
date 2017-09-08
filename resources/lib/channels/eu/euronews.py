@@ -25,7 +25,7 @@ from resources.lib import utils
 from resources.lib import common
 import json
 
-# TODO 
+# TODO
 # Replay add emissions
 # Add info LIVE TV
 
@@ -52,7 +52,7 @@ def channel_entry(params):
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
+
     # Add Replay Desactiver
     if params.channel_name != 'euronews':
         modes.append({
@@ -64,8 +64,8 @@ def mode_replay_live(params):
                 window_title='%s Replay' % params.channel_name.upper()
             ),
         })
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -75,7 +75,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -91,21 +91,21 @@ def list_shows(params):
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     return None
-    
+
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-    
+
     lives = []
-    
+
     title = ''
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
-    
+
     if desired_language == 'FR':
         title = '%s Français Live' % (params.channel_name.upper())
     elif desired_language == 'EN':
@@ -130,14 +130,14 @@ def list_live(params):
         title = '%s Ελληνικά Live' % (params.channel_name.upper())
     elif desired_language == 'HU':
         title = '%s Magyar Nyelv Live' % (params.channel_name.upper())
-    
+
     if desired_language == 'EN':
         url_live_json = url_live_api % 'www'
     elif desired_language == 'AR':
         url_live_json = url_live_api % 'arabic'
     else:
         url_live_json = url_live_api % desired_language.lower()
-        
+
     file_path = utils.download_catalog(
         url_live_json,
         '%s_%s_live.json' % (params.channel_name,desired_language.lower())
@@ -145,16 +145,16 @@ def list_live(params):
     json_live = open(file_path).read()
     json_parser = json.loads(json_live)
     url_2nd_json = json_parser["url"]
-    
+
     file_path_2 = utils.download_catalog(
         url_2nd_json,
         '%s_%s_live_2.json' % (params.channel_name,desired_language.lower())
     )
     json_live_2 = open(file_path_2).read()
     json_parser_2 = json.loads(json_live_2)
-    
+
     url_live = json_parser_2["primary"]
-    
+
     info = {
         'video': {
             'title': title,
@@ -162,7 +162,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -175,7 +175,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -186,7 +186,7 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     if params.next == 'play_l':
         return params.url
 

@@ -165,6 +165,10 @@ msgctxt "#30108"
 msgid "More programs..."
 msgstr ""
 
+msgctxt "#30109"
+msgid "Live TV"
+msgstr ""
+
 # Download (from 30200 to 30240)
 
 msgctxt "#30200"

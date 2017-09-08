@@ -41,7 +41,7 @@ channel_catalog = 'http://pluzz.webservices.francetelevisions.fr/' \
 
 channel_live = 'http://pluzz.webservices.francetelevisions.fr/' \
                'pluzz/liste/type/live/nb/10000/chaine/%s'
-               
+
 # channel_catalog = 'https://pluzz.webservices.francetelevisions.fr/' \
 #                   'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s'
 # page inc: 20
@@ -148,8 +148,8 @@ def change_to_nicer_name(original_name):
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
-    # Add Replay 
+
+    # Add Replay
     if params.channel_name != 'franceinfo':
         modes.append({
             'label' : 'Replay',
@@ -160,8 +160,8 @@ def mode_replay_live(params):
                 window_title='%s Replay' % params.channel_name.upper()
             ),
         })
-    
-    # Add Live 
+
+    # Add Live
     if params.channel_name != 'la_1ere':
         modes.append({
             'label' : 'Live TV',
@@ -172,7 +172,7 @@ def mode_replay_live(params):
                 window_title='%s Live TV' % params.channel_name.upper()
             ),
         })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -203,7 +203,7 @@ def list_shows(params):
 
     # Level 0
     if params.next == 'list_shows_1':
-                
+
         url_json = channel_catalog % (real_channel)
         file_path = utils.download_catalog(
             url_json,
@@ -527,7 +527,7 @@ def list_videos(params):
                         'director': director
                     }
                 }
-                
+
                 # Nouveau pour ajouter le menu pour télécharger la vidéo
                 context_menu = []
                 download_video = (
@@ -603,15 +603,15 @@ def list_videos(params):
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
     lives = []
-    
+
     real_channel = params.channel_name
-    
+
     title = ''
     plot = ''
     duration = 0
     date = ''
     genre = ''
-    
+
     if real_channel != 'franceinfo':
         url_json_live = channel_live % (real_channel)
         file_path_live = utils.download_catalog(
@@ -621,14 +621,14 @@ def list_live(params):
         file_prgm_live = open(file_path_live).read()
         json_parser_live = json.loads(file_prgm_live)
         emissions_live = json_parser_live['reponse']['emissions']
-        
+
         for emission in emissions_live:
             id_programme = emission['id_programme'].encode('utf-8')
             if id_programme == '':
                 id_programme = emission['id_emission'].encode('utf-8')
             id_diffusion = emission['id_diffusion']
             chaine_id = emission['chaine_id'].encode('utf-8')
-            
+
             start_time_emission = 'Debut: ' + emission['date_diffusion'].split('T')[1].encode('utf-8')
 
             if emission['accroche']:
@@ -700,9 +700,9 @@ def list_live(params):
                 'info': info
             })
     else:
-        
-        title = '%s Live' % params.channel_name 
-        
+
+        title = '%s Live' % params.channel_name
+
         info = {
                 'video': {
                     'title': title,
@@ -721,8 +721,8 @@ def list_live(params):
             'is_playable': True,
             'info': info
         })
-        
-    
+
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -733,18 +733,18 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     if params.next == 'play_r' or params.next == 'download_video':
         file_prgm = utils.get_webcontent(show_info % (params.id_diffusion))
         json_parser = json.loads(file_prgm)
-        
+
         desired_quality = common.plugin.get_setting('quality')
-        
+
         url_selected = ''
-        
+
         if desired_quality == "DIALOG":
             all_datas_videos = []
-            
+
             for video in json_parser['videos']:
                 if video['format'] == 'hls_v5_os' or video['format'] == 'm3u8-download':
                     new_list_item = xbmcgui.ListItem()
@@ -754,7 +754,7 @@ def get_video_url(params):
                         new_list_item.setLabel("SD")
                     new_list_item.setPath(video['url'])
                     all_datas_videos.append(new_list_item)
-                    
+
             seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
             url_selected = all_datas_videos[seleted_item].getPath()
@@ -767,23 +767,23 @@ def get_video_url(params):
             for video in json_parser['videos']:
                 if video['format'] == 'm3u8-download':
                     url_selected = video['url']
-                
+
         return url_selected
-    
+
     elif params.next == 'play_l':
-        
+
         file_prgm = utils.get_webcontent(live_info % (params.channel_name))
         json_parser = json.loads(file_prgm)
-        
+
         url_selected = ''
-        
+
         for video in json_parser['videos']:
             if video['format'] == 'hls_v5_os':
                 url_protected = video['url']
-        
+
         file_prgm2 = utils.get_webcontent(hdfauth_url % (url_protected))
         json_parser2 = json.loads(file_prgm2)
-        
+
         return json_parser2['url']
 
 

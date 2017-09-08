@@ -53,13 +53,13 @@ def channel_entry(params):
     elif 'live' in params.next:
         return list_live(params)
     elif 'play' in params.next:
-        return get_video_url(params)        
+        return get_video_url(params)
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
-    # Add Replay 
+
+    # Add Replay
     modes.append({
         'label' : 'Replay',
         'url': common.plugin.get_url(
@@ -69,7 +69,7 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
+
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -79,7 +79,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -242,24 +242,24 @@ def list_videos(params):
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
     lives = []
-    
+
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
-    
+
     if desired_language == 'DE':
         desired_language = 'de'
     else:
         desired_language = 'fr'
-    
+
     url_live = ''
-    
+
     file_path = utils.download_catalog(
         url_live_arte % desired_language,
         '%s_%s_live.json' % (params.channel_name, desired_language)
     )
     file_live = open(file_path).read()
     json_parser = json.loads(file_live)
-    
+
     title = json_parser["videoJsonPlayer"]["VTI"].encode('utf-8')
     img = json_parser["videoJsonPlayer"]["VTU"]["IUR"].encode('utf-8')
     plot = ''
@@ -270,7 +270,7 @@ def list_live(params):
     duration = 0
     duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
     url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
-    
+
     info = {
         'video': {
             'title': title,
@@ -278,7 +278,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -291,7 +291,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-        
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -302,15 +302,15 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     if params.next == 'play_r' or params.next == 'download_video':
         file_medias = utils.get_webcontent(
             params.url)
         json_parser = json.loads(file_medias)
 
-        url_selected = ''    
+        url_selected = ''
         video_streams = json_parser['videoJsonPlayer']['VSR']
-        
+
         desired_quality = common.plugin.get_setting('quality')
 
         if desired_quality == "DIALOG":
@@ -327,7 +327,7 @@ def get_video_url(params):
             seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
             url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
-        
+
         elif desired_quality == "BEST":
             url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
         else:

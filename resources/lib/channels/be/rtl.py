@@ -58,7 +58,7 @@ def channel_entry(params):
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
+
     # Add Replay
     modes.append({
         'label' : 'Replay',
@@ -69,8 +69,8 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -80,7 +80,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -381,39 +381,39 @@ def list_videos(params):
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
     lives = []
-    
+
     title = ''
     subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     # get liveid
     file_path = utils.download_catalog(
         url_root_live % (params.channel_name),
         '%s_live.html' % (params.channel_name))
     live_html = open(file_path).read()
-    
+
     root_soup = bs(live_html, 'html.parser')
     live_soup = root_soup.find('main', class_="main-container")
-    
+
     #Live
     if live_soup.find('section'):
-    
+
         get_liveid = re.compile(r'liveid="(.*?)"').findall(live_html)[0]
-        
+
         file_path = utils.download_catalog(
             url_xml_live % (get_liveid),
             '%s_live.xml' % (params.channel_name))
         live_xml = open(file_path).read()
-        
-        #XML not well build missing header ....        
+
+        #XML not well build missing header ....
         img = 'http://' + re.compile(r'<Thumbnail>(.*?)<').findall(live_xml)[0]
         url_live = re.compile(r'<URL_HLS>(.*?)<').findall(live_xml)[0]
         title = re.compile(r'<tv><!\[CDATA\[(.*?)\]').findall(live_xml)[0]
         plot = re.compile(r'<From>(.*?)<').findall(live_xml)[0] + ' - ' + re.compile(r'<To>(.*?)<').findall(live_xml)[0]
-    
+
         info = {
             'video': {
                 'title': title,
@@ -421,7 +421,7 @@ def list_live(params):
                 'duration': duration
             }
         }
-        
+
         lives.append({
             'label': title,
             'fanart': img,
@@ -436,9 +436,9 @@ def list_live(params):
         })
     #No live
     else:
-        
+
         title = live_soup.find('div', class_="container").find('h2').get_text().encode('utf-8')
-        
+
         info = {
             'video': {
                 'title': title,
@@ -446,7 +446,7 @@ def list_live(params):
                 'duration': duration
             }
         }
-        
+
         lives.append({
             'label': title,
             'fanart': img,
@@ -459,7 +459,7 @@ def list_live(params):
             'is_playable': False,
             'info': info
         })
-        
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -470,7 +470,7 @@ def list_live(params):
 
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     if params.next == 'play_r':
         video_html = utils.get_webcontent(params.video_url)
         video_soup = bs(video_html, 'html.parser')
@@ -485,6 +485,6 @@ def get_video_url(params):
         m3u8 = re.compile(r'<URL_HLS>(.*?)</URL_HLS>').findall(xml)[0]
 
         return m3u8
-        
+
     elif params.next == 'play_l':
         return params.url_live

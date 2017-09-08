@@ -30,6 +30,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
+[Add live TV] TF1 (wwark)
 [Bug] L'équipe: Fix video quality selection
 [Improvement] Numéro 23: Better categories listing
 [Add channel] RTL-TVI
@@ -43,7 +44,7 @@
 [Add Live TV] Pluzz (wwark)
 [Add Live TV] Arte (wwark)
 
-    </news> 
+    </news>
     <assets>
       <icon>icon.png</icon>
       <fanart>fanart.jpg</fanart>

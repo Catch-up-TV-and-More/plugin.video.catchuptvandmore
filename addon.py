@@ -195,7 +195,7 @@ def list_channels(params):
             'label': title,
             'url': common.plugin.get_url(
                 action='channel_entry',
-                next='mode_replay_live',
+                next='root',
                 channel_name=channel_name,
                 channel_module=channel_module,
                 channel_id=channel_id,

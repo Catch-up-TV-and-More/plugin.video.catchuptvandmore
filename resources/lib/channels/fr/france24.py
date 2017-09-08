@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup as bs
 import time
 import re
 
-# TODO 
+# TODO
 # Replay (emission) | (just 5 first episodes) Add More Button (with api) to download just some part ? (More Work TODO)
 # Add info LIVE TV (picture, plot)
 # Add Video, Last JT, Last ECO, Last Meteo
@@ -63,7 +63,7 @@ def channel_entry(params):
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
+
     # Add Replay
     modes.append({
         'label' : 'Replay',
@@ -74,8 +74,8 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -85,7 +85,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -97,10 +97,10 @@ def mode_replay_live(params):
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
-    
+
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
-    
+
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
             url_api_vod % (desired_language.lower(),desired_language.lower()),
@@ -108,15 +108,15 @@ def list_shows(params):
         )
         json_vod = open(file_path).read()
         json_parser = json.loads(json_vod)
-        
+
         list_caterories = json_parser["result"]["f24%s" % desired_language.lower()]["list"]
         for category in list_caterories:
-            
+
             category_name = category["title"].encode('utf-8')
             img = category["image"][0]["original"].encode('utf-8')
             nid = category["nid"]
             url = category["url"].encode('utf-8')
-            
+
             shows.append({
                 'label': category_name,
                 'fanart': img,
@@ -130,7 +130,7 @@ def list_shows(params):
                     category_name=category_name,
                 )
             })
-            
+
     return common.plugin.create_listing(
         shows,
         sort_methods=(
@@ -142,27 +142,27 @@ def list_shows(params):
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    
+
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
-    
+
     file_path = utils.download_catalog(
         url_api_vod % (desired_language.lower(),desired_language.lower()),
         '%s_%s_vod.json' % (params.channel_name,desired_language.lower())
     )
     json_vod = open(file_path).read()
     json_parser = json.loads(json_vod)
-    
+
     list_caterories = json_parser["result"]["f24%s" % desired_language.lower()]["list"]
     for category in list_caterories:
         if str(params.nid) == str(category["nid"]):
             for video in category["editions"]["list"]:
-        
+
                 title = video["title"].encode('utf-8')
                 plot = video["intro"].encode('utf-8')
                 img = video["image"][0]["original"].encode('utf-8')
                 url = video["video"][0]["mp4-mbr"].encode('utf-8')
-                
+
                 value_date = time.strftime('%d %m %Y', time.localtime(int(video["created"])))
                 date = str(value_date).split(' ')
                 day = date[0]
@@ -170,7 +170,7 @@ def list_videos(params):
                 year = date[2]
                 date = '.'.join((day, mounth, year))
                 aired = '-'.join((year, mounth, day))
-        
+
                 info = {
                     'video': {
                         'title': title,
@@ -207,10 +207,10 @@ def list_videos(params):
                     'info': info,
                     'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
-    
-    
+
+
     # TODO add More button Video
-    
+
     return common.plugin.create_listing(
         videos,
         sort_methods=(
@@ -218,39 +218,39 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
         ),
         content='tvshows')
-    
+
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-    
+
     lives = []
-    
+
     title = ''
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
-    
+
     url_live = url_live_site % desired_language.lower()
-    
+
     file_path = utils.download_catalog(
         url_live,
         '%s_%s_live.html' % (params.channel_name,desired_language.lower())
     )
     html_live = open(file_path).read()
     root_soup = bs(html_live, 'html.parser')
-    
+
     json_parser = json.loads(root_soup.select_one("script[type=application/json]").text)
     media_datas_list = json_parser['medias']['media']['media_sources']['media_source']
     for datas in media_datas_list:
         if datas['source']:
             url_live = datas['source']
-    
+
     live_info = utils.get_webcontent(url_info_live % (desired_language.lower()))
     title = re.compile('id="main-player-playing-value">(.+?)<').findall(live_info)[0]
-    
+
     info = {
         'video': {
             'title': title,
@@ -258,7 +258,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -271,7 +271,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -282,7 +282,7 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+
     if params.next == 'play_l':
         return params.url
     elif params.next == 'play_r' or params.next == 'download_video':

@@ -53,7 +53,7 @@ url_json_lives = 'https://services.vrt.be/videoplayer/r/live.json'
         #context:%s (how to get ?)
         #utf8:✓
 # https://accounts.vrt.be/socialize.getSavedResponse?APIKey=3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG&saveResponseID=%s&noAuth=true&sdk=js_7.3.30&format=jsonp&callback=gigya.callback&context=%s
-#  Context id, 
+#  Context id,
 ## https://token.vrt.be/
 # https://token.vrt.be/
 
@@ -77,12 +77,12 @@ def channel_entry(params):
         return get_video_url(params)
     else:
         return None
-        
+
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
     modes = []
-    
-    # Add Replay 
+
+    # Add Replay
     #modes.append({
     #        'label' : 'Replay',
     #        'url': common.plugin.get_url(
@@ -92,8 +92,8 @@ def mode_replay_live(params):
     #            window_title='%s Replay' % params.channel_name.upper()
     #        ),
     #})
-    
-    # Add Live 
+
+    # Add Live
     modes.append({
         'label' : 'Live TV',
         'url': common.plugin.get_url(
@@ -103,7 +103,7 @@ def mode_replay_live(params):
             window_title='%s Live TV' % params.channel_name.upper()
         ),
     })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -115,37 +115,37 @@ def mode_replay_live(params):
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
-    
+
     return None
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    
+
     return None
-    
+
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
     lives = []
-    
+
     title = ''
     subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
     url_live = ''
-    
+
     file_path = utils.download_catalog(
         url_json_lives,
         '%s_live.json' % (params.channel_name))
     lives_json = open(file_path).read()
     lives_json = lives_json.replace(')','').replace('parseLiveJson(','')
     lives_jsonparser = json.loads(lives_json)
-    
+
     url_live = lives_jsonparser["vualto_%s" % (params.channel_name)]["hls"]
-    
-    title = '%s Live' % params.channel_name.upper() 
-        
+
+    title = '%s Live' % params.channel_name.upper()
+
     info = {
         'video': {
             'title': title,
@@ -153,7 +153,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -166,7 +166,7 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-    
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(

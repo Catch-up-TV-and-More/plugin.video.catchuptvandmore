@@ -21,13 +21,12 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import json
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
-import json
-import re
 
-# TODO
+# TO DO
 # Rework QUALITY
 # Replay LCI (Add date, aired, year, fix some elements)
 
@@ -36,27 +35,28 @@ import re
 # strings.po file instead of numeric codes
 _ = common.addon.initialize_gettext()
 
-url_root = "http://www.tf1.fr/"
-url_time = 'http://www.wat.tv/servertime2/'
-url_token = 'http://api.wat.tv/services/Delivery'
-url_live_tv = 'https://www.tf1.fr/%s/direct'
-url_live_info = 'https://api.mytf1.tf1.fr/live/2/%s'
-url_api_image = 'http://api.mytf1.tf1.fr/image'
+URL_ROOT = "http://www.tf1.fr/"
+URL_TIME = 'http://www.wat.tv/servertime2/'
+URL_TOKEN = 'http://api.wat.tv/services/Delivery'
+URL_LIVE_TV = 'https://www.tf1.fr/%s/direct'
+URL_LIVE_INFO = 'https://api.mytf1.tf1.fr/live/2/%s'
+URL_API_IMAGE = 'http://api.mytf1.tf1.fr/image'
 
-url_lci_replay = "http://www.lci.fr/emissions"
-url_lci_root = "http://www.lci.fr"
+URL_LCI_REPLAY = "http://www.lci.fr/emissions"
+URL_LCI_ROOT = "http://www.lci.fr"
 
-secret_key = 'W3m0#1mFI'
-app_name = 'sdk/Iphone/1.0'
-version = '2.1.3'
-hosting_application_name = 'com.tf1.applitf1'
-hosting_application_version = '7.0.4'
-img_width = 640
-img_height = 360 
+SECRET_KEY = 'W3m0#1mFI'
+APP_NAME = 'sdk/Iphone/1.0'
+VERSION = '2.1.3'
+HOSTING_APPLICATION_NAME = 'com.tf1.applitf1'
+HOSTING_APPLICATION_VERSION = '7.0.4'
+IMG_WIDTH = 640
+IMG_HEIGHT = 360
 
 
 def channel_entry(params):
-    if 'mode_replay_live' in params.next:
+    """Entry function of the module"""
+    if 'root' in params.next:
         return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
@@ -68,14 +68,14 @@ def channel_entry(params):
         return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
-    else:
-        return None
+    return None
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
+    """Add Replay and Live in the listing"""
     modes = []
-    
-    # Add Replay 
+
+    # Add Replay
     modes.append({
         'label' : 'Replay',
         'url': common.plugin.get_url(
@@ -85,11 +85,11 @@ def mode_replay_live(params):
             window_title='%s Replay' % params.channel_name.upper()
         ),
     })
-    
-    # Add Live 
+
+    # Add Live
     if params.channel_name != 'tfou' and params.channel_name != 'xtra':
         modes.append({
-            'label' : 'Live TV',
+            'label' : _('Live TV'),
             'url': common.plugin.get_url(
                 action='channel_entry',
                 next='live_cat',
@@ -97,7 +97,7 @@ def mode_replay_live(params):
                 window_title='%s Live TV' % params.channel_name.upper()
             ),
         })
-    
+
     return common.plugin.create_listing(
         modes,
         sort_methods=(
@@ -108,22 +108,23 @@ def mode_replay_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
+    """Build categories listing"""
     shows = []
 
     if params.channel_name == 'lci':
-        
+
         file_path = utils.download_catalog(
-            url_lci_replay,
+            URL_LCI_REPLAY,
             params.channel_name + '.html')
         root_html = open(file_path).read()
         root_soup = bs(root_html, 'html.parser')
-        
+
         if params.next == 'list_shows_1':
             programs_soup = root_soup.find(
                 'ul',
                 attrs={'class': 'topic-chronology-milestone-component'})
             for program in programs_soup.find_all('li'):
-                program_url = url_lci_root + program.find('a')['href'].encode('utf-8')
+                program_url = URL_LCI_ROOT + program.find('a')['href'].encode('utf-8')
                 program_name = program.find(
                     'h2',
                     class_='text-block').get_text().encode('utf-8')
@@ -147,7 +148,7 @@ def list_shows(params):
                 })
     else:
         url = ''.join((
-            url_root,
+            URL_ROOT,
             params.channel_name,
             '/programmes-tv'))
         file_path = utils.download_catalog(
@@ -218,6 +219,7 @@ def list_shows(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_videos_categories(params):
+    """Build videos categories listing"""
     videos_categories = []
     url = ''.join((
         params.program_url,
@@ -252,18 +254,19 @@ def list_videos_categories(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     if params.channel_name == 'lci':
         program_html = utils.get_webcontent(params.program_url)
         program_soup = bs(program_html, 'html.parser')
-        
+
         list_replay = program_soup.find_all(
             'a',
             class_='topic-emission-extract-block-image trackXiti')
 
         for replay in list_replay:
-        
+
             title = replay.find_all('img')[0].get('alt').encode('utf-8')
             duration = 0
             img = replay.find_all('source')[0]
@@ -273,7 +276,7 @@ def list_videos(params):
                 img = img['srcset'].encode('utf-8')
 
             img = img.split(',')[0].split(' ')[0]
-            program_id = url_lci_root + replay.get('href').encode('utf-8')
+            program_id = URL_LCI_ROOT + replay.get('href').encode('utf-8')
 
             info = {
                 'video': {
@@ -287,7 +290,6 @@ def list_videos(params):
                 }
             }
 
-            # Nouveau pour ajouter le menu pour télécharger la vidéo
             context_menu = []
             download_video = (
                 _('Download'),
@@ -296,7 +298,6 @@ def list_videos(params):
                     program_id=program_id) + ')'
             )
             context_menu.append(download_video)
-            # Fin
 
             videos.append({
                 'label': title,
@@ -308,9 +309,9 @@ def list_videos(params):
                 ),
                 'is_playable': True,
                 'info': info,
-                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                'context_menu': context_menu
             })
-        
+
     else:
         url = ''.join((
             params.program_url,
@@ -325,7 +326,8 @@ def list_videos(params):
             class_='grid')
 
         for li in grid.find_all('li'):
-            video_type_string = li.find('div', class_='description').find('a')['data-xiti-libelle'].encode('utf-8')
+            video_type_string = li.find(
+                'div', class_='description').find('a')['data-xiti-libelle'].encode('utf-8')
             video_type_string = video_type_string.split('-')[0]
 
             if 'Playlist' not in video_type_string:
@@ -392,7 +394,6 @@ def list_videos(params):
                     }
                 }
 
-                # Nouveau pour ajouter le menu pour télécharger la vidéo
                 context_menu = []
                 download_video = (
                     _('Download'),
@@ -401,7 +402,6 @@ def list_videos(params):
                         program_id=program_id) + ')'
                 )
                 context_menu.append(download_video)
-                # Fin
 
                 videos.append({
                     'label': title,
@@ -413,7 +413,7 @@ def list_videos(params):
                     ),
                     'is_playable': True,
                     'info': info,
-                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                    'context_menu': context_menu
                 })
 
     return common.plugin.create_listing(
@@ -428,34 +428,40 @@ def list_videos(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
+    """Build live listing"""
     lives = []
-       
+
     file_path = utils.download_catalog(
-        url_live_info % params.channel_name,
+        URL_LIVE_INFO % params.channel_name,
         '%s_info_live.json' % (params.channel_name)
     )
     file_info_live = open(file_path).read()
     json_parser = json.loads(file_info_live)
-        
-    title = json_parser["current"]["title"].encode('utf-8') + ' - ' + json_parser["current"]["episode"].encode('utf-8')
+
+    title = json_parser["current"]["title"].encode('utf-8') + ' - ' \
+        + json_parser["current"]["episode"].encode('utf-8')
     if "description" in json_parser["current"]:
-        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8') \
-               + '\n ' + json_parser["current"]["description"].encode('utf-8')
+        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + ' - ' \
+            + json_parser["current"]["humanEndDate"].encode('utf-8') \
+            + '\n ' + json_parser["current"]["description"].encode('utf-8')
     else:
-        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8')
-        
+        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + ' - ' \
+            + json_parser["current"]["humanEndDate"].encode('utf-8')
+
     duration = 0
     #duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
-    
+
     # Get Image (Code java found in a Forum)
     id_image = json_parser["current"]["image"].encode('utf-8')
-    valueMD5 = common.sp.md5(str(img_width) + str(img_height) + id_image + 'elk45sz6ers68').hexdigest()
-    valueMD5 = valueMD5[:6]
+    value_md5 = common.sp.md5(str(IMG_WIDTH) + str(IMG_HEIGHT) + id_image \
+        + 'elk45sz6ers68').hexdigest()
+    value_md5 = value_md5[:6]
     try:
-        img = url_api_image + '/' + str(img_width)  + '/' + str(img_height) + '/' + id_image + '/' + str(valueMD5)
+        img = URL_API_IMAGE + '/' + str(IMG_WIDTH)  + '/' + str(IMG_HEIGHT) + '/' \
+            + id_image + '/' + str(value_md5)
     except:
-        img = ''         
-    
+        img = ''
+
     info = {
         'video': {
             'title': title,
@@ -463,7 +469,7 @@ def list_live(params):
             'duration': duration
         }
     }
-    
+
     lives.append({
         'label': title,
         'fanart': img,
@@ -475,8 +481,8 @@ def list_live(params):
         'is_playable': True,
         'info': info
     })
-        
-    
+
+
     return common.plugin.create_listing(
         lives,
         sort_methods=(
@@ -487,12 +493,13 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    
+    """Get video URL and start video player"""
+
     if params.next == 'play_r' or params.next == 'download_video':
         if "http" not in params.program_id:
             if params.program_id[0] == '/':
                 params.program_id = params.program_id[1:]
-            url = url_root + params.program_id
+            url = URL_ROOT + params.program_id
         else:
             url = params.program_id
         video_html = utils.get_webcontent(url)
@@ -508,13 +515,13 @@ def get_video_url(params):
             data_src = iframe_player_soup['data-src'].encode('utf-8')
             video_id = data_src[-8:]
 
-        timeserver = str(utils.get_webcontent(url_time))
+        timeserver = str(utils.get_webcontent(URL_TIME))
 
         auth_key = '%s-%s-%s-%s-%s' % (
             video_id,
-            secret_key,
-            app_name,
-            secret_key,
+            SECRET_KEY,
+            APP_NAME,
+            SECRET_KEY,
             timeserver
         )
 
@@ -522,17 +529,17 @@ def get_video_url(params):
         auth_key = auth_key + '/' + timeserver
 
         post_data = {
-            'appName': app_name,
+            'appName': APP_NAME,
             'method': 'getUrl',
             'mediaId': video_id,
             'authKey': auth_key,
-            'version': version,
-            'hostingApplicationName': hosting_application_name,
-            'hostingApplicationVersion': hosting_application_version
+            'version': VERSION,
+            'hostingApplicationName': HOSTING_APPLICATION_NAME,
+            'hostingApplicationVersion': HOSTING_APPLICATION_VERSION
         }
 
         url_video = utils.get_webcontent(
-            url=url_token,
+            url=URL_TOKEN,
             request_type='post',
             post_dic=post_data)
         url_video = json.loads(url_video)
@@ -547,20 +554,20 @@ def get_video_url(params):
                 pass
 
         return url_video
-    
+
     elif params.next == 'play_l':
-        
+
         # Video_ID 'L_%CHANNEL_NAME%'
         video_id = 'L_%s' % params.channel_name.upper()
         real_channel = params.channel_name
 
-        timeserver = str(utils.get_webcontent(url_time))
+        timeserver = str(utils.get_webcontent(URL_TIME))
 
         auth_key = '%s-%s-%s-%s-%s' % (
             video_id,
-            secret_key,
-            app_name,
-            secret_key,
+            SECRET_KEY,
+            APP_NAME,
+            SECRET_KEY,
             timeserver
         )
 
@@ -568,17 +575,17 @@ def get_video_url(params):
         auth_key = auth_key + '/' + timeserver
 
         post_data = {
-            'appName': app_name,
+            'appName': APP_NAME,
             'method': 'getUrl',
             'mediaId': video_id,
             'authKey': auth_key,
-            'version': version,
-            'hostingApplicationName': hosting_application_name,
-            'hostingApplicationVersion': hosting_application_version
+            'version': VERSION,
+            'hostingApplicationName': HOSTING_APPLICATION_NAME,
+            'hostingApplicationVersion': HOSTING_APPLICATION_VERSION
         }
 
         url_video = utils.get_webcontent(
-            url=url_token,
+            url=URL_TOKEN,
             request_type='post',
             post_dic=post_data)
         url_video = json.loads(url_video)
@@ -588,8 +595,8 @@ def get_video_url(params):
 
         if desired_quality == 'BEST' or desired_quality == 'DIALOG':
             try:
-                url_video = url_video.split('&bwmax')[0] 
+                url_video = url_video.split('&bwmax')[0]
             except:
                 pass
-        
-        return url_video 
+
+        return url_video
