@@ -69,11 +69,11 @@ msgstr "Chaînes européennes"
 
 msgctxt "#30024"
 msgid "United Kingdom channels"
-msgstr "Chaînes Anglaises"
+msgstr "Chaînes anglaises"
 
 msgctxt "#30025"
 msgid "United States channels"
-msgstr "Chaînes Américaines"
+msgstr "Chaînes américaines"
 
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
