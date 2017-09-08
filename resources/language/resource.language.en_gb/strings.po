@@ -33,6 +33,10 @@ msgctxt "#30003"
 msgid "Download"
 msgstr ""
 
+msgctxt "#30004"
+msgid "Accounts"
+msgstr ""
+
 # Settings line separators (from 30010 to 30019)
 msgctxt "#30010"
 msgid "Hide main menu categories"
@@ -55,6 +59,21 @@ msgctxt "#30021"
 msgid "Belgian channels"
 msgstr ""
 
+msgctxt "#30022"
+msgid "Japanese channels"
+msgstr ""
+
+msgctxt "#30023"
+msgid "European channels"
+msgstr ""
+
+msgctxt "#30024"
+msgid "United Kingdom channels"
+msgstr ""
+
+msgctxt "#30025"
+msgid "United States channels"
+msgstr ""
 
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
@@ -85,8 +104,24 @@ msgstr ""
 
 
 # Settings quality and content (from 30070 to 30099)
+msgctxt "#30070"
+msgid "Video quality"
+msgstr ""
+
+msgctxt "#30071"
+msgid "Contents"
+msgstr ""
+
 msgctxt "#30080"
-msgid "Arte: Choose Channel (FR|DE)"
+msgid "Arte: Choose Channel"
+msgstr ""
+
+msgctxt "#30081"
+msgid "France24: Choose Channel"
+msgstr ""
+
+msgctxt "#30082"
+msgid "Euronews: Choose Channel"
 msgstr ""
 
 msgctxt "#30087"

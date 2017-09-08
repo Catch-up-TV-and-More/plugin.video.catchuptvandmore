@@ -26,6 +26,10 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
+# TODO
+# LIVE TV protected by #EXT-X-FAXS-CM
+# https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
+
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -35,7 +39,7 @@ _ = common.addon.initialize_gettext()
 # e.g. Info, Divertissement, Séries, ...
 # We get an id by category
 url_root = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
-           'm6group_web/services/%sreplay/folders?limit=999&offset=0'
+           'm6group_web/services/%s/folders?limit=999&offset=0'
 
 # Url to get catgory's programs
 # e.g. Le meilleur patissier, La france à un incroyable talent, ...
@@ -73,21 +77,57 @@ url_img = 'https://images.6play.fr/v1/images/%s/raw'
 
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+        return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
+
+#@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay
+    modes.append({
+        'label' : 'Replay',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
+    })
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 @common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
+        
+        url_root_site = ''
+        if params.channel_name == 'stories' or params.channel_name == 'bruce' \
+           or params.channel_name == 'crazy_kitchen' or params.channel_name == 'home' \
+           or params.channel_name == 'styles' or params.channel_name == 'comedy':
+            url_root_site = url_root % params.channel_name
+        else:
+            url_root_site = url_root % (params.channel_name + 'replay')
+        
         file_path = utils.download_catalog(
-            url_root % (params.channel_name),
+            url_root_site,
             '%s.json' % (params.channel_name),
             random_ua=True)
         file_prgm = open(file_path).read()
@@ -135,6 +175,7 @@ def list_shows(params):
             program_desc = array['description'].encode('utf-8')
             program_imgs = array['images']
             program_img = ''
+            program_fanart = ''
             for img in program_imgs:
                 if img['role'].encode('utf-8') == 'vignette':
                     external_key = img['external_key'].encode('utf-8')
@@ -178,12 +219,19 @@ def list_shows(params):
         program_json = utils.get_webcontent(
             url_subcategory % (params.program_id),
             random_ua=True)
-
+        
         json_parser = json.loads(program_json)
+        
+        try:            
+            program_fanart = params.program_fanart
+        except:
+            pass
+            program_fanart = ''
+        
         for sub_category in json_parser['program_subcats']:
             sub_category_id = str(sub_category['id'])
             sub_category_title = sub_category['title'].encode('utf-8')
-
+            
             info = {
                 'video': {
                     'title': sub_category_title,
@@ -194,7 +242,7 @@ def list_shows(params):
             shows.append({
                 'label': sub_category_title,
                 'thumb': params.program_img,
-                'fanart': params.program_fanart,
+                'fanart': program_fanart,
                 'url': common.plugin.get_url(
                     action='channel_entry',
                     next='list_videos',
@@ -214,7 +262,7 @@ def list_shows(params):
         shows.append({
             'label': common.addon.get_localized_string(30101),
             'thumb': params.program_img,
-            'fanart': params.program_fanart,
+            'fanart': program_fanart,
             'url': common.plugin.get_url(
                 action='channel_entry',
                 next='list_videos',
@@ -296,13 +344,13 @@ def list_videos(params):
         # Nouveau pour ajouter le menu pour télécharger la vidéo
         context_menu = []
         download_video = (
-	    _('Download'),
-	    'XBMC.RunPlugin(' + common.plugin.get_url(
-		action='download_video',
-		video_id=video_id) + ')'
-	)
-	context_menu.append(download_video)
-	# Fin
+            _('Download'),
+            'XBMC.RunPlugin(' + common.plugin.get_url(
+                action='download_video',
+                video_id=video_id) + ')'
+        )
+        context_menu.append(download_video)
+        # Fin
 
         videos.append({
             'label': title,
@@ -386,16 +434,9 @@ def get_video_url(params):
         elif 'RESOLUTION=1080' in lines[k]:
             url_ultra_hd = root + '/' + lines[k + 1]
 
-    if desired_quality == 'Force HD':
-        if url_ultra_hd:
-            return url_ultra_hd
-        elif url_hd:
-            return url_hd
-        return manifest_url
+    desired_quality = common.plugin.get_setting('quality')
 
-    elif desired_quality == 'Force SD':
-        if url_ultra_sd:
-            return url_ultra_sd
-        elif url_sd:
-            return url_sd
+    if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_ultra_hd:
+        return url_ultra_hd
+    else:
         return manifest_url

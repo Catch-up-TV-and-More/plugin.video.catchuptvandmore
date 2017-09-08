@@ -24,6 +24,11 @@ import json
 from resources.lib import utils
 from resources.lib import common
 import time
+from bs4 import BeautifulSoup as bs
+import re
+
+# TODO
+# Improve Live TV (Title, picture, plot)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -31,10 +36,14 @@ import time
 _ = common.addon.initialize_gettext()
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+        return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -77,8 +86,44 @@ url_list_show = 'https://sslreplay.gulli.fr/replay/api?call=%%7B%%22api_key' \
                 'method%%22:%%22programme.getEpisodesByProgramIds%%22,%%22' \
                 'params%%22:%%7B%%22program_id_list%%22:%%5B%%22%s%%22%%5D' \
                 '%%7D%%7D'
+
+url_live_tv = 'http://replay.gulli.fr/Direct'
+
 # program_id
 
+@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay 
+    modes.append({
+        'label' : 'Replay',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
+    })
+    
+    # Add Live 
+    modes.append({
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
+    })
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 @common.plugin.cached(common.cache_time)
 def list_shows(params):
@@ -141,7 +186,7 @@ def list_shows(params):
         )
 
 
-#@common.plugin.cached(common.cache_time)
+@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
 
@@ -189,16 +234,16 @@ def list_videos(params):
             }
         }
 
-	# Nouveau pour ajouter le menu pour télécharger la vidéo
-	context_menu = []
-	download_video = (
-	    _('Download'),
-	    'XBMC.RunPlugin(' + common.plugin.get_url(
-		action='download_video',
-		url_streaming=url_streaming) + ')'
-	)
-	context_menu.append(download_video)
-	# Fin
+        # Nouveau pour ajouter le menu pour télécharger la vidéo
+        context_menu = []
+        download_video = (
+            _('Download'),
+            'XBMC.RunPlugin(' + common.plugin.get_url(
+                action='download_video',
+                url_streaming=url_streaming) + ')'
+        )
+        context_menu.append(download_video)
+        # Fin
 
         videos.append({
             'label': episode_title,
@@ -206,7 +251,7 @@ def list_videos(params):
             'fanart': fanart,
             'url': common.plugin.get_url(
                 action='channel_entry',
-                next='play',
+                next='play_r',
                 url_streaming=url_streaming
             ),
             'is_playable': True,
@@ -223,15 +268,86 @@ def list_videos(params):
         ),
         content='tvshows')
 
+@common.plugin.cached(common.cache_time)
+def list_live(params):
+    
+    lives = []
+    
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
+    
+    file_path = utils.download_catalog(
+        url_live_tv,
+        params.channel_name + '_live.html')
+    root_live_html = open(file_path).read()
+    root_live_soup = bs(root_live_html, 'html.parser')
+    
+    live_soup = root_live_soup.find(
+        'div',
+        class_='wrapperVideo'
+    )
+    
+    url_live_embeded = ''
+    for live in live_soup.find_all('iframe'):
+        url_live_embeded = live.get('src').encode('utf-8')
+
+    file_path_2 = utils.download_catalog(
+        url_live_embeded,
+        params.channel_name + '_live_embeded.html')
+    root_live_embeded_html = open(file_path_2).read()
+        
+    all_url_video = re.compile(r'file: \'(.*?)\'').findall(root_live_embeded_html)
+
+    for url_video in all_url_video:
+        if url_video.count('m3u8') > 0:
+            url_live = url_video
+    
+    title = '%s Live' % params.channel_name.upper()
+    
+    info = {
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
+    }
+    
+    lives.append({
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.plugin.get_url(
+            action='channel_entry',
+            next='play_l',
+            url_live=url_live,
+        ),
+        'is_playable': True,
+        'info': info
+    })
+    
+    return common.plugin.create_listing(
+        lives,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
 
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    url_root = params.url_streaming.replace('playlist.m3u8', '')
-    m3u8_content = utils.get_webcontent(params.url_streaming)
-    last_url = ''
+    if params.next == 'play_r' or params.next == 'download_video':
+        url_root = params.url_streaming.replace('playlist.m3u8', '')
+        m3u8_content = utils.get_webcontent(params.url_streaming)
+        last_url = ''
 
-    for line in m3u8_content.splitlines():
-        if 'm3u8' in line and 'video' in line:
-            last_url = line
+        for line in m3u8_content.splitlines():
+            if 'm3u8' in line and 'video' in line:
+                last_url = line
 
-    return url_root + last_url
+        return url_root + last_url
+        
+    elif params.next == 'play_l':
+        return params.url_live

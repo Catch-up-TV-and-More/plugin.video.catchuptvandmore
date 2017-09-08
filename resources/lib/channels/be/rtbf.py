@@ -26,332 +26,422 @@ from resources.lib import common
 import ast
 import re
 import json
+import time
+
+# TODO (More Work TODO)
+# Add categories 
+# Add geoblock (info in JSON)
+# Add Quality Mode
+# Add return to previous date
+# Fix JSON video data null ?
+
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.addon.initialize_gettext()
 
 url_json_categories = 'https://www.rtbf.be/news/api/menu?site=media'
 
-url_more_subcategories = 'https://www.rtbf.be/news/api/block?data%%5B0%%5D%%5B' \
-                         'uuid%%5D=%s&data%%5B0%%5D%%5Btype%%5D=widget&data%%5B0%%' \
-                         '5D%%5Bsettings%%5D%%5Bid%%5D=%s&data%%5B0%%5D%%5Bsettings' \
-                         '%%5D%%5Bparams%%5D%%5Border%%5D=0'
-# widget-10097-58bdd52f55880, 10097
+url_replay = 'https://www.rtbf.be/auvio/replay?channelId=%s'
+# channel Id, page
+
+url_json_emissions_by_id = 'https://www.rtbf.be/api/media/video?method=getVideoListByEmissionOrdered&args[]=%s'
+# emission_id
+
+url_json_video_by_id = 'https://www.rtbf.be/api/media/video?method=getVideoDetail&args[]=%s'
+# video_id
+
+url_root_image_rtbf = 'https://ds1.static.rtbf.be'
+
+url_json_live =        'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&partner_key=%s'
+# partener_key
+
+url_root_live = 'https://www.rtbf.be/auvio/direct#/'
+
 channel_filter = {
     'laune': 'La Une',
     'ladeux': 'La Deux',
-    'latrois': 'La Trois'
+    'latrois': 'La Trois',
+    'lapremiere' : 'La Première',
+    'vivacite' : 'Vivacité',
+    'musiq3' : 'Musiq 3',
+    'classic21' : 'Classic 21',
+    'purefm' : 'Pure',
+    'tarmac' : 'TARMAC',
+    'webcreation' : 'Webcréation'
+        
+}
+
+channel_id = {
+    'laune': '1',
+    'ladeux': '2',
+    'latrois': '3',
+    'lapremiere' : '17',
+    'vivacite' : '10',
+    'musiq3' : '8',
+    'classic21' : '7',
+    'purefm' : '9',
+    'tarmac' : '34'#,
+    #'webcreation' : 'Webcréation'
+        
 }
 
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    if 'mode_replay_live' in params.next:
+        return mode_replay_live(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
         return None
 
+def get_partener_key(params):
+    
+    file_path_root_live = utils.download_catalog(
+        url_root_live,
+        '%s_root_live.html' % params.channel_name,
+    )
+    html_root_live = open(file_path_root_live).read()
+    
+    list_js_files = re.compile(r'<script type="text\/javascript" src="(.*?)">').findall(html_root_live)
+    
+    partener_key_value = ''
+    i = 0
+    
+    for js_file in list_js_files:
+        # Get partener key
+        file_path_js = utils.download_catalog(
+            js_file,
+            '%s_partener_key_%s.js' % (params.channel_name, str(i)),
+        )
+        partener_key_js = open(file_path_js).read()
+        
+        partener_key = re.compile('partner_key: \'(.+?)\'').findall(partener_key_js)
+        if len(partener_key) > 0:
+            partener_key_value = partener_key[0]
+        i = i + 1
+    
+    return partener_key_value
+
+#@common.plugin.cached(common.cache_time)
+def mode_replay_live(params):
+    modes = []
+    
+    # Add Replay 
+    modes.append({
+        'label' : 'Replay',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='list_videos_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
+    })
+    
+    # Add Live 
+    modes.append({
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
+    })
+    
+    return common.plugin.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
-    # if 'previous_listing' in params:
-    #     shows = ast.literal_eval(params['previous_listing'])
+    #if 'previous_listing' in params:
+        #shows = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_shows_1':
-        file_path = utils.download_catalog(
-            url_json_categories,
-            '%s_categories.json' % params.channel_name)
-        categories_json = open(file_path).read()
-        categories = json.loads(categories_json)
-
-        for category in categories['item']:
-            if category['@attributes']['id'] == 'emission':
-                category_title = category[
-                    '@attributes']['name'].encode('utf-8')
-                category_url = category[
-                    '@attributes']['url'].encode('utf-8')
-                shows.append({
-                    'label': category_title,
-                    'url': common.plugin.get_url(
-                        category_title=category_title,
-                        action='channel_entry',
-                        category_url=category_url,
-                        next='list_shows_cat',
-                        window_title=category_title
-                    )
-                })
-
-            elif category['@attributes']['id'] == 'category':
-                for sub_category in category['item']:
-                    if 'category' in sub_category['@attributes']['id']:
-                        category_title = sub_category[
-                            '@attributes']['name'].encode('utf-8')
-                        category_url = sub_category[
-                            '@attributes']['url'].encode('utf-8')
-                        shows.append({
-                            'label': category_title,
-                            'url': common.plugin.get_url(
-                                category_title=category_title,
-                                action='channel_entry',
-                                category_url=category_url,
-                                next='list_shows_cat',
-                                window_title=category_title
-                            )
-                        })
-
-    elif params.next == 'list_shows_cat':
-        file_path = utils.download_catalog(
-            params.category_url,
-            '%s_%s.html' % (
-                params.channel_name,
-                params.category_title))
-        category_html = open(file_path).read()
-        category_soup = bs(category_html, 'html.parser')
-
-
-        widgets_soup = category_soup.find_all('b', class_='js-block')
-        for widget_soup in widgets_soup:
-            uuid = widget_soup['data-uuid'].encode('utf-8')
-            uuid_main = uuid.split('-')[1]
-            widget_json = utils.get_webcontent(
-                url_more_subcategories % (uuid, uuid_main))
-            widget = json.loads(widget_json)
-            widget_html = widget['blocks'][uuid].encode('utf-8')
-            category_html += widget_html
-
-        category_soup = bs(category_html, 'html.parser')
-
-        for category in category_soup.find_all('div', class_='www-row'):
-            title = category.find('h2').get_text().encode('utf-8')
-            title = ' '.join(title.split())
-            print title
-
-
-        # for category_soup in categories_soup.find_all('li'):
-        #     category_title = category_soup.find(
-        #         'a').get_text().encode('utf-8').replace(
-        #             '\n', '').replace(' ', '')
-        #     category_url = category_soup.find(
-        #         'a')['href'].encode('utf-8').replace('//', 'http://')
-
-        #     shows.append({
-        #         'label': category_title,
-        #         'url': common.plugin.get_url(
-        #             category_title=category_title,
-        #             action='channel_entry',
-        #             category_url=category_url,
-        #             next='list_shows_cat',
-        #             window_title=category_title,
-        #             index_page='1'
-        #         )
-        #     })
-
-    # elif params.next == 'list_shows_cat':
-    #     file_path = utils.download_catalog(
-    #         params.category_url,
-    #         '%s_%s_%s.html' % (
-    #             params.channel_name,
-    #             params.category_title,
-    #             params.index_page))
-    #     category_html = open(file_path).read()
-    #     category_soup = bs(category_html, 'html.parser')
-
-    #     programs_soup = category_soup.find_all(
-    #         'article',
-    #         attrs={'card': 'tv-show'})
-
-    #     for program_soup in programs_soup:
-    #         program_title = program_soup.find('h3').get_text().encode('utf-8')
-    #         program_url = program_soup.find(
-    #             'a')['href'].encode('utf-8').replace('//', 'http://')
-    #         program_url = program_url + '/videos'
-    #         program_img = program_soup.find(
-    #             'img')['src'].encode('utf-8').replace('//', 'http://')
-    #         program_img = utils.get_redirected_url(program_img)
-
-    #         shows.append({
-    #             'label': program_title,
-    #             'thumb': program_img,
-    #             'url': common.plugin.get_url(
-    #                 program_title=program_title,
-    #                 action='channel_entry',
-    #                 program_url=program_url,
-    #                 next='list_videos',
-    #                 window_title=program_title
-    #             )
-    #         })
-
-    #     if category_soup.find('nav', attrs={'pagination': 'infinite'}):
-    #         url = category_soup.find(
-    #             'nav', attrs={'pagination': 'infinite'}).find(
-    #             'a')['href'].encode('utf-8').replace('//', 'http://')
-    #         # More programs...
-    #         shows.append({
-    #             'label': common.addon.get_localized_string(30108),
-    #             'url': common.plugin.get_url(
-    #                 category_title=params.category_title,
-    #                 action='channel_entry',
-    #                 category_url=url,
-    #                 next=params.next,
-    #                 window_title=params.category_title,
-    #                 index_page=str(int(params.index_page) + 1),
-    #                 update_listing=True,
-    #                 previous_listing=str(shows)
-    #             )
-
-    #         })
+        
+        program_title = 'Toutes les videos'
+        
+        shows.append({
+            'label': program_title,
+            'url': common.plugin.get_url(
+                emission_title=program_title,
+                action='channel_entry',
+                page_replay='1',
+                next='list_videos_1',
+                window_title=program_title
+            )
+        })
 
     return common.plugin.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        update_listing='update_listing' in params
+        )#,
+        #update_listing='update_listing' in params
     )
 
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    return videos
-    # if 'previous_listing' in params:
-    #     videos = ast.literal_eval(params['previous_listing'])
+    
+    if params.next == 'list_videos_1':
+    
+        channel_id_value = channel_id[params.channel_name]
+        
+        file_path = utils.download_catalog(
+            url_replay % (channel_id_value),
+            '%s_replay_%s.html' % (params.channel_name,channel_id_value))
+        programs_html = open(file_path).read()
+        
+        programs_soup = bs(programs_html, 'html.parser')
+        
+        if params.channel_name == 'lapremiere':
+            programs = programs_soup.find_all('article', class_="col-xs-12 rtbf-media-li rtbf-media-li--replay ")
+        else:
+            programs = programs_soup.find_all('article', class_="col-xs-12 rtbf-media-li rtbf-media-li--replay")
+        
+        for program in programs:
+        
+            data_id = program.find('a').get('href').split('id=')[1]
+            
+            file_path = utils.download_catalog(
+                url_json_video_by_id % data_id,
+                '%s_%s.json' % (
+                    params.channel_name,
+                    data_id))
+            videos_json = open(file_path).read()
+            videos_jsonparser = json.loads(videos_json)
+            
+            if videos_jsonparser["data"] is not None:
+                video_data = videos_jsonparser["data"]
+                if video_data["subtitle"]:
+                    title = video_data["title"].encode('utf-8') + ' - ' +  video_data["subtitle"].encode('utf-8')
+                else:
+                    title = video_data["title"].encode('utf-8')
+                img = url_root_image_rtbf + video_data["thumbnail"]["full_medium"]
+                url_video = video_data["urlHls"]
+                plot = ''
+                if video_data["description"]:
+                    plot = video_data["description"].encode('utf-8')
+                duration = 0
+                duration = video_data["durations"]
+                    
+                value_date = time.strftime('%d %m %Y', time.localtime(video_data["liveFrom"]))
+                date = str(value_date).split(' ')
+                day = date[0]
+                mounth = date[1]
+                year = date[2]
 
-    # if 'index_page' in params:
-    #     index_page = params.index_page
-    # else:
-    #     index_page = '1'
+                date = '.'.join((day, mounth, year))
+                aired = '-'.join((year, mounth, day))
+                    
+                info = {
+                    'video': {
+                        'title': title,
+                        'plot': plot,
+                        #'episode': episode_number,
+                        #'season': season_number,
+                        #'rating': note,
+                        'aired': aired,
+                        'date': date,
+                        'duration': duration,
+                        'year': year,
+                        'mediatype': 'tvshow'
+                    }
+                }
 
-    # if 'category_url' in params:
-    #     url = params.category_url
-    # else:
-    #     url = params.program_url
+                # Nouveau pour ajouter le menu pour télécharger la vidéo
+                context_menu = []
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                        action='download_video',
+                        url_video=url_video) + ')'
+                )
+                context_menu.append(download_video)
+                # Fin
 
-    # if 'category_title' in params:
-    #     title = params.category_title
-    # else:
-    #     title = params.program_title
+                videos.append({
+                    'label': title,
+                    'thumb': img,
+                    'fanart': img,
+                    'url': common.plugin.get_url(
+                        action='channel_entry',
+                        next='play_r',
+                        url_video=url_video
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                })
+        
+        videos.append({
+            'label': 'Jour précédent',
+            'url': common.plugin.get_url(
+                emission_title='Jour précédent',
+                action='channel_entry',
+                next='list_videos_1',
+                window_title='Jour précédent',
+                update_listing=True
+            )
+        })
+    
+    return common.plugin.create_listing(
+        videos,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_DATE
+        ),
+        content='tvshows',
+        update_listing='update_listing' in params)
 
-    # videos_len_bool = False
-    # if 'videos_len' in params:
-    #     videos_len = int(params.videos_len)
-    #     if videos_len != -1:
-    #         videos_len_bool = True
+def format_hours(date):
+    date_list = date.split('T')
+    date_hour = date_list[1][:5]
+    return date_hour
 
-    # file_path = utils.download_catalog(
-    #     url,
-    #     '%s_%s_%s.html' % (
-    #         params.channel_name,
-    #         title,
-    #         index_page))
-    # videos_html = open(file_path).read()
-    # videos_soup = bs(videos_html, 'html.parser')
+def format_day(date):
+    date_list = date.split('T')
+    date_dmy = date_list[0].replace('-','/') 
+    return date_dmy
+    
 
-    # videos_soup_2 = videos_soup.find_all(
-    #     'article',
-    #     attrs={'card': 'video'})
+#@common.plugin.cached(common.cache_time)
+def list_live(params):
+    
+    lives = []
+    
+    title = ''
+    subtitle = ' - '
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
+    
+    file_path = utils.download_catalog(
+        url_json_live % (get_partener_key(params)),
+        '%s_live.json' % (params.channel_name))
+    live_json = open(file_path).read()
+    live_jsonparser = json.loads(live_json)
+    
+    channel_live_in_process = False
+    
+    for live in live_jsonparser:
+        #check in live for this channel today + print start_date
+        if type(live["channel"]) is dict:
+            live_channel = live["channel"]["label"].encode('utf-8')
+            if channel_filter[params.channel_name] in live_channel:
+                start_date_value = format_hours(live["start_date"])
+                end_date_value = format_hours(live["end_date"])
+                day_value = format_day(live["start_date"])
+                title = live["title"] + ' - ' + day_value + ' - Periode : ' + start_date_value + ' - ' + end_date_value
+                url_live = ''
+                if live["url_streaming"]:
+                    url_live = live["url_streaming"]["url_hls"]
+                plot = live["description"].encode('utf-8')
+                img = live["images"]["illustration"]["16x9"]["1248x702"]
 
-    # if videos_len_bool is True:
-    #     videos_soup_2.insert(0, videos_soup.find_all(
-    #         'article',
-    #         attrs={'card': 'big-video'})[0])
+                info = {
+                    'video': {
+                        'title': title,
+                        'plot': plot,
+                        'duration': duration
+                    }
+                }
+                
+                lives.append({
+                    'label': title,
+                    'fanart': img,
+                    'thumb': img,
+                    'url' : common.plugin.get_url(
+                        action='channel_entry',
+                        next='play_l',
+                        url_live=url_live,
+                    ),
+                    'is_playable': True,
+                    'info': info
+                })
+        else:
+            #add exclusivity of Auvio
+            start_date_value = format_hours(live["start_date"])
+            end_date_value = format_hours(live["end_date"])
+            day_value = format_day(live["start_date"])
+            title = 'Exclu Auvio : ' + live["title"] + ' - ' + day_value + ' - Periode : ' + start_date_value + ' - ' + end_date_value
+            url_live = ''
+            if live["url_streaming"]:
+                url_live = live["url_streaming"]["url_hls"]
+            plot = live["description"].encode('utf-8')
+            img = live["images"]["illustration"]["16x9"]["1248x702"]
 
-    # count = 0
-
-    # for video_soup in videos_soup_2:
-    #     if videos_len_bool is True and count > videos_len:
-    #         break
-    #     count += 1
-    #     video_content = video_soup.find('div', class_='content')
-    #     video_title = video_content.find(
-    #         'a').get_text().encode('utf-8')
-    #     video_subtitle = video_content.find(
-    #         'h3').get_text().encode('utf-8')
-    #     video_url = video_soup.find(
-    #         'a')['href'].encode('utf-8').replace('//', 'http://')
-
-    #     video_img = video_soup.find(
-    #         'img')['src'].encode('utf-8').replace('//', 'http://')
-    #     video_img = utils.get_redirected_url(video_img)
-
-    #     try:
-    #         video_aired = video_soup.find('time')['datetime'].encode('utf-8')
-    #         video_aired = video_aired.split('T')[0]
-    #         video_aired_splited = video_aired.split('-')
-
-    #         day = video_aired_splited[2]
-    #         mounth = video_aired_splited[1]
-    #         year = video_aired_splited[0]
-    #         video_date = '.'.join((day, mounth, year))
-    #         # date : string (%d.%m.%Y / 01.01.2009)
-    #         # aired : string (2008-12-07)
-    #     except:
-    #         year = 0
-    #         video_aired = ''
-    #         video_date = ''
-
-    #     if video_subtitle:
-    #         video_title = video_title + ' - [I]' + video_subtitle + '[/I]'
-
-    #     info = {
-    #         'video': {
-    #             'title': video_title,
-    #             'aired': video_aired,
-    #             'date': video_date,
-    #             'year': int(year),
-    #             'mediatype': 'tvshow'
-    #         }
-    #     }
-
-    #     videos.append({
-    #         'label': video_title,
-    #         'thumb': video_img,
-    #         'url': common.plugin.get_url(
-    #             action='channel_entry',
-    #             next='play',
-    #             video_url=video_url
-    #         ),
-    #         'is_playable': True,
-    #         'info': info
-    #     })
-
-    # if videos_len_bool is False:
-    #     prev_next_soup = videos_soup.find(
-    #         'div',
-    #         attrs={'pagination': 'prev-next'})
-    #     if prev_next_soup.find('a', class_='next'):
-    #         url = prev_next_soup.find(
-    #             'a', class_='next')['href'].encode('utf-8').replace('//', '')
-    #         url = 'http://' + url
-    #         # More videos...
-    #         videos.append({
-    #             'label': common.addon.get_localized_string(30100),
-    #             'url': common.plugin.get_url(
-    #                 category_title=title,
-    #                 action='channel_entry',
-    #                 category_url=url,
-    #                 next=params.next,
-    #                 window_title=title,
-    #                 index_page=str(int(index_page) + 1),
-    #                 update_listing=True,
-    #                 previous_listing=str(videos)
-    #             )
-
-    #         })
-
-    # return common.plugin.create_listing(
-    #     videos,
-    #     sort_methods=(
-    #         common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-    #         common.sp.xbmcplugin.SORT_METHOD_DATE,
-    #         common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
-    #     ),
-    #     content='tvshows',
-    #     update_listing='update_listing' in params)
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    'duration': duration
+                }
+            }
+                
+            lives.append({
+                'label': title,
+                'fanart': img,
+                'thumb': img,
+                'url' : common.plugin.get_url(
+                    action='channel_entry',
+                    next='play_l',
+                    url_live=url_live,
+                ),
+                'is_playable': True,
+                'info': info
+            })
+    
+    if len(lives) == 0:
+        
+        title = 'No Live TV for %s Today' % params.channel_name.upper()
+        
+        info = {
+            'video': {
+                'title': title,
+                'plot': plot,
+                'duration': duration
+            }
+        }
+        
+        lives.append({
+            'label': title,
+            'url' : common.plugin.get_url(
+                action='channel_entry',
+                next='play_l',
+            ),
+            'is_playable': False,
+            'info': info
+        })
+    
+    return common.plugin.create_listing(
+        lives,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
 
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    return None
+    if params.next == 'play_l':
+        return params.url_live
+    elif params.next == 'play_r':
+        return params.url_video

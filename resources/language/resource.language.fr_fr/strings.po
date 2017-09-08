@@ -33,6 +33,10 @@ msgctxt "#30003"
 msgid "Download"
 msgstr "Téléchargement"
 
+msgctxt "#30004"
+msgid "Accounts"
+msgstr "Comptes"
+
 # Settings line separators (from 30010 to 30019)
 msgctxt "#30010"
 msgid "Hide main menu categories"
@@ -55,6 +59,21 @@ msgctxt "#30021"
 msgid "Belgian channels"
 msgstr "Chaînes belges"
 
+msgctxt "#30022"
+msgid "Japanese channels"
+msgstr "Chaînes japonaises"
+
+msgctxt "#30023"
+msgid "European channels"
+msgstr "Chaînes européennes"
+
+msgctxt "#30024"
+msgid "United Kingdom channels"
+msgstr "Chaînes anglaises"
+
+msgctxt "#30025"
+msgid "United States channels"
+msgstr "Chaînes américaines"
 
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
@@ -85,13 +104,29 @@ msgstr "Pour réactiver les éléments masqués rendez-vous dans les réglages d
 
 
 # Settings quality and content (from 30070 to 30099)
+msgctxt "#30070"
+msgid "Video quality"
+msgstr "Qualité vidéo"
+
+msgctxt "#30071"
+msgid "Contents"
+msgstr "Contenus"
+
 msgctxt "#30080"
-msgid "Arte: Choose Channel (FR|DE)"
-msgstr "Arte: Choix de la chaine (FR|DE)"
+msgid "Arte: Choose Channel"
+msgstr "Arte : Choix de la chaîne"
+
+msgctxt "#30081"
+msgid "France24: Choose Channel"
+msgstr "France24 : Choix de la chaîne"
+
+msgctxt "#30082"
+msgid "Euronews: Choose Channel"
+msgstr "Euronews : Choix de la chaîne"
 
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
-msgstr "Qualité Video (BEST|DEFAULT|DIALOG)"
+msgstr "Qualité Vidéo (BEST|DEFAULT|DIALOG)"
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"

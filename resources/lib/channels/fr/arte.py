@@ -37,26 +37,23 @@ _ = common.addon.initialize_gettext()
 
 url_replay = 'https://www.arte.tv/papi/tvguide/videos/' \
              'ARTE_PLUS_SEVEN/%s.json?includeLongRights=true'
+# Langue, ...
 
-url_live_arte = 'http://artelive-lh.akamaihd.net/i/%s/master.m3u8'
-
-live_fr = 'artelive_fr@344805'
-live_de = 'artelive_de@393591'
-# Valid languages: F or D
-
+url_live_arte = 'https://api.arte.tv/api/player/v1/livestream/%s'
+# Langue, ...
 
 def channel_entry(params):
 
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
-        return get_video_url(params)	
+        return get_video_url(params)        
 
 #@common.plugin.cached(common.cache_time)
 def mode_replay_live(params):
@@ -64,23 +61,23 @@ def mode_replay_live(params):
     
     # Add Replay 
     modes.append({
-	'label' : 'Replay',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='list_shows_1',
-	    category='Replay',
-	    window_title='Replay'
-	),
+        'label' : 'Replay',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
     })
     
     modes.append({
-	'label' : 'Live TV',
-	'url': common.plugin.get_url(
-	    action='channel_entry',
-	    next='live_cat',
-	    category='Live',
-	    window_title='Live'
-	),
+        'label' : 'Live TV',
+        'url': common.plugin.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
     })
     
     return common.plugin.create_listing(
@@ -249,26 +246,55 @@ def list_live(params):
     desired_language = common.plugin.get_setting(
         params.channel_id + '.language')
     
+    if desired_language == 'DE':
+        desired_language = 'de'
+    else:
+        desired_language = 'fr'
+    
     url_live = ''
     
-    if desired_language == 'D':
-	url_live = url_live_arte % (live_de)
-    else:
-	url_live = url_live_arte % (live_fr)
+    file_path = utils.download_catalog(
+        url_live_arte % desired_language,
+        '%s_%s_live.json' % (params.channel_name, desired_language)
+    )
+    file_live = open(file_path).read()
+    json_parser = json.loads(file_live)
+    
+    title = json_parser["videoJsonPlayer"]["VTI"].encode('utf-8')
+    img = json_parser["videoJsonPlayer"]["VTU"]["IUR"].encode('utf-8')
+    plot = ''
+    if 'V7T' in json_parser["videoJsonPlayer"]:
+        plot = json_parser["videoJsonPlayer"]["V7T"].encode('utf-8')
+    elif 'VDE' in json_parser["videoJsonPlayer"]:
+        plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
+    duration = 0
+    duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
+    url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
+    
+    info = {
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
+    }
     
     lives.append({
-	'label': 'ARTE Live',
-	'url' : common.plugin.get_url(
-	    action='channel_entry',
-	    next='play_l',
-	    url=url_live,
-	),
-	'is_playable': True
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.plugin.get_url(
+            action='channel_entry',
+            next='play_l',
+            url=url_live,
+        ),
+        'is_playable': True,
+        'info': info
     })
         
     return common.plugin.create_listing(
-	lives,
-	sort_methods=(
+        lives,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
@@ -278,36 +304,36 @@ def list_live(params):
 def get_video_url(params):
     
     if params.next == 'play_r' or params.next == 'download_video':
-	file_medias = utils.get_webcontent(
-	    params.url)
-	json_parser = json.loads(file_medias)
+        file_medias = utils.get_webcontent(
+            params.url)
+        json_parser = json.loads(file_medias)
 
-	url_selected = ''    
-	video_streams = json_parser['videoJsonPlayer']['VSR']
-	
-	desired_quality = common.plugin.get_setting('quality')
+        url_selected = ''    
+        video_streams = json_parser['videoJsonPlayer']['VSR']
+        
+        desired_quality = common.plugin.get_setting('quality')
 
-	if desired_quality == "DIALOG":
-	    all_datas_videos = []
+        if desired_quality == "DIALOG":
+            all_datas_videos = []
 
-	    for video in video_streams:
-		if not video.find("HLS"):
-			datas = json_parser['videoJsonPlayer']['VSR'][video]
-			new_list_item = xbmcgui.ListItem()
-			new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
-			new_list_item.setPath(datas['url'])
-			all_datas_videos.append(new_list_item)
+            for video in video_streams:
+                if not video.find("HLS"):
+                        datas = json_parser['videoJsonPlayer']['VSR'][video]
+                        new_list_item = xbmcgui.ListItem()
+                        new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
+                        new_list_item.setPath(datas['url'])
+                        all_datas_videos.append(new_list_item)
 
-	    seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+            seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
-	    url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
-	
-	elif desired_quality == "BEST":
-	    url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
-	else:
-	    url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
+            url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
+        
+        elif desired_quality == "BEST":
+            url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
+        else:
+            url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
 
-	return url_selected
+        return url_selected
     elif params.next == 'play_l':
-	return params.url
+        return params.url
 

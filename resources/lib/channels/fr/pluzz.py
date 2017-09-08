@@ -40,8 +40,8 @@ channel_catalog = 'http://pluzz.webservices.francetelevisions.fr/' \
                   'pluzz/liste/type/replay/nb/10000/chaine/%s'
 
 channel_live = 'http://pluzz.webservices.francetelevisions.fr/' \
-	       'pluzz/liste/type/live/nb/10000/chaine/%s'
-	       
+               'pluzz/liste/type/live/nb/10000/chaine/%s'
+               
 # channel_catalog = 'https://pluzz.webservices.francetelevisions.fr/' \
 #                   'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s'
 # page inc: 20
@@ -125,13 +125,13 @@ categories = {
 
 def channel_entry(params):
     if 'mode_replay_live' in params.next:
-	return mode_replay_live(params)
+        return mode_replay_live(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-	return list_live(params)
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     elif 'search' in params.next:
@@ -151,27 +151,27 @@ def mode_replay_live(params):
     
     # Add Replay 
     if params.channel_name != 'franceinfo':
-	modes.append({
-	    'label' : 'Replay',
-	    'url': common.plugin.get_url(
-		action='channel_entry',
-		next='list_shows_1',
-		category='Replay',
-		window_title='Replay'
-	    ),
-	})
+        modes.append({
+            'label' : 'Replay',
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                next='list_shows_1',
+                category='%s Replay' % params.channel_name.upper(),
+                window_title='%s Replay' % params.channel_name.upper()
+            ),
+        })
     
     # Add Live 
     if params.channel_name != 'la_1ere':
-	modes.append({
-	    'label' : 'Live TV',
-	    'url': common.plugin.get_url(
-		action='channel_entry',
-		next='live_cat',
-		category='Live',
-		window_title='Live'
-	    ),
-	})
+        modes.append({
+            'label' : 'Live TV',
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                next='live_cat',
+                category='%s Live TV' % params.channel_name.upper(),
+                window_title='%s Live TV' % params.channel_name.upper()
+            ),
+        })
     
     return common.plugin.create_listing(
         modes,
@@ -198,12 +198,12 @@ def list_shows(params):
                        'la_1ere_mayotte%2C' \
                        'la_1ere_nouvellecaledonie%2C' \
                        'la_1ere_guadeloupe%2C' \
-		       'la_1ere_wallisetfutuna%2C' \
+                       'la_1ere_wallisetfutuna%2C' \
                        'la_1ere_saintpierreetmiquelon'
 
     # Level 0
     if params.next == 'list_shows_1':
-		
+                
         url_json = channel_catalog % (real_channel)
         file_path = utils.download_catalog(
             url_json,
@@ -613,114 +613,119 @@ def list_live(params):
     genre = ''
     
     if real_channel != 'franceinfo':
-	url_json_live = channel_live % (real_channel)
-	file_path_live = utils.download_catalog(
-		url_json_live,
-		'live_%s.json' % (
-		    params.channel_name))
-	file_prgm_live = open(file_path_live).read()
-	json_parser_live = json.loads(file_prgm_live)
-	emissions_live = json_parser_live['reponse']['emissions']
-	
-	for emission in emissions_live:
-	    id_programme = emission['id_programme'].encode('utf-8')
-	    if id_programme == '':
-		id_programme = emission['id_emission'].encode('utf-8')
-	    id_diffusion = emission['id_diffusion']
-	    chaine_id = emission['chaine_id'].encode('utf-8')
+        url_json_live = channel_live % (real_channel)
+        file_path_live = utils.download_catalog(
+                url_json_live,
+                'live_%s.json' % (
+                    params.channel_name))
+        file_prgm_live = open(file_path_live).read()
+        json_parser_live = json.loads(file_prgm_live)
+        emissions_live = json_parser_live['reponse']['emissions']
+        
+        for emission in emissions_live:
+            id_programme = emission['id_programme'].encode('utf-8')
+            if id_programme == '':
+                id_programme = emission['id_emission'].encode('utf-8')
+            id_diffusion = emission['id_diffusion']
+            chaine_id = emission['chaine_id'].encode('utf-8')
+            
+            start_time_emission = 'Debut: ' + emission['date_diffusion'].split('T')[1].encode('utf-8')
 
-	    if emission['accroche']:
-		plot = emission['accroche'].encode('utf-8')
-	    elif emission['accroche_programme']:
-		plot = emission['accroche_programme'].encode('utf-8')
-	    if emission['date_diffusion']:
-		date = emission['date_diffusion']
-		date = date.encode('utf-8')
-	    if emission['duree']:
-		duration = int(emission['duree'])
-	    if emission['titre']:
-		title = emission['titre'].encode('utf-8')
+            if emission['accroche']:
+                plot = start_time_emission + '\n ' + emission['accroche'].encode('utf-8')
+            elif emission['accroche_programme']:
+                plot = start_time_emission + '\n ' + emission['accroche_programme'].encode('utf-8')
+            if emission['date_diffusion']:
+                date = emission['date_diffusion']
+                date = date.encode('utf-8')
+            if emission['duree']:
+                duration = int(emission['duree']) * 60
+            if emission['titre']:
+                title = emission['titre'].encode('utf-8')
 
-	    if emission['genre'] != '':
-		genre = \
-		    emission['genre'].encode('utf-8')
+            if emission['genre'] != '':
+                genre = \
+                    emission['genre'].encode('utf-8')
 
-	    episode = 0
-	    if 'episode' in emission:
-		episode = emission['episode']
+            episode = 0
+            if 'episode' in emission:
+                episode = emission['episode']
 
-	    season = 0
-	    if 'saison' in emission:
-		season = emission['saison']
+            season = 0
+            if 'saison' in emission:
+                season = emission['saison']
 
-	    cast = []
-	    director = ''
-	    if emission['realisateurs'] in emission:
-		director = emission['realisateurs'].encode('utf-8')
-	    if emission['acteurs'] in emission:
-		cast.append(emission['acteurs'].encode('utf-8'))
+            cast = []
+            director = ''
+            if emission['realisateurs'] in emission:
+                director = emission['realisateurs'].encode('utf-8')
+            if emission['acteurs'] in emission:
+                cast.append(emission['acteurs'].encode('utf-8'))
 
-	    year = int(date[:4])
-	    month = int(date[5:7])
-	    day = int(date[8:10])
-	    aired = '-'.join((str(year), str(month), str(day)))
+            year = int(date[:4])
+            month = int(date[5:7])
+            day = int(date[8:10])
+            aired = '-'.join((str(year), str(month), str(day)))
 
 
-	    image = url_img % (emission['image_large'])
+            image = url_img % (emission['image_large'])
 
-	    info = {
-		'video': {
-		    'title': title,
-		    'plot': plot,
-		    'aired': aired,
-		    'date': date,
-		    'duration': duration,
-		    #year': year,
-		    'genre': genre,
-		    'mediatype': 'tvshow',
-		    'season': season,
-		    'episode': episode,
-		    'cast': cast,
-		    'director': director
-		}
-	    }
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    'aired': aired,
+                    'date': date,
+                    'duration': duration,
+                    #year': year,
+                    'genre': genre,
+                    'mediatype': 'tvshow',
+                    'season': season,
+                    'episode': episode,
+                    'cast': cast,
+                    'director': director
+                }
+            }
 
-	    lives.append({
-		'label': title,
-		'fanart': image,
-		'thumb': image,
-		'url': common.plugin.get_url(
-		    action='channel_entry',
-		    next='play_l',
-		    id_diffusion=id_diffusion
-		),
-		'is_playable': True,
-		'info': info
-	    })
+            lives.append({
+                'label': title,
+                'fanart': image,
+                'thumb': image,
+                'url': common.plugin.get_url(
+                    action='channel_entry',
+                    next='play_l',
+                    id_diffusion=id_diffusion
+                ),
+                'is_playable': True,
+                'info': info
+            })
     else:
-	info = {
-		'video': {
-		    'title': title,
-		    'plot': plot,
-		    'date': date,
-		    'duration': duration
-		}
-	    }
+        
+        title = '%s Live' % params.channel_name 
+        
+        info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    'date': date,
+                    'duration': duration
+                }
+            }
 
-	lives.append({
-	    'label': 'Open Stream',
-	    'url': common.plugin.get_url(
-		action='channel_entry',
-		next='play_l'
-	    ),
-	    'is_playable': True,
-	    'info': info
-	})
-	
+        lives.append({
+            'label': title,
+            'url': common.plugin.get_url(
+                action='channel_entry',
+                next='play_l'
+            ),
+            'is_playable': True,
+            'info': info
+        })
+        
     
     return common.plugin.create_listing(
-	lives,
-	sort_methods=(
+        lives,
+        sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
@@ -732,54 +737,54 @@ def get_video_url(params):
     if params.next == 'play_r' or params.next == 'download_video':
         file_prgm = utils.get_webcontent(show_info % (params.id_diffusion))
         json_parser = json.loads(file_prgm)
-	
-	desired_quality = common.plugin.get_setting('quality')
         
-	url_selected = ''
-	
-	if desired_quality == "DIALOG":
-	    all_datas_videos = []
-	    
-	    for video in json_parser['videos']:
-		if video['format'] == 'hls_v5_os' or video['format'] == 'm3u8-download':
-		    new_list_item = xbmcgui.ListItem()
-		    if video['format'] == 'hls_v5_os':
-			new_list_item.setLabel("HD")
-		    else:
-			new_list_item.setLabel("SD")
-		    new_list_item.setPath(video['url'])
-		    all_datas_videos.append(new_list_item)
-		    
-	    seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+        desired_quality = common.plugin.get_setting('quality')
+        
+        url_selected = ''
+        
+        if desired_quality == "DIALOG":
+            all_datas_videos = []
+            
+            for video in json_parser['videos']:
+                if video['format'] == 'hls_v5_os' or video['format'] == 'm3u8-download':
+                    new_list_item = xbmcgui.ListItem()
+                    if video['format'] == 'hls_v5_os':
+                        new_list_item.setLabel("HD")
+                    else:
+                        new_list_item.setLabel("SD")
+                    new_list_item.setPath(video['url'])
+                    all_datas_videos.append(new_list_item)
+                    
+            seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
-	    url_selected = all_datas_videos[seleted_item].getPath()
+            url_selected = all_datas_videos[seleted_item].getPath()
 
-	elif desired_quality == "BEST":
-	    for video in json_parser['videos']:
-		if video['format'] == 'hls_v5_os':
-		    url_selected = video['url']
-	else:
-	    for video in json_parser['videos']:
-		if video['format'] == 'm3u8-download':
-		    url_selected = video['url']
-		
-	return url_selected
+        elif desired_quality == "BEST":
+            for video in json_parser['videos']:
+                if video['format'] == 'hls_v5_os':
+                    url_selected = video['url']
+        else:
+            for video in json_parser['videos']:
+                if video['format'] == 'm3u8-download':
+                    url_selected = video['url']
+                
+        return url_selected
     
     elif params.next == 'play_l':
-	
-	file_prgm = utils.get_webcontent(live_info % (params.channel_name))
+        
+        file_prgm = utils.get_webcontent(live_info % (params.channel_name))
         json_parser = json.loads(file_prgm)
-	
-	url_selected = ''
-	
-	for video in json_parser['videos']:
-	    if video['format'] == 'hls_v5_os':
-		url_protected = video['url']
-	
-	file_prgm2 = utils.get_webcontent(hdfauth_url % (url_protected))
-	json_parser2 = json.loads(file_prgm2)
-	
-	return json_parser2['url']
+        
+        url_selected = ''
+        
+        for video in json_parser['videos']:
+            if video['format'] == 'hls_v5_os':
+                url_protected = video['url']
+        
+        file_prgm2 = utils.get_webcontent(hdfauth_url % (url_protected))
+        json_parser2 = json.loads(file_prgm2)
+        
+        return json_parser2['url']
 
 
 def search(params):
