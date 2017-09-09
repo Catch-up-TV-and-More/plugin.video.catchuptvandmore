@@ -169,6 +169,10 @@ msgctxt "#30109"
 msgid "Live TV"
 msgstr "TV en direct"
 
+msgctxt "#30110"
+msgid "Choose video quality"
+msgstr "Choisir la qualité vidéo"
+
 # Download (from 30200 to 30240)
 
 msgctxt "#30200"

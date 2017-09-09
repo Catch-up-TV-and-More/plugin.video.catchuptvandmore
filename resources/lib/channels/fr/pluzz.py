@@ -27,7 +27,6 @@
 
 import json
 import ast
-import xbmcgui
 from resources.lib import utils
 from resources.lib import common
 
@@ -100,11 +99,11 @@ CATEGORIES = {
     'Documentaire': 'https://pluzz.webservices.francetelevisions.fr/'
                     'mobile/liste/type/replay/rubrique/documentaire/nb/20/debut/%s',
     'Série & Fiction': 'https://pluzz.webservices.francetelevisions.fr/'
-                        'mobile/liste/type/replay/rubrique/seriefiction/nb/20/debut/%s',
+                       'mobile/liste/type/replay/rubrique/seriefiction/nb/20/debut/%s',
     'Magazine': 'https://pluzz.webservices.francetelevisions.fr/'
                 'mobile/liste/type/replay/rubrique/magazine/nb/20/debut/%s',
     'Culture': 'https://pluzz.webservices.francetelevisions.fr/'
-                'mobile/liste/type/replay/rubrique/culture/nb/20/debut/%s',
+               'mobile/liste/type/replay/rubrique/culture/nb/20/debut/%s',
     'Jeunesse': 'https://pluzz.webservices.francetelevisions.fr/'
                 'mobile/liste/type/replay/rubrique/jeunesse/nb/20/debut/%s',
     'Divertissement': 'https://pluzz.webservices.francetelevisions.fr/'
@@ -151,6 +150,7 @@ def change_to_nicer_name(original_name):
 
 #@common.plugin.cached(common.cache_time)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -187,6 +187,7 @@ def root(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
+    """Build categories listing"""
     shows = []
     if 'previous_listing' in params:
         shows = ast.literal_eval(params['previous_listing'])
@@ -395,6 +396,7 @@ def list_shows(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
     if 'previous_listing' in params:
         videos = ast.literal_eval(params['previous_listing'])
@@ -606,6 +608,7 @@ def list_videos(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
+    """Build live listing"""
     lives = []
 
     real_channel = params.channel_name
@@ -619,9 +622,9 @@ def list_live(params):
     if real_channel != 'franceinfo':
         url_json_live = CHANNEL_LIVE % (real_channel)
         file_path_live = utils.download_catalog(
-                url_json_live,
-                'live_%s.json' % (
-                    params.channel_name))
+            url_json_live,
+            'live_%s.json' % (
+                params.channel_name))
         file_prgm_live = open(file_path_live).read()
         json_parser_live = json.loads(file_prgm_live)
         emissions_live = json_parser_live['reponse']['emissions']
@@ -633,7 +636,7 @@ def list_live(params):
             id_diffusion = emission['id_diffusion']
             chaine_id = emission['chaine_id'].encode('utf-8')
 
-            start_time_emission = 'Debut: ' + emission['date_diffusion'].split('T')[1].encode('utf-8')
+            start_time_emission = 'Début : ' + emission['date_diffusion'].split('T')[1].encode('utf-8')
 
             if emission['accroche']:
                 plot = start_time_emission + '\n ' + emission['accroche'].encode('utf-8')
@@ -708,13 +711,13 @@ def list_live(params):
         title = '%s Live' % params.channel_name
 
         info = {
-                'video': {
-                    'title': title,
-                    'plot': plot,
-                    'date': date,
-                    'duration': duration
-                }
+            'video': {
+                'title': title,
+                'plot': plot,
+                'date': date,
+                'duration': duration
             }
+        }
 
         lives.append({
             'label': title,
@@ -737,6 +740,7 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
+    """Get video URL and start video player"""
 
     if params.next == 'play_r' or params.next == 'download_video':
         file_prgm = utils.get_webcontent(SHOW_INFO % (params.id_diffusion))
@@ -751,7 +755,7 @@ def get_video_url(params):
 
             for video in json_parser['videos']:
                 if video['format'] == 'hls_v5_os' or video['format'] == 'm3u8-download':
-                    new_list_item = xbmcgui.ListItem()
+                    new_list_item = common.sp.xbmcgui.ListItem()
                     if video['format'] == 'hls_v5_os':
                         new_list_item.setLabel("HD")
                     else:
@@ -759,7 +763,12 @@ def get_video_url(params):
                     new_list_item.setPath(video['url'])
                     all_datas_videos.append(new_list_item)
 
-            seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+            seleted_item = common.sp.xbmcgui.Dialog().select(
+                _('Choose video quality'),
+                all_datas_videos)
+
+            if seleted_item == -1:
+                return None
 
             url_selected = all_datas_videos[seleted_item].getPath()
 
@@ -792,6 +801,7 @@ def get_video_url(params):
 
 
 def search(params):
+    """Show keyboard to search a program"""
     keyboard = common.sp.xbmc.Keyboard(
         default='',
         title='',
