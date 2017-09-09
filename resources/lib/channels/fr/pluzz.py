@@ -138,10 +138,12 @@ def channel_entry(params):
         return get_video_url(params)
     elif 'search' in params.next:
         return search(params)
+    return None
 
 
 #@common.plugin.cached(common.cache_time)
 def change_to_nicer_name(original_name):
+    """Convert id name to label name"""
     if original_name in CATEGORIES_DISPLAY:
         return CATEGORIES_DISPLAY[original_name]
     return original_name
