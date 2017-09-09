@@ -38,45 +38,46 @@ _ = common.addon.initialize_gettext()
 # Url to get channel's categories
 # e.g. Info, Divertissement, Séries, ...
 # We get an id by category
-url_root = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
+URL_ROOT = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
            'm6group_web/services/%s/folders?limit=999&offset=0'
 
 # Url to get catgory's programs
 # e.g. Le meilleur patissier, La france à un incroyable talent, ...
 # We get an id by program
-url_category = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
+URL_CATEGORY = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
                'm6group_web/services/6play/folders/%s/programs' \
                '?limit=999&offset=0&csa=9&with=parentcontext'
 
 # Url to get program's subfolders
 # e.g. Saison 5, Les meilleurs moments, les recettes pas à pas, ...
 # We get an id by subfolder
-url_subcategory = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
+URL_SUBCATEGORY = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
                   'm6group_web/services/6play/programs/%s' \
                   '?with=links,subcats,rights'
 
 
 # Url to get shows list
 # e.g. Episode 1, Episode 2, ...
-url_videos = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
+URL_VIDEOS = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
              'm6group_web/services/6play/programs/%s/videos?' \
              'csa=6&with=clips,freemiumpacks&type=vi,vc,playlist&limit=999'\
              '&offset=0&subcat=%s&sort=subcat'
 
-url_videos2 = 'https://pc.middleware.6play.fr/6play/v2/platforms/' \
+URL_VIDEOS2 = 'https://pc.middleware.6play.fr/6play/v2/platforms/' \
               'm6group_web/services/6play/programs/%s/videos?' \
               'csa=6&with=clips,freemiumpacks&type=vi&limit=999&offset=0'
 
 
-url_json_video = 'https://pc.middleware.6play.fr/6play/v2/platforms/' \
+URL_JSON_VIDEO = 'https://pc.middleware.6play.fr/6play/v2/platforms/' \
                  'm6group_web/services/6play/videos/%s'\
                  '?csa=9&with=clips,freemiumpacks'
 
 
-url_img = 'https://images.6play.fr/v1/images/%s/raw'
+URL_IMG = 'https://images.6play.fr/v1/images/%s/raw'
 
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -87,10 +88,12 @@ def channel_entry(params):
         return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+    return None
 
 
 #@common.plugin.cached(common.cache_time)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -114,6 +117,7 @@ def root(params):
 
 @common.plugin.cached(common.cache_time)
 def list_shows(params):
+    """Build categories listing"""
     shows = []
 
     if params.next == 'list_shows_1':
@@ -122,9 +126,9 @@ def list_shows(params):
         if params.channel_name == 'stories' or params.channel_name == 'bruce' \
            or params.channel_name == 'crazy_kitchen' or params.channel_name == 'home' \
            or params.channel_name == 'styles' or params.channel_name == 'comedy':
-            url_root_site = url_root % params.channel_name
+            url_root_site = URL_ROOT % params.channel_name
         else:
-            url_root_site = url_root % (params.channel_name + 'replay')
+            url_root_site = URL_ROOT % (params.channel_name + 'replay')
 
         file_path = utils.download_catalog(
             url_root_site,
@@ -165,7 +169,7 @@ def list_shows(params):
 
     elif params.next == 'list_shows_2':
         file_prgm = utils.get_webcontent(
-            url_category % (params.category_id),
+            URL_CATEGORY % (params.category_id),
             random_ua=True)
         json_parser = json.loads(file_prgm)
 
@@ -179,10 +183,10 @@ def list_shows(params):
             for img in program_imgs:
                 if img['role'].encode('utf-8') == 'vignette':
                     external_key = img['external_key'].encode('utf-8')
-                    program_img = url_img % (external_key)
+                    program_img = URL_IMG % (external_key)
                 elif img['role'].encode('utf-8') == 'carousel':
                     external_key = img['external_key'].encode('utf-8')
-                    program_fanart = url_img % (external_key)
+                    program_fanart = URL_IMG % (external_key)
 
             info = {
                 'video': {
@@ -217,7 +221,7 @@ def list_shows(params):
 
     elif params.next == 'list_shows_3':
         program_json = utils.get_webcontent(
-            url_subcategory % (params.program_id),
+            URL_SUBCATEGORY % (params.program_id),
             random_ua=True)
 
         json_parser = json.loads(program_json)
@@ -287,12 +291,13 @@ def list_shows(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     if params.sub_category_id == 'null':
-        url = url_videos2 % params.program_id
+        url = URL_VIDEOS2 % params.program_id
     else:
-        url = url_videos % (params.program_id, params.sub_category_id)
+        url = URL_VIDEOS % (params.program_id, params.sub_category_id)
     program_json = utils.get_webcontent(
         url,
         random_ua=True)
@@ -327,7 +332,7 @@ def list_videos(params):
         for img in program_imgs:
                 if img['role'].encode('utf-8') == 'vignette':
                     external_key = img['external_key'].encode('utf-8')
-                    program_img = url_img % (external_key)
+                    program_img = URL_IMG % (external_key)
 
         info = {
             'video': {
@@ -341,7 +346,6 @@ def list_videos(params):
             }
         }
 
-        # Nouveau pour ajouter le menu pour télécharger la vidéo
         context_menu = []
         download_video = (
             _('Download'),
@@ -350,7 +354,6 @@ def list_videos(params):
                 video_id=video_id) + ')'
         )
         context_menu.append(download_video)
-        # Fin
 
         videos.append({
             'label': title,
@@ -362,7 +365,7 @@ def list_videos(params):
             ),
             'is_playable': True,
             'info': info,
-            'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+            'context_menu': context_menu
         })
 
     return common.plugin.create_listing(
@@ -378,8 +381,9 @@ def list_videos(params):
 
 @common.plugin.cached(common.cache_time)
 def get_video_url(params):
+    """Get video URL and start video player"""
     video_json = utils.get_webcontent(
-        url_json_video % (params.video_id),
+        URL_JSON_VIDEO % (params.video_id),
         random_ua=True)
     json_parser = json.loads(video_json)
 
