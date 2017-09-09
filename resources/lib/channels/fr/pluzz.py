@@ -168,7 +168,7 @@ def root(params):
     # Add Live
     if params.channel_name != 'la_1ere':
         modes.append({
-            'label' : 'Live TV',
+            'label' : _('Live TV'),
             'url': common.plugin.get_url(
                 action='channel_entry',
                 next='live_cat',

@@ -21,13 +21,14 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from resources.lib import utils
-from resources.lib import common
 import re
 import json
 import ast
+from resources.lib import utils
+from resources.lib import common
 
-# TODO
+
+# TO DO
 # Replay (More Refactoring todo)
 # Find API for all channel (JSON) get Replay/Live ?
 # Get URL Live FROM SITE
@@ -35,49 +36,50 @@ import ast
 
 # URL :
 
-url_root_site = 'http://www.%s.fr/'
+URL_ROOT_SITE = 'http://www.%s.fr/'
 # Channel
 
 # Live :
-url_live_cplus = 'http://www.canalplus.fr/pid3580-live-tv-clair.html'
-url_live_c8 = 'http://www.c8.fr/pid5323-c8-live.html'
-url_live_cstar = 'http://www.cstar.fr/pid5322-cstar-live.html'
-url_live_cnews = 'http://www.cnews.fr/direct'
+URL_LIVE_CPLUS = 'http://www.canalplus.fr/pid3580-live-tv-clair.html'
+URL_LIVE_C8 = 'http://www.c8.fr/pid5323-c8-live.html'
+URL_LIVE_CSTAR = 'http://www.cstar.fr/pid5322-cstar-live.html'
+URL_LIVE_CNEWS = 'http://www.cnews.fr/direct'
 
 # Replay Cplus :
-url_replay_cplus_auth = 'http://service.mycanal.fr/authenticate.json/iphone/' \
+URL_REPLAY_CPLUS_AUTH = 'http://service.mycanal.fr/authenticate.json/iphone/' \
                         '1.6?highResolution=1&isActivated=0&isAuthenticated=0&paired=0'
 
-url_replay_cplus_categories = 'http://service.mycanal.fr/page/%s/4578.json?' \
+URL_REPLAY_CPLUS_CATEGORIES = 'http://service.mycanal.fr/page/%s/4578.json?' \
                               'cache=60000&nbContent=96'
 # Token
 
 # Replay C8 & CStar
-url_replay_c8_cstar_root = 'http://lab.canal-plus.pro/web/app_prod.php/api/replay/%s'
+URL_REPLAY_C8__CSTAR_ROOT = 'http://lab.canal-plus.pro/web/app_prod.php/api/replay/%s'
 # Channel id :
 # c8 : 1
 # cstar : 2
-url_replay_c8_cstar_shows = 'http://lab.canal-plus.pro/web/app_prod.php/api/pfv/list/%s/%s'
+URL_REPLAY_C8__CSTAR_SHOWS = 'http://lab.canal-plus.pro/web/app_prod.php/api/pfv/list/%s/%s'
 # channel_id/show_id
-url_replay_c8_cstar_video = 'http://lab.canal-plus.pro/web/app_prod.php/api/pfv/video/%s/%s'
+URL_REPLAY_C8__CSTAR_VIDEOS = 'http://lab.canal-plus.pro/web/app_prod.php/api/pfv/video/%s/%s'
 # channel_id/video_id
 
 # Replay CNews
-url_replay_cnews = 'http://service.itele.fr/iphone/categorie_news?query='
-categories_cnews = {
+URL_REPLAY_CNEWS = 'http://service.itele.fr/iphone/categorie_news?query='
+
+CATEGORIES_CNEWS = {
     'http://service.itele.fr/iphone/topnews': 'La Une',
-    url_replay_cnews + 'FRANCE': 'France',
-    url_replay_cnews + 'MONDE': 'Monde',
-    url_replay_cnews + 'POLITIQUE': 'Politique',
-    url_replay_cnews + 'JUSTICE': 'Justice',
-    url_replay_cnews + 'ECONOMIE': 'Économie',
-    url_replay_cnews + 'SPORT': 'Sport',
-    url_replay_cnews + 'CULTURE': 'Culture',
-    url_replay_cnews + 'INSOLITE': 'Insolite'
+    URL_REPLAY_CNEWS + 'FRANCE': 'France',
+    URL_REPLAY_CNEWS + 'MONDE': 'Monde',
+    URL_REPLAY_CNEWS + 'POLITIQUE': 'Politique',
+    URL_REPLAY_CNEWS + 'JUSTICE': 'Justice',
+    URL_REPLAY_CNEWS + 'ECONOMIE': 'Économie',
+    URL_REPLAY_CNEWS + 'SPORT': 'Sport',
+    URL_REPLAY_CNEWS + 'CULTURE': 'Culture',
+    URL_REPLAY_CNEWS + 'INSOLITE': 'Insolite'
 }
 
 # Replay/Live => Parameters Channel, VideoId
-url_info_content = 'http://service.canal-plus.com/video/rest/getvideosliees/%s/%s?format=json'
+URL_INFO_CONTENT = 'http://service.canal-plus.com/video/rest/getvideosliees/%s/%s?format=json'
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -85,6 +87,7 @@ url_info_content = 'http://service.canal-plus.com/video/rest/getvideosliees/%s/%
 _ = common.addon.initialize_gettext()
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -95,14 +98,17 @@ def channel_entry(params):
         return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+    return None
 
 def get_token():
-    token_json = utils.get_webcontent(url_replay_cplus_auth)
+    """Get session token"""
+    token_json = utils.get_webcontent(URL_REPLAY_CPLUS_AUTH)
     token_json = json.loads(token_json)
     token = token_json['token']
     return token
 
 def get_channel_id(params):
+    """Get channel id by name"""
     if params.channel_name == 'c8':
         return '1'
     elif params.channel_name == 'cstar':
@@ -112,6 +118,7 @@ def get_channel_id(params):
 
 #@common.plugin.cached(common.cache_time)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -127,7 +134,7 @@ def root(params):
 
     # Add Live
     modes.append({
-        'label' : 'Live TV',
+        'label' : _('Live TV'),
         'url': common.plugin.get_url(
             action='channel_entry',
             next='live_cat',
@@ -146,12 +153,12 @@ def root(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
-    # Create categories list
+    """Create categories list"""
     shows = []
 
     ################### BEGIN CNEWS ###########################
     if params.next == 'list_shows_1' and params.channel_name == 'cnews':
-        for category_url, category_title in categories_cnews.iteritems():
+        for category_url, category_title in CATEGORIES_CNEWS.iteritems():
             shows.append({
                 'label': category_title,
                 'url': common.plugin.get_url(
@@ -210,9 +217,10 @@ def list_shows(params):
     ################### END CNEWS ###########################
 
     ################### BEGIN C8 and CStar ##################
-    elif params.next == 'list_shows_1' and (params.channel_name == 'c8' or params.channel_name == 'cstar'):
+    elif params.next == 'list_shows_1' and (params.channel_name == 'c8' or \
+            params.channel_name == 'cstar'):
         file_path = utils.download_catalog(
-            url_replay_c8_cstar_root % get_channel_id(params),
+            URL_REPLAY_C8__CSTAR_ROOT % get_channel_id(params),
             '%s.json' % (params.channel_name))
         file_categories = open(file_path).read()
         json_categories = json.loads(file_categories)
@@ -232,10 +240,11 @@ def list_shows(params):
                 )
             })
 
-    elif params.next == 'list_shows_2' and (params.channel_name == 'c8' or params.channel_name == 'cstar'):
+    elif params.next == 'list_shows_2' and (params.channel_name == 'c8' or \
+            params.channel_name == 'cstar'):
         # Create category's programs list
         file_path = utils.download_catalog(
-            url_replay_c8_cstar_root % get_channel_id(params),
+            URL_REPLAY_C8__CSTAR_ROOT % get_channel_id(params),
             '%s_%s.json' % (params.channel_name, params.slug))
         file_categories = open(file_path).read()
         json_categories = json.loads(file_categories)
@@ -265,7 +274,7 @@ def list_shows(params):
     ################### BEGIN CANAL + ##################
     elif params.next == 'list_shows_1' and params.channel_name == 'cplus':
         if 'url_page' not in params:
-            params.url_page = url_replay_cplus_categories % get_token()
+            params.url_page = URL_REPLAY_CPLUS_CATEGORIES % get_token()
         if 'title' not in params:
             params.title = 'root'
         if 'fanart' in params:
@@ -469,16 +478,16 @@ def list_shows(params):
     ################### END CANAL + ##################
 
     return common.plugin.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            )
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
-    # Create list video
+    """Build videos listing"""
     videos = []
 
     ################### BEGIN CNEWS ###########################
@@ -529,7 +538,6 @@ def list_videos(params):
                 }
             }
 
-            # Nouveau pour ajouter le menu pour télécharger la vidéo
             context_menu = []
             download_video = (
                 _('Download'),
@@ -538,7 +546,6 @@ def list_videos(params):
                     video_urlhd=video_url) + ')'
             )
             context_menu.append(download_video)
-            # Fin
 
             videos.append({
                 'label': title,
@@ -551,14 +558,14 @@ def list_videos(params):
                 ),
                 'is_playable': True,
                 'info': info,
-                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                'context_menu': context_menu
             })
     ################### END CNEWS ###########################
 
     ################### BEGIN C8 and CStar ##################
     elif params.channel_name == 'c8' or params.channel_name == 'cstar':
         file_path = utils.download_catalog(
-            url_replay_c8_cstar_shows % (get_channel_id(params), params.videos_recent),
+            URL_REPLAY_C8__CSTAR_SHOWS % (get_channel_id(params), params.videos_recent),
             '%s_%s.json' % (params.channel_name, params.videos_recent))
         file_videos = open(file_path).read()
         videos_json = json.loads(file_videos)
@@ -602,7 +609,6 @@ def list_videos(params):
                 }
             }
 
-            # Nouveau pour ajouter le menu pour télécharger la vidéo
             context_menu = []
             download_video = (
                 _('Download'),
@@ -611,7 +617,6 @@ def list_videos(params):
                     id=id) + ')'
             )
             context_menu.append(download_video)
-            # Fin
 
             videos.append({
                 'label': title,
@@ -623,7 +628,7 @@ def list_videos(params):
                 ),
                 'is_playable': True,
                 'info': info,
-                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                'context_menu': context_menu
             })
     ################### END C8 and CStar ##################
 
@@ -715,7 +720,6 @@ def list_videos(params):
                     }
                 }
 
-                # Nouveau pour ajouter le menu pour télécharger la vidéo
                 context_menu = []
                 download_video = (
                     _('Download'),
@@ -724,7 +728,6 @@ def list_videos(params):
                         url_media=url_media) + ')'
                 )
                 context_menu.append(download_video)
-                # Fin
 
                 videos.append({
                     'label': title,
@@ -739,7 +742,7 @@ def list_videos(params):
                     ),
                     'info': info,
                     'is_playable': True,
-                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                    'context_menu': context_menu
                 })
 
             if more_videos is True:
@@ -776,7 +779,7 @@ def list_videos(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -787,13 +790,13 @@ def list_live(params):
 
     url_live_html = ''
     if params.channel_name == 'cplus':
-        url_live_html = url_live_cplus
+        url_live_html = URL_LIVE_CPLUS
     elif params.channel_name == 'c8':
-        url_live_html = url_live_c8
+        url_live_html = URL_LIVE_C8
     elif params.channel_name == 'cstar':
-        url_live_html = url_live_cstar
+        url_live_html = URL_LIVE_CSTAR
     elif params.channel_name == 'cnews':
-        url_live_html = url_live_cnews
+        url_live_html = URL_LIVE_CNEWS
 
     file_path_html = utils.download_catalog(
         url_live_html,
@@ -819,7 +822,7 @@ def list_live(params):
         channel_name_catalog = 'itele'
 
     file_path_json = utils.download_catalog(
-        url_info_content % (channel_name_catalog, video_id_re[0]),
+        URL_INFO_CONTENT % (channel_name_catalog, video_id_re[0]),
         '%s_%s_live.json' % (channel_name_catalog, video_id_re[0])
     )
     file_live_json = open(file_path_json).read()
@@ -861,20 +864,23 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     # CNews
-    if (params.next == 'play_r' and params.channel_name == 'cnews') or (params.next == 'download_video' and params.channel_name == 'cnews'):
+    if (params.next == 'play_r' and params.channel_name == 'cnews') or \
+            (params.next == 'download_video' and params.channel_name == 'cnews'):
         return params.video_urlhd
     # C8 & CStar
-    elif (params.next == 'play_r' and (params.channel_name == 'c8' or params.channel_name == 'cstar')) \
-         or (params.next == 'download_video' and (params.channel_name == 'c8' or params.channel_name == 'cstar')):
+    elif (params.next == 'play_r' and (params.channel_name == 'c8' or \
+            params.channel_name == 'cstar')) or (params.next == 'download_video' and \
+            (params.channel_name == 'c8' or params.channel_name == 'cstar')):
         file_video = utils.get_webcontent(
-            url_replay_c8_cstar_video % (get_channel_id(params), params.id)
+            URL_REPLAY_C8__CSTAR_VIDEOS % (get_channel_id(params), params.id)
         )
         video_json = json.loads(file_video)
         return video_json['main']['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
     # Canal +
-    elif (params.next == 'play_r' and params.channel_name == 'cplus') or (params.next == 'download_video' and params.channel_name == 'cplus'):
+    elif (params.next == 'play_r' and params.channel_name == 'cplus') or \
+            (params.next == 'download_video' and params.channel_name == 'cplus'):
         file_path = utils.get_webcontent(params.url_media)
         media_json = json.loads(file_path)
         url = media_json['detail']['informations']['VoD']['videoURL'].encode('utf-8')
