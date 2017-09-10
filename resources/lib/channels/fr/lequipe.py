@@ -39,38 +39,13 @@ _ = common.addon.initialize_gettext()
 
 url_root = 'https://www.lequipe.fr'
 
-url_live_lequipe = 'https://www.lequipe.fr/lachainelequipe/'
+url_root_video_lequipe = 'https://www.lequipe.fr/lachainelequipe/'
+
+url_replay_video_lequipe = 'https://www.lequipe.fr/lachainelequipe/morevideos/%s'
+# Category_id
 
 url_dailymotion_embed = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
-
-categories = {
-    'https://www.lequipe.fr/lachainelequipe/morevideos/0': 'Tout',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/1': 'L\'Équipe du soir',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/98': 'L\'Équipe d\'Estelle',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/95': 'L\'Équipe Vintage',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/88': 'L\'Équipe Enquête',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/82': 'L\'Équipe Explore',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/28': 'Les Grands Docs',
-    'https://www.lequipe.fr/lachainelequipe/morevideos/42': 'Emission Spéciale'
-
-}
-
-correct_mounth = {
-    'JANV.': '01',
-    'FÉVR.': '02',
-    'MARS.': '03',
-    'AVRI': '04',
-    'MAI': '05',
-    'JUIN': '06',
-    'JUIL.': '07',
-    'AOÛT': '08',
-    'SEPT.': '09',
-    'OCTO.': '10',
-    'NOVE.': '11',
-    'DECE.': '12'
-}
-
 
 def channel_entry(params):
     if 'root' in params.next:
@@ -124,14 +99,26 @@ def root(params):
 def list_shows(params):
     shows = []
 
-    for category_url, category_name in categories.iteritems():
+    # Get categories :
+    file_path = utils.download_catalog(
+        url_root_video_lequipe,
+        '%s_video.html' % (
+            params.channel_name))
+    root_html = open(file_path).read()
+    root_soup = bs(root_html, 'html.parser')
+        
+    categories_soup = root_soup.find_all('a', class_="navtab__item js-tabs-item")
+    
+    for category in categories_soup:
+        
+        category_name = category.get_text().encode('utf-8')
+        category_url = url_replay_video_lequipe % category.get('data-program-id')
 
         shows.append({
             'label': category_name,
             'url': common.plugin.get_url(
                 action='channel_entry',
                 category_url=category_url,
-                #page='1',
                 category_name=category_name,
                 next='list_videos',
                 window_title=category_name
@@ -197,7 +184,7 @@ def list_videos(params):
             class_='colead__layerText colead__layerText--bottomleft'
         ).get_text().strip().encode('utf-8')
         duration_list = duration_string.split(' ')
-        duration = int(duration_list[2])
+        duration = int(duration_list[2]) * 60
 
         info = {
             'video': {
@@ -274,7 +261,7 @@ def list_live(params):
     video_id = ''
     url_live = ''
 
-    html_live_equipe = utils.get_webcontent(url_live_lequipe)
+    html_live_equipe = utils.get_webcontent(url_root_video_lequipe)
     video_id = re.compile(r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?', re.DOTALL).findall(html_live_equipe)[0]
 
     title = '%s Live' % params.channel_name.upper()
