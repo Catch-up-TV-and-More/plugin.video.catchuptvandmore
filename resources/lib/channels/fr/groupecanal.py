@@ -885,7 +885,10 @@ def get_video_url(params):
             URL_INFO_CONTENT % ('cplus',params.id)
         )
         media_json = json.loads(file_video)
-        url = media_json['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
+        if 'MEDIA' in media_json:
+            url = media_json['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
+        else:
+            url = media_json[0]['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
         return url
     # Live CPlus, C8, CStar and CNews
     elif params.next == 'play_l':
