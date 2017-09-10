@@ -674,7 +674,7 @@ def list_videos(params):
                             except:
                                 subtitle = ''
                             img = content['URLImage'].encode('utf-8')
-                            url_media = content['onClick']['URLPage'].encode('utf-8')
+                            id = content['contentID']
 
                             info = {
                                 'video': {
@@ -691,8 +691,8 @@ def list_videos(params):
                                 'fanart': fanart,
                                 'url': common.plugin.get_url(
                                     action='channel_entry',
-                                    next='play',
-                                    url_media=url_media,
+                                    next='play_r',
+                                    id=id,
                                     url_page=params.url_page,
                                     title=title
                                 ),
@@ -709,7 +709,7 @@ def list_videos(params):
                 except:
                     subtitle = ''
                 img = content['URLImage'].encode('utf-8')
-                url_media = content['onClick']['URLPage'].encode('utf-8')
+                id = content['contentID']
 
                 info = {
                     'video': {
@@ -725,7 +725,7 @@ def list_videos(params):
                     _('Download'),
                     'XBMC.RunPlugin(' + common.plugin.get_url(
                         action='download_video',
-                        url_media=url_media) + ')'
+                        id=id) + ')'
                 )
                 context_menu.append(download_video)
 
@@ -736,7 +736,7 @@ def list_videos(params):
                     'url': common.plugin.get_url(
                         action='channel_entry',
                         next='play_r',
-                        url_media=url_media,
+                        id=id,
                         title=title,
                         fanart=params.fanart
                     ),
@@ -881,9 +881,11 @@ def get_video_url(params):
     # Canal +
     elif (params.next == 'play_r' and params.channel_name == 'cplus') or \
             (params.next == 'download_video' and params.channel_name == 'cplus'):
-        file_path = utils.get_webcontent(params.url_media)
-        media_json = json.loads(file_path)
-        url = media_json['detail']['informations']['VoD']['videoURL'].encode('utf-8')
+        file_video = utils.get_webcontent(
+            URL_INFO_CONTENT % ('cplus',params.id)
+        )
+        media_json = json.loads(file_video)
+        url = media_json['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
         return url
     # Live CPlus, C8, CStar and CNews
     elif params.next == 'play_l':
