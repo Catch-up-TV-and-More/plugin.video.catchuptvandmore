@@ -29,8 +29,9 @@ from resources.lib import common
 
 
 # TO DO
-# Replay (More Refactoring todo)
-# Find API for all channel (JSON) get Replay/Live ?
+# Replay (More Refactoring todo) / Find API for all channel (JSON) get Replay/Live ?
+# JSON CANAL + used is depreciated (change ?)
+# Emission l'effet papillon (not good)
 # Get URL Live FROM SITE
 # QUALITY
 
@@ -668,7 +669,10 @@ def list_videos(params):
                     # Else show only this videos
                     else:
                         for content in strate['contents']:
-                            title = content['title'].encode('utf-8')
+                            if 'title' in content:
+                                title = content['title'].encode('utf-8')
+                            else:
+                                title = ''
                             try:
                                 subtitle = content['subtitle'].encode('utf-8')
                             except:
