@@ -30,8 +30,7 @@ from resources.lib import common
 
 # TO DO
 # Replay (More Refactoring todo) / Find API for all channel (JSON) get Replay/Live ?
-# JSON CANAL + used is depreciated (change ?)
-# Emission l'effet papillon (not good)
+# JSON CANAL + used is depreciated (change ?) / Emission "l'effet papillon" - very old emission
 # Get URL Live FROM SITE
 # QUALITY
 
