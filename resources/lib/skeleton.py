@@ -38,7 +38,6 @@ channels = {
         'channels.fr.groupecanal.cplus': 'Canal +',
         'channels.fr.pluzz.france5': 'France 5',
         'channels.fr.6play.m6': 'M6',
-        'channels.fr.arte.arte': 'Arte',
         'channels.fr.groupecanal.c8': 'C8',
         'channels.fr.6play.w9': 'W9',
         'channels.fr.tf1.tmc': 'TMC',
@@ -104,6 +103,7 @@ channels = {
     },
 
     'main_menu.eu': {
+        'channels.eu.arte.arte': 'Arte',
         'channels.eu.euronews.euronews': 'Euronews'
     },
 
