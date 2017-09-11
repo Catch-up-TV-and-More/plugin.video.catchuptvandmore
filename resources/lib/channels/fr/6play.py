@@ -26,14 +26,14 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
-# TODO
+# TO DO
 # LIVE TV protected by #EXT-X-FAXS-CM
 # https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
 # Url to get channel's categories
 # e.g. Info, Divertissement, Séries, ...
@@ -99,7 +99,7 @@ def root(params):
     # Add Replay
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -107,7 +107,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -115,7 +115,7 @@ def root(params):
         ),
     )
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -150,7 +150,7 @@ def list_shows(params):
             category_name = array['name'].encode('utf-8')
             shows.append({
                 'label': category_name,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     category_id=category_id,
                     next='list_shows_2',
@@ -159,7 +159,7 @@ def list_shows(params):
                 )
             })
 
-        shows = common.plugin.create_listing(
+        shows = common.PLUGIN.create_listing(
             shows,
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -198,7 +198,7 @@ def list_shows(params):
                 'label': program_title,
                 'thumb': program_img,
                 'fanart': program_fanart,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_shows_3',
                     program_id=program_id,
@@ -211,7 +211,7 @@ def list_shows(params):
                 'info': info
             })
 
-        shows = common.plugin.create_listing(
+        shows = common.PLUGIN.create_listing(
             shows,
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -247,7 +247,7 @@ def list_shows(params):
                 'label': sub_category_title,
                 'thumb': params.program_img,
                 'fanart': program_fanart,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos',
                     program_id=params.program_id,
@@ -259,15 +259,15 @@ def list_shows(params):
 
         info = {
             'video': {
-                'title': common.addon.get_localized_string(30101),
+                'title': common.ADDON.get_localized_string(30101),
                 'plot': params.program_desc
             }
         }
         shows.append({
-            'label': common.addon.get_localized_string(30101),
+            'label': common.ADDON.get_localized_string(30101),
             'thumb': params.program_img,
             'fanart': program_fanart,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos',
                 program_id=params.program_id,
@@ -278,7 +278,7 @@ def list_shows(params):
             'info': info
         })
 
-        shows = common.plugin.create_listing(
+        shows = common.PLUGIN.create_listing(
             shows,
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -349,7 +349,7 @@ def list_videos(params):
         context_menu = []
         download_video = (
             _('Download'),
-            'XBMC.RunPlugin(' + common.plugin.get_url(
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_id=video_id) + ')'
         )
@@ -358,7 +358,7 @@ def list_videos(params):
         videos.append({
             'label': title,
             'thumb': program_img,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play',
                 video_id=video_id,
@@ -368,7 +368,7 @@ def list_videos(params):
             'context_menu': context_menu
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_DATE,
@@ -379,7 +379,7 @@ def list_videos(params):
         content='tvshows')
 
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     video_json = utils.get_webcontent(
@@ -411,10 +411,10 @@ def get_video_url(params):
         manifest_url,
         random_ua=True)
     if 'drm' in manifest:
-        utils.send_notification(common.addon.get_localized_string(30102))
+        utils.send_notification(common.ADDON.get_localized_string(30102))
         return ''
 
-    desired_quality = common.plugin.get_setting(
+    desired_quality = common.PLUGIN.get_setting(
         params.channel_id + '.quality')
 
     if desired_quality == 'Auto':
@@ -438,7 +438,7 @@ def get_video_url(params):
         elif 'RESOLUTION=1080' in lines[k]:
             url_ultra_hd = root + '/' + lines[k + 1]
 
-    desired_quality = common.plugin.get_setting('quality')
+    desired_quality = common.PLUGIN.get_setting('quality')
 
     if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_ultra_hd:
         return url_ultra_hd

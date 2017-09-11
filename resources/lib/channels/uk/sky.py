@@ -20,18 +20,19 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import re
 from resources.lib import utils
 from resources.lib import common
-import re
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
-url_live_skynews = 'http://news.sky.com/watch-live'
+URL_LIVE_SKYNEWS = 'http://news.sky.com/watch-live'
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -62,7 +63,7 @@ def root(params):
     # Add Live
     modes.append({
         'label' : 'Live TV',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -70,7 +71,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -106,7 +107,7 @@ def list_live(params):
 
     # Get URL Live
     file_path = utils.download_catalog(
-        url_live_skynews,
+        URL_LIVE_SKYNEWS,
         '%s_live.html' % params.channel_name,
     )
     live_html = open(file_path).read()
@@ -124,7 +125,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url=url_live,
@@ -133,7 +134,7 @@ def list_live(params):
         'info': info
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,

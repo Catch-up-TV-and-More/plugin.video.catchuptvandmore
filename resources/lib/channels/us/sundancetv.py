@@ -20,40 +20,42 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 '''
 
+import re
+from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
-from bs4 import BeautifulSoup as bs
-import re
 
-# TODO
+
+# TO DO
 # Add Live TV
 # More videos buttons for shorts
 # Get url_video_stream or pubId (shows and movies)
 
-url_root = "http://www.sundance.tv"
+UR_ROOT = "http://www.sundance.tv"
 
-url_movies = "http://www.sundance.tv/watch-now/movies"
+URL_MOVIES = "http://www.sundance.tv/watch-now/movies"
 
-url_shows = "http://www.sundance.tv/watch-now/"
+URL_SHOWS = "http://www.sundance.tv/watch-now/"
 
-url_shorts = "http://www.sundance.tv/series/shorts-on-sundancetv/video"
+URL_SHORTS = "http://www.sundance.tv/series/shorts-on-sundancetv/video"
 
-url_live_sundance = 'http://www.sundance.tv/watch-now/stream'
+URL_LIVE_SUNDANCE = 'http://www.sundance.tv/watch-now/stream'
 
-url_video_stream = "http://c.brightcove.com/services/mobile/streaming/index/master.m3u8?videoId=%s&pubId=%s"
+URL_VIDEO_STREAM = "http://c.brightcove.com/services/mobile/streaming/index/master.m3u8?videoId=%s&pubId=%s"
 # videoId, pubId
-pubId_movie_show = '3605490453001'
+PUBID_MOVIE_SHOW = '3605490453001'
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
 def get_policy_key(data_account, data_player):
     file_js = utils.get_webcontent(url_js_policy_key % (data_account, data_player))
     return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     if 'list_shows' in params.next:
@@ -72,7 +74,7 @@ def root(params):
     # Add Replay
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -91,7 +93,7 @@ def root(params):
         #),
     #})
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -109,7 +111,7 @@ def list_shows(params):
         video_title = 'Movies'
         shows.append({
             'label': video_title,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_movies',
                     title=video_title,
@@ -120,7 +122,7 @@ def list_shows(params):
         video_title = 'Shorts'
         shows.append({
             'label': video_title,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_shorts',
                     title=video_title,
@@ -131,7 +133,7 @@ def list_shows(params):
         video_title = 'Shows'
         shows.append({
             'label': video_title,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_shows_2',
                     title=video_title,
@@ -141,7 +143,7 @@ def list_shows(params):
 
     elif params.next == 'list_shows_2':
         file_path = utils.download_catalog(
-            url_shows,
+            URL_SHOWS,
             '%s_replay_shows.html' % (params.channel_name))
         replay_shows_html = open(file_path).read()
 
@@ -152,12 +154,12 @@ def list_shows(params):
 
             show_title = show.find('a').find('div').get_text().encode('utf-8')
             show_img = show.find('div', class_='poster').find('a').find('img').get('src')
-            show_url = url_shows + show.find_all('a', class_='episode')[0].get('href').split('/')[2]
+            show_url = URL_SHOWS + show.find_all('a', class_='episode')[0].get('href').split('/')[2]
 
             shows.append({
                 'label': show_title,
                 'thumb': show_img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos_show',
                         title=show_title,
@@ -166,7 +168,7 @@ def list_shows(params):
                     )
                 })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -181,7 +183,7 @@ def list_videos(params):
 
     if params.next == 'list_videos_movies':
         file_path = utils.download_catalog(
-            url_movies,
+            URL_MOVIES,
             '%s_replay_movies.html' % (params.channel_name))
         replay_movies_html = open(file_path).read()
 
@@ -192,7 +194,7 @@ def list_videos(params):
 
         for movie in list_movies:
 
-            url_movie = url_root + movie.get('href')
+            url_movie = UR_ROOT + movie.get('href')
             movie_id = ''
             movie_id = re.compile(r'\/watch-now\/movie\/(.*?)\/').findall(movie.get('href'))[0]
 
@@ -209,7 +211,7 @@ def list_videos(params):
                          + '\n' + datas_movie_soup.find('a').find('div', class_='video-player-right').find('p', class_='').get_text().strip().encode('utf-8')
             video_duration = 0
             video_img = datas_movie_soup.find('a').find('div').find('div').find('img').get('src').encode('utf-8')
-            video_url = url_video_stream % (movie_id, pubId_movie_show)
+            video_url = URL_VIDEO_STREAM % (movie_id, PUBID_MOVIE_SHOW)
             info = {
                 'video': {
                     'title': video_title,
@@ -226,7 +228,7 @@ def list_videos(params):
             context_menu = []
             download_video = (
                 _('Download'),
-                'XBMC.RunPlugin(' + common.plugin.get_url(
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
@@ -237,7 +239,7 @@ def list_videos(params):
                 'label': video_title,
                 'thumb': video_img,
                 'fanart': video_img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
                     video_url=video_url
@@ -249,7 +251,7 @@ def list_videos(params):
 
     elif params.next == 'list_videos_shorts':
         file_path = utils.download_catalog(
-            url_shorts,
+            URL_SHORTS,
             '%s_replay_shorts.html' % (params.channel_name))
         replay_shorts_html = open(file_path).read()
 
@@ -275,7 +277,7 @@ def list_videos(params):
             short_videoid = re.compile(r'\&videoId=(.*?)\&').findall(replay_short_html)[0]
             short_pubid = re.compile(r'\&publisherID=(.*?)\&').findall(replay_short_html)[0]
 
-            video_url = url_video_stream % (short_videoid,short_pubid)
+            video_url = URL_VIDEO_STREAM % (short_videoid,short_pubid)
 
             info = {
                 'video': {
@@ -293,7 +295,7 @@ def list_videos(params):
             context_menu = []
             download_video = (
                 _('Download'),
-                'XBMC.RunPlugin(' + common.plugin.get_url(
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
@@ -304,7 +306,7 @@ def list_videos(params):
                 'label': video_title,
                 'thumb': video_img,
                 'fanart': video_img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
                     video_url=video_url
@@ -332,7 +334,7 @@ def list_videos(params):
             video_img = episode.find('div').find('img').get('src').encode('utf-8')
             video_url = ''
             video_id = episode.get('href').split('/',6)[-2]
-            video_url = url_video_stream % (video_id,pubId_movie_show)
+            video_url = URL_VIDEO_STREAM % (video_id,PUBID_MOVIE_SHOW)
 
             video_title = ''
             video_title = episode.find('div').find('div', class_='video-text').find('div', class_='video-text-play-btn').find('h4').get_text().encode('utf-8')
@@ -358,7 +360,7 @@ def list_videos(params):
             context_menu = []
             download_video = (
                 _('Download'),
-                'XBMC.RunPlugin(' + common.plugin.get_url(
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
@@ -369,7 +371,7 @@ def list_videos(params):
                 'label': video_title,
                 'thumb': video_img,
                 'fanart': video_img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
                     video_url=video_url
@@ -379,7 +381,7 @@ def list_videos(params):
                 'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -408,10 +410,10 @@ def list_live(params):
 
     # Get URL Live
     file_path = utils.download_catalog(
-        url_live_sundance,
+        URL_LIVE_SUNDANCE,
         '%s_live.html' % (params.channel_name))
     live_html = open(file_path).read()
-    url_live = url_video_stream % re.compile(r'data-video_id="(.*?)"').findall(live_html)[0]
+    url_live = URL_VIDEO_STREAM % re.compile(r'data-video_id="(.*?)"').findall(live_html)[0]
 
     info = {
         'video': {
@@ -425,7 +427,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url_live=url_live,
@@ -434,7 +436,7 @@ def list_live(params):
         'info': info
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,

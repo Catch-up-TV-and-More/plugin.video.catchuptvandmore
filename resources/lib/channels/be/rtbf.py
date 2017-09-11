@@ -20,15 +20,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from bs4 import BeautifulSoup as bs
-from resources.lib import utils
-from resources.lib import common
 import ast
 import re
 import json
 import time
+from bs4 import BeautifulSoup as bs
+from resources.lib import utils
+from resources.lib import common
 
-# TODO (More Work TODO)
+# TO DO (More Work TO DO)
 # Add categories
 # Add geoblock (info in JSON)
 # Add Quality Mode
@@ -38,27 +38,29 @@ import time
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
-url_json_categories = 'https://www.rtbf.be/news/api/menu?site=media'
+URL_JSON_CATEGORIES = 'https://www.rtbf.be/news/api/menu?site=media'
 
-url_replay = 'https://www.rtbf.be/auvio/replay?channelId=%s'
+URL_REPLAY = 'https://www.rtbf.be/auvio/replay?channelId=%s'
 # channel Id, page
 
-url_json_emissions_by_id = 'https://www.rtbf.be/api/media/video?method=getVideoListByEmissionOrdered&args[]=%s'
+URL_JSON_EMISSIONS_BY_ID = 'https://www.rtbf.be/api/media/video?' \
+                           'method=getVideoListByEmissionOrdered&args[]=%s'
 # emission_id
 
-url_json_video_by_id = 'https://www.rtbf.be/api/media/video?method=getVideoDetail&args[]=%s'
+URL_JSON_VIDEO_BY_ID = 'https://www.rtbf.be/api/media/video?method=getVideoDetail&args[]=%s'
 # video_id
 
-url_root_image_rtbf = 'https://ds1.static.rtbf.be'
+URL_ROOT_IMAGE_RTBF = 'https://ds1.static.rtbf.be'
 
-url_json_live =        'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&partner_key=%s'
+URL_JSON_LIVE = 'https://www.rtbf.be/api/partner/generic/live/' \
+                'planninglist?target_site=media&partner_key=%s'
 # partener_key
 
-url_root_live = 'https://www.rtbf.be/auvio/direct#/'
+URL_ROOT_LIVE = 'https://www.rtbf.be/auvio/direct#/'
 
-channel_filter = {
+CHANNEL_FILTER = {
     'laune': 'La Une',
     'ladeux': 'La Deux',
     'latrois': 'La Trois',
@@ -72,7 +74,7 @@ channel_filter = {
 
 }
 
-channel_id = {
+CHANNEL_ID = {
     'laune': '1',
     'ladeux': '2',
     'latrois': '3',
@@ -88,6 +90,7 @@ channel_id = {
 
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -104,7 +107,7 @@ def channel_entry(params):
 def get_partener_key(params):
 
     file_path_root_live = utils.download_catalog(
-        url_root_live,
+        URL_ROOT_LIVE,
         '%s_root_live.html' % params.channel_name,
     )
     html_root_live = open(file_path_root_live).read()
@@ -136,7 +139,7 @@ def root(params):
     # Add Replay
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_videos_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -147,7 +150,7 @@ def root(params):
     # Add Live
     modes.append({
         'label' : 'Live TV',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -155,7 +158,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -175,7 +178,7 @@ def list_shows(params):
 
         shows.append({
             'label': program_title,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 emission_title=program_title,
                 action='channel_entry',
                 page_replay='1',
@@ -184,7 +187,7 @@ def list_shows(params):
             )
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -200,10 +203,10 @@ def list_videos(params):
 
     if params.next == 'list_videos_1':
 
-        channel_id_value = channel_id[params.channel_name]
+        channel_id_value = CHANNEL_ID[params.channel_name]
 
         file_path = utils.download_catalog(
-            url_replay % (channel_id_value),
+            URL_REPLAY % (channel_id_value),
             '%s_replay_%s.html' % (params.channel_name,channel_id_value))
         programs_html = open(file_path).read()
 
@@ -219,7 +222,7 @@ def list_videos(params):
             data_id = program.find('a').get('href').split('id=')[1]
 
             file_path = utils.download_catalog(
-                url_json_video_by_id % data_id,
+                URL_JSON_VIDEO_BY_ID % data_id,
                 '%s_%s.json' % (
                     params.channel_name,
                     data_id))
@@ -232,7 +235,7 @@ def list_videos(params):
                     title = video_data["title"].encode('utf-8') + ' - ' +  video_data["subtitle"].encode('utf-8')
                 else:
                     title = video_data["title"].encode('utf-8')
-                img = url_root_image_rtbf + video_data["thumbnail"]["full_medium"]
+                img = URL_ROOT_IMAGE_RTBF + video_data["thumbnail"]["full_medium"]
                 url_video = video_data["urlHls"]
                 plot = ''
                 if video_data["description"]:
@@ -268,7 +271,7 @@ def list_videos(params):
                 context_menu = []
                 download_video = (
                     _('Download'),
-                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         url_video=url_video) + ')'
                 )
@@ -279,7 +282,7 @@ def list_videos(params):
                     'label': title,
                     'thumb': img,
                     'fanart': img,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_r',
                         url_video=url_video
@@ -291,7 +294,7 @@ def list_videos(params):
 
         videos.append({
             'label': 'Jour précédent',
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 emission_title='Jour précédent',
                 action='channel_entry',
                 next='list_videos_1',
@@ -300,7 +303,7 @@ def list_videos(params):
             )
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -333,7 +336,7 @@ def list_live(params):
     url_live = ''
 
     file_path = utils.download_catalog(
-        url_json_live % (get_partener_key(params)),
+        URL_JSON_LIVE % (get_partener_key(params)),
         '%s_live.json' % (params.channel_name))
     live_json = open(file_path).read()
     live_jsonparser = json.loads(live_json)
@@ -344,7 +347,7 @@ def list_live(params):
         #check in live for this channel today + print start_date
         if type(live["channel"]) is dict:
             live_channel = live["channel"]["label"].encode('utf-8')
-            if channel_filter[params.channel_name] in live_channel:
+            if CHANNEL_FILTER[params.channel_name] in live_channel:
                 start_date_value = format_hours(live["start_date"])
                 end_date_value = format_hours(live["end_date"])
                 day_value = format_day(live["start_date"])
@@ -367,7 +370,7 @@ def list_live(params):
                     'label': title,
                     'fanart': img,
                     'thumb': img,
-                    'url' : common.plugin.get_url(
+                    'url' : common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_l',
                         url_live=url_live,
@@ -399,7 +402,7 @@ def list_live(params):
                 'label': title,
                 'fanart': img,
                 'thumb': img,
-                'url' : common.plugin.get_url(
+                'url' : common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_l',
                     url_live=url_live,
@@ -422,7 +425,7 @@ def list_live(params):
 
         lives.append({
             'label': title,
-            'url' : common.plugin.get_url(
+            'url' : common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_l',
             ),
@@ -430,7 +433,7 @@ def list_live(params):
             'info': info
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,

@@ -21,77 +21,81 @@
 '''
 
 import json
-import xbmcgui
-from resources.lib import utils
-from resources.lib import common
 import ast
-from bs4 import BeautifulSoup as bs
 import time
 import re
+from bs4 import BeautifulSoup as bs
+from resources.lib import utils
+from resources.lib import common
 
-# TODO
+# TO DO
 # Add Live TV (ONENET ???)
 
 # BFMTV, RMC, ONENET, etc ...
-url_token = 'http://api.nextradiotv.com/%s-applications/'
+URL_TOKEN = 'http://api.nextradiotv.com/%s-applications/'
 #channel
 
-url_menu = 'http://www.bfmtv.com/static/static-mobile/bfmtv/' \
+URL_MENU = 'http://www.bfmtv.com/static/static-mobile/bfmtv/' \
            'ios-smartphone/v0/configuration.json'
 
-url_replay = 'http://api.nextradiotv.com/%s-applications/%s/' \
+URL_REPLAY = 'http://api.nextradiotv.com/%s-applications/%s/' \
              'getPage?pagename=replay'
 # channel, token
 
-url_show = 'http://api.nextradiotv.com/%s-applications/%s/' \
+URL_SHOW = 'http://api.nextradiotv.com/%s-applications/%s/' \
            'getVideosList?category=%s&count=100&page=%s'
 # channel, token, category, page_number
 
-url_video = 'http://api.nextradiotv.com/%s-applications/%s/' \
+URL_VIDEO = 'http://api.nextradiotv.com/%s-applications/%s/' \
             'getVideo?idVideo=%s'
 # channel, token, video_id
 
 # URL Live
 # Channel ONENET
-url_live_onenet = 'http://www.01net.com/mediaplayer/live-video/'
+URL_LIVE_ONENET = 'http://www.01net.com/mediaplayer/live-video/'
+
 # Channel BFMTV
-url_live_bfmtv = 'http://www.bfmtv.com/mediaplayer/live-video/'
-url_live_bfm_paris = 'http://www.bfmtv.com/mediaplayer/live-bfm-paris/'
+URL_LIVE_BFMTV = 'http://www.bfmtv.com/mediaplayer/live-video/'
+
+URL_LIVE_BFM_PARIS = 'http://www.bfmtv.com/mediaplayer/live-bfm-paris/'
+
 # Channel BFM Business
-url_live_bfmbusiness = 'http://bfmbusiness.bfmtv.com/mediaplayer/live-video/'
+URL_LIVE_BFMBUSINESS = 'http://bfmbusiness.bfmtv.com/mediaplayer/live-video/'
+
 # Channel RMC
-url_live_bfm_sport = 'http://rmcsport.bfmtv.com/mediaplayer/live-bfm-sport/'
+URL_LIVE_BFM_SPORT = 'http://rmcsport.bfmtv.com/mediaplayer/live-bfm-sport/'
 
 # RMC Decouverte
-url_replay_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-replay/'
+URL_REPLAY_RMCDECOUVERTE = 'http://rmcdecouverte.bfmtv.com/mediaplayer-replay/'
 
-url_video_html_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-replay/?id=%s'
+URL_VIDEO_HTML_RMCDECOUVERTE = 'http://rmcdecouverte.bfmtv.com/mediaplayer-replay/?id=%s'
 # VideoId_html
 
-url_live_rmcdecouverte = 'http://rmcdecouverte.bfmtv.com/mediaplayer-direct/'
+URL_LIVE_RMCDECOUVERTE = 'http://rmcdecouverte.bfmtv.com/mediaplayer-direct/'
 
-url_js_policy_key = 'http://players.brightcove.net/%s/%s_default/index.min.js'
+URL_JS_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.min.js'
 # AccountId, PlayerId
 
-url_video_json_brightcove = 'https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s'
+URL_VIDEO_JSON_BRIGHTCOVE = 'https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s'
 # AccountId, VideoId
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
 #@common.plugin.cached(common.cache_time)
 def get_token(channel_name):
-    file_token = utils.get_webcontent(url_token % (channel_name))
+    file_token = utils.get_webcontent(URL_TOKEN % (channel_name))
     token_json = json.loads(file_token)
     return token_json['session']['token'].encode('utf-8')
 
 def get_policy_key(data_account, data_player):
-    file_js = utils.get_webcontent(url_js_policy_key % (data_account, data_player))
+    file_js = utils.get_webcontent(URL_JS_POLICY_KEY % (data_account, data_player))
     return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     if 'list_shows' in params.next:
@@ -102,6 +106,7 @@ def channel_entry(params):
         return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+    return None
 
 #@common.plugin.cached(common.cache_time)
 def root(params):
@@ -110,7 +115,7 @@ def root(params):
     # Add Replay Desactiver
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -122,7 +127,7 @@ def root(params):
     if params.channel_name != '01net':
         modes.append({
             'label' : 'Live TV',
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
@@ -130,7 +135,7 @@ def root(params):
             ),
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -146,7 +151,7 @@ def list_shows(params):
     if params.channel_name == 'rmcdecouverte':
 
         file_path = utils.download_catalog(
-            url_replay_rmcdecouverte,
+            URL_REPLAY_RMCDECOUVERTE,
             '%s_replay.html' % (params.channel_name))
         program_html = open(file_path).read()
 
@@ -163,7 +168,7 @@ def list_shows(params):
             shows.append({
                 'label': video_title,
                 'thumb': video_img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos_1',
                     video_id = video_id,
@@ -176,7 +181,7 @@ def list_shows(params):
     else:
         if params.next == 'list_shows_1':
             file_path = utils.download_catalog(
-                url_replay % (params.channel_name, get_token(params.channel_name)),
+                URL_REPLAY % (params.channel_name, get_token(params.channel_name)),
                 '%s.json' % (params.channel_name))
             file_categories = open(file_path).read()
             json_categories = json.loads(file_categories)
@@ -191,7 +196,7 @@ def list_shows(params):
                 shows.append({
                     'label': title,
                     'thumb': image_url,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         category=category,
                         next='list_videos_1',
@@ -201,7 +206,7 @@ def list_shows(params):
                     )
                 })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -216,7 +221,7 @@ def list_videos(params):
 
     if params.channel_name == 'rmcdecouverte':
         file_path = utils.download_catalog(
-            url_video_html_rmcdecouverte % (params.video_id),
+            URL_VIDEO_HTML_RMCDECOUVERTE % (params.video_id),
             '%s_%s_replay.html' % (params.channel_name,params.video_id))
         video_html = open(file_path).read()
 
@@ -229,7 +234,7 @@ def list_videos(params):
 
         # Method to get JSON from 'edge.api.brightcove.com'
         file_json = utils.download_catalog(
-            url_video_json_brightcove % (data_account,data_video_id),
+            URL_VIDEO_JSON_BRIGHTCOVE % (data_account,data_video_id),
             '%s_%s_replay.json' % (data_account,data_video_id),
             force_dl=False,
             request_type='get',
@@ -282,7 +287,7 @@ def list_videos(params):
         context_menu = []
         download_video = (
             _('Download'),
-            'XBMC.RunPlugin(' + common.plugin.get_url(
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_id=params.video_id) + ')'
         )
@@ -293,7 +298,7 @@ def list_videos(params):
             'label': video_title,
             'thumb': video_img,
             'fanart': video_img,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_r',
                 video_url=video_url
@@ -309,7 +314,7 @@ def list_videos(params):
 
         if params.next == 'list_videos_1':
             file_path = utils.download_catalog(
-                url_show % (
+                URL_SHOW % (
                     params.channel_name,
                     get_token(params.channel_name),
                     params.category,
@@ -357,7 +362,7 @@ def list_videos(params):
                 context_menu = []
                 download_video = (
                     _('Download'),
-                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_id=video_id) + ')'
                 )
@@ -367,7 +372,7 @@ def list_videos(params):
                 videos.append({
                     'label': title,
                     'thumb': image,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_r',
                         video_id=video_id,
@@ -380,8 +385,8 @@ def list_videos(params):
 
             # More videos...
             videos.append({
-                'label': common.addon.get_localized_string(30100),
-                'url': common.plugin.get_url(
+                'label': common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     category=params.category,
                     next='list_videos_1',
@@ -394,7 +399,7 @@ def list_videos(params):
 
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -421,7 +426,7 @@ def list_live(params):
     if params.channel_name == 'rmcdecouverte':
 
         file_path = utils.download_catalog(
-            url_live_rmcdecouverte,
+            URL_LIVE_RMCDECOUVERTE,
             '%s_live.html' % (params.channel_name))
         live_html = open(file_path).read()
 
@@ -434,7 +439,7 @@ def list_live(params):
 
         # Method to get JSON from 'edge.api.brightcove.com'
         file_json = utils.download_catalog(
-            url_video_json_brightcove % (data_account,data_video_id),
+            URL_VIDEO_JSON_BRIGHTCOVE % (data_account,data_video_id),
             '%s_%s_live.json' % (data_account,data_video_id),
             force_dl=False,
             request_type='get',
@@ -463,7 +468,7 @@ def list_live(params):
             'label': title,
             'fanart': img,
             'thumb': img,
-            'url' : common.plugin.get_url(
+            'url' : common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_l',
                 url_live=url_live,
@@ -478,7 +483,7 @@ def list_live(params):
 
             # BFMTV
             file_path = utils.download_catalog(
-                url_live_bfmtv,
+                URL_LIVE_BFMTV,
                 '%s_live.html' % (params.channel_name))
             live_html = open(file_path).read()
 
@@ -498,7 +503,7 @@ def list_live(params):
                 'label': title,
                 'fanart': img,
                 'thumb': img,
-                'url' : common.plugin.get_url(
+                'url' : common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_l',
                     url_live=url_live,
@@ -509,7 +514,7 @@ def list_live(params):
 
             #BFM PARIS
             file_paris_path = utils.download_catalog(
-                url_live_bfm_paris,
+                URL_LIVE_BFM_PARIS,
                 'bfm_paris_live.html')
             live_paris_html = open(file_paris_path).read()
 
@@ -522,7 +527,7 @@ def list_live(params):
 
             # Method to get JSON from 'edge.api.brightcove.com'
             file_json_paris = utils.download_catalog(
-                url_video_json_brightcove % (data_account_paris,data_video_id_paris),
+                URL_VIDEO_JSON_BRIGHTCOVE % (data_account_paris,data_video_id_paris),
                 '%s_%s_live.json' % (data_account_paris,data_video_id_paris),
                 force_dl=False,
                 request_type='get',
@@ -553,7 +558,7 @@ def list_live(params):
                 'label': title_paris,
                 'fanart': img,
                 'thumb': img,
-                'url' : common.plugin.get_url(
+                'url' : common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_l',
                     url_live=url_live_paris,
@@ -566,7 +571,7 @@ def list_live(params):
 
             #BFM BUSINESS
             file_path = utils.download_catalog(
-                url_live_bfmbusiness,
+                URL_LIVE_BFMBUSINESS,
                 '%s_live.html' % (params.channel_name))
             live_html = open(file_path).read()
 
@@ -579,7 +584,7 @@ def list_live(params):
 
             # Method to get JSON from 'edge.api.brightcove.com'
             file_json = utils.download_catalog(
-                url_video_json_brightcove % (data_account,data_video_id),
+                URL_VIDEO_JSON_BRIGHTCOVE % (data_account,data_video_id),
                 '%s_%s_live.json' % (data_account,data_video_id),
                 force_dl=False,
                 request_type='get',
@@ -611,7 +616,7 @@ def list_live(params):
                 'label': title,
                 'fanart': img,
                 'thumb': img,
-                'url' : common.plugin.get_url(
+                'url' : common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_l',
                     url_live=url_live,
@@ -624,7 +629,7 @@ def list_live(params):
 
             #BFM SPORT
             file_path = utils.download_catalog(
-                url_live_bfm_sport,
+                URL_LIVE_BFM_SPORT,
                 'bfm_sport_live.html')
             live_html = open(file_path).read()
 
@@ -638,7 +643,7 @@ def list_live(params):
 
             # Method to get JSON from 'edge.api.brightcove.com'
             file_json = utils.download_catalog(
-                url_video_json_brightcove % (data_account,data_video_id),
+                URL_VIDEO_JSON_BRIGHTCOVE % (data_account,data_video_id),
                 '%s_%s_live.json' % (data_account,data_video_id),
                 force_dl=False,
                 request_type='get',
@@ -670,7 +675,7 @@ def list_live(params):
                 'label': title,
                 'fanart': img,
                 'thumb': img,
-                'url' : common.plugin.get_url(
+                'url' : common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_l',
                     url_live=url_live,
@@ -685,7 +690,7 @@ def list_live(params):
 
             return None
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -700,10 +705,10 @@ def get_video_url(params):
     elif params.channel_name == 'rmcdecouverte' and params.next == 'play_r':
         return params.video_url
     elif params.channel_name == 'rmcdecouverte' and params.next == 'download_video':
-        return url_video_html_rmcdecouverte % (params.video_id)
+        return URL_VIDEO_HTML_RMCDECOUVERTE % (params.video_id)
     elif params.channel_name != 'rmcdecouverte' and (params.next == 'play_r' or params.next == 'download_video'):
         file_medias = utils.get_webcontent(
-            url_video % (params.channel_name, get_token(params.channel_name), params.video_id))
+            URL_VIDEO % (params.channel_name, get_token(params.channel_name), params.video_id))
         json_parser = json.loads(file_medias)
 
         if params.next == 'download_video':
@@ -711,17 +716,17 @@ def get_video_url(params):
 
         video_streams = json_parser['video']['medias']
 
-        desired_quality = common.plugin.get_setting('quality')
+        desired_quality = common.PLUGIN.get_setting('quality')
 
         if desired_quality == "DIALOG":
             all_datas_videos = []
             for datas in video_streams:
-                new_list_item = xbmcgui.ListItem()
+                new_list_item = common.sp.xbmcgui.ListItem()
                 new_list_item.setLabel("Video Height : " + str(datas['frame_height']) + " (Encoding : " + str(datas['encoding_rate']) + ")")
                 new_list_item.setPath(datas['video_url'])
                 all_datas_videos.append(new_list_item)
 
-            seleted_item = xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+            seleted_item = common.sp.xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
             return all_datas_videos[seleted_item].getPath().encode('utf-8')
 

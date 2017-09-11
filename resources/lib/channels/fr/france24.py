@@ -21,15 +21,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from resources.lib import utils
-from resources.lib import common
-import json
-from bs4 import BeautifulSoup as bs
 import time
 import re
+import json
+from bs4 import BeautifulSoup as bs
+from resources.lib import utils
+from resources.lib import common
 
-# TODO
-# Replay (emission) | (just 5 first episodes) Add More Button (with api) to download just some part ? (More Work TODO)
+# TO DO
+# Replay (emission) | (just 5 first episodes) Add More Button (with api) to download just some part ? (More Work TO DO)
 # Add info LIVE TV (picture, plot)
 # Add Video, Last JT, Last ECO, Last Meteo
 # Select Language settings not show
@@ -37,18 +37,19 @@ import re
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
-url_live_site = 'http://www.france24.com/%s/'
+URL_LIVE_SITE = 'http://www.france24.com/%s/'
 # Language
 
-url_info_live = 'http://www.france24.com/%s/_fragment/player/nowplaying/'
+URL_INFO_LIVE = 'http://www.france24.com/%s/_fragment/player/nowplaying/'
 # Language
 
-url_api_vod = 'http://api.france24.com/%s/services/json-rpc/emission_list?databases=f24%s&key=XXX&start=0&limit=50&edition_start=0&edition_limit=5'
+URL_API_VOD = 'http://api.france24.com/%s/services/json-rpc/emission_list?databases=f24%s&key=XXX&start=0&limit=50&edition_start=0&edition_limit=5'
 # language
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -59,6 +60,7 @@ def channel_entry(params):
         return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+    return None
 
 #@common.plugin.cached(common.cache_time)
 def root(params):
@@ -67,7 +69,7 @@ def root(params):
     # Add Replay
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -78,7 +80,7 @@ def root(params):
     # Add Live
     modes.append({
         'label' : 'Live TV',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -86,7 +88,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -98,12 +100,12 @@ def root(params):
 def list_shows(params):
     shows = []
 
-    desired_language = common.plugin.get_setting(
+    desired_language = common.PLUGIN.get_setting(
         params.channel_id + '.language')
 
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
-            url_api_vod % (desired_language.lower(),desired_language.lower()),
+            URL_API_VOD % (desired_language.lower(),desired_language.lower()),
             '%s_%s_vod.json' % (params.channel_name,desired_language.lower())
         )
         json_vod = open(file_path).read()
@@ -121,7 +123,7 @@ def list_shows(params):
                 'label': category_name,
                 'fanart': img,
                 'thumb': img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos_cat',
                     nid=nid,
@@ -131,7 +133,7 @@ def list_shows(params):
                 )
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -143,11 +145,11 @@ def list_shows(params):
 def list_videos(params):
     videos = []
 
-    desired_language = common.plugin.get_setting(
+    desired_language = common.PLUGIN.get_setting(
         params.channel_id + '.language')
 
     file_path = utils.download_catalog(
-        url_api_vod % (desired_language.lower(),desired_language.lower()),
+        URL_API_VOD % (desired_language.lower(),desired_language.lower()),
         '%s_%s_vod.json' % (params.channel_name,desired_language.lower())
     )
     json_vod = open(file_path).read()
@@ -187,7 +189,7 @@ def list_videos(params):
                 context_menu = []
                 download_video = (
                     _('Download'),
-                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         url=url) + ')'
                 )
@@ -198,7 +200,7 @@ def list_videos(params):
                     'label': title,
                     'thumb': img,
                     'fanart': img,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_r',
                         url=url
@@ -211,7 +213,7 @@ def list_videos(params):
 
     # TODO add More button Video
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -230,10 +232,10 @@ def list_live(params):
     img = ''
     url_live = ''
 
-    desired_language = common.plugin.get_setting(
+    desired_language = common.PLUGIN.get_setting(
         params.channel_id + '.language')
 
-    url_live = url_live_site % desired_language.lower()
+    url_live = URL_LIVE_SITE % desired_language.lower()
 
     file_path = utils.download_catalog(
         url_live,
@@ -248,7 +250,7 @@ def list_live(params):
         if datas['source']:
             url_live = datas['source']
 
-    live_info = utils.get_webcontent(url_info_live % (desired_language.lower()))
+    live_info = utils.get_webcontent(URL_INFO_LIVE % (desired_language.lower()))
     title = re.compile('id="main-player-playing-value">(.+?)<').findall(live_info)[0]
 
     info = {
@@ -263,7 +265,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url=url_live,
@@ -272,7 +274,7 @@ def list_live(params):
         'info': info
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,

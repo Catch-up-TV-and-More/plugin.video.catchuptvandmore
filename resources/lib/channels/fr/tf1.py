@@ -33,7 +33,7 @@ from resources.lib import common
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
 URL_ROOT = "http://www.tf1.fr/"
 URL_TIME = 'http://www.wat.tv/servertime2/'
@@ -78,7 +78,7 @@ def root(params):
     # Add Replay
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -90,7 +90,7 @@ def root(params):
     if params.channel_name != 'tfou' and params.channel_name != 'xtra':
         modes.append({
             'label' : _('Live TV'),
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
@@ -98,7 +98,7 @@ def root(params):
             ),
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -139,7 +139,7 @@ def list_shows(params):
                 shows.append({
                     'label': program_name,
                     'thumb': img,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         program_url=program_url,
                         next='list_videos',
@@ -167,7 +167,7 @@ def list_shows(params):
 
                 shows.append({
                     'label': category_name,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         category=category_url,
                         next='list_shows_2',
@@ -200,7 +200,7 @@ def list_shows(params):
                     shows.append({
                         'label': program_name,
                         'thumb': img,
-                        'url': common.plugin.get_url(
+                        'url': common.PLUGIN.get_url(
                             action='channel_entry',
                             program_url=program_url,
                             next='list_videos_categories',
@@ -208,7 +208,7 @@ def list_shows(params):
                         )
                     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -235,7 +235,7 @@ def list_videos_categories(params):
         category_id = li.find('a')['data-filter'].encode('utf-8')
         videos_categories.append({
             'label': category_title,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 program_url=params.program_url,
                 next='list_videos',
@@ -243,7 +243,7 @@ def list_videos_categories(params):
                 category_id=category_id
             )
         })
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos_categories,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -293,7 +293,7 @@ def list_videos(params):
             context_menu = []
             download_video = (
                 _('Download'),
-                'XBMC.RunPlugin(' + common.plugin.get_url(
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     program_id=program_id) + ')'
             )
@@ -302,7 +302,7 @@ def list_videos(params):
             videos.append({
                 'label': title,
                 'thumb': img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
                     program_id=program_id,
@@ -397,7 +397,7 @@ def list_videos(params):
                 context_menu = []
                 download_video = (
                     _('Download'),
-                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         program_id=program_id) + ')'
                 )
@@ -406,7 +406,7 @@ def list_videos(params):
                 videos.append({
                     'label': title,
                     'thumb': img,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_r',
                         program_id=program_id,
@@ -416,7 +416,7 @@ def list_videos(params):
                     'context_menu': context_menu
                 })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_DATE,
@@ -474,7 +474,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
         ),
@@ -483,7 +483,7 @@ def list_live(params):
     })
 
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -545,7 +545,7 @@ def get_video_url(params):
         url_video = json.loads(url_video)
         url_video = url_video['message'].replace('\\', '')
 
-        desired_quality = common.plugin.get_setting('quality')
+        desired_quality = common.PLUGIN.get_setting('quality')
 
         if desired_quality == 'BEST' or desired_quality == 'DIALOG':
             try:
@@ -591,7 +591,7 @@ def get_video_url(params):
         url_video = json.loads(url_video)
         url_video = url_video['message'].replace('\\', '')
 
-        desired_quality = common.plugin.get_setting('quality')
+        desired_quality = common.PLUGIN.get_setting('quality')
 
         if desired_quality == 'BEST' or desired_quality == 'DIALOG':
             try:

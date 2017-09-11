@@ -34,7 +34,7 @@ from resources.lib import common
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
 CHANNEL_CATALOG = 'http://pluzz.webservices.francetelevisions.fr/' \
                   'pluzz/liste/type/replay/nb/10000/chaine/%s'
@@ -157,7 +157,7 @@ def root(params):
     if params.channel_name != 'franceinfo':
         modes.append({
             'label' : 'Replay',
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_shows_1',
                 category='%s Replay' % params.channel_name.upper(),
@@ -169,7 +169,7 @@ def root(params):
     if params.channel_name != 'la_1ere':
         modes.append({
             'label' : _('Live TV'),
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
@@ -177,7 +177,7 @@ def root(params):
             ),
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -225,7 +225,7 @@ def list_shows(params):
 
                 shows.append({
                     'label': rubrique_title,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         rubrique=rubrique,
                         next='list_shows_2_cat',
@@ -235,41 +235,41 @@ def list_shows(params):
 
         # Last videos
         shows.append({
-            'label': common.addon.get_localized_string(30104),
-            'url': common.plugin.get_url(
+            'label': common.ADDON.get_localized_string(30104),
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_shows_last',
                 page='0',
-                window_title=common.addon.get_localized_string(30104)
+                window_title=common.ADDON.get_localized_string(30104)
             )
         })
 
         # Search
         shows.append({
-            'label': common.addon.get_localized_string(30103),
-            'url': common.plugin.get_url(
+            'label': common.ADDON.get_localized_string(30103),
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='search',
                 page='0',
-                window_title=common.addon.get_localized_string(30103)
+                window_title=common.ADDON.get_localized_string(30103)
             )
         })
 
         # from A to Z
         shows.append({
-            'label': common.addon.get_localized_string(30105),
-            'url': common.plugin.get_url(
+            'label': common.ADDON.get_localized_string(30105),
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_shows_from_a_to_z',
-                window_title=common.addon.get_localized_string(30105)
+                window_title=common.ADDON.get_localized_string(30105)
             )
         })
 
     # level 1
     elif 'list_shows_from_a_to_z' in params.next:
         shows.append({
-            'label': common.addon.get_localized_string(30106),
-            'url': common.plugin.get_url(
+            'label': common.ADDON.get_localized_string(30106),
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_shows_2_from_a_to_z_CATEGORIES',
                 page='0',
@@ -280,8 +280,8 @@ def list_shows(params):
             )
         })
         shows.append({
-            'label': common.addon.get_localized_string(30107),
-            'url': common.plugin.get_url(
+            'label': common.ADDON.get_localized_string(30107),
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_shows_2_from_a_to_z_CATEGORIES',
                 page='0',
@@ -299,7 +299,7 @@ def list_shows(params):
                 url = url % (params.channel_name, '%s')
             shows.append({
                 'label': title,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos_last',
                     page='0',
@@ -357,7 +357,7 @@ def list_shows(params):
                             'label': titre_programme,
                             'thumb': icon,
                             'fanart': icon,
-                            'url': common.plugin.get_url(
+                            'url': common.PLUGIN.get_url(
                                 action='channel_entry',
                                 next='list_videos_1',
                                 id_programme=id_programme,
@@ -371,8 +371,8 @@ def list_shows(params):
         if params.next == 'list_shows_2_from_a_to_z_CATEGORIES':
             # More videos...
             shows.append({
-                'label': common.addon.get_localized_string(30100),
-                'url': common.plugin.get_url(
+                'label': common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_shows_2_from_a_to_z_CATEGORIES',
                     sens=params.sens,
@@ -384,7 +384,7 @@ def list_shows(params):
                 )
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -538,7 +538,7 @@ def list_videos(params):
                 context_menu = []
                 download_video = (
                     _('Download'),
-                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         id_diffusion=id_diffusion) + ')'
                 )
@@ -549,7 +549,7 @@ def list_videos(params):
                     'label': title,
                     'fanart': image,
                     'thumb': image,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_r',
                         id_diffusion=id_diffusion
@@ -562,8 +562,8 @@ def list_videos(params):
     if 'search' in params.next:
         # More videos...
         videos.append({
-            'label': common.addon.get_localized_string(30100),
-            'url': common.plugin.get_url(
+            'label': common.ADDON.get_localized_string(30100),
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_search',
                 query=params.query,
@@ -578,8 +578,8 @@ def list_videos(params):
     elif 'last' in params.next:
         # More videos...
         videos.append({
-            'label': common.addon.get_localized_string(30100),
-            'url': common.plugin.get_url(
+            'label': common.ADDON.get_localized_string(30100),
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 url=params.url,
                 next=params.next,
@@ -592,7 +592,7 @@ def list_videos(params):
 
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -698,7 +698,7 @@ def list_live(params):
                 'label': title,
                 'fanart': image,
                 'thumb': image,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_l',
                     id_diffusion=id_diffusion
@@ -721,7 +721,7 @@ def list_live(params):
 
         lives.append({
             'label': title,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_l'
             ),
@@ -730,7 +730,7 @@ def list_live(params):
         })
 
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -746,7 +746,7 @@ def get_video_url(params):
         file_prgm = utils.get_webcontent(SHOW_INFO % (params.id_diffusion))
         json_parser = json.loads(file_prgm)
 
-        desired_quality = common.plugin.get_setting('quality')
+        desired_quality = common.PLUGIN.get_setting('quality')
 
         url_selected = ''
 

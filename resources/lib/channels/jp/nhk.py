@@ -21,45 +21,47 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from resources.lib import utils
-from resources.lib import common
 import xml.etree.ElementTree as ET
 import re
 import json
 import base64
 import time
+from resources.lib import utils
+from resources.lib import common
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
-url_root = 'http://www3.nhk.or.jp/'
+URL_ROOT = 'http://www3.nhk.or.jp/'
 
-url_live_nhk = 'http://www3.nhk.or.jp/%s/app/tv/hlslive_tv.xml'
+URL_LIVE_NHK = 'http://www3.nhk.or.jp/%s/app/tv/hlslive_tv.xml'
 # Channel_Name...
 
-url_commonjs_nhk = 'http://www3.nhk.or.jp/%s/common/js/common.js'
+URL_COMMONJS_NHK = 'http://www3.nhk.or.jp/%s/common/js/common.js'
 # Channel_Name...
 
-url_live_info_nhk = 'https://api.nhk.or.jp/%s/epg/v6/%s/now.json?apikey=%s'
+URL_LIVE_INFO_NHK = 'https://api.nhk.or.jp/%s/epg/v6/%s/now.json?apikey=%s'
 # Channel_Name, location, apikey ...
 
-url_categories_nhk = 'https://api.nhk.or.jp/%s/vodcatlist/v2/notzero/list.json?apikey=%s'
+URL_CATEGORIES_NHK = 'https://api.nhk.or.jp/%s/vodcatlist/v2/notzero/list.json?apikey=%s'
 # Channel_Name, apikey
 
-url_all_vod_nhk = 'https://api.nhk.or.jp/%s/vodesdlist/v1/all/all/all.json?apikey=%s'
+URL_ALL_VOD_NHK = 'https://api.nhk.or.jp/%s/vodesdlist/v1/all/all/all.json?apikey=%s'
 # Channel_Name, apikey
 
-url_video_vod = 'https://player.ooyala.com/sas/player_api/v2/authorization/embed_code/%s/%s?device=html5&domain=www3.nhk.or.jp'
+URL_VIDEO_VOD = 'https://player.ooyala.com/sas/player_api/v2/authorization/' \
+                'embed_code/%s/%s?device=html5&domain=www3.nhk.or.jp'
 # pcode, Videoid
 
-url_get_js_pcode = 'https://www3.nhk.or.jp/%s/common/player/tv/vod/'
+URL_GET_JS_PCODE = 'https://www3.nhk.or.jp/%s/common/player/tv/vod/'
 # Channel_Name...
 
-location = ['world']
+LOCATION = ['world']
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -74,14 +76,14 @@ def channel_entry(params):
 def get_pcode(params):
     # Get js file
     file_path = utils.download_catalog(
-        url_get_js_pcode % params.channel_name,
+        URL_GET_JS_PCODE % params.channel_name,
         '%s_js.html' % params.channel_name,
     )
     file_js = open(file_path).read()
     js_file = re.compile('<script src="\/(.+?)"').findall(file_js)
 
     # Get last JS script
-    url_get_pcode = url_root + js_file[len(js_file)-1]
+    url_get_pcode = URL_ROOT + js_file[len(js_file)-1]
 
     # Get apikey
     file_path_js = utils.download_catalog(
@@ -95,7 +97,7 @@ def get_pcode(params):
 def get_api_key(params):
     # Get apikey
     file_path_js = utils.download_catalog(
-        url_commonjs_nhk % params.channel_name,
+        URL_COMMONJS_NHK % params.channel_name,
         '%s_info.js' % params.channel_name,
     )
     info_js = open(file_path_js).read()
@@ -110,7 +112,7 @@ def root(params):
     # Add Replay Desactiver
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -121,7 +123,7 @@ def root(params):
     # Add Live
     modes.append({
         'label' : 'Live TV',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -129,7 +131,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -147,7 +149,7 @@ def list_shows(params):
 
         shows.append({
             'label': all_video,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_cat',
                 category_id=0,
@@ -157,7 +159,7 @@ def list_shows(params):
         })
 
         file_path = utils.download_catalog(
-            url_categories_nhk % (params.channel_name, get_api_key(params)),
+            URL_CATEGORIES_NHK % (params.channel_name, get_api_key(params)),
             '%s_categories.json' % (params.channel_name)
         )
         file_categories = open(file_path).read()
@@ -170,7 +172,7 @@ def list_shows(params):
 
             shows.append({
                 'label': name_category,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos_cat',
                     category_id=category_id,
@@ -179,7 +181,7 @@ def list_shows(params):
                 ),
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -195,7 +197,7 @@ def list_videos(params):
         category_id = params.category_id
 
         file_path = utils.download_catalog(
-            url_all_vod_nhk % (params.channel_name, get_api_key(params)),
+            URL_ALL_VOD_NHK % (params.channel_name, get_api_key(params)),
             '%s_all_vod.json' % (params.channel_name)
         )
         file_all_vod = open(file_path).read()
@@ -214,7 +216,7 @@ def list_videos(params):
 
             if episode_to_add is True:
                 title = episode["title_clean"].encode('utf-8') + ' - ' + episode["sub_title_clean"].encode('utf-8')
-                img = url_root + episode["image"].encode('utf-8')
+                img = URL_ROOT + episode["image"].encode('utf-8')
                 video_id = episode["vod_id"].encode('utf-8')
                 plot = episode["description_clean"].encode('utf-8')
                 duration = 0
@@ -248,7 +250,7 @@ def list_videos(params):
                 context_menu = []
                 download_video = (
                     _('Download'),
-                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_id=video_id) + ')'
                 )
@@ -259,7 +261,7 @@ def list_videos(params):
                     'label': title,
                     'thumb': img,
                     'fanart': img,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_r',
                         video_id=video_id
@@ -269,7 +271,7 @@ def list_videos(params):
                     'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_DATE,
@@ -297,7 +299,7 @@ def list_live(params):
 
     # Get URL Live
     file_path = utils.download_catalog(
-        url_live_nhk % params.channel_name,
+        URL_LIVE_NHK % params.channel_name,
         '%s_live.xml' % params.channel_name,
     )
     live_xml = open(file_path).read()
@@ -306,7 +308,7 @@ def list_live(params):
 
     #GET Info Live
     # Get JSON
-    url_json = url_live_info_nhk % (params.channel_name, location[0], get_api_key(params))
+    url_json = URL_LIVE_INFO_NHK % (params.channel_name, LOCATION[0], get_api_key(params))
     file_path_json = utils.download_catalog(
         url_json,
         '%s_live.json' % params.channel_name,
@@ -323,7 +325,7 @@ def list_live(params):
         start_date = time.strftime('%H:%M', time.localtime(int(str(info_live["pubDate"])[:-3])))
         end_date = time.strftime('%H:%M', time.localtime(int(str(info_live["endDate"])[:-3])))
         plot = start_date + ' - ' + end_date + '\n ' + info_live["description"].encode('utf-8')
-        img = url_root + info_live["thumbnail"].encode('utf-8')
+        img = URL_ROOT + info_live["thumbnail"].encode('utf-8')
         break
 
 
@@ -339,7 +341,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url=url_live,
@@ -348,7 +350,7 @@ def list_live(params):
         'info': info
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -362,7 +364,7 @@ def get_video_url(params):
     if params.next == 'play_r' or params.next == 'download_video':
         url = ''
         file_path = utils.download_catalog(
-            url_video_vod % (get_pcode(params), params.video_id),
+            URL_VIDEO_VOD % (get_pcode(params), params.video_id),
             '%s_%s_video_vod.json' % (params.channel_name, params.video_id)
         )
         video_vod = open(file_path).read()

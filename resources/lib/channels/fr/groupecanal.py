@@ -84,7 +84,7 @@ URL_INFO_CONTENT = 'http://service.canal-plus.com/video/rest/getvideosliees/%s/%
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -124,7 +124,7 @@ def root(params):
     # Add Replay
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -135,7 +135,7 @@ def root(params):
     # Add Live
     modes.append({
         'label' : _('Live TV'),
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -143,7 +143,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -161,7 +161,7 @@ def list_shows(params):
         for category_url, category_title in CATEGORIES_CNEWS.iteritems():
             shows.append({
                 'label': category_title,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     category_url=category_url,
                     next='list_videos_cat',
@@ -172,7 +172,7 @@ def list_shows(params):
 
         shows.append({
             'label': 'Les Émissions',
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 category_url='emissions',
                 next='list_shows_emissions',
@@ -184,7 +184,7 @@ def list_shows(params):
     elif params.next == 'list_shows_emissions' and params.channel_name == 'cnews':
         shows.append({
             'label': 'À la Une',
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 category_url='http://service.itele.fr/iphone/dernieres_emissions?query=',
                 next='list_videos_cat',
@@ -195,7 +195,7 @@ def list_shows(params):
 
         shows.append({
             'label': 'Magazines',
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 category_url='http://service.itele.fr/iphone/emissions?query=magazines',
                 next='list_videos_cat',
@@ -206,7 +206,7 @@ def list_shows(params):
 
         shows.append({
             'label': 'Chroniques',
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 category_url='http://service.itele.fr/iphone/emissions?query=chroniques',
                 next='list_videos_cat',
@@ -231,7 +231,7 @@ def list_shows(params):
 
             shows.append({
                 'label': title,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     slug=slug,
                     next='list_shows_2',
@@ -259,7 +259,7 @@ def list_shows(params):
 
                     shows.append({
                         'label': title,
-                        'url': common.plugin.get_url(
+                        'url': common.PLUGIN.get_url(
                             action='channel_entry',
                             next='list_videos_cat',
                             id=id,
@@ -334,7 +334,7 @@ def list_shows(params):
                             shows.append({
                                 'label': title,
                                 'thumb': img,
-                                'url': common.plugin.get_url(
+                                'url': common.PLUGIN.get_url(
                                     action='channel_entry',
                                     url_page=url_page,
                                     next='list_shows_1',
@@ -369,7 +369,7 @@ def list_shows(params):
                             shows.append({
                                 'label': title,
                                 'thumb': img,
-                                'url': common.plugin.get_url(
+                                'url': common.PLUGIN.get_url(
                                     action='channel_entry',
                                     url_page=url_page,
                                     next='list_shows_1',
@@ -384,7 +384,7 @@ def list_shows(params):
                         title = strate['title'].encode('utf-8')
                         shows.append({
                             'label': title,
-                            'url': common.plugin.get_url(
+                            'url': common.PLUGIN.get_url(
                                 action='channel_entry',
                                 url_page=params.url_page,
                                 next='list_shows_2',
@@ -397,7 +397,7 @@ def list_shows(params):
                         title = strate['title'].encode('utf-8')
                         shows.append({
                             'label': title,
-                            'url': common.plugin.get_url(
+                            'url': common.PLUGIN.get_url(
                                 action='channel_entry',
                                 url_page=params.url_page,
                                 next='list_shows_2',
@@ -436,7 +436,7 @@ def list_shows(params):
                 shows.append({
                     'label': title,
                     'thumb': img,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         url_page=url_page,
                         next='list_shows_1',
@@ -477,7 +477,7 @@ def list_shows(params):
 
     ################### END CANAL + ##################
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -541,7 +541,7 @@ def list_videos(params):
             context_menu = []
             download_video = (
                 _('Download'),
-                'XBMC.RunPlugin(' + common.plugin.get_url(
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_urlhd=video_url) + ')'
             )
@@ -550,7 +550,7 @@ def list_videos(params):
             videos.append({
                 'label': title,
                 'thumb': thumb,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
                     video_id=video_id,
@@ -612,7 +612,7 @@ def list_videos(params):
             context_menu = []
             download_video = (
                 _('Download'),
-                'XBMC.RunPlugin(' + common.plugin.get_url(
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     id=id) + ')'
             )
@@ -621,7 +621,7 @@ def list_videos(params):
             videos.append({
                 'label': title,
                 'thumb': thumb,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
                     id=id,
@@ -689,7 +689,7 @@ def list_videos(params):
                                 'label': title,
                                 'thumb': img,
                                 'fanart': fanart,
-                                'url': common.plugin.get_url(
+                                'url': common.PLUGIN.get_url(
                                     action='channel_entry',
                                     next='play_r',
                                     id=id,
@@ -723,7 +723,7 @@ def list_videos(params):
                 context_menu = []
                 download_video = (
                     _('Download'),
-                    'XBMC.RunPlugin(' + common.plugin.get_url(
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         id=id) + ')'
                 )
@@ -733,7 +733,7 @@ def list_videos(params):
                     'label': title,
                     'thumb': img,
                     'fanart': params.fanart,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_r',
                         id=id,
@@ -750,8 +750,8 @@ def list_videos(params):
                 current_index_page = int(params.url_page[-1])
                 videos.append({
                     'fanart': params.fanart,
-                    'label': common.addon.get_localized_string(30100),
-                    'url': common.plugin.get_url(
+                    'label': common.ADDON.get_localized_string(30100),
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='list_videos',
                         title=params.title,
@@ -765,7 +765,7 @@ def list_videos(params):
                 })
     ################### END Canal + ##################
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_DATE,
@@ -845,7 +845,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url=url_live,
@@ -854,7 +854,7 @@ def list_live(params):
         'info': info
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,

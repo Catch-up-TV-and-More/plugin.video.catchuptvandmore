@@ -20,14 +20,14 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from resources.lib import utils
-from resources.lib import common
 import re
 import json
-from bs4 import BeautifulSoup as bs
 import time
+from resources.lib import utils
+from resources.lib import common
+from bs4 import BeautifulSoup as bs
 
-# TODO
+# TO DO
 # Info live (title, picture, plot)
 # Find JS with categories with text, ... ? more reliable
 # Fix errors, show error, etc ...
@@ -35,27 +35,28 @@ import time
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
-url_root = 'https://www.bvn.tv'
+URL_ROOT = 'https://www.bvn.tv'
 
 #LIVE :
-url_live_site = 'https://www.bvn.tv/bvnlive'
+URL_LIVE_SITE = 'https://www.bvn.tv/bvnlive'
 # Get Id
-json_live = 'https://json.dacast.com/b/%s/%s/%s'
+JSON_LIVE = 'https://json.dacast.com/b/%s/%s/%s'
 # Id in 3 part
-json_live_token = 'https://services.dacast.com/token/i/b/%s/%s/%s'
+JSON_LIVE_TOKEN = 'https://services.dacast.com/token/i/b/%s/%s/%s'
 # Id in 3 part
 
 # REPLAY :
-url_token = 'https://ida.omroep.nl/app.php/auth'
-url_programs = 'https://www.bvn.tv/programmas'
-url_info_replay = 'https://e.omroep.nl/metadata/%s?callback=jsonpCallback%s5910'
+URL_TOKEN = 'https://ida.omroep.nl/app.php/auth'
+URL_PROGRAMS = 'https://www.bvn.tv/programmas'
+URL_INFO_REPLAY = 'https://e.omroep.nl/metadata/%s?callback=jsonpCallback%s5910'
 # Id Video, time
-url_video_replay = 'https://ida.omroep.nl/app.php/%s?adaptive=yes&token=%s'
+URL_VIDEO_REPLAY = 'https://ida.omroep.nl/app.php/%s?adaptive=yes&token=%s'
 # Id Video, Token
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -71,23 +72,24 @@ def channel_entry(params):
 
 #@common.plugin.cached(common.cache_time)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
     modes.append({
-            'label' : 'Replay',
-            'url': common.plugin.get_url(
-                action='channel_entry',
-                next='list_shows_1',
-                category='%s Replay' % params.channel_name.upper(),
-                window_title='%s Replay' % params.channel_name.upper()
-            ),
+        'label' : 'Replay',
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
     })
 
     # Add Live
     modes.append({
         'label' : 'Live TV',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -95,7 +97,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -105,30 +107,42 @@ def root(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_shows(params):
+    """Build categories listing"""
     shows = []
 
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
-            url_programs,
+            URL_PROGRAMS,
             '%s_programs.html' % params.channel_name)
         programs_html = open(file_path).read()
         programs_soup = bs(programs_html, 'html.parser')
-        list_js  = programs_soup.find_all("script")
+        list_js = programs_soup.find_all("script")
         # 7ème script contient la liste des categories au format json
-        json_categories = list_js[6].prettify().replace('</script>','').replace('<script>','').replace('var programList = ','').replace('\n','').replace('\r','').replace(',]',']')
+        json_categories = list_js[6].prettify().replace(
+            '</script>', ''
+        ).replace(
+            '<script>', ''
+        ).replace(
+            'var programList = ', ''
+        ).replace(
+            '\n', ''
+        ).replace(
+            '\r', ''
+        ).replace(
+            ',]', ']')
 
         json_categories_jsonparser = json.loads(json_categories)
 
         for category in json_categories_jsonparser["programmings"]:
             category_name = category["title"]
-            category_img =  url_root + category["image"]
-            category_url = url_root + '/programma/' + category["description"]
+            category_img = URL_ROOT + category["image"]
+            category_url = URL_ROOT + '/programma/' + category["description"]
 
             shows.append({
                 'label': category_name,
                 'thumb' : category_img,
                 'fanart' : category_img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos_cat',
                     category_url=category_url,
@@ -137,7 +151,7 @@ def list_shows(params):
                 )
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -147,11 +161,12 @@ def list_shows(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     file_path_2 = utils.download_catalog(
         params.category_url,
-        '%s_%s_list_episodes.html' % (params.channel_name,params.category_url))
+        '%s_%s_list_episodes.html' % (params.channel_name, params.category_url))
     episodes_html = open(file_path_2).read()
     episodes_soup = bs(episodes_html, 'html.parser')
 
@@ -166,7 +181,7 @@ def list_videos(params):
 
         # get token
         file_path_json_token = utils.download_catalog(
-            url_token,
+            URL_TOKEN,
             '%s_replay_token.json' % (params.channel_name))
         replay_json_token = open(file_path_json_token).read()
         replay_jsonparser_token = json.loads(replay_json_token)
@@ -175,21 +190,23 @@ def list_videos(params):
 
         # get info replay
         file_path_info_replay = utils.download_catalog(
-            url_info_replay % (id_episode,str(time.time()).replace('.','')),
-            '%s_%s_info_replay.js' % (params.channel_name,id_episode))
+            URL_INFO_REPLAY % (id_episode, str(time.time()).replace('.', '')),
+            '%s_%s_info_replay.js' % (params.channel_name, id_episode))
         info_replay_js = open(file_path_info_replay).read()
         info_replay_json = re.compile(r'\((.*?)\)\n').findall(info_replay_js)[0]
         info_replay_jsonparser = json.loads(info_replay_json)
 
-        title = info_replay_jsonparser["titel"].encode('utf-8') + ' ' +  info_replay_jsonparser["aflevering_titel"].encode('utf-8')
+        title = info_replay_jsonparser["titel"].encode('utf-8') + ' ' + \
+            info_replay_jsonparser["aflevering_titel"].encode('utf-8')
         img = ''
         if 'images' in info_replay_jsonparser:
             img = info_replay_jsonparser["images"][0]["url"].encode('utf-8')
 
         plot = info_replay_jsonparser["info"].encode('utf-8')
         duration = 0
-        duration = int(info_replay_jsonparser["tijdsduur"].split(':')[0]) * 3600 + int(info_replay_jsonparser["tijdsduur"].split(':')[1]) * 60 \
-                   + int(info_replay_jsonparser["tijdsduur"].split(':')[2])
+        duration = int(info_replay_jsonparser["tijdsduur"].split(':')[0]) * 3600 + \
+            int(info_replay_jsonparser["tijdsduur"].split(':')[1]) * 60 \
+            + int(info_replay_jsonparser["tijdsduur"].split(':')[2])
 
         value_date = info_replay_jsonparser["gidsdatum"].split('-')
         day = value_date[2]
@@ -201,8 +218,8 @@ def list_videos(params):
 
         # Get HLS link
         file_path_video_replay = utils.download_catalog(
-            url_video_replay % (id_episode,token),
-            '%s_%s_video_replay.js' % (params.channel_name,id_episode))
+            URL_VIDEO_REPLAY % (id_episode, token),
+            '%s_%s_video_replay.js' % (params.channel_name, id_episode))
         video_replay_json = open(file_path_video_replay).read()
         video_replay_jsonparser = json.loads(video_replay_json)
 
@@ -214,8 +231,8 @@ def list_videos(params):
                 break
 
             file_path_hls_replay = utils.download_catalog(
-                url_json_url_hls + 'jsonpCallback%s5910' % (str(time.time()).replace('.','')),
-                '%s_%s_hls_replay.js' % (params.channel_name,id_episode))
+                url_json_url_hls + 'jsonpCallback%s5910' % (str(time.time()).replace('.', '')),
+                '%s_%s_hls_replay.js' % (params.channel_name, id_episode))
             hls_replay_js = open(file_path_hls_replay).read()
             hls_replay_json = re.compile(r'\((.*?)\)').findall(hls_replay_js)[0]
             hls_replay_jsonparser = json.loads(hls_replay_json)
@@ -238,33 +255,31 @@ def list_videos(params):
             }
         }
 
-        # Nouveau pour ajouter le menu pour télécharger la vidéo
         context_menu = []
         download_video = (
             _('Download'),
-            'XBMC.RunPlugin(' + common.plugin.get_url(
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 url_hls=url_hls) + ')'
             )
         context_menu.append(download_video)
-        # Fin
 
         if url_hls != '':
             videos.append({
                 'label': title,
                 'thumb': img,
                 'fanart': img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
                     url_hls=url_hls
                 ),
                 'is_playable': True,
                 'info': info,
-                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                'context_menu': context_menu
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_DATE,
@@ -278,6 +293,7 @@ def list_videos(params):
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -288,26 +304,27 @@ def list_live(params):
     url_live = ''
 
     file_path = utils.download_catalog(
-        url_live_site,
+        URL_LIVE_SITE,
         '%s_live.html' % (params.channel_name))
     live_html = open(file_path).read()
     id_value = re.compile(r'<script id="(.*?)"').findall(live_html)[0].split('_')
 
     #json with hls
     file_path_json = utils.download_catalog(
-        json_live % (id_value[0], id_value[1], id_value[2]),
+        JSON_LIVE % (id_value[0], id_value[1], id_value[2]),
         '%s_live.json' % (params.channel_name))
     live_json = open(file_path_json).read()
     live_jsonparser = json.loads(live_json)
 
     #json with token
     file_path_json_token = utils.download_catalog(
-        json_live_token % (id_value[0], id_value[1], id_value[2]),
+        JSON_LIVE_TOKEN % (id_value[0], id_value[1], id_value[2]),
         '%s_live_token.json' % (params.channel_name))
     live_json_token = open(file_path_json_token).read()
     live_jsonparser_token = json.loads(live_json_token)
 
-    url_live = 'http:' + live_jsonparser["hls"].encode('utf-8') + live_jsonparser_token["token"].encode('utf-8')
+    url_live = 'http:' + live_jsonparser["hls"].encode('utf-8') + \
+        live_jsonparser_token["token"].encode('utf-8')
 
     title = '%s Live' % params.channel_name.upper()
 
@@ -323,7 +340,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url_live=url_live,
@@ -332,7 +349,7 @@ def list_live(params):
         'info': info
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -342,6 +359,7 @@ def list_live(params):
 
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
+    """Get video URL and start video player"""
     if params.next == 'play_l':
         return params.url_live
     elif params.next == 'play_r' or params.next == 'download_video':

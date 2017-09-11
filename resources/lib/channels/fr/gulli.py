@@ -20,22 +20,58 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import re
 import json
-from resources.lib import utils
-from resources.lib import common
 import time
 from bs4 import BeautifulSoup as bs
-import re
+from resources.lib import utils
+from resources.lib import common
 
-# TODO
+# TO DO
 # Improve Live TV (Title, picture, plot)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
+
+SECRET_KEY = '19nBVBxv791Xs'
+
+CATEGORIES = {}
+
+CATEGORIES['Dessins animés'] = 'http://sslreplay.gulli.fr/replay/api?' \
+                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
+                               '%%22:%%22programme.getLatestEpisodes%%22,%%' \
+                               '22params%%22:%%7B%%22program_image_thumb%%' \
+                               '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
+                               'dessins-animes%%22%%7D%%7D'
+
+CATEGORIES['Émissions'] = 'https://sslreplay.gulli.fr/replay/api?' \
+                          'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
+                          '%%22:%%22programme.getLatestEpisodes%%22,%%' \
+                          '22params%%22:%%7B%%22program_image_thumb%%' \
+                          '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
+                          'emissions%%22%%7D%%7D'
+
+CATEGORIES['Séries & films'] = 'https://sslreplay.gulli.fr/replay/api?' \
+                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
+                               '%%22:%%22programme.getLatestEpisodes%%22,%%' \
+                               '22params%%22:%%7B%%22program_image_thumb%%' \
+                               '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
+                               'series%%22%%7D%%7D'
+
+URL_LIST_SHOW = 'https://sslreplay.gulli.fr/replay/api?call=%%7B%%22api_key' \
+                '%%22:%%22%s%%22,%%22' \
+                'method%%22:%%22programme.getEpisodesByProgramIds%%22,%%22' \
+                'params%%22:%%7B%%22program_id_list%%22:%%5B%%22%s%%22%%5D' \
+                '%%7D%%7D'
+
+URL_LIVE_TV = 'http://replay.gulli.fr/Direct'
+
+# program_id
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -46,59 +82,24 @@ def channel_entry(params):
         return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
-
-
-secret_key = '19nBVBxv791Xs'
+    return None
 
 
 def get_api_key():
     date = time.strftime("%Y%m%d")
-    key = secret_key + date
+    key = SECRET_KEY + date
     key = common.sp.md5(key).hexdigest()
     return 'iphoner_' + key
 
 
-categories = {}
-
-categories['Dessins animés'] = 'http://sslreplay.gulli.fr/replay/api?' \
-                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
-                               '%%22:%%22programme.getLatestEpisodes%%22,%%' \
-                               '22params%%22:%%7B%%22program_image_thumb%%' \
-                               '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
-                               'dessins-animes%%22%%7D%%7D'
-
-categories['Émissions'] = 'https://sslreplay.gulli.fr/replay/api?' \
-                          'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
-                          '%%22:%%22programme.getLatestEpisodes%%22,%%' \
-                          '22params%%22:%%7B%%22program_image_thumb%%' \
-                          '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
-                          'emissions%%22%%7D%%7D'
-
-categories['Séries & films'] = 'https://sslreplay.gulli.fr/replay/api?' \
-                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
-                               '%%22:%%22programme.getLatestEpisodes%%22,%%' \
-                               '22params%%22:%%7B%%22program_image_thumb%%' \
-                               '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
-                               'series%%22%%7D%%7D'
-
-url_list_show = 'https://sslreplay.gulli.fr/replay/api?call=%%7B%%22api_key' \
-                '%%22:%%22%s%%22,%%22' \
-                'method%%22:%%22programme.getEpisodesByProgramIds%%22,%%22' \
-                'params%%22:%%7B%%22program_id_list%%22:%%5B%%22%s%%22%%5D' \
-                '%%7D%%7D'
-
-url_live_tv = 'http://replay.gulli.fr/Direct'
-
-# program_id
-
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
     modes = []
 
     # Add Replay
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -109,7 +110,7 @@ def root(params):
     # Add Live
     modes.append({
         'label' : 'Live TV',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -117,7 +118,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -125,16 +126,16 @@ def root(params):
         ),
     )
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
     # Create categories list
     shows = []
 
     if params.next == 'list_shows_1':
-        for category_title, category_url in categories.iteritems():
+        for category_title, category_url in CATEGORIES.iteritems():
             shows.append({
                 'label': category_title,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     category_url=category_url % get_api_key(),
                     next='list_shows_cat',
@@ -143,7 +144,7 @@ def list_shows(params):
                 )
             })
 
-        return common.plugin.create_listing(
+        return common.PLUGIN.create_listing(
             shows,
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -168,7 +169,7 @@ def list_shows(params):
                 'label': program_title,
                 'thumb': fanart,
                 'fanart': fanart,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     program_id=program_id,
                     next='list_videos',
@@ -177,7 +178,7 @@ def list_shows(params):
                 )
             })
 
-        return common.plugin.create_listing(
+        return common.PLUGIN.create_listing(
             shows,
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -186,12 +187,12 @@ def list_shows(params):
         )
 
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
     videos = []
 
     file_path = utils.download_catalog(
-        url_list_show % (get_api_key(), params.program_id),
+        URL_LIST_SHOW % (get_api_key(), params.program_id),
         '%s_%s.json' % (params.channel_name, params.program_id))
     file = open(file_path).read()
     json_show = json.loads(file)
@@ -238,7 +239,7 @@ def list_videos(params):
         context_menu = []
         download_video = (
             _('Download'),
-            'XBMC.RunPlugin(' + common.plugin.get_url(
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 url_streaming=url_streaming) + ')'
         )
@@ -249,7 +250,7 @@ def list_videos(params):
             'label': episode_title,
             'thumb': thumb,
             'fanart': fanart,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_r',
                 url_streaming=url_streaming
@@ -259,7 +260,7 @@ def list_videos(params):
             'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -268,7 +269,7 @@ def list_videos(params):
         ),
         content='tvshows')
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
 
     lives = []
@@ -280,7 +281,7 @@ def list_live(params):
     url_live = ''
 
     file_path = utils.download_catalog(
-        url_live_tv,
+        URL_LIVE_TV,
         params.channel_name + '_live.html')
     root_live_html = open(file_path).read()
     root_live_soup = bs(root_live_html, 'html.parser')
@@ -319,7 +320,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url_live=url_live,
@@ -328,7 +329,7 @@ def list_live(params):
         'info': info
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -336,7 +337,7 @@ def list_live(params):
         )
     )
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
     if params.next == 'play_r' or params.next == 'download_video':
         url_root = params.url_streaming.replace('playlist.m3u8', '')

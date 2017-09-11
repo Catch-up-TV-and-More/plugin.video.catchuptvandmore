@@ -20,28 +20,29 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import ast
+import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
-import ast
-import re
 
-# TODO
+# TO DO
 #   emissions alphabetics
 
-url_root = 'http://www.rtl.be/tv/%s/replay'
+URL_ROOT = 'http://www.rtl.be/tv/%s/replay'
 # channel name : plugrtl, rtltvi or clubrtl
 
-url_xml = 'http://www.rtl.be/videos/player/replays/%s/%s.xml'
+URL_XML = 'http://www.rtl.be/videos/player/replays/%s/%s.xml'
 # program_id, video_id
 
-url_root_live = 'http://www.rtl.be/tv/%s/live'
+URL_ROOT_LIVE = 'http://www.rtl.be/tv/%s/live'
 # channel
 
-url_xml_live = 'http://www.rtl.be/videos/player/lives/10000/%s.xml'
+URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/10000/%s.xml'
 # live id
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -62,7 +63,7 @@ def root(params):
     # Add Replay
     modes.append({
         'label' : 'Replay',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -73,7 +74,7 @@ def root(params):
     # Add Live
     modes.append({
         'label' : 'Live TV',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -81,7 +82,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -89,7 +90,7 @@ def root(params):
         ),
     )
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
     shows = []
     if 'previous_listing' in params:
@@ -97,7 +98,7 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
-            url_root % params.channel_name,
+            URL_ROOT % params.channel_name,
             '%s_root.html' % params.channel_name)
         root_html = open(file_path).read()
         root_soup = bs(root_html, 'html.parser')
@@ -131,11 +132,11 @@ def list_shows(params):
                         'article',
                         attrs={'card': 'video'}))
                     next = 'list_videos'
-                    category_url = url_root % params.channel_name
+                    category_url = URL_ROOT % params.channel_name
 
                 shows.append({
                     'label': category_title,
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         category_title=category_title,
                         action='channel_entry',
                         category_url=category_url,
@@ -165,7 +166,7 @@ def list_shows(params):
 
             shows.append({
                 'label': category_title,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     category_title=category_title,
                     action='channel_entry',
                     category_url=category_url,
@@ -201,7 +202,7 @@ def list_shows(params):
             shows.append({
                 'label': program_title,
                 'thumb': program_img,
-                'url': common.plugin.get_url(
+                'url': common.PLUGIN.get_url(
                     program_title=program_title,
                     action='channel_entry',
                     program_url=program_url,
@@ -216,8 +217,8 @@ def list_shows(params):
                 'a')['href'].encode('utf-8').replace('//', 'http://')
             # More programs...
             shows.append({
-                'label': common.addon.get_localized_string(30108),
-                'url': common.plugin.get_url(
+                'label': common.ADDON.get_localized_string(30108),
+                'url': common.PLUGIN.get_url(
                     category_title=params.category_title,
                     action='channel_entry',
                     category_url=url,
@@ -230,7 +231,7 @@ def list_shows(params):
 
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -240,7 +241,7 @@ def list_shows(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
     videos = []
     if 'previous_listing' in params:
@@ -335,7 +336,7 @@ def list_videos(params):
         videos.append({
             'label': video_title,
             'thumb': video_img,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_r',
                 video_url=video_url
@@ -354,8 +355,8 @@ def list_videos(params):
             url = 'http://' + url
             # More videos...
             videos.append({
-                'label': common.addon.get_localized_string(30100),
-                'url': common.plugin.get_url(
+                'label': common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
                     category_title=title,
                     action='channel_entry',
                     category_url=url,
@@ -368,7 +369,7 @@ def list_videos(params):
 
             })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -391,7 +392,7 @@ def list_live(params):
 
     # get liveid
     file_path = utils.download_catalog(
-        url_root_live % (params.channel_name),
+        URL_ROOT_LIVE % (params.channel_name),
         '%s_live.html' % (params.channel_name))
     live_html = open(file_path).read()
 
@@ -404,7 +405,7 @@ def list_live(params):
         get_liveid = re.compile(r'liveid="(.*?)"').findall(live_html)[0]
 
         file_path = utils.download_catalog(
-            url_xml_live % (get_liveid),
+            URL_XML_LIVE % (get_liveid),
             '%s_live.xml' % (params.channel_name))
         live_xml = open(file_path).read()
 
@@ -426,7 +427,7 @@ def list_live(params):
             'label': title,
             'fanart': img,
             'thumb': img,
-            'url' : common.plugin.get_url(
+            'url' : common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_l',
                 url_live=url_live,
@@ -451,7 +452,7 @@ def list_live(params):
             'label': title,
             'fanart': img,
             'thumb': img,
-            'url' : common.plugin.get_url(
+            'url' : common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_l',
                 url_live=url_live,
@@ -460,7 +461,7 @@ def list_live(params):
             'info': info
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -468,7 +469,7 @@ def list_live(params):
         )
     )
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
 
     if params.next == 'play_r':
@@ -480,7 +481,7 @@ def get_video_url(params):
         program_id = video_id[:-3] + '000'
 
         xml = utils.get_webcontent(
-            url_xml % (program_id, video_id))
+            URL_XML % (program_id, video_id))
 
         m3u8 = re.compile(r'<URL_HLS>(.*?)</URL_HLS>').findall(xml)[0]
 

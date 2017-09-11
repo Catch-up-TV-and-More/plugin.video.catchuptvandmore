@@ -20,17 +20,17 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from resources.lib import utils
-from resources.lib import common
 import json
 import re
+from resources.lib import utils
+from resources.lib import common
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
-_ = common.addon.initialize_gettext()
+_ = common.ADDON.initialize_gettext()
 
-url_json_lives = 'https://services.vrt.be/videoplayer/r/live.json'
+URL_JSON_LIVES = 'https://services.vrt.be/videoplayer/r/live.json'
 # All lives in this JSON
 
 #To get videoid :
@@ -61,10 +61,11 @@ url_json_lives = 'https://services.vrt.be/videoplayer/r/live.json'
 #(go to this url) https://www.vrt.be/vrtnu/a-z/ (select a show)
 # url_show + .securevideo.json
 # exemple https://www.vrt.be/vrtnu/a-z/100-jaar-slag-bij-passendale/2017/100-jaar-slag-bij-passendale-s2017.securevideo.json => get videoid
-url_video_vod_json = 'https://mediazone.vrt.be/api/v1/vrtvideo/assets/%s'
+URL_VIDEO_VOD_JSON = 'https://mediazone.vrt.be/api/v1/vrtvideo/assets/%s'
 # Video ID
 
 def channel_entry(params):
+    """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
     elif 'list_shows' in params.next:
@@ -96,7 +97,7 @@ def root(params):
     # Add Live
     modes.append({
         'label' : 'Live TV',
-        'url': common.plugin.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -104,7 +105,7 @@ def root(params):
         ),
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -136,7 +137,7 @@ def list_live(params):
     url_live = ''
 
     file_path = utils.download_catalog(
-        url_json_lives,
+        URL_JSON_LIVES,
         '%s_live.json' % (params.channel_name))
     lives_json = open(file_path).read()
     lives_json = lives_json.replace(')','').replace('parseLiveJson(','')
@@ -158,7 +159,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.plugin.get_url(
+        'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url_live=url_live,
@@ -167,7 +168,7 @@ def list_live(params):
         'info': info
     })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
