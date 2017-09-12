@@ -29,7 +29,6 @@ from resources.lib import common
 # TO DO
 # Add Live TV
 # More videos buttons for shorts
-# Get url_video_stream or pubId (shows and movies)
 
 UR_ROOT = "http://www.sundance.tv"
 
@@ -43,16 +42,15 @@ URL_LIVE_SUNDANCE = 'http://www.sundance.tv/watch-now/stream'
 
 URL_VIDEO_STREAM = "http://c.brightcove.com/services/mobile/streaming/index/master.m3u8?videoId=%s&pubId=%s"
 # videoId, pubId
-PUBID_MOVIE_SHOW = '3605490453001'
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-def get_policy_key(data_account, data_player):
-    file_js = utils.get_webcontent(url_js_policy_key % (data_account, data_player))
-    return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
+def get_pubid_movie_show():
+    file_html = utils.get_webcontent(URL_LIVE_SUNDANCE)
+    return re.compile('data-video_id="(.+?)"').findall(file_html)[0]
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -154,7 +152,7 @@ def list_shows(params):
 
             show_title = show.find('a').find('div').get_text().encode('utf-8')
             show_img = show.find('div', class_='poster').find('a').find('img').get('src')
-            show_url = URL_SHOWS + show.find_all('a', class_='episode')[0].get('href').split('/')[2]
+            show_url = show.find_all('a', class_='episode')[0].get('href').split('/')[2]
 
             shows.append({
                 'label': show_title,
@@ -211,7 +209,7 @@ def list_videos(params):
                          + '\n' + datas_movie_soup.find('a').find('div', class_='video-player-right').find('p', class_='').get_text().strip().encode('utf-8')
             video_duration = 0
             video_img = datas_movie_soup.find('a').find('div').find('div').find('img').get('src').encode('utf-8')
-            video_url = URL_VIDEO_STREAM % (movie_id, PUBID_MOVIE_SHOW)
+            video_url = URL_VIDEO_STREAM % (movie_id, get_pubid_movie_show())
             info = {
                 'video': {
                     'title': video_title,
@@ -319,68 +317,81 @@ def list_videos(params):
             # TODO add More Button
 
     elif params.next == 'list_videos_show':
-
+        
         file_path = utils.download_catalog(
-            params.show_url,
-            '%s_replay_%s_episodes.html' % (params.channel_name,params.title))
-        replay_show_episodes_html = open(file_path).read()
+            URL_SHOWS,
+            '%s_replay_all_episodes.html' % (params.channel_name))
+        replay_episodes_html = open(file_path).read()
 
-        replay_show_episodes_soup = bs(replay_show_episodes_html, 'html.parser')
-        list_episodes = replay_show_episodes_soup.find_all('a', class_='video-link related-triple')
+        replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
+        datas_episodes_soup = replay_episodes_soup.find_all('a', class_='episode')
 
-        for episode in list_episodes:
+        for datasepisode in datas_episodes_soup:
+            
+            if params.show_url in datasepisode.get('href'):
 
-            video_img = ''
-            video_img = episode.find('div').find('img').get('src').encode('utf-8')
-            video_url = ''
-            video_id = episode.get('href').split('/',6)[-2]
-            video_url = URL_VIDEO_STREAM % (video_id,PUBID_MOVIE_SHOW)
+                file_path = utils.download_catalog(
+                    UR_ROOT + datasepisode.get('href'),
+                    '%s_replay_%s_episodes.html' % (params.channel_name,params.title))
+                replay_show_episodes_html = open(file_path).read()
 
-            video_title = ''
-            video_title = episode.find('div').find('div', class_='video-text').find('div', class_='video-text-play-btn').find('h4').get_text().encode('utf-8')
-            video_duration = 0
-            video_plot = ''
-            video_datas = replay_show_episodes_soup.find(id="video-%s-hover" % video_id)
-            video_plot = video_datas.find('p', class_="video-availability-window").get_text().strip().encode('utf-8') + '\n' + \
-                         video_datas.find('p', class_="video-description").get_text().strip().encode('utf-8')
+                replay_show_episodes_soup = bs(replay_show_episodes_html, 'html.parser')
+                list_episodes = replay_show_episodes_soup.find_all('a', class_='video-link related-triple')
 
-            info = {
-                'video': {
-                    'title': video_title,
-                    #'aired': aired,
-                    #'date': date,
-                    'duration': video_duration,
-                    'plot': video_plot,
-                    #'year': year,
-                    'mediatype': 'tvshow'
-                }
-            }
+                for episode in list_episodes:
 
-            # Nouveau pour ajouter le menu pour télécharger la vidéo
-            context_menu = []
-            download_video = (
-                _('Download'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='download_video',
-                    video_url=video_url) + ')'
-            )
-            context_menu.append(download_video)
-            # Fin
+                    video_img = ''
+                    video_img = episode.find('div').find('img').get('src').encode('utf-8')
+                    video_url = ''
+                    video_id = episode.get('href').split('/',6)[-2]
+                    video_url = URL_VIDEO_STREAM % (video_id,get_pubid_movie_show())
 
-            videos.append({
-                'label': video_title,
-                'thumb': video_img,
-                'fanart': video_img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_r',
-                    video_url=video_url
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
-            })
+                    video_title = ''
+                    video_title = episode.find('div').find('div', class_='video-text').find('div', class_='video-text-play-btn').find('h4').get_text().encode('utf-8')
+                    video_duration = 0
+                    video_plot = ''
+                    video_datas = replay_show_episodes_soup.find(id="video-%s-hover" % video_id)
+                    video_plot = video_datas.find('p', class_="video-availability-window").get_text().strip().encode('utf-8') + '\n' + \
+                                 video_datas.find('p', class_="video-description").get_text().strip().encode('utf-8')
 
+                    info = {
+                        'video': {
+                            'title': video_title,
+                            #'aired': aired,
+                            #'date': date,
+                            'duration': video_duration,
+                            'plot': video_plot,
+                            #'year': year,
+                            'mediatype': 'tvshow'
+                        }
+                    }
+
+                    # Nouveau pour ajouter le menu pour télécharger la vidéo
+                    context_menu = []
+                    download_video = (
+                        _('Download'),
+                        'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                            action='download_video',
+                            video_url=video_url) + ')'
+                    )
+                    context_menu.append(download_video)
+                    # Fin
+
+                    videos.append({
+                        'label': video_title,
+                        'thumb': video_img,
+                        'fanart': video_img,
+                        'url': common.PLUGIN.get_url(
+                            action='channel_entry',
+                            next='play_r',
+                            video_url=video_url
+                        ),
+                        'is_playable': True,
+                        'info': info,
+                        'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                    })
+                break
+                
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
