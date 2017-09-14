@@ -77,15 +77,7 @@ channels = {
     },
 
     'main_menu.be': {
-        'channels.be.rtbf.laune': 'La Une',
-        'channels.be.rtbf.ladeux': 'La Deux',
-        'channels.be.rtbf.latrois': 'La Trois',
-        'channels.be.rtbf.lapremiere': 'La Première',
-        'channels.be.rtbf.vivacite': 'Vivacité',
-        'channels.be.rtbf.musiq3': 'Musiq 3',
-        'channels.be.rtbf.classic21': 'Classic 21',
-        'channels.be.rtbf.purefm': 'Pure FM',
-        'channels.be.rtbf.tarmac': 'TARMAC',
+        'channels.be.rtbf.auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
         'channels.be.rtl.rtltvi': 'RTL-TVI',
         'channels.be.rtl.plugrtl': 'PLUG RTL',
         'channels.be.rtl.clubrtl': 'CLUB RTL',
