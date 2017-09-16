@@ -87,7 +87,8 @@ channels = {
         'channels.be.vrt.sporza': 'Sporza',
         'channels.be.vrt.mnm': 'MNM',
         'channels.be.vrt.stubru': 'Studio-Brussel',
-        'channels.be.bvn.bvn': 'BVN'
+        'channels.be.bvn.bvn': 'BVN',
+        'channels.be.brf.brf': 'BRF Mediathek'
     },
 
     'main_menu.jp': {

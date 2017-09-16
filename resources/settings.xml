@@ -183,6 +183,9 @@
 
             <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="11"/>
+            
+            <setting label="BRF Mediathek" type="bool" id="channels.be.brf.brf" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.brf.brf.order" default="12"/>
 
             <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>

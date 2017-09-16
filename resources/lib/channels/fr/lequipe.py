@@ -213,6 +213,7 @@ def list_videos(params):
         videos.append({
             'label': title,
             'thumb': img,
+            'fanart': img,
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_r',
@@ -303,11 +304,6 @@ def list_live(params):
 def get_video_url(params):
 
     url_video = URL_DAILYMOTION_EMBED % params.video_id
-
-    file_path = utils.download_catalog(
-        url_video,
-        '%s_%s.html' % (params.channel_name, params.video_id)
-    )
 
     desired_quality = common.PLUGIN.get_setting('quality')
 

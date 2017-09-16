@@ -309,11 +309,6 @@ def get_video_url(params):
 
     url_video = URL_DAILYMOTION_EMBED % params.video_id
 
-    file_path = utils.download_catalog(
-        url_video,
-        '%s_%s.html' % (params.channel_name, params.video_id)
-    )
-
     desired_quality = common.PLUGIN.get_setting('quality')
 
     if params.next == 'download_video':

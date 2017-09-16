@@ -290,7 +290,7 @@ def list_live(params):
         end_date_value = format_hours(live["end_date"])
         day_value = format_day(live["start_date"])
         
-        title = live_channel + ' : ' + live["title"] + ' - ' + day_value + ' - ' + start_date_value + '-' + end_date_value
+        title = live_channel + ' : ' + live["title"].encode('utf-8') + ' - ' + day_value + ' - ' + start_date_value + '-' + end_date_value
                         
         url_live = ''
         if live["url_streaming"]:
