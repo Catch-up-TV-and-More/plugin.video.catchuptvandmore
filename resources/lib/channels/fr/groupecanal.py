@@ -24,6 +24,7 @@
 import re
 import json
 import ast
+from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
@@ -36,7 +37,7 @@ from resources.lib import common
 
 # URL :
 
-URL_ROOT_SITE = 'http://www.%s.fr/'
+URL_ROOT_SITE = 'http://www.%s.fr'
 # Channel
 
 # Live :
@@ -64,22 +65,18 @@ URL_REPLAY_C8__CSTAR_VIDEOS = 'http://lab.canal-plus.pro/web/app_prod.php/api/pf
 # channel_id/video_id
 
 # Replay CNews
-URL_REPLAY_CNEWS = 'http://service.itele.fr/iphone/categorie_news?query='
+URL_VIDEOS_CNEWS = URL_ROOT_SITE + '/videos/'
 
-CATEGORIES_CNEWS = {
-    'http://service.itele.fr/iphone/topnews': 'La Une',
-    URL_REPLAY_CNEWS + 'FRANCE': 'France',
-    URL_REPLAY_CNEWS + 'MONDE': 'Monde',
-    URL_REPLAY_CNEWS + 'POLITIQUE': 'Politique',
-    URL_REPLAY_CNEWS + 'JUSTICE': 'Justice',
-    URL_REPLAY_CNEWS + 'ECONOMIE': 'Économie',
-    URL_REPLAY_CNEWS + 'SPORT': 'Sport',
-    URL_REPLAY_CNEWS + 'CULTURE': 'Culture',
-    URL_REPLAY_CNEWS + 'INSOLITE': 'Insolite'
-}
+URL_LISTE_EMISSIONS_CNEWS = URL_ROOT_SITE + '/emissions'
 
 # Replay/Live => Parameters Channel, VideoId
 URL_INFO_CONTENT = 'http://service.canal-plus.com/video/rest/getvideosliees/%s/%s?format=json'
+
+channel_name_catalog = {
+    'cplus': 'cplus',
+    'c8': 'd8',
+    'cstar': 'd17',
+    'cnews': 'itele'}
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -113,8 +110,6 @@ def get_channel_id(params):
         return '1'
     elif params.channel_name == 'cstar':
         return '2'
-    else:
-        return '1'
 
 #@common.plugin.cached(common.cache_time)
 def root(params):
@@ -158,62 +153,93 @@ def list_shows(params):
 
     ################### BEGIN CNEWS ###########################
     if params.next == 'list_shows_1' and params.channel_name == 'cnews':
-        for category_url, category_title in CATEGORIES_CNEWS.iteritems():
-            shows.append({
-                'label': category_title,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    category_url=category_url,
-                    next='list_videos_cat',
-                    title=category_title,
-                    window_title=category_title
-                )
-            })
+        
+        file_path = utils.download_catalog(
+            URL_VIDEOS_CNEWS % params.channel_name,
+            '%s_categories.html' % (
+                params.channel_name))
+        root_html = open(file_path).read()
+        root_soup = bs(root_html, 'html.parser')
+        
+        menu_soup = root_soup.find('div', class_="nav-tabs-inner")
+        
+        categories_soup = menu_soup.find_all('a')
+        
+        for category in categories_soup:
 
-        shows.append({
-            'label': 'Les Émissions',
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                category_url='emissions',
-                next='list_shows_emissions',
-                title='Les Émissions',
-                window_title='Les Émissions'
-            )
-        })
+            category_name = category.get_text().encode('utf-8')
+            category_url = (URL_ROOT_SITE % params.channel_name) + category.get('href')
+        
+            if category_name != 'Les tops':
+                shows.append({
+                    'label': category_name,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        category_url=category_url,
+                        category_name=category_name,
+                        next='list_shows_2',
+                        window_title=category_name
+                    )
+                })
+    
+    elif params.next == 'list_shows_2' and params.channel_name == 'cnews':
+        
+        if params.category_name == 'Les sujets':
+            
+            file_path = utils.download_catalog(
+                params.category_url,
+                '%s_%s.html' % (
+                    params.channel_name,params.category_name))
+            root_html = open(file_path).read()
+            root_soup = bs(root_html, 'html.parser')
+            categories_soup = root_soup.find_all('a', class_="checkbox")
+            
+            for category in categories_soup:
 
-    elif params.next == 'list_shows_emissions' and params.channel_name == 'cnews':
-        shows.append({
-            'label': 'À la Une',
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                category_url='http://service.itele.fr/iphone/dernieres_emissions?query=',
-                next='list_videos_cat',
-                title='À la Une',
-                window_title='À la Une'
-            )
-        })
+                category_name = category.get_text().encode('utf-8')
+                category_url = (URL_ROOT_SITE % params.channel_name) + category.get('href')
+            
+                shows.append({
+                    'label': category_name,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        category_url=category_url,
+                        category_name=category_name,
+                        next='list_videos',
+                        window_title=category_name
+                    )
+                })
+        else:
+            # Find all emissions
+            file_path = utils.download_catalog(
+                (URL_LISTE_EMISSIONS_CNEWS % params.channel_name),
+                '%s_ALL_EMISSION.html' % (
+                    params.channel_name))
+            root_html = open(file_path).read()
+            root_soup = bs(root_html, 'html.parser')
+            
+            categories_soup = root_soup.find_all('article', class_="item")
+            
+            for category in categories_soup:
 
-        shows.append({
-            'label': 'Magazines',
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                category_url='http://service.itele.fr/iphone/emissions?query=magazines',
-                next='list_videos_cat',
-                title='Magazines',
-                window_title='Magazines'
-            )
-        })
+                category_name = category.find('h3').get_text().encode('utf-8')
+                category_url = (URL_VIDEOS_CNEWS % params.channel_name) + '/emissions' + category.find('a').get('href').split('.fr')[1]
+                category_img = category.find('img').get('src').encode('utf-8')
+            
+                shows.append({
+                    'label': category_name,
+                    'thumb': category_img,
+                    'fanart': category_img,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        category_url=category_url,
+                        category_name=category_name,
+                        next='list_videos',
+                        window_title=category_name
+                    )
+                })
+            
 
-        shows.append({
-            'label': 'Chroniques',
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                category_url='http://service.itele.fr/iphone/emissions?query=chroniques',
-                next='list_videos_cat',
-                title='Chroniques',
-                window_title='Chroniques'
-            )
-        })
     ################### END CNEWS ###########################
 
     ################### BEGIN C8 and CStar ##################
@@ -494,36 +520,30 @@ def list_videos(params):
     if params.channel_name == 'cnews':
         file_path = utils.download_catalog(
             params.category_url,
-            '%s_%s.json' % (params.channel_name, params.title))
-        file = open(file_path).read()
-        json_category = json.loads(file)
+            '%s_%s.html' % (params.channel_name, params.category_name))
+        root_html = open(file_path).read()
+        root_soup = bs(root_html, 'html.parser')
 
-        if 'news' in json_category:
-            json_category = json_category['news']
-        elif 'videos' in json_category:
-            json_category = json_category['videos']
-        elif 'topnews' in json_category:
-            json_category = json_category['topnews']
-        for video in json_category:
-            video_id = video['id_pfv'].encode('utf-8')
-            category = video['category'].encode('utf-8')
-            date_time = video['date'].encode('utf-8')
-            # 2017-02-10 22:05:02
-            date_time = date_time.split(' ')[0]
-            date_splited = date_time.split('-')
-            year = date_splited[0]
-            mounth = date_splited[1]
-            day = date_splited[2]
-            aired = '-'.join((year, mounth, day))
+        programs = root_soup.find_all('article', class_='item')
+        
+        for program in programs:
+            title = program.find('h3').get_text().encode('utf-8')
+            thumb = program.find('img').get('src').encode('utf-8')
+            #Get Video_ID
+            video_html = utils.get_webcontent(program.find('a').get('href').encode('utf-8'))
+            id = re.compile(r'videoId=(.*?)"').findall(video_html)[0]
+            #Get Description 
+            datas_video = bs(video_html, 'html.parser')
+            description = datas_video.find('article', class_='entry-body').get_text().encode('utf-8')
+            duration = 0
+            
+            date = re.compile(r'property="video:release_date" content="(.*?)"').findall(video_html)[0].split('T')[0].split('-')
+            day = date[2]
+            mounth = date[1]
+            year = date[0]
+
             date = '.'.join((day, mounth, year))
-            # date : string (%d.%m.%Y / 01.01.2009)
-            # aired : string (2008-12-07)
-            title = video['title'].encode('utf-8')
-            description = video['description'].encode('utf-8')
-            thumb = video['preview169'].encode('utf-8')
-            video_url = video['video_urlhd'].encode('utf-8')
-            if not video_url:
-                video_url = 'no_video'
+            aired = '-'.join((year, mounth, day))
 
             info = {
                 'video': {
@@ -531,30 +551,30 @@ def list_videos(params):
                     'plot': description,
                     'aired': aired,
                     'date': date,
-                    #'duration': duration,
+                    'duration': duration,
                     'year': year,
-                    'genre': category,
+                    #'genre': category,
                     'mediatype': 'tvshow'
                 }
             }
 
             context_menu = []
             download_video = (
-                _('Download'),
+                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
-                    video_urlhd=video_url) + ')'
+                    id=id) + ')'
             )
             context_menu.append(download_video)
 
             videos.append({
                 'label': title,
                 'thumb': thumb,
+                'fanart': thumb,
                 'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
-                    video_id=video_id,
-                    video_urlhd=video_url
+                    id=id
                 ),
                 'is_playable': True,
                 'info': info,
@@ -814,19 +834,9 @@ def list_live(params):
     else :
         video_id_re = re.compile(r'\bdata-video="(?P<video_id>[0-9]+)"').findall(html_live)
 
-    channel_name_catalog = ''
-    if params.channel_name == 'cplus':
-        channel_name_catalog = params.channel_name
-    elif params.channel_name == 'c8':
-        channel_name_catalog = 'd8'
-    elif params.channel_name == 'cstar':
-        channel_name_catalog = 'd17'
-    elif params.channel_name == 'cnews':
-        channel_name_catalog = 'itele'
-
     file_path_json = utils.download_catalog(
-        URL_INFO_CONTENT % (channel_name_catalog, video_id_re[0]),
-        '%s_%s_live.json' % (channel_name_catalog, video_id_re[0])
+        URL_INFO_CONTENT % (channel_name_catalog[params.channel_name], video_id_re[0]),
+        '%s_%s_live.json' % (channel_name_catalog[params.channel_name], video_id_re[0])
     )
     file_live_json = open(file_path_json).read()
     json_parser = json.loads(file_live_json)
@@ -868,12 +878,8 @@ def list_live(params):
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     """Get video URL and start video player"""
-    # CNews
-    if (params.next == 'play_r' and params.channel_name == 'cnews') or \
-            (params.next == 'download_video' and params.channel_name == 'cnews'):
-        return params.video_urlhd
     # C8 & CStar
-    elif (params.next == 'play_r' and (params.channel_name == 'c8' or \
+    if (params.next == 'play_r' and (params.channel_name == 'c8' or \
             params.channel_name == 'cstar')) or (params.next == 'download_video' and \
             (params.channel_name == 'c8' or params.channel_name == 'cstar')):
         file_video = utils.get_webcontent(
@@ -881,11 +887,11 @@ def get_video_url(params):
         )
         video_json = json.loads(file_video)
         return video_json['main']['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
-    # Canal +
-    elif (params.next == 'play_r' and params.channel_name == 'cplus') or \
-            (params.next == 'download_video' and params.channel_name == 'cplus'):
+    # Canal +, CNews
+    elif (params.next == 'play_r' and (params.channel_name == 'cplus' or params.channel_name == 'cnews')) or \
+            (params.next == 'download_video' and (params.channel_name == 'cplus' or params.channel_name == 'cnews')):
         file_video = utils.get_webcontent(
-            URL_INFO_CONTENT % ('cplus',params.id)
+            URL_INFO_CONTENT % (channel_name_catalog[params.channel_name],params.id)
         )
         media_json = json.loads(file_video)
         if 'MEDIA' in media_json:
