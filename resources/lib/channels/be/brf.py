@@ -21,13 +21,13 @@
 """
 
 import re
+import ast
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Add button "More Videos"
-# Download Video
+# ...
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -128,12 +128,17 @@ def list_shows(params):
 #@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
+
+    url_videos = params.category_url + 'page/%s' % params.page
 
     file_path = utils.download_catalog(
-        params.category_url,
-        '%s_%s.html' % (
+        url_videos,
+        '%s_%s_%s.html' % (
             params.channel_name,
-            params.category_name))
+            params.category_name,
+            params.page))
     root_html = open(file_path).read()
     root_soup = bs(root_html, 'html.parser')
 
@@ -200,18 +205,18 @@ def list_videos(params):
         })
 
     # More videos...
-    #videos.append({
-        #'label': common.ADDON.get_localized_string(30100),
-        #'url': common.PLUGIN.get_url(
-            #action='channel_entry',
-            #category_url=params.category_url,
-            #category_name=params.category_name,
-            #next='list_videos',
-            #page=str(int(params.page) + 1),
-            #update_listing=True,
-            #previous_listing=str(videos)
-        #),
-    #})
+    videos.append({
+        'label': common.ADDON.get_localized_string(30100),
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            category_url=params.category_url,
+            category_name=params.category_name,
+            next='list_videos',
+            page=str(int(params.page) + 1),
+            update_listing=True,
+            previous_listing=str(videos)
+        ),
+    })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -223,6 +228,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
         ),
         content='tvshows',
+        update_listing='update_listing' in params,
     )
 
 #@common.plugin.cached(common.cache_time)
@@ -234,14 +240,15 @@ def list_live(params):
 #@common.plugin.cached(common.cache_time)
 def get_video_url(params):
     
-    if params.next == 'play_r':
+    if params.next == 'play_r' or params.next == 'download_video':
         """Get video URL and start video player"""
         video_html = utils.get_webcontent(
             params.video_url)
         url_video = re.compile(r'jQuery.get\( "(.*?)"').findall(video_html)[0]
-        url = utils.get_webcontent(
-            url_video)
-        return re.compile(r'data-src="(.*?)"').findall(url)[0]
+        if params.next == 'download_video':
+            return url_video
+        else:
+            url = utils.get_webcontent(
+                url_video)
+            return re.compile(r'data-src="(.*?)"').findall(url)[0]
     
-    elif  params.next == 'download_video':
-        return params.video_url
