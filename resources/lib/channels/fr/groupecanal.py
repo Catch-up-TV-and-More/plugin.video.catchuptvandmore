@@ -62,7 +62,7 @@ URL_REPLAY_C8__CSTAR_SHOWS = 'http://lab.canal-plus.pro/web/app_prod.php/api/pfv
 # Replay CNews
 URL_VIDEOS_CNEWS = URL_ROOT_SITE + '/videos/'
 
-URL_LIST_EMISSIONS_CNEWS = URL_ROOT_SITE + '/emissions'
+URL_EMISSIONS_CNEWS = URL_ROOT_SITE + '/emissions'
 
 # Replay/Live => Parameters Channel, VideoId
 URL_INFO_CONTENT = 'http://service.canal-plus.com/video/rest/getvideos/%s/%s?format=json'
@@ -207,7 +207,7 @@ def list_shows(params):
         else:
             # Find all emissions
             file_path = utils.download_catalog(
-                (URL_LISTE_EMISSIONS_CNEWS % params.channel_name),
+                (URL_EMISSIONS_CNEWS % params.channel_name),
                 '%s_ALL_EMISSION.html' % (
                     params.channel_name))
             root_html = open(file_path).read()
