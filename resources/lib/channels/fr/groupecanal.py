@@ -199,6 +199,7 @@ def list_shows(params):
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         category_url=category_url,
+                        page="1",
                         category_name=category_name,
                         next='list_videos',
                         window_title=category_name
@@ -228,6 +229,7 @@ def list_shows(params):
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         category_url=category_url,
+                        page="1",
                         category_name=category_name,
                         next='list_videos',
                         window_title=category_name
@@ -365,12 +367,17 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
 
     ################### BEGIN CNEWS ###########################
     if params.channel_name == 'cnews':
+        
+        url_page = params.category_url + '/page/%s' % params.page
+        
         file_path = utils.download_catalog(
-            params.category_url,
-            '%s_%s.html' % (params.channel_name, params.category_name))
+            url_page,
+            '%s_%s_%s.html' % (params.channel_name, params.category_name, params.page))
         root_html = open(file_path).read()
         root_soup = bs(root_html, 'html.parser')
 
@@ -430,6 +437,20 @@ def list_videos(params):
                 'info': info,
                 'context_menu': context_menu
             })
+            
+        # More videos...
+        videos.append({
+            'label': common.ADDON.get_localized_string(30100),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                category_url=params.category_url,
+                category_name=params.category_name,
+                next='list_videos',
+                page=str(int(params.page) + 1),
+                update_listing=True,
+                previous_listing=str(videos)
+            ),
+        })
     ################### END CNEWS ###########################
 
     ################### BEGIN C8 and CStar ##################
@@ -583,7 +604,9 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_PLAYCOUNT,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
-        content='tvshows')
+        content='tvshows',
+        update_listing='update_listing' in params,
+    )
 
 #@common.plugin.cached(common.cache_time)
 def list_live(params):
