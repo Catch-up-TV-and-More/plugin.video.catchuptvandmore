@@ -67,11 +67,12 @@ URL_EMISSIONS_CNEWS = URL_ROOT_SITE + '/emissions'
 # Replay/Live => Parameters Channel, VideoId
 URL_INFO_CONTENT = 'http://service.canal-plus.com/video/rest/getvideos/%s/%s?format=json'
 
-channel_name_catalog = {
+CHANNEL_NAME_CATALOG = {
     'cplus': 'cplus',
     'c8': 'd8',
     'cstar': 'd17',
-    'cnews': 'itele'}
+    'cnews': 'itele'
+}
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -99,6 +100,7 @@ def get_token():
     token = token_json['token']
     return token
 
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_channel_id(params):
     """Get channel id by name"""
     if params.channel_name == 'c8':
@@ -106,7 +108,7 @@ def get_channel_id(params):
     elif params.channel_name == 'cstar':
         return '2'
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
@@ -141,30 +143,30 @@ def root(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
     """Create categories list"""
     shows = []
 
     ################### BEGIN CNEWS ###########################
     if params.next == 'list_shows_1' and params.channel_name == 'cnews':
-        
+
         file_path = utils.download_catalog(
             URL_VIDEOS_CNEWS % params.channel_name,
             '%s_categories.html' % (
                 params.channel_name))
         root_html = open(file_path).read()
         root_soup = bs(root_html, 'html.parser')
-        
+
         menu_soup = root_soup.find('div', class_="nav-tabs-inner")
-        
+
         categories_soup = menu_soup.find_all('a')
-        
+
         for category in categories_soup:
 
             category_name = category.get_text().encode('utf-8')
             category_url = (URL_ROOT_SITE % params.channel_name) + category.get('href')
-        
+
             if category_name != 'Les tops':
                 shows.append({
                     'label': category_name,
@@ -176,11 +178,11 @@ def list_shows(params):
                         window_title=category_name
                     )
                 })
-    
+
     elif params.next == 'list_shows_2' and params.channel_name == 'cnews':
-        
+
         if params.category_name == 'Les sujets':
-            
+
             file_path = utils.download_catalog(
                 params.category_url,
                 '%s_%s.html' % (
@@ -188,12 +190,12 @@ def list_shows(params):
             root_html = open(file_path).read()
             root_soup = bs(root_html, 'html.parser')
             categories_soup = root_soup.find_all('a', class_="checkbox")
-            
+
             for category in categories_soup:
 
                 category_name = category.get_text().encode('utf-8')
                 category_url = (URL_ROOT_SITE % params.channel_name) + category.get('href')
-            
+
                 shows.append({
                     'label': category_name,
                     'url': common.PLUGIN.get_url(
@@ -213,15 +215,15 @@ def list_shows(params):
                     params.channel_name))
             root_html = open(file_path).read()
             root_soup = bs(root_html, 'html.parser')
-            
+
             categories_soup = root_soup.find_all('article', class_="item")
-            
+
             for category in categories_soup:
 
                 category_name = category.find('h3').get_text().encode('utf-8')
                 category_url = (URL_VIDEOS_CNEWS % params.channel_name) + '/emissions' + category.find('a').get('href').split('.fr')[1]
                 category_img = category.find('img').get('src').encode('utf-8')
-            
+
                 shows.append({
                     'label': category_name,
                     'thumb': category_img,
@@ -235,7 +237,7 @@ def list_shows(params):
                         window_title=category_name
                     )
                 })
-            
+
 
     ################### END CNEWS ###########################
 
@@ -296,22 +298,22 @@ def list_shows(params):
 
     ################### BEGIN CANAL + ##################
     elif params.next == 'list_shows_1' and params.channel_name == 'cplus':
-        
+
         file_path = utils.download_catalog(
             URL_LIST_EMISSIONS_CPLUS,
             '%s_categories.html' % (
                 params.channel_name))
         root_html = open(file_path).read()
         root_soup = bs(root_html, 'html.parser')
-        
+
         categories_soup = root_soup.find_all('div', class_='cell')
-        
+
         for category in categories_soup:
 
             category_name = category.find('h6').get_text().encode('utf-8')
             category_url = URL_ROOT_CPLUS + category.find('a').get('href')
             category_img = category.find('img').get('src').encode('utf-8')
-        
+
             if category_name != 'Les tops':
                 shows.append({
                     'label': category_name,
@@ -325,22 +327,22 @@ def list_shows(params):
                         window_title=category_name
                     )
                 })
-    
-    elif params.next == 'list_shows_2' and params.channel_name == 'cplus':    
-        
+
+    elif params.next == 'list_shows_2' and params.channel_name == 'cplus':
+
         file_path = utils.download_catalog(
             params.category_url,
             '%s_%s.html' % (
                 params.channel_name,params.category_name))
         root_html = open(file_path).read()
         root_soup = bs(root_html, 'html.parser')
-        
+
         sections_soup = root_soup.find('div', class_="listeRegroupee")
-        
+
         list_section = sections_soup.find_all('h2')
         for section in list_section:
             section = section.get_text().encode('utf-8')
-            
+
             shows.append({
                 'label': section,
                 'url': common.PLUGIN.get_url(
@@ -352,7 +354,7 @@ def list_shows(params):
                     window_title=section
                 )
             })
-        
+
     ################### END CANAL + ##################
 
     return common.PLUGIN.create_listing(
@@ -363,7 +365,7 @@ def list_shows(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -372,9 +374,9 @@ def list_videos(params):
 
     ################### BEGIN CNEWS ###########################
     if params.channel_name == 'cnews':
-        
+
         url_page = params.category_url + '/page/%s' % params.page
-        
+
         file_path = utils.download_catalog(
             url_page,
             '%s_%s_%s.html' % (params.channel_name, params.category_name, params.page))
@@ -382,18 +384,18 @@ def list_videos(params):
         root_soup = bs(root_html, 'html.parser')
 
         programs = root_soup.find_all('article', class_='item')
-        
+
         for program in programs:
             title = program.find('h3').get_text().encode('utf-8')
             thumb = program.find('img').get('src').encode('utf-8')
             #Get Video_ID
             video_html = utils.get_webcontent(program.find('a').get('href').encode('utf-8'))
             id = re.compile(r'videoId=(.*?)"').findall(video_html)[0]
-            #Get Description 
+            #Get Description
             datas_video = bs(video_html, 'html.parser')
             description = datas_video.find('article', class_='entry-body').get_text().encode('utf-8')
             duration = 0
-            
+
             date = re.compile(r'property="video:release_date" content="(.*?)"').findall(video_html)[0].split('T')[0].split('-')
             day = date[2]
             mounth = date[1]
@@ -437,7 +439,7 @@ def list_videos(params):
                 'info': info,
                 'context_menu': context_menu
             })
-            
+
         # More videos...
         videos.append({
             'label': common.ADDON.get_localized_string(30100),
@@ -525,7 +527,7 @@ def list_videos(params):
 
     ################### BEGIN Canal + ##################
     elif params.channel_name == 'cplus':
-        
+
         file_path = utils.download_catalog(
             params.category_url,
             '%s_%s_%s.html' % (params.channel_name, params.category_name, params.category_section))
@@ -533,7 +535,7 @@ def list_videos(params):
         root_soup = bs(root_html, 'html.parser')
 
         sections_soup = root_soup.find('div', class_="listeRegroupee")
-        
+
         i = 0
         j = 0
         list_sections = sections_soup.find_all('h2')
@@ -541,21 +543,21 @@ def list_videos(params):
             i = i + 1
             if section.get_text().encode('utf-8') == params.category_section:
                 break
-        
+
         videos_sections_soup = sections_soup.find_all('ul', class_="features features-alt features-alt-videov3-4x3 features-alt-videov3-4x3-noMarge")
         for videos_section in videos_sections_soup:
             j = j + 1
             if i == j:
                 data_videos = videos_section.find_all('li')
-                        
+
                 for data_video in data_videos:
-                        
+
                     title = data_video.find('h4').get('title').encode('utf-8')
                     description = data_video.find('p').find('a').get_text().strip().encode('utf-8')
                     duration = 0
                     thumb = data_video.find('img').get('src').encode('utf-8')
                     id = data_video.get('id').split('_')[1]
-                            
+
                     info = {
                         'video': {
                             'title': title,
@@ -591,7 +593,7 @@ def list_videos(params):
                         'info': info,
                         'context_menu': context_menu
                     })
-                
+
     ################### END Canal + ##################
 
     return common.PLUGIN.create_listing(
@@ -608,7 +610,7 @@ def list_videos(params):
         update_listing='update_listing' in params,
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
     lives = []
@@ -643,8 +645,8 @@ def list_live(params):
         video_id_re = re.compile(r'\bdata-video="(?P<video_id>[0-9]+)"').findall(html_live)
 
     file_path_json = utils.download_catalog(
-        URL_INFO_CONTENT % (channel_name_catalog[params.channel_name], video_id_re[0]),
-        '%s_%s_live.json' % (channel_name_catalog[params.channel_name], video_id_re[0])
+        URL_INFO_CONTENT % (CHANNEL_NAME_CATALOG[params.channel_name], video_id_re[0]),
+        '%s_%s_live.json' % (CHANNEL_NAME_CATALOG[params.channel_name], video_id_re[0])
     )
     file_live_json = open(file_path_json).read()
     json_parser = json.loads(file_live_json)
@@ -683,12 +685,12 @@ def list_live(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
         file_video = utils.get_webcontent(
-            URL_INFO_CONTENT % (channel_name_catalog[params.channel_name],params.id)
+            URL_INFO_CONTENT % (CHANNEL_NAME_CATALOG[params.channel_name],params.id)
         )
         media_json = json.loads(file_video)
         return media_json['MEDIA']['VIDEOS']['HLS'].encode('utf-8')

@@ -14,19 +14,19 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TF1 (Replay, Live TV)
 - France 2 (Replay, Live TV)
 - France 3 (Replay, Live TV)
-- Canal +
+- Canal + (Replay, Live TV)
 - France 5 (Replay, Live TV)
 - M6
 - Arte
-- C8
+- C8 (Replay, Live TV)
 - W9
 - TMC
 - NT1
 - NRJ 12
 - France 4 (Replay, Live TV)
 - BFM TV
-- i-Télé
-- CStar
+- CNews (Replay, Live TV)
+- CStar (Replay, Live TV)
 - Gulli
 - France Ô
 - HD1
