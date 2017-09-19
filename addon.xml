@@ -30,9 +30,12 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
-[Add live TV] TF1 (wwark)
+[Add live TV] TF1 group (wwark)
 [Bug] TF1 group: Fix wrong Video URL format
 [Improvement] TF1 group: Add missing date and duration for videos
+[Add channel] Tfou — MyTF1 (wwark)
+[Add channel] Xtra — MyTF1 (wwark)
+[Add channel] LCI (wwark)
 [Add Live TV] Pluzz — France Télévision (wwark)
 [Improvement] Pluzz - France Télévision: Choose video quality with DIALOG setting (wwark)
 [Add channel] La 1ère — Outre-Mer (wwark)
