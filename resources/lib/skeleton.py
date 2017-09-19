@@ -22,12 +22,8 @@
 
 
 categories = {
-    'main_menu.fr': 'French channels',
-    'main_menu.be': 'Belgian channels',
-    'main_menu.jp': 'Japanese channels',
-    'main_menu.eu': 'European channels',
-    'main_menu.uk': 'United Kingdom channels',
-    'main_menu.us': 'United States channels'
+    'main_menu.fr': 'French channels'
+    'main_menu.eu': 'European channels'
 }
 
 channels = {
@@ -76,35 +72,8 @@ channels = {
         #'channels.fr.6play.parispremiere': 'Paris Première' #To Test with 6play Account with purshase Paris Premiere channel (scrapping working)
     },
 
-    'main_menu.be': {
-        'channels.be.rtbf.auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
-        'channels.be.rtl.rtltvi': 'RTL-TVI',
-        'channels.be.rtl.plugrtl': 'PLUG RTL',
-        'channels.be.rtl.clubrtl': 'CLUB RTL',
-        'channels.be.vrt.een': 'Eén',
-        'channels.be.vrt.canvas': 'Canvas',
-        'channels.be.vrt.ketnet': 'Ketnet',
-        'channels.be.vrt.sporza': 'Sporza',
-        'channels.be.vrt.mnm': 'MNM',
-        'channels.be.vrt.stubru': 'Studio-Brussel',
-        'channels.be.bvn.bvn': 'BVN',
-        'channels.be.brf.brf': 'BRF Mediathek'
-    },
-
-    'main_menu.jp': {
-        'channels.jp.nhk.nhkworld': 'NHK World'
-    },
-
     'main_menu.eu': {
         'channels.eu.arte.arte': 'Arte',
         'channels.eu.euronews.euronews': 'Euronews'
-    },
-
-    'main_menu.uk': {
-        'channels.uk.sky.skynews': 'Sky News'
-    },
-
-    'main_menu.us': {
-        'channels.us.sundancetv.sundancetv': 'Sundance TV'
     }
 }

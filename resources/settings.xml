@@ -6,11 +6,7 @@
         <!-- Hide main menu categories -->
         <setting label="30010" type="lsep"/>
         <setting label="30020" type="bool" id="main_menu.fr" default="true"/>
-        <setting label="30021" type="bool" id="main_menu.be" default="true"/>
-            <setting label="30022" type="bool" id="main_menu.jp" default="true"/>
-            <setting label="30023" type="bool" id="main_menu.eu" default="true"/>
-            <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
-            <setting label="30025" type="bool" id="main_menu.us" default="true"/>
+        <setting label="30023" type="bool" id="main_menu.eu" default="true"/>
     </category>
 
 
@@ -148,73 +144,13 @@
                 <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-83,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="42"/>-->
 
-        <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
-
-            <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="1"/>
-
-            <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="2"/>
-
-            <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="3"/>
-
-            <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="4"/>
-
-            <setting label="Eén" type="bool" id="channels.be.vrt.een" default="true" visible="eq(-9,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.een.order" default="5"/>
-
-            <setting label="Canvas" type="bool" id="channels.be.vrt.canvas" default="true" visible="eq(-11,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.canvas.order" default="6"/>
-
-            <setting label="Ketnet" type="bool" id="channels.be.vrt.ketnet" default="true" visible="eq(-13,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.ketnet.order" default="7"/>
-
-            <setting label="Sporza" type="bool" id="channels.be.vrt.sporza" default="true" visible="eq(-15,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.sporza.order" default="8"/>
-
-            <setting label="MNM" type="bool" id="channels.be.vrt.mnm" default="true" visible="eq(-17,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.mnm.order" default="9"/>
-
-            <setting label="Studio-Brussel" type="bool" id="channels.be.vrt.stubru" default="true" visible="eq(-19,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.stubru.order" default="10"/>
 
 
-            <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-21,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="11"/>
-
-            <setting label="BRF Mediathek" type="bool" id="channels.be.brf.brf" default="true" visible="eq(-23,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.brf.brf.order" default="12"/>
-
-            <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
-
-                <setting label="NHK World" type="bool" id="channels.jp.nhk.nhkworld" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhkworld.order" default="1"/>
-
-            <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
-
-
-                <setting label="Euronews" type="bool" id="channels.eu.euronews.euronews" default="true" visible="eq(-1,true)"/>
+            <setting label="Euronews" type="bool" id="channels.eu.euronews.euronews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.euronews.euronews.order" default="1"/>
 
             <setting label="Arte" type="bool" id="channels.eu.arte.arte" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.arte.arte.order" default="2"/>
-
-            <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
-
-                <setting label="Sky News" type="bool" id="channels.uk.sky.skynews" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.uk.sky.skynews.order" default="1"/>
-
-            <setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30025" type="bool" id="main_menu.us" default="true" visible="false"/>
-
-                <setting label="Sundance TV" type="bool" id="channels.us.sundancetv.sundancetv" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.us.sundancetv.sundancetv.order" default="1"/>
 
     </category>
 
@@ -231,24 +167,11 @@
 
                 <setting label="30081" type="labelenum" id="channels.fr.france24.france24.language" visible="eq(-1,true)" values="FR|EN|AR"/>
 
-            <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
-
-
-            <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
-
             <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
 
                 <setting label="30080" type="labelenum" id="channels.eu.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
                 <setting label="30082" type="labelenum" id="channels.eu.euronews.euronews.language" visible="eq(-3,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
-
-            <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
-
-            <setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="30025" type="bool" id="main_menu.us" default="true" visible="false"/>
 
             <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>
@@ -270,20 +193,9 @@
             <setting label="NRJ Login" type="text" id="channels.fr.nrj.login" visible="eq(-1,true)" defaut=""/>
             <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-3,true)" defaut=""/>
 
-        <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
-
-        <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
-
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
 
-        <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
-
-        <setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30025" type="bool" id="main_menu.us" default="true" visible="false"/>
 
     </category>
 
