@@ -128,18 +128,6 @@ msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
 msgstr ""
 
-msgctxt "#30089"
-msgid "TMC: Video quality"
-msgstr ""
-
-msgctxt "#30090"
-msgid "NT1: Video quality"
-msgstr ""
-
-msgctxt "#30091"
-msgid "HD1: Video quality"
-msgstr ""
-
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"

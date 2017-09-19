@@ -285,7 +285,7 @@ def list_videos(params):
                     #'aired': aired,
                     #'date': date,
                     'duration': duration,
-                    'year': int(aired[:4]),
+                    #'year': int(aired[:4]),
                     'mediatype': 'tvshow'
                 }
             }

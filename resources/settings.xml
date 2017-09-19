@@ -181,6 +181,7 @@
             <setting label="Studio-Brussel" type="bool" id="channels.be.vrt.stubru" default="true" visible="eq(-19,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.vrt.stubru.order" default="10"/>
 
+
             <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="11"/>
 
@@ -195,6 +196,7 @@
 
             <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
+
 
                 <setting label="Euronews" type="bool" id="channels.eu.euronews.euronews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.euronews.euronews.order" default="1"/>
@@ -232,6 +234,7 @@
             <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
 
+
             <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
 
@@ -256,6 +259,7 @@
         <setting label="30012" type="lsep"/>
         <setting label="30200" type="folder" id="dlFolder" source="auto" option="writeable"/>
     </category>
+
 
     <!-- Account ... -->
     <category label="30004">
