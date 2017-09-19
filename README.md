@@ -16,10 +16,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France 3 (Replay, Live TV)
 - Canal + (Replay, Live TV)
 - France 5 (Replay, Live TV)
-- M6
+- M6 (Replay)
 - Arte
 - C8 (Replay, Live TV)
-- W9
+- W9 (Replay)
 - TMC
 - NT1
 - NRJ 12
@@ -31,11 +31,18 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France Ô
 - HD1
 - L'Équipe
-- 6ter
+- 6ter (Replay)
 - Numéro 23
 - Chérie 25
 - La 1ère — Outre-Mer (Replay)
 - France Info (Live TV)
+- Stories — 6play (Replay)
+- Stories — 6play (Replay)
+- Bruce — 6play (Replay)
+- Crazy Kitchen — 6play (Replay)
+- Home Time — 6play (Replay)
+- Sixième Style — 6play (Replay)
+- Comic — 6play (Replay)
 
 ### Belgique — *Belgium*
 - *à venir* — *coming soon*

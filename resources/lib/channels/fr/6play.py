@@ -91,7 +91,7 @@ def channel_entry(params):
     return None
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
@@ -289,7 +289,7 @@ def list_shows(params):
     return shows
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
