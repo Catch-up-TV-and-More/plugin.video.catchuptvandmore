@@ -11,11 +11,11 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ## Chaînes disponibles — *Available channels*
 ### France
-- TF1
-- France 2
-- France 3
+- TF1 (Replay, Live TV)
+- France 2 (Replay, Live TV)
+- France 3 (Replay, Live TV)
 - Canal +
-- France 5
+- France 5 (Replay, Live TV)
 - M6
 - Arte
 - C8
@@ -23,7 +23,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TMC
 - NT1
 - NRJ 12
-- France 4
+- France 4 (Replay, Live TV)
 - BFM TV
 - i-Télé
 - CStar
@@ -34,6 +34,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - 6ter
 - Numéro 23
 - Chérie 25
+- La 1ère — Outre-Mer (Replay)
+- France Info (Live TV)
 
 ### Belgique — *Belgium*
 - *à venir* — *coming soon*

@@ -33,10 +33,12 @@
 [Add live TV] TF1 (wwark)
 [Bug] TF1 group: Fix wrong Video URL format
 [Improvement] TF1 group: Add missing date and duration for videos
-
-
 [Add Live TV] Pluzz — France Télévision (wwark)
 [Improvement] Pluzz - France Télévision: Choose video quality with DIALOG setting (wwark)
+[Add channel] La 1ère — Outre-Mer (wwark)
+[Add channel] France Info (wwark)
+
+
 [Add Live TV] Canal + group (wwark)
 [Bug] L'équipe: Fix video quality selection
 [Improvement] Numéro 23: Better categories listing
@@ -48,7 +50,7 @@
 [Bug] TMC, NT1 and HD1: Fix missing setting to set video quality
 
 [Improvement] Add download mode on multiple channels (wwark)
-[Add Live TV] Pluzz (wwark)
+
 [Add Live TV] Arte (wwark)
 
     </news>

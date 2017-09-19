@@ -140,7 +140,7 @@ def channel_entry(params):
     return None
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def change_to_nicer_name(original_name):
     """Convert id name to label name"""
     if original_name in CATEGORIES_DISPLAY:
@@ -148,7 +148,7 @@ def change_to_nicer_name(original_name):
     return original_name
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
@@ -185,7 +185,7 @@ def root(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -394,7 +394,7 @@ def list_shows(params):
     )
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -462,38 +462,38 @@ def list_videos(params):
             file_prgm = utils.get_webcontent(
                 SHOW_INFO % (emission['id_diffusion']))
             if(file_prgm != ''):
-                json_parserShow = json.loads(file_prgm)
-                if json_parserShow['synopsis']:
-                    plot = json_parserShow['synopsis'].encode('utf-8')
-                if json_parserShow['diffusion']['date_debut']:
-                    date = json_parserShow['diffusion']['date_debut']
+                json_parser_show = json.loads(file_prgm)
+                if json_parser_show['synopsis']:
+                    plot = json_parser_show['synopsis'].encode('utf-8')
+                if json_parser_show['diffusion']['date_debut']:
+                    date = json_parser_show['diffusion']['date_debut']
                     date = date.encode('utf-8')
-                if json_parserShow['real_duration']:
-                    duration = int(json_parserShow['real_duration'])
-                if json_parserShow['titre']:
-                    title = json_parserShow['titre'].encode('utf-8')
-                if json_parserShow['sous_titre']:
+                if json_parser_show['real_duration']:
+                    duration = int(json_parser_show['real_duration'])
+                if json_parser_show['titre']:
+                    title = json_parser_show['titre'].encode('utf-8')
+                if json_parser_show['sous_titre']:
                     title = ' '.join((
                         title,
                         '- [I]',
-                        json_parserShow['sous_titre'].encode('utf-8'),
+                        json_parser_show['sous_titre'].encode('utf-8'),
                         '[/I]'))
 
-                if json_parserShow['genre'] != '':
+                if json_parser_show['genre'] != '':
                     genre = \
-                        json_parserShow['genre'].encode('utf-8')
+                        json_parser_show['genre'].encode('utf-8')
 
                 episode = 0
-                if 'episode' in json_parserShow:
-                    episode = json_parserShow['episode']
+                if 'episode' in json_parser_show:
+                    episode = json_parser_show['episode']
 
                 season = 0
-                if 'saison' in json_parserShow:
-                    season = json_parserShow['saison']
+                if 'saison' in json_parser_show:
+                    season = json_parser_show['saison']
 
                 cast = []
                 director = ''
-                personnes = json_parserShow['personnes']
+                personnes = json_parser_show['personnes']
                 for personne in personnes:
                     fonctions = ' '.join(
                         x.encode('utf-8') for x in personne['fonctions'])
@@ -515,7 +515,7 @@ def list_videos(params):
                 # aired : string (2008-12-07)
 
                 # image = URL_IMG % (json_parserShow['image'])
-                image = json_parserShow['image_secure']
+                image = json_parser_show['image_secure']
 
                 info = {
                     'video': {
@@ -606,7 +606,7 @@ def list_videos(params):
         update_listing='update_listing' in params,
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
     lives = []
@@ -738,7 +738,7 @@ def list_live(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 
