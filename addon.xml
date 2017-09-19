@@ -8,6 +8,9 @@
     <import addon="xbmc.python" version="2.24.0"/>
     <import addon="script.module.beautifulsoup4" version="4.3.1"/>
     <import addon="script.module.requests" version="2.9.1"/>
+    <import addon="script.module.youtube.dl" version="17.518.2"/>
+    <import addon="script.module.elementtree" version="1.2.8"/>
+    <import addon="plugin.video.youtube"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -27,12 +30,25 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
+[Add live TV] TF1 (wwark)
+[Add Live TV] Pluzz — France Télévision (wwark)
+[Improvement] Pluzz - France Télévision: Choose video quality with DIALOG setting (wwark)
+[Add Live TV] Canal + group (wwark)
+
 [Bug] L'équipe: Fix video quality selection
 [Improvement] Numéro 23: Better categories listing
+[Add channel] RTL-TVI
+[Add channel] 01Net TV (wwark)
+[Add channel] BFM Business (wwark)
+[Add channel] RMC (wwark)
 [Bug] TF1 group: Fix wrong Video URL format
 [Bug] TMC, NT1 and HD1: Fix missing setting to set video quality
 [Improvement] TF1 group: Add missing date and duration for videos
-    </news> 
+[Improvement] Add download mode on multiple channels (wwark)
+[Add Live TV] Pluzz (wwark)
+[Add Live TV] Arte (wwark)
+
+    </news>
     <assets>
       <icon>icon.png</icon>
       <fanart>fanart.jpg</fanart>

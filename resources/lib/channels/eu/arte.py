@@ -24,48 +24,86 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
-# TODO
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.ADDON.initialize_gettext()
+
+# TO DO
 #   List emissions
 #   Most recent
 #   Most viewed
 
-url_replay = 'https://www.arte.tv/papi/tvguide/videos/' \
+URL_REPLAY = 'https://www.arte.tv/papi/tvguide/videos/' \
              'ARTE_PLUS_SEVEN/%s.json?includeLongRights=true'
-# Valid languages: F or D
+# Langue, ...
 
+URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v1/livestream/%s'
+# Langue, ...
 
 def channel_entry(params):
-    if 'list_shows' in params.next:
+    """Entry function of the module"""
+    if 'root' in params.next:
+        return root(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+    return None
 
+#@common.plugin.cached(common.cache_time)
+def root(params):
+    modes = []
 
-@common.plugin.cached(common.cache_time)
+    # Add Replay
+    modes.append({
+        'label' : 'Replay',
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
+    })
+
+    modes.append({
+        'label' : 'Live TV',
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name.upper()
+        ),
+    })
+
+    return common.PLUGIN.create_listing(
+        modes,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+    )
+
+#@common.plugin.cached(common.cache_time)
 def list_shows(params):
     shows = []
     emissions_list = []
     categories = {}
 
-    desired_language = common.plugin.get_setting(
+    desired_language = common.PLUGIN.get_setting(
         params.channel_id + '.language')
 
-    if desired_language == 'Auto':
-        if params.channel_country == 'fr':
-            desired_language = 'F'
-        elif params.channel_country == 'de':
-            desired_language = 'D'
-    elif desired_language == 'fr':
-        desired_language = 'F'
-    elif desired_language == 'de':
+    if desired_language == 'DE':
         desired_language = 'D'
     else:
         desired_language = 'F'
 
     file_path = utils.download_catalog(
-        url_replay % desired_language,
+        URL_REPLAY % desired_language,
         '%s_%s.json' % (params.channel_name, desired_language)
     )
     file_replay = open(file_path).read()
@@ -103,14 +141,14 @@ def list_shows(params):
 
         emissions_list.append(emission_dict)
 
-    with common.plugin.get_storage() as storage:
+    with common.PLUGIN.get_storage() as storage:
         storage['emissions_list'] = emissions_list
 
     for category in categories.keys():
 
         shows.append({
             'label': category,
-            'url': common.plugin.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_cat',
                 category=category,
@@ -118,7 +156,7 @@ def list_shows(params):
             ),
         })
 
-    return common.plugin.create_listing(
+    return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
@@ -127,10 +165,10 @@ def list_shows(params):
     )
 
 
-@common.plugin.cached(common.cache_time)
+#@common.plugin.cached(common.cache_time)
 def list_videos(params):
     videos = []
-    with common.plugin.get_storage() as storage:
+    with common.PLUGIN.get_storage() as storage:
         emissions_list = storage['emissions_list']
 
     if params.next == 'list_videos_cat':
@@ -165,19 +203,31 @@ def list_videos(params):
                     }
                 }
 
+                # Nouveau pour ajouter le menu pour télécharger la vidéo
+                context_menu = []
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        url=emission['video_url']) + ')'
+                )
+                context_menu.append(download_video)
+                # Fin
+
                 videos.append({
                     'label': title,
                     'thumb': emission['image'],
-                    'url': common.plugin.get_url(
+                    'url': common.PLUGIN.get_url(
                         action='channel_entry',
-                        next='play',
+                        next='play_r',
                         url=emission['video_url'],
                     ),
                     'is_playable': True,
-                    'info': info
+                    'info': info,
+                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
                 })
 
-        return common.plugin.create_listing(
+        return common.PLUGIN.create_listing(
             videos,
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_DATE,
@@ -189,59 +239,101 @@ def list_videos(params):
             ),
             content='tvshows')
 
+#@common.plugin.cached(common.cache_time)
+def list_live(params):
+    lives = []
 
-@common.plugin.cached(common.cache_time)
+    desired_language = common.PLUGIN.get_setting(
+        params.channel_id + '.language')
+
+    if desired_language == 'DE':
+        desired_language = 'de'
+    else:
+        desired_language = 'fr'
+
+    url_live = ''
+
+    file_path = utils.download_catalog(
+        URL_LIVE_ARTE % desired_language,
+        '%s_%s_live.json' % (params.channel_name, desired_language)
+    )
+    file_live = open(file_path).read()
+    json_parser = json.loads(file_live)
+
+    title = json_parser["videoJsonPlayer"]["VTI"].encode('utf-8')
+    img = json_parser["videoJsonPlayer"]["VTU"]["IUR"].encode('utf-8')
+    plot = ''
+    if 'V7T' in json_parser["videoJsonPlayer"]:
+        plot = json_parser["videoJsonPlayer"]["V7T"].encode('utf-8')
+    elif 'VDE' in json_parser["videoJsonPlayer"]:
+        plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
+    duration = 0
+    duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
+    url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
+
+    info = {
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
+    }
+
+    lives.append({
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url' : common.PLUGIN.get_url(
+            action='channel_entry',
+            next='play_l',
+            url=url_live,
+        ),
+        'is_playable': True,
+        'info': info
+    })
+
+    return common.PLUGIN.create_listing(
+        lives,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        )
+    )
+
+#@common.plugin.cached(common.cache_time)
 def get_video_url(params):
-    file_medias = utils.get_webcontent(
-        params.url)
-    json_parser = json.loads(file_medias)
 
-    url_auto = ''
-    url_hd_plus = ''
-    url_hd = ''
-    url_sd = ''
-    url_sd_minus = ''
-    video_streams = json_parser['videoJsonPlayer']['VSR']
+    if params.next == 'play_r' or params.next == 'download_video':
+        file_medias = utils.get_webcontent(
+            params.url)
+        json_parser = json.loads(file_medias)
 
-    if 'HLS_SQ_1' in video_streams:
-        url_auto = video_streams['HLS_SQ_1']['url'].encode('utf-8')
+        url_selected = ''
+        video_streams = json_parser['videoJsonPlayer']['VSR']
 
-    if 'HTTP_MP4_SQ_1' in video_streams:
-        url_hd_plus = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
+        desired_quality = common.PLUGIN.get_setting('quality')
 
-    if 'HTTP_MP4_EQ_1' in video_streams:
-        url_hd = video_streams['HTTP_MP4_EQ_1']['url'].encode('utf-8')
+        if desired_quality == "DIALOG":
+            all_datas_videos = []
 
-    if 'HTTP_MP4_HQ_1' in video_streams:
-        url_sd = video_streams['HTTP_MP4_HQ_1']['url'].encode('utf-8')
+            for video in video_streams:
+                if not video.find("HLS"):
+                        datas = json_parser['videoJsonPlayer']['VSR'][video]
+                        new_list_item = common.sp.xbmcgui.ListItem()
+                        new_list_item.setLabel(datas['mediaType'] + " (" + datas['versionLibelle'] + ")")
+                        new_list_item.setPath(datas['url'])
+                        all_datas_videos.append(new_list_item)
 
-    if 'HTTP_MP4_MQ_1' in video_streams:
-        url_sd_minus = video_streams['HTTP_MP4_MQ_1']['url'].encode('utf-8')
+            seleted_item = common.sp.xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
 
-    desired_quality = common.plugin.get_setting(
-        params.channel_id + '.quality')
+            url_selected = all_datas_videos[seleted_item].getPath().encode('utf-8')
 
-    if desired_quality == 'Auto' and url_auto:
-        return url_auto
+        elif desired_quality == "BEST":
+            url_selected = video_streams['HTTP_MP4_SQ_1']['url'].encode('utf-8')
+        else:
+            url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
 
-    if desired_quality == 'HD+' and url_hd_plus:
-        return url_hd_plus
-    elif url_hd:
-        return url_hd
+        return url_selected
+    elif params.next == 'play_l':
+        return params.url
 
-    if desired_quality == 'HD' and url_hd:
-        return url_hd
-    elif url_hd_plus:
-        return url_hd_plus
-
-    if desired_quality == 'SD' and url_sd:
-        return url_sd
-    elif url_sd_minus:
-        return url_sd_minus
-
-    if desired_quality == 'SD-' and url_sd_minus:
-        return url_sd_minus
-    elif url_sd:
-        return url_sd
-
-    return url_auto
