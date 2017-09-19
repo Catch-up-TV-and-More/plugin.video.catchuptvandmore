@@ -10,6 +10,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 *This plugin brings together all the videos of the various services and channels of catch-up TV. Furthermore, this addon allows you to quickly access the videos and content offered by certain websites (coming soon).*
 
 ## Chaînes disponibles — *Available channels*
+### Europe
+- Arte (Replay, Live TV)
+
 ### France
 - TF1 (Replay, Live TV)
 - France 2 (Replay, Live TV)
@@ -17,7 +20,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Canal + (Replay, Live TV)
 - France 5 (Replay, Live TV)
 - M6 (Replay)
-- Arte
 - C8 (Replay, Live TV)
 - W9 (Replay)
 - TMC

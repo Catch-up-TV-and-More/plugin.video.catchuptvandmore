@@ -55,8 +55,9 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -88,8 +89,9 @@ def root(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build categories listing"""
     shows = []
     emissions_list = []
     categories = {}
@@ -165,8 +167,9 @@ def list_shows(params):
     )
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
     with common.PLUGIN.get_storage() as storage:
         emissions_list = storage['emissions_list']
@@ -239,8 +242,9 @@ def list_videos(params):
             ),
             content='tvshows')
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
+    """Build live listing"""
     lives = []
 
     desired_language = common.PLUGIN.get_setting(
@@ -300,9 +304,9 @@ def list_live(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
         file_medias = utils.get_webcontent(
             params.url)
