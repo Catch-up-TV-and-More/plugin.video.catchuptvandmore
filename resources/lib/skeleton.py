@@ -21,12 +21,12 @@
 """
 
 
-categories = {
-    'main_menu.fr': 'French channels'
+CATEGORIES = {
+    'main_menu.fr': 'French channels',
     'main_menu.eu': 'European channels'
 }
 
-channels = {
+CHANNELS = {
     'main_menu.fr': {
         'channels.fr.tf1.tf1': 'TF1',
         'channels.fr.pluzz.france2': 'France 2',
@@ -67,9 +67,7 @@ channels = {
         'channels.fr.6play.styles': 'Sixième Style (6play)',
         'channels.fr.6play.comedy': 'Comic (6play)',
         'channels.fr.france24.france24': 'France24',
-        'channels.fr.publicsenat.publicsenat': 'Public Sénat'#,
-        #'channels.fr.6play.teva': 'Teva', #To Test with 6play Account with purshase Teva channel (scrapping working)
-        #'channels.fr.6play.parispremiere': 'Paris Première' #To Test with 6play Account with purshase Paris Premiere channel (scrapping working)
+        'channels.fr.publicsenat.publicsenat': 'Public Sénat'
     },
 
     'main_menu.eu': {

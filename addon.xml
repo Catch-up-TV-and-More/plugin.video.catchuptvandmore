@@ -31,6 +31,10 @@
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
 [Add live TV] TF1 (wwark)
+[Bug] TF1 group: Fix wrong Video URL format
+[Improvement] TF1 group: Add missing date and duration for videos
+
+
 [Add Live TV] Pluzz — France Télévision (wwark)
 [Improvement] Pluzz - France Télévision: Choose video quality with DIALOG setting (wwark)
 [Add Live TV] Canal + group (wwark)
@@ -40,9 +44,9 @@
 [Add channel] 01Net TV (wwark)
 [Add channel] BFM Business (wwark)
 [Add channel] RMC (wwark)
-[Bug] TF1 group: Fix wrong Video URL format
+
 [Bug] TMC, NT1 and HD1: Fix missing setting to set video quality
-[Improvement] TF1 group: Add missing date and duration for videos
+
 [Improvement] Add download mode on multiple channels (wwark)
 [Add Live TV] Pluzz (wwark)
 [Add Live TV] Arte (wwark)

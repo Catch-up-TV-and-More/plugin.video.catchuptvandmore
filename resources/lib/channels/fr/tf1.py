@@ -70,7 +70,7 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
@@ -106,7 +106,7 @@ def root(params):
         ),
     )
 
-@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -217,7 +217,7 @@ def list_shows(params):
     )
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos_categories(params):
     """Build videos categories listing"""
     videos_categories = []
@@ -252,7 +252,7 @@ def list_videos_categories(params):
     )
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -426,7 +426,7 @@ def list_videos(params):
         ),
         content='tvshows')
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
     lives = []
@@ -491,7 +491,7 @@ def list_live(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 
@@ -559,7 +559,6 @@ def get_video_url(params):
 
         # Video_ID 'L_%CHANNEL_NAME%'
         video_id = 'L_%s' % params.channel_name.upper()
-        real_channel = params.channel_name
 
         timeserver = str(utils.get_webcontent(URL_TIME))
 

@@ -57,7 +57,7 @@ def root(params):
     """
     listing = []
     last_category_id = ''
-    for category_id, string_id in skeleton.categories.iteritems():
+    for category_id, string_id in skeleton.CATEGORIES.iteritems():
         if common.PLUGIN.get_setting(category_id):
             last_category_id = category_id
             last_window_title = _(string_id)
@@ -114,7 +114,7 @@ def list_channels(params):
     """
 
     # First, we sort channels by order
-    channels_dict = skeleton.channels[params.category_id]
+    channels_dict = skeleton.CHANNELS[params.category_id]
     channels = []
     for channel_id, title in channels_dict.iteritems():
         # If channel isn't disable
