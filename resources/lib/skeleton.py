@@ -66,7 +66,7 @@ CHANNELS = {
         'channels.fr.6play.home': 'Home Time (6play)',
         'channels.fr.6play.styles': 'Sixième Style (6play)',
         'channels.fr.6play.comedy': 'Comic (6play)',
-        'channels.fr.france24.france24': 'France24',
+        'channels.fr.france24.france24': 'France 24',
         'channels.fr.publicsenat.publicsenat': 'Public Sénat'
     },
 

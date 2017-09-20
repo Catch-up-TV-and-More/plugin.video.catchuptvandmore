@@ -44,6 +44,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RMC (Replay, Live TV)
 - RMC Découverte (Replay, Live TV)
 - LCP Assemblée Nationale (Replay, Live TV)
+- France 24 (Replay, Live TV)
 
 #### Web TV
 - Stories — 6play (Replay)

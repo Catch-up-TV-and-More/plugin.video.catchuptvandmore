@@ -45,7 +45,8 @@ URL_LIVE_SITE = 'http://www.france24.com/%s/'
 URL_INFO_LIVE = 'http://www.france24.com/%s/_fragment/player/nowplaying/'
 # Language
 
-URL_API_VOD = 'http://api.france24.com/%s/services/json-rpc/emission_list?databases=f24%s&key=XXX&start=0&limit=50&edition_start=0&edition_limit=5'
+URL_API_VOD = 'http://api.france24.com/%s/services/json-rpc/emission_list?databases=f24%s&key=XXX' \
+              '&start=0&limit=50&edition_start=0&edition_limit=5'
 # language
 
 def channel_entry(params):
@@ -62,8 +63,9 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -96,8 +98,9 @@ def root(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build shows listing"""
     shows = []
 
     desired_language = common.PLUGIN.get_setting(
@@ -141,16 +144,17 @@ def list_shows(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     desired_language = common.PLUGIN.get_setting(
         params.channel_id + '.language')
 
     file_path = utils.download_catalog(
-        URL_API_VOD % (desired_language.lower(),desired_language.lower()),
-        '%s_%s_vod.json' % (params.channel_name,desired_language.lower())
+        URL_API_VOD % (desired_language.lower(), desired_language.lower()),
+        '%s_%s_vod.json' % (params.channel_name, desired_language.lower())
     )
     json_vod = open(file_path).read()
     json_parser = json.loads(json_vod)
@@ -185,7 +189,6 @@ def list_videos(params):
                     }
                 }
 
-                # Nouveau pour ajouter le menu pour télécharger la vidéo
                 context_menu = []
                 download_video = (
                     _('Download'),
@@ -194,7 +197,6 @@ def list_videos(params):
                         url=url) + ')'
                 )
                 context_menu.append(download_video)
-                # Fin
 
                 videos.append({
                     'label': title,
@@ -207,11 +209,11 @@ def list_videos(params):
                     ),
                     'is_playable': True,
                     'info': info,
-                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                    'context_menu': context_menu
                 })
 
 
-    # TODO add More button Video
+    # TO DO add More button Video
 
     return common.PLUGIN.create_listing(
         videos,
@@ -221,9 +223,9 @@ def list_videos(params):
         ),
         content='tvshows')
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -239,7 +241,7 @@ def list_live(params):
 
     file_path = utils.download_catalog(
         url_live,
-        '%s_%s_live.html' % (params.channel_name,desired_language.lower())
+        '%s_%s_live.html' % (params.channel_name, desired_language.lower())
     )
     html_live = open(file_path).read()
     root_soup = bs(html_live, 'html.parser')
@@ -282,9 +284,9 @@ def list_live(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_l':
         return params.url
     elif params.next == 'play_r' or params.next == 'download_video':
