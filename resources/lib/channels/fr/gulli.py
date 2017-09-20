@@ -85,7 +85,9 @@ def channel_entry(params):
     return None
 
 
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_api_key():
+    """Compute the API key"""
     date = time.strftime("%Y%m%d")
     key = SECRET_KEY + date
     key = common.sp.md5(key).hexdigest()
@@ -94,6 +96,7 @@ def get_api_key():
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -128,7 +131,7 @@ def root(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
-    # Create categories list
+    """Build categories listing"""
     shows = []
 
     if params.next == 'list_shows_1':
@@ -189,6 +192,7 @@ def list_shows(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     file_path = utils.download_catalog(
@@ -235,7 +239,6 @@ def list_videos(params):
             }
         }
 
-        # Nouveau pour ajouter le menu pour télécharger la vidéo
         context_menu = []
         download_video = (
             _('Download'),
@@ -244,7 +247,6 @@ def list_videos(params):
                 url_streaming=url_streaming) + ')'
         )
         context_menu.append(download_video)
-        # Fin
 
         videos.append({
             'label': episode_title,
@@ -257,7 +259,7 @@ def list_videos(params):
             ),
             'is_playable': True,
             'info': info,
-            'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -269,9 +271,10 @@ def list_videos(params):
         ),
         content='tvshows')
 
+
 @common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -339,6 +342,7 @@ def list_live(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
+    """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
         url_root = params.url_streaming.replace('playlist.m3u8', '')
         m3u8_content = utils.get_webcontent(params.url_streaming)

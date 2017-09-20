@@ -30,7 +30,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - BFM TV (Replay, Live TV)
 - CNews (Replay, Live TV)
 - CStar (Replay, Live TV)
-- Gulli
+- Gulli (Replay, Live TV)
 - France Ô
 - HD1 (Replay, Live TV)
 - L'Équipe
