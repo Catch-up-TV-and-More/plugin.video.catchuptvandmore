@@ -31,7 +31,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - CNews (Replay, Live TV)
 - CStar (Replay, Live TV)
 - Gulli (Replay, Live TV)
-- France Ô
+- France Ô (Replay, Live TV)
 - HD1 (Replay, Live TV)
 - L'Équipe
 - 6ter (Replay)
