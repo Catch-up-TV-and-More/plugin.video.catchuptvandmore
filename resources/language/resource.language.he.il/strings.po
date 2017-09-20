@@ -101,6 +101,7 @@ msgctxt "#30051"
 msgid "To re-enable hidden items go to the plugin settings"
 msgstr "כדי להפעיל מחדש את הפריטים המוסתרים, עבור אל ההגדרות של תוסף"
 
+
 # Settings quality and content (from 30070 to 30099)
 msgctxt "#30070"
 msgid "Video quality"
@@ -125,6 +126,7 @@ msgstr "Euronews: בחר ערוץ"
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
 msgstr "איכות וידאו (הטוב ביותר|ברירת מחדל|תיבת דו-שיח)"
+
 
 # Others (from 30100 to 30140)
 msgctxt "#30100"

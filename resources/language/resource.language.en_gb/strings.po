@@ -92,7 +92,6 @@ msgctxt "#30043"
 msgid "Download"
 msgstr ""
 
-
 # Dialog boxes (from 30050 to 30069)
 msgctxt "#30050"
 msgid "Information"
