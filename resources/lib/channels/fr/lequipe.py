@@ -61,8 +61,9 @@ def channel_entry(params):
     else:
         return None
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -95,8 +96,9 @@ def root(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build shows listing"""
     shows = []
 
     # Get categories :
@@ -133,8 +135,9 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL))
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
     if 'previous_listing' in params:
         videos = ast.literal_eval(params['previous_listing'])
@@ -156,10 +159,11 @@ def list_videos(params):
 
     for program in category_soup:
 
-        #Get Video_ID
+        # Get Video_ID
         url = URL_ROOT + program['href'].encode('utf-8')
         html_video_equipe = utils.get_webcontent(url)
-        video_id = re.compile(r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?', re.DOTALL).findall(html_video_equipe)[0]
+        video_id = re.compile(
+            r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?', re.DOTALL).findall(html_video_equipe)[0]
 
         title = program.find(
             'h2').get_text().encode('utf-8')
@@ -199,7 +203,6 @@ def list_videos(params):
             }
         }
 
-        # Nouveau pour ajouter le menu pour télécharger la vidéo
         context_menu = []
         download_video = (
             _('Download'),
@@ -208,7 +211,6 @@ def list_videos(params):
                 video_id=video_id) + ')'
         )
         context_menu.append(download_video)
-        # Fin
 
         videos.append({
             'label': title,
@@ -221,7 +223,7 @@ def list_videos(params):
             ),
             'is_playable': True,
             'info': info,
-            'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+            'context_menu': context_menu
         })
 
     # More videos...
@@ -251,9 +253,9 @@ def list_videos(params):
         update_listing='update_listing' in params,
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -265,7 +267,8 @@ def list_live(params):
     url_live = ''
 
     html_live_equipe = utils.get_webcontent(URL_ROOT_VIDEO_LEQUIPE)
-    video_id = re.compile(r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?', re.DOTALL).findall(html_live_equipe)[0]
+    video_id = re.compile(
+        r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?', re.DOTALL).findall(html_live_equipe)[0]
 
     title = '%s Live' % params.channel_name.upper()
 
@@ -300,15 +303,15 @@ def list_live(params):
 
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     url_video = URL_DAILYMOTION_EMBED % params.video_id
 
     desired_quality = common.PLUGIN.get_setting('quality')
 
     if params.next == 'download_video':
-            return url_video
+        return url_video
     else:
         html_video = utils.get_webcontent(url_video)
         html_video = html_video.replace('\\', '')
@@ -332,7 +335,7 @@ def get_video_url(params):
 
                 return all_datas_videos[seleted_item].getPath().encode('utf-8')
             elif desired_quality == 'BEST':
-                #Last video in the Best
+                # Last video in the Best
                 for datas in all_url_video:
                     url = datas
                 return url

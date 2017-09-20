@@ -30,6 +30,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
+[Improvement] Choose video quality with DIALOG setting for compatible channels (wwark)
 [Add live TV] TF1 group (wwark)
 [Bug] TF1 group: Fix wrong Video URL format
 [Improvement] TF1 group: Add missing date and duration for videos
@@ -37,7 +38,6 @@
 [Add channel] Xtra — MyTF1 (wwark)
 [Add channel] LCI (wwark)
 [Add Live TV] Pluzz — France Télévision (wwark)
-[Improvement] Pluzz - France Télévision: Choose video quality with DIALOG setting (wwark)
 [Add channel] La 1ère — Outre-Mer (wwark)
 [Add channel] France Info (wwark)
 [Add Live TV] Canal + group (wwark)
@@ -54,6 +54,7 @@
 [Add channel] 01Net TV (wwark)
 [Add channel — Live TV] RMC Découverte (wwark)
 [Add Live TV] Gulli (wwark)
+[Add Live TV] L'Équipe (wwark)
 
 
 [Improvement] Numéro 23: Better categories listing
