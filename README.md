@@ -26,7 +26,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - W9 *(Replay)*
 - TMC *(Replay, Live TV)*
 - NT1 *(Replay, Live TV)*
-- NRJ 12
+- NRJ 12 *(Replay, Live TV with NRJ account)*
 - France 4 *(Replay, Live TV)*
 - BFM TV *(Replay, Live TV)*
 - CNews *(Replay, Live TV)*
@@ -37,7 +37,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - L'Équipe *(Replay, Live TV)*
 - 6ter *(Replay)*
 - Numéro 23 *(Replay, Live TV)*
-- Chérie 25
+- Chérie 25 *(Replay, Live TV with NRJ account)*
 - LCI *(Replay, Live TV)*
 - La 1ère — Outre-Mer *(Replay)*
 - France Info *(Live TV)*
@@ -57,6 +57,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Comic — 6play *(Replay)*
 - Tfou — MyTF1 *(Replay)*
 - Xtra — MyTF1 *(Replay)*
+- 01Net TV
 
 ### Belgique — *Belgium*
 - *à venir* — *coming soon*
