@@ -10,7 +10,6 @@
     <import addon="script.module.requests" version="2.9.1"/>
     <import addon="script.module.youtube.dl" version="17.518.2"/>
     <import addon="script.module.elementtree" version="1.2.8"/>
-    <import addon="plugin.video.youtube"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -60,19 +59,7 @@
 [Add channel — Live TV] France 24 (wwark)
 [Add channel — Live TV] Public Sénat (wwark)
 [Add Live TV] Euronews FR (wwark)
-
-
-
-
-[Add channel] RTL-TVI
-[Add channel] 01Net TV (wwark)
-[Add channel] BFM Business (wwark)
-
-
-
 [Improvement] Add download mode on multiple channels (wwark)
-
-
     </news>
     <assets>
       <icon>icon.png</icon>
