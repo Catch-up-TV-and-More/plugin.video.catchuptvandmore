@@ -12,6 +12,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ## Chaînes disponibles — *Available channels*
 ### Europe
 - Arte (Replay, Live TV)
+- Euronews FR (Live TV)
 
 ### France
 #### TV
@@ -45,6 +46,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RMC Découverte (Replay, Live TV)
 - LCP Assemblée Nationale (Replay, Live TV)
 - France 24 (Replay, Live TV)
+- Public Sénat (Replay, Live TV)
 
 #### Web TV
 - Stories — 6play (Replay)
