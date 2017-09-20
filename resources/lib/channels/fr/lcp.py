@@ -63,13 +63,13 @@ def channel_entry(params):
     elif 'play' in params.next:
         return get_video_url(params)
 
-categories = {
+CATEGORIES = {
     'http://www.lcp.fr/actualites' : 'Actualités',
     'http://www.lcp.fr/emissions' : 'Émissions',
     'http://www.lcp.fr/documentaires' : 'Documentaires'
 }
 
-correct_mounth = {
+CORRECT_MOUNTH = {
     'janvier' : '01',
     'février' : '02',
     'mars' : '03',
@@ -84,8 +84,9 @@ correct_mounth = {
     'décembre' : '12'
 }
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay Desactiver
@@ -118,13 +119,14 @@ def root(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build shows listing"""
     shows = []
 
     if params.next == 'list_shows_1':
 
-        for category_url, category_name in categories.iteritems():
+        for category_url, category_name in CATEGORIES.iteritems():
 
             if category_name == 'Émissions':
                 shows.append({
@@ -201,9 +203,9 @@ def list_shows(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
-
+    """Build videos listing"""
     videos = []
 
     if 'previous_listing' in params:
@@ -234,7 +236,7 @@ def list_videos(params):
             date = value_date.split(' ')
             day = date[0]
             try:
-                mounth = correct_mounth[date[1]]
+                mounth = CORRECT_MOUNTH[date[1]]
             except:
                 mounth = '00'
             year = date[2]
@@ -414,7 +416,7 @@ def list_videos(params):
             date = value_date.split(' ')
             day = date[0]
             try:
-                mounth = correct_mounth[date[1]]
+                mounth = CORRECT_MOUNTH[date[1]]
             except:
                 mounth = '00'
             year = date[2]
@@ -491,9 +493,10 @@ def list_videos(params):
         update_listing='update_listing' in params,
     )
 
-#@common.plugin.cached(common.cache_time)
-def list_live(params):
 
+@common.PLUGIN.cached(common.CACHE_TIME)
+def list_live(params):
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -542,9 +545,9 @@ def list_live(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
 
         url = ''
@@ -564,7 +567,7 @@ def get_video_url(params):
             for datas in all_url_video:
                 url = datas
         else:
-            #get videoId and accountId
+            # get videoId and accountId
             videoId, accountId = re.compile(r'embed/(.*?)/(.*?)/').findall(url_video_embed)[0]
 
             html_json = utils.get_webcontent(URL_VIDEO_REPLAY % (videoId, accountId))
