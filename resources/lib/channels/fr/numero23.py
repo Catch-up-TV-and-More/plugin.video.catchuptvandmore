@@ -58,7 +58,7 @@ def channel_entry(params):
     else:
         return None
 
-correct_month = {
+CORRECT_MONTH = {
     'janvier' : '01',
     'février' : '02',
     'mars' : '03',
@@ -73,8 +73,9 @@ correct_month = {
     'décembre' : '12'
 }
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -107,8 +108,9 @@ def root(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build shows listing"""
     shows = []
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
@@ -124,7 +126,7 @@ def list_shows(params):
 
         for category in categories_soup.find_all('a'):
             category_name = category.find('span').get_text().encode('utf-8').replace(
-                                '\n', ' ').replace('\r', ' ').rstrip('\r\n')
+                '\n', ' ').replace('\r', ' ').rstrip('\r\n')
             category_hash = common.sp.md5(category_name).hexdigest()
 
             url = category.get('href').encode('utf-8')
@@ -150,8 +152,9 @@ def list_shows(params):
     )
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     paged = 1
@@ -171,22 +174,26 @@ def list_videos(params):
 
             info_video = video.find_all('p')
 
-            video_title = video.find('h3').find('a').get_text().encode('utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n') \
-                            + ' - ' + video.find('p', class_="red").get_text().encode('utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n')
+            video_title = video.find('h3').find('a').get_text().encode('utf-8').replace(
+                '\n', ' ').replace('\r', ' ').rstrip('\r\n') + ' - ' + video.find(
+                    'p', class_="red").get_text().encode(
+                        'utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n')
             video_img = video.find('img')['src'].encode('utf-8')
             video_id = video.find('div', class_="player")['data-id-video'].encode('utf-8')
             video_duration = 0
-            video_duration_list = str(info_video[3]).replace("<p><strong>",'').replace("</strong></p>",'').split(':')
+            video_duration_list = str(info_video[3]).replace(
+                "<p><strong>", '').replace("</strong></p>", '').split(':')
             if len(video_duration_list) > 2:
-                video_duration = int(video_duration_list[0]) * 3600 + int(video_duration_list[1]) * 60 + int(video_duration_list[2])
+                video_duration = int(video_duration_list[0]) * 3600 + int(video_duration_list[1]) \
+                    * 60 + int(video_duration_list[2])
             else:
                 video_duration = int(video_duration_list[0]) * 60 + int(video_duration_list[1])
 
             # get month and day on the page
-            date_list = str(info_video[2]).replace("<p>",'').replace("</p>",'').split(' ')
+            date_list = str(info_video[2]).replace("<p>", '').replace("</p>", '').split(' ')
             day = date_list[2]
             try:
-                mounth = correct_month[date_list[3]]
+                mounth = CORRECT_MONTH[date_list[3]]
             except:
                 mounth = '00'
             # get year ?
@@ -206,7 +213,6 @@ def list_videos(params):
                 }
             }
 
-            # Nouveau pour ajouter le menu pour télécharger la vidéo
             context_menu = []
             download_video = (
                 _('Download'),
@@ -215,7 +221,6 @@ def list_videos(params):
                     video_id=video_id) + ')'
             )
             context_menu.append(download_video)
-            # Fin
 
             videos.append({
                 'label': video_title,
@@ -228,7 +233,7 @@ def list_videos(params):
                 ),
                 'is_playable': True,
                 'info': info,
-                'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                'context_menu': context_menu
             })
         paged = paged + 1
 
@@ -251,9 +256,9 @@ def list_videos(params):
         ),
         content='tvshows')
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -304,21 +309,22 @@ def list_live(params):
         )
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     url_video = URL_DAILYMOTION_EMBED % params.video_id
 
     desired_quality = common.PLUGIN.get_setting('quality')
 
     if params.next == 'download_video':
-            return url_video
+        return url_video
     else:
         html_video = utils.get_webcontent(url_video)
         html_video = html_video.replace('\\', '')
 
         if params.next == 'play_l':
-            all_url_video = re.compile(r'{"type":"application/x-mpegURL","url":"(.*?)"').findall(html_video)
+            all_url_video = re.compile(
+                r'{"type":"application/x-mpegURL","url":"(.*?)"').findall(html_video)
             # Just One Quality
             return all_url_video[0]
         elif  params.next == 'play_r':
@@ -342,5 +348,3 @@ def get_video_url(params):
                 return url
             else:
                 return all_url_video[0]
-
-
