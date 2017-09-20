@@ -12,7 +12,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ## Chaînes disponibles — *Available channels*
 ### Europe
 - Arte *(Replay, Live TV)*
-- Euronews FR *(Live TV)*
+- Euronews *(Live TV)*
 
 ### France
 ##### TV

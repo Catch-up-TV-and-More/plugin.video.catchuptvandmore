@@ -84,67 +84,68 @@
             <setting label="Chérie 25" type="bool" id="channels.fr.nrj.cherie25" default="true" visible="eq(-43,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.nrj.cherie25.order" default="22"/>
 
-                <setting label="La 1ère (Outre-Mer)" type="bool" id="channels.fr.pluzz.la_1ere" default="true" visible="eq(-45,true)"/>
+            <setting label="La 1ère (Outre-Mer)" type="bool" id="channels.fr.pluzz.la_1ere" default="true" visible="eq(-45,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.la_1ere.order" default="23"/>
 
-                <setting label="France Info" type="bool" id="channels.fr.pluzz.franceinfo" default="true" visible="eq(-47,true)"/>
+             <setting label="France Info" type="bool" id="channels.fr.pluzz.franceinfo" default="true" visible="eq(-47,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.franceinfo.order" default="24"/>
 
-                <setting label="BFM Business" type="bool" id="channels.fr.bfmtv.bfmbusiness" default="true" visible="eq(-49,true)"/>
+            <setting label="BFM Business" type="bool" id="channels.fr.bfmtv.bfmbusiness" default="true" visible="eq(-49,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.bfmbusiness.order" default="25"/>
 
-                <setting label="RMC" type="bool" id="channels.fr.bfmtv.rmc" default="true" visible="eq(-51,true)"/>
+            <setting label="RMC" type="bool" id="channels.fr.bfmtv.rmc" default="true" visible="eq(-51,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.rmc.order" default="26"/>
 
-                <setting label="01Net TV" type="bool" id="channels.fr.bfmtv.01net" default="true" visible="eq(-53,true)"/>
+            <setting label="01Net TV" type="bool" id="channels.fr.bfmtv.01net" default="true" visible="eq(-53,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.01net.order" default="27"/>
 
-                <setting label="Tfou (MYTF1)" type="bool" id="channels.fr.tf1.tfou" default="true" visible="eq(-55,true)"/>
+            <setting label="Tfou (MYTF1)" type="bool" id="channels.fr.tf1.tfou" default="true" visible="eq(-55,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1.tfou.order" default="28"/>
 
-                <setting label="Xtra (MYTF1)" type="bool" id="channels.fr.tf1.xtra" default="true" visible="eq(-57,true)"/>
+            <setting label="Xtra (MYTF1)" type="bool" id="channels.fr.tf1.xtra" default="true" visible="eq(-57,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1.xtra.order" default="29"/>
 
-                <setting label="LCI" type="bool" id="channels.fr.tf1.lci" default="true" visible="eq(-59,true)"/>
+            <setting label="LCI" type="bool" id="channels.fr.tf1.lci" default="true" visible="eq(-59,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1.lci.order" default="30"/>
 
-                <setting label="LCP Assemblée Nationale" type="bool" id="channels.fr.lcp.lcp" default="true" visible="eq(-61,true)"/>
+            <setting label="LCP Assemblée Nationale" type="bool" id="channels.fr.lcp.lcp" default="true" visible="eq(-61,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.lcp.lcp.order" default="31"/>
 
-                <setting label="RMC Découverte HD24" type="bool" id="channels.fr.bfmtv.rmcdecouverte" default="true" visible="eq(-63,true)"/>
+            <setting label="RMC Découverte HD24" type="bool" id="channels.fr.bfmtv.rmcdecouverte" default="true" visible="eq(-63,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.rmcdecouverte.order" default="32"/>
 
-                <setting label="Stories (6play)" type="bool" id="channels.fr.6play.stories" default="true" visible="eq(-65,true)"/>
+            <setting label="Stories (6play)" type="bool" id="channels.fr.6play.stories" default="true" visible="eq(-65,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.stories.order" default="33"/>
 
-                <setting label="Bruce (6play)" type="bool" id="channels.fr.6play.bruce" default="true" visible="eq(-67,true)"/>
+            <setting label="Bruce (6play)" type="bool" id="channels.fr.6play.bruce" default="true" visible="eq(-67,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.bruce.order" default="34"/>
 
-                <setting label="Crazy Kitchen (6play)" type="bool" id="channels.fr.6play.crazy_kitchen" default="true" visible="eq(-69,true)"/>
+            <setting label="Crazy Kitchen (6play)" type="bool" id="channels.fr.6play.crazy_kitchen" default="true" visible="eq(-69,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.crazy_kitchen.order" default="35"/>
 
-                <setting label="Home Time (6play)" type="bool" id="channels.fr.6play.home" default="true" visible="eq(-71,true)"/>
+            <setting label="Home Time (6play)" type="bool" id="channels.fr.6play.home" default="true" visible="eq(-71,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.home.order" default="36"/>
 
-                <setting label="Sixième Style (6play)" type="bool" id="channels.fr.6play.styles" default="true" visible="eq(-73,true)"/>
+            <setting label="Sixième Style (6play)" type="bool" id="channels.fr.6play.styles" default="true" visible="eq(-73,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.styles.order" default="37"/>
 
-                <setting label="Comic (6play)" type="bool" id="channels.fr.6play.comedy" default="true" visible="eq(-75,true)"/>
+            <setting label="Comic (6play)" type="bool" id="channels.fr.6play.comedy" default="true" visible="eq(-75,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.comedy.order" default="38"/>
 
-                <setting label="France24" type="bool" id="channels.fr.france24.france24" default="true" visible="eq(-77,true)"/>
+            <setting label="France24" type="bool" id="channels.fr.france24.france24" default="true" visible="eq(-77,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.france24.france24.order" default="39"/>
 
-                <setting label="Public Sénat" type="bool" id="channels.fr.publicsenat.publicsenat" default="true" visible="eq(-79,true)"/>
+            <setting label="Public Sénat" type="bool" id="channels.fr.publicsenat.publicsenat" default="true" visible="eq(-79,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.publicsenat.publicsenat.order" default="40"/>
 
             <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-81,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="41"/>
 
-                <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-83,true)"/>
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-83,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="42"/>-->
 
-
+        <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
 
             <setting label="Euronews" type="bool" id="channels.eu.euronews.euronews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.euronews.euronews.order" default="1"/>
@@ -171,7 +172,7 @@
             <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
 
                 <setting label="30080" type="labelenum" id="channels.eu.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
-                <setting label="30082" type="labelenum" id="channels.eu.euronews.euronews.language" visible="eq(-3,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
+                <setting label="30082" type="labelenum" id="channels.eu.euronews.euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
 
             <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>
