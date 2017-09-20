@@ -192,12 +192,7 @@
         <setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
 
             <setting label="NRJ Login" type="text" id="channels.fr.nrj.login" visible="eq(-1,true)" defaut=""/>
-            <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-3,true)" defaut=""/>
-
-        <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
-
-
+            <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
     </category>
 
 </settings>
