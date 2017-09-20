@@ -50,7 +50,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ##### Web TV
 - Stories — 6play *(Replay)*
-- Stories — 6play *(Replay)*
 - Bruce — 6play *(Replay)*
 - Crazy Kitchen — 6play *(Replay)*
 - Home Time — 6play *(Replay)*
