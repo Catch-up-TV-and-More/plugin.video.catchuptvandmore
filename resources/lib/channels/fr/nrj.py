@@ -21,9 +21,9 @@
 """
 
 import json
-import requests
 import re
 import xml.etree.ElementTree as ET
+import requests
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
@@ -76,8 +76,9 @@ def channel_entry(params):
         return None
 
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay with Categories
@@ -121,8 +122,9 @@ def root(params):
         ),
     )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build shows listing"""
     shows = []
 
     if 'list_shows_without_categories' in params.next:
@@ -150,13 +152,14 @@ def list_shows(params):
         )
         collection_xml = open(file_path).read()
 
-        xmlElements = ET.XML(collection_xml)
+        xml_elements = ET.XML(collection_xml)
 
         if 'list_shows_1' in params.next:
             # Build categories list (Tous les programmes, Séries, ...)
-            collections = xmlElements.findall("collection")
+            collections = xml_elements.findall("collection")
 
-            # Pour avoir toutes les videos, certaines videos ont des categories non presentes dans cette URL 'url_collection_api'
+            # Pour avoir toutes les videos, certaines videos ont des
+            # categories non presentes dans cette URL 'url_collection_api'
             state_video = 'Toutes les videos'
 
             shows.append({
@@ -190,13 +193,14 @@ def list_shows(params):
 
         elif 'list_shows_programs' in params.next:
             # Build programm list (Tous les programmes, Séries, ...)
-            collections = xmlElements.findall("collection")
+            collections = xml_elements.findall("collection")
 
             state_video = 'VIDEOS_BY_CATEGORY'
 
             for collection in collections:
                 if params.category_name == collection.findtext("category").encode('utf-8') \
-                    or (params.category_name == 'NO_CATEGORY' and collection.findtext("category").encode('utf-8') == ''):
+                        or (params.category_name == 'NO_CATEGORY' and \
+                        collection.findtext("category").encode('utf-8') == ''):
                     name_program = collection.findtext("name").encode('utf-8')
                     img_program = collection.findtext("picture")
                     id_program = collection.get("id")
@@ -220,10 +224,11 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
         ),
-)
+    )
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     if params.state_video == 'Toutes les videos (sans les categories)':
@@ -234,43 +239,49 @@ def list_videos(params):
         )
         replay_xml = open(file_path).read()
 
-        xmlElements = ET.XML(replay_xml)
+        xml_elements = ET.XML(replay_xml)
 
-        programs = xmlElements.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url")
+        programs = xml_elements.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url")
 
         for program in programs:
 
-            url_site = program.findtext("{http://www.sitemaps.org/schemas/sitemap/0.9}loc").encode('utf-8')
+            url_site = program.findtext(
+                "{http://www.sitemaps.org/schemas/sitemap/0.9}loc").encode('utf-8')
             check_string = '%s/replay/' % params.channel_name
             if url_site.count(check_string) > 0:
 
                 # Title
                 title = url_site.rsplit('/', 1)[1].replace("-", " ").upper()
 
-                video_node = program.findall("{http://www.google.com/schemas/sitemap-video/1.1}video")[0]
+                video_node = program.findall(
+                    "{http://www.google.com/schemas/sitemap-video/1.1}video")[0]
 
                 # Duration
                 duration = 0
 
                 # Image
                 img = ''
-                img_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}thumbnail_loc")
+                img_node = video_node.find(
+                    "{http://www.google.com/schemas/sitemap-video/1.1}thumbnail_loc")
                 img = img_node.text.encode('utf-8')
 
                 # Url Video
                 url = ''
-                url_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}content_loc")
+                url_node = video_node.find(
+                    "{http://www.google.com/schemas/sitemap-video/1.1}content_loc")
                 url = url_node.text.encode('utf-8')
 
                 # Plot
                 plot = ''
-                plot_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}description")
+                plot_node = video_node.find(
+                    "{http://www.google.com/schemas/sitemap-video/1.1}description")
                 if plot_node.text:
                     plot = plot_node.text.encode('utf-8')
 
                 # Date
                 value_date = ''
-                value_date_node = video_node.find("{http://www.google.com/schemas/sitemap-video/1.1}publication_date")
+                value_date_node = video_node.find(
+                    "{http://www.google.com/schemas/sitemap-video/1.1}publication_date")
                 value_date = value_date_node.text.encode('utf-8')
                 date = value_date.split('T')[0].split('-')
                 day = date[2]
@@ -291,7 +302,6 @@ def list_videos(params):
                     }
                 }
 
-                # Nouveau pour ajouter le menu pour télécharger la vidéo
                 context_menu = []
                 download_video = (
                     _('Download'),
@@ -300,7 +310,6 @@ def list_videos(params):
                         url_video=url_site) + ')'
                 )
                 context_menu.append(download_video)
-                # Fin
 
                 videos.append({
                     'label': title,
@@ -313,7 +322,7 @@ def list_videos(params):
                     ),
                     'is_playable': True,
                     'info': info,
-                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                    'context_menu': context_menu
                 })
 
     else:
@@ -323,15 +332,16 @@ def list_videos(params):
         )
         replay_xml = open(file_path).read()
 
-        xmlElements = ET.XML(replay_xml)
+        xml_elements = ET.XML(replay_xml)
 
-        programs = xmlElements.findall("program")
+        programs = xml_elements.findall("program")
 
         for program in programs:
             if params.state_video == 'Toutes les videos':
 
                 # Title
-                title = program.findtext("title").encode('utf-8') + " - " + program.findtext("subtitle").encode('utf-8')
+                title = program.findtext("title").encode('utf-8') + " - " + \
+                    program.findtext("subtitle").encode('utf-8')
 
                 # Duration
                 duration = 0
@@ -364,7 +374,7 @@ def list_videos(params):
                 plot = ''
                 for i in program.find("stories").findall("story"):
                     if int(i.get("maxlength")) == 680:
-                        plot= i.text.encode('utf-8')
+                        plot = i.text.encode('utf-8')
 
                 info = {
                     'video': {
@@ -378,7 +388,6 @@ def list_videos(params):
                     }
                 }
 
-                # Nouveau pour ajouter le menu pour télécharger la vidéo
                 context_menu = []
                 download_video = (
                     _('Download'),
@@ -387,7 +396,6 @@ def list_videos(params):
                         url_video=url) + ')'
                 )
                 context_menu.append(download_video)
-                # Fin
 
                 videos.append({
                     'label': title,
@@ -400,13 +408,14 @@ def list_videos(params):
                     ),
                     'is_playable': True,
                     'info': info,
-                    'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                    'context_menu': context_menu
                 })
 
             elif params.id_program == program.get("IDSERIE"):
 
                 # Title
-                title = program.findtext("title").encode('utf-8') + " - " + program.findtext("subtitle").encode('utf-8')
+                title = program.findtext("title").encode('utf-8') + " - " + \
+                    program.findtext("subtitle").encode('utf-8')
 
                 # Duration
                 duration = 0
@@ -439,7 +448,7 @@ def list_videos(params):
                 plot = ''
                 for i in program.find("stories").findall("story"):
                     if int(i.get("maxlength")) == 680:
-                        plot= i.text.encode('utf-8')
+                        plot = i.text.encode('utf-8')
 
                 info = {
                     'video': {
@@ -453,7 +462,6 @@ def list_videos(params):
                     }
                 }
 
-                # Nouveau pour ajouter le menu pour télécharger la vidéo
                 context_menu = []
                 download_video = (
                     _('Download'),
@@ -462,7 +470,6 @@ def list_videos(params):
                         url_video=url) + ')'
                 )
                 context_menu.append(download_video)
-                # Fin
 
                 videos.append({
                     'label': title,
@@ -474,8 +481,8 @@ def list_videos(params):
                         url_video=url
                     ),
                     'is_playable': True,
-                    'info': info#,
-                    #'context_menu': context_menu  #  A ne pas oublier pour ajouter le bouton "Download" à chaque vidéo
+                    'info': info
+                    # 'context_menu': context_menu
                 })
 
     return common.PLUGIN.create_listing(
@@ -490,9 +497,9 @@ def list_videos(params):
         ),
         content='tvshows')
 
-#@common.plugin.cached(common.cache_time)
+@common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -504,20 +511,27 @@ def list_live(params):
     session_requests = requests.session()
     result = session_requests.get(URL_COMPTE_LOGIN)
 
-    token_form_login = re.compile(r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(result.text)[0]
+    token_form_login = re.compile(
+        r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(result.text)[0]
 
     # Build PAYLOAD
     payload = {
-        "login_form[email]": common.PLUGIN.get_setting(params.channel_id.rsplit('.',1)[0] + '.login'),
-        "login_form[password]": common.PLUGIN.get_setting(params.channel_id.rsplit('.',1)[0] + '.password'),
+        "login_form[email]": common.PLUGIN.get_setting(
+            params.channel_id.rsplit('.', 1)[0] + '.login'),
+        "login_form[password]": common.PLUGIN.get_setting(
+            params.channel_id.rsplit('.', 1)[0] + '.password'),
         "login_form[_token]": token_form_login
     }
 
     # LOGIN
-    result_2 = session_requests.post(URL_COMPTE_LOGIN, data = payload, headers = dict(referer = URL_COMPTE_LOGIN))
+    result_2 = session_requests.post(
+        URL_COMPTE_LOGIN, data = payload, headers = dict(referer = URL_COMPTE_LOGIN))
 
     # GET page with url_live with the session logged
-    result_3 = session_requests.get(URL_LIVE_WITH_TOKEN % (params.channel_name), headers = dict(referer = URL_LIVE_WITH_TOKEN % (params.channel_name)))
+    result_3 = session_requests.get(
+        URL_LIVE_WITH_TOKEN % (params.channel_name),
+        headers=dict(
+            referer=URL_LIVE_WITH_TOKEN % (params.channel_name)))
 
     root_soup = bs(result_3.text, 'html.parser')
     live_soup = root_soup.find('div', class_="player")
@@ -560,7 +574,7 @@ def list_live(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
         # Just One format of each video (no need of QUALITY)
         return params.url_video
