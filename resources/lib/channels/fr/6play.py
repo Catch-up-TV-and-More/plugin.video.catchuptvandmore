@@ -229,7 +229,6 @@ def list_shows(params):
         try:
             program_fanart = params.program_fanart
         except:
-            pass
             program_fanart = ''
 
         for sub_category in json_parser['program_subcats']:
