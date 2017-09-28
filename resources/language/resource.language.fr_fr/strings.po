@@ -114,15 +114,15 @@ msgstr "Contenus"
 
 msgctxt "#30080"
 msgid "Arte: Choose Channel"
-msgstr "Arte : Choix de la chaîne"
+msgstr "Arte: Choix de la chaîne"
 
 msgctxt "#30081"
-msgid "France24: Choose Channel"
-msgstr "France24 : Choix de la chaîne"
+msgid "France 24: Choose Channel"
+msgstr "France 24: Choix de la chaîne"
 
 msgctxt "#30082"
 msgid "Euronews: Choose Channel"
-msgstr "Euronews : Choix de la chaîne"
+msgstr "Euronews: Choix de la chaîne"
 
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"

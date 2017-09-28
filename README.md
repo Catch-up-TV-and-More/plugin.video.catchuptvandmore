@@ -10,6 +10,12 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 *This plugin brings together all the videos of the various services and channels of catch-up TV. Furthermore, this addon allows you to quickly access the videos and content offered by certain websites (coming soon).*
 
 ## Chaînes disponibles — *Available channels*
+### Angleterre — *United Kingdom*
+- Blaze *(Replay, Live TV)*
+
+### Belgique — *Belgium*
+- *à venir* — *coming soon*
+
 ### Europe
 - Arte *(Replay, Live TV)*
 - Euronews *(Live TV)*
@@ -58,9 +64,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Tfou — MyTF1 *(Replay)*
 - Xtra — MyTF1 *(Replay)*
 - 01Net TV
-
-### Belgique — *Belgium*
-- *à venir* — *coming soon*
 
 ### Sites internet — *Websites*
 - *à venir* — *coming soon*

@@ -116,8 +116,8 @@ msgid "Arte: Choose Channel"
 msgstr "Arte: בחר ערוץ"
 
 msgctxt "#30081"
-msgid "France24: Choose Channel"
-msgstr "France24: בחר ערוץ"
+msgid "France 24: Choose Channel"
+msgstr "France 24: בחר ערוץ"
 
 msgctxt "#30082"
 msgid "Euronews: Choose Channel"
