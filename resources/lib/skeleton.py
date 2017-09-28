@@ -83,6 +83,10 @@ CHANNELS = {
     },
 
     'main_menu.uk': {
-        'channels.uk.blaze.blaze': 'Blaze'
+        'channels.uk.blaze.blaze': 'Blaze',
+        'channels.uk.uktvplay.dave': 'Dave',
+        'channels.uk.uktvplay.really': 'Really',
+        'channels.uk.uktvplay.yesterday': 'Yesterday',
+        'channels.uk.uktvplay.drama': 'Drama'
     }
 }

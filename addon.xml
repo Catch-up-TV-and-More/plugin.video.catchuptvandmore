@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.4-beta002"
+       version="0.1.4-beta003"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -30,6 +30,10 @@
     <news>
 [Add channel — Live TV] Blaze (UK) (wwark)
 [Add channel — Live TV] RTBF (BE) (La Une, La Deux, La Trois, ...) (wwark)
+[Add channel] Dave (UK) (wwark)
+[Add channel] Drama (UK) (wwark)
+[Add channel] Really (UK) (wwark)
+[Add channel] Yesterday (UK) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

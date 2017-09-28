@@ -167,6 +167,18 @@
             <setting label="Blaze" type="bool" id="channels.uk.blaze.blaze" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.uk.blaze.blaze.order" default="1"/>
 
+            <setting label="Dave" type="bool" id="channels.uk.uktvplay.dave" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.uktvplay.dave.order" default="2"/>
+
+            <setting label="Really" type="bool" id="channels.uk.uktvplay.really" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.uktvplay.really.order" default="3"/>
+
+            <setting label="Yesterday" type="bool" id="channels.uk.uktvplay.yesterday" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.uktvplay.yesterday.order" default="4"/>
+
+            <setting label="Drama" type="bool" id="channels.uk.uktvplay.drama" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.uktvplay.drama.order" default="5"/>
+
     </category>
 
 
@@ -207,6 +219,13 @@
 
             <setting label="NRJ Login" type="text" id="channels.fr.nrj.login" visible="eq(-1,true)" defaut=""/>
             <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+
+        <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
+
+            <setting label="UKTVPlay Login" type="text" id="channels.fr.uktvplay.login" visible="eq(-1,true)" defaut=""/>
+            <setting label="UKTVPlay Password" type="text" id="channels.fr.uktvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+
     </category>
 
 </settings>

@@ -66,6 +66,7 @@ def channel_entry(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -101,6 +102,7 @@ def root(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build categories listing"""
     shows = []
     if 'previous_listing' in params:
         shows = ast.literal_eval(params['previous_listing'])
@@ -185,6 +187,7 @@ def list_shows(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     file_path = utils.download_catalog(
@@ -258,7 +261,7 @@ def list_videos(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -303,7 +306,7 @@ def list_live(params):
 
 @common.PLUGIN.cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_l':
         return params.url
     elif params.next == 'play_r' or params.next == 'download_video':
