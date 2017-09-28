@@ -14,7 +14,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Blaze *(Replay, Live TV)*
 
 ### Belgique — *Belgium*
-- *à venir* — *coming soon*
+##### TV Région Wallonne
+- RTBF Auvio (La Une, La Deux, La Trois, ...) *(Replay, Live TV)*
 
 ### Europe
 - Arte *(Replay, Live TV)*
