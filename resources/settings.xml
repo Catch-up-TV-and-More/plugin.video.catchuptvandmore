@@ -223,8 +223,8 @@
         <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
 
-            <setting label="UKTVPlay Login" type="text" id="channels.fr.uktvplay.login" visible="eq(-1,true)" defaut=""/>
-            <setting label="UKTVPlay Password" type="text" id="channels.fr.uktvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+            <setting label="UKTVPlay Login" type="text" id="channels.uk.uktvplay.login" visible="eq(-1,true)" defaut=""/>
+            <setting label="UKTVPlay Password" type="text" id="channels.uk.uktvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
     </category>
 
