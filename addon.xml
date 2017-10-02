@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.4-beta004"
+       version="0.1.4-beta005"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -35,6 +35,7 @@
 [Add channel] Really (UK) (wwark)
 [Add channel] Yesterday (UK) (wwark)
 [Fix] Get Meteo Video for Channel TF1 (wwark)
+[Fix] Program without videos for Group TF1 (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

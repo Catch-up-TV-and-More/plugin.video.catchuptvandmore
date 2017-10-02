@@ -243,19 +243,20 @@ def list_videos_categories(params):
     filters_1_soup = program_soup.find(
         'ul',
         class_='filters_1')
-    for li in filters_1_soup.find_all('li'):
-        category_title = li.get_text().encode('utf-8')
-        category_id = li.find('a')['data-filter'].encode('utf-8')
-        videos_categories.append({
-            'label': category_title,
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                program_url=params.program_url,
-                next='list_videos',
-                window_title=category_title,
-                category_id=category_id
-            )
-        })
+    if filters_1_soup is not None:
+        for li in filters_1_soup.find_all('li'):
+            category_title = li.get_text().encode('utf-8')
+            category_id = li.find('a')['data-filter'].encode('utf-8')
+            videos_categories.append({
+                'label': category_title,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    program_url=params.program_url,
+                    next='list_videos',
+                    window_title=category_title,
+                    category_id=category_id
+                )
+            })
     return common.PLUGIN.create_listing(
         videos_categories,
         sort_methods=(
