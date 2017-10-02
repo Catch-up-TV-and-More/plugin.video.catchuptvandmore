@@ -22,6 +22,7 @@
 """
 
 import json
+import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
@@ -197,16 +198,28 @@ def list_shows(params):
 
                     img = 'http:' + img.split(',')[-1].split(' ')[0]
 
-                    shows.append({
-                        'label': program_name,
-                        'thumb': img,
-                        'url': common.PLUGIN.get_url(
-                            action='channel_entry',
-                            program_url=program_url,
-                            next='list_videos_categories',
-                            window_title=program_name
-                        )
-                    })
+                    if 'meteo.tf1.fr/meteo-france' in program_url:
+                        shows.append({
+                            'label': program_name,
+                            'thumb': img,
+                            'url': common.PLUGIN.get_url(
+                                action='channel_entry',
+                                program_url=program_url,
+                                next='list_videos',
+                                window_title=program_name
+                            )
+                        })
+                    else:
+                        shows.append({
+                            'label': program_name,
+                            'thumb': img,
+                            'url': common.PLUGIN.get_url(
+                                action='channel_entry',
+                                program_url=program_url,
+                                next='list_videos_categories',
+                                window_title=program_name
+                            )
+                        })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -312,6 +325,52 @@ def list_videos(params):
                 'context_menu': context_menu
             })
 
+    elif 'meteo.tf1.fr/meteo-france' in params.program_url:
+        program_html = utils.get_webcontent(params.program_url)
+        program_soup = bs(program_html, 'html.parser')
+        print program_soup
+
+        wat_info = program_soup.find(
+            'td',
+            class_='textbase')
+
+        title = wat_info.find('h3').get_text()
+
+        program_id = re.compile('; src = \'(.*?)\?').findall(program_html)[0]
+
+        info = {
+            'video': {
+                'title': title,
+                #'plot': stitle,
+                #'aired': aired,
+                #'date': date,
+                #'duration': duration,
+                #'year': int(aired[:4]),
+                'mediatype': 'tvshow'
+            }
+        }
+
+        context_menu = []
+        download_video = (
+            ('Download'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='download_video',
+                program_id=program_id) + ')'
+            )
+        context_menu.append(download_video)
+
+        videos.append({
+            'label': title,
+            #'thumb': img,
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='play_r',
+                program_id=program_id,
+            ),
+            'is_playable': True,
+            'info': info,
+            'context_menu': context_menu
+        })
     else:
         url = ''.join((
             params.program_url,
@@ -496,24 +555,29 @@ def get_video_url(params):
     """Get video URL and start video player"""
 
     if params.next == 'play_r' or params.next == 'download_video':
-        if "http" not in params.program_id:
+        if 'www.wat.tv/embedframe' in params.program_id:
+            url = 'http:' + params.program_id
+        elif "http" not in params.program_id:
             if params.program_id[0] == '/':
                 params.program_id = params.program_id[1:]
             url = URL_ROOT + params.program_id
         else:
             url = params.program_id
         video_html = utils.get_webcontent(url)
-        video_html_soup = bs(video_html, 'html.parser')
 
-        iframe_player_soup = video_html_soup.find(
-            'div',
-            class_='iframe_player')
-
-        if params.channel_name == 'lci':
-            video_id = iframe_player_soup['data-watid'].encode('utf-8')
+        if 'www.wat.tv/embedframe' in params.program_id:
+            video_id = re.compile('UVID=(.*?)&').findall(video_html)[0]
         else:
-            data_src = iframe_player_soup['data-src'].encode('utf-8')
-            video_id = data_src[-8:]
+            video_html_soup = bs(video_html, 'html.parser')
+            iframe_player_soup = video_html_soup.find(
+                'div',
+                class_='iframe_player')
+
+            if params.channel_name == 'lci':
+                video_id = iframe_player_soup['data-watid'].encode('utf-8')
+            else:
+                data_src = iframe_player_soup['data-src'].encode('utf-8')
+                video_id = data_src[-8:]
 
         timeserver = str(utils.get_webcontent(URL_TIME))
 
