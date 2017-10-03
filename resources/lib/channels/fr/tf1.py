@@ -618,6 +618,14 @@ def get_video_url(params):
             except:
                 pass
 
+        # Check DRM in the m3u8 file
+        manifest = utils.get_webcontent(
+            url_video,
+            random_ua=True)
+        if 'drm' in manifest:
+            utils.send_notification(common.ADDON.get_localized_string(30102))
+            return ''
+
         return url_video
 
     elif params.next == 'play_l':
