@@ -335,7 +335,7 @@ def list_nwb(params):
     for url_nbe in url_nbe_list:
         url_nbe_html = utils.get_webcontent(url_nbe)
         root_soup = bs(url_nbe_html, 'html.parser')
-        url_nbe_yt_html = utils.get_webcontent(root_soup.find('iframe').get('src'))
+        url_nbe_yt_html = utils.get_webcontent(root_soup.find('div', class_='yt-vod-container').find('iframe').get('src'))
         url_yt = re.compile('<link rel="canonical" href="(.*?)"').findall(url_nbe_yt_html)[0]
         ydl.add_default_info_extractors()
         with ydl:
