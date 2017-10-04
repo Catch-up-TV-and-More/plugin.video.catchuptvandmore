@@ -322,10 +322,7 @@ def list_nwb(params):
         url_business = URL_LIVE_SITE % desired_language.lower() + 'vod/economia'
     elif 'EN' == desired_language or 'AR' == desired_language:
         url_news = URL_LIVE_SITE % desired_language.lower() + 'vod/latest-news'
-        if 'AR' == desired_language:
-            url_weather = URL_LIVE_SITE % desired_language.lower() + 'vod/international-weather-forecast'
-        else:
-            url_weather = URL_LIVE_SITE % desired_language.lower() + 'vod/weather-forecast'
+        url_weather = URL_LIVE_SITE % desired_language.lower() + 'vod/international-weather-forecast'
         url_business = URL_LIVE_SITE % desired_language.lower() + 'vod/business-news'
 
     url_nbe_list = []
