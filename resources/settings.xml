@@ -192,7 +192,7 @@
             <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
 
-                <setting label="30081" type="labelenum" id="channels.fr.france24.france24.language" visible="eq(-1,true)" values="FR|EN|AR"/>
+                <setting label="30081" type="labelenum" id="channels.fr.france24.france24.language" visible="eq(-1,true)" values="FR|EN|AR|ES"/>
 
             <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
