@@ -71,6 +71,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - 01Net TV *(Replay)*
 
 ### Sites internet — *Websites*
+#### France
 - Allociné
 
 ## Bugs et améliorations — *Bugs and improvements*
