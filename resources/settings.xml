@@ -9,6 +9,7 @@
         <setting label="30021" type="bool" id="main_menu.be" default="true"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
+        <setting label="30026" type="bool" id="main_menu.ws" default="true"/>
     </category>
 
 
@@ -179,8 +180,13 @@
             <setting label="Drama" type="bool" id="channels.uk.uktvplay.drama" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.uk.uktvplay.drama.order" default="5"/>
 
-    </category>
+        <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30026" type="bool" id="main_menu.ws" default="true" visible="false"/>
 
+            <setting label="Allociné" type="bool" id="channels.ws.allocine.allocine" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.allocine.allocine.order" default="1"/>
+
+    </category>
 
     <!-- Quality and Content (and also hidden settings) -->
     <category label="30002">
@@ -189,6 +195,7 @@
             <setting label="30087" type="labelenum" id="quality" values="BEST|DEFAULT|DIALOG"/>
 
         <setting label="30071" type="lsep" />
+
             <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
 
@@ -203,13 +210,11 @@
             <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>
 
-
     <!-- Download ... -->
     <category label="30003">
         <setting label="30012" type="lsep"/>
         <setting label="30200" type="folder" id="dlFolder" source="auto" option="writeable"/>
     </category>
-
 
     <!-- Account ... -->
     <category label="30004">

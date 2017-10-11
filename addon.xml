@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.4-beta008"
+       version="0.1.4-beta009"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -39,6 +39,7 @@
 [Improvement] Detect DRM video for Group TF1 and send notification (wwark)
 [Improvement] Add More Videos button for Group TF1 (wwark)
 [Improvement] Add Spanish content, Last News, Last Weather, Last Business for Channel France 24 (wwark)
+[Add WebSite] Allociné (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

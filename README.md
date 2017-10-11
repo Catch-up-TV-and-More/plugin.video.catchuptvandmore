@@ -18,7 +18,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Yesterday *(Replay with UKTVPlay account)*
 
 ### Belgique — *Belgium*
-##### TV Communauté française
+##### TV Communauté française — *French Community TV*
 - RTBF Auvio (La Une, La Deux, La Trois, ...) *(Replay, Live TV)*
 
 ### Europe
@@ -68,14 +68,18 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Comic — 6play *(Replay)*
 - Tfou — MyTF1 *(Replay)*
 - Xtra — MyTF1 *(Replay)*
-- 01Net TV
+- 01Net TV *(Replay)*
 
 ### Sites internet — *Websites*
-- *à venir* — *coming soon*
+- Allociné
 
 ## Bugs et améliorations — *Bugs and improvements*
 Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.
 *Bug reports, suggestions for improvements or content additions are welcome! GitHub or e-mail.*
 
-## French Forum
+## Forums
+### Français — *French*
 <https://forum.mpdb.tv/index.php/topic,35713.0.html>
+
+### Anglais — *English*
+<https://forum.kodi.tv/showthread.php?tid=307107>

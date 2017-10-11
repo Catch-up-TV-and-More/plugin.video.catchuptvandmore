@@ -25,7 +25,8 @@ CATEGORIES = {
     'main_menu.be': 'Belgian channels',
     'main_menu.eu': 'European channels',
     'main_menu.fr': 'French channels',
-    'main_menu.uk': 'United Kingdom channels'
+    'main_menu.uk': 'United Kingdom channels',
+    'main_menu.ws': 'Websites'
 }
 
 CHANNELS = {
@@ -88,5 +89,9 @@ CHANNELS = {
         'channels.uk.uktvplay.really': 'Really',
         'channels.uk.uktvplay.yesterday': 'Yesterday',
         'channels.uk.uktvplay.drama': 'Drama'
+    },
+
+    'main_menu.ws': {
+        'channels.ws.allocine.allocine': 'Allociné'
     }
 }
