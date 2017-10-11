@@ -23,6 +23,7 @@
 import ast
 import json
 import re
+import requests
 from bs4 import BeautifulSoup as bs
 from youtube_dl import YoutubeDL
 from resources.lib import utils
@@ -567,8 +568,8 @@ def get_video_url(params):
         # (Video Hosted By Allocine)
         for media in video_json_parser["media"]["rendition"]:
             url = media["href"]
-        result = utils.get_webcontent(url)
-        if '404 Not Found' in result:
+        result = requests.get(url)
+        if result.status_code == 404:
             utils.send_notification(common.ADDON.get_localized_string(30111))
             return ''
     else:
