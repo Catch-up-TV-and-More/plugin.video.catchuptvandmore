@@ -35,7 +35,7 @@ from resources.lib import common
 _ = common.ADDON.initialize_gettext()
 
 # Live
-URL_LIVE_BLAZE = 'http://live.blaze.simplestreamcdn.com/live/blaze/bitrate1.isml/live.m3u8'
+URL_LIVE_JSON = 'http://dbxm993i42r09.cloudfront.net/configs/blaze.json?callback=blaze'
 
 URL_NOW_PLAYING = 'http://www.blaze.tv/home/index/now-playing'
 
@@ -274,6 +274,8 @@ def list_live(params):
     video_html = utils.get_webcontent(URL_NOW_PLAYING)
     title_live = bs(video_html, 'html.parser')
     title = title_live.get_text()
+    url_live_html = utils.get_webcontent(URL_LIVE_JSON)
+    url_live = re.compile('"url": "(.*?)"').findall(url_live_html)[0]
 
     info = {
         'video': {
@@ -290,7 +292,7 @@ def list_live(params):
         'url' : common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
-            url=URL_LIVE_BLAZE,
+            url=url_live,
         ),
         'is_playable': True,
         'info': info
