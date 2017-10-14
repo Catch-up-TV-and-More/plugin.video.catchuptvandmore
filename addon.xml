@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.4-beta012"
+       version="0.1.4-beta013"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -40,8 +40,9 @@
 [Improvement] Add More Videos button for Group TF1 (wwark)
 [Improvement] Add Spanish content, Last News, Last Weather, Last Business for Channel France 24 (wwark)
 [Add WebSite] Allociné (wwark)
-[Fix] Change API and force SSL TLSV1 to get the video for Group M6 (kogonia from mpdb.tv, wwark)
+[Fix] Change API and force SSL TLSV1 to get the video for Group M6 (kagonia from mpdb.tv, wwark)
 [Add WebSite] tetesaclaques.tv (wwark)
+[Fix] Video without date for Channel Numero 23 (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -191,13 +191,16 @@ def list_videos(params):
 
             # get month and day on the page
             date_list = str(info_video[2]).replace("<p>", '').replace("</p>", '').split(' ')
-            day = date_list[2]
-            try:
-                mounth = CORRECT_MONTH[date_list[3]]
-            except:
-                mounth = '00'
-            # get year ?
+            day = '00'
+            month = '00'
             year = '2017'
+            if len(date_list) > 3:
+                day = date_list[2]
+                try:
+                    mounth = CORRECT_MONTH[date_list[3]]
+                except:
+                    mounth = '00'
+                # get year ?
 
             date = '.'.join((day, mounth, year))
             aired = '-'.join((year, mounth, day))
