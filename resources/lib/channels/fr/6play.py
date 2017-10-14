@@ -390,6 +390,9 @@ def get_video_url(params):
     json_parser = json.loads(video_json)
 
     video_assets = json_parser['clips'][0]['assets']
+    if video_assets is None:
+        utils.send_notification(common.ADDON.get_localized_string(30112))
+        return ''
     url = ''
     url2 = ''
     url3 = ''

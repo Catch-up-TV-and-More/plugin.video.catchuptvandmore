@@ -181,6 +181,10 @@ msgctxt "#30111"
 msgid "Video stream no longer exists"
 msgstr "Le flux vidéo n'existe plus"
 
+msgctxt "#30112"
+msgid "Video with an account needed"
+msgstr "Vidéo avec un compte requis"
+
 # Download (from 30200 to 30240)
 
 msgctxt "#30200"
