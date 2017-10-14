@@ -186,6 +186,9 @@
             <setting label="Allociné" type="bool" id="channels.ws.allocine.allocine" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.allocine.allocine.order" default="1"/>
 
+            <setting label="Au pays des Têtes à claques" type="bool" id="channels.ws.tetesaclaques.tetesaclaques" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.tetesaclaques.tetesaclaques.order" default="2"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->

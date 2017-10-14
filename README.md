@@ -71,8 +71,12 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - 01Net TV *(Replay)*
 
 ### Sites internet — *Websites*
+#### Canada
+##### Communauté française — *French Community*
+- Au pays des Têtes à claques <https://www.tetesaclaques.tv/>
+
 #### France
-- Allociné
+- Allociné <http://www.allocine.fr/>
 
 ## Bugs et améliorations — *Bugs and improvements*
 Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.
