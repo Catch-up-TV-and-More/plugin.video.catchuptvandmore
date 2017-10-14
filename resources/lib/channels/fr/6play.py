@@ -23,12 +23,15 @@
 
 
 import json
+import ssl
+import urllib2
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
 # LIVE TV protected by #EXT-X-FAXS-CM
 # https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
+# M6 'Jeunesse - Videos - La tête à Toto' wrong episode (To check)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -46,7 +49,7 @@ URL_ROOT = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
 # We get an id by program
 URL_CATEGORY = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
                'm6group_web/services/6play/folders/%s/programs' \
-               '?limit=999&offset=0&csa=9&with=parentcontext'
+               '?limit=999&offset=0&csa=6&with=parentcontext'
 
 # Url to get program's subfolders
 # e.g. Saison 5, Les meilleurs moments, les recettes pas à pas, ...
@@ -70,7 +73,7 @@ URL_VIDEOS2 = 'https://pc.middleware.6play.fr/6play/v2/platforms/' \
 
 URL_JSON_VIDEO = 'https://pc.middleware.6play.fr/6play/v2/platforms/' \
                  'm6group_web/services/6play/videos/%s'\
-                 '?csa=9&with=clips,freemiumpacks'
+                 '?csa=6&with=clips,freemiumpacks'
 
 
 URL_IMG = 'https://images.6play.fr/v1/images/%s/raw'
@@ -406,9 +409,8 @@ def get_video_url(params):
     else:
         manifest_url = url3
 
-    manifest = utils.get_webcontent(
-        manifest_url,
-        random_ua=True)
+    ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+    manifest = urllib2.urlopen(manifest_url, context=ctx).read()
     if 'drm' in manifest:
         utils.send_notification(common.ADDON.get_localized_string(30102))
         return ''
