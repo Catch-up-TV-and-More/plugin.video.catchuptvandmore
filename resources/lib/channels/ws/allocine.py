@@ -568,10 +568,10 @@ def get_video_url(params):
         # (Video Hosted By Allocine)
         for media in video_json_parser["media"]["rendition"]:
             url = media["href"]
-        result = requests.get(url)
-        if result.status_code == 404:
+        if requests.get(url, stream=True).status_code == 404:
             utils.send_notification(common.ADDON.get_localized_string(30111))
             return ''
+        return url
     else:
         # (Video Not Hosted By Allocine)
         url_video_embeded = re.compile('src=\'(.*?)\'').findall(video_json_parser["media"]["trailerEmbed"])[0]
@@ -592,5 +592,4 @@ def get_video_url(params):
             result = ydl.extract_info(url_ytdl, download=False)
             for format_video in result['formats']:
                 url = format_video['url']
-
-    return url
+        return url
