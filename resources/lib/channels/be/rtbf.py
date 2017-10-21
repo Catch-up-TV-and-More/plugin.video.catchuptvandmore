@@ -103,7 +103,7 @@ def format_day(date):
     date_dmy = date_list[0].replace('-','/')
     return date_dmy
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     modes = []
 
@@ -137,7 +137,7 @@ def root(params):
         ),
     )
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     shows = []
 
@@ -174,7 +174,7 @@ def list_shows(params):
         )
     )
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     videos = []
 
@@ -256,7 +256,7 @@ def list_videos(params):
         content='tvshows',
         update_listing='update_listing' in params)
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
 
     lives = []
@@ -324,7 +324,7 @@ def list_live(params):
         )
     )
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     if params.next == 'play_l':
         return params.url_live

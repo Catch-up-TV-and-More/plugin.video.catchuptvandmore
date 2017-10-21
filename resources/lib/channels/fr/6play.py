@@ -23,15 +23,21 @@
 
 
 import json
-import ssl
-import urllib2
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
 # LIVE TV protected by #EXT-X-FAXS-CM
 # https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
-# M6 'Jeunesse - Videos - La tête à Toto' wrong episode (To check)
+#Clip and Playlist (cas les blagues de TOTO)
+#Case MP4:
+#https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/playlist_2248?csa=6&with=clips,freemiumpacks,program_images,service_display_images
+#Case without ISM (One flux m3u8) :
+#https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/clip_11740712?csa=6&with=clips,freemiumpacks,program_images,service_display_images
+#Case Video Protected :
+#https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/clip_11288922?csa=6&with=clips,freemiumpacks,program_images,service_display_images
+# Rework Quality Video
+# Get vtt subtitle
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -94,7 +100,7 @@ def channel_entry(params):
     return None
 
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
@@ -118,7 +124,7 @@ def root(params):
         ),
     )
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -291,7 +297,7 @@ def list_shows(params):
     return shows
 
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -381,7 +387,7 @@ def list_videos(params):
         content='tvshows')
 
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     video_json = utils.get_webcontent(
@@ -411,40 +417,10 @@ def get_video_url(params):
         manifest_url = url2
     else:
         manifest_url = url3
-
-    ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-    manifest = urllib2.urlopen(manifest_url, context=ctx).read()
-    if 'drm' in manifest:
-        utils.send_notification(common.ADDON.get_localized_string(30102))
-        return ''
-
-    desired_quality = common.PLUGIN.get_setting(
-        params.channel_id + '.quality')
-
-    if desired_quality == 'Auto':
-        return manifest_url
-
-    root = common.os.path.dirname(manifest_url)
-
-    url_sd = ''
-    url_hd = ''
-    url_ultra_sd = ''
-    url_ultra_hd = ''
-
-    lines = manifest.splitlines()
-    for k in range(0, len(lines) - 1):
-        if 'RESOLUTION=400' in lines[k]:
-            url_ultra_sd = root + '/' + lines[k + 1]
-        elif 'RESOLUTION=640' in lines[k]:
-            url_sd = root + '/' + lines[k + 1]
-        elif 'RESOLUTION=720' in lines[k]:
-            url_hd = root + '/' + lines[k + 1]
-        elif 'RESOLUTION=1080' in lines[k]:
-            url_ultra_hd = root + '/' + lines[k + 1]
-
-    desired_quality = common.PLUGIN.get_setting('quality')
-
-    if (desired_quality == 'BEST' or desired_quality == 'DIALOG') and url_ultra_hd:
-        return url_ultra_hd
-    else:
-        return manifest_url
+        manifest = utils.get_webcontent(
+            manifest_url,
+            random_ua=True)
+        if 'drm' in manifest:
+            utils.send_notification(common.ADDON.get_localized_string(30102))
+            return ''
+    return manifest_url
