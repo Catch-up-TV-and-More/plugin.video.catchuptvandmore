@@ -72,6 +72,7 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
@@ -79,7 +80,7 @@ def root(params):
 
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
@@ -91,7 +92,7 @@ def root(params):
     # Add Live
     if params.channel_name != 'tfou' and params.channel_name != 'xtra':
         modes.append({
-            'label' : _('Live TV'),
+            'label': _('Live TV'),
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='live_cat',
@@ -107,6 +108,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -126,14 +128,15 @@ def list_shows(params):
                 'ul',
                 attrs={'class': 'topic-chronology-milestone-component'})
             for program in programs_soup.find_all('li'):
-                program_url = URL_LCI_ROOT + program.find('a')['href'].encode('utf-8')
+                program_url = URL_LCI_ROOT + program.find(
+                    'a')['href'].encode('utf-8')
                 program_name = program.find(
                     'h2',
                     class_='text-block').get_text().encode('utf-8')
                 img = program.find_all('source')[0]
                 try:
                     img = img['data-srcset'].encode('utf-8')
-                except:
+                except Exception:
                     img = img['srcset'].encode('utf-8')
 
                 img = img.split(',')[0].split(' ')[0]
@@ -194,7 +197,7 @@ def list_shows(params):
                     img = program.find('img')
                     try:
                         img = img['data-srcset'].encode('utf-8')
-                    except:
+                    except Exception:
                         img = img['srcset'].encode('utf-8')
 
                     img = 'http:' + img.split(',')[-1].split(' ')[0]
@@ -252,12 +255,13 @@ def list_videos_categories(params):
             # Get Last Page of each categorie
             # Get First page :
             url_first_page = ''.join((
-                    params.program_url,
-                    '/videos',
-                    '?filter=',
-                    category_id))
+                params.program_url,
+                '/videos',
+                '?filter=',
+                category_id))
             program_first_page_html = utils.get_webcontent(url_first_page)
-            program_first_page_soup = bs(program_first_page_html, 'html.parser')
+            program_first_page_soup = bs(
+                program_first_page_html, 'html.parser')
             # Get Last page :
             last_page = '0'
             if program_first_page_soup.find('a', class_='icon i-chevron-right-double trackXiti') is not None:
