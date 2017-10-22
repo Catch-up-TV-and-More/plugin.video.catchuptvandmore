@@ -84,7 +84,7 @@ URL_VIDEO_JSON_BRIGHTCOVE = 'https://edge.api.brightcove.com/playback/v1/account
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_token(channel_name):
     """Get session token"""
     file_token = utils.get_webcontent(URL_TOKEN % (channel_name))
@@ -92,7 +92,7 @@ def get_token(channel_name):
     return token_json['session']['token'].encode('utf-8')
 
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_policy_key(data_account, data_player):
     """Get policy key"""
     file_js = utils.get_webcontent(URL_JS_POLICY_KEY % (data_account, data_player))
@@ -113,7 +113,7 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
@@ -149,7 +149,7 @@ def root(params):
         ),
     )
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -227,7 +227,7 @@ def list_shows(params):
     )
 
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -423,7 +423,7 @@ def list_videos(params):
     )
 
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
     lives = []
@@ -713,7 +713,7 @@ def list_live(params):
         )
     )
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':

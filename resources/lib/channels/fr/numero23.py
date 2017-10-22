@@ -73,7 +73,7 @@ CORRECT_MONTH = {
     'décembre' : '12'
 }
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
@@ -108,7 +108,7 @@ def root(params):
         ),
     )
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build shows listing"""
     shows = []
@@ -152,7 +152,7 @@ def list_shows(params):
     )
 
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -191,13 +191,16 @@ def list_videos(params):
 
             # get month and day on the page
             date_list = str(info_video[2]).replace("<p>", '').replace("</p>", '').split(' ')
-            day = date_list[2]
-            try:
-                mounth = CORRECT_MONTH[date_list[3]]
-            except:
-                mounth = '00'
-            # get year ?
+            day = '00'
+            month = '00'
             year = '2017'
+            if len(date_list) > 3:
+                day = date_list[2]
+                try:
+                    mounth = CORRECT_MONTH[date_list[3]]
+                except:
+                    mounth = '00'
+                # get year ?
 
             date = '.'.join((day, mounth, year))
             aired = '-'.join((year, mounth, day))
@@ -256,7 +259,7 @@ def list_videos(params):
         ),
         content='tvshows')
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
     lives = []
@@ -309,7 +312,7 @@ def list_live(params):
         )
     )
 
-@common.PLUGIN.cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     url_video = URL_DAILYMOTION_EMBED % params.video_id
