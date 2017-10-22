@@ -40,7 +40,7 @@
 [Improvement] Add More Videos button for Group TF1 (wwark)
 [Improvement] Add Spanish content, Last News, Last Weather, Last Business for Channel France 24 (wwark)
 [Add WebSite] Allociné (wwark)
-[Fix] Change API and force SSL TLSV1 to get the video for Group M6 (kagonia from mpdb.tv, wwark)
+[Fix] Change API to get the video for Group M6 (kagonia from mpdb.tv)
 [Add WebSite] tetesaclaques.tv (wwark)
 [Fix] Video without date for Channel Numero 23 (wwark)
 [Improvement] Detect premium video and send notification for Group M6 (wwark)
