@@ -301,7 +301,7 @@ def list_videos(params):
 
         list_replay = program_soup.find_all(
             'a',
-            class_='topic-emission-extract-block-image trackXiti')
+            class_='medium-3col-article-block-article-link')
 
         for replay in list_replay:
 
