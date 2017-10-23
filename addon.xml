@@ -48,6 +48,10 @@
 [Fix] Video without date for Channel Numero 23 (wwark)
 [Improvement] Detect premium video and send notification for Group M6 (wwark)
 [Improvement] Update simpleplugin module and used mem_cache for all websites and channels. Gain little speedup (wwark)
+[Fix] Change website for Replay LCI (wwark)
+[Update] Verify Pep8 in all files (SylvainCecchetto)
+[Update] Fanart, Image for channel (SylvainCecchetto)
+[Improvement] Remove choice if there is just replay or live tv for a channel (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>
