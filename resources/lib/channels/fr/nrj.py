@@ -521,14 +521,11 @@ def list_live(params):
     session_requests = requests.session()
     result = session_requests.get(URL_COMPTE_LOGIN)
 
-    """
     token_form_login = re.compile(
         r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
     ).findall(result.text)[0]
-    """
 
     # Build PAYLOAD
-    """ Unused
     payload = {
         "login_form[email]": common.PLUGIN.get_setting(
             params.channel_id.rsplit('.', 1)[0] + '.login'),
@@ -536,13 +533,10 @@ def list_live(params):
             params.channel_id.rsplit('.', 1)[0] + '.password'),
         "login_form[_token]": token_form_login
     }
-    """
 
     # LOGIN
-    """ Unused
     result_2 = session_requests.post(
-       URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
-    """
+        URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
 
     # GET page with url_live with the session logged
     result_3 = session_requests.get(
