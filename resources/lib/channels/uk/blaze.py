@@ -27,7 +27,7 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Fix Download Video
+# Fix Download Video
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -35,20 +35,24 @@ from resources.lib import common
 _ = common.ADDON.initialize_gettext()
 
 # Live
-URL_LIVE_JSON = 'http://dbxm993i42r09.cloudfront.net/configs/blaze.json?callback=blaze'
+URL_LIVE_JSON = 'http://dbxm993i42r09.cloudfront.net/' \
+                'configs/blaze.json?callback=blaze'
 
 URL_NOW_PLAYING = 'http://www.blaze.tv/home/index/now-playing'
 
-# Replay
+# Replay
 URL_SHOWS = 'http://www.blaze.tv/series?page=%s'
 # pageId
 
 URL_API_KEY = 'https://dbxm993i42r09.cloudfront.net/configs/config.blaze.js'
 
-URL_STREAM = 'https://d2q1b32gh59m9o.cloudfront.net/player/config?callback=ssmp&client=blaze&type=vod&apiKey=%s&videoId=%s&format=jsonp&callback=ssmp'
+URL_STREAM = 'https://d2q1b32gh59m9o.cloudfront.net/player/config?' \
+             'callback=ssmp&client=blaze&type=vod&apiKey=%s&videoId=%s&' \
+             'format=jsonp&callback=ssmp'
 # apiKey, videoId
 
 URL_ROOT = 'http://www.blaze.tv'
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -71,7 +75,7 @@ def root(params):
 
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
@@ -83,7 +87,7 @@ def root(params):
 
     # Add Live
     modes.append({
-        'label' : 'Live TV',
+        'label': 'Live TV',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
@@ -99,6 +103,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -129,11 +134,11 @@ def list_shows(params):
                 'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_shows_2',
-                        title=show_title,
-                        show_url=show_url,
-                        window_title=show_title
-                    )
-                })
+                    title=show_title,
+                    show_url=show_url,
+                    window_title=show_title
+                )
+            })
 
         # More programs...
         shows.append({
@@ -156,7 +161,8 @@ def list_shows(params):
         replay_show_html = open(file_path).read()
 
         replay_show_seasons_soup = bs(replay_show_html, 'html.parser')
-        replay_show_seasons = replay_show_seasons_soup.find('div', class_='pagination')
+        replay_show_seasons = replay_show_seasons_soup.find(
+            'div', class_='pagination')
 
         get_show_seasons = replay_show_seasons.find_all('a')
 
@@ -170,11 +176,11 @@ def list_shows(params):
                 'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos_1',
-                        title=params.title + '_' + season_title,
-                        show_url=show_season_url,
-                        window_title=season_title
-                    )
-                })
+                    title=params.title + '_' + season_title,
+                    show_url=show_season_url,
+                    window_title=season_title
+                )
+            })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -184,6 +190,7 @@ def list_shows(params):
         ),
         update_listing='update_listing' in params,
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -198,27 +205,37 @@ def list_videos(params):
     episodes_soup = bs(replay_show_html, 'html.parser')
 
     root_episodes = episodes_soup.find_all('div', class_='carousel-inner')[0]
-    episodes = root_episodes.find_all('div', class_='col-md-4 wrapper-item season')
+    episodes = root_episodes.find_all(
+        'div', class_='col-md-4 wrapper-item season')
 
     for episode in episodes:
 
-        value_episode = episode.find('span', class_='caption-description').get_text().split(' | ')[1].split(' ')[1]
-        value_season = episode.find('span', class_='caption-description').get_text().split(' | ')[0].split(' ')[1]
-        video_title = episode.find('span', class_='caption-title').get_text() + ' S%sE%s' % (value_season, value_episode)
+        value_episode = episode.find(
+            'span', class_='caption-description'
+        ).get_text().split(' | ')[1].split(' ')[1]
+        value_season = episode.find(
+            'span', class_='caption-description'
+        ).get_text().split(' | ')[0].split(' ')[1]
+        video_title = episode.find(
+            'span', class_='caption-title'
+        ).get_text() + ' S%sE%s' % (value_season, value_episode)
 
         video_duration = 0
-        video_plot = episode.find('span', class_='caption-title').get_text().encode('utf-8') + ' ' + episode.find('span', class_='caption-description').get_text().encode('utf-8')
+        video_plot = episode.find(
+            'span', class_='caption-title').get_text().encode('utf-8') + ' '
+        video_plot = video_plot + episode.find(
+            'span', class_='caption-description').get_text().encode('utf-8')
         video_img = episode.find('a').find('img').get('src')
         video_url = URL_ROOT + episode.find('a').get('href').encode('utf-8')
 
         info = {
             'video': {
                 'title': video_title,
-                #'aired': aired,
-                #'date': date,
+                # 'aired': aired,
+                # 'date': date,
                 'duration': video_duration,
                 'plot': video_plot,
-                #'year': year,
+                # 'year': year,
                 'mediatype': 'tvshow'
             }
         }
@@ -242,8 +259,8 @@ def list_videos(params):
                 video_url=video_url
             ),
             'is_playable': True,
-            'info': info#,
-            #'context_menu': context_menu
+            'info': info  # ,
+            # 'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -259,13 +276,14 @@ def list_videos(params):
         update_listing='update_listing' in params,
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
     lives = []
 
     title = ''
-    subtitle = ' - '
+    # subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
@@ -289,7 +307,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.PLUGIN.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url=url_live,
@@ -306,6 +324,7 @@ def list_live(params):
         )
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
@@ -316,6 +335,5 @@ def get_video_url(params):
         videoId = re.compile('data-uvid="(.*?)"').findall(video_html)[0]
         apikey_html = utils.get_webcontent(URL_API_KEY)
         apikey = re.compile('"apiKey": "(.*?)"').findall(apikey_html)[0]
-        stream_html = utils.get_webcontent(URL_STREAM % (apikey,videoId))
+        stream_html = utils.get_webcontent(URL_STREAM % (apikey, videoId))
         return re.compile('"hls":"(.*?)"').findall(stream_html)[0]
-

@@ -39,7 +39,7 @@ _ = common.ADDON.initialize_gettext()
 URL_EMISSIONS_AUVIO = 'https://www.rtbf.be/auvio/emissions'
 
 URL_JSON_EMISSION_BY_ID = 'https://www.rtbf.be/api/media/video?' \
-                           'method=getVideoListByEmissionOrdered&args[]=%s'
+                          'method=getVideoListByEmissionOrdered&args[]=%s'
 # emission_id
 
 URL_ROOT_IMAGE_RTBF = 'https://ds1.static.rtbf.be'
@@ -49,6 +49,7 @@ URL_JSON_LIVE = 'https://www.rtbf.be/api/partner/generic/live/' \
 # partener_key
 
 URL_ROOT_LIVE = 'https://www.rtbf.be/auvio/direct#/'
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -65,6 +66,7 @@ def channel_entry(params):
     else:
         return None
 
+
 def get_partener_key(params):
 
     file_path_root_live = utils.download_catalog(
@@ -73,7 +75,9 @@ def get_partener_key(params):
     )
     html_root_live = open(file_path_root_live).read()
 
-    list_js_files = re.compile(r'<script type="text\/javascript" src="(.*?)">').findall(html_root_live)
+    list_js_files = re.compile(
+        r'<script type="text\/javascript" src="(.*?)">'
+    ).findall(html_root_live)
 
     partener_key_value = ''
     i = 0
@@ -86,22 +90,26 @@ def get_partener_key(params):
         )
         partener_key_js = open(file_path_js).read()
 
-        partener_key = re.compile('partner_key: \'(.+?)\'').findall(partener_key_js)
+        partener_key = re.compile(
+            'partner_key: \'(.+?)\'').findall(partener_key_js)
         if len(partener_key) > 0:
             partener_key_value = partener_key[0]
         i = i + 1
 
     return partener_key_value
 
+
 def format_hours(date):
     date_list = date.split('T')
     date_hour = date_list[1][:5]
     return date_hour
 
+
 def format_day(date):
     date_list = date.split('T')
-    date_dmy = date_list[0].replace('-','/')
+    date_dmy = date_list[0].replace('-', '/')
     return date_dmy
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
@@ -109,7 +117,7 @@ def root(params):
 
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
@@ -120,7 +128,7 @@ def root(params):
 
     # Add Live
     modes.append({
-        'label' : 'Live TV',
+        'label': 'Live TV',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
@@ -137,6 +145,7 @@ def root(params):
         ),
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     shows = []
@@ -148,7 +157,8 @@ def list_shows(params):
             'url_emissions_auvio.html')
         emissions_html = open(file_path).read()
         emissions_soup = bs(emissions_html, 'html.parser')
-        list_emissions = emissions_soup.find_all('article', class_="rtbf-media-item col-xxs-12 ")
+        list_emissions = emissions_soup.find_all(
+            'article', class_="rtbf-media-item col-xxs-12 ")
 
         for emission in list_emissions:
 
@@ -174,6 +184,7 @@ def list_shows(params):
         )
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     videos = []
@@ -189,7 +200,8 @@ def list_videos(params):
         for video in videos_jsonparser['data']:
 
             if video["subtitle"]:
-                title = video["title"].encode('utf-8') + ' - ' +  video["subtitle"].encode('utf-8')
+                title = video["title"].encode('utf-8') + \
+                    ' - ' + video["subtitle"].encode('utf-8')
             else:
                 title = video["title"].encode('utf-8')
             img = URL_ROOT_IMAGE_RTBF + video["thumbnail"]["full_medium"]
@@ -200,7 +212,8 @@ def list_videos(params):
             duration = 0
             duration = video["durations"]
 
-            value_date = time.strftime('%d %m %Y', time.localtime(video["liveFrom"]))
+            value_date = time.strftime(
+                '%d %m %Y', time.localtime(video["liveFrom"]))
             date = str(value_date).split(' ')
             day = date[0]
             mounth = date[1]
@@ -213,9 +226,9 @@ def list_videos(params):
                 'video': {
                     'title': title,
                     'plot': plot,
-                    #'episode': episode_number,
-                    #'season': season_number,
-                    #'rating': note,
+                    # 'episode': episode_number,
+                    # 'season': season_number,
+                    # 'rating': note,
                     'aired': aired,
                     'date': date,
                     'duration': duration,
@@ -256,13 +269,14 @@ def list_videos(params):
         content='tvshows',
         update_listing='update_listing' in params)
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
 
     lives = []
 
     title = ''
-    subtitle = ' - '
+    # subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
@@ -274,7 +288,7 @@ def list_live(params):
     live_json = open(file_path).read()
     live_jsonparser = json.loads(live_json)
 
-    channel_live_in_process = False
+    # channel_live_in_process = False
 
     for live in live_jsonparser:
 
@@ -287,7 +301,8 @@ def list_live(params):
         end_date_value = format_hours(live["end_date"])
         day_value = format_day(live["start_date"])
 
-        title = live_channel + ' : ' + live["title"] + ' - ' + day_value + ' - ' + start_date_value + '-' + end_date_value
+        title = live_channel + ' : ' + live["title"] + \
+            ' - ' + day_value + ' - ' + start_date_value + '-' + end_date_value
 
         url_live = ''
         if live["url_streaming"]:
@@ -307,11 +322,11 @@ def list_live(params):
             'label': title,
             'fanart': img,
             'thumb': img,
-            'url' : common.PLUGIN.get_url(
+            'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_l',
                 url_live=url_live,
-                ),
+            ),
             'is_playable': True,
             'info': info
         })
@@ -323,6 +338,7 @@ def list_live(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):

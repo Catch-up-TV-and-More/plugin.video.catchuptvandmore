@@ -40,6 +40,7 @@ URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
@@ -52,6 +53,7 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add modes in the listing"""
@@ -59,7 +61,8 @@ def root(params):
 
     list_categories_html = utils.get_webcontent(URL_ROOT)
     list_categories_soup = bs(list_categories_html, 'html.parser')
-    list_categories = list_categories_soup.find('div', class_='jqueryslidemenu').find('ul').find('ul').find_all('li')
+    list_categories = list_categories_soup.find(
+        'div', class_='jqueryslidemenu').find('ul').find('ul').find_all('li')
 
     for category in list_categories:
 
@@ -75,12 +78,12 @@ def root(params):
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next=value_next,
-                    title=category_title,
-                    page='1',
-                    category_url=category_url,
-                    window_title=category_title
-                )
-            })
+                title=category_title,
+                page='1',
+                category_url=category_url,
+                window_title=category_title
+            )
+        })
 
     return common.PLUGIN.create_listing(
         modes,
@@ -90,6 +93,7 @@ def root(params):
         ),
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
@@ -97,7 +101,8 @@ def list_shows(params):
 
     list_shows_html = utils.get_webcontent(params.category_url)
     list_shows_soup = bs(list_shows_html, 'html.parser')
-    list_shows = list_shows_soup.find('div', class_='personnages').find_all('a')
+    list_shows = list_shows_soup.find(
+        'div', class_='personnages').find_all('a')
 
     for personnage in list_shows:
 
@@ -111,11 +116,11 @@ def list_shows(params):
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_2',
-                    title=show_title,
-                    category_url=show_url,
-                    window_title=show_title
-                )
-            })
+                title=show_title,
+                category_url=show_url,
+                window_title=show_title
+            )
+        })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -124,6 +129,7 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -134,15 +140,20 @@ def list_videos(params):
 
     if params.next == 'list_videos_1':
 
-        replay_episodes_html = utils.get_webcontent(params.category_url + '/par_date/%s' % params.page)
+        replay_episodes_html = utils.get_webcontent(
+            params.category_url + '/par_date/%s' % params.page)
         replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
 
         if 'serietele' in params.category_url:
-            episodes = replay_episodes_soup.find('div', class_='serieTele').find_all('div')
+            episodes = replay_episodes_soup.find(
+                'div', class_='serieTele').find_all('div')
 
             for episode in episodes:
-                if episode.find('a') is not None and episode.find('img', class_='thumb') is not None:
-                    video_title = episode.find('a').find('span', class_='saison-episode').get_text().strip() + ' ' + episode.find('img').get('alt')
+                if episode.find('a') is not None and \
+                        episode.find('img', class_='thumb') is not None:
+                    video_title = episode.find('a').find(
+                        'span', class_='saison-episode'
+                    ).get_text().strip() + ' ' + episode.find('img').get('alt')
                     video_url = URL_ROOT + episode.find('a').get('href')
                     video_img = URL_ROOT + '/' + episode.find('img').get('src')
                     video_duration = 0
@@ -150,11 +161,11 @@ def list_videos(params):
                     info = {
                         'video': {
                             'title': video_title,
-                            #'aired': aired,
-                            #'date': date,
+                            # 'aired': aired,
+                            # 'date': date,
                             'duration': video_duration,
-                            #'plot': video_plot,
-                            #'year': year,
+                            # 'plot': video_plot,
+                            # 'year': year,
                             'mediatype': 'tvshow'
                         }
                     }
@@ -177,11 +188,12 @@ def list_videos(params):
                             video_url=video_url
                         ),
                         'is_playable': True,
-                        'info': info#,
-                        #'context_menu': context_menu
+                        'info': info  # ,
+                        # 'context_menu': context_menu
                     })
         else:
-            episodes = replay_episodes_soup.find_all('a', class_='lienThumbCollection')
+            episodes = replay_episodes_soup.find_all(
+                'a', class_='lienThumbCollection')
 
             for episode in episodes:
                 video_title = episode.find('img').get('alt')
@@ -192,11 +204,11 @@ def list_videos(params):
                 info = {
                     'video': {
                         'title': video_title,
-                        #'aired': aired,
-                        #'date': date,
+                        # 'aired': aired,
+                        # 'date': date,
                         'duration': video_duration,
-                        #'plot': video_plot,
-                        #'year': year,
+                        # 'plot': video_plot,
+                        # 'year': year,
                         'mediatype': 'tvshow'
                     }
                 }
@@ -219,8 +231,8 @@ def list_videos(params):
                         video_url=video_url
                     ),
                     'is_playable': True,
-                    'info': info#,
-                    #'context_menu': context_menu
+                    'info': info  # ,
+                    # 'context_menu': context_menu
                 })
 
         # More videos...
@@ -240,7 +252,8 @@ def list_videos(params):
 
         replay_episodes_html = utils.get_webcontent(params.category_url)
         replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-        episodes = replay_episodes_soup.find_all('a', class_='lienThumbCollection')
+        episodes = replay_episodes_soup.find_all(
+            'a', class_='lienThumbCollection')
 
         for episode in episodes:
             video_title = episode.find('img').get('alt')
@@ -251,11 +264,11 @@ def list_videos(params):
             info = {
                 'video': {
                     'title': video_title,
-                    #'aired': aired,
-                    #'date': date,
+                    # 'aired': aired,
+                    # 'date': date,
                     'duration': video_duration,
-                    #'plot': video_plot,
-                    #'year': year,
+                    # 'plot': video_plot,
+                    # 'year': year,
                     'mediatype': 'tvshow'
                 }
             }
@@ -278,8 +291,8 @@ def list_videos(params):
                     video_url=video_url
                 ),
                 'is_playable': True,
-                'info': info#,
-                #'context_menu': context_menu
+                'info': info  # ,
+                # 'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -292,12 +305,14 @@ def list_videos(params):
         update_listing='update_listing' in params,
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     video_html = utils.get_webcontent(params.video_url)
     if re.compile('AtedraVideo.video_id = "(.*?)"').findall(video_html):
-        url_ytdl = URL_YOUTUBE % re.compile('AtedraVideo.video_id = "(.*?)"').findall(video_html)[0]
+        url_ytdl = URL_YOUTUBE % re.compile(
+            'AtedraVideo.video_id = "(.*?)"').findall(video_html)[0]
     else:
         # TO DO Espagnol Video
         return ''
