@@ -57,6 +57,7 @@ def channel_entry(params):
 def root(params):
     modes = []
 
+    """
     # Add Replay Desactiver
     if params.channel_name != 'euronews':
         modes.append({
@@ -87,6 +88,10 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
     )
+    """
+
+    params.next = "list_live"
+    return channel_entry(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
