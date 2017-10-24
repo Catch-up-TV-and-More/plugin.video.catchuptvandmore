@@ -40,11 +40,11 @@ SECRET_KEY = '19nBVBxv791Xs'
 CATEGORIES = {}
 
 CATEGORIES['Dessins animés'] = 'http://sslreplay.gulli.fr/replay/api?' \
-                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
-                               '%%22:%%22programme.getLatestEpisodes%%22,%%' \
-                               '22params%%22:%%7B%%22program_image_thumb%%' \
-                               '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
-                               'dessins-animes%%22%%7D%%7D'
+                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%22' \
+                               'method%%22:%%22programme.getLatest' \
+                               'Episodes%%22,%%22params%%22:%%7B%%22' \
+                               'program_image_thumb%%22:%%5B310,230%%5D,%%22' \
+                               'category_id%%22:%%22dessins-animes%%22%%7D%%7D'
 
 CATEGORIES['Émissions'] = 'https://sslreplay.gulli.fr/replay/api?' \
                           'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
@@ -54,11 +54,11 @@ CATEGORIES['Émissions'] = 'https://sslreplay.gulli.fr/replay/api?' \
                           'emissions%%22%%7D%%7D'
 
 CATEGORIES['Séries & films'] = 'https://sslreplay.gulli.fr/replay/api?' \
-                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
-                               '%%22:%%22programme.getLatestEpisodes%%22,%%' \
-                               '22params%%22:%%7B%%22program_image_thumb%%' \
-                               '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
-                               'series%%22%%7D%%7D'
+                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%2' \
+                               '2method%%22:%%22programme.getLatest' \
+                               'Episodes%%22,%%22params%%22:%%7B%%22program_' \
+                               'image_thumb%%22:%%5B310,230%%5D,%%22category' \
+                               '_id%%22:%%22series%%22%%7D%%7D'
 
 URL_LIST_SHOW = 'https://sslreplay.gulli.fr/replay/api?call=%%7B%%22api_key' \
                 '%%22:%%22%s%%22,%%22' \
@@ -69,6 +69,7 @@ URL_LIST_SHOW = 'https://sslreplay.gulli.fr/replay/api?call=%%7B%%22api_key' \
 URL_LIVE_TV = 'http://replay.gulli.fr/Direct'
 
 # program_id
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -101,7 +102,7 @@ def root(params):
 
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
@@ -112,7 +113,7 @@ def root(params):
 
     # Add Live
     modes.append({
-        'label' : 'Live TV',
+        'label': 'Live TV',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
@@ -128,6 +129,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -303,7 +305,8 @@ def list_live(params):
         params.channel_name + '_live_embeded.html')
     root_live_embeded_html = open(file_path_2).read()
 
-    all_url_video = re.compile(r'file: \'(.*?)\'').findall(root_live_embeded_html)
+    all_url_video = re.compile(
+        r'file: \'(.*?)\'').findall(root_live_embeded_html)
 
     for url_video in all_url_video:
         if url_video.count('m3u8') > 0:
@@ -323,7 +326,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.PLUGIN.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             url_live=url_live,
@@ -339,6 +342,7 @@ def list_live(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         )
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):

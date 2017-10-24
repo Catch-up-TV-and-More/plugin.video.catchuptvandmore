@@ -43,6 +43,7 @@ URL_INFO_LIVE_JSON = 'http://www.numero23.fr/wp-content/cache/n23-direct.json'
 URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
 
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
@@ -58,20 +59,22 @@ def channel_entry(params):
     else:
         return None
 
+
 CORRECT_MONTH = {
-    'janvier' : '01',
-    'février' : '02',
-    'mars' : '03',
-    'avril' : '04',
-    'mai' : '05',
-    'juin' : '06',
-    'juillet' : '07',
-    'août' : '08',
-    'septembre' : '09',
-    'octobre' : '10',
-    'novembre' : '11',
-    'décembre' : '12'
+    'janvier': '01',
+    'février': '02',
+    'mars': '03',
+    'avril': '04',
+    'mai': '05',
+    'juin': '06',
+    'juillet': '07',
+    'août': '08',
+    'septembre': '09',
+    'octobre': '10',
+    'novembre': '11',
+    'décembre': '12'
 }
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
@@ -80,7 +83,7 @@ def root(params):
 
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
@@ -91,7 +94,7 @@ def root(params):
 
     # Add Live
     modes.append({
-        'label' : 'Live TV',
+        'label': 'Live TV',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
@@ -107,6 +110,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -125,7 +129,8 @@ def list_shows(params):
         )
 
         for category in categories_soup.find_all('a'):
-            category_name = category.find('span').get_text().encode('utf-8').replace(
+            category_name = category.find(
+                'span').get_text().encode('utf-8').replace(
                 '\n', ' ').replace('\r', ' ').rstrip('\r\n')
             category_hash = common.sp.md5(category_name).hexdigest()
 
@@ -162,7 +167,8 @@ def list_videos(params):
 
     file_path = utils.download_catalog(
         url_replay_paged,
-        '%s_%s_%s.html' % (params.channel_name, params.category_name, str(paged))
+        '%s_%s_%s.html' % (
+            params.channel_name, params.category_name, str(paged))
     )
     program_html = open(file_path).read()
     program_soup = bs(program_html, 'html.parser')
@@ -174,31 +180,38 @@ def list_videos(params):
 
             info_video = video.find_all('p')
 
-            video_title = video.find('h3').find('a').get_text().encode('utf-8').replace(
-                '\n', ' ').replace('\r', ' ').rstrip('\r\n') + ' - ' + video.find(
-                    'p', class_="red").get_text().encode(
-                        'utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n')
-            video_img = video.find('img')['src'].encode('utf-8')
-            video_id = video.find('div', class_="player")['data-id-video'].encode('utf-8')
+            video_title = video.find('h3').find(
+                'a').get_text().encode('utf-8').replace(
+                '\n', ' ').replace('\r', ' ').rstrip(
+                '\r\n') + ' - ' + video.find(
+                'p', class_="red").get_text().encode(
+                'utf-8').replace('\n', ' ').replace('\r', ' ').rstrip('\r\n')
+            video_img = video.find(
+                'img')['src'].encode('utf-8')
+            video_id = video.find(
+                'div', class_="player")['data-id-video'].encode('utf-8')
             video_duration = 0
             video_duration_list = str(info_video[3]).replace(
                 "<p><strong>", '').replace("</strong></p>", '').split(':')
             if len(video_duration_list) > 2:
-                video_duration = int(video_duration_list[0]) * 3600 + int(video_duration_list[1]) \
-                    * 60 + int(video_duration_list[2])
+                video_duration = int(video_duration_list[0]) * 3600 + \
+                    int(video_duration_list[1]) * 60 + \
+                    int(video_duration_list[2])
             else:
-                video_duration = int(video_duration_list[0]) * 60 + int(video_duration_list[1])
+                video_duration = int(video_duration_list[0]) * 60 + \
+                    int(video_duration_list[1])
 
             # get month and day on the page
-            date_list = str(info_video[2]).replace("<p>", '').replace("</p>", '').split(' ')
+            date_list = str(info_video[2]).replace(
+                "<p>", '').replace("</p>", '').split(' ')
             day = '00'
-            month = '00'
+            mounth = '00'
             year = '2017'
             if len(date_list) > 3:
                 day = date_list[2]
                 try:
                     mounth = CORRECT_MONTH[date_list[3]]
-                except:
+                except Exception:
                     mounth = '00'
                 # get year ?
 
@@ -244,12 +257,14 @@ def list_videos(params):
 
         file_path = utils.download_catalog(
             url_replay_paged,
-            '%s_%s_%s.html' % (params.channel_name, params.category_name, str(paged))
+            '%s_%s_%s.html' % (
+                params.channel_name, params.category_name, str(paged))
         )
         program_html = open(file_path).read()
         program_soup = bs(program_html, 'html.parser')
 
-        videos_soup = program_soup.find_all('div', class_='program sticky video')
+        videos_soup = program_soup.find_all(
+            'div', class_='program sticky video')
 
     return common.PLUGIN.create_listing(
         videos,
@@ -258,6 +273,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
         ),
         content='tvshows')
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
@@ -268,7 +284,6 @@ def list_live(params):
     plot = ''
     duration = 0
     img = ''
-    url_live = ''
 
     file_path = utils.download_catalog(
         URL_INFO_LIVE_JSON,
@@ -281,7 +296,7 @@ def list_live(params):
 
     video_id = json_parser["video"].encode('utf-8')
 
-    #url_live = url_dailymotion_embed % video_id
+    # url_live = url_dailymotion_embed % video_id
 
     info = {
         'video': {
@@ -295,7 +310,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.PLUGIN.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
             video_id=video_id,
@@ -312,6 +327,7 @@ def list_live(params):
         )
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
@@ -327,11 +343,13 @@ def get_video_url(params):
 
         if params.next == 'play_l':
             all_url_video = re.compile(
-                r'{"type":"application/x-mpegURL","url":"(.*?)"').findall(html_video)
+                r'{"type":"application/x-mpegURL","url":"(.*?)"'
+            ).findall(html_video)
             # Just One Quality
             return all_url_video[0]
-        elif  params.next == 'play_r':
-            all_url_video = re.compile(r'{"type":"video/mp4","url":"(.*?)"').findall(html_video)
+        elif params.next == 'play_r':
+            all_url_video = re.compile(
+                r'{"type":"video/mp4","url":"(.*?)"').findall(html_video)
             if desired_quality == "DIALOG":
                 all_datas_videos = []
                 for datas in all_url_video:
@@ -341,11 +359,12 @@ def get_video_url(params):
                     new_list_item.setPath(datas)
                     all_datas_videos.append(new_list_item)
 
-                seleted_item = common.sp.xbmcgui.Dialog().select("Choose Stream", all_datas_videos)
+                seleted_item = common.sp.xbmcgui.Dialog().select(
+                    "Choose Stream", all_datas_videos)
 
                 return all_datas_videos[seleted_item].getPath().encode('utf-8')
             elif desired_quality == 'BEST':
-                #Last video in the Best
+                # Last video in the Best
                 for datas in all_url_video:
                     url = datas
                 return url

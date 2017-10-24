@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.4-beta017"
+       version="0.1.4"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -20,6 +20,9 @@
     <summary lang="en_gb">Catch-Up TV &amp; More: It's all in the title.</summary>
     <description lang="en_gb">Catch-Up TV &amp; More brings together in one Kodi plugin all the videos of the various services and channels of catch-up TV. Furthermore, this addon allows you to quickly access the videos and content offered by certain websites.</description>
     <disclaimer lang="en_gb">Bug reports, suggestions for improvements or content additions are welcome! GitHub or e-mail.</disclaimer>
+    <description lang="he_il">ההרחבה מאפשרת לך להתעדכן בתוכן השידורים תוסף אחד של קודי מרכז את כל קטעי וידאו של שירותים שונים וערוצי תוכן משודר. בנוסף, תוספת זו מאפשרת לך לגשת במהירות לסרטונים ולתכנים המוצעים על ידי אתרים מסוימים.</description>
+    <disclaimer lang="he_il">דוחות שגיאה, הצעות לשיפור או תוספות תוכן יתקבלו בברכה! ל-GitHub או אימייל.</disclaimer>
+ 
     <language>fr</language>
     <platform>all</platform>
     <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
@@ -45,6 +48,10 @@
 [Fix] Video without date for Channel Numero 23 (wwark)
 [Improvement] Detect premium video and send notification for Group M6 (wwark)
 [Improvement] Update simpleplugin module and used mem_cache for all websites and channels. Gain little speedup (wwark)
+[Fix] Change website for Replay LCI (wwark)
+[Update] Verify Pep8 in all files (SylvainCecchetto)
+[Update] Fanart, Image for channel (SylvainCecchetto)
+[Improvement] Remove choice if there is just replay or live tv for a channel (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>

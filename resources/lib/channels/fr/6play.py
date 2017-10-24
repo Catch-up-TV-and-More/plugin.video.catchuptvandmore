@@ -29,13 +29,13 @@ from resources.lib import common
 # TO DO
 # LIVE TV protected by #EXT-X-FAXS-CM
 # https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
-#Clip and Playlist (cas les blagues de TOTO)
-#Case MP4:
-#https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/playlist_2248?csa=6&with=clips,freemiumpacks,program_images,service_display_images
-#Case without ISM (One flux m3u8) :
-#https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/clip_11740712?csa=6&with=clips,freemiumpacks,program_images,service_display_images
-#Case Video Protected :
-#https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/clip_11288922?csa=6&with=clips,freemiumpacks,program_images,service_display_images
+# Clip and Playlist (cas les blagues de TOTO)
+# Case MP4:
+# https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/playlist_2248?csa=6&with=clips,freemiumpacks,program_images,service_display_images
+# Case without ISM (One flux m3u8) :
+# https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/clip_11740712?csa=6&with=clips,freemiumpacks,program_images,service_display_images
+# Case Video Protected :
+# https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/clip_11288922?csa=6&with=clips,freemiumpacks,program_images,service_display_images
 # Rework Quality Video
 # Get vtt subtitle
 
@@ -94,7 +94,7 @@ def channel_entry(params):
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
-        return list_live(params)
+        return None
     elif 'play' in params.next:
         return get_video_url(params)
     return None
@@ -103,11 +103,12 @@ def channel_entry(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
+    """
     modes = []
 
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
@@ -123,6 +124,10 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
     )
+    """
+    params.next = "list_shows_1"
+    return channel_entry(params)
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -132,9 +137,12 @@ def list_shows(params):
     if params.next == 'list_shows_1':
 
         url_root_site = ''
-        if params.channel_name == 'stories' or params.channel_name == 'bruce' \
-           or params.channel_name == 'crazy_kitchen' or params.channel_name == 'home' \
-           or params.channel_name == 'styles' or params.channel_name == 'comedy':
+        if params.channel_name == 'stories' or \
+                params.channel_name == 'bruce' or \
+                params.channel_name == 'crazy_kitchen' or \
+                params.channel_name == 'home' or \
+                params.channel_name == 'styles' or \
+                params.channel_name == 'comedy':
             url_root_site = URL_ROOT % params.channel_name
         else:
             url_root_site = URL_ROOT % (params.channel_name + 'replay')
@@ -237,7 +245,7 @@ def list_shows(params):
 
         try:
             program_fanart = params.program_fanart
-        except:
+        except Exception:
             program_fanart = ''
 
         for sub_category in json_parser['program_subcats']:
@@ -329,7 +337,7 @@ def list_videos(params):
             year = aired.split('-')[0]
             date = '.'.join((day, mounth, year))
 
-        except:
+        except Exception:
             aired = ''
             year = ''
             date = ''

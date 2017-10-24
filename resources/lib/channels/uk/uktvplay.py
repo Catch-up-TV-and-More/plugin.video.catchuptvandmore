@@ -20,7 +20,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import json
 import re
 import requests
 from bs4 import BeautifulSoup as bs
@@ -44,11 +43,13 @@ URL_SHOWS = 'https://uktvplay.uktv.co.uk/shows/channel/%s/'
 URL_AUTHENTICATE = 'https://live.mppglobal.com/api/accounts/authenticate'
 # POST Payload {email: "********@*******", password: "*********"}
 
-URL_BRIGHTCOVE_API = 'https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s'
+URL_BRIGHTCOVE_API = 'https://edge.api.brightcove.com/playback/v1/' \
+                     'accounts/%s/videos/%s'
 # data-account, data-vidid
 
 URL_JS_POLICY_KEY = 'https://players.brightcove.net/%s/%s_default/index.min.js'
 # data-account, data-player
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -63,26 +64,30 @@ def channel_entry(params):
     elif 'play' in params.next:
         return get_video_url(params)
 
+
 CORRECT_MOUNTH = {
-    'Jan' : '01',
-    'Feb' : '02',
-    'Mar' : '03',
-    'Apr' : '04',
-    'May' : '05',
-    'Jun' : '06',
-    'Jul' : '07',
-    'Aug' : '08',
-    'Sep' : '09',
-    'Oct' : '10',
-    'Nov' : '11',
-    'Dec' : '12'
+    'Jan': '01',
+    'Feb': '02',
+    'Mar': '03',
+    'Apr': '04',
+    'May': '05',
+    'Jun': '06',
+    'Jul': '07',
+    'Aug': '08',
+    'Sep': '09',
+    'Oct': '10',
+    'Nov': '11',
+    'Dec': '12'
 }
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_policy_key(data_account, data_player):
     """Get policy key"""
-    file_js = utils.get_webcontent(URL_JS_POLICY_KEY % (data_account, data_player))
+    file_js = utils.get_webcontent(
+        URL_JS_POLICY_KEY % (data_account, data_player))
     return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
@@ -91,7 +96,7 @@ def root(params):
 
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
@@ -107,6 +112,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -137,11 +143,11 @@ def list_shows(params):
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='list_shows_2',
-                            title=show_title,
-                            show_url=show_url,
-                            window_title=show_title
-                        )
-                    })
+                        title=show_title,
+                        show_url=show_url,
+                        window_title=show_title
+                    )
+                })
             else:
                 shows.append({
                     'label': show_title,
@@ -149,39 +155,41 @@ def list_shows(params):
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='list_videos_1',
-                            title=show_title,
-                            show_url=show_url,
-                            window_title=show_title
-                        )
-                    })
+                        title=show_title,
+                        show_url=show_url,
+                        window_title=show_title
+                    )
+                })
 
     elif params.next == 'list_shows_2':
 
         file_path = utils.download_catalog(
             params.show_url,
-            '%s_show_%s.html' % (params.channel_name,params.title)
+            '%s_show_%s.html' % (params.channel_name, params.title)
         )
         replay_show_html = open(file_path).read()
 
         replay_show_seasons_soup = bs(replay_show_html, 'html.parser')
-        replay_show_seasons = replay_show_seasons_soup.find('ul', class_='clearfix tag-nav')
+        replay_show_seasons = replay_show_seasons_soup.find(
+            'ul', class_='clearfix tag-nav')
 
         get_show_seasons = replay_show_seasons.find_all('li')
 
         for season in get_show_seasons:
 
-            season_title = 'Series %s' % season.get('id').encode('utf-8').split('nav-series-')[1]
+            season_title = 'Series %s' % season.get(
+                'id').encode('utf-8').split('nav-series-')[1]
 
             shows.append({
                 'label': season_title,
                 'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='list_videos_1',
-                        title=params.title + '_' + season_title,
-                        show_url=params.show_url,
-                        window_title=season_title
-                    )
-                })
+                    title=params.title + '_' + season_title,
+                    show_url=params.show_url,
+                    window_title=season_title
+                )
+            })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -191,6 +199,7 @@ def list_shows(params):
         )
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
@@ -198,26 +207,39 @@ def list_videos(params):
 
     file_path = utils.download_catalog(
         params.show_url,
-        '%s_show_%s.html' % (params.channel_name,params.title)
+        '%s_show_%s.html' % (
+            params.channel_name, params.title)
     )
     replay_show_season_html = open(file_path).read()
     seasons_episodes_soup = bs(replay_show_season_html, 'html.parser')
 
     # Get data-account
-    data_account = re.compile(r'data-account="(.*?)"').findall(replay_show_season_html)[0]
-    data_player = re.compile(r'data-player="(.*?)"').findall(replay_show_season_html)[0]
+    data_account = re.compile(
+        r'data-account="(.*?)"').findall(replay_show_season_html)[0]
+    data_player = re.compile(
+        r'data-player="(.*?)"').findall(replay_show_season_html)[0]
 
     if "Series" in params.title:
         # GET VideoId for each episode of season selected
-        seasons_episodes = seasons_episodes_soup.find_all('div', class_='spanOneThird vod-episode clearfix ')
+        seasons_episodes = seasons_episodes_soup.find_all(
+            'div', class_='spanOneThird vod-episode clearfix ')
         for episode in seasons_episodes:
-            if episode.get('data-series') == params.title.split('Series')[1].strip():
+            if episode.get('data-series') == \
+                    params.title.split('Series')[1].strip():
 
                 data_vidid = episode.get('data-vidid')
 
-                video_title = episode.get('data-title') + ' S%sE%s' % (episode.get('data-series'), episode.get('data-episode'))
+                video_title = episode.get('data-title')
+                video_title = video_title + ' S%sE%s' % (
+                    episode.get('data-series'), episode.get('data-episode'))
                 video_duration = 0
-                video_plot = 'Expire ' + episode.get('data-publishend').split('T')[0] +'\n'+ episode.get('data-teaser').encode('utf-8')
+
+                video_plot = 'Expire '
+                video_plot = video_plot + episode.get(
+                    'data-publishend').split('T')[0]
+                video_plot = video_plot + '\n' + episode.get(
+                    'data-teaser').encode('utf-8')
+
                 video_img = episode.find('img').get('src')
 
                 date_value = episode.get("data-publishstart")
@@ -268,14 +290,24 @@ def list_videos(params):
                     'context_menu': context_menu
                 })
 
-        play_episode = seasons_episodes_soup.find('div', class_='spanOneThird vod-episode clearfix playing in')
-        if play_episode.get('data-series') == params.title.split('Series')[1].strip():
+        play_episode = seasons_episodes_soup.find(
+            'div', class_='spanOneThird vod-episode clearfix playing in')
+        if play_episode.get('data-series') == \
+                params.title.split('Series')[1].strip():
 
             data_vidid = play_episode.get('data-vidid')
 
-            video_title = play_episode.get('data-title') + ' S%sE%s' % (play_episode.get('data-series'), play_episode.get('data-episode'))
+            video_title = play_episode.get('data-title')
+            video_title = video_title + ' S%sE%s' % (
+                play_episode.get('data-series'),
+                play_episode.get('data-episode')
+            )
             video_duration = 0
-            video_plot = 'Expire ' + play_episode.get('data-publishend').split('T')[0] +'\n'+ play_episode.get('data-teaser').encode('utf-8')
+            video_plot = 'Expire '
+            video_plot = video_plot + play_episode.get(
+                'data-publishend').split('T')[0] + '\n '
+            video_plot = video_plot + play_episode.get(
+                'data-teaser').encode('utf-8')
             video_img = play_episode.find('img').get('src')
 
             date_value = play_episode.get("data-publishstart")
@@ -327,16 +359,22 @@ def list_videos(params):
             })
 
     else:
-        play_episode = seasons_episodes_soup.find('div', class_='vod-video-container')
+        play_episode = seasons_episodes_soup.find(
+            'div', class_='vod-video-container')
 
         data_vidid = play_episode.find('a').get('data-vidid')
 
         video_title = play_episode.find('img').get('alt')
         video_duration = 0
-        video_plot = seasons_episodes_soup.find('p', class_='teaser').get_text().encode('utf-8')
-        video_img = re.compile('itemprop="image" content="(.*?)"').findall(replay_show_season_html)[0]
+        video_plot = seasons_episodes_soup.find(
+            'p', class_='teaser').get_text().encode('utf-8')
+        video_img = re.compile(
+            'itemprop="image" content="(.*?)"'
+        ).findall(replay_show_season_html)[0]
 
-        date_value = re.compile('itemprop="uploadDate" content="(.*?)"').findall(replay_show_season_html)[0]
+        date_value = re.compile(
+            'itemprop="uploadDate" content="(.*?)"'
+        ).findall(replay_show_season_html)[0]
         date_value_list = date_value.split(',')[0].split(' ')
         if len(date_value_list[0]) == 1:
             day = '0' + date_value_list[0]
@@ -344,7 +382,7 @@ def list_videos(params):
             day = date_value_list[0]
         try:
             mounth = CORRECT_MOUNTH[date_value_list[1]]
-        except:
+        except Exception:
             mounth = '00'
         year = date_value_list[2]
 
@@ -402,11 +440,12 @@ def list_videos(params):
         content='tvshows',
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
-    lives = []
     return None
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
@@ -416,6 +455,7 @@ def get_video_url(params):
         session_requests = requests.session()
 
         # Build PAYLOAD
+        """
         payload = {
             'email': common.PLUGIN.get_setting(
                 params.channel_id.rsplit('.', 1)[0] + '.login'),
@@ -423,7 +463,11 @@ def get_video_url(params):
                 params.channel_id.rsplit('.', 1)[0] + '.password')
         }
         result = session_requests.post(URL_AUTHENTICATE,payload)
-
-        result_2 = session_requests.get(URL_BRIGHTCOVE_API % (params.data_account,params.data_vidid),
-                    headers={'Accept': 'application/json;pk=%s' % get_policy_key(params.data_account,params.data_player)})
-        return re.compile('"application/x-mpegURL","src":"(.+?)"').findall(result_2.text)[0]
+        """
+        result_2 = session_requests.get(
+            URL_BRIGHTCOVE_API % (params.data_account, params.data_vidid),
+            headers={'Accept': 'application/json;pk=%s' % get_policy_key(
+                params.data_account, params.data_player)}
+        )
+        return re.compile(
+            '"application/x-mpegURL","src":"(.+?)"').findall(result_2.text)[0]
