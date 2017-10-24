@@ -77,7 +77,7 @@ msgstr "ערוצים אמריקאיים"
 
 msgctxt "#30026"
 msgid "Websites"
-msgstr ""
+msgstr "אתרי רשת"
 
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
@@ -103,7 +103,7 @@ msgstr "מידע"
 
 msgctxt "#30051"
 msgid "To re-enable hidden items go to the plugin settings"
-msgstr "כדי להפעיל מחדש את הפריטים המוסתרים, עבור אל ההגדרות של תוסף"
+msgstr "כדי להפעיל מחדש את הפריטים המוסתרים, עבור אל ההגדרות של ההרחבה"
 
 
 # Settings quality and content (from 30070 to 30099)
@@ -179,11 +179,11 @@ msgstr "בחר איכות וידאו"
 
 msgctxt "#30111"
 msgid "Video stream no longer exists"
-msgstr ""
+msgstr "הזרמת הווידאו כבר לא קיימת"
 
 msgctxt "#30112"
 msgid "Video with an account needed"
-msgstr ""
+msgstr "נדרש וידאו שמקושר לחשבון"
 
 # Download (from 30200 to 30240)
 msgctxt "#30200"
