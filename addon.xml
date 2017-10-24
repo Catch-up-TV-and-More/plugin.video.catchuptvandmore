@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.4"
+       version="0.1.5-beta001"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -31,27 +31,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
-[Add channel — Live TV] Blaze (UK) (wwark)
-[Add channel — Live TV] RTBF (BE) (La Une, La Deux, La Trois, ...) (wwark)
-[Add channel] Dave (UK) (wwark)
-[Add channel] Drama (UK) (wwark)
-[Add channel] Really (UK) (wwark)
-[Add channel] Yesterday (UK) (wwark)
-[Fix] Get Meteo Video for Channel TF1 (wwark)
-[Fix] Program without videos for Group TF1 (wwark)
-[Improvement] Detect DRM video for Group TF1 and send notification (wwark)
-[Improvement] Add More Videos button for Group TF1 (wwark)
-[Improvement] Add Spanish content, Last News, Last Weather, Last Business for Channel France 24 (wwark)
-[Add WebSite] Allociné (wwark)
-[Fix] Change API to get the video for Group M6 (kagonia from mpdb.tv)
-[Add WebSite] tetesaclaques.tv (wwark)
-[Fix] Video without date for Channel Numero 23 (wwark)
-[Improvement] Detect premium video and send notification for Group M6 (wwark)
-[Improvement] Update simpleplugin module and used mem_cache for all websites and channels. Gain little speedup (wwark)
-[Fix] Change website for Replay LCI (wwark)
-[Update] Verify Pep8 in all files (SylvainCecchetto)
-[Update] Fanart, Image for channel (SylvainCecchetto)
-[Improvement] Remove choice if there is just replay or live tv for a channel (SylvainCecchetto)
+[Add channel — Live TV] BVN (BE) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

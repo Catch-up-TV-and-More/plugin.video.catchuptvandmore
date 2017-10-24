@@ -150,8 +150,11 @@
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
 
-            <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="1"/>
+            <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="1"/>
+
+            <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="2"/>
 
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>

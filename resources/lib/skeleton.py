@@ -32,7 +32,8 @@ CATEGORIES = {
 CHANNELS = {
 
     'main_menu.be': {
-        'channels.be.rtbf.auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)'
+        'channels.be.rtbf.auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
+        'channels.be.bvn.bvn': 'BVN'
     },
 
     'main_menu.eu': {

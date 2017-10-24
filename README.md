@@ -21,6 +21,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV Communauté française — *French Community TV*
 - RTBF Auvio (La Une, La Deux, La Trois, ...) *(Replay, Live TV)*
 
+##### TV Communauté flamande — *Flemish Community TV*
+- BVN *(Replay, Live TV)*
+
 ### Europe
 - Arte *(Replay, Live TV)*
 - Euronews *(Live TV)*
