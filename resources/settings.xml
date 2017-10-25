@@ -7,6 +7,7 @@
         <setting label="30010" type="lsep"/>
         <setting label="30020" type="bool" id="main_menu.fr" default="true"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true"/>
+        <setting label="30022" type="bool" id="main_menu.jp" default="true"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true"/>
@@ -164,6 +165,18 @@
 
             <setting label="Arte" type="bool" id="channels.eu.arte.arte" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.arte.arte.order" default="2"/>
+
+        <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
+
+            <setting label="NHK World" type="bool" id="channels.jp.nhk.nhkworld" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhkworld.order" default="1"/>
+
+            <setting label="NHK ニュース" type="bool" id="channels.jp.nhk.nhknews" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhknews.order" default="2"/>
+
+            <setting label="NHKらいふ" type="bool" id="channels.jp.nhk.nhklifestyle" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhklifestyle.order" default="3"/>
 
         <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>

@@ -73,6 +73,14 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Xtra — MyTF1 *(Replay)*
 - 01Net TV *(Replay)*
 
+### Japon — *Japan*
+##### TV
+- NHK World *(Replay, Live TV)*
+
+##### Web TV
+- NHK ニュース *(Replay)*
+- NHKらいふ *(Replay)*
+
 ### Sites internet — *Websites*
 #### Canada
 ##### Communauté française — *French Community*

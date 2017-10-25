@@ -25,6 +25,7 @@ CATEGORIES = {
     'main_menu.be': 'Belgian channels',
     'main_menu.eu': 'European channels',
     'main_menu.fr': 'French channels',
+    'main_menu.jp': 'Japanese channels',
     'main_menu.uk': 'United Kingdom channels',
     'main_menu.ws': 'Websites'
 }
@@ -82,6 +83,12 @@ CHANNELS = {
         'channels.fr.6play.comedy': 'Comic (6play)',
         'channels.fr.france24.france24': 'France 24',
         'channels.fr.publicsenat.publicsenat': 'Public Sénat'
+    },
+
+    'main_menu.jp': {
+        'channels.jp.nhk.nhkworld': 'NHK World',
+        'channels.jp.nhk.nhknews': 'NHK ニュース',
+        'channels.jp.nhk.nhklifestyle': 'NHKらいふ'
     },
 
     'main_menu.uk': {
