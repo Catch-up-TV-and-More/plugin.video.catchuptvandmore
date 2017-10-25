@@ -142,7 +142,8 @@ def root(params):
     return common.PLUGIN.create_listing(
         listing,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,)
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,),
+        category=common.get_window_title()
     )
 
 
@@ -248,7 +249,8 @@ def list_channels(params):
     return common.PLUGIN.create_listing(
         listing,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,)
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,),
+        category=common.get_window_title()
     )
 
 
@@ -298,7 +300,6 @@ def channel_entry(params):
 
     # Let's go to the channel file ...
     return channel.channel_entry(params)
-
 
 
 @common.PLUGIN.action()

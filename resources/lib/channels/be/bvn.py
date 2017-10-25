@@ -55,6 +55,7 @@ URL_INFO_REPLAY = 'https://e.omroep.nl/metadata/%s?callback=jsonpCallback%s5910'
 URL_VIDEO_REPLAY = 'https://ida.omroep.nl/app.php/%s?adaptive=yes&token=%s'
 # Id Video, Token
 
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
@@ -70,6 +71,7 @@ def channel_entry(params):
     else:
         return None
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
@@ -77,23 +79,23 @@ def root(params):
 
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
+            window_title='%s Replay' % params.channel_name
         ),
     })
 
     # Add Live
     modes.append({
-        'label' : 'Live TV',
+        'label': 'Live TV',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name.upper()
+            window_title='%s Live TV' % params.channel_name
         ),
     })
 
@@ -103,7 +105,9 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
+        category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -157,6 +161,7 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
+        category=common.get_window_title()
     )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -289,7 +294,10 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_PLAYCOUNT,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
-        content='tvshows')
+        content='tvshows',
+        category=common.get_window_title()
+    )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
@@ -354,8 +362,10 @@ def list_live(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):

@@ -113,7 +113,7 @@ def root(params):
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
+            window_title='%s Replay' % params.channel_name
         ),
     })
 
@@ -125,6 +125,7 @@ def root(params):
         ),
     )
     """
+    params.window_title = '%s Replay' % params.channel_name
     params.next = "list_shows_1"
     return channel_entry(params)
 
@@ -181,7 +182,8 @@ def list_shows(params):
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                 common.sp.xbmcplugin.SORT_METHOD_LABEL
-            )
+            ),
+            category=common.get_window_title()
         )
 
     elif params.next == 'list_shows_2':
@@ -233,7 +235,8 @@ def list_shows(params):
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                 common.sp.xbmcplugin.SORT_METHOD_LABEL
-            )
+            ),
+            category=common.get_window_title()
         )
 
     elif params.next == 'list_shows_3':
@@ -299,7 +302,8 @@ def list_shows(params):
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                 common.sp.xbmcplugin.SORT_METHOD_LABEL
-            )
+            ),
+            category=common.get_window_title()
         )
 
     return shows
@@ -392,7 +396,9 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
-        content='tvshows')
+        content='tvshows',
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

@@ -81,7 +81,7 @@ def root(params):
             next='list_shows_1',
             page='0',
             category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
+            window_title='%s Replay' % params.channel_name
         ),
     })
 
@@ -92,7 +92,7 @@ def root(params):
             action='channel_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name.upper()
+            window_title='%s Live TV' % params.channel_name
         ),
     })
 
@@ -102,6 +102,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
+        category=common.get_window_title()
     )
 
 
@@ -189,6 +190,7 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
         update_listing='update_listing' in params,
+        category=common.get_window_title()
     )
 
 
@@ -274,6 +276,7 @@ def list_videos(params):
         ),
         content='tvshows',
         update_listing='update_listing' in params,
+        category=common.get_window_title()
     )
 
 
@@ -321,7 +324,8 @@ def list_live(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
 
 

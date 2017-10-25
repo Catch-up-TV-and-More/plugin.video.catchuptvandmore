@@ -79,6 +79,7 @@ URL_STREAM_NHK_LIFE_STYLE = 'http://movie-s.nhk.or.jp/ws/ws_program/api/%s/apiv/
 
 LOCATION = ['world']
 
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
@@ -91,6 +92,7 @@ def channel_entry(params):
         return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
+
 
 CORRECT_MOUNTH = {
     'Jan': '01',
@@ -107,6 +109,7 @@ CORRECT_MOUNTH = {
     'Dec': '12'
 }
 
+
 def get_pcode(params):
     # Get js file
     file_path = utils.download_catalog(
@@ -117,7 +120,7 @@ def get_pcode(params):
     js_file = re.compile('<script src="\/(.+?)"').findall(file_js)
 
     # Get last JS script
-    url_get_pcode = URL_ROOT + js_file[len(js_file)-1]
+    url_get_pcode = URL_ROOT + js_file[len(js_file) - 1]
 
     # Get apikey
     file_path_js = utils.download_catalog(
@@ -127,6 +130,7 @@ def get_pcode(params):
     pcode_js = open(file_path_js).read()
     pcode = re.compile('pcode: "(.+?)"').findall(pcode_js)
     return pcode[0]
+
 
 def get_api_key(params):
     # Get apikey
@@ -139,6 +143,7 @@ def get_api_key(params):
     apikey = re.compile('nw_api_key\|\|"(.+?)"').findall(info_js)
     return apikey[0]
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     modes = []
@@ -147,7 +152,7 @@ def root(params):
 
         # Add News
         modes.append({
-            'label' : 'ニュース',
+            'label': 'ニュース',
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_news',
@@ -159,7 +164,7 @@ def root(params):
 
         # Add Weather
         modes.append({
-            'label' : '気象',
+            'label': '気象',
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_weather',
@@ -172,23 +177,23 @@ def root(params):
 
         # Add Replay
         modes.append({
-            'label' : 'Replay',
+            'label': 'Replay',
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_shows_1',
                 category='%s Replay' % params.channel_name.upper(),
-                window_title='%s Replay' % params.channel_name.upper()
+                window_title='%s Replay' % params.channel_name
             ),
         })
 
         # Add Live
         modes.append({
-            'label' : 'Live TV',
+            'label': 'Live TV',
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
-                window_title='%s Live TV' % params.channel_name.upper()
+                window_title='%s Live TV' % params.channel_name
             ),
         })
 
@@ -197,7 +202,8 @@ def root(params):
         # Build Menu
         list_categories_html = utils.get_webcontent(URL_NHK_LIFESTYLE)
         list_categories_soup = bs(list_categories_html, 'html.parser')
-        list_categories = list_categories_soup.find_all('a', class_="header__menu__head")
+        list_categories = list_categories_soup.find_all(
+            'a', class_="header__menu__head")
 
         for category in list_categories:
             if '#' not in category.get('href'):
@@ -209,11 +215,11 @@ def root(params):
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='list_videos_lifestyle',
-                            title=category_title,
-                            category_url=category_url,
-                            window_title=category_title
-                        )
-                    })
+                        title=category_title,
+                        category_url=category_url,
+                        window_title=category_title
+                    )
+                })
 
     return common.PLUGIN.create_listing(
         modes,
@@ -221,7 +227,9 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
+        category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -270,8 +278,10 @@ def list_shows(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -302,15 +312,16 @@ def list_videos(params):
 
             if episode_to_add is True:
                 title = episode["title_clean"].encode('utf-8') + ' - ' + \
-                        episode["sub_title_clean"].encode('utf-8')
+                    episode["sub_title_clean"].encode('utf-8')
                 img = URL_ROOT + episode["image"].encode('utf-8')
                 video_id = episode["vod_id"].encode('utf-8')
                 plot = episode["description_clean"].encode('utf-8')
                 duration = 0
                 duration = episode["movie_duration"]
 
-                value_date = time.strftime('%d %m %Y',
-                             time.localtime(int(str(episode["onair"])[:-3])))
+                value_date = time.strftime(
+                    '%d %m %Y',
+                    time.localtime(int(str(episode["onair"])[:-3])))
                 date = str(value_date).split(' ')
                 day = date[0]
                 mounth = date[1]
@@ -430,7 +441,7 @@ def list_videos(params):
             title = video["title"]
             img = URL_ROOT + 'news/' + video["imgPath"]
             duration = int(video["videoDuration"])
-            video_id = video["videoPath"].replace('.mp4','')
+            video_id = video["videoPath"].replace('.mp4', '')
             pub_date_list = video["pubDate"].split(' ')
 
             if len(pub_date_list[1]) == 1:
@@ -439,7 +450,7 @@ def list_videos(params):
                 day = pub_date_list[1]
             try:
                 mounth = CORRECT_MOUNTH[pub_date_list[2]]
-            except:
+            except Exception:
                 mounth = '00'
             year = pub_date_list[3]
 
@@ -505,9 +516,11 @@ def list_videos(params):
         replay_episodes_html = utils.get_webcontent(params.category_url)
         replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
         episodes_html = replay_episodes_soup.find('article')
-        episodes_html = episodes_html.find_all('script')[0].get_text().encode('utf-8')
+        episodes_html = episodes_html.find_all(
+            'script')[0].get_text().encode('utf-8')
         replay_episodes_json = episodes_html.replace(']', '')
-        replay_episodes_json = replay_episodes_json.replace('var NHKLIFE_LISTDATA = [', '')
+        replay_episodes_json = replay_episodes_json.replace(
+            'var NHKLIFE_LISTDATA = [', '')
         replay_episodes_json = replay_episodes_json.strip()
         replay_episodes_json = replay_episodes_json.replace('{', '{"')
         replay_episodes_json = replay_episodes_json.replace(': ', '": ')
@@ -521,9 +534,9 @@ def list_videos(params):
                 plot = video["desc"]
                 img = URL_ROOT_2 + video["image_src"]
                 duration = 60 * int(video["videoInfo"]["duration"].split(':')[0]) + \
-                           int(video["videoInfo"]["duration"].split(':')[1])
+                    int(video["videoInfo"]["duration"].split(':')[1])
                 video_url = URL_NHK_LIFESTYLE + \
-                            video["href"].replace('../','')
+                    video["href"].replace('../', '')
 
                 # published_date: "2017年10月10日"
                 # year = video["published_date"].encode('utf-8').split('年')[0]
@@ -583,7 +596,9 @@ def list_videos(params):
         ),
         content='tvshows',
         update_listing='update_listing' in params,
+        category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
@@ -609,8 +624,9 @@ def list_live(params):
     url_live = xmlElements.find("tv_url").findtext("wstrm").encode('utf-8')
 
     # GET Info Live (JSON)
-    url_json = URL_LIVE_INFO_NHK % (params.channel_name,
-               LOCATION[0], get_api_key(params))
+    url_json = URL_LIVE_INFO_NHK % (
+        params.channel_name,
+        LOCATION[0], get_api_key(params))
     file_path_json = utils.download_catalog(
         url_json,
         '%s_live.json' % params.channel_name,
@@ -624,12 +640,14 @@ def list_live(params):
             subtitle = subtitle + info_live["subtitle"].encode('utf-8')
         title = info_live["title"].encode('utf-8') + subtitle
 
-        start_date = time.strftime('%H:%M',
-                     time.localtime(int(str(info_live["pubDate"])[:-3])))
-        end_date = time.strftime('%H:%M',
-                   time.localtime(int(str(info_live["endDate"])[:-3])))
+        start_date = time.strftime(
+            '%H:%M',
+            time.localtime(int(str(info_live["pubDate"])[:-3])))
+        end_date = time.strftime(
+            '%H:%M',
+            time.localtime(int(str(info_live["endDate"])[:-3])))
         plot = start_date + ' - ' + end_date + '\n ' + \
-               info_live["description"].encode('utf-8')
+            info_live["description"].encode('utf-8')
         img = URL_ROOT + info_live["thumbnail"].encode('utf-8')
         break
 
@@ -659,8 +677,10 @@ def list_live(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
@@ -696,7 +716,8 @@ def get_video_url(params):
         video_id_html = utils.get_webcontent(params.video_url)
         video_id = re.compile('player.php\?v=(.*?)&').findall(video_id_html)[0]
         api_key_html = utils.get_webcontent(URL_API_KEY_LIFE_STYLE % video_id)
-        api_key = re.compile('data-de-api-key="(.*?)"').findall(api_key_html)[0]
+        api_key = re.compile(
+            'data-de-api-key="(.*?)"').findall(api_key_html)[0]
         url_stream = URL_STREAM_NHK_LIFE_STYLE % (api_key, video_id)
         url_stream_json = utils.get_webcontent(url_stream)
         json_parser_stream = json.loads(url_stream_json)

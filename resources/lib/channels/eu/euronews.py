@@ -87,9 +87,11 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
+        category=common.get_window_title()
     )
     """
 
+    params.window_title = '%s Live TV' % params.channel_name
     params.next = "list_live"
     return channel_entry(params)
 
@@ -196,7 +198,8 @@ def list_live(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
 
 

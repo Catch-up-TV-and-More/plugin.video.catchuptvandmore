@@ -85,7 +85,7 @@ def root(params):
             action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
+            window_title='%s Replay' % params.channel_name
         ),
     })
 
@@ -97,7 +97,7 @@ def root(params):
                 action='channel_entry',
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
-                window_title='%s Live TV' % params.channel_name.upper()
+                window_title='%s Live TV' % params.channel_name
             ),
         })
 
@@ -107,6 +107,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
+        category=common.get_window_title()
     )
 
 
@@ -230,7 +231,8 @@ def list_shows(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
 
 
@@ -264,8 +266,13 @@ def list_videos_categories(params):
                 program_first_page_html, 'html.parser')
             # Get Last page :
             last_page = '0'
-            if program_first_page_soup.find('a', class_='icon i-chevron-right-double trackXiti') is not None:
-                last_page = program_first_page_soup.find('a', class_='icon i-chevron-right-double trackXiti').get('href').rsplit('/')[-1].split('?')[0]
+            if program_first_page_soup.find(
+                    'a', class_='icon i-chevron-right-double trackXiti'
+            ) is not None:
+                last_page = program_first_page_soup.find(
+                    'a',
+                    class_='icon i-chevron-right-double trackXiti'
+                ).get('href').rsplit('/')[-1].split('?')[0]
 
             videos_categories.append({
                 'label': category_title,
@@ -284,7 +291,8 @@ def list_videos_categories(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
 
 
@@ -310,7 +318,7 @@ def list_videos(params):
             img = replay.find_all('source')[0]
             try:
                 img = img['data-srcset'].encode('utf-8')
-            except:
+            except Exception:
                 img = img['srcset'].encode('utf-8')
 
             img = img.split(',')[0].split(' ')[0]
@@ -319,11 +327,11 @@ def list_videos(params):
             info = {
                 'video': {
                     'title': title,
-                    #'plot': stitle,
-                    #'aired': aired,
-                    #'date': date,
+                    # 'plot': stitle,
+                    # 'aired': aired,
+                    # 'date': date,
                     'duration': duration,
-                    #'year': int(aired[:4]),
+                    # 'year': int(aired[:4]),
                     'mediatype': 'tvshow'
                 }
             }
@@ -365,11 +373,11 @@ def list_videos(params):
         info = {
             'video': {
                 'title': title,
-                #'plot': stitle,
-                #'aired': aired,
-                #'date': date,
-                #'duration': duration,
-                #'year': int(aired[:4]),
+                # 'plot': stitle,
+                # 'aired': aired,
+                # 'date': date,
+                # 'duration': duration,
+                # 'year': int(aired[:4]),
                 'mediatype': 'tvshow'
             }
         }
@@ -380,12 +388,12 @@ def list_videos(params):
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 program_id=program_id) + ')'
-            )
+        )
         context_menu.append(download_video)
 
         videos.append({
             'label': title,
-            #'thumb': img,
+            # 'thumb': img,
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_r',
@@ -418,7 +426,8 @@ def list_videos(params):
         if grid is not None:
             for li in grid.find_all('li'):
                 video_type_string = li.find(
-                    'div', class_='description').find('a')['data-xiti-libelle'].encode('utf-8')
+                    'div', class_='description'
+                ).find('a')['data-xiti-libelle'].encode('utf-8')
                 video_type_string = video_type_string.split('-')[0]
 
                 if 'Playlist' not in video_type_string:
@@ -430,7 +439,7 @@ def list_videos(params):
                         stitle = li.find(
                             'p',
                             class_='stitle').get_text().encode('utf-8')
-                    except:
+                    except Exception:
                         stitle = ''
 
                     try:
@@ -439,14 +448,15 @@ def list_videos(params):
                             class_='uptitle').find(
                                 'span',
                                 class_='momentDate')
-                        duration = int(duration_soup.get_text().encode('utf-8'))
-                    except:
+                        duration = int(
+                            duration_soup.get_text().encode('utf-8'))
+                    except Exception:
                         duration = 0
 
                     img = li.find('img')
                     try:
                         img = img['data-srcset'].encode('utf-8')
-                    except:
+                    except Exception:
                         img = img['srcset'].encode('utf-8')
 
                     img = 'http:' + img.split(',')[-1].split(' ')[0]
@@ -458,7 +468,8 @@ def list_videos(params):
                                 'p',
                                 class_='uptitle').find('span')
 
-                        aired = date_soup['data-date'].encode('utf-8').split('T')[0]
+                        aired = date_soup['data-date'].encode(
+                            'utf-8').split('T')[0]
                         day = aired.split('-')[2]
                         mounth = aired.split('-')[1]
                         year = aired.split('-')[0]
@@ -466,7 +477,7 @@ def list_videos(params):
                         # date : string (%d.%m.%Y / 01.01.2009)
                         # aired : string (2008-12-07)
 
-                    except:
+                    except Exception:
                         date = ''
                         aired = ''
                         year = 0
@@ -533,7 +544,9 @@ def list_videos(params):
         ),
         content='tvshows',
         update_listing='update_listing' in params,
+        category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
@@ -550,25 +563,26 @@ def list_live(params):
     title = json_parser["current"]["title"].encode('utf-8') + ' - ' \
         + json_parser["current"]["episode"].encode('utf-8')
     if "description" in json_parser["current"]:
-        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + ' - ' \
-            + json_parser["current"]["humanEndDate"].encode('utf-8') \
+        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + \
+            ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8') \
             + '\n ' + json_parser["current"]["description"].encode('utf-8')
     else:
-        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + ' - ' \
-            + json_parser["current"]["humanEndDate"].encode('utf-8')
+        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + \
+            ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8')
 
     duration = 0
-    #duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
+    # duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
 
     # Get Image (Code java found in a Forum)
     id_image = json_parser["current"]["image"].encode('utf-8')
-    value_md5 = common.sp.md5(str(IMG_WIDTH) + str(IMG_HEIGHT) + id_image \
-        + 'elk45sz6ers68').hexdigest()
+    value_md5 = common.sp.md5(
+        str(IMG_WIDTH) + str(IMG_HEIGHT) + id_image + 'elk45sz6ers68'
+    ).hexdigest()
     value_md5 = value_md5[:6]
     try:
-        img = URL_API_IMAGE + '/' + str(IMG_WIDTH)  + '/' + str(IMG_HEIGHT) + '/' \
-            + id_image + '/' + str(value_md5)
-    except:
+        img = URL_API_IMAGE + '/' + str(IMG_WIDTH) + '/' + \
+            str(IMG_HEIGHT) + '/' + id_image + '/' + str(value_md5)
+    except Exception:
         img = ''
 
     info = {
@@ -583,7 +597,7 @@ def list_live(params):
         'label': title,
         'fanart': img,
         'thumb': img,
-        'url' : common.PLUGIN.get_url(
+        'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
         ),
@@ -591,14 +605,15 @@ def list_live(params):
         'info': info
     })
 
-
     return common.PLUGIN.create_listing(
         lives,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
@@ -664,7 +679,7 @@ def get_video_url(params):
         if desired_quality == 'BEST' or desired_quality == 'DIALOG':
             try:
                 url_video = url_video.split('&bwmax')[0]
-            except:
+            except Exception:
                 pass
 
         # Check DRM in the m3u8 file
@@ -717,7 +732,7 @@ def get_video_url(params):
         if desired_quality == 'BEST' or desired_quality == 'DIALOG':
             try:
                 url_video = url_video.split('&bwmax')[0]
-            except:
+            except Exception:
                 pass
 
         return url_video
