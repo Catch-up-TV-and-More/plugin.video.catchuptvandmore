@@ -36,6 +36,7 @@
 [Add WebTV] NHK ニュース (JP) (wwark)
 [Add WebTV] NHKらいふ (JP) (wwark)
 [improvement] Sort main category items as you want (move up, move down) (SylvainCecchetto)
+[improvement] Add current category name on the top left corner screen (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>
