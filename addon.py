@@ -55,19 +55,61 @@ def root(params):
     Build the addon main menu
     with all not hidden categories
     """
+
+    # First, we sort main menu by order
+    categories = []
+    for category_id, title in skeleton.CATEGORIES.iteritems():
+        # If category isn't disable
+        if common.PLUGIN.get_setting(category_id):
+            category_order = common.PLUGIN.get_setting(category_id + '.order')
+            category = (category_order, category_id, title)
+            categories.append(category)
+
+    categories = sorted(categories, key=lambda x: x[0])
+
     listing = []
     last_category_id = ''
-    for category_id, string_id in skeleton.CATEGORIES.iteritems():
+    for index, (order, category_id, title) in enumerate(categories):
         if common.PLUGIN.get_setting(category_id):
             last_category_id = category_id
-            last_window_title = _(string_id)
+            last_window_title = _(title)
+
+            # Build context menu (Move up, move down, ...)
             context_menu = []
+
+            item_down = (
+                _('Move down'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='move',
+                    direction='down',
+                    item_id_order=category_id + '.order',
+                    displayed_items=categories) + ')'
+            )
+            item_up = (
+                _('Move up'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='move',
+                    direction='up',
+                    item_id_order=category_id + '.order',
+                    displayed_items=categories) + ')'
+            )
+
+            if index == 0:
+                context_menu.append(item_down)
+            elif index == len(categories) - 1:
+                context_menu.append(item_up)
+            else:
+                context_menu.append(item_up)
+                context_menu.append(item_down)
+
             hide = (
                 _('Hide'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='hide',
                     item_id=category_id) + ')'
             )
+            context_menu.append(hide)
+
             media_category_path = common.sp.xbmc.translatePath(
                 common.sp.os.path.join(
                     MEDIA_PATH,
@@ -79,15 +121,14 @@ def root(params):
             icon = media_category_path + '.png'
             fanart = media_category_path + '_fanart.png'
 
-            context_menu.append(hide)
             listing.append({
                 'icon': icon,
                 'fanart': fanart,
-                'label': _(string_id),
+                'label': _(title),
                 'url': common.PLUGIN.get_url(
                     action='list_channels',
                     category_id=category_id,
-                    window_title=_(string_id)
+                    window_title=_(title)
                 ),
                 'context_menu': context_menu
             })
@@ -101,8 +142,7 @@ def root(params):
     return common.PLUGIN.create_listing(
         listing,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL)
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,)
     )
 
 
@@ -158,16 +198,16 @@ def list_channels(params):
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='move',
                 direction='down',
-                channel_id_order=channel_id + '.order',
-                displayed_channels=channels) + ')'
+                item_id_order=channel_id + '.order',
+                displayed_items=channels) + ')'
         )
         item_up = (
             _('Move up'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='move',
                 direction='up',
-                channel_id_order=channel_id + '.order',
-                displayed_channels=channels) + ')'
+                item_id_order=channel_id + '.order',
+                displayed_items=channels) + ')'
         )
 
         if index == 0:
@@ -260,6 +300,7 @@ def channel_entry(params):
     return channel.channel_entry(params)
 
 
+
 @common.PLUGIN.action()
 def move(params):
     if params.direction == 'down':
@@ -267,20 +308,20 @@ def move(params):
     elif params.direction == 'up':
         offset = - 1
 
-    for k in range(0, len(params.displayed_channels)):
-        channel = eval(params.displayed_channels[k])
-        channel_order = channel[0]
-        channel_id = channel[1]
-        if channel_id + '.order' == params.channel_id_order:
-            channel_swaped = eval(params.displayed_channels[k + offset])
-            channel_swaped_order = channel_swaped[0]
-            channel_swaped_id = channel_swaped[1]
+    for k in range(0, len(params.displayed_items)):
+        item = eval(params.displayed_items[k])
+        item_order = item[0]
+        item_id = item[1]
+        if item_id + '.order' == params.item_id_order:
+            item_swaped = eval(params.displayed_items[k + offset])
+            item_swaped_order = item_swaped[0]
+            item_swaped_id = item_swaped[1]
             common.PLUGIN.set_setting(
-                params.channel_id_order,
-                channel_swaped_order)
+                params.item_id_order,
+                item_swaped_order)
             common.PLUGIN.set_setting(
-                channel_swaped_id + '.order',
-                channel_order)
+                item_swaped_id + '.order',
+                item_order)
             common.sp.xbmc.executebuiltin('XBMC.Container.Refresh()')
             return None
 
