@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    Private Wark
-    Copyright (C) 2017  Wwark
+    Catch-up TV & More
+    Copyright (C) 2017  SylvainCecchetto
 
-    This file is part of Private Wark.
+    This file is part of Catch-up TV & More.
 
     Catch-up TV & More is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
