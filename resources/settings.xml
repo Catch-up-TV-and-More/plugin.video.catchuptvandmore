@@ -19,9 +19,9 @@
         <!-- Hide channels from categories -->
         <setting label="30011" type="lsep"/>
 
+        <setting label="" type="number" visible="false" id="main_menu.fr.order" default="1"/>
         <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
-        <setting label="" type="number" visible="false" id="main_menu.fr.order" default="1"/>
 
             <setting label="TF1" type="bool" id="channels.fr.tf1.tf1" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1.tf1.order" default="1"/>
@@ -149,9 +149,9 @@
             <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-83,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="42"/>-->
 
+        <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
-        <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
 
             <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="1"/>
@@ -159,9 +159,9 @@
             <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="2"/>
 
+        <setting label="" type="number" visible="false" id="main_menu.eu.order" default="3"/>
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
-        <setting label="" type="number" visible="false" id="main_menu.eu.order" default="3"/>
 
             <setting label="Euronews" type="bool" id="channels.eu.euronews.euronews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.euronews.euronews.order" default="1"/>
@@ -169,9 +169,9 @@
             <setting label="Arte" type="bool" id="channels.eu.arte.arte" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.arte.arte.order" default="2"/>
 
+        <setting label="" type="number" visible="false" id="main_menu.jp.order" default="4"/>
         <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
-        <setting label="" type="number" visible="false" id="main_menu.jp.order" default="4"/>
 
             <setting label="NHK World" type="bool" id="channels.jp.nhk.nhkworld" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.jp.nhk.nhkworld.order" default="1"/>
@@ -182,9 +182,9 @@
             <setting label="NHKらいふ" type="bool" id="channels.jp.nhk.nhklifestyle" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.jp.nhk.nhklifestyle.order" default="3"/>
 
+        <setting label="" type="number" visible="false" id="main_menu.uk.order" default="5"/>
         <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
-        <setting label="" type="number" visible="false" id="main_menu.uk.order" default="5"/>
 
             <setting label="Blaze" type="bool" id="channels.uk.blaze.blaze" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.uk.blaze.blaze.order" default="1"/>
@@ -201,9 +201,9 @@
             <setting label="Drama" type="bool" id="channels.uk.uktvplay.drama" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.uk.uktvplay.drama.order" default="5"/>
 
+        <setting label="" type="number" visible="false" id="main_menu.ws.order" default="6"/>
         <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true" visible="false"/>
-        <setting label="" type="number" visible="false" id="main_menu.ws.order" default="6"/>
 
             <setting label="Allociné" type="bool" id="channels.ws.allocine.allocine" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.allocine.allocine.order" default="1"/>
