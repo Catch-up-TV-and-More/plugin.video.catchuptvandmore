@@ -211,6 +211,9 @@
             <setting label="Au pays des Têtes à claques" type="bool" id="channels.ws.tetesaclaques.tetesaclaques" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.tetesaclaques.tetesaclaques.order" default="2"/>
 
+            <setting label="Taratata" type="bool" id="channels.ws.taratata.taratata" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.taratata.taratata.order" default="3"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->

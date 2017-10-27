@@ -75,6 +75,10 @@ msgctxt "#30025"
 msgid "United States channels"
 msgstr "ערוצים אמריקאיים"
 
+msgctxt "#30026"
+msgid "Websites"
+msgstr ""
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"
@@ -170,6 +174,14 @@ msgstr "‎טלוויזיה"
 msgctxt "#30110"
 msgid "Choose video quality"
 msgstr "בחר איכות וידאו"
+
+msgctxt "#30111"
+msgid "Video stream no longer exists"
+msgstr ""
+
+msgctxt "#30112"
+msgid "Video with an account needed"
+msgstr ""
 
 # Download (from 30200 to 30240)
 msgctxt "#30200"
