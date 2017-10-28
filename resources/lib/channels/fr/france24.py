@@ -32,7 +32,7 @@ from resources.lib import common
 # TO DO
 # Replay (emission) | (just 5 first episodes)
 # Add More Button (with api) to download just some part ? (More Work TO DO)
-# Add info LIVE TV (picture, plot)
+# Add info LIVE TV (title, picture, plot)
 # Find Replay ES ? (API return Access Denied)
 
 # Initialize GNU gettext emulation in addon
@@ -41,9 +41,6 @@ from resources.lib import common
 _ = common.ADDON.initialize_gettext()
 
 URL_LIVE_SITE = 'http://www.france24.com/%s/'
-# Language
-
-URL_INFO_LIVE = 'http://www.france24.com/%s/_fragment/player/nowplaying/'
 # Language
 
 URL_API_VOD = 'http://api.france24.com/%s/services/json-rpc/' \
@@ -91,7 +88,7 @@ def root(params):
 
     # Add Live
     modes.append({
-        'label': 'Live TV',
+        'label': _('Live TV'),
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
@@ -289,10 +286,7 @@ def list_live(params):
         if datas['source']:
             url_live = datas['source']
 
-    live_info = utils.get_webcontent(
-        URL_INFO_LIVE % (desired_language.lower()))
-    title = re.compile(
-        'id="main-player-playing-value">(.+?)<').findall(live_info)[0]
+    title = 'Live ' + params.channel_name + ' ' + desired_language.lower()
 
     info = {
         'video': {

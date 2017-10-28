@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.5-beta004"
+       version="0.1.5-beta005"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -39,6 +39,7 @@
 [improvement] Add current category name on the top left corner screen (SylvainCecchetto)
 [Add Website] Taratata (wwark)
 [Improvement] Add Español Live TV for Channel France 24 with content (ES) (wwark)
+[Fix] Title Live Info for Channel France 24 (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
