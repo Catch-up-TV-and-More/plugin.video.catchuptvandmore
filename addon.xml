@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.5-beta003"
+       version="0.1.5-beta004"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -38,6 +38,7 @@
 [improvement] Sort main category items as you want (move up, move down) (SylvainCecchetto)
 [improvement] Add current category name on the top left corner screen (SylvainCecchetto)
 [Add Website] Taratata (wwark)
+[Improvement] Add Español Live TV for Channel France 24 with content (ES) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

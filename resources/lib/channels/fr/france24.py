@@ -33,6 +33,7 @@ from resources.lib import common
 # Replay (emission) | (just 5 first episodes)
 # Add More Button (with api) to download just some part ? (More Work TO DO)
 # Add info LIVE TV (picture, plot)
+# Find Replay ES ? (API return Access Denied)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -89,16 +90,15 @@ def root(params):
         })
 
     # Add Live
-    if desired_language != 'ES':
-        modes.append({
-            'label': 'Live TV',
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='live_cat',
-                category='%s Live TV' % params.channel_name.upper(),
-                window_title='%s Live TV' % params.channel_name
-            ),
-        })
+    modes.append({
+        'label': 'Live TV',
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name
+        ),
+    })
 
     modes.append({
         'label': 'News - Weather - Business',
@@ -328,7 +328,7 @@ def list_live(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_nwb(params):
     """Build News - Weather - Business listing"""
-    nbe = []
+    nwb = []
 
     desired_language = common.PLUGIN.get_setting(
         params.channel_id + '.language')
@@ -359,26 +359,26 @@ def list_nwb(params):
         url_business = URL_LIVE_SITE % desired_language.lower() + \
             'vod/business-news'
 
-    url_nbe_list = []
-    url_nbe_list.append(url_news)
-    url_nbe_list.append(url_weather)
-    url_nbe_list.append(url_business)
+    url_nwb_list = []
+    url_nwb_list.append(url_news)
+    url_nwb_list.append(url_weather)
+    url_nwb_list.append(url_business)
 
     ydl = YoutubeDL()
 
-    for url_nbe in url_nbe_list:
-        url_nbe_html = utils.get_webcontent(url_nbe)
-        root_soup = bs(url_nbe_html, 'html.parser')
-        url_nbe_yt_html = utils.get_webcontent(
+    for url_nwb in url_nwb_list:
+        url_nwb_html = utils.get_webcontent(url_nwb)
+        root_soup = bs(url_nwb_html, 'html.parser')
+        url_nwb_yt_html = utils.get_webcontent(
             root_soup.find(
                 'div', class_='yt-vod-container').find('iframe').get('src'))
         url_yt = re.compile(
-            '<link rel="canonical" href="(.*?)"').findall(url_nbe_yt_html)[0]
+            '<link rel="canonical" href="(.*?)"').findall(url_nwb_yt_html)[0]
         ydl.add_default_info_extractors()
         with ydl:
             result = ydl.extract_info(url_yt, download=False)
             for format_video in result['formats']:
-                url_nbe_stream = format_video['url']
+                url_nwb_stream = format_video['url']
         title = result['title']
         plot = ''
         duration = 0
@@ -392,21 +392,21 @@ def list_nwb(params):
             }
         }
 
-        nbe.append({
+        nwb.append({
             'label': title,
             'fanart': img,
             'thumb': img,
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='play_r',
-                url=url_nbe_stream,
+                url=url_nwb_stream,
             ),
             'is_playable': True,
             'info': info
         })
 
     return common.PLUGIN.create_listing(
-        nbe,
+        nwb,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
