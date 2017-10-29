@@ -295,8 +295,10 @@ def list_videos(params):
             break
         count += 1
         video_content = video_soup.find('div', class_='content')
-        video_title = video_content.find(
-            'a').get_text().encode('utf-8')
+        video_title = ''
+        if video_content.find('a'):
+            video_title = video_content.find(
+                'a').get_text().encode('utf-8')
         video_subtitle = video_content.find(
             'h3').get_text().encode('utf-8')
         video_url = video_soup.find(
