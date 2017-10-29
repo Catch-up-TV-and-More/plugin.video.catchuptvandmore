@@ -111,7 +111,7 @@ LIVE_FR3_REGIONS = {
     "basse_normandie": "le direct France 3 BASSE-NORMANDIE",
     "bourgogne": "le direct France 3 BOURGOGNE",
     "bretagne": "le direct France 3 BRETAGNE",
-    "centre_val_de_loire": "le direct France 3 CENTRE-VAL DE LOIRE",
+    "centre": "le direct France 3 CENTRE-VAL DE LOIRE",
     "champagne_ardenne": "le direct France 3 CHAMPAGNE-ARDENNE",
     "corse": "le direct France 3 CORSE",
     "cote_dazur": "le direct France 3 COTE D'AZUR",
