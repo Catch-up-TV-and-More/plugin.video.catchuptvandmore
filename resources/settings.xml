@@ -156,8 +156,20 @@
             <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="1"/>
 
-            <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="2"/>
+            <setting label="BRF Mediathek" type="bool" id="channels.be.brf.brf" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.brf.brf.order" default="2"/>
+
+            <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="3"/>
+
+            <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="4"/>
+
+            <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="5"/>
+
+            <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="6"/>
 
         <setting label="" type="number" visible="false" id="main_menu.eu.order" default="3"/>
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>

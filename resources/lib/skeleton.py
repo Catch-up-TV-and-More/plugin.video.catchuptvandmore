@@ -34,7 +34,11 @@ CHANNELS = {
 
     'main_menu.be': {
         'channels.be.rtbf.auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
-        'channels.be.bvn.bvn': 'BVN'
+        'channels.be.bvn.bvn': 'BVN',
+        'channels.be.brf.brf': 'BRF Mediathek',
+        'channels.be.rtl.rtltvi': 'RTL-TVI',
+        'channels.be.rtl.plugrtl': 'PLUG RTL',
+        'channels.be.rtl.clubrtl': 'CLUB RTL'
     },
 
     'main_menu.eu': {
