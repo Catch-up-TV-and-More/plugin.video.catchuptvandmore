@@ -89,6 +89,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
+        category=common.get_window_title()
     )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -239,7 +240,8 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        update_listing='update_listing' in params
+        update_listing='update_listing' in params,
+        category=common.get_window_title()
     )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -381,7 +383,9 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
         ),
         content='tvshows',
-        update_listing='update_listing' in params)
+        update_listing='update_listing' in params,
+        category=common.get_window_title()
+    )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
@@ -475,7 +479,8 @@ def list_live(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
+        ),
+        category=common.get_window_title()
     )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

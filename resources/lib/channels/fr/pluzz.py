@@ -103,6 +103,32 @@ LIVE_LA_1ERE = {
     "wallis": "Wallis et Futuna 1ère"
 }
 
+LIVE_FR3_REGIONS = {
+    "alpes": "le direct France 3 ALPES",
+    "alsace": "le direct France 3 ALSACE",
+    "aquitaine": "le direct France 3 AQUITAINE",
+    "auvergne": "le direct France 3 AUVERGNE",
+    "basse_normandie": "le direct France 3 BASSE-NORMANDIE",
+    "bourgogne": "le direct France 3 BOURGOGNE",
+    "bretagne": "le direct France 3 BRETAGNE",
+    "centre_val_de_loire": "le direct France 3 CENTRE-VAL DE LOIRE",
+    "champagne_ardenne": "le direct France 3 CHAMPAGNE-ARDENNE",
+    "corse": "le direct France 3 CORSE",
+    "cote_d_azur": "le direct France 3 COTE D'AZUR",
+    "franche_comte": "le direct France 3 FRANCHE-COMTE",
+    "haute_normandie": "le direct France 3 HAUTE-NORMANDIE",
+    "languedoc_roussillon": "le direct France 3 LANGUEDOC-ROUSSILLON",
+    "limousin": "le direct France 3 LIMOUSIN",
+    "lorraine": "le direct France 3 GRAND-EST",
+    "nord_pas_de_calais": "le direct France 3 NORD-PAS-DE-CALAIS",
+    "paris_ile_de_france": "le direct France 3 PARIS-ILE DE FRANCE",
+    "pays_de_la_loire": "le direct France 3 PAYS DE LA LOIRE",
+    "picardie": "le direct France 3 PICARDIE",
+    "poitou_charentes": "le direct France 3 POITOU-CHARENTES",
+    "provence_alpes": "le direct France 3 PROVENCE-ALPES",
+    "rhone_alpes": "le direct France 3 RHÔNE-ALPES"
+}
+
 CATEGORIES = {
     'Toutes catégories': 'https://pluzz.webservices.francetelevisions.fr/'
                          'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s',
@@ -174,7 +200,8 @@ def root(params):
     modes = []
 
     # Add Replay
-    if params.channel_name != 'franceinfo':
+    if params.channel_name != 'franceinfo' and \
+        params.channel_name != 'france3regions':
         modes.append({
             'label': 'Replay',
             'url': common.PLUGIN.get_url(
@@ -689,6 +716,31 @@ def list_live(params):
                 'info': info
             })
 
+    elif params.channel_name == 'france3regions':
+
+        for id_stream, title_stream in LIVE_FR3_REGIONS.iteritems():
+            title = '%s Live' % title_stream
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    'date': date,
+                    'duration': duration
+                }
+            }
+
+            lives.append({
+                'label': title,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_l',
+                    id_stream=id_stream
+                ),
+                'is_playable': True,
+                'info': info
+            })
+
     else:
         url_json_live = CHANNEL_LIVE % (params.channel_name)
         file_path_live = utils.download_catalog(
@@ -830,7 +882,8 @@ def get_video_url(params):
 
     elif params.next == 'play_l':
 
-        if params.channel_name == 'la_1ere':
+        if params.channel_name == 'la_1ere' or \
+            params.channel_name == 'france3regions':
             file_prgm = utils.get_webcontent(
                 LIVE_INFO % (params.id_stream))
         else:
@@ -840,8 +893,7 @@ def get_video_url(params):
 
         url_protected = ''
         for video in json_parser['videos']:
-            if video['format'] == 'hls_v5_os' or \
-                video['format'] == 'hls_v1_os':
+            if 'hls' in video['format']:
                 url_protected = video['url']
 
         file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_protected))

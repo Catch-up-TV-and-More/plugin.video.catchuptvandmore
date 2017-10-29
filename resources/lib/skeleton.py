@@ -86,7 +86,8 @@ CHANNELS = {
         'channels.fr.6play.styles': 'Sixième Style (6play)',
         'channels.fr.6play.comedy': 'Comic (6play)',
         'channels.fr.france24.france24': 'France 24',
-        'channels.fr.publicsenat.publicsenat': 'Public Sénat'
+        'channels.fr.publicsenat.publicsenat': 'Public Sénat',
+        'channels.fr.pluzz.france3regions': 'France 3 Régions'
     },
 
     'main_menu.jp': {
