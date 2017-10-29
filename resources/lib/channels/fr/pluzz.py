@@ -78,8 +78,8 @@ CATEGORIES_DISPLAY = {
     "nouvellecaledonie": "Nouvelle Calédonie 1ère",
     "polynesie": "Polynésie 1ère",
     "reunion": "Réunion 1ère",
-    "saintpierreetmiquelon": "St-Pierre et Miquelon 1ère",
-    "wallisetfutuna": "Wallis et Futuna 1ère",
+    "saintpierremiquelon": "St-Pierre et Miquelon 1ère",
+    "wallisfutuna": "Wallis et Futuna 1ère",
     "sport": "Sport",
     "info": "Info",
     "documentaire": "Documentaire",
@@ -89,6 +89,18 @@ CATEGORIES_DISPLAY = {
     "divertissement": "Divertissement",
     "jeu": "Jeu",
     "culture": "Culture"
+}
+
+LIVE_LA_1ERE = {
+    "guadeloupe": "Guadeloupe 1ère",
+    "guyane": "Guyane 1ère",
+    "martinique": "Martinique 1ère",
+    "mayotte": "Mayotte 1ère",
+    "nouvellecaledonie": "Nouvelle Calédonie 1ère",
+    "polynesie": "Polynésie 1ère",
+    "reunion": "Réunion 1ère",
+    "spm": "St-Pierre et Miquelon 1ère",
+    "wallis": "Wallis et Futuna 1ère"
 }
 
 CATEGORIES = {
@@ -174,16 +186,15 @@ def root(params):
         })
 
     # Add Live
-    if params.channel_name != 'la_1ere':
-        modes.append({
-            'label': _('Live TV'),
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='live_cat',
-                category='%s Live TV' % params.channel_name.upper(),
-                window_title='%s Live TV' % params.channel_name
-            ),
-        })
+    modes.append({
+        'label': _('Live TV'),
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name
+        ),
+    })
 
     return common.PLUGIN.create_listing(
         modes,
@@ -624,16 +635,62 @@ def list_live(params):
     """Build live listing"""
     lives = []
 
-    real_channel = params.channel_name
-
     title = ''
     plot = ''
     duration = 0
     date = ''
     genre = ''
 
-    if real_channel != 'franceinfo':
-        url_json_live = CHANNEL_LIVE % (real_channel)
+    if params.channel_name == 'franceinfo':
+
+        title = '%s Live' % params.channel_name
+
+        info = {
+            'video': {
+                'title': title,
+                'plot': plot,
+                'date': date,
+                'duration': duration
+            }
+        }
+
+        lives.append({
+            'label': title,
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='play_l'
+            ),
+            'is_playable': True,
+            'info': info
+        })
+
+    elif params.channel_name == 'la_1ere':
+
+        for id_stream, title_stream in LIVE_LA_1ERE.iteritems():
+            title = '%s Live' % title_stream
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    'date': date,
+                    'duration': duration
+                }
+            }
+
+            lives.append({
+                'label': title,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_l',
+                    id_stream=id_stream
+                ),
+                'is_playable': True,
+                'info': info
+            })
+
+    else:
+        url_json_live = CHANNEL_LIVE % (params.channel_name)
         file_path_live = utils.download_catalog(
             url_json_live,
             'live_%s.json' % (
@@ -643,12 +700,6 @@ def list_live(params):
         emissions_live = json_parser_live['reponse']['emissions']
 
         for emission in emissions_live:
-            id_programme = emission['id_programme'].encode('utf-8')
-            if id_programme == '':
-                id_programme = emission['id_emission'].encode('utf-8')
-            id_diffusion = emission['id_diffusion']
-            # chaine_id = emission['chaine_id'].encode('utf-8')
-
             start_time_emission = 'Début : ' + \
                 emission['date_diffusion'].split('T')[1].encode('utf-8')
 
@@ -716,33 +767,10 @@ def list_live(params):
                 'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_l',
-                    id_diffusion=id_diffusion
                 ),
                 'is_playable': True,
                 'info': info
             })
-    else:
-
-        title = '%s Live' % params.channel_name
-
-        info = {
-            'video': {
-                'title': title,
-                'plot': plot,
-                'date': date,
-                'duration': duration
-            }
-        }
-
-        lives.append({
-            'label': title,
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='play_l'
-            ),
-            'is_playable': True,
-            'info': info
-        })
 
     return common.PLUGIN.create_listing(
         lives,
@@ -802,13 +830,18 @@ def get_video_url(params):
 
     elif params.next == 'play_l':
 
-        file_prgm = utils.get_webcontent(LIVE_INFO % (params.channel_name))
+        if params.channel_name == 'la_1ere':
+            file_prgm = utils.get_webcontent(
+                LIVE_INFO % (params.id_stream))
+        else:
+            file_prgm = utils.get_webcontent(
+                LIVE_INFO % (params.channel_name))
         json_parser = json.loads(file_prgm)
 
-        url_selected = ''
-
+        url_protected = ''
         for video in json_parser['videos']:
-            if video['format'] == 'hls_v5_os':
+            if video['format'] == 'hls_v5_os' or \
+                video['format'] == 'hls_v1_os':
                 url_protected = video['url']
 
         file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_protected))
