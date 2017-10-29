@@ -59,7 +59,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Numéro 23 *(Replay, Live TV)*
 - Chérie 25 *(Replay, Live TV with NRJ account)*
 - LCI *(Replay, Live TV)*
-- La 1ère — Outre-Mer *(Replay)*
+- La 1ère — Outre-Mer *(Replay, Live TV)*
 - France Info *(Live TV)*
 - BFM Business *(Replay, Live TV)*
 - RMC *(Replay, Live TV)*
