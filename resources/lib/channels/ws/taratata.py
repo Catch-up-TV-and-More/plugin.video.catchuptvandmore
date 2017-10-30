@@ -429,6 +429,27 @@ def get_video_url(params):
                         url = format_video['url']
             new_list_item.setPath(url)
             all_datas_videos.append(new_list_item)
+        # Get link from FranceTV
+        elif '#ftv-player-' in video.get('href'):
+            new_list_item = common.sp.xbmcgui.ListItem()
+            # Find a better solution to strip
+            new_list_item.setLabel(video.get_text().strip())
+            # Get link
+            value_ftvlayer_id = video.get('data-ftvplayer-id')
+            list_streams = videos_soup.find_all(
+                'iframe', class_='embed-responsive-item')
+            for stream in list_streams:
+                if stream.get('id') == value_ftvlayer_id:
+                    url_id = stream.get('src')
+            ydl = YoutubeDL()
+            ydl.add_default_info_extractors()
+            with ydl:
+                result = ydl.extract_info(
+                    url_id, download=False)
+                for format_video in result['formats']:
+                    url = format_video['url']
+            new_list_item.setPath(url)
+            all_datas_videos.append(new_list_item)
 
     if len(all_datas_videos) > 1:
         seleted_item = common.sp.xbmcgui.Dialog().select(
