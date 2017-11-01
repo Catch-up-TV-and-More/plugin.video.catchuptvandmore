@@ -43,7 +43,8 @@ CHANNELS = {
 
     'main_menu.eu': {
         'channels.eu.arte.arte': 'Arte',
-        'channels.eu.euronews.euronews': 'Euronews'
+        'channels.eu.euronews.euronews': 'Euronews',
+        'channels.eu.france24.france24': 'France 24'
     },
 
     'main_menu.fr': {
@@ -85,7 +86,6 @@ CHANNELS = {
         'channels.fr.6play.home': 'Home Time (6play)',
         'channels.fr.6play.styles': 'Sixième Style (6play)',
         'channels.fr.6play.comedy': 'Comic (6play)',
-        'channels.fr.france24.france24': 'France 24',
         'channels.fr.publicsenat.publicsenat': 'Public Sénat',
         'channels.fr.pluzz.france3regions': 'France 3 Régions',
         'channels.fr.pluzz.francetvsport': 'France TV Sport'

@@ -137,23 +137,20 @@
             <setting label="Comic (6play)" type="bool" id="channels.fr.6play.comedy" default="true" visible="eq(-75,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.comedy.order" default="38"/>
 
-            <setting label="France24" type="bool" id="channels.fr.france24.france24" default="true" visible="eq(-77,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.france24.france24.order" default="39"/>
+            <setting label="Public Sénat" type="bool" id="channels.fr.publicsenat.publicsenat" default="true" visible="eq(-77,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.publicsenat.publicsenat.order" default="39"/>
 
-            <setting label="Public Sénat" type="bool" id="channels.fr.publicsenat.publicsenat" default="true" visible="eq(-79,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.publicsenat.publicsenat.order" default="40"/>
+            <setting label="France 3 Régions" type="bool" id="channels.fr.pluzz.france3regions" default="true" visible="eq(-79,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3regions.order" default="40"/>
 
-            <setting label="France 3 Régions" type="bool" id="channels.fr.pluzz.france3regions" default="true" visible="eq(-81,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3regions.order" default="41"/>
+            <setting label="France TV Sport" type="bool" id="channels.fr.pluzz.francetvsport" default="true" visible="eq(-81,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.francetvsport.order" default="41"/>
 
-            <setting label="France TV Sport" type="bool" id="channels.fr.pluzz.francetvsport" default="true" visible="eq(-83,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.pluzz.francetvsport.order" default="42"/>
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-83,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="42"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-85,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="43"/>
-
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-87,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="44"/>-->
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-85,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="43"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -186,6 +183,9 @@
 
             <setting label="Arte" type="bool" id="channels.eu.arte.arte" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.arte.arte.order" default="2"/>
+
+            <setting label="France24" type="bool" id="channels.eu.france24.france24" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.eu.france24.france24.order" default="3"/>
 
         <setting label="" type="number" visible="false" id="main_menu.jp.order" default="4"/>
         <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -242,16 +242,12 @@
 
         <setting label="30071" type="lsep" />
 
-            <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
-
-                <setting label="30081" type="labelenum" id="channels.fr.france24.france24.language" visible="eq(-1,true)" values="FR|EN|AR|ES"/>
-
             <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
 
                 <setting label="30080" type="labelenum" id="channels.eu.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
                 <setting label="30082" type="labelenum" id="channels.eu.euronews.euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
+                <setting label="30081" type="labelenum" id="channels.eu.france24.france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES"/>
 
             <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>
