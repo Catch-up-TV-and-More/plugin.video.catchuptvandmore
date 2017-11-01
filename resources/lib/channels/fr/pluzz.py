@@ -24,10 +24,10 @@
 # TO DO
 # Liste A à Z
 # Si FR3 ou FR1 : Régions
-# FranceTVSport Add Live
 
-import json
 import ast
+import json
+import time
 from resources.lib import utils
 from resources.lib import common
 
@@ -67,8 +67,8 @@ URL_ALPHA = 'https://pluzz.webservices.francetelevisions.fr/' \
 # page inc: 100
 
 URL_FRANCETV_SPORT = 'https://api-sport-events.webservices.' \
-                     'francetelevisions.fr/%s?page=%s'
-# RootMode, Page
+                     'francetelevisions.fr/%s'
+# RootMode
 
 CATEGORIES_DISPLAY = {
     "france2": "France 2",
@@ -225,17 +225,16 @@ def root(params):
         })
 
     # Add Live
-    if params.channel_name != 'francetvsport':
-        modes.append({
-            'label': _('Live TV'),
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='live_cat',
-                mode='live',
-                category='%s Live TV' % params.channel_name.upper(),
-                window_title='%s Live TV' % params.channel_name
-            ),
-        })
+    modes.append({
+        'label': _('Live TV'),
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='live_cat',
+            mode='live',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name
+        ),
+    })
 
     # Add Videos
     if params.channel_name == 'francetvsport':
@@ -481,7 +480,8 @@ def list_videos(params):
     if params.next == 'list_videos_ftvsport':
 
         list_videos = utils.get_webcontent(
-            URL_FRANCETV_SPORT % (params.mode, params.page))
+            URL_FRANCETV_SPORT % (params.mode) + \
+            '?page=%s' % (params.page))
         list_videos_parserjson = json.loads(list_videos)
 
         for video in list_videos_parserjson["page"]["flux"]:
@@ -759,7 +759,87 @@ def list_live(params):
     date = ''
     genre = ''
 
-    if params.channel_name == 'franceinfo':
+    if params.channel_name == 'francetvsport':
+
+        list_lives = utils.get_webcontent(
+            URL_FRANCETV_SPORT % 'directs')
+        list_lives_parserjson = json.loads(list_lives)
+
+        if 'lives' in list_lives_parserjson["page"]:
+
+            for live in list_lives_parserjson["page"]["lives"]:
+                title = live["title"]
+                image = live["image"]["large_16_9"]
+                id_diffusion = live["sivideo-id"]
+
+                try:
+                    value_date = time.strftime(
+                        '%d/%m/%Y %H:%M', time.localtime(live["start"]))
+                except Exception:
+                    value_date = ''
+                plot = 'Live start at ' + value_date
+
+                info = {
+                    'video': {
+                        'title': title,
+                        'plot': plot,
+                        # 'aired': aired,
+                        # 'date': date,
+                        'duration': duration,
+                        # 'year': year,
+                    }
+                }
+
+                lives.append({
+                    'label': title,
+                    'fanart': image,
+                    'thumb': image,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='play_l',
+                        id_diffusion=id_diffusion
+                    ),
+                    'is_playable': True,
+                    'info': info
+                })
+
+        for live in list_lives_parserjson["page"]["upcoming-lives"]:
+
+            title = live["title"]
+            image = live["image"]["large_16_9"]
+            # id_diffusion = live["sivideo-id"]
+
+            try:
+                value_date = time.strftime(
+                    '%d/%m/%Y %H:%M', time.localtime(live["start"]))
+            except Exception:
+                value_date = ''
+            plot = 'Live start at ' + value_date
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
+                }
+            }
+
+            lives.append({
+                'label': title,
+                'fanart': image,
+                'thumb': image,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='list_live'
+                ),
+                'is_playable': False,
+                'info': info
+            })
+
+    elif params.channel_name == 'franceinfo':
 
         title = '%s Live' % params.channel_name
 
@@ -977,6 +1057,9 @@ def get_video_url(params):
             params.channel_name == 'france3regions':
             file_prgm = utils.get_webcontent(
                 LIVE_INFO % (params.id_stream))
+        elif params.channel_name == 'francetvsport':
+            file_prgm = utils.get_webcontent(
+                SHOW_INFO % (params.id_diffusion))
         else:
             file_prgm = utils.get_webcontent(
                 LIVE_INFO % (params.channel_name))

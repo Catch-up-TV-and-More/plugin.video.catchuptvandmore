@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.5-beta011"
+       version="0.1.5-beta013"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -46,8 +46,7 @@
 [Add channel — Live TV] CLUB RTL (BE) (SylvainCecchetto, wwark)
 [Improvement] Add La 1ère Live TV for group France Télévision (wwark)
 [Add Live TV] Add France 3 Régions Live TV for group France Télévision (wwark)
-[Fix] Video Stream hosted by FranceTelevision in Website Taratata (wwark)
-[Add WebTV] France TV Sport (Replay, Videos) (wwark)
+[Add WebTV] France TV Sport (Replay, Videos, Live) (wwark)
 [Move] France 24 from French Channels to European Channels (wwark)
 [Fix] Error log YTDL (still one Warning TO DO) (wwark)
 [Improverment] Add button to clear cache (Not working, work TO DO) (wwark)
