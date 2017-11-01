@@ -87,7 +87,8 @@ CHANNELS = {
         'channels.fr.6play.comedy': 'Comic (6play)',
         'channels.fr.france24.france24': 'France 24',
         'channels.fr.publicsenat.publicsenat': 'Public Sénat',
-        'channels.fr.pluzz.france3regions': 'France 3 Régions'
+        'channels.fr.pluzz.france3regions': 'France 3 Régions',
+        'channels.fr.pluzz.francetvsport': 'France TV Sport'
     },
 
     'main_menu.jp': {

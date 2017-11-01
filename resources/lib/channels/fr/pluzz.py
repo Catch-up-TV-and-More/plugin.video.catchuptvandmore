@@ -24,6 +24,7 @@
 # TO DO
 # Liste A à Z
 # Si FR3 ou FR1 : Régions
+# FranceTVSport Add Live
 
 import json
 import ast
@@ -47,7 +48,7 @@ CHANNEL_LIVE = 'http://pluzz.webservices.francetelevisions.fr/' \
 # page inc: 20
 
 SHOW_INFO = 'http://webservices.francetelevisions.fr/tools/' \
-            'getInfosOeuvre/v2/?idDiffusion=%s&catalogue=Pluzz'
+            'getInfosOeuvre/v2/?idDiffusion=%s'
 
 LIVE_INFO = 'http://webservices.francetelevisions.fr/tools/' \
             'getInfosOeuvre/v2/?idDiffusion=SIM_%s'
@@ -64,6 +65,10 @@ URL_ALPHA = 'https://pluzz.webservices.francetelevisions.fr/' \
             'debut/%s/lastof/1'
 # sens: asc or desc
 # page inc: 100
+
+URL_FRANCETV_SPORT = 'https://api-sport-events.webservices.' \
+                     'francetelevisions.fr/%s?page=%s'
+# RootMode, Page
 
 CATEGORIES_DISPLAY = {
     "france2": "France 2",
@@ -199,6 +204,11 @@ def root(params):
     """Add Replay and Live in the listing"""
     modes = []
 
+    if params.channel_name == 'francetvsport':
+        next_replay = 'list_videos_ftvsport'
+    else:
+        next_replay = 'list_shows_1'
+
     # Add Replay
     if params.channel_name != 'franceinfo' and \
         params.channel_name != 'france3regions':
@@ -206,22 +216,40 @@ def root(params):
             'label': 'Replay',
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
-                next='list_shows_1',
+                next=next_replay,
+                mode='replay',
+                page='1',
                 category='%s Replay' % params.channel_name.upper(),
                 window_title='%s Replay' % params.channel_name
             ),
         })
 
     # Add Live
-    modes.append({
-        'label': _('Live TV'),
-        'url': common.PLUGIN.get_url(
-            action='channel_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name
-        ),
-    })
+    if params.channel_name != 'francetvsport':
+        modes.append({
+            'label': _('Live TV'),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='live_cat',
+                mode='live',
+                category='%s Live TV' % params.channel_name.upper(),
+                window_title='%s Live TV' % params.channel_name
+            ),
+        })
+
+    # Add Videos
+    if params.channel_name == 'francetvsport':
+        modes.append({
+            'label': 'Videos',
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='list_videos_ftvsport',
+                mode='videos',
+                page='1',
+                category='%s Videos' % params.channel_name.upper(),
+                window_title='%s Videos' % params.channel_name
+            ),
+        })
 
     return common.PLUGIN.create_listing(
         modes,
@@ -450,189 +478,61 @@ def list_videos(params):
     if 'previous_listing' in params:
         videos = ast.literal_eval(params['previous_listing'])
 
-    if 'search' in params.next:
-        file_path = utils.download_catalog(
-            URL_SEARCH % (params.query, params.page),
-            '%s_%s_search.json' % (params.channel_name, params.query),
-            force_dl=True
-        )
+    if params.next == 'list_videos_ftvsport':
 
-    elif 'last' in params.next:
-        file_path = utils.download_catalog(
-            params.url % params.page,
-            '%s_%s_%s_last.json' % (
-                params.channel_name,
-                params.page,
-                params.title)
-        )
+        list_videos = utils.get_webcontent(
+            URL_FRANCETV_SPORT % (params.mode, params.page))
+        list_videos_parserjson = json.loads(list_videos)
 
-    elif 'from_a_to_z' in params.next:
-        file_path = utils.download_catalog(
-            params.url % params.page,
-            '%s_%s_%s_last.json' % (
-                params.channel_name,
-                params.page,
-                params.sens)
-        )
+        for video in list_videos_parserjson["page"]["flux"]:
 
-    else:
-        file_path = utils.download_catalog(
-            CHANNEL_CATALOG % params.channel_name,
-            '%s.json' % params.channel_name
-        )
-    file_prgm = open(file_path).read()
-    json_parser = json.loads(file_prgm)
-    emissions = json_parser['reponse']['emissions']
+            title = video["title"]
+            image = video["image"]["large_16_9"]
+            duration = int(video["duration"])
+            id_diffusion = video["sivideo-id"]
 
-    for emission in emissions:
-        id_programme = emission['id_programme'].encode('utf-8')
-        if id_programme == '':
-            id_programme = emission['id_emission'].encode('utf-8')
-        if 'search' in params.next \
-                or 'last' in params.next \
-                or 'from_a_to_z' in params.next \
-                or id_programme == params.id_programme:
-            title = ''
-            plot = ''
-            duration = 0
-            date = ''
-            genre = ''
-            id_diffusion = emission['id_diffusion']
-            chaine_id = emission['chaine_id'].encode('utf-8')
-
-            # If we are in search or alpha or last videos cases,
-            # only add channel's shows
-            if 'search' in params.next or\
-                    'from_a_to_z' in params.next or\
-                    'last' in params.next:
-                if chaine_id != params.channel_name:
-                    continue
-
-            file_prgm = utils.get_webcontent(
-                SHOW_INFO % (emission['id_diffusion']))
-            if(file_prgm != ''):
-                json_parser_show = json.loads(file_prgm)
-                if json_parser_show['synopsis']:
-                    plot = json_parser_show['synopsis'].encode('utf-8')
-                if json_parser_show['diffusion']['date_debut']:
-                    date = json_parser_show['diffusion']['date_debut']
-                    date = date.encode('utf-8')
-                if json_parser_show['real_duration']:
-                    duration = int(json_parser_show['real_duration'])
-                if json_parser_show['titre']:
-                    title = json_parser_show['titre'].encode('utf-8')
-                if json_parser_show['sous_titre']:
-                    title = ' '.join((
-                        title,
-                        '- [I]',
-                        json_parser_show['sous_titre'].encode('utf-8'),
-                        '[/I]'))
-
-                if json_parser_show['genre'] != '':
-                    genre = \
-                        json_parser_show['genre'].encode('utf-8')
-
-                episode = 0
-                if 'episode' in json_parser_show:
-                    episode = json_parser_show['episode']
-
-                season = 0
-                if 'saison' in json_parser_show:
-                    season = json_parser_show['saison']
-
-                cast = []
-                director = ''
-                personnes = json_parser_show['personnes']
-                for personne in personnes:
-                    fonctions = ' '.join(
-                        x.encode('utf-8') for x in personne['fonctions'])
-                    if 'Acteur' in fonctions:
-                        cast.append(
-                            personne['nom'].encode(
-                                'utf-8') + ' ' + personne['prenom'].encode(
-                                    'utf-8'))
-                    elif 'Réalisateur' in fonctions:
-                        director = personne['nom'].encode(
-                            'utf-8') + ' ' + personne['prenom'].encode('utf-8')
-
-                year = int(date[6:10])
-                day = date[:2]
-                month = date[3:5]
-                date = '.'.join((day, month, str(year)))
-                aired = '-'.join((str(year), month, day))
-                # date : string (%d.%m.%Y / 01.01.2009)
-                # aired : string (2008-12-07)
-
-                # image = URL_IMG % (json_parserShow['image'])
-                image = json_parser_show['image_secure']
-
-                info = {
-                    'video': {
-                        'title': title,
-                        'plot': plot,
-                        'aired': aired,
-                        'date': date,
-                        'duration': duration,
-                        'year': year,
-                        'genre': genre,
-                        'mediatype': 'tvshow',
-                        'season': season,
-                        'episode': episode,
-                        'cast': cast,
-                        'director': director
-                    }
+            info = {
+                'video': {
+                    'title': title,
+                    # 'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
                 }
+            }
 
-                # Nouveau pour ajouter le menu pour télécharger la vidéo
-                context_menu = []
-                download_video = (
-                    _('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        id_diffusion=id_diffusion) + ')'
-                )
-                context_menu.append(download_video)
-                # Fin
-
-                videos.append({
-                    'label': title,
-                    'fanart': image,
-                    'thumb': image,
-                    'url': common.PLUGIN.get_url(
-                        action='channel_entry',
-                        next='play_r',
-                        id_diffusion=id_diffusion
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu
-                })
-
-    if 'search' in params.next:
-        # More videos...
-        videos.append({
-            'label': common.ADDON.get_localized_string(30100),
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='list_videos_search',
-                query=params.query,
-                page=str(int(params.page) + 20),
-                window_title=params.window_title,
-                update_listing=True,
-                previous_listing=str(videos)
-
+            context_menu = []
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    id_diffusion=id_diffusion) + ')'
             )
-        })
+            context_menu.append(download_video)
 
-    elif 'last' in params.next:
+            videos.append({
+                'label': title,
+                'fanart': image,
+                'thumb': image,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    id_diffusion=id_diffusion
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
         # More videos...
         videos.append({
             'label': common.ADDON.get_localized_string(30100),
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
-                url=params.url,
+                mode=params.mode,
                 next=params.next,
-                page=str(int(params.page) + 20),
+                page=str(int(params.page) + 1),
                 title=params.title,
                 window_title=params.window_title,
                 update_listing=True,
@@ -640,6 +540,197 @@ def list_videos(params):
             )
 
         })
+
+    else:
+
+        if 'search' in params.next:
+            file_path = utils.download_catalog(
+                URL_SEARCH % (params.query, params.page),
+                '%s_%s_search.json' % (params.channel_name, params.query),
+                force_dl=True
+            )
+
+        elif 'last' in params.next:
+            file_path = utils.download_catalog(
+                params.url % params.page,
+                '%s_%s_%s_last.json' % (
+                    params.channel_name,
+                    params.page,
+                    params.title)
+            )
+
+        elif 'from_a_to_z' in params.next:
+            file_path = utils.download_catalog(
+                params.url % params.page,
+                '%s_%s_%s_last.json' % (
+                    params.channel_name,
+                    params.page,
+                    params.sens)
+            )
+
+        else:
+            file_path = utils.download_catalog(
+                CHANNEL_CATALOG % params.channel_name,
+                '%s.json' % params.channel_name
+            )
+        file_prgm = open(file_path).read()
+        json_parser = json.loads(file_prgm)
+        emissions = json_parser['reponse']['emissions']
+
+        for emission in emissions:
+            id_programme = emission['id_programme'].encode('utf-8')
+            if id_programme == '':
+                id_programme = emission['id_emission'].encode('utf-8')
+            if 'search' in params.next \
+                    or 'last' in params.next \
+                    or 'from_a_to_z' in params.next \
+                    or id_programme == params.id_programme:
+                title = ''
+                plot = ''
+                duration = 0
+                date = ''
+                genre = ''
+                id_diffusion = emission['id_diffusion']
+                chaine_id = emission['chaine_id'].encode('utf-8')
+
+                # If we are in search or alpha or last videos cases,
+                # only add channel's shows
+                if 'search' in params.next or\
+                        'from_a_to_z' in params.next or\
+                        'last' in params.next:
+                    if chaine_id != params.channel_name:
+                        continue
+
+                file_prgm = utils.get_webcontent(
+                    SHOW_INFO % (emission['id_diffusion']))
+                if(file_prgm != ''):
+                    json_parser_show = json.loads(file_prgm)
+                    if json_parser_show['synopsis']:
+                        plot = json_parser_show['synopsis'].encode('utf-8')
+                    if json_parser_show['diffusion']['date_debut']:
+                        date = json_parser_show['diffusion']['date_debut']
+                        date = date.encode('utf-8')
+                    if json_parser_show['real_duration']:
+                        duration = int(json_parser_show['real_duration'])
+                    if json_parser_show['titre']:
+                        title = json_parser_show['titre'].encode('utf-8')
+                    if json_parser_show['sous_titre']:
+                        title = ' '.join((
+                            title,
+                            '- [I]',
+                            json_parser_show['sous_titre'].encode('utf-8'),
+                            '[/I]'))
+
+                    if json_parser_show['genre'] != '':
+                        genre = \
+                            json_parser_show['genre'].encode('utf-8')
+
+                    episode = 0
+                    if 'episode' in json_parser_show:
+                        episode = json_parser_show['episode']
+
+                    season = 0
+                    if 'saison' in json_parser_show:
+                        season = json_parser_show['saison']
+
+                    cast = []
+                    director = ''
+                    personnes = json_parser_show['personnes']
+                    for personne in personnes:
+                        fonctions = ' '.join(
+                            x.encode('utf-8') for x in personne['fonctions'])
+                        if 'Acteur' in fonctions:
+                            cast.append(
+                                personne['nom'].encode(
+                                    'utf-8') + ' ' + personne['prenom'].encode(
+                                        'utf-8'))
+                        elif 'Réalisateur' in fonctions:
+                            director = personne['nom'].encode(
+                                'utf-8') + ' ' + personne['prenom'].encode('utf-8')
+
+                    year = int(date[6:10])
+                    day = date[:2]
+                    month = date[3:5]
+                    date = '.'.join((day, month, str(year)))
+                    aired = '-'.join((str(year), month, day))
+                    # date : string (%d.%m.%Y / 01.01.2009)
+                    # aired : string (2008-12-07)
+
+                    # image = URL_IMG % (json_parserShow['image'])
+                    image = json_parser_show['image_secure']
+
+                    info = {
+                        'video': {
+                            'title': title,
+                            'plot': plot,
+                            'aired': aired,
+                            'date': date,
+                            'duration': duration,
+                            'year': year,
+                            'genre': genre,
+                            'mediatype': 'tvshow',
+                            'season': season,
+                            'episode': episode,
+                            'cast': cast,
+                            'director': director
+                        }
+                    }
+
+                    context_menu = []
+                    download_video = (
+                        _('Download'),
+                        'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                            action='download_video',
+                            id_diffusion=id_diffusion) + ')'
+                    )
+                    context_menu.append(download_video)
+
+                    videos.append({
+                        'label': title,
+                        'fanart': image,
+                        'thumb': image,
+                        'url': common.PLUGIN.get_url(
+                            action='channel_entry',
+                            next='play_r',
+                            id_diffusion=id_diffusion
+                        ),
+                        'is_playable': True,
+                        'info': info,
+                        'context_menu': context_menu
+                    })
+
+        if 'search' in params.next:
+            # More videos...
+            videos.append({
+                'label': common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='list_videos_search',
+                    query=params.query,
+                    page=str(int(params.page) + 20),
+                    window_title=params.window_title,
+                    update_listing=True,
+                    previous_listing=str(videos)
+
+                )
+            })
+
+        elif 'last' in params.next:
+            # More videos...
+            videos.append({
+                'label': common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    url=params.url,
+                    next=params.next,
+                    page=str(int(params.page) + 20),
+                    title=params.title,
+                    window_title=params.window_title,
+                    update_listing=True,
+                    previous_listing=str(videos)
+                )
+
+            })
 
     return common.PLUGIN.create_listing(
         videos,

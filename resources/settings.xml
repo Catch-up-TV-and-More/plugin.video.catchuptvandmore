@@ -146,11 +146,14 @@
             <setting label="France 3 Régions" type="bool" id="channels.fr.pluzz.france3regions" default="true" visible="eq(-81,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3regions.order" default="41"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-83,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="42"/>
+            <setting label="France TV Sport" type="bool" id="channels.fr.pluzz.francetvsport" default="true" visible="eq(-83,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.francetvsport.order" default="42"/>
 
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-85,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="43"/>-->
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-85,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="43"/>
+
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-87,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="44"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
