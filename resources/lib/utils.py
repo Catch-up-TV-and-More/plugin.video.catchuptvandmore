@@ -170,3 +170,7 @@ def send_notification(
         message, title=common.PLUGIN_NAME, time=5000, sound=True):
     common.sp.xbmcgui.Dialog().notification(
         title, message, common.ADDON.icon, time)
+
+def clear_cache():
+    common.sp.xbmcgui.Dialog().notification(
+        common.PLUGIN_NAME, 'test', common.ADDON.icon, 5000)

@@ -49,6 +49,8 @@
 [Fix] Video Stream hosted by FranceTelevision in Website Taratata (wwark)
 [Add WebTV] France TV Sport (Replay, Videos) (wwark)
 [Move] France 24 from French Channels to European Channels (wwark)
+[Fix] Error log YTDL (still one Warning TO DO) (wwark)
+[Improverment] Add button to clear cache (Not working, work TO DO) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

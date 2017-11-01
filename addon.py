@@ -26,7 +26,6 @@ import YDStreamExtractor
 from resources.lib import skeleton
 from resources.lib import common
 
-YDStreamExtractor.disableDASHVideo(True)
 
 # Useful path
 LIB_PATH = common.sp.xbmc.translatePath(

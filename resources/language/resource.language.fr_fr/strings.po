@@ -37,6 +37,10 @@ msgctxt "#30004"
 msgid "Accounts"
 msgstr "Comptes"
 
+msgctxt "#30005"
+msgid "Tools"
+msgstr "Outils"
+
 # Settings line separators (from 30010 to 30019)
 msgctxt "#30010"
 msgid "Hide main menu categories"
@@ -191,4 +195,8 @@ msgctxt "#30200"
 msgid "Folder to Download"
 msgstr "Répertoire de téléchargement"
 
+# Tools (from 30300 to 30340)
 
+msgctxt "#30300"
+msgid "Clear cache"
+msgstr "Vider le cache"

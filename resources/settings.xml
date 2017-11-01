@@ -143,7 +143,7 @@
             <setting label="France 3 Régions" type="bool" id="channels.fr.pluzz.france3regions" default="true" visible="eq(-79,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3regions.order" default="40"/>
 
-            <setting label="France TV Sport" type="bool" id="channels.fr.pluzz.francetvsport" default="true" visible="eq(-81,true)"/>
+            <setting label="France TV Sport (francetv)" type="bool" id="channels.fr.pluzz.francetvsport" default="true" visible="eq(-81,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.francetvsport.order" default="41"/>
 
             <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-83,true)"/>
@@ -184,7 +184,7 @@
             <setting label="Arte" type="bool" id="channels.eu.arte.arte" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.arte.arte.order" default="2"/>
 
-            <setting label="France24" type="bool" id="channels.eu.france24.france24" default="true" visible="eq(-5,true)"/>
+            <setting label="France 24" type="bool" id="channels.eu.france24.france24" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.eu.france24.france24.order" default="3"/>
 
         <setting label="" type="number" visible="false" id="main_menu.jp.order" default="4"/>
@@ -273,6 +273,11 @@
             <setting label="UKTVPlay Login" type="text" id="channels.uk.uktvplay.login" visible="eq(-1,true)" defaut=""/>
             <setting label="UKTVPlay Password" type="text" id="channels.uk.uktvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
+    </category>
+
+    <!-- Tools ... -->
+    <category label="30005">
+        <setting label="30300" type="action" action="RunScript($CWD/resources/lib/utils.py, clear_cache)"/>
     </category>
 
 </settings>
