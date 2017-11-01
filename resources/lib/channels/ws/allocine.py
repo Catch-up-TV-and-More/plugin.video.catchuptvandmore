@@ -43,6 +43,9 @@ URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
 
 PARTNER = 'YW5kcm9pZC12Mg'
 
+URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
+# Video_id
+
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -622,13 +625,33 @@ def get_video_url(params):
         URL_API_MEDIA % (params.video_id, PARTNER))
     video_json_parser = json.loads(video_json)
 
+    desired_quality = common.PLUGIN.get_setting('quality')
+
     url = ''
     if 'rendition' in video_json_parser["media"]:
         # (Video Hosted By Allocine)
-        for media in video_json_parser["media"]["rendition"]:
-            url = media["href"]
+        if desired_quality == "DIALOG":
+            all_datas_videos = []
+            for media in video_json_parser["media"]["rendition"]:
+                new_list_item = common.sp.xbmcgui.ListItem()
+                new_list_item.setLabel(media["bandwidth"]["$"])
+                new_list_item.setPath(media["href"])
+                all_datas_videos.append(new_list_item)
+            seleted_item = common.sp.xbmcgui.Dialog().select(
+                _('Choose video quality'),
+                all_datas_videos)
+            if seleted_item == -1:
+                return None
+            url = all_datas_videos[seleted_item].getPath()
+        elif desired_quality == "BEST":
+            for media in video_json_parser["media"]["rendition"]:
+                url = media["href"]
+        else:
+            for media in video_json_parser["media"]["rendition"][0]:
+                url = media["href"]
         if requests.get(url, stream=True).status_code == 404:
-            utils.send_notification(common.ADDON.get_localized_string(30111))
+            utils.send_notification(
+                common.ADDON.get_localized_string(30111))
             return ''
         return url
     else:
@@ -641,24 +664,100 @@ def get_video_url(params):
             'data-model="(.*?)"'
         ).findall(url_video_embeded_html)[0].replace('&quot;', '"')
         url_video_json_parser = json.loads(url_video_json)
-        # Case Facebook, Youtube and Vimeo (Not Working HTTP 503)
-        if 'facebook' in url_video_json or \
-                'youtube' in url_video_json or 'vimeo' in url_video_json:
+        # Case Youtube
+        if 'youtube' in url_video_json:
             url_ytdl = url_video_json_parser["videos"][0]["sources"]["code"]
             url_ytdl = re.compile('src=(.*?) ').findall(
                 url_ytdl
             )[0].replace('\\', '').replace('&amp;', '&').replace('"', '')
+            ydl = YoutubeDL()
+            ydl.add_default_info_extractors()
+            with ydl:
+                result = ydl.extract_info(url_ytdl, download=False)
+                for format_video in result['formats']:
+                    url = format_video['url']
+            return url
         # Case DailyMotion
+        elif 'dailymotion' in url_video_json:
+            url_dmotion = url_video_json_parser["videos"]
+            url_dmotion = url_dmotion[0]["sources"]["url_provider"]
+            url_dmotion = url_dmotion.replace('\\', '')
+            video_id = re.compile(
+                r'embed/video/(.*?)\?').findall(url_dmotion)[0]
+            url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
+            html_video = utils.get_webcontent(url_dmotion)
+            html_video = html_video.replace('\\', '')
+            url_video_auto = re.compile(
+                r'{"type":"application/x-mpegURL","url":"(.*?)"'
+                ).findall(html_video)[0]
+            m3u8_video_auto = utils.get_webcontent(url_video_auto)
+            lines = m3u8_video_auto.splitlines()
+            if desired_quality == "DIALOG":
+                all_datas_videos = []
+                for k in range(0, len(lines) - 1):
+                    if 'RESOLUTION=' in lines[k]:
+                        new_list_item = common.sp.xbmcgui.ListItem()
+                        new_list_item.setLabel(re.compile(
+                            r'RESOLUTION=(.*?),').findall(lines[k])[0])
+                        new_list_item.setPath(lines[k + 1])
+                        all_datas_videos.append(new_list_item)
+                seleted_item = common.sp.xbmcgui.Dialog().select(
+                    "Choose Stream", all_datas_videos)
+                return all_datas_videos[seleted_item].getPath().encode('utf-8')
+            elif desired_quality == 'BEST':
+                # Last video in the Best
+                for k in range(0, len(lines) - 1):
+                    if 'RESOLUTION=' in lines[k]:
+                        url = lines[k + 1]
+                return url
+            else:
+                for k in range(0, len(lines) - 1):
+                    if 'RESOLUTION=' in lines[k]:
+                        url = lines[k + 1]
+                        break
+                return url
+        # Case Facebook
+        elif 'facebook' in url_video_json:
+            url_fbook = url_video_json_parser["videos"][0]["sources"]["code"]
+            url_fbook = re.compile('src=(.*?) ').findall(
+                url_fbook
+            )[0].replace('\\', '').replace('&amp;', '&').replace('"', '')
+            url_fbook = utils.get_webcontent(url_fbook)
+            if len(re.compile(
+                r'"hd_src_no_ratelimit":"(.*?)"').findall(
+                url_fbook)) > 0:
+                if desired_quality == "DIALOG":
+                    all_datas_videos = []
+                    new_list_item_sd = common.sp.xbmcgui.ListItem()
+                    new_list_item_sd.setLabel('SD')
+                    new_list_item_sd.setPath(re.compile(
+                        r'"sd_src_no_ratelimit":"(.*?)"').findall(
+                        url_fbook)[0].replace('\\', ''))
+                    all_datas_videos.append(new_list_item_sd)
+                    new_list_item_hd = common.sp.xbmcgui.ListItem()
+                    new_list_item_hd.setLabel('HD')
+                    new_list_item_hd.setPath(re.compile(
+                        r'"hd_src_no_ratelimit":"(.*?)"').findall(
+                        url_fbook)[0].replace('\\', ''))
+                    all_datas_videos.append(new_list_item_hd)
+                    seleted_item = common.sp.xbmcgui.Dialog().select(
+                        "Choose Stream", all_datas_videos)
+                    return all_datas_videos[seleted_item].getPath().encode('utf-8')
+                elif desired_quality == 'BEST':
+                    return re.compile(
+                        r'"hd_src_no_ratelimit":"(.*?)"').findall(
+                        url_fbook)[0].replace('\\', '')
+                else:
+                    return re.compile(
+                        r'"sd_src_no_ratelimit":"(.*?)"').findall(
+                        url_fbook)[0].replace('\\', '')
+            else:
+                return re.compile(
+                    r'"sd_src_no_ratelimit":"(.*?)"').findall(
+                    url_fbook)[0].replace('\\', '')
+        # Case Vimeo
+        elif 'vimeo' in url_video_json:
+            return ''
+        # TO DO ? (return an error)
         else:
-            url_ytdl = url_video_json_parser["videos"]
-            url_ytdl = url_ytdl[0]["sources"]["url_provider"]
-            url_ytdl = 'https:' + url_ytdl.split(
-                ':')[1].replace(
-                    '\\', '').replace('&amp;', '&').replace('"', '')
-        ydl = YoutubeDL()
-        ydl.add_default_info_extractors()
-        with ydl:
-            result = ydl.extract_info(url_ytdl, download=False)
-            for format_video in result['formats']:
-                url = format_video['url']
-        return url
+            return ''
