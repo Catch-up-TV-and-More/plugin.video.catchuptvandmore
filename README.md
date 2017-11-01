@@ -79,7 +79,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Tfou — MyTF1 *(Replay)*
 - Xtra — MyTF1 *(Replay)*
 - 01Net TV *(Replay)*
-- France TV Sport — francetv *(Replay)*
+- France TV Sport — francetv *(Replay, Live)*
 
 ### Japon — *Japan*
 ##### TV
