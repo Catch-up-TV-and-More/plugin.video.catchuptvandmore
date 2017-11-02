@@ -48,7 +48,7 @@ URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 URL_VIMEO = 'https://player.vimeo.com/video/%s'
 # Video_id
 
-URL_YT = 'https://www.youtube.com/watch?v=%'
+URL_YT = 'https://www.youtube.com/watch?v=%s'
 # Video_id
 
 URL_FACEBOOK = 'https://www.facebook.com/allocine/videos/%s'
