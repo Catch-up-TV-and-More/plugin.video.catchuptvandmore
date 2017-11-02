@@ -757,7 +757,14 @@ def get_video_url(params):
                     url_fbook)[0].replace('\\', '')
         # Case Vimeo
         elif 'vimeo' in url_video_json:
-            return ''
+            url_vimeo = url_video_json_parser["videos"][0]["sources"]["code"]
+            url_vimeo = re.compile('src=(.*?) ').findall(
+                url_vimeo
+            )[0].replace('\\', '').replace('&amp;', '&').replace('"', '')
+            html_vimeo = utils.get_webcontent(url_vimeo)
+            json_vimeo = json.loads(re.compile('var t=(.*?);').findall(
+                html_vimeo)[0])
+            return json_vimeo["request"]["files"]["hls"]["cdns"]["akfire_interconnect_quic"]["url"]
         # TO DO ? (return an error)
         else:
             return ''
