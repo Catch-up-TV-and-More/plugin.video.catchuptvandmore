@@ -681,10 +681,18 @@ def get_video_url(params):
             # Case DailyMotion
             elif 'dailymotion' in url_video_json:
                 url_dmotion = url_video_json_parser["videos"]
-                url_dmotion = url_dmotion[0]["sources"]["url_provider"]
-                url_dmotion = url_dmotion.replace('\\', '')
-                video_id = re.compile(
-                    r'embed/video/(.*?)\?').findall(url_dmotion)[0]
+                if "url_provider" in url_dmotion[0]["sources"]:
+                    url_dmotion = url_dmotion[0]["sources"]["url_provider"]
+                    url_dmotion = url_dmotion.replace('\\', '')
+                    video_id = re.compile(
+                        r'embed/video/(.*?)\?').findall(url_dmotion)[0]
+                else:
+                    url_dmotion = url_dmotion[0]["sources"]["code"]
+                    url_dmotion = re.compile('src=(.*?) ').findall(
+                        url_dmotion
+                    )[0].replace('\\', '').replace('&quot;', '"')
+                    video_id = re.compile(
+                        r'embed/video/(.*?)"').findall(url_dmotion)[0]
                 url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
                 html_video = utils.get_webcontent(url_dmotion)
                 html_video = html_video.replace('\\', '')
@@ -765,7 +773,9 @@ def get_video_url(params):
                 html_vimeo = utils.get_webcontent(url_vimeo)
                 json_vimeo = json.loads(re.compile('var t=(.*?);').findall(
                     html_vimeo)[0])
-                return json_vimeo["request"]["files"]["hls"]["cdns"]["akfire_interconnect_quic"]["url"]
+                hls_json = json_vimeo["request"]["files"]["hls"]
+                default_cdns = hls_json["default_cdn"]
+                return hls_json["cdns"][default_cdns]["url"]
             # TO DO ? (return an error)
             else:
                 return ''
