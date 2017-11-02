@@ -30,7 +30,6 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Vimeo HTTP 503
 # Get Last_Page (for Programs, Videos)
 # Get Partner Id ?
 # Todo get Aired, Year, Date of the Video
@@ -44,6 +43,15 @@ URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
 PARTNER = 'YW5kcm9pZC12Mg'
 
 URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
+# Video_id
+
+URL_VIMEO = 'https://player.vimeo.com/video/%s'
+# Video_id
+
+URL_YT = 'https://www.youtube.com/watch?v=%'
+# Video_id
+
+URL_FACEBOOK = 'https://www.facebook.com/allocine/videos/%s'
 # Video_id
 
 # Initialize GNU gettext emulation in addon
@@ -661,16 +669,19 @@ def get_video_url(params):
             ).findall(video_json_parser["media"]["trailerEmbed"])[0]
         if 'allocine' in url_video_embeded:
             url_video_embeded_html = utils.get_webcontent(url_video_embeded)
-            url_video_json = re.compile(
+            url_video_resolver = re.compile(
                 'data-model="(.*?)"'
-            ).findall(url_video_embeded_html)[0].replace('&quot;', '"')
-            url_video_json_parser = json.loads(url_video_json)
+            ).findall(url_video_embeded_html)[0]
+            url_video_resolver = url_video_resolver.replace('&quot;', '"')
+            url_video_resolver = url_video_resolver.replace('\\','')
+            url_video_resolver = url_video_resolver.replace('&amp;','&')
+            url_video_resolver = url_video_resolver.replace('%2F','/')
             # Case Youtube
-            if 'youtube' in url_video_json:
-                url_ytdl = url_video_json_parser["videos"][0]["sources"]["code"]
-                url_ytdl = re.compile('src=(.*?) ').findall(
-                    url_ytdl
-                )[0].replace('\\', '').replace('&amp;', '&').replace('"', '')
+            if 'youtube' in url_video_resolver:
+                video_id = re.compile(
+                    'www.youtube.com/embed/(.*?)"').findall(
+                    url_video_resolver)[0]
+                url_ytdl = URL_YT % video_id
                 ydl = YoutubeDL()
                 ydl.add_default_info_extractors()
                 with ydl:
@@ -679,20 +690,10 @@ def get_video_url(params):
                         url = format_video['url']
                 return url
             # Case DailyMotion
-            elif 'dailymotion' in url_video_json:
-                url_dmotion = url_video_json_parser["videos"]
-                if "url_provider" in url_dmotion[0]["sources"]:
-                    url_dmotion = url_dmotion[0]["sources"]["url_provider"]
-                    url_dmotion = url_dmotion.replace('\\', '')
-                    video_id = re.compile(
-                        r'embed/video/(.*?)\?').findall(url_dmotion)[0]
-                else:
-                    url_dmotion = url_dmotion[0]["sources"]["code"]
-                    url_dmotion = re.compile('src=(.*?) ').findall(
-                        url_dmotion
-                    )[0].replace('\\', '').replace('&quot;', '"')
-                    video_id = re.compile(
-                        r'embed/video/(.*?)"').findall(url_dmotion)[0]
+            elif 'dailymotion' in url_video_resolver:
+                video_id = re.compile(
+                    r'embed/video/(.*?)[\"\?]').findall(
+                    url_video_resolver)[0]
                 url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
                 html_video = utils.get_webcontent(url_dmotion)
                 html_video = html_video.replace('\\', '')
@@ -726,56 +727,54 @@ def get_video_url(params):
                             break
                     return url
             # Case Facebook
-            elif 'facebook' in url_video_json:
-                url_fbook = url_video_json_parser["videos"][0]["sources"]["code"]
-                url_fbook = re.compile('src=(.*?) ').findall(
-                    url_fbook
-                )[0].replace('\\', '').replace('&amp;', '&').replace('"', '')
-                url_fbook = utils.get_webcontent(url_fbook)
+            elif 'facebook' in url_video_resolver:
+                video_id = re.compile(
+                    'www.facebook.com/allocine/videos/(.*?)/').findall(
+                    url_video_resolver)[0]
+                url_fbook = utils.get_webcontent(
+                    URL_FACEBOOK % video_id)
                 if len(re.compile(
-                    r'"hd_src_no_ratelimit":"(.*?)"').findall(
+                    r'hd_src_no_ratelimit:"(.*?)"').findall(
                     url_fbook)) > 0:
                     if desired_quality == "DIALOG":
                         all_datas_videos = []
                         new_list_item_sd = common.sp.xbmcgui.ListItem()
                         new_list_item_sd.setLabel('SD')
                         new_list_item_sd.setPath(re.compile(
-                            r'"sd_src_no_ratelimit":"(.*?)"').findall(
-                            url_fbook)[0].replace('\\', ''))
+                            r'sd_src_no_ratelimit:"(.*?)"').findall(
+                            url_fbook)[0])
                         all_datas_videos.append(new_list_item_sd)
                         new_list_item_hd = common.sp.xbmcgui.ListItem()
                         new_list_item_hd.setLabel('HD')
                         new_list_item_hd.setPath(re.compile(
-                            r'"hd_src_no_ratelimit":"(.*?)"').findall(
-                            url_fbook)[0].replace('\\', ''))
+                            r'hd_src_no_ratelimit:"(.*?)"').findall(
+                            url_fbook)[0])
                         all_datas_videos.append(new_list_item_hd)
                         seleted_item = common.sp.xbmcgui.Dialog().select(
                             "Choose Stream", all_datas_videos)
                         return all_datas_videos[seleted_item].getPath().encode('utf-8')
                     elif desired_quality == 'BEST':
                         return re.compile(
-                            r'"hd_src_no_ratelimit":"(.*?)"').findall(
-                            url_fbook)[0].replace('\\', '')
+                            r'hd_src_no_ratelimit:"(.*?)"').findall(
+                            url_fbook)[0]
                     else:
                         return re.compile(
-                            r'"sd_src_no_ratelimit":"(.*?)"').findall(
-                            url_fbook)[0].replace('\\', '')
+                            r'sd_src_no_ratelimit:"(.*?)"').findall(
+                            url_fbook)[0]
                 else:
                     return re.compile(
-                        r'"sd_src_no_ratelimit":"(.*?)"').findall(
-                        url_fbook)[0].replace('\\', '')
+                        r'sd_src_no_ratelimit:"(.*?)"').findall(
+                        url_fbook)[0]
             # Case Vimeo
-            elif 'vimeo' in url_video_json:
-                url_vimeo = url_video_json_parser["videos"][0]["sources"]["code"]
-                url_vimeo = re.compile('src=(.*?) ').findall(
-                    url_vimeo
-                )[0].replace('\\', '').replace('&amp;', '&').replace('"', '')
-                html_vimeo = utils.get_webcontent(url_vimeo)
+            elif 'vimeo' in url_video_resolver:
+                video_id = re.compile('player.vimeo.com/video/(.*?)"').findall(
+                    url_video_resolver)[0]
+                html_vimeo = utils.get_webcontent(URL_VIMEO % video_id)
                 json_vimeo = json.loads(re.compile('var t=(.*?);').findall(
                     html_vimeo)[0])
                 hls_json = json_vimeo["request"]["files"]["hls"]
-                default_cdns = hls_json["default_cdn"]
-                return hls_json["cdns"][default_cdns]["url"]
+                default_cdn = hls_json["default_cdn"]
+                return hls_json["cdns"][default_cdn]["url"]
             # TO DO ? (return an error)
             else:
                 return ''
