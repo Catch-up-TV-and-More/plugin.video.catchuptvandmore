@@ -21,6 +21,7 @@
 """
 
 import os
+import sys
 from resources.lib import simpleplugin as sp
 
 PLUGIN = sp.Plugin()
@@ -29,6 +30,10 @@ ADDON = sp.Addon()
 CACHE_TIME = 10
 
 PLUGIN_NAME = 'Catch-up TV & More'
+
+FILESYSTEM_CODING = sys.getfilesystemencoding()
+if sys.getfilesystemencoding() is None:
+    FILESYSTEM_CODING = "utf-8"
 
 
 def get_window_title():

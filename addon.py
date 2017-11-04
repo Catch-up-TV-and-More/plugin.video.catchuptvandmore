@@ -21,7 +21,6 @@
 """
 
 import imp
-import sys
 import YDStreamUtils
 import YDStreamExtractor
 from resources.lib import skeleton
@@ -123,7 +122,7 @@ def root(params):
             )
 
             media_category_path = media_category_path.decode(
-                "utf-8").encode(sys.getfilesystemencoding())
+                "utf-8").encode(common.FILESYSTEM_CODING)
 
             icon = media_category_path + '.png'
             fanart = media_category_path + '_fanart.png'
@@ -200,7 +199,7 @@ def list_channels(params):
         )
 
         media_channel_path = media_channel_path.decode(
-            "utf-8").encode(sys.getfilesystemencoding())
+            "utf-8").encode(common.FILESYSTEM_CODING)
 
         # Build context menu (Move up, move down, ...)
         context_menu = []
@@ -298,10 +297,7 @@ def get_channel_module(params):
     )
     channel_filepath = channel_path + ".py"
     channel_filepath = channel_filepath.decode(
-        "utf-8"
-    ).encode(
-        sys.getfilesystemencoding()
-    )
+        "utf-8").encode(common.FILESYSTEM_CODING)
 
     return imp.load_source(
         channel_name,
@@ -376,7 +372,7 @@ def download_video(params):
     vid = YDStreamExtractor.getVideoInfo(url_video, quality=3)
     path = common.PLUGIN.get_setting('dlFolder')
     path = path.decode(
-        "utf-8").encode(sys.getfilesystemencoding())
+        "utf-8").encode(common.FILESYSTEM_CODING)
 
     with YDStreamUtils.DownloadProgress() as prog:
         try:
