@@ -21,6 +21,7 @@
 """
 
 import imp
+import sys
 import YDStreamUtils
 import YDStreamExtractor
 from resources.lib import skeleton
@@ -281,11 +282,20 @@ def get_channel_module(params):
     channel_path = common.sp.xbmc.translatePath(
         common.sp.os.path.join(
             LIB_PATH,
-            channel_module.replace('.', '/') + '.py'))
+            *(channel_module.split("."))
+        )
+    )
+    channel_filepath = channel_path + ".py"
+    channel_filepath = channel_filepath.decode(
+        "utf-8"
+    ).encode(
+        sys.getfilesystemencoding()
+    )
 
     return imp.load_source(
         channel_name,
-        channel_path)
+        channel_filepath
+    )
 
 
 @common.PLUGIN.action()
