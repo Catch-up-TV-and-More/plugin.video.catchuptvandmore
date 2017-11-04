@@ -22,12 +22,10 @@
 """
 
 import os
-import sys
 import time
 import requests
 from random import randint
 from resources.lib import common
-
 
 cache_path = common.sp.xbmc.translatePath(
     os.path.join(
@@ -38,7 +36,7 @@ cache_path = common.sp.xbmc.translatePath(
 )
 
 cache_path = cache_path.decode(
-    "utf-8").encode(sys.getfilesystemencoding())
+    "utf-8").encode(common.FILESYSTEM_CODING)
 
 default_ua = "Mozilla/5.0 (X11; Linux x86_64) " \
              "AppleWebKit/537.36 (KHTML, like Gecko) " \
