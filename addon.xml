@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.5-beta017"
+       version="0.1.5-beta018"
        provider-name="SylvainCecchetto">
   <requires>
     <!-- TODO before official repo submission: xbmc.python version="2.25.0"/> -->
@@ -49,9 +49,9 @@
 [Add WebTV] France TV Sport (Replay, Videos, Live) (wwark)
 [Move] France 24 from French Channels to European Channels (wwark)
 [Fix] Error log YTDL (still one Warning TO DO) (wwark)
-[Improvement] Add button to clear cache (Not working, work TO DO) (wwark)
 [Improvement] Add Quality Mode and fix some videos for Website Allociné (wwark)
 [Improvement] Readd Quality Mode for 6play and detect new stream protected by DRM (wwark, thanks Kagonia MPDB)
+[Fix] Fix bug on Windows with accents in path (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>
