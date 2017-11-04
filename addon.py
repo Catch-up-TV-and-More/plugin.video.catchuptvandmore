@@ -21,6 +21,7 @@
 """
 
 import imp
+import sys
 import YDStreamUtils
 import YDStreamExtractor
 from resources.lib import skeleton
@@ -32,7 +33,9 @@ LIB_PATH = common.sp.xbmc.translatePath(
     common.sp.os.path.join(
         common.ADDON.path,
         "resources",
-        "lib"))
+        "lib"
+    )
+)
 
 MEDIA_PATH = (
     common.sp.xbmc.translatePath(
@@ -40,7 +43,9 @@ MEDIA_PATH = (
             common.ADDON.path,
             "resources",
             "media"
-        )))
+        )
+    )
+)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -117,6 +122,9 @@ def root(params):
                 )
             )
 
+            media_category_path = media_category_path.decode(
+                "utf-8").encode(sys.getfilesystemencoding())
+
             icon = media_category_path + '.png'
             fanart = media_category_path + '_fanart.png'
 
@@ -188,7 +196,11 @@ def list_channels(params):
                 channel_type,
                 channel_category,
                 channel_name
-            ))
+            )
+        )
+
+        media_channel_path = media_channel_path.decode(
+            "utf-8").encode(sys.getfilesystemencoding())
 
         # Build context menu (Move up, move down, ...)
         context_menu = []
@@ -281,11 +293,20 @@ def get_channel_module(params):
     channel_path = common.sp.xbmc.translatePath(
         common.sp.os.path.join(
             LIB_PATH,
-            channel_module.replace('.', '/') + '.py'))
+            *(channel_module.split("."))
+        )
+    )
+    channel_filepath = channel_path + ".py"
+    channel_filepath = channel_filepath.decode(
+        "utf-8"
+    ).encode(
+        sys.getfilesystemencoding()
+    )
 
     return imp.load_source(
         channel_name,
-        channel_path)
+        channel_filepath
+    )
 
 
 @common.PLUGIN.action()
@@ -354,6 +375,8 @@ def download_video(params):
 
     vid = YDStreamExtractor.getVideoInfo(url_video, quality=3)
     path = common.PLUGIN.get_setting('dlFolder')
+    path = path.decode(
+        "utf-8").encode(sys.getfilesystemencoding())
 
     with YDStreamUtils.DownloadProgress() as prog:
         try:
