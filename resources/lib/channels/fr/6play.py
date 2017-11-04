@@ -29,14 +29,7 @@ from resources.lib import common
 # TO DO
 # LIVE TV protected by #EXT-X-FAXS-CM
 # https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
-# Clip and Playlist (cas les blagues de TOTO)
-# Case MP4:
-# https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/playlist_2248?csa=6&with=clips,freemiumpacks,program_images,service_display_images
-# Case without ISM (One flux m3u8) :
-# https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/clip_11740712?csa=6&with=clips,freemiumpacks,program_images,service_display_images
-# Case Video Protected :
-# https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/videos/clip_11288922?csa=6&with=clips,freemiumpacks,program_images,service_display_images
-# Rework Quality Video
+# Playlists (cas les blagues de TOTO)
 # Get vtt subtitle
 
 # Initialize GNU gettext emulation in addon
@@ -323,6 +316,8 @@ def list_videos(params):
         random_ua=True)
     json_parser = json.loads(program_json)
 
+    # TO DO Playlist More one 'clips'
+
     for video in json_parser:
         video_id = str(video['id'])
 
@@ -413,28 +408,52 @@ def get_video_url(params):
     if video_assets is None:
         utils.send_notification(common.ADDON.get_localized_string(30112))
         return ''
-    url = ''
-    url2 = ''
-    url3 = ''
+
+    # "type":"primetime_phls_h264" => Video protected by DRM (m3u8)
+    # "type":"usp_hls_h264" => Video not protected by DRM (m3u8)
+    # "type":"usp_dashcenc_h264" => No supported by Kodi (MDP)
+    # "type":"usp_hlsfp_h264" => Video protected by DRM (m3u8)
+    # "type":"http_h264" => Video not proted by DRM (mp4) (Quality SD "video_quality":"sd", HD "video_quality":"hq", HD "video_quality":"hd", HD "video_quality":"lq", 3G) 
+    # "type":"http_subtitle_vtt_sm" => Subtitle (in English TVShows)
+
+    desired_quality = common.PLUGIN.get_setting('quality')
+    all_datas_videos = []
     for asset in video_assets:
-        if 'ism' in asset['video_container'].encode('utf-8'):
-            url = asset['full_physical_path'].encode('utf-8')
-        if 'mp4' in asset['video_container'].encode('utf-8'):
-            if 'hd' in asset['video_quality'].encode('utf-8'):
-                url2 = asset['full_physical_path'].encode('utf-8')
-        else:
-            url3 = asset['full_physical_path'].encode('utf-8')
-    manifest_url = ''
-    if url:
-        manifest_url = url
-    elif url2:
-        manifest_url = url2
+        if 'http_h264' in asset["type"]:
+            new_list_item = common.sp.xbmcgui.ListItem()
+            new_list_item.setLabel(asset["video_quality"])
+            new_list_item.setPath(
+                asset['full_physical_path'].encode('utf-8'))
+            all_datas_videos.append(new_list_item)
+        elif 'h264' in asset["type"]:
+            manifest = utils.get_webcontent(
+                asset['full_physical_path'].encode('utf-8'),
+                random_ua=True)
+            if 'drm' not in manifest:
+                new_list_item = common.sp.xbmcgui.ListItem()
+                new_list_item.setLabel(asset["video_quality"])
+                new_list_item.setPath(
+                    asset['full_physical_path'].encode('utf-8'))
+                all_datas_videos.append(new_list_item)
+
+    if len(all_datas_videos) == 0:
+        utils.send_notification(common.ADDON.get_localized_string(30102))
+        return ''
+    elif len(all_datas_videos) == 1:
+        return all_datas_videos[0].getPath()
     else:
-        manifest_url = url3
-        manifest = utils.get_webcontent(
-            manifest_url,
-            random_ua=True)
-        if 'drm' in manifest:
-            utils.send_notification(common.ADDON.get_localized_string(30102))
-            return ''
-    return manifest_url
+        if desired_quality == "DIALOG":
+            seleted_item = common.sp.xbmcgui.Dialog().select(
+                _('Choose video quality'),
+                all_datas_videos)
+            if seleted_item == -1:
+                return ''
+            return all_datas_videos[seleted_item].getPath()
+        elif desired_quality == "BEST":
+            url_best = ''
+            for data_video in all_datas_videos:
+                if 'lq' not in data_video.getLabel():
+                    url_best = data_video.getPath()
+            return url_best
+        else:
+            return all_datas_videos[0].getPath()
