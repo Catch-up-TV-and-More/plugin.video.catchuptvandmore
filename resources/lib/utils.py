@@ -22,21 +22,23 @@
 """
 
 import os
+import sys
 import time
 import requests
 from random import randint
 from resources.lib import common
 
 
-user_data = common.sp.xbmc.translatePath(
-    os.path.join(
-        'special://profile/addon_data',
-        common.ADDON.id))
-
 cache_path = common.sp.xbmc.translatePath(
     os.path.join(
-        user_data,
-        'cache'))
+        'special://profile/addon_data',
+        common.ADDON.id,
+        'cache'
+    )
+)
+
+cache_path = cache_path.decode(
+    "utf-8").encode(sys.getfilesystemencoding())
 
 default_ua = "Mozilla/5.0 (X11; Linux x86_64) " \
              "AppleWebKit/537.36 (KHTML, like Gecko) " \
