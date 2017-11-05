@@ -38,7 +38,7 @@ URL_XML = 'http://www.rtl.be/videos/player/replays/%s/%s.xml'
 URL_ROOT_LIVE = 'http://www.rtl.be/tv/%s/live'
 # channel
 
-URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/10000/%s.xml'
+URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/11000/%s.xml'
 # live id
 
 def channel_entry(params):
