@@ -97,6 +97,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 #### France
 - Allociné <http://www.allocine.fr/>
 - Taratata <http://mytaratata.com/>
+- Noob TV <http://noob-tv.com/>
 
 ## Bugs et améliorations — *Bugs and improvements*
 Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.

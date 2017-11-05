@@ -232,6 +232,9 @@
             <setting label="Taratata" type="bool" id="channels.ws.taratata.taratata" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.taratata.taratata.order" default="3"/>
 
+            <setting label="Noob TV" type="bool" id="channels.ws.noob.noob" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.noob.noob.order" default="4"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->

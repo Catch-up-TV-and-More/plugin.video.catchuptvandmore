@@ -108,6 +108,7 @@ CHANNELS = {
     'main_menu.ws': {
         'channels.ws.allocine.allocine': 'Allociné',
         'channels.ws.tetesaclaques.tetesaclaques': 'Au pays des Têtes à claques',
-        'channels.ws.taratata.taratata': 'Taratata'
+        'channels.ws.taratata.taratata': 'Taratata',
+        'channels.ws.noob.noob': 'Noob TV'
     }
 }

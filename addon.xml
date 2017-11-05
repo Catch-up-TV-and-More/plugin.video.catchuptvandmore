@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.6~beta0"
+       version="0.1.6-beta001"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,27 +30,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
     <news>
-[Add channel — Live TV] BVN (BE) (wwark)
-[Add channel — Live TV] NHK World (JP) (wwark)
-[Add WebTV] NHK ニュース (JP) (wwark)
-[Add WebTV] NHKらいふ (JP) (wwark)
-[improvement] Sort main category items as you want (move up, move down) (SylvainCecchetto)
-[improvement] Add current category name on the top left corner screen (SylvainCecchetto)
-[Add Website] Taratata (wwark)
-[Improvement] Add Español Live TV for Channel France 24 with content (ES) (wwark)
-[Fix] Title Live Info for Channel France 24 (wwark)
-[Add Channel] BRF (BE) (wwark)
-[Add channel — Live TV] RTL-TVI (BE) (SylvainCecchetto, wwark)
-[Add channel — Live TV] PLUG RTL (BE) (SylvainCecchetto, wwark)
-[Add channel — Live TV] CLUB RTL (BE) (SylvainCecchetto, wwark)
-[Improvement] Add La 1ère Live TV for group France Télévision (wwark)
-[Add Live TV] Add France 3 Régions Live TV for group France Télévision (wwark)
-[Add WebTV] France TV Sport (Replay, Videos, Live) (wwark)
-[Move] France 24 from French Channels to European Channels (wwark)
-[Fix] Error log YTDL (still one Warning TO DO) (wwark)
-[Improvement] Add Quality Mode and fix some videos for Website Allociné (wwark)
-[Improvement] Readd Quality Mode for 6play and detect new stream protected by DRM (wwark, thanks Kagonia MPDB)
-[Fix] Fix bug on Windows with accents in path (SylvainCecchetto)
+[Add Website] Noob TV (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
