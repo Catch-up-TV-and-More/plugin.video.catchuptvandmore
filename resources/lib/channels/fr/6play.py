@@ -437,7 +437,7 @@ def get_video_url(params):
         utils.send_notification(common.ADDON.get_localized_string(30102))
         return ''
     elif len(all_datas_videos_quality) == 1:
-        return all_datas_videos[0].getPath()
+        return all_datas_videos_path[0]
     else:
         if desired_quality == "DIALOG":
             seleted_item = common.sp.xbmcgui.Dialog().select(
