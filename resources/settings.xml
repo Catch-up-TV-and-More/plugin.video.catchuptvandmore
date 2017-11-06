@@ -235,6 +235,9 @@
             <setting label="Noob TV" type="bool" id="channels.ws.noob.noob" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.noob.noob.order" default="4"/>
 
+            <setting label="Culturepub" type="bool" id="channels.ws.culturepub.culturepub" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.culturepub.culturepub.order" default="5"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->
