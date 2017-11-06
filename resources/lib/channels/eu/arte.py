@@ -328,23 +328,22 @@ def get_video_url(params):
         desired_quality = common.PLUGIN.get_setting('quality')
 
         if desired_quality == "DIALOG":
-            all_datas_videos = []
+            all_datas_videos_quality = []
+            all_datas_videos_path = []
 
             for video in video_streams:
                 if not video.find("HLS"):
                         datas = json_parser['videoJsonPlayer']['VSR'][video]
-                        new_list_item = common.sp.xbmcgui.ListItem()
-                        new_list_item.setLabel(
+                        all_datas_videos_quality.append(
                             datas['mediaType'] + " (" +
                             datas['versionLibelle'] + ")")
-                        new_list_item.setPath(datas['url'])
-                        all_datas_videos.append(new_list_item)
+                        all_datas_videos_path.append(datas['url'])
 
             seleted_item = common.sp.xbmcgui.Dialog().select(
-                "Choose Stream", all_datas_videos)
+                "Choose Stream", all_datas_videos_quality)
 
-            url_selected = all_datas_videos[seleted_item]
-            url_selected = url_selected.getPath().encode('utf-8')
+            url_selected = all_datas_videos_path[seleted_item].encode(
+                'utf-8')
 
         elif desired_quality == "BEST":
             url_selected = video_streams['HTTP_MP4_SQ_1']['url']

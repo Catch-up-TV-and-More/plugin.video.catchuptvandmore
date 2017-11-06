@@ -417,43 +417,42 @@ def get_video_url(params):
     # "type":"http_subtitle_vtt_sm" => Subtitle (in English TVShows)
 
     desired_quality = common.PLUGIN.get_setting('quality')
-    all_datas_videos = []
+    all_datas_videos_quality = []
+    all_datas_videos_path = []
     for asset in video_assets:
         if 'http_h264' in asset["type"]:
-            new_list_item = common.sp.xbmcgui.ListItem()
-            new_list_item.setLabel(asset["video_quality"])
-            new_list_item.setPath(
+            all_datas_videos_quality.append(asset["video_quality"])
+            all_datas_videos_path.append(
                 asset['full_physical_path'].encode('utf-8'))
-            all_datas_videos.append(new_list_item)
         elif 'h264' in asset["type"]:
             manifest = utils.get_webcontent(
                 asset['full_physical_path'].encode('utf-8'),
                 random_ua=True)
             if 'drm' not in manifest:
-                new_list_item = common.sp.xbmcgui.ListItem()
-                new_list_item.setLabel(asset["video_quality"])
-                new_list_item.setPath(
+                all_datas_videos_quality.append(asset["video_quality"])
+                all_datas_videos_path.append(
                     asset['full_physical_path'].encode('utf-8'))
-                all_datas_videos.append(new_list_item)
 
-    if len(all_datas_videos) == 0:
+    if len(all_datas_videos_quality) == 0:
         utils.send_notification(common.ADDON.get_localized_string(30102))
         return ''
-    elif len(all_datas_videos) == 1:
+    elif len(all_datas_videos_quality) == 1:
         return all_datas_videos[0].getPath()
     else:
         if desired_quality == "DIALOG":
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 _('Choose video quality'),
-                all_datas_videos)
+                all_datas_videos_quality)
             if seleted_item == -1:
                 return ''
-            return all_datas_videos[seleted_item].getPath()
+            return all_datas_videos_path[seleted_item]
         elif desired_quality == "BEST":
             url_best = ''
-            for data_video in all_datas_videos:
-                if 'lq' not in data_video.getLabel():
-                    url_best = data_video.getPath()
+            i = 0
+            for data_video in all_datas_videos_quality:
+                if 'lq' not in data_video:
+                    url_best = all_datas_videos_path[i]
+                i = i + 1
             return url_best
         else:
-            return all_datas_videos[0].getPath()
+            return all_datas_videos_path[0]

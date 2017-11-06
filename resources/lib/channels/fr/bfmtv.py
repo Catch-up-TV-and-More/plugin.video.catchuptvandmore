@@ -761,20 +761,20 @@ def get_video_url(params):
         desired_quality = common.PLUGIN.get_setting('quality')
 
         if desired_quality == "DIALOG":
-            all_datas_videos = []
+            all_datas_videos_quality = []
+            all_datas_videos_path = []
+
             for datas in video_streams:
-                new_list_item = common.sp.xbmcgui.ListItem()
-                new_list_item.setLabel(
+                all_datas_videos_quality.append(
                     "Video Height : " + str(datas['frame_height']) +
                     " (Encoding : " + str(datas['encoding_rate']) + ")"
                 )
-                new_list_item.setPath(datas['video_url'])
-                all_datas_videos.append(new_list_item)
+                all_datas_videos_path.append(datas['video_url'])
 
             seleted_item = common.sp.xbmcgui.Dialog().select(
-                "Choose Stream", all_datas_videos)
+                _('Choose video quality'), all_datas_videos_quality)
 
-            return all_datas_videos[seleted_item].getPath().encode('utf-8')
+            return all_datas_videos_path[seleted_item].encode('utf-8')
 
         elif desired_quality == 'BEST':
             # GET LAST NODE (VIDEO BEST QUALITY)

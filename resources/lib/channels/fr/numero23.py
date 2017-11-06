@@ -356,18 +356,19 @@ def get_video_url(params):
             all_url_video = re.compile(
                 r'{"type":"video/mp4","url":"(.*?)"').findall(html_video)
             if desired_quality == "DIALOG":
-                all_datas_videos = []
+                all_datas_videos_quality = []
+                all_datas_videos_path = []
                 for datas in all_url_video:
-                    new_list_item = common.sp.xbmcgui.ListItem()
-                    datas_quality = re.search('H264-(.+?)/', datas).group(1)
-                    new_list_item.setLabel('H264-' + datas_quality)
-                    new_list_item.setPath(datas)
-                    all_datas_videos.append(new_list_item)
+                    datas_quality = re.search(
+                        'H264-(.+?)/', datas).group(1)
+                    all_datas_videos_quality.append(
+                        'H264-' + datas_quality)
+                    all_datas_videos_path.append(datas)
 
                 seleted_item = common.sp.xbmcgui.Dialog().select(
-                    "Choose Stream", all_datas_videos)
+                    _('Choose video quality'), all_datas_videos_quality)
 
-                return all_datas_videos[seleted_item].getPath().encode('utf-8')
+                return all_datas_videos_path[seleted_item].encode('utf-8')
             elif desired_quality == 'BEST':
                 # Last video in the Best
                 for datas in all_url_video:
