@@ -1018,27 +1018,26 @@ def get_video_url(params):
         url_selected = ''
 
         if desired_quality == "DIALOG":
-            all_datas_videos = []
+            all_datas_videos_quality = []
+            all_datas_videos_path = []
 
             for video in json_parser['videos']:
                 if video['format'] == 'hls_v5_os' or \
                         video['format'] == 'm3u8-download':
-                    new_list_item = common.sp.xbmcgui.ListItem()
                     if video['format'] == 'hls_v5_os':
-                        new_list_item.setLabel("HD")
+                        all_datas_videos_quality.append("HD")
                     else:
-                        new_list_item.setLabel("SD")
-                    new_list_item.setPath(video['url'])
-                    all_datas_videos.append(new_list_item)
+                        all_datas_videos_quality.append("SD")
+                    all_datas_videos_path.append(video['url'])
 
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 _('Choose video quality'),
-                all_datas_videos)
+                all_datas_videos_quality)
 
             if seleted_item == -1:
                 return None
 
-            url_selected = all_datas_videos[seleted_item].getPath()
+            url_selected = all_datas_videos_path[seleted_item]
 
         elif desired_quality == "BEST":
             for video in json_parser['videos']:

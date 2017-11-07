@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.5"
+       version="0.1.5.1"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -28,8 +28,9 @@
     <forum></forum>
     <website></website>
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
-    <source>https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore</source>
+    <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
+[Version 0.1.5]
 [Add channel — Live TV] BVN (BE) (wwark)
 [Add channel — Live TV] NHK World (JP) (wwark)
 [Add WebTV] NHK ニュース (JP) (wwark)
@@ -51,6 +52,8 @@
 [Improvement] Add Quality Mode and fix some videos for Website Allociné (wwark)
 [Improvement] Readd Quality Mode for 6play and detect new stream protected by DRM (wwark, thanks Kagonia MPDB)
 [Fix] Fix bug on Windows with accents in path (SylvainCecchetto)
+[Version 0.1.5.1]
+[Fix] Dialog Select(content, quality) not working in Kodi Jarvis for all channels using it (wwark, thanks NenesSix)
     </news>
     <assets>
       <icon>icon.png</icon>

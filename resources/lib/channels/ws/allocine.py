@@ -639,18 +639,18 @@ def get_video_url(params):
     if 'rendition' in video_json_parser["media"]:
         # (Video Hosted By Allocine)
         if desired_quality == "DIALOG":
-            all_datas_videos = []
+            all_datas_videos_quality = []
+            all_datas_videos_path = []
             for media in video_json_parser["media"]["rendition"]:
-                new_list_item = common.sp.xbmcgui.ListItem()
-                new_list_item.setLabel(media["bandwidth"]["$"])
-                new_list_item.setPath(media["href"])
-                all_datas_videos.append(new_list_item)
+                all_datas_videos_quality.append(
+                    media["bandwidth"]["$"])
+                all_datas_videos_path.append(media["href"])
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 _('Choose video quality'),
-                all_datas_videos)
+                all_datas_videos_quality)
             if seleted_item == -1:
                 return None
-            url = all_datas_videos[seleted_item].getPath()
+            url = all_datas_videos_path[seleted_item]
         elif desired_quality == "BEST":
             for media in video_json_parser["media"]["rendition"]:
                 url = media["href"]
@@ -703,17 +703,21 @@ def get_video_url(params):
                 m3u8_video_auto = utils.get_webcontent(url_video_auto)
                 lines = m3u8_video_auto.splitlines()
                 if desired_quality == "DIALOG":
-                    all_datas_videos = []
+                    all_datas_videos_quality = []
+                    all_datas_videos_path = []
                     for k in range(0, len(lines) - 1):
                         if 'RESOLUTION=' in lines[k]:
-                            new_list_item = common.sp.xbmcgui.ListItem()
-                            new_list_item.setLabel(re.compile(
-                                r'RESOLUTION=(.*?),').findall(lines[k])[0])
-                            new_list_item.setPath(lines[k + 1])
-                            all_datas_videos.append(new_list_item)
+                            all_datas_videos_quality.append(
+                                re.compile(
+                                r'RESOLUTION=(.*?),').findall(
+                                lines[k])[0])
+                            all_datas_videos_quality.append(
+                                lines[k + 1])
                     seleted_item = common.sp.xbmcgui.Dialog().select(
-                        "Choose Stream", all_datas_videos)
-                    return all_datas_videos[seleted_item].getPath().encode('utf-8')
+                        _('Choose video quality'),
+                        all_datas_videos_quality)
+                    return all_datas_videos_path[seleted_item].encode(
+                        'utf-8')
                 elif desired_quality == 'BEST':
                     # Last video in the Best
                     for k in range(0, len(lines) - 1):
@@ -737,22 +741,21 @@ def get_video_url(params):
                     r'hd_src_no_ratelimit:"(.*?)"').findall(
                     url_fbook)) > 0:
                     if desired_quality == "DIALOG":
-                        all_datas_videos = []
-                        new_list_item_sd = common.sp.xbmcgui.ListItem()
-                        new_list_item_sd.setLabel('SD')
-                        new_list_item_sd.setPath(re.compile(
+                        all_datas_videos_quality = []
+                        all_datas_videos_path = []
+                        all_datas_videos_quality.append('SD')
+                        all_datas_videos_path.append(re.compile(
                             r'sd_src_no_ratelimit:"(.*?)"').findall(
                             url_fbook)[0])
-                        all_datas_videos.append(new_list_item_sd)
-                        new_list_item_hd = common.sp.xbmcgui.ListItem()
-                        new_list_item_hd.setLabel('HD')
-                        new_list_item_hd.setPath(re.compile(
+                        all_datas_videos_quality.append('HD')
+                        all_datas_videos_path.append(re.compile(
                             r'hd_src_no_ratelimit:"(.*?)"').findall(
                             url_fbook)[0])
-                        all_datas_videos.append(new_list_item_hd)
                         seleted_item = common.sp.xbmcgui.Dialog().select(
-                            "Choose Stream", all_datas_videos)
-                        return all_datas_videos[seleted_item].getPath().encode('utf-8')
+                            _('Choose video quality'),
+                            all_datas_videos_quality)
+                        return all_datas_videos_path[seleted_item].encode(
+                            'utf-8')
                     elif desired_quality == 'BEST':
                         return re.compile(
                             r'hd_src_no_ratelimit:"(.*?)"').findall(

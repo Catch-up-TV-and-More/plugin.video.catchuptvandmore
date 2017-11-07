@@ -387,6 +387,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
+        update_listing='update_listing' in params,
         category=common.get_window_title()
     )
 
@@ -395,7 +396,8 @@ def list_videos(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     url_selected = ''
-    all_datas_videos = []
+    all_datas_videos_quality = []
+    all_datas_videos_path = []
     videos_html = utils.get_webcontent(params.video_url)
     videos_soup = bs(videos_html, 'html.parser')
 
@@ -404,9 +406,8 @@ def get_video_url(params):
 
     for video in list_videos:
         if '#video-' in video.get('href'):
-            new_list_item = common.sp.xbmcgui.ListItem()
             # Find a better solution to strip
-            new_list_item.setLabel(video.get_text().strip())
+            all_datas_videos_quality.append(video.get_text().strip())
             # Get link
             value_jwplayer_id=video.get('data-jwplayer-id')
             # Case mp4
@@ -427,13 +428,11 @@ def get_video_url(params):
                         url_ytdl, download=False)
                     for format_video in result['formats']:
                         url = format_video['url']
-            new_list_item.setPath(url)
-            all_datas_videos.append(new_list_item)
+            all_datas_videos_path.append(url)
         # Get link from FranceTV
         elif '#ftv-player-' in video.get('href'):
-            new_list_item = common.sp.xbmcgui.ListItem()
             # Find a better solution to strip
-            new_list_item.setLabel(video.get_text().strip())
+            all_datas_videos_quality.append(video.get_text().strip())
             # Get link
             value_ftvlayer_id = video.get('data-ftvplayer-id')
             list_streams = videos_soup.find_all(
@@ -448,16 +447,15 @@ def get_video_url(params):
                     url_id, download=False)
                 for format_video in result['formats']:
                     url = format_video['url']
-            new_list_item.setPath(url)
-            all_datas_videos.append(new_list_item)
+            all_datas_videos_path.append(url)
 
-    if len(all_datas_videos) > 1:
+    if len(all_datas_videos_quality) > 1:
         seleted_item = common.sp.xbmcgui.Dialog().select(
             _('Choose video quality'),
-            all_datas_videos)
+            all_datas_videos_quality)
         if seleted_item == -1:
             return ''
-        url_selected = all_datas_videos[seleted_item].getPath()
+        url_selected = all_datas_videos_path[seleted_item]
         return url_selected
     else:
-        return all_datas_videos[0].getPath()
+        return all_datas_videos_path[0]
