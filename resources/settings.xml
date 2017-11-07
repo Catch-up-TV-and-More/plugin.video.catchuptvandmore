@@ -10,6 +10,7 @@
         <setting label="30022" type="bool" id="main_menu.jp" default="true"/>
         <setting label="30023" type="bool" id="main_menu.eu" default="true"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
+        <setting label="30025" type="bool" id="main_menu.wo" default="true"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true"/>
     </category>
 
@@ -219,7 +220,14 @@
             <setting label="Drama" type="bool" id="channels.uk.uktvplay.drama" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.uk.uktvplay.drama.order" default="5"/>
 
-        <setting label="" type="number" visible="false" id="main_menu.ws.order" default="6"/>
+        <setting label="" type="number" visible="false" id="main_menu.wo.order" default="6"/>
+        <setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30025" type="bool" id="main_menu.wo" default="true" visible="false"/>
+
+            <setting label="TV5Monde Afrique" type="bool" id="channels.wo.tv5monde.tv5mondeafrique" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.tv5monde.tv5mondeafrique.order" default="1"/>
+
+        <setting label="" type="number" visible="false" id="main_menu.ws.order" default="7"/>
         <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true" visible="false"/>
 

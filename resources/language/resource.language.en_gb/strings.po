@@ -76,7 +76,7 @@ msgid "United Kingdom channels"
 msgstr ""
 
 msgctxt "#30025"
-msgid "United States channels"
+msgid "International channels"
 msgstr ""
 
 msgctxt "#30026"

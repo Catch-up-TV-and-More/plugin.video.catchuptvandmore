@@ -27,6 +27,7 @@ CATEGORIES = {
     'main_menu.fr': 'French channels',
     'main_menu.jp': 'Japanese channels',
     'main_menu.uk': 'United Kingdom channels',
+    'main_menu.wo': 'International channels',
     'main_menu.ws': 'Websites'
 }
 
@@ -103,6 +104,10 @@ CHANNELS = {
         'channels.uk.uktvplay.really': 'Really',
         'channels.uk.uktvplay.yesterday': 'Yesterday',
         'channels.uk.uktvplay.drama': 'Drama'
+    },
+
+    'main_menu.wo': {
+        'channels.wo.tv5monde.tv5mondeafrique': 'TV5Monde Afrique'
     },
 
     'main_menu.ws': {

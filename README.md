@@ -81,6 +81,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - 01Net TV *(Replay)*
 - France TV Sport — francetv *(Replay, Live)*
 
+### Chaînes internationales — *International channels*
+##### TV
+- TV5Monde Afrique *(Replay)*
+
 ### Japon — *Japan*
 ##### TV
 - NHK World *(Replay, Live TV)*
