@@ -140,18 +140,6 @@ def root(params):
                 'context_menu': context_menu
             })
 
-
-    listing.append({
-        'icon': "",
-        'fanart': "",
-        'label': "OpenPVN",
-        'url': common.PLUGIN.get_url(
-            action='load_openvpn'
-        )
-    })
-
-
-
     # If only one category is present, directly open this category
     if len(listing) == 1:
         params['category_id'] = last_category_id
@@ -164,13 +152,6 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,),
         category=common.get_window_title()
     )
-
-
-
-@common.PLUGIN.action()
-def load_openvpn(params):
-    openvpn.root(params)
-
 
 
 @common.PLUGIN.action()

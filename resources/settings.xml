@@ -289,6 +289,17 @@
 
     </category>
 
+
+    <!-- OpenVPN -->
+    <category label="OpenVPN">
+        <setting label="30340" type="bool" id="main_menu.vpn" default="true"/>
+        <setting label="OpenVPN" type="bool" id="channels.vpn.vpn.vpn" default="true" visible="false"/>
+        <setting label="30341" type="folder" id="openvpn_folderpath" source="auto" option=""/>
+        <setting label="30342" type="file" id="openvpn_config_filepath"/>
+    </category>
+
+
+
     <!-- Tools ... -->
     <!-- <category label="30005">
         <setting label="30300" type="action" action="RunScript($CWD/resources/lib/utils.py, clear_cache)"/>
