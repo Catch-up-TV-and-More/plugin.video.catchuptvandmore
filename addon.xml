@@ -35,6 +35,7 @@
 [Add Website] Culturepub (wwark, SylvainCecchetto)
 [Add Channel] TV5Monde Afrique (wwark)
 [Fix] some fixes for Replay LCI (wwark)
+[Fix] Try to fix random crash with simpleplugin storage feature (SylvainCecchetto, thanks romanvm)
     </news>
     <assets>
       <icon>icon.png</icon>
