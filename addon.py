@@ -391,5 +391,4 @@ def download_video(params):
 
 
 if __name__ == '__main__':
-    window_title = common.get_window_title()
-    common.PLUGIN.run(window_title)
+    common.PLUGIN.run()
