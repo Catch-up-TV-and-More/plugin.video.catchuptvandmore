@@ -29,8 +29,8 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Rework QUALITY
-# Replay LCI (Add date, aired, year, fix some elements)
+# Rework QUALITY (SD in Kodi Jarvis)
+# Replay LCI add More Buttons
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -64,6 +64,8 @@ def channel_entry(params):
         return list_shows(params)
     elif 'list_videos_categories' in params.next:
         return list_videos_categories(params)
+    elif 'list_videos_lci' in params.next:
+        return list_videos_lci(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
@@ -148,7 +150,7 @@ def list_shows(params):
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         program_url=program_url,
-                        next='list_videos',
+                        next='list_videos_lci',
                         window_title=program_name
                     )
                 })
@@ -295,13 +297,10 @@ def list_videos_categories(params):
         category=common.get_window_title()
     )
 
-
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_videos(params):
+def list_videos_lci(params):
     """Build videos listing"""
     videos = []
-    if 'previous_listing' in params:
-        videos = ast.literal_eval(params['previous_listing'])
 
     if params.channel_name == 'lci':
         program_html = utils.get_webcontent(params.program_url)
@@ -313,52 +312,72 @@ def list_videos(params):
 
         for replay in list_replay:
 
-            title = replay.find_all('img')[0].get('alt').encode('utf-8')
-            duration = 0
-            img = replay.find_all('source')[0]
-            try:
-                img = img['data-srcset'].encode('utf-8')
-            except Exception:
-                img = img['srcset'].encode('utf-8')
+            if 'Replay' in replay.find(
+                'span', class_='emission-infos-type').get_text():
+                title = replay.find_all(
+                    'img')[0].get('alt').encode('utf-8')
+                duration = 0
+                img = replay.find_all('source')[0]
+                try:
+                    img = img['data-srcset'].encode('utf-8')
+                except Exception:
+                    img = img['srcset'].encode('utf-8')
 
-            img = img.split(',')[0].split(' ')[0]
-            program_id = URL_LCI_ROOT + replay.get('href').encode('utf-8')
+                img = img.split(',')[0].split(' ')[0]
+                program_id = URL_LCI_ROOT + replay.get(
+                    'href').encode('utf-8')
 
-            info = {
-                'video': {
-                    'title': title,
-                    # 'plot': stitle,
-                    # 'aired': aired,
-                    # 'date': date,
-                    'duration': duration,
-                    # 'year': int(aired[:4]),
-                    'mediatype': 'tvshow'
+                info = {
+                    'video': {
+                        'title': title,
+                        # 'plot': stitle,
+                        # 'aired': aired,
+                        # 'date': date,
+                        'duration': duration,
+                        # 'year': int(aired[:4]),
+                        'mediatype': 'tvshow'
+                    }
                 }
-            }
 
-            context_menu = []
-            download_video = (
-                _('Download'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='download_video',
-                    program_id=program_id) + ')'
-            )
-            context_menu.append(download_video)
+                context_menu = []
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        program_id=program_id) + ')'
+                )
+                context_menu.append(download_video)
 
-            videos.append({
-                'label': title,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_r',
-                    program_id=program_id,
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
-            })
+                videos.append({
+                    'label': title,
+                    'thumb': img,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='play_r',
+                        program_id=program_id,
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
 
-    elif 'meteo.tf1.fr/meteo-france' in params.program_url:
+    return common.PLUGIN.create_listing(
+        videos,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+        ),
+        content='tvshows',
+        category=common.get_window_title()
+    )
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_videos(params):
+    """Build videos listing"""
+    videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
+
+    if 'meteo.tf1.fr/meteo-france' in params.program_url:
         program_html = utils.get_webcontent(params.program_url)
         program_soup = bs(program_html, 'html.parser')
 
@@ -368,7 +387,8 @@ def list_videos(params):
 
         title = wat_info.find('h3').get_text()
 
-        program_id = re.compile('; src = \'(.*?)\?').findall(program_html)[0]
+        program_id = re.compile(
+            '; src = \'(.*?)\?').findall(program_html)[0]
 
         info = {
             'video': {
