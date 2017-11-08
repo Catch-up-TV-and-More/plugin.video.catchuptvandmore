@@ -54,6 +54,7 @@
 [Fix] Fix bug on Windows with accents in path (SylvainCecchetto)
 [Version 0.1.5.1]
 [Fix] Dialog Select(content, quality) not working in Kodi Jarvis for all channels using it (wwark, thanks NenesSix)
+[Fix] Try to fix random crash with simpleplugin storage feature (SylvainCecchetto, thanks romanvm)
     </news>
     <assets>
       <icon>icon.png</icon>
