@@ -31,6 +31,9 @@ from resources.lib import openvpn as vpn
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+# 'enum' of connection states
+(disconnected, failed, connecting, disconnecting, connected) = range(5)
+_state = disconnected
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -39,15 +42,36 @@ def channel_entry(params):
     return None
 
 
+def which(program, path_var):
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in path_var.split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
 
 
 def root(params):
     print "Je suis dans le root vpn"
 
     openvpn_folderpath = common.PLUGIN.get_setting('openvpn_folderpath')
-
+    path = os.environ['PATH']
     if openvpn_folderpath is not "":
         path = common.PLUGIN.get_setting('openvpn_folderpath')
+
+    # tempo
+    path = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin:/Library/TeX/texbin:/Applications/Wireshark.app/Contents/MacOS"
+
+    openvpn_filepath = which("openvpn", path)
 
     openvpn_config_filepath = common.PLUGIN.get_setting('openvpn_config_filepath')
     if openvpn_config_filepath is "":
@@ -56,15 +80,23 @@ def root(params):
             _('Specify OpenVPN config file in addon settings'))
         return
 
+    global _state
+
     openvpn = vpn.OpenVPN(
-        "openpvn",
+        openvpn_filepath,
         openvpn_config_filepath,
         args=None,
         sudo=False,
         sudopwd=None,
-        debug=True,
-        env="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin:/Library/TeX/texbin:/Applications/Wireshark.app/Contents/MacOS"
+        debug=True
     )
+
+    try:
+        openvpn.connect()
+        print "Try to connect"
+        _state = connected
+    except vpn.OpenVPNError as exception:
+        print "loupé %s" % exception
 
 
 

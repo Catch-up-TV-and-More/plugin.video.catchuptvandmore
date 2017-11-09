@@ -119,7 +119,7 @@ class OpenVPNError(Exception):
 
 class OpenVPN:
 
-    def __init__(self, openvpn, ovpnconfig, ip='127.0.0.1', port=1337, sudo=False, sudopwd=None, args=None, timeout=1, debug=False, env=None):
+    def __init__(self, openvpn, ovpnconfig, ip='127.0.0.1', port=1337, sudo=False, sudopwd=None, args=None, timeout=1, debug=False):
         self.openvpn = openvpn
         self.ovpnconfig = ovpnconfig
         self.ip = ip
@@ -143,11 +143,6 @@ class OpenVPN:
         if self.ovpnconfig is None or not os.path.exists(self.ovpnconfig) or not os.path.isfile(self.ovpnconfig):
             self._log_error(
                 'OpenVPN: ERROR: Specified OpenVPN configuration file does not exist')
-
-        if env is None:
-            self.env = {"PATH": os.environ['PATH']}
-        else:
-            self.env = {"PATH": env}
 
         self.interface = None
         self.workdir = os.path.dirname(ovpnconfig)
@@ -207,8 +202,7 @@ class OpenVPN:
                 cmdline = 'sudo %s' % (cmdline)
 
         self.process = subprocess.Popen(cmdline, cwd=self.workdir, shell=True,
-                                        stdout=subprocess.PIPE, stdin=subprocess.PIPE,
-                                        stderr=subprocess.PIPE, env=self.env)
+                                        stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         time.sleep(self.timeout)
         if not self.connect_to_interface(True):
             self._log_debug('Connect OpenVPN failed')
