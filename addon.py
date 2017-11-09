@@ -23,9 +23,9 @@
 import imp
 import YDStreamUtils
 import YDStreamExtractor
-from resources.lib import openvpn
 from resources.lib import skeleton
 from resources.lib import common
+from resources.lib import vpn
 
 
 # Useful path
@@ -113,6 +113,17 @@ def root(params):
                     item_id=category_id) + ')'
             )
             context_menu.append(hide)
+
+            vpn_label = _('Connect VPN')
+            if params.vpn is not None:
+                vpn_label = params.vpn
+
+            vpn = (
+                vpn_label,
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='vpn_entry') + ')'
+            )
+            context_menu.append(vpn)
 
             media_category_path = common.sp.xbmc.translatePath(
                 common.sp.os.path.join(
@@ -388,6 +399,12 @@ def download_video(params):
         finally:
             YDStreamExtractor.setOutputCallback(None)
 
+    return None
+
+
+@common.PLUGIN.action()
+def vpn_entry(params):
+    vpn.root(params)
     return None
 
 

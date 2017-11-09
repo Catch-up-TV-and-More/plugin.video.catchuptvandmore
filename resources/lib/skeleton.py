@@ -28,8 +28,7 @@ CATEGORIES = {
     'main_menu.jp': 'Japanese channels',
     'main_menu.uk': 'United Kingdom channels',
     'main_menu.wo': 'International channels',
-    'main_menu.ws': 'Websites',
-    'main_menu.vpn': 'Connect VPN'
+    'main_menu.ws': 'Websites'
 }
 
 CHANNELS = {
@@ -117,9 +116,5 @@ CHANNELS = {
         'channels.ws.taratata.taratata': 'Taratata',
         'channels.ws.noob.noob': 'Noob TV',
         'channels.ws.culturepub.culturepub': 'Culturepub'
-    },
-
-    'main_menu.vpn': {
-        'channels.vpn.vpn.vpn': 'OpenVPN'
     }
 }
