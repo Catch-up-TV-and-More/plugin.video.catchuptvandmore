@@ -8,7 +8,7 @@
         <setting label="30020" type="bool" id="main_menu.fr" default="true"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true"/>
-        <setting label="30023" type="bool" id="main_menu.eu" default="true"/>
+        <setting label="30023" type="bool" id="main_menu.sw" default="true"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
         <setting label="30025" type="bool" id="main_menu.wo" default="true"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true"/>
@@ -175,18 +175,9 @@
             <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="6"/>
 
-        <setting label="" type="number" visible="false" id="main_menu.eu.order" default="3"/>
+        <setting label="" type="number" visible="false" id="main_menu.sw.order" default="3"/>
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
-
-            <setting label="Euronews" type="bool" id="channels.eu.euronews.euronews" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.eu.euronews.euronews.order" default="1"/>
-
-            <setting label="Arte" type="bool" id="channels.eu.arte.arte" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="channels.eu.arte.arte.order" default="2"/>
-
-            <setting label="France 24" type="bool" id="channels.eu.france24.france24" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="channels.eu.france24.france24.order" default="3"/>
+        <setting label="30023" type="bool" id="main_menu.sw" default="true" visible="false"/>
 
         <setting label="" type="number" visible="false" id="main_menu.jp.order" default="4"/>
         <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -227,6 +218,15 @@
             <setting label="TV5Monde Afrique" type="bool" id="channels.wo.tv5monde.tv5mondeafrique" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="channels.wo.tv5monde.tv5mondeafrique.order" default="1"/>
 
+            <setting label="Euronews" type="bool" id="channels.wo.euronews.euronews" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.euronews.euronews.order" default="2"/>
+
+            <setting label="Arte" type="bool" id="channels.wo.arte.arte" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.arte.arte.order" default="3"/>
+
+            <setting label="France 24" type="bool" id="channels.wo.france24.france24" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.france24.france24.order" default="4"/>
+
         <setting label="" type="number" visible="false" id="main_menu.ws.order" default="7"/>
         <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true" visible="false"/>
@@ -256,12 +256,12 @@
 
         <setting label="30071" type="lsep" />
 
-            <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="30023" type="bool" id="main_menu.eu" default="true" visible="false"/>
+            <setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
+            <setting label="30025" type="bool" id="main_menu.wo" default="true" visible="false"/>
 
-                <setting label="30080" type="labelenum" id="channels.eu.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
-                <setting label="30082" type="labelenum" id="channels.eu.euronews.euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
-                <setting label="30081" type="labelenum" id="channels.eu.france24.france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES"/>
+                <setting label="30080" type="labelenum" id="channels.wo.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
+                <setting label="30082" type="labelenum" id="channels.wo.euronews.euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
+                <setting label="30081" type="labelenum" id="channels.wo.france24.france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES"/>
 
             <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>

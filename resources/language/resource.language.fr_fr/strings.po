@@ -68,8 +68,8 @@ msgid "Japanese channels"
 msgstr "Chaînes japonaises"
 
 msgctxt "#30023"
-msgid "European channels"
-msgstr "Chaînes européennes"
+msgid "Swiss channels"
+msgstr "Chaînes suisses"
 
 msgctxt "#30024"
 msgid "United Kingdom channels"

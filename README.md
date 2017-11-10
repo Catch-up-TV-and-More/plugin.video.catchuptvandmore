@@ -30,11 +30,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV Communauté allemande — *German Community TV*
 - BRF *(Replay)*
 
-### Europe
-- Arte *(Replay, Live TV)* *(Contents {FR|DE})*
-- Euronews *(Live TV)* *(Contents {FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU})*
-- France 24 *(Replay, Live TV)* *(Contents {FR|EN|AR|ES})*
-
 ### France
 ##### TV
 - TF1 *(Replay, Live TV)*
@@ -84,6 +79,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Chaînes internationales — *International channels*
 ##### TV
 - TV5Monde Afrique *(Replay)*
+- Arte *(Replay, Live TV)* *(Contents {FR|DE})*
+- Euronews *(Live TV)* *(Contents {FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU})*
+- France 24 *(Replay, Live TV)* *(Contents {FR|EN|AR|ES})*
 
 ### Japon — *Japan*
 ##### TV

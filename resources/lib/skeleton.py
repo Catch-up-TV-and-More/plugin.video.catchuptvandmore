@@ -23,9 +23,9 @@
 
 CATEGORIES = {
     'main_menu.be': 'Belgian channels',
-    'main_menu.eu': 'European channels',
     'main_menu.fr': 'French channels',
     'main_menu.jp': 'Japanese channels',
+    'main_menu.sw': 'Swiss channels',
     'main_menu.uk': 'United Kingdom channels',
     'main_menu.wo': 'International channels',
     'main_menu.ws': 'Websites'
@@ -42,10 +42,7 @@ CHANNELS = {
         'channels.be.rtl.clubrtl': 'CLUB RTL'
     },
 
-    'main_menu.eu': {
-        'channels.eu.arte.arte': 'Arte',
-        'channels.eu.euronews.euronews': 'Euronews',
-        'channels.eu.france24.france24': 'France 24'
+    'main_menu.sw': {
     },
 
     'main_menu.fr': {
@@ -107,7 +104,10 @@ CHANNELS = {
     },
 
     'main_menu.wo': {
-        'channels.wo.tv5monde.tv5mondeafrique': 'TV5Monde Afrique'
+        'channels.wo.tv5monde.tv5mondeafrique': 'TV5Monde Afrique',
+        'channels.wo.arte.arte': 'Arte',
+        'channels.wo.euronews.euronews': 'Euronews',
+        'channels.wo.france24.france24': 'France 24'
     },
 
     'main_menu.ws': {

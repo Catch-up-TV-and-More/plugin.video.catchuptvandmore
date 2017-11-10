@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Original work (C) JUL1EN094, SPM, SylvainCecchetto
-    Copyright (C) 2016  SylvainCecchetto
+    Copyright (C) 2017  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
