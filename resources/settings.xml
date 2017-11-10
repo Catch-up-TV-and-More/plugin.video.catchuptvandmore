@@ -183,14 +183,14 @@
         <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
 
-            <setting label="NHK World" type="bool" id="channels.jp.nhk.nhkworld" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhkworld.order" default="1"/>
+            <setting label="NHK ニュース" type="bool" id="channels.jp.nhk.nhknews" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhknews.order" default="1"/>
 
-            <setting label="NHK ニュース" type="bool" id="channels.jp.nhk.nhknews" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhknews.order" default="2"/>
+            <setting label="NHKらいふ" type="bool" id="channels.jp.nhk.nhklifestyle" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhklifestyle.order" default="2"/>
 
-            <setting label="NHKらいふ" type="bool" id="channels.jp.nhk.nhklifestyle" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="channels.jp.nhk.nhklifestyle.order" default="3"/>
+            <setting label="TBS ニュース" type="bool" id="channels.jp.tbs.tbsnews" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.jp.tbs.tbsnews.order" default="3"/>
 
         <setting label="" type="number" visible="false" id="main_menu.uk.order" default="5"/>
         <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -226,6 +226,9 @@
 
             <setting label="France 24" type="bool" id="channels.wo.france24.france24" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="channels.wo.france24.france24.order" default="4"/>
+
+            <setting label="NHK World" type="bool" id="channels.wo.nhkworld.nhkworld" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.nhkworld.nhkworld.order" default="5"/>
 
         <setting label="" type="number" visible="false" id="main_menu.ws.order" default="7"/>
         <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>

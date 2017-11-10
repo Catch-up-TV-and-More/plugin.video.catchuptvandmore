@@ -90,9 +90,9 @@ CHANNELS = {
     },
 
     'main_menu.jp': {
-        'channels.jp.nhk.nhkworld': 'NHK World',
         'channels.jp.nhk.nhknews': 'NHK ニュース',
-        'channels.jp.nhk.nhklifestyle': 'NHKらいふ'
+        'channels.jp.nhk.nhklifestyle': 'NHKらいふ',
+        'channels.jp.tbs.tbsnews': 'TBS ニュース'
     },
 
     'main_menu.uk': {
@@ -107,7 +107,8 @@ CHANNELS = {
         'channels.wo.tv5monde.tv5mondeafrique': 'TV5Monde Afrique',
         'channels.wo.arte.arte': 'Arte',
         'channels.wo.euronews.euronews': 'Euronews',
-        'channels.wo.france24.france24': 'France 24'
+        'channels.wo.france24.france24': 'France 24',
+        'channels.wo.nhkworld.nhkworld': 'NHK World'
     },
 
     'main_menu.ws': {
