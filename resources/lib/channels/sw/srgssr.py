@@ -45,8 +45,8 @@ URL_ROOT = 'https://%s.%s.ch'
 URL_CATEGORIES_JSON = 'https://%s.%s.ch/play/v2/tv/topicList?layout=json'
 # (www or play), channel_name
 
-URL_TOKEN = 'https://tp.srgssr.ch/akahd/token?acl=/i/%s/*'
-# channel_name
+URL_TOKEN = 'https://tp.srgssr.ch/akahd/token?acl=%s'
+# acl
 
 URL_INFO_VIDEO = 'https://il.srgssr.ch/integrationlayer' \
                  '/2.0/%s/mediaComposition/video/%s.json' \
@@ -240,21 +240,15 @@ def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
         video_id = params.video_url.split('=')[1]
-        print 'video_id :'  + video_id
         if params.channel_name == 'swissinfo':
             channel_name_value = 'swi'
         else :
             channel_name_value = params.channel_name
         streams_datas = utils.get_webcontent(
             URL_INFO_VIDEO % (channel_name_value, video_id))
-        print 'streams_datas :'  + streams_datas
         streams_json = json.loads(streams_datas)
-        token_datas = utils.get_webcontent(
-            URL_TOKEN % channel_name_value)
-        token_json = json.loads(token_datas)
 
         # build url
-        token = token_json["token"]["authparams"]
         url = ''
         for stream in streams_json["chapterList"]:
             if video_id in stream["id"]:
@@ -262,4 +256,10 @@ def get_video_url(params):
                     if url_stream["quality"] == 'HD' and \
                        'mpegURL' in url_stream["mimeType"]:
                         url = url_stream["url"]
+        acl_value = '/i/%s/*' % (re.compile(
+            '\/i\/(.*?)\/').findall(url)[0])
+        token_datas = utils.get_webcontent(URL_TOKEN % acl_value)
+        token_json = json.loads(token_datas)
+        token = token_json["token"]["authparams"]
+
         return url + '?' + token
