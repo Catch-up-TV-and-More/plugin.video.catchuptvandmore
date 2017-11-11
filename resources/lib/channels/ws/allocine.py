@@ -711,7 +711,7 @@ def get_video_url(params):
                                 re.compile(
                                 r'RESOLUTION=(.*?),').findall(
                                 lines[k])[0])
-                            all_datas_videos_quality.append(
+                            all_datas_videos_path.append(
                                 lines[k + 1])
                     seleted_item = common.sp.xbmcgui.Dialog().select(
                         _('Choose video quality'),

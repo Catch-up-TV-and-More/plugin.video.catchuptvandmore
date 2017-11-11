@@ -27,7 +27,6 @@ from resources.lib import common
 
 # TO DO
 # RTR (JSON empty ? for category)
-# Live TV
 # Add More Video_button (for category)
 # Add all emission (All channels)
 # Add Info Video
@@ -44,6 +43,10 @@ URL_ROOT = 'https://%s.%s.ch'
 # Replay
 URL_CATEGORIES_JSON = 'https://%s.%s.ch/play/v2/tv/topicList?layout=json'
 # (www or play), channel_name
+
+# Live
+URL_LIVE_JSON = 'http://www.%s.ch/play/v2/tv/live/overview?layout=json'
+# channel_name
 
 URL_TOKEN = 'https://tp.srgssr.ch/akahd/token?acl=%s'
 # acl
@@ -85,16 +88,16 @@ def root(params):
     })
 
     # Add Live
-    #if params.channel_name != 'swissinfo':
-        #modes.append({
-            #'label': _('Live TV'),
-            #'url': common.PLUGIN.get_url(
-                #action='channel_entry',
-                #next='live_cat',
-                #category='%s Live TV' % params.channel_name.upper(),
-                #window_title='%s Live TV' % params.channel_name
-            #),
-        #})
+    if params.channel_name != 'swissinfo':
+        modes.append({
+            'label': _('Live TV'),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='live_cat',
+                category='%s Live TV' % params.channel_name.upper(),
+                window_title='%s Live TV' % params.channel_name
+            ),
+        })
 
     return common.PLUGIN.create_listing(
         modes,
@@ -232,10 +235,56 @@ def list_videos(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
-    return None
+    lives = []
+
+    title = ''
+    # subtitle = ' - '
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
+
+    lives_datas = utils.get_webcontent(
+        URL_LIVE_JSON % params.channel_name)
+    lives_json = json.loads(lives_datas)
+
+    for live in lives_json["teaser"]:
+
+        title = live["channelName"]
+        img = live["logo"] + '/scale/width/448'
+        live_id = live["id"]
+
+        info = {
+            'video': {
+                'title': title,
+                'plot': plot,
+                'duration': duration
+            }
+        }
+
+        lives.append({
+            'label': title,
+            'thumb': img,
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='play_l',
+                live_id=live_id,
+            ),
+            'is_playable': True,
+            'info': info
+        })
+
+    return common.PLUGIN.create_listing(
+        lives,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
+#@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -263,3 +312,36 @@ def get_video_url(params):
         token = token_json["token"]["authparams"]
 
         return url + '?' + token
+    elif params.next == 'play_l':
+
+        streams_datas = utils.get_webcontent(
+            URL_INFO_VIDEO % (params.channel_name,
+                params.live_id))
+        streams_json = json.loads(streams_datas)
+
+        # build url
+        url = ''
+        for stream in streams_json["chapterList"]:
+            if params.live_id in stream["id"]:
+                for url_stream in stream["resourceList"]:
+                    if 'HD' in url_stream["quality"]:
+                        if url_stream["quality"] == 'HD' and \
+                           'mpegURL' in url_stream["mimeType"]:
+                            url = url_stream["url"]
+                    else:
+                        if 'mpegURL' in url_stream["mimeType"]:
+                            url = url_stream["url"]
+        acl_value = '/i/%s/*' % (re.compile(
+            '\/i\/(.*?)\/').findall(url)[0])
+        token_datas = utils.get_webcontent(URL_TOKEN % acl_value)
+        token_json = json.loads(token_datas)
+        token = token_json["token"]["authparams"]
+
+        m3u8_file = utils.get_webcontent(url + '?' + token)
+        lines = m3u8_file.splitlines()
+        for k in range(0, len(lines) - 1):
+            for k in range(0, len(lines) - 1):
+                if 'RESOLUTION=' in lines[k]:
+                    url = lines[k + 1]
+        return url
+
