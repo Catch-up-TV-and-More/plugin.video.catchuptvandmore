@@ -25,7 +25,7 @@ CATEGORIES = {
     'main_menu.be': 'Belgian channels',
     'main_menu.fr': 'French channels',
     'main_menu.jp': 'Japanese channels',
-    'main_menu.sw': 'Swiss channels',
+    'main_menu.sw': 'Switzerland channels',
     'main_menu.uk': 'United Kingdom channels',
     'main_menu.wo': 'International channels',
     'main_menu.ws': 'Websites'
@@ -43,6 +43,11 @@ CHANNELS = {
     },
 
     'main_menu.sw': {
+        'channels.sw.srgssr.rts': 'RTS',
+        'channels.sw.srgssr.rsi': 'RSI',
+        'channels.sw.srgssr.srf': 'SRF',
+        'channels.sw.srgssr.rtr': 'RTR',
+        'channels.sw.srgssr.swissinfo': 'SWISSINFO'
     },
 
     'main_menu.fr': {

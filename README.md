@@ -90,12 +90,28 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - NHKらいふ *(Replay)*
 - TBS ニュース *(Replay)*
 
-### Sites internet — *Websites*
-#### Canada
-##### Communauté française — *French Community*
+### Suisse — *Switzerland*
+##### TV Communauté française — *French Community TV*
+- RTS *(Replay)*
+
+##### TV Communauté italienne — *Italian Community TV*
+- RSI *(Replay)*
+
+##### TV Communauté allemande — *German Community TV*
+- SRF *(Replay)*
+
+##### TV Communauté romanche — *Romansh Community TV*
+- RTR *(Replay)*
+
+##### Web TV
+- SWISSINFO *(Replay)*
+
+## Sites internet disponibles — *Available Websites*
+### Canada
+#### Communauté française — *French Community*
 - Au pays des Têtes à claques <https://www.tetesaclaques.tv/>
 
-#### France
+### France
 - Allociné <http://www.allocine.fr/>
 - Taratata <http://mytaratata.com/>
 - Noob TV <http://noob-tv.com/>

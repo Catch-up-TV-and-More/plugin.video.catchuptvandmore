@@ -179,6 +179,21 @@
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.sw" default="true" visible="false"/>
 
+            <setting label="RTS" type="bool" id="channels.sw.srgssr.rts" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.sw.srgssr.rts.order" default="1"/>
+
+            <setting label="RSI" type="bool" id="channels.sw.srgssr.rsi" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.sw.srgssr.rsi.order" default="2"/>
+
+            <setting label="SRF" type="bool" id="channels.sw.srgssr.srf" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.sw.srgssr.srf.order" default="3"/>
+
+            <setting label="RTR" type="bool" id="channels.sw.srgssr.rtr" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.sw.srgssr.rtr.order" default="4"/>
+
+            <setting label="SWISSINFO" type="bool" id="channels.sw.srgssr.swissinfo" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="channels.sw.srgssr.swissinfo.order" default="5"/>
+
         <setting label="" type="number" visible="false" id="main_menu.jp.order" default="4"/>
         <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>

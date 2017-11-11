@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.7~beta002"
+       version="0.1.7~beta003"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -37,6 +37,11 @@
 [Move] Arte, Euronews, France 24 to International channels (wwark)
 [Move] NHK World to International channels (wwark)
 [Add WebTV] TBS ニュース (JP) (wwark)
+[Add Channel] RTS (SW) (wwark)
+[Add Channel] RSI (SW) (wwark)
+[Add Channel] RTR (SW) (wwark)
+[Add Channel] SRF (SW) (wwark)
+[Add WebTV] SWISSINFO (SW) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
