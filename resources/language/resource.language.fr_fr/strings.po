@@ -204,7 +204,7 @@ msgctxt "#30300"
 msgid "Clear cache"
 msgstr "Vider le cache"
 
-# OpenVPN (from 30340 to 30360)
+# OpenVPN (from 30340 to 30370)
 msgctxt "#30340"
 msgid "Enable VPN feature"
 msgstr "Activer la fonctionnalité VPN"
@@ -255,7 +255,7 @@ msgstr "Importation échouée. Vous devez spécifier un nom pour cette configura
 
 msgctxt "#30352"
 msgid "Select OpenVPN configuration to run"
-msgstr "Choisissez la configuration OpenVPN à uriliser"
+msgstr "Choisissez la configuration OpenVPN à utiliser"
 
 msgctxt "#30353"
 msgid "Enter your sudo password"
@@ -269,7 +269,6 @@ msgctxt "#30355"
 msgid "Stopped VPN connection"
 msgstr "Arrêt de la connexion VPN"
 
-
 msgctxt "#30356"
 msgid "An existing OpenVPN instance appears to be running."
 msgstr "Une instance OpenVPN semble être en cours."
@@ -281,3 +280,15 @@ msgstr "La déconnecter ?"
 msgctxt "#30358"
 msgid "An error has occurred whilst trying to connect OpenVPN"
 msgstr "Une erreur est survenue durant la tentative de reconnexion"
+
+msgctxt "#30359"
+msgid "Disconnect VPN"
+msgstr "Déconnecter VPN"
+
+msgctxt "#30360"
+msgid "Select OpenVPN configuration to delete"
+msgstr "Choisissez la configuration OpenVPN à supprimer"
+
+msgctxt "#30361"
+msgid "Connect/Disconnect VPN"
+msgstr "Connecter/Déconnecter VPN"

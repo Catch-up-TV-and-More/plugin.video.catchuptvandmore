@@ -36,6 +36,7 @@
 [Add Channel] TV5Monde Afrique (wwark)
 [Fix] some fixes for Replay LCI (wwark)
 [Fix] Try to fix random crash with simpleplugin storage feature (SylvainCecchetto, thanks romanvm)
+[Feature] Integrated OpenVPN client (BETA) (SylvainCecchetto, brianhornsby) 
     </news>
     <assets>
       <icon>icon.png</icon>

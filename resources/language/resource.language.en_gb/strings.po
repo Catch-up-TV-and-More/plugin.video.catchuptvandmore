@@ -206,7 +206,7 @@ msgctxt "#30300"
 msgid "Clear cache"
 msgstr ""
 
-# OpenVPN (from 30340 to 30360)
+# OpenVPN (from 30340 to 30370)
 msgctxt "#30340"
 msgid "Enable VPN feature"
 msgstr ""
@@ -283,3 +283,14 @@ msgctxt "#30358"
 msgid "An error has occurred whilst trying to connect OpenVPN"
 msgstr ""
 
+msgctxt "#30359"
+msgid "Disconnect VPN"
+msgstr ""
+
+msgctxt "#30360"
+msgid "Select OpenVPN configuration to delete"
+msgstr ""
+
+msgctxt "#30361"
+msgid "Connect/Disconnect VPN"
+msgstr ""
