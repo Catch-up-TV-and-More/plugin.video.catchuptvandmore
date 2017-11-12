@@ -83,6 +83,10 @@ msgctxt "#30026"
 msgid "Websites"
 msgstr "Sites Web"
 
+msgctxt "#30027"
+msgid "Connect VPN"
+msgstr "Connecter le VPN"
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"
@@ -188,7 +192,6 @@ msgstr "Le flux vidéo n'existe plus"
 msgctxt "#30112"
 msgid "Video with an account needed"
 msgstr "Vidéo avec un compte requis"
-
 # Download (from 30200 to 30240)
 
 msgctxt "#30200"
@@ -200,3 +203,92 @@ msgstr "Répertoire de téléchargement"
 msgctxt "#30300"
 msgid "Clear cache"
 msgstr "Vider le cache"
+
+# OpenVPN (from 30340 to 30370)
+msgctxt "#30340"
+msgid "Enable VPN feature"
+msgstr "Activer la fonctionnalité VPN"
+
+msgctxt "#30341"
+msgid "OpenVPN filepath"
+msgstr "Chemin du binaire openvpn"
+
+msgctxt "#30342"
+msgid "Import OpenVPN configuration file"
+msgstr "Importer un fichier de configuration OpenVPN"
+
+msgctxt "#30343"
+msgid "Delete OpenVPN configuration file"
+msgstr "Supprimer un fichier de configuration OpenVPN"
+
+msgctxt "#30344"
+msgid "Additional arguments"
+msgstr "Arguments supplémentaires"
+
+msgctxt "#30345"
+msgid "Run OpenVPN with superuser privileges (sudo)"
+msgstr "Exécuter OpenVPN en tant que super-utilisateur (sudo)"
+
+msgctxt "#30346"
+msgid "Demander le mot de passe sudo"
+msgstr ""
+
+msgctxt "#30347"
+msgid "Connect VPN"
+msgstr "Connecter VPN"
+
+msgctxt "#30348"
+msgid "Choose a name for OpenVPN configuration"
+msgstr "Choisissez un nom pour cette configuration OpenVPN"
+
+msgctxt "#30349"
+msgid "This OpenVPN configuration name already exists. Overwrite?"
+msgstr "Ce nom existe déjà pour une configuration OvenVPN. Ecraser ?"
+
+msgctxt "#30350"
+msgid "Import cancelled"
+msgstr "Importation annulée"
+
+msgctxt "#30351"
+msgid "Import failed. You must specify a name for the OpenVPN configuration"
+msgstr "Importation échouée. Vous devez spécifier un nom pour cette configuration OpenVPN"
+
+msgctxt "#30352"
+msgid "Select OpenVPN configuration to run"
+msgstr "Choisissez la configuration OpenVPN à utiliser"
+
+msgctxt "#30353"
+msgid "Enter your sudo password"
+msgstr "Saisissez votre mot de passe sudo"
+
+msgctxt "#30354"
+msgid "Started VPN connection"
+msgstr "Démarrage de la connexion au VPN"
+
+msgctxt "#30355"
+msgid "Stopped VPN connection"
+msgstr "Arrêt de la connexion VPN"
+
+msgctxt "#30356"
+msgid "An existing OpenVPN instance appears to be running."
+msgstr "Une instance OpenVPN semble être en cours."
+
+msgctxt "#30357"
+msgid "Disconnect it?"
+msgstr "La déconnecter ?"
+
+msgctxt "#30358"
+msgid "An error has occurred whilst trying to connect OpenVPN"
+msgstr "Une erreur est survenue durant la tentative de reconnexion"
+
+msgctxt "#30359"
+msgid "Disconnect VPN"
+msgstr "Déconnecter VPN"
+
+msgctxt "#30360"
+msgid "Select OpenVPN configuration to delete"
+msgstr "Choisissez la configuration OpenVPN à supprimer"
+
+msgctxt "#30361"
+msgid "Connect/Disconnect VPN"
+msgstr "Connecter/Déconnecter VPN"

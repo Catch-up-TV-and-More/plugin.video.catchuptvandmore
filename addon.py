@@ -25,6 +25,7 @@ import YDStreamUtils
 import YDStreamExtractor
 from resources.lib import skeleton
 from resources.lib import common
+from resources.lib import vpn
 
 
 # Useful path
@@ -112,6 +113,20 @@ def root(params):
                     item_id=category_id) + ')'
             )
             context_menu.append(hide)
+
+            vpn_label = _('Connect VPN')
+            storage = common.sp.MemStorage('vpn')
+            if 'status' in storage:
+                if storage['status'] == "connected":
+                    vpn_label = _('Disconnect VPN')
+            else:
+                storage['status'] = "disconnected"
+            vpn = (
+                vpn_label,
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='vpn_entry') + ')'
+            )
+            context_menu.append(vpn)
 
             media_category_path = common.sp.xbmc.translatePath(
                 common.sp.os.path.join(
@@ -236,6 +251,20 @@ def list_channels(params):
                 item_id=channel_id) + ')'
         )
         context_menu.append(hide)
+
+        vpn_label = _('Connect VPN')
+        storage = common.sp.MemStorage('vpn')
+        if 'status' in storage:
+            if storage['status'] == "connected":
+                vpn_label = _('Disconnect VPN')
+        else:
+            storage['status'] = "disconnected"
+        vpn = (
+            vpn_label,
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='vpn_entry') + ')'
+        )
+        context_menu.append(vpn)
 
         icon = media_channel_path + '.png'
         fanart = media_channel_path + '_fanart.png'
@@ -387,6 +416,12 @@ def download_video(params):
         finally:
             YDStreamExtractor.setOutputCallback(None)
 
+    return None
+
+
+@common.PLUGIN.action()
+def vpn_entry(params):
+    vpn.root(params)
     return None
 
 

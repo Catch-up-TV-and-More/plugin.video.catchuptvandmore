@@ -43,6 +43,8 @@
 [Add Channel - Live TV] SRF (SW) (wwark)
 [Add WebTV] SWISSINFO (SW) (wwark)
 [Improvement] Add categories for RTBF Auvio (BE) (wwark)
+[Feature] Integrated OpenVPN client (BETA) (SylvainCecchetto, brianhornsby) 
+>>>>>>> openvpn
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -4,10 +4,10 @@
 # Addon Provider: SylvainCecchetto
 msgid ""
 msgstr ""
-"Project-Id-Version: Kodi Addons\n"
+"Project-Id-Version: plugin.video.catchuptvandmore\n"
 "Report-Msgid-Bugs-To: alanwww1@kodi.org\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2017-10-22 09:08+0300\n"
+"PO-Revision-Date: 2017-09-20 09:11+0300\n"
 "Last-Translator: A. Dambledore\n"
 "Language-Team: Eng2Heb\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "תפריט ראשי"
 
 msgctxt "#30001"
 msgid "Channels"
-msgstr "סרטים מערוצים"
+msgstr "ערוצים"
 
 msgctxt "#30002"
 msgid "Quality and Content"
@@ -31,11 +31,11 @@ msgstr "איכות ותוכן"
 
 msgctxt "#30003"
 msgid "Download"
-msgstr "הורדה"
+msgstr "הורד"
 
 msgctxt "#30004"
 msgid "Accounts"
-msgstr "חשבון"
+msgstr "חשבונות"
 
 msgctxt "#30005"
 msgid "Tools"
@@ -83,14 +83,18 @@ msgctxt "#30026"
 msgid "Websites"
 msgstr "אתרי רשת"
 
+msgctxt "#30027"
+msgid "Connect VPN"
+msgstr ""
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"
-msgstr "הזזה מטה"
+msgstr "רד למטה"
 
 msgctxt "#30041"
 msgid "Move up"
-msgstr "הזזה מעלה"
+msgstr "עבור למעלה"
 
 msgctxt "#30042"
 msgid "Hide"
@@ -98,7 +102,7 @@ msgstr "הסתר"
 
 msgctxt "#30043"
 msgid "Download"
-msgstr "הורדה"
+msgstr "הורד"
 
 # Dialog boxes (from 30050 to 30069)
 msgctxt "#30050"
@@ -107,7 +111,8 @@ msgstr "מידע"
 
 msgctxt "#30051"
 msgid "To re-enable hidden items go to the plugin settings"
-msgstr "כדי להפעיל מחדש את הפריטים המוסתרים, עבור אל ההגדרות של תוסף"
+msgstr "כדי להפעיל מחדש את הפריטים המוסתרים, עבור אל ההגדרות של ההרחבה"
+
 
 # Settings quality and content (from 30070 to 30099)
 msgctxt "#30070"
@@ -123,8 +128,8 @@ msgid "Arte: Choose Channel"
 msgstr "Arte: בחר ערוץ"
 
 msgctxt "#30081"
-msgid "France24: Choose Channel"
-msgstr "France24: בחר ערוץ"
+msgid "France 24: Choose Channel"
+msgstr "France 24: בחר ערוץ"
 
 msgctxt "#30082"
 msgid "Euronews: Choose Channel"
@@ -134,6 +139,7 @@ msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
 msgstr "איכות וידאו (הטוב ביותר|ברירת מחדל|תיבת דו-שיח)"
 
+
 # Others (from 30100 to 30140)
 msgctxt "#30100"
 msgid "More videos..."
@@ -141,7 +147,7 @@ msgstr "קטעי וידאו נוספים..."
 
 msgctxt "#30101"
 msgid "All videos"
-msgstr "כל וידאו"
+msgstr "נגן את כל הסרטונים"
 
 msgctxt "#30102"
 msgid "DRM protected video"
@@ -153,7 +159,7 @@ msgstr "חיפוש"
 
 msgctxt "#30104"
 msgid "Last videos"
-msgstr "קטעי וידאו האחרונים"
+msgstr "קטעי וידאו אחרונים"
 
 msgctxt "#30105"
 msgid "From A to Z"
@@ -161,11 +167,11 @@ msgstr "מ-א עד ת"
 
 msgctxt "#30106"
 msgid "Ascending"
-msgstr "עולה"
+msgstr "בסדר עולה"
 
 msgctxt "#30107"
 msgid "Descending"
-msgstr "יורד"
+msgstr "בסדר יורד"
 
 msgctxt "#30108"
 msgid "More programs..."
@@ -173,7 +179,7 @@ msgstr "עוד תוכניות..."
 
 msgctxt "#30109"
 msgid "Live TV"
-msgstr "‎טלוויזיה"
+msgstr "טלוויזיה חיה"
 
 msgctxt "#30110"
 msgid "Choose video quality"
@@ -181,11 +187,11 @@ msgstr "בחר איכות וידאו"
 
 msgctxt "#30111"
 msgid "Video stream no longer exists"
-msgstr ""
+msgstr "הזרמת הווידאו כבר לא קיימת"
 
 msgctxt "#30112"
 msgid "Video with an account needed"
-msgstr ""
+msgstr "נדרש וידאו שמקושר לחשבון"
 
 # Download (from 30200 to 30240)
 msgctxt "#30200"
@@ -196,4 +202,93 @@ msgstr "תיקיה להורדה"
 
 msgctxt "#30300"
 msgid "Clear cache"
+msgstr ""
+
+# OpenVPN (from 30340 to 30370)
+msgctxt "#30340"
+msgid "Enable VPN feature"
+msgstr ""
+
+msgctxt "#30341"
+msgid "OpenVPN filepath"
+msgstr ""
+
+msgctxt "#30342"
+msgid "Import OpenVPN configuration file"
+msgstr ""
+
+msgctxt "#30343"
+msgid "Delete OpenVPN configuration file"
+msgstr ""
+
+msgctxt "#30344"
+msgid "Additional arguments"
+msgstr ""
+
+msgctxt "#30345"
+msgid "Run OpenVPN with superuser privileges (sudo)"
+msgstr ""
+
+msgctxt "#30346"
+msgid "Ask for sudo password"
+msgstr ""
+
+msgctxt "#30347"
+msgid "Connect VPN"
+msgstr ""
+
+msgctxt "#30348"
+msgid "Choose a name for OpenVPN configuration"
+msgstr ""
+
+msgctxt "#30349"
+msgid "This OpenVPN configuration name already exists. Overwrite?"
+msgstr ""
+
+msgctxt "#30350"
+msgid "Import cancelled"
+msgstr ""
+
+msgctxt "#30351"
+msgid "Import failed. You must specify a name for the OpenVPN configuration"
+msgstr ""
+
+msgctxt "#30352"
+msgid "Select OpenVPN configuration to run"
+msgstr ""
+
+msgctxt "#30353"
+msgid "Enter your sudo password"
+msgstr ""
+
+msgctxt "#30354"
+msgid "Started VPN connection"
+msgstr ""
+
+msgctxt "#30355"
+msgid "Stopped VPN connection"
+msgstr ""
+
+msgctxt "#30356"
+msgid "An existing OpenVPN instance appears to be running."
+msgstr ""
+
+msgctxt "#30357"
+msgid "Disconnect it?"
+msgstr ""
+
+msgctxt "#30358"
+msgid "An error has occurred whilst trying to connect OpenVPN"
+msgstr ""
+
+msgctxt "#30359"
+msgid "Disconnect VPN"
+msgstr ""
+
+msgctxt "#30360"
+msgid "Select OpenVPN configuration to delete"
+msgstr ""
+
+msgctxt "#30361"
+msgid "Connect/Disconnect VPN"
 msgstr ""
