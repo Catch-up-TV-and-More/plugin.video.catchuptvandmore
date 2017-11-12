@@ -119,6 +119,8 @@ def format_day(date):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     modes = []
+    context_menu = []
+    context_menu.append(utils.vpn_context_menu_item())
 
     # Add Replay
     modes.append({
@@ -129,6 +131,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     # Add Live
@@ -140,6 +143,7 @@ def root(params):
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -160,6 +164,8 @@ def list_shows(params):
 
         emission_title = 'Émissions'
 
+        context_menu = []
+        context_menu.append(utils.vpn_context_menu_item())
         shows.append({
             'label': emission_title,
             'url': common.PLUGIN.get_url(
@@ -167,7 +173,8 @@ def list_shows(params):
                 action='channel_entry',
                 next='list_shows_2',
                 window_title=emission_title
-            )
+            ),
+            'context_menu': context_menu
         })
 
         file_path = utils.get_webcontent(URL_CATEGORIES)
@@ -179,6 +186,9 @@ def list_shows(params):
                     if 'category-' in category_sub["@attributes"]["id"]:
                         category_name = category_sub["@attributes"]["name"]
                         category_url = category_sub["@attributes"]["url"]
+
+                        context_menu = []
+                        context_menu.append(utils.vpn_context_menu_item())
                         shows.append({
                             'label': category_name,
                             'url': common.PLUGIN.get_url(
@@ -187,7 +197,8 @@ def list_shows(params):
                                 category_name=category_name,
                                 next='list_videos_categorie',
                                 window_title=category_name
-                            )
+                            ),
+                            'context_menu': context_menu
                         })
 
     elif params.next == 'list_shows_2':
@@ -205,6 +216,8 @@ def list_shows(params):
             emission_id = emission.get('data-id')
             emission_title = emission.find('h4').get_text().encode('utf-8')
 
+            context_menu = []
+            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': emission_title,
                 'url': common.PLUGIN.get_url(
@@ -213,7 +226,8 @@ def list_shows(params):
                     emission_id=emission_id,
                     next='list_videos_emission',
                     window_title=emission_title
-                )
+                ),
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -286,6 +300,7 @@ def list_videos(params):
                     url_video=url_video) + ')'
             )
             context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -347,6 +362,7 @@ def list_videos(params):
                         video_id=video_id) + ')'
                 )
                 context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -421,6 +437,8 @@ def list_live(params):
             }
         }
 
+        context_menu = []
+        context_menu.append(utils.vpn_context_menu_item())
         lives.append({
             'label': title,
             'fanart': img,
@@ -431,7 +449,8 @@ def list_live(params):
                 url_live=url_live,
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(

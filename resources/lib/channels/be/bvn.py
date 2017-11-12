@@ -76,6 +76,8 @@ def channel_entry(params):
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
+    context_menu = []
+    context_menu.append(utils.vpn_context_menu_item())
 
     # Add Replay
     modes.append({
@@ -86,6 +88,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     # Add Live
@@ -97,6 +100,7 @@ def root(params):
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -142,6 +146,8 @@ def list_shows(params):
             category_img = URL_ROOT + category["image"]
             category_url = URL_ROOT + '/programma/' + category["description"]
 
+            context_menu = []
+            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': category_name,
                 'thumb': category_img,
@@ -152,7 +158,8 @@ def list_shows(params):
                     category_url=category_url,
                     window_title=category_name,
                     category_name=category_name,
-                )
+                ),
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -266,8 +273,9 @@ def list_videos(params):
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 url_hls=url_hls) + ')'
-            )
+        )
         context_menu.append(download_video)
+        context_menu.append(utils.vpn_context_menu_item())
 
         if url_hls != '':
             videos.append({
@@ -344,6 +352,8 @@ def list_live(params):
         }
     }
 
+    context_menu = []
+    context_menu.append(utils.vpn_context_menu_item())
     lives.append({
         'label': title,
         'fanart': img,
@@ -354,7 +364,8 @@ def list_live(params):
             url_live=url_live,
         ),
         'is_playable': True,
-        'info': info
+        'info': info,
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(

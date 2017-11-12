@@ -41,6 +41,7 @@ URL_ROOT_LIVE = 'http://www.rtl.be/tv/%s/live'
 URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/11000/%s.xml'
 # live id
 
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
@@ -56,10 +57,13 @@ def channel_entry(params):
     else:
         return None
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
+    context_menu = []
+    context_menu.append(utils.vpn_context_menu_item())
 
     # Add Replay
     modes.append({
@@ -70,6 +74,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
         ),
+        'context_menu': context_menu
     })
 
     # Add Live
@@ -81,6 +86,7 @@ def root(params):
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name.upper()
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -91,6 +97,7 @@ def root(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -137,6 +144,8 @@ def list_shows(params):
                     next = 'list_videos'
                     category_url = URL_ROOT % params.channel_name
 
+                context_menu = []
+                context_menu.append(utils.vpn_context_menu_item())
                 shows.append({
                     'label': category_title,
                     'url': common.PLUGIN.get_url(
@@ -146,7 +155,8 @@ def list_shows(params):
                         next=next,
                         window_title=category_title,
                         videos_len=videos_len
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
 
     elif params.next == 'list_shows_carousel':
@@ -167,6 +177,8 @@ def list_shows(params):
             category_url = category_soup.find(
                 'a')['href'].encode('utf-8').replace('//', 'http://')
 
+            context_menu = []
+            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': category_title,
                 'url': common.PLUGIN.get_url(
@@ -176,7 +188,8 @@ def list_shows(params):
                     next='list_shows_cat',
                     window_title=category_title,
                     index_page='1'
-                )
+                ),
+                'context_menu': context_menu
             })
 
     elif params.next == 'list_shows_cat':
@@ -202,6 +215,8 @@ def list_shows(params):
                 'img')['src'].encode('utf-8').replace('//', 'http://')
             program_img = utils.get_redirected_url(program_img)
 
+            context_menu = []
+            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': program_title,
                 'thumb': program_img,
@@ -211,7 +226,8 @@ def list_shows(params):
                     program_url=program_url,
                     next='list_videos',
                     window_title=program_title
-                )
+                ),
+                'context_menu': context_menu
             })
 
         if category_soup.find('nav', attrs={'pagination': 'infinite'}):
@@ -219,6 +235,9 @@ def list_shows(params):
                 'nav', attrs={'pagination': 'infinite'}).find(
                 'a')['href'].encode('utf-8').replace('//', 'http://')
             # More programs...
+
+            context_menu = []
+            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': common.ADDON.get_localized_string(30108),
                 'url': common.PLUGIN.get_url(
@@ -230,7 +249,8 @@ def list_shows(params):
                     index_page=str(int(params.index_page) + 1),
                     update_listing=True,
                     previous_listing=str(shows)
-                )
+                ),
+                'context_menu': context_menu
 
             })
 
@@ -243,6 +263,7 @@ def list_shows(params):
         update_listing='update_listing' in params,
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -339,6 +360,8 @@ def list_videos(params):
             }
         }
 
+        context_menu = []
+        context_menu.append(utils.vpn_context_menu_item())
         videos.append({
             'label': video_title,
             'thumb': video_img,
@@ -348,7 +371,8 @@ def list_videos(params):
                 video_url=video_url
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu
         })
 
     if videos_len_bool is False:
@@ -360,6 +384,8 @@ def list_videos(params):
                 'a', class_='next')['href'].encode('utf-8').replace('//', '')
             url = 'http://' + url
             # More videos...
+            context_menu = []
+            context_menu.append(utils.vpn_context_menu_item())
             videos.append({
                 'label': common.ADDON.get_localized_string(30100),
                 'url': common.PLUGIN.get_url(
@@ -371,7 +397,8 @@ def list_videos(params):
                     index_page=str(int(index_page) + 1),
                     update_listing=True,
                     previous_listing=str(videos)
-                )
+                ),
+                'context_menu': context_menu
 
             })
 
@@ -386,6 +413,7 @@ def list_videos(params):
         update_listing='update_listing' in params,
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
@@ -435,6 +463,8 @@ def list_live(params):
             }
         }
 
+        context_menu = []
+        context_menu.append(utils.vpn_context_menu_item())
         lives.append({
             'label': title,
             'fanart': img,
@@ -445,7 +475,8 @@ def list_live(params):
                 url_live=url_live,
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu
         })
     # No live
     else:
@@ -461,6 +492,8 @@ def list_live(params):
             }
         }
 
+        context_menu = []
+        context_menu.append(utils.vpn_context_menu_item())
         lives.append({
             'label': title,
             'fanart': img,
@@ -471,7 +504,8 @@ def list_live(params):
                 url_live=url_live,
             ),
             'is_playable': False,
-            'info': info
+            'info': info,
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -482,6 +516,7 @@ def list_live(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):

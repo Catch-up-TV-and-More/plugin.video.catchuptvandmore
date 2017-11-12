@@ -34,7 +34,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+
 URL_ROOT_BRF = 'https://m.brf.be/'
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -51,20 +53,24 @@ def channel_entry(params):
     else:
         return None
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
+    context_menu = []
+    context_menu.append(utils.vpn_context_menu_item())
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-        action='channel_entry',
+            action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -75,6 +81,7 @@ def root(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -98,6 +105,8 @@ def list_shows(params):
         category_url = category.get('href')
 
         if 'http' in category_url:
+            context_menu = []
+            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
@@ -107,7 +116,8 @@ def list_shows(params):
                     category_name=category_name,
                     next='list_videos',
                     window_title=category_name
-                )
+                ),
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -118,6 +128,7 @@ def list_shows(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -186,6 +197,7 @@ def list_videos(params):
                 video_url=video_url) + ')'
         )
         context_menu.append(download_video)
+        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': title,
@@ -229,11 +241,13 @@ def list_videos(params):
         category=common.get_window_title()
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
     """Build live listing"""
     lives = []
     return None
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
@@ -250,4 +264,4 @@ def get_video_url(params):
                 url_video)
             return re.compile(
                 r'data-src="(.*?)"').findall(url)[0]
-    
+

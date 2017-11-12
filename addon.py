@@ -26,6 +26,7 @@ import YDStreamExtractor
 from resources.lib import skeleton
 from resources.lib import common
 from resources.lib import vpn
+from resources.lib import utils
 
 
 # Useful path
@@ -114,19 +115,7 @@ def root(params):
             )
             context_menu.append(hide)
 
-            vpn_label = _('Connect VPN')
-            storage = common.sp.MemStorage('vpn')
-            if 'status' in storage:
-                if storage['status'] == "connected":
-                    vpn_label = _('Disconnect VPN')
-            else:
-                storage['status'] = "disconnected"
-            vpn = (
-                vpn_label,
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='vpn_entry') + ')'
-            )
-            context_menu.append(vpn)
+            context_menu.append(utils.vpn_context_menu_item())
 
             media_category_path = common.sp.xbmc.translatePath(
                 common.sp.os.path.join(
@@ -252,19 +241,7 @@ def list_channels(params):
         )
         context_menu.append(hide)
 
-        vpn_label = _('Connect VPN')
-        storage = common.sp.MemStorage('vpn')
-        if 'status' in storage:
-            if storage['status'] == "connected":
-                vpn_label = _('Disconnect VPN')
-        else:
-            storage['status'] = "disconnected"
-        vpn = (
-            vpn_label,
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='vpn_entry') + ')'
-        )
-        context_menu.append(vpn)
+        context_menu.append(utils.vpn_context_menu_item())
 
         icon = media_channel_path + '.png'
         fanart = media_channel_path + '_fanart.png'
