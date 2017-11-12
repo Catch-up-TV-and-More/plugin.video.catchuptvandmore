@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.7~beta005"
+       version="0.1.7~beta006"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -44,7 +44,6 @@
 [Add WebTV] SWISSINFO (SW) (wwark)
 [Improvement] Add categories for RTBF Auvio (BE) (wwark)
 [Feature] Integrated OpenVPN client (BETA) (SylvainCecchetto, brianhornsby) 
->>>>>>> openvpn
     </news>
     <assets>
       <icon>icon.png</icon>
