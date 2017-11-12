@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.7~beta004"
+       version="0.1.7~beta005"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -42,6 +42,7 @@
 [Add Channel - Live TV] RTR (SW) (wwark)
 [Add Channel - Live TV] SRF (SW) (wwark)
 [Add WebTV] SWISSINFO (SW) (wwark)
+[Improvement] Add categories for RTBF Auvio (BE) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

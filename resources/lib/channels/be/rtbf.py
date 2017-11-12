@@ -42,6 +42,11 @@ URL_JSON_EMISSION_BY_ID = 'https://www.rtbf.be/api/media/video?' \
                           'method=getVideoListByEmissionOrdered&args[]=%s'
 # emission_id
 
+URL_CATEGORIES = 'https://www.rtbf.be/news/api/menu?site=media'
+
+URL_VIDEO_BY_ID = 'https://www.rtbf.be/auvio/embed/media?id=%s&autoplay=1'
+# Video Id
+
 URL_ROOT_IMAGE_RTBF = 'https://ds1.static.rtbf.be'
 
 URL_JSON_LIVE = 'https://www.rtbf.be/api/partner/generic/live/' \
@@ -128,7 +133,7 @@ def root(params):
 
     # Add Live
     modes.append({
-        'label': 'Live TV',
+        'label': _('Live TV'),
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='live_cat',
@@ -153,6 +158,40 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
 
+        emission_title = 'Émissions'
+
+        shows.append({
+            'label': emission_title,
+            'url': common.PLUGIN.get_url(
+                emission_title=emission_title,
+                action='channel_entry',
+                next='list_shows_2',
+                window_title=emission_title
+            )
+        })
+
+        file_path = utils.get_webcontent(URL_CATEGORIES)
+        categories_json = json.loads(file_path)
+
+        for category  in categories_json["item"]:
+            if category["@attributes"]["id"] == 'category':
+                for category_sub in category["item"]:
+                    if 'category-' in category_sub["@attributes"]["id"]:
+                        category_name = category_sub["@attributes"]["name"]
+                        category_url = category_sub["@attributes"]["url"]
+                        shows.append({
+                            'label': category_name,
+                            'url': common.PLUGIN.get_url(
+                                action='channel_entry',
+                                category_url=category_url,
+                                category_name=category_name,
+                                next='list_videos_categorie',
+                                window_title=category_name
+                            )
+                        })
+
+    elif params.next == 'list_shows_2':
+
         file_path = utils.download_catalog(
             URL_EMISSIONS_AUVIO,
             'url_emissions_auvio.html')
@@ -172,7 +211,7 @@ def list_shows(params):
                     emission_title=emission_title,
                     action='channel_entry',
                     emission_id=emission_id,
-                    next='list_videos_1',
+                    next='list_videos_emission',
                     window_title=emission_title
                 )
             })
@@ -191,7 +230,7 @@ def list_shows(params):
 def list_videos(params):
     videos = []
 
-    if params.next == 'list_videos_1':
+    if params.next == 'list_videos_emission':
 
         file_path = utils.download_catalog(
             URL_JSON_EMISSION_BY_ID % params.emission_id,
@@ -262,6 +301,67 @@ def list_videos(params):
                 'context_menu': context_menu
             })
 
+    elif params.next == 'list_videos_categorie':
+
+        file_path = utils.get_webcontent(params.category_url)
+        episodes_soup = bs(file_path, 'html.parser')
+        list_episodes = episodes_soup.find_all('article')
+
+        for episode in list_episodes:
+
+            if episode.get('data-type') == 'media':
+
+                if episode.find('h4'):
+                    title = episode.find('h3').find(
+                        'a').get('title') + ' - ' + \
+                        episode.find('h4').get_text()
+                else:
+                    title = episode.find('h3').find('a').get('title')
+                duration = 0
+                video_id = episode.get('data-id')
+                all_images = episode.find('img').get(
+                    'data-srcset').split(',')
+                for image in all_images:
+                    img = image.split(' ')[0]
+
+                info = {
+                    'video': {
+                        'title': title,
+                        # 'plot': plot,
+                        # 'episode': episode_number,
+                        # 'season': season_number,
+                        # 'rating': note,
+                        # 'aired': aired,
+                        # 'date': date,
+                        'duration': duration,
+                        # 'year': year,
+                        'mediatype': 'tvshow'
+                    }
+                }
+
+                context_menu = []
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        video_id=video_id) + ')'
+                )
+                context_menu.append(download_video)
+
+                videos.append({
+                    'label': title,
+                    'thumb': img,
+                    'fanart': img,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='play_r_categorie',
+                        video_id=video_id
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
+
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
@@ -269,7 +369,6 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_DATE
         ),
         content='tvshows',
-        update_listing='update_listing' in params,
         category=common.get_window_title()
     )
 
@@ -349,5 +448,13 @@ def list_live(params):
 def get_video_url(params):
     if params.next == 'play_l':
         return params.url_live
+    elif params.next == 'play_r_categorie':
+        file_path = utils.get_webcontent(
+            URL_VIDEO_BY_ID % params.video_id)
+        data_stream = re.compile('data-media=\"(.*?)\"').findall(
+            file_path)[0]
+        data_stream = data_stream.replace('&quot;', '"')
+        data_stream_json = json.loads(data_stream)
+        return data_stream_json["urlHls"]
     elif params.next == 'play_r':
         return params.url_video
