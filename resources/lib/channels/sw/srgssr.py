@@ -20,15 +20,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import datetime
 import json
 import re
 from resources.lib import utils
 from resources.lib import common
 
-# TO DO
-# RTR (JSON empty ? for category)
-# Add More Video_button (for category)
-# Add all emission (All channels)
+# TO DO and Infos
+# RTR No category (verify in the future ?)
+# Add More Video_button (for category and emissions)
 # Add Info Video
 # Add Quality Mode / test Download Mode
 
@@ -43,6 +43,14 @@ URL_ROOT = 'https://%s.%s.ch'
 # Replay
 URL_CATEGORIES_JSON = 'https://%s.%s.ch/play/v2/tv/topicList?layout=json'
 # (www or play), channel_name
+
+URL_EMISSIONS = 'https://www.%s.ch/play/tv/%s?index=all'
+# channel_name, name_emission
+
+URL_LIST_EPISODES = 'https://www.%s.ch/play/v2/tv/show/%s/' \
+                    'latestEpisodes/tillMonth/%s?' \
+                    'numberOfEpisodes=50&layout=json'
+# channel_name, IdEmission, ThisMonth (11-2017)
 
 # Live
 URL_LIVE_JSON = 'http://www.%s.ch/play/v2/tv/live/overview?layout=json'
@@ -69,6 +77,13 @@ def channel_entry(params):
     elif 'play' in params.next:
         return get_video_url(params)
     return None
+
+EMISSION_NAME = {
+    'rts': 'emissions',
+    'rsi': 'programmi',
+    'rtr': 'emissiuns',
+    'srf': 'sendungen'
+}
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
@@ -116,6 +131,23 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
 
+        if params.channel_name != 'swissinfo':
+
+            show_title = EMISSION_NAME[params.channel_name]
+            show_url = URL_EMISSIONS % (params.channel_name,
+                EMISSION_NAME[params.channel_name])
+
+            shows.append({
+                'label': show_title,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='list_shows_2',
+                    title=show_title,
+                    show_url=show_url,
+                    window_title=show_title
+                )
+            })
+
         if params.channel_name == 'swissinfo':
             first_part_fqdn = 'play'
         else:
@@ -145,6 +177,39 @@ def list_shows(params):
                 )
             })
 
+    elif params.next == 'list_shows_2':
+
+        file_path = utils.get_webcontent(params.show_url)
+        datas_shows = re.compile(
+            r'data-alphabetical-sections=\\\"(.*?)\\\"').findall(
+            file_path)[0]
+        datas_shows = datas_shows.replace('&quot;', '"')
+        datas_shows = datas_shows.replace('\\\\"', ' ')
+        datas_shows_json = json.loads(datas_shows)
+
+        for letter_show in datas_shows_json:
+            for show in letter_show["showTeaserList"]:
+                if 'id' in show:
+                    show_title = show["title"].encode('utf-8')
+                    if 'rts.ch' in show["imageUrl"]:
+                        show_image = show["imageUrl"] + \
+                        '/scale/width/448'.encode('utf-8')
+                    else:
+                        show_image = show["imageUrl"].encode('utf-8')
+                    show_id = show["id"]
+
+                    shows.append({
+                        'label': show_title,
+                        'thumb': show_image,
+                        'url': common.PLUGIN.get_url(
+                            action='channel_entry',
+                            next='list_videos_2',
+                            title=show_title,
+                            show_id=show_id,
+                            window_title=show_title
+                        )
+                    })
+
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
@@ -160,62 +225,127 @@ def list_videos(params):
     """Build videos listing"""
     videos = []
 
-    file_path = utils.get_webcontent(params.show_url)
-    datas_videos = re.compile(
-        r'data-teaser=\"(.*?)\"').findall(file_path)[0]
-    datas_videos = datas_videos.replace('&quot;', '"')
-    datas_videos_json = json.loads(datas_videos)
+    if params.next == 'list_videos_1':
+        file_path = utils.get_webcontent(params.show_url)
+        datas_videos = re.compile(
+            r'data-teaser=\"(.*?)\"').findall(file_path)[0]
+        datas_videos = datas_videos.replace('&quot;', '"')
+        datas_videos_json = json.loads(datas_videos)
 
-    for episode in datas_videos_json:
+        for episode in datas_videos_json:
 
-        video_title = ''
-        if 'showTitle' in episode:
-            video_title = episode["showTitle"].encode('utf-8') + \
-            ' - ' + episode["title"].encode('utf-8')
-        else:
-            video_title = episode["title"].encode('utf-8')
-        video_duration = 0
-        video_plot = ''
-        if 'description' in episode:
-            video_plot = episode["description"].encode('utf-8')
-        video_img = episode["imageUrl"].encode('utf-8') + \
-            '/scale/width/448'
-        video_url = episode["absoluteDetailUrl"].encode('utf-8')
+            video_title = ''
+            if 'showTitle' in episode:
+                video_title = episode["showTitle"].encode('utf-8') + \
+                ' - ' + episode["title"].encode('utf-8')
+            else:
+                video_title = episode["title"].encode('utf-8')
+            video_duration = 0
+            video_plot = ''
+            if 'description' in episode:
+                video_plot = episode["description"].encode('utf-8')
+            video_img = episode["imageUrl"].encode('utf-8') + \
+                '/scale/width/448'
+            video_url = episode["absoluteDetailUrl"].encode('utf-8')
 
-        info = {
-            'video': {
-                'title': video_title,
-                # 'aired': aired,
-                # 'date': date,
-                'duration': video_duration,
-                'plot': video_plot,
-                # 'year': year,
-                'mediatype': 'tvshow'
+            info = {
+                'video': {
+                    'title': video_title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': video_duration,
+                    'plot': video_plot,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
             }
-        }
 
-        context_menu = []
-        download_video = (
-            _('Download'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='download_video',
-                video_url=video_url) + ')'
-        )
-        context_menu.append(download_video)
+            context_menu = []
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    video_url=video_url) + ')'
+            )
+            context_menu.append(download_video)
 
-        videos.append({
-            'label': video_title,
-            'thumb': video_img,
-            'fanart': video_img,
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='play_r',
-                video_url=video_url
-            ),
-            'is_playable': True,
-            'info': info  # ,
-            # 'context_menu': context_menu
-        })
+            videos.append({
+                'label': video_title,
+                'thumb': video_img,
+                'fanart': video_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    video_url=video_url
+                ),
+                'is_playable': True,
+                'info': info  # ,
+                # 'context_menu': context_menu
+            })
+
+    elif params.next == 'list_videos_2':
+
+        date = datetime.datetime.now()
+
+        actual_month = str(date).split(' ')[0].split('-')[1] + '-' + \
+                       str(date).split(' ')[0].split('-')[0]
+
+        file_path = utils.get_webcontent(
+            URL_LIST_EPISODES % (params.channel_name,
+            params.show_id, actual_month))
+
+        list_episodes = json.loads(file_path)
+
+        for episode in list_episodes["episodes"]:
+
+            video_title = ''
+            if 'showTitle' in episode:
+                video_title = episode["showTitle"].encode('utf-8') + \
+                ' - ' + episode["title"].encode('utf-8')
+            else:
+                video_title = episode["title"].encode('utf-8')
+            video_duration = 0
+            video_plot = ''
+            if 'description' in episode:
+                video_plot = episode["description"].encode('utf-8')
+            video_img = episode["imageUrl"].encode('utf-8') + \
+                '/scale/width/448'
+            video_url = episode["absoluteDetailUrl"].encode('utf-8')
+
+            info = {
+                'video': {
+                    'title': video_title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': video_duration,
+                    'plot': video_plot,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            context_menu = []
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    video_url=video_url) + ')'
+            )
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': video_title,
+                'thumb': video_img,
+                'fanart': video_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    video_url=video_url
+                ),
+                'is_playable': True,
+                'info': info  # ,
+                # 'context_menu': context_menu
+            })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -284,7 +414,7 @@ def list_live(params):
     )
 
 
-#@common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
