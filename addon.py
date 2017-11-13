@@ -279,17 +279,17 @@ def get_channel_module(params):
         channel_module = params.channel_module
         channel_id = params.channel_id
         channel_category = params.channel_category
-        with common.PLUGIN.get_storage() as storage:
-            storage['last_channel_name'] = channel_name
-            storage['last_channel_module'] = channel_module
-            storage['last_channel_id'] = channel_id
-            storage['last_channel_category'] = channel_category
+        storage = common.sp.MemStorage('last_channel')
+        storage['last_channel_name'] = channel_name
+        storage['last_channel_module'] = channel_module
+        storage['last_channel_id'] = channel_id
+        storage['last_channel_category'] = channel_category
     else:
-        with common.PLUGIN.get_storage() as storage:
-            channel_name = storage['last_channel_name']
-            channel_module = storage['last_channel_module']
-            channel_id = storage['last_channel_id']
-            channel_category = storage['last_channel_category']
+        storage = common.sp.MemStorage('last_channel')
+        channel_name = storage['last_channel_name']
+        channel_module = storage['last_channel_module']
+        channel_id = storage['last_channel_id']
+        channel_category = storage['last_channel_category']
 
     params['channel_name'] = channel_name
     params['channel_id'] = channel_id
@@ -399,6 +399,12 @@ def download_video(params):
 @common.PLUGIN.action()
 def vpn_entry(params):
     vpn.root(params)
+    return None
+
+
+@common.PLUGIN.action()
+def clear_cache():
+    utils.clear_cache()
     return None
 
 

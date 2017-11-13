@@ -330,8 +330,8 @@
 
 
     <!-- Tools ... -->
-    <!-- <category label="30005">
-        <setting label="30300" type="action" action="RunScript($CWD/resources/lib/utils.py, clear_cache)"/>
-    </category> -->
+    <category label="30005">
+        <setting label="30300" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/?action=clear_cache)"/>
+    </category>
 
 </settings>

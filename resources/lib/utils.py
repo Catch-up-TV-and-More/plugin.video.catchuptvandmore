@@ -178,8 +178,14 @@ def send_notification(
 
 
 def clear_cache():
-    common.sp.xbmcgui.Dialog().notification(
-        common.PLUGIN_NAME, 'test', common.ADDON.icon, 5000)
+    for file in os.listdir(cache_path):
+        file_path = os.path.join(cache_path, file)
+        try:
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        except Exception as e:
+            print(e)
+    send_notification(_('Cache cleared'))
 
 
 def vpn_context_menu_item():

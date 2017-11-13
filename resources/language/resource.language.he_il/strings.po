@@ -38,7 +38,7 @@ msgid "Accounts"
 msgstr "חשבונות"
 
 msgctxt "#30005"
-msgid "Tools"
+msgid "Advanced settings"
 msgstr ""
 
 # Settings line separators (from 30010 to 30019)
@@ -198,10 +198,14 @@ msgctxt "#30200"
 msgid "Folder to Download"
 msgstr "תיקיה להורדה"
 
-# Tools (from 30300 to 30340)
+# Advanced settings (from 30300 to 30340)
 
 msgctxt "#30300"
 msgid "Clear cache"
+msgstr ""
+
+msgctxt "#30301"
+msgid "Cache cleared"
 msgstr ""
 
 # OpenVPN (from 30340 to 30370)
