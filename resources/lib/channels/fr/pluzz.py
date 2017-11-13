@@ -1030,7 +1030,7 @@ def list_live(params):
     )
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
+# @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 
@@ -1087,11 +1087,13 @@ def get_video_url(params):
         else:
             file_prgm = utils.get_webcontent(
                 LIVE_INFO % (params.channel_name))
+
         json_parser = json.loads(file_prgm)
 
         url_protected = ''
         for video in json_parser['videos']:
-            if 'hls' in video['format']:
+            if 'hls_v1_os' in video['format'] and \
+                    video['geoblocage'] is not None:
                 url_protected = video['url']
 
         file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_protected))
