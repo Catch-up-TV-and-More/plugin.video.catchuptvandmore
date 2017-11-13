@@ -245,6 +245,12 @@
             <setting label="NHK World" type="bool" id="channels.wo.nhkworld.nhkworld" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.wo.nhkworld.nhkworld.order" default="5"/>
 
+            <setting label="TV5Monde" type="bool" id="channels.wo.tv5monde.tv5monde" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.tv5monde.tv5monde.order" default="6"/>
+
+            <setting label="Tivi 5Monde" type="bool" id="channels.wo.tv5monde.tivi5monde" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.tv5monde.tivi5monde.order" default="7"/>
+
         <setting label="" type="number" visible="false" id="main_menu.ws.order" default="7"/>
         <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true" visible="false"/>

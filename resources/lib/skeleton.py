@@ -113,7 +113,9 @@ CHANNELS = {
         'channels.wo.arte.arte': 'Arte',
         'channels.wo.euronews.euronews': 'Euronews',
         'channels.wo.france24.france24': 'France 24',
-        'channels.wo.nhkworld.nhkworld': 'NHK World'
+        'channels.wo.nhkworld.nhkworld': 'NHK World',
+        'channels.wo.tv5monde.tv5monde': 'TV5Monde',
+        'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde'
     },
 
     'main_menu.ws': {

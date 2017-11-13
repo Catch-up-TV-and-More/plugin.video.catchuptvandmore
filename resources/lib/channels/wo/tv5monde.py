@@ -37,6 +37,8 @@ _ = common.ADDON.initialize_gettext()
 
 URL_TV5MAF_ROOT = 'https://afrique.tv5monde.com'
 
+URL_TV5MONDE_LIVE = 'http://live.tv5monde.com/'
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
@@ -51,26 +53,36 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+LIST_LIVE_TV5MONDE = {
+    _('Live TV') + ' France Belgique Suisse': 'fbs',
+    _('Live TV') + ' Info Plus': 'infoplus'
+}
+
+LIST_LIVE_TIVI5MONDE = {
+    _('Live TV') + ' TIVI 5Monde': 'tivi5monde'
+}
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     modes = []
 
     # Add Replay
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='channel_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
-        ),
-    })
+    if params.channel_name != 'tv5monde' and \
+       params.channel_name != 'tivi5monde':
+        modes.append({
+            'label': 'Replay',
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='list_shows_1',
+                category='%s Replay' % params.channel_name.upper(),
+                window_title='%s Replay' % params.channel_name.upper()
+            ),
+        })
 
     # Add Live
     if params.channel_name != 'tv5mondeafrique':
         modes.append({
-            'label': 'Live TV',
+            'label': _('Live TV'),
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='live_cat',
@@ -89,7 +101,7 @@ def root(params):
     )
 
 
-#@common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -363,7 +375,80 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
-    return None
+    """Build live listing"""
+    lives = []
+
+    if params.channel_name == 'tv5monde':
+        for live_name, live_id in LIST_LIVE_TV5MONDE.iteritems():
+
+            live_title = live_name
+            live_html = utils.get_webcontent(
+                URL_TV5MONDE_LIVE + '%s.html' % live_id)
+            live_json = re.compile(
+                r'data-broadcast=\'(.*?)\'').findall(live_html)[0]
+            live_json_parser = json.loads(live_json)
+            live_url = live_json_parser["files"][0]["url"]
+            live_img = URL_TV5MONDE_LIVE + re.compile(
+                r'data-image=\"(.*?)\"').findall(live_html)[0]
+
+            info = {
+                'video': {
+                    'title': live_title
+                }
+            }
+
+            lives.append({
+                'label': live_title,
+                'thumb': live_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_l',
+                    live_url=live_url,
+                ),
+                'is_playable': True,
+                'info': info
+            })
+
+    elif params.channel_name == 'tivi5monde':
+
+        for live_name, live_id in LIST_LIVE_TIVI5MONDE.iteritems():
+
+            live_title = live_name
+            live_html = utils.get_webcontent(
+                URL_TV5MONDE_LIVE  + '%s.html' % live_id)
+            live_json = re.compile(
+                r'data-broadcast=\'(.*?)\'').findall(live_html)[0]
+            live_json_parser = json.loads(live_json)
+            live_url = live_json_parser["files"][0]["url"]
+            live_img = URL_TV5MONDE_LIVE + re.compile(
+                r'data-image=\"(.*?)\"').findall(live_html)[0]
+
+            info = {
+                'video': {
+                    'title': live_title
+                }
+            }
+
+            lives.append({
+                'label': live_title,
+                'thumb': live_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_l',
+                    live_url=live_url,
+                ),
+                'is_playable': True,
+                'info': info
+            })
+
+    return common.PLUGIN.create_listing(
+        lives,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -376,3 +461,5 @@ def get_video_url(params):
             info_video_html)[0]
         video_json = json.loads(video_json)
         return video_json["files"][0]["url"]
+    elif params.next == 'play_l':
+        return params.live_url
