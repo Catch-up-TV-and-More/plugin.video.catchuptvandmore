@@ -26,6 +26,9 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 # TO DO
 # LIVE TV protected by #EXT-X-FAXS-CM
 # https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
@@ -159,6 +162,7 @@ def list_shows(params):
         for array in json_parser:
             category_id = str(array['id'])
             category_name = array['name'].encode('utf-8')
+
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
@@ -167,7 +171,8 @@ def list_shows(params):
                     next='list_shows_2',
                     title=category_name,
                     window_title=category_name
-                )
+                ),
+                'context_menu': context_menu
             })
 
         shows = common.PLUGIN.create_listing(
@@ -206,6 +211,7 @@ def list_shows(params):
                     'plot': program_desc
                 }
             }
+
             shows.append({
                 'label': program_title,
                 'thumb': program_img,
@@ -220,7 +226,8 @@ def list_shows(params):
                     title=program_title,
                     window_title=program_title
                 ),
-                'info': info
+                'info': info,
+                'context_menu': context_menu
             })
 
         shows = common.PLUGIN.create_listing(
@@ -266,7 +273,8 @@ def list_shows(params):
                     sub_category_id=sub_category_id,
                     window_title=sub_category_title
                 ),
-                'info': info
+                'info': info,
+                'context_menu': context_menu
             })
 
         info = {
@@ -275,6 +283,7 @@ def list_shows(params):
                 'plot': params.program_desc
             }
         }
+
         shows.append({
             'label': common.ADDON.get_localized_string(30101),
             'thumb': params.program_img,
@@ -287,7 +296,8 @@ def list_shows(params):
                 window_title=params.window_title
 
             ),
-            'info': info
+            'info': info,
+            'context_menu': context_menu
         })
 
         shows = common.PLUGIN.create_listing(
@@ -361,14 +371,15 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_id=video_id) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
+        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': title,

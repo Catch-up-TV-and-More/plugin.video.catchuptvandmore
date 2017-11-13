@@ -34,6 +34,8 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
 
 URL_ROOT_BRF = 'https://m.brf.be/'
 
@@ -60,8 +62,6 @@ def root(params):
     modes = []
 
     # Add Replay
-    context_menu = []
-    context_menu.append(utils.vpn_context_menu_item())
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
@@ -105,8 +105,6 @@ def list_shows(params):
         category_url = category.get('href')
 
         if 'http' in category_url:
-            context_menu = []
-            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
@@ -176,7 +174,7 @@ def list_videos(params):
 
         duration_list = program.find(
             'time').get_text().split('-')[1].strip().split(':')
-        duration =  int(duration_list[0])*60 + int(duration_list[1])
+        duration = int(duration_list[0]) * 60 + int(duration_list[1])
 
         info = {
             'video': {
@@ -189,13 +187,13 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_url=video_url) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
         context_menu.append(utils.vpn_context_menu_item())
 
@@ -225,6 +223,7 @@ def list_videos(params):
             update_listing=True,
             previous_listing=str(videos)
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(

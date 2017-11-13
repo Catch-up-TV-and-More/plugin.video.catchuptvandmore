@@ -29,6 +29,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 # TO DO
 #   List emissions
 #   Most recent
@@ -71,6 +74,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     modes.append({
@@ -81,6 +85,7 @@ def root(params):
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -160,6 +165,7 @@ def list_shows(params):
                 category=category,
                 window_title=category
             ),
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -211,16 +217,15 @@ def list_videos(params):
                     }
                 }
 
-                # Nouveau pour ajouter le menu pour télécharger la vidéo
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         url=emission['video_url']) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
-                # Fin
+                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -301,7 +306,8 @@ def list_live(params):
             url=url_live,
         ),
         'is_playable': True,
-        'info': info
+        'info': info,
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(

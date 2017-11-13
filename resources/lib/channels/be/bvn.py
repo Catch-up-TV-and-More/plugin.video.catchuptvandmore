@@ -37,6 +37,9 @@ from bs4 import BeautifulSoup as bs
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = 'https://www.bvn.tv'
 
 # LIVE :
@@ -76,8 +79,6 @@ def channel_entry(params):
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
-    context_menu = []
-    context_menu.append(utils.vpn_context_menu_item())
 
     # Add Replay
     modes.append({
@@ -146,8 +147,6 @@ def list_shows(params):
             category_img = URL_ROOT + category["image"]
             category_url = URL_ROOT + '/programma/' + category["description"]
 
-            context_menu = []
-            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': category_name,
                 'thumb': category_img,
@@ -170,6 +169,7 @@ def list_shows(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -267,13 +267,13 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 url_hls=url_hls) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
         context_menu.append(utils.vpn_context_menu_item())
 
@@ -352,8 +352,6 @@ def list_live(params):
         }
     }
 
-    context_menu = []
-    context_menu.append(utils.vpn_context_menu_item())
     lives.append({
         'label': title,
         'fanart': img,

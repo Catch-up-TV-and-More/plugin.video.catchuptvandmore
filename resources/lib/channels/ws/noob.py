@@ -38,6 +38,9 @@ URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -51,16 +54,18 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+
 CATEGORIES = {
-    'Noob' : URL_ROOT + '/videos.php?id=1',
-    'WarpZone Project' : URL_ROOT + '/videos.php?id=4',
-    'Blog de Gaea' : URL_ROOT + '/videos.php?id=2',
-    'Funglisoft' : URL_ROOT + '/videos.php?id=6',
-    'Flander''s Company' : URL_ROOT + '/videos.php?id=7',
-    'Damned 7' : URL_ROOT + '/videos.php?id=8',
-    'IRL' : URL_ROOT + '/videos.php?id=9',
-    'Emissions' : URL_ROOT + '/videos.php?id=5'
+    'Noob': URL_ROOT + '/videos.php?id=1',
+    'WarpZone Project': URL_ROOT + '/videos.php?id=4',
+    'Blog de Gaea': URL_ROOT + '/videos.php?id=2',
+    'Funglisoft': URL_ROOT + '/videos.php?id=6',
+    'Flander''s Company': URL_ROOT + '/videos.php?id=7',
+    'Damned 7': URL_ROOT + '/videos.php?id=8',
+    'IRL': URL_ROOT + '/videos.php?id=9',
+    'Emissions': URL_ROOT + '/videos.php?id=5'
 }
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
@@ -76,7 +81,8 @@ def root(params):
                 category_name=category_name,
                 next='list_shows_1',
                 window_title=category_name
-            )
+            ),
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -112,7 +118,8 @@ def list_shows(params):
                 title=show_title,
                 category_url=show_url,
                 window_title=show_title
-            )
+            ),
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -146,9 +153,10 @@ def list_videos(params):
             video_url = URL_ROOT + '/' + episode.find('a').get('href')
             video_img = URL_ROOT + '/' + episode.find('img').get('src')
             video_duration = 0
-            video_plot = episode.find('p',
-                class_='mod-articles-category-introtext').get_text(
-                ).strip().encode('utf-8')
+            video_plot = episode.find(
+                'p',
+                class_='mod-articles-category-introtext'
+            ).get_text().strip().encode('utf-8')
 
             info = {
                 'video': {
@@ -162,14 +170,15 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
-                )
-            context_menu.append(download_video)
+            )
+            context_menu = []
+            # context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': video_title,
@@ -180,8 +189,8 @@ def list_videos(params):
                     video_url=video_url
                 ),
                 'is_playable': True,
-                'info': info  # ,
-                # 'context_menu': context_menu
+                'info': info,
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(

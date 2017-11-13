@@ -36,6 +36,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_EMISSIONS_AUVIO = 'https://www.rtbf.be/auvio/emissions'
 
 URL_JSON_EMISSION_BY_ID = 'https://www.rtbf.be/api/media/video?' \
@@ -119,8 +122,6 @@ def format_day(date):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     modes = []
-    context_menu = []
-    context_menu.append(utils.vpn_context_menu_item())
 
     # Add Replay
     modes.append({
@@ -164,8 +165,6 @@ def list_shows(params):
 
         emission_title = 'Émissions'
 
-        context_menu = []
-        context_menu.append(utils.vpn_context_menu_item())
         shows.append({
             'label': emission_title,
             'url': common.PLUGIN.get_url(
@@ -180,15 +179,13 @@ def list_shows(params):
         file_path = utils.get_webcontent(URL_CATEGORIES)
         categories_json = json.loads(file_path)
 
-        for category  in categories_json["item"]:
+        for category in categories_json["item"]:
             if category["@attributes"]["id"] == 'category':
                 for category_sub in category["item"]:
                     if 'category-' in category_sub["@attributes"]["id"]:
                         category_name = category_sub["@attributes"]["name"]
                         category_url = category_sub["@attributes"]["url"]
 
-                        context_menu = []
-                        context_menu.append(utils.vpn_context_menu_item())
                         shows.append({
                             'label': category_name,
                             'url': common.PLUGIN.get_url(
@@ -216,8 +213,6 @@ def list_shows(params):
             emission_id = emission.get('data-id')
             emission_title = emission.find('h4').get_text().encode('utf-8')
 
-            context_menu = []
-            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': emission_title,
                 'url': common.PLUGIN.get_url(
@@ -292,13 +287,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     url_video=url_video) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
             context_menu.append(utils.vpn_context_menu_item())
 
@@ -354,13 +349,13 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_id=video_id) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
                 context_menu.append(utils.vpn_context_menu_item())
 
@@ -437,8 +432,6 @@ def list_live(params):
             }
         }
 
-        context_menu = []
-        context_menu.append(utils.vpn_context_menu_item())
         lives.append({
             'label': title,
             'fanart': img,

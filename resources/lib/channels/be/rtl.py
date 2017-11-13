@@ -29,6 +29,9 @@ from resources.lib import common
 # TO DO
 # emissions alphabetics
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = 'http://www.rtl.be/tv/%s/replay'
 # channel name : plugrtl, rtltvi or clubrtl
 
@@ -62,8 +65,6 @@ def channel_entry(params):
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
-    context_menu = []
-    context_menu.append(utils.vpn_context_menu_item())
 
     # Add Replay
     modes.append({
@@ -144,8 +145,6 @@ def list_shows(params):
                     next = 'list_videos'
                     category_url = URL_ROOT % params.channel_name
 
-                context_menu = []
-                context_menu.append(utils.vpn_context_menu_item())
                 shows.append({
                     'label': category_title,
                     'url': common.PLUGIN.get_url(
@@ -177,8 +176,6 @@ def list_shows(params):
             category_url = category_soup.find(
                 'a')['href'].encode('utf-8').replace('//', 'http://')
 
-            context_menu = []
-            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': category_title,
                 'url': common.PLUGIN.get_url(
@@ -215,8 +212,6 @@ def list_shows(params):
                 'img')['src'].encode('utf-8').replace('//', 'http://')
             program_img = utils.get_redirected_url(program_img)
 
-            context_menu = []
-            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': program_title,
                 'thumb': program_img,
@@ -236,8 +231,6 @@ def list_shows(params):
                 'a')['href'].encode('utf-8').replace('//', 'http://')
             # More programs...
 
-            context_menu = []
-            context_menu.append(utils.vpn_context_menu_item())
             shows.append({
                 'label': common.ADDON.get_localized_string(30108),
                 'url': common.PLUGIN.get_url(
@@ -360,8 +353,6 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
-        context_menu.append(utils.vpn_context_menu_item())
         videos.append({
             'label': video_title,
             'thumb': video_img,
@@ -383,9 +374,8 @@ def list_videos(params):
             url = prev_next_soup.find(
                 'a', class_='next')['href'].encode('utf-8').replace('//', '')
             url = 'http://' + url
+
             # More videos...
-            context_menu = []
-            context_menu.append(utils.vpn_context_menu_item())
             videos.append({
                 'label': common.ADDON.get_localized_string(30100),
                 'url': common.PLUGIN.get_url(
@@ -399,7 +389,6 @@ def list_videos(params):
                     previous_listing=str(videos)
                 ),
                 'context_menu': context_menu
-
             })
 
     return common.PLUGIN.create_listing(
@@ -463,8 +452,6 @@ def list_live(params):
             }
         }
 
-        context_menu = []
-        context_menu.append(utils.vpn_context_menu_item())
         lives.append({
             'label': title,
             'fanart': img,
@@ -492,8 +479,6 @@ def list_live(params):
             }
         }
 
-        context_menu = []
-        context_menu.append(utils.vpn_context_menu_item())
         lives.append({
             'label': title,
             'fanart': img,

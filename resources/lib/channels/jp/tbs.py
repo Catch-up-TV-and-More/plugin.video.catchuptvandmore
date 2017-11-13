@@ -29,6 +29,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = 'http://news.tbs.co.jp'
 
 URL_CONTENT = URL_ROOT + '/digest/%s.html'
@@ -59,7 +62,7 @@ def root(params):
 
     # Add News
     modes.append({
-        'label' : 'ニュース',
+        'label': 'ニュース',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_videos_news',
@@ -67,17 +70,19 @@ def root(params):
             category='TBS ニュース',
             window_title='TBS ニュース'
         ),
+        'context_menu': context_menu
     })
 
     # Add Weather
     modes.append({
-        'label' : '気象',
+        'label': '気象',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='list_videos_weather',
             category='TBS ニュース - 気象',
             window_title='TBS ニュース - 気象'
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -89,9 +94,11 @@ def root(params):
         category=common.get_window_title()
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     return None
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -121,14 +128,15 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_url=video_url) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
+        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': title,
@@ -170,14 +178,15 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -207,9 +216,11 @@ def list_videos(params):
         category=common.get_window_title()
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
     return None
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):

@@ -35,6 +35,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = 'http://www3.nhk.or.jp/'
 
 URL_ROOT_2 = 'http://www.nhk.or.jp'
@@ -86,6 +89,7 @@ CORRECT_MONTH = {
     'Dec': '12'
 }
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     modes = []
@@ -102,6 +106,7 @@ def root(params):
                 category='NHK ニュース',
                 window_title='NHK ニュース'
             ),
+            'context_menu': context_menu
         })
 
         # Add Weather
@@ -113,6 +118,7 @@ def root(params):
                 category='NHK ニュース - 気象',
                 window_title='NHK ニュース - 気象'
             ),
+            'context_menu': context_menu
         })
 
     elif params.channel_name == 'nhklifestyle':
@@ -136,7 +142,8 @@ def root(params):
                         title=category_title,
                         category_url=category_url,
                         window_title=category_title
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
 
     return common.PLUGIN.create_listing(
@@ -152,6 +159,7 @@ def root(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     return None
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -188,14 +196,15 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_url=video_url) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
+        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': title,
@@ -265,7 +274,6 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
@@ -273,7 +281,9 @@ def list_videos(params):
                     video_id=video_id,
                     video_date=video_date) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -300,6 +310,7 @@ def list_videos(params):
                 update_listing=True,
                 previous_listing=str(videos)
             ),
+            'context_menu': context_menu
         })
 
     elif params.next == 'list_videos_lifestyle':
@@ -352,14 +363,15 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=video_url) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -394,6 +406,7 @@ def list_videos(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
     return None
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):

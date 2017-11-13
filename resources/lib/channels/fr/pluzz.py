@@ -37,6 +37,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 CHANNEL_CATALOG = 'http://pluzz.webservices.francetelevisions.fr/' \
                   'pluzz/liste/type/replay/nb/10000/chaine/%s'
 
@@ -211,7 +214,7 @@ def root(params):
 
     # Add Replay
     if params.channel_name != 'franceinfo' and \
-        params.channel_name != 'france3regions':
+            params.channel_name != 'france3regions':
         modes.append({
             'label': 'Replay',
             'url': common.PLUGIN.get_url(
@@ -222,6 +225,7 @@ def root(params):
                 category='%s Replay' % params.channel_name.upper(),
                 window_title='%s Replay' % params.channel_name
             ),
+            'context_menu': context_menu
         })
 
     # Add Live
@@ -234,6 +238,7 @@ def root(params):
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     # Add Videos
@@ -248,6 +253,7 @@ def root(params):
                 category='%s Videos' % params.channel_name.upper(),
                 window_title='%s Videos' % params.channel_name
             ),
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -305,7 +311,8 @@ def list_shows(params):
                         rubrique=rubrique,
                         next='list_shows_2_cat',
                         window_title=rubrique_title
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
 
         # Last videos
@@ -316,7 +323,8 @@ def list_shows(params):
                 next='list_shows_last',
                 page='0',
                 window_title=common.ADDON.get_localized_string(30104)
-            )
+            ),
+            'context_menu': context_menu
         })
 
         # Search
@@ -327,7 +335,8 @@ def list_shows(params):
                 next='search',
                 page='0',
                 window_title=common.ADDON.get_localized_string(30103)
-            )
+            ),
+            'context_menu': context_menu
         })
 
         # from A to Z
@@ -337,7 +346,8 @@ def list_shows(params):
                 action='channel_entry',
                 next='list_shows_from_a_to_z',
                 window_title=common.ADDON.get_localized_string(30105)
-            )
+            ),
+            'context_menu': context_menu
         })
 
     # level 1
@@ -352,7 +362,8 @@ def list_shows(params):
                 sens='asc',
                 rubrique='no_rubrique',
                 window_title=params.window_title
-            )
+            ),
+            'context_menu': context_menu
         })
         shows.append({
             'label': common.ADDON.get_localized_string(30107),
@@ -364,7 +375,8 @@ def list_shows(params):
                 sens='desc',
                 rubrique='no_rubrique',
                 window_title=params.window_title
-            )
+            ),
+            'context_menu': context_menu
         })
 
     # level 1
@@ -381,7 +393,8 @@ def list_shows(params):
                     url=url,
                     title=title,
                     window_title=title
-                )
+                ),
+                'context_menu': context_menu
             })
 
     # level 1 or 2
@@ -441,7 +454,8 @@ def list_shows(params):
                                 window_title=titre_programme,
                                 fanart=icon
                             ),
-                            'info': info
+                            'info': info,
+                            'context_menu': context_menu
                         })
         if params.next == 'list_shows_2_from_a_to_z_CATEGORIES':
             # More videos...
@@ -456,7 +470,8 @@ def list_shows(params):
                     rubrique='no_rubrique',
                     update_listing=True,
                     previous_listing=str(shows)
-                )
+                ),
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -502,14 +517,15 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     id_diffusion=id_diffusion) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -537,7 +553,8 @@ def list_videos(params):
                 window_title=params.window_title,
                 update_listing=True,
                 previous_listing=str(videos)
-            )
+            ),
+            'context_menu': context_menu
 
         })
 
@@ -676,14 +693,15 @@ def list_videos(params):
                         }
                     }
 
-                    context_menu = []
                     download_video = (
                         _('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             id_diffusion=id_diffusion) + ')'
                     )
+                    context_menu = []
                     context_menu.append(download_video)
+                    context_menu.append(utils.vpn_context_menu_item())
 
                     videos.append({
                         'label': title,
@@ -711,8 +729,8 @@ def list_videos(params):
                     window_title=params.window_title,
                     update_listing=True,
                     previous_listing=str(videos)
-
-                )
+                ),
+                'context_menu': context_menu
             })
 
         elif 'last' in params.next:
@@ -728,7 +746,8 @@ def list_videos(params):
                     window_title=params.window_title,
                     update_listing=True,
                     previous_listing=str(videos)
-                )
+                ),
+                'context_menu': context_menu
 
             })
 
@@ -800,7 +819,8 @@ def list_live(params):
                         id_diffusion=id_diffusion
                     ),
                     'is_playable': True,
-                    'info': info
+                    'info': info,
+                    'context_menu': context_menu
                 })
 
         for live in list_lives_parserjson["page"]["upcoming-lives"]:
@@ -836,7 +856,8 @@ def list_live(params):
                     next='list_live'
                 ),
                 'is_playable': False,
-                'info': info
+                'info': info,
+                'context_menu': context_menu
             })
 
     elif params.channel_name == 'franceinfo':
@@ -859,7 +880,8 @@ def list_live(params):
                 next='play_l'
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu
         })
 
     elif params.channel_name == 'la_1ere':
@@ -884,7 +906,8 @@ def list_live(params):
                     id_stream=id_stream
                 ),
                 'is_playable': True,
-                'info': info
+                'info': info,
+                'context_menu': context_menu
             })
 
     elif params.channel_name == 'france3regions':
@@ -909,7 +932,8 @@ def list_live(params):
                     id_stream=id_stream
                 ),
                 'is_playable': True,
-                'info': info
+                'info': info,
+                'context_menu': context_menu
             })
 
     else:
@@ -992,7 +1016,8 @@ def list_live(params):
                     next='play_l',
                 ),
                 'is_playable': True,
-                'info': info
+                'info': info,
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -1053,7 +1078,7 @@ def get_video_url(params):
     elif params.next == 'play_l':
 
         if params.channel_name == 'la_1ere' or \
-            params.channel_name == 'france3regions':
+                params.channel_name == 'france3regions':
             file_prgm = utils.get_webcontent(
                 LIVE_INFO % (params.id_stream))
         elif params.channel_name == 'francetvsport':

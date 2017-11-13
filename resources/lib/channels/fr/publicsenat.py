@@ -35,6 +35,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = 'https://www.publicsenat.fr'
 
 URL_LIVE_SITE = 'https://www.publicsenat.fr/direct'
@@ -96,6 +99,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     # Add Live
@@ -107,6 +111,7 @@ def root(params):
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -137,7 +142,8 @@ def list_shows(params):
                     page='0',
                     next='list_videos_1',
                     window_title=category_name
-                )
+                ),
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -321,14 +327,15 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     url_video=url_video) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -356,6 +363,7 @@ def list_videos(params):
             update_listing=True,
             previous_listing=str(videos)
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -412,7 +420,8 @@ def list_live(params):
             url=url_live,
         ),
         'is_playable': True,
-        'info': info
+        'info': info,
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(

@@ -35,6 +35,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = 'https://uktvplay.uktv.co.uk'
 
 URL_SHOWS = 'https://uktvplay.uktv.co.uk/shows/channel/%s/'
@@ -103,6 +106,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -147,7 +151,8 @@ def list_shows(params):
                         title=show_title,
                         show_url=show_url,
                         window_title=show_title
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
             else:
                 shows.append({
@@ -159,7 +164,8 @@ def list_shows(params):
                         title=show_title,
                         show_url=show_url,
                         window_title=show_title
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
 
     elif params.next == 'list_shows_2':
@@ -189,7 +195,8 @@ def list_shows(params):
                     title=params.title + '_' + season_title,
                     show_url=params.show_url,
                     window_title=season_title
-                )
+                ),
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -265,7 +272,6 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
@@ -274,7 +280,9 @@ def list_videos(params):
                         data_account=data_account,
                         data_player=data_player) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': video_title,
@@ -333,7 +341,6 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
@@ -342,7 +349,9 @@ def list_videos(params):
                     data_account=data_account,
                     data_player=data_player) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': video_title,
@@ -403,7 +412,6 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
@@ -412,7 +420,9 @@ def list_videos(params):
                 data_account=data_account,
                 data_player=data_player) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
+        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': video_title,

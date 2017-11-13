@@ -35,7 +35,11 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_TV5MAF_ROOT = 'https://afrique.tv5monde.com'
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -65,6 +69,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
         ),
+        'context_menu': context_menu
     })
 
     # Add Live
@@ -77,6 +82,7 @@ def root(params):
                 category='%s Live TV' % params.channel_name.upper(),
                 window_title='%s Live TV' % params.channel_name.upper()
             ),
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -118,7 +124,8 @@ def list_shows(params):
                         title=category_title,
                         category_url=category_url,
                         window_title=category_title
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
 
     elif params.next == 'list_shows_2':
@@ -152,7 +159,8 @@ def list_shows(params):
                         title=show_title,
                         category_url=show_url,
                         window_title=show_title
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
 
     return common.PLUGIN.create_listing(
@@ -202,14 +210,15 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=params.category_url) + ')'
                 )
-                context_menu.append(download_video)
+                context_menu = []
+                # context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': video_title,
@@ -221,13 +230,14 @@ def list_videos(params):
                         video_url=params.category_url
                     ),
                     'is_playable': True,
-                    'info': info # ,
-                    # 'context_menu': context_menu
+                    'info': info,
+                    'context_menu': context_menu
                 })
             else:
-                seasons = replay_videos_soup.find('div',
-                    class_='tv5-pagerTop tv5-pagerTop--green').find_all(
-                    'a')
+                seasons = replay_videos_soup.find(
+                    'div',
+                    class_='tv5-pagerTop tv5-pagerTop--green'
+                ).find_all('a')
                 if len(seasons) > 1:
 
                     for season in seasons:
@@ -250,12 +260,16 @@ def list_videos(params):
                                 category_url=video_url
                             ),
                             'is_playable': False,
-                            'info': info
+                            'info': info,
+                            'context_menu': context_menu
                         })
                 else:
-                    all_videos = replay_videos_soup.find('div',
-                        class_='u-bg--concrete u-pad-t--xl u-pad-b--l').find_all(
-                        'div', 'grid-col-12 grid-col-m-4')
+                    all_videos = replay_videos_soup.find(
+                        'div',
+                        class_='u-bg--concrete u-pad-t--xl u-pad-b--l'
+                    ).find_all(
+                        'div',
+                        'grid-col-12 grid-col-m-4')
 
                     for video in all_videos:
 
@@ -277,14 +291,15 @@ def list_videos(params):
                             }
                         }
 
-                        context_menu = []
                         download_video = (
                             _('Download'),
                             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                                 action='download_video',
                                 video_url=video_url) + ')'
                         )
-                        context_menu.append(download_video)
+                        context_menu = []
+                        # context_menu.append(download_video)
+                        context_menu.append(utils.vpn_context_menu_item())
 
                         videos.append({
                             'label': video_title,
@@ -295,8 +310,8 @@ def list_videos(params):
                                 video_url=video_url
                             ),
                             'is_playable': True,
-                            'info': info # ,
-                            # 'context_menu': context_menu
+                            'info': info,
+                            'context_menu': context_menu
                         })
 
     elif params.next == 'list_videos_2':
@@ -329,14 +344,15 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=video_url) + ')'
                 )
-                context_menu.append(download_video)
+                context_menu = []
+                # context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': video_title,
@@ -347,8 +363,8 @@ def list_videos(params):
                         video_url=video_url
                     ),
                     'is_playable': True,
-                    'info': info # ,
-                    # 'context_menu': context_menu
+                    'info': info,
+                    'context_menu': context_menu
                 })
 
     return common.PLUGIN.create_listing(
@@ -360,6 +376,7 @@ def list_videos(params):
         update_listing='update_listing' in params,
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):

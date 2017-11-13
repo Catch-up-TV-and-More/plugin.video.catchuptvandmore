@@ -37,6 +37,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = 'https://%s.%s.ch'
 # (www or play), channel_name
 
@@ -64,6 +67,7 @@ URL_INFO_VIDEO = 'https://il.srgssr.ch/integrationlayer' \
                  '?onlyChapters=true&vector=portalplay'
 # channel_name, video_id
 
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
@@ -78,12 +82,14 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+
 EMISSION_NAME = {
     'rts': 'emissions',
     'rsi': 'programmi',
     'rtr': 'emissiuns',
     'srf': 'sendungen'
 }
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
@@ -100,6 +106,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     # Add Live
@@ -112,6 +119,7 @@ def root(params):
                 category='%s Live TV' % params.channel_name.upper(),
                 window_title='%s Live TV' % params.channel_name
             ),
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -145,7 +153,8 @@ def list_shows(params):
                     title=show_title,
                     show_url=show_url,
                     window_title=show_title
-                )
+                ),
+                'context_menu': context_menu
             })
 
         if params.channel_name == 'swissinfo':
@@ -154,7 +163,8 @@ def list_shows(params):
             first_part_fqdn = 'www'
 
         file_path = utils.get_webcontent(
-            URL_CATEGORIES_JSON % (first_part_fqdn,
+            URL_CATEGORIES_JSON % (
+                first_part_fqdn,
                 params.channel_name)
         )
         replay_categories_json = json.loads(file_path)
@@ -174,7 +184,8 @@ def list_shows(params):
                     title=show_title,
                     show_url=show_url,
                     window_title=show_title
-                )
+                ),
+                'context_menu': context_menu
             })
 
     elif params.next == 'list_shows_2':
@@ -193,7 +204,7 @@ def list_shows(params):
                     show_title = show["title"].encode('utf-8')
                     if 'rts.ch' in show["imageUrl"]:
                         show_image = show["imageUrl"] + \
-                        '/scale/width/448'.encode('utf-8')
+                            '/scale/width/448'.encode('utf-8')
                     else:
                         show_image = show["imageUrl"].encode('utf-8')
                     show_id = show["id"]
@@ -207,7 +218,8 @@ def list_shows(params):
                             title=show_title,
                             show_id=show_id,
                             window_title=show_title
-                        )
+                        ),
+                        'context_menu': context_menu
                     })
 
     return common.PLUGIN.create_listing(
@@ -237,7 +249,7 @@ def list_videos(params):
             video_title = ''
             if 'showTitle' in episode:
                 video_title = episode["showTitle"].encode('utf-8') + \
-                ' - ' + episode["title"].encode('utf-8')
+                    ' - ' + episode["title"].encode('utf-8')
             else:
                 video_title = episode["title"].encode('utf-8')
             video_duration = 0
@@ -260,14 +272,15 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
-            context_menu.append(download_video)
+            context_menu = []
+            # context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': video_title,
@@ -279,8 +292,8 @@ def list_videos(params):
                     video_url=video_url
                 ),
                 'is_playable': True,
-                'info': info  # ,
-                # 'context_menu': context_menu
+                'info': info,
+                'context_menu': context_menu
             })
 
     elif params.next == 'list_videos_2':
@@ -288,11 +301,13 @@ def list_videos(params):
         date = datetime.datetime.now()
 
         actual_month = str(date).split(' ')[0].split('-')[1] + '-' + \
-                       str(date).split(' ')[0].split('-')[0]
+            str(date).split(' ')[0].split('-')[0]
 
         file_path = utils.get_webcontent(
-            URL_LIST_EPISODES % (params.channel_name,
-            params.show_id, actual_month))
+            URL_LIST_EPISODES % (
+                params.channel_name,
+                params.show_id,
+                actual_month))
 
         list_episodes = json.loads(file_path)
 
@@ -301,7 +316,7 @@ def list_videos(params):
             video_title = ''
             if 'showTitle' in episode:
                 video_title = episode["showTitle"].encode('utf-8') + \
-                ' - ' + episode["title"].encode('utf-8')
+                    ' - ' + episode["title"].encode('utf-8')
             else:
                 video_title = episode["title"].encode('utf-8')
             video_duration = 0
@@ -324,14 +339,15 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
-            context_menu.append(download_video)
+            context_menu = []
+            # context_menu.append(download_video)
+            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': video_title,
@@ -343,8 +359,8 @@ def list_videos(params):
                     video_url=video_url
                 ),
                 'is_playable': True,
-                'info': info  # ,
-                # 'context_menu': context_menu
+                'info': info,
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -401,7 +417,8 @@ def list_live(params):
                 live_id=live_id,
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -421,7 +438,7 @@ def get_video_url(params):
         video_id = params.video_url.split('=')[1]
         if params.channel_name == 'swissinfo':
             channel_name_value = 'swi'
-        else :
+        else:
             channel_name_value = params.channel_name
         streams_datas = utils.get_webcontent(
             URL_INFO_VIDEO % (channel_name_value, video_id))
@@ -445,7 +462,8 @@ def get_video_url(params):
     elif params.next == 'play_l':
 
         streams_datas = utils.get_webcontent(
-            URL_INFO_VIDEO % (params.channel_name,
+            URL_INFO_VIDEO % (
+                params.channel_name,
                 params.live_id))
         streams_json = json.loads(streams_datas)
 
@@ -474,4 +492,3 @@ def get_video_url(params):
                 if 'RESOLUTION=' in lines[k]:
                     url = lines[k + 1]
         return url
-

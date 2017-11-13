@@ -34,6 +34,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = 'http://www3.nhk.or.jp/'
 
 URL_LIVE_NHK = 'http://www3.nhk.or.jp/%s/app/tv/hlslive_tv.xml'
@@ -123,6 +126,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     # Add Live
@@ -134,6 +138,7 @@ def root(params):
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
@@ -163,6 +168,7 @@ def list_shows(params):
                 all_video=all_video,
                 window_title=all_video
             ),
+            'context_menu': context_menu
         })
 
         file_path = utils.download_catalog(
@@ -186,6 +192,7 @@ def list_shows(params):
                     name_category=name_category,
                     window_title=name_category
                 ),
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -258,14 +265,15 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_id=video_id) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -365,7 +373,8 @@ def list_live(params):
             url=url_live,
         ),
         'is_playable': True,
-        'info': info
+        'info': info,
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(

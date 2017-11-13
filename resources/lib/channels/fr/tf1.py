@@ -37,6 +37,9 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+context_menu = []
+context_menu.append(utils.vpn_context_menu_item())
+
 URL_ROOT = "http://www.tf1.fr/"
 URL_TIME = 'http://www.wat.tv/servertime2/'
 URL_TOKEN = 'http://api.wat.tv/services/Delivery'
@@ -89,6 +92,7 @@ def root(params):
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
         ),
+        'context_menu': context_menu
     })
 
     # Add Live
@@ -101,6 +105,7 @@ def root(params):
                 category='%s Live TV' % params.channel_name.upper(),
                 window_title='%s Live TV' % params.channel_name
             ),
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(
@@ -152,7 +157,8 @@ def list_shows(params):
                         program_url=program_url,
                         next='list_videos_lci',
                         window_title=program_name
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
     else:
         url = ''.join((
@@ -180,7 +186,8 @@ def list_shows(params):
                         category=category_url,
                         next='list_shows_2',
                         window_title=category_name
-                    )
+                    ),
+                    'context_menu': context_menu
                 })
 
         elif params.next == 'list_shows_2':
@@ -214,7 +221,8 @@ def list_shows(params):
                                 program_url=program_url,
                                 next='list_videos',
                                 window_title=program_name
-                            )
+                            ),
+                            'context_menu': context_menu
                         })
                     else:
                         shows.append({
@@ -225,7 +233,8 @@ def list_shows(params):
                                 program_url=program_url,
                                 next='list_videos_categories',
                                 window_title=program_name
-                            )
+                            ),
+                            'context_menu': context_menu
                         })
 
     return common.PLUGIN.create_listing(
@@ -286,7 +295,8 @@ def list_videos_categories(params):
                     next='list_videos',
                     window_title=category_title,
                     category_id=category_id
-                )
+                ),
+                'context_menu': context_menu
             })
     return common.PLUGIN.create_listing(
         videos_categories,
@@ -296,6 +306,7 @@ def list_videos_categories(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos_lci(params):
@@ -313,7 +324,7 @@ def list_videos_lci(params):
         for replay in list_replay:
 
             if 'Replay' in replay.find(
-                'span', class_='emission-infos-type').get_text():
+                    'span', class_='emission-infos-type').get_text():
                 title = replay.find_all(
                     'img')[0].get('alt').encode('utf-8')
                 duration = 0
@@ -339,14 +350,15 @@ def list_videos_lci(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         program_id=program_id) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -369,6 +381,7 @@ def list_videos_lci(params):
         content='tvshows',
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -402,14 +415,15 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             ('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 program_id=program_id) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
+        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': title,
@@ -516,14 +530,15 @@ def list_videos(params):
                         }
                     }
 
-                    context_menu = []
                     download_video = (
                         _('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             program_id=program_id) + ')'
                     )
+                    context_menu = []
                     context_menu.append(download_video)
+                    context_menu.append(utils.vpn_context_menu_item())
 
                     videos.append({
                         'label': title,
@@ -552,6 +567,7 @@ def list_videos(params):
                     update_listing=True,
                     previous_listing=str(videos)
                 ),
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
@@ -622,7 +638,8 @@ def list_live(params):
             next='play_l',
         ),
         'is_playable': True,
-        'info': info
+        'info': info,
+        'context_menu': context_menu
     })
 
     return common.PLUGIN.create_listing(
