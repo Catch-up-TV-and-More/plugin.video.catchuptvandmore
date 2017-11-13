@@ -152,8 +152,8 @@ def list_shows(params):
 
         emissions_list.append(emission_dict)
 
-    with common.PLUGIN.get_storage() as storage:
-        storage['emissions_list'] = emissions_list
+    storage = common.sp.MemStorage('arte')
+    storage['emissions_list'] = emissions_list
 
     for category in categories.keys():
 
@@ -182,8 +182,8 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
-    with common.PLUGIN.get_storage() as storage:
-        emissions_list = storage['emissions_list']
+    storage = common.sp.MemStorage('arte')
+    emissions_list = storage['emissions_list']
 
     if params.next == 'list_videos_cat':
         for emission in emissions_list:
