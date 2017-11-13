@@ -73,17 +73,6 @@ def root(params):
     modes = []
 
     # Add Replay
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='channel_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
-        ),
-        'context_menu': context_menu
-    })
-
     if params.channel_name != 'tv5monde' and \
        params.channel_name != 'tivi5monde':
         modes.append({
