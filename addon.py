@@ -129,7 +129,7 @@ def root(params):
                 "utf-8").encode(common.FILESYSTEM_CODING)
 
             icon = media_category_path + '.png'
-            fanart = media_category_path + '_fanart.png'
+            fanart = media_category_path + '_fanart.jpg'
 
             listing.append({
                 'icon': icon,
@@ -244,7 +244,7 @@ def list_channels(params):
         context_menu.append(utils.vpn_context_menu_item())
 
         icon = media_channel_path + '.png'
-        fanart = media_channel_path + '_fanart.png'
+        fanart = media_channel_path + '_fanart.jpg'
 
         listing.append({
             'icon': icon,
