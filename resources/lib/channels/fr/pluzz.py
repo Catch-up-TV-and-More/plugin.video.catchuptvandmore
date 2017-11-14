@@ -1030,7 +1030,7 @@ def list_live(params):
     )
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
+# @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 
@@ -1090,13 +1090,23 @@ def get_video_url(params):
 
         json_parser = json.loads(file_prgm)
 
-        url_protected = ''
+        url_hls_v1 = ''
+        url_hls_v5 = ''
+
         for video in json_parser['videos']:
             if 'hls_v1_os' in video['format'] and \
                     video['geoblocage'] is not None:
-                url_protected = video['url']
+                url_hls_v1 = video['url']
+            if 'hls_v5_os' in video['format'] and \
+                    video['geoblocage'] is not None:
+                url_hls_v5 = video['url']
 
-        file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_protected))
+        final_url = url_hls_v1
+        if common.sp.xbmc.__version__ == '2.25.0' \
+                and url_hls_v5 != '':
+            final_url = url_hls_v5
+
+        file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (final_url))
         json_parser2 = json.loads(file_prgm2)
 
         return json_parser2['url']
