@@ -1092,6 +1092,7 @@ def get_video_url(params):
 
         url_hls_v1 = ''
         url_hls_v5 = ''
+        url_hls = ''
 
         for video in json_parser['videos']:
             if 'hls_v1_os' in video['format'] and \
@@ -1100,11 +1101,22 @@ def get_video_url(params):
             if 'hls_v5_os' in video['format'] and \
                     video['geoblocage'] is not None:
                 url_hls_v5 = video['url']
+            if 'hls' in video['format']:
+                url_hls = video['url']
 
-        final_url = url_hls_v1
-        if common.sp.xbmc.__version__ == '2.25.0' \
-                and url_hls_v5 != '':
+        final_url = ''
+        # Case France 3 Région
+        if url_hls_v1 == '' and url_hls_v5 == '':
+            final_url = url_hls
+        # Case Jarvis
+        if common.sp.xbmc.__version__ == '2.24.0' \
+                and url_hls_v1 != '':
+            final_url = url_hls_v1
+        # Case Krypton, Leia, ...
+        if final_url == '' and url_hls_v5 != '':
             final_url = url_hls_v5
+        elif final_url == '':
+            final_url = url_hls_v1
 
         file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (final_url))
         json_parser2 = json.loads(file_prgm2)
