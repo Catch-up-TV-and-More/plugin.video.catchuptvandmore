@@ -45,9 +45,6 @@ URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
 
 PARTNER = 'YW5kcm9pZC12Mg'
 
-URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
-# Video_id
-
 URL_VIMEO = 'https://player.vimeo.com/video/%s'
 # Video_id
 
@@ -716,42 +713,7 @@ def get_video_url(params):
                 video_id = re.compile(
                     r'embed/video/(.*?)[\"\?]').findall(
                     url_video_resolver)[0]
-                url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
-                html_video = utils.get_webcontent(url_dmotion)
-                html_video = html_video.replace('\\', '')
-                url_video_auto = re.compile(
-                    r'{"type":"application/x-mpegURL","url":"(.*?)"'
-                    ).findall(html_video)[0]
-                m3u8_video_auto = utils.get_webcontent(url_video_auto)
-                lines = m3u8_video_auto.splitlines()
-                if desired_quality == "DIALOG":
-                    all_datas_videos_quality = []
-                    all_datas_videos_path = []
-                    for k in range(0, len(lines) - 1):
-                        if 'RESOLUTION=' in lines[k]:
-                            all_datas_videos_quality.append(
-                                re.compile(
-                                r'RESOLUTION=(.*?),').findall(
-                                lines[k])[0])
-                            all_datas_videos_path.append(
-                                lines[k + 1])
-                    seleted_item = common.sp.xbmcgui.Dialog().select(
-                        _('Choose video quality'),
-                        all_datas_videos_quality)
-                    return all_datas_videos_path[seleted_item].encode(
-                        'utf-8')
-                elif desired_quality == 'BEST':
-                    # Last video in the Best
-                    for k in range(0, len(lines) - 1):
-                        if 'RESOLUTION=' in lines[k]:
-                            url = lines[k + 1]
-                    return url
-                else:
-                    for k in range(0, len(lines) - 1):
-                        if 'RESOLUTION=' in lines[k]:
-                            url = lines[k + 1]
-                            break
-                    return url
+                return resolver.get_stream_dailymotion(video_id)
             # Case Facebook
             elif 'facebook' in url_video_resolver:
                 video_id = re.compile(
