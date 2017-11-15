@@ -603,7 +603,7 @@ def list_videos(params):
                     video_id=video_id) + ')'
             )
             context_menu = []
-            # context_menu.append(download_video)
+            context_menu.append(download_video)
             context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
@@ -714,7 +714,12 @@ def get_video_url(params):
                 video_id = re.compile(
                     r'embed/video/(.*?)[\"\?]').findall(
                     url_video_resolver)[0]
-                return resolver.get_stream_dailymotion(video_id)
+                if params.next == 'download_video':
+                    return resolver.get_stream_dailymotion(
+                        video_id, True)
+                else:
+                    return resolver.get_stream_dailymotion(
+                        video_id, False)
             # Case Facebook
             elif 'facebook' in url_video_resolver:
                 video_id = re.compile(

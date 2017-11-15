@@ -131,7 +131,7 @@ def list_videos(params):
                     video_url=video_url) + ')'
             )
             context_menu = []
-            # context_menu.append(download_video)
+            context_menu.append(download_video)
             context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
@@ -180,4 +180,7 @@ def get_video_url(params):
     video_id = re.compile(
         r'embed/video/(.*?)[\"\?]').findall(
         video_html)[0]
-    return resolver.get_stream_dailymotion(video_id)
+    if params.next == 'play_r':
+        return resolver.get_stream_dailymotion(video_id, False)
+    elif params.next == 'download_video':
+        return resolver.get_stream_dailymotion(video_id, True)

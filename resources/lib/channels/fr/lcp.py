@@ -32,7 +32,6 @@ from resources.lib import common
 # TO DO
 # Use some API to simplify
 # Add info LIVE TV
-# Fix Download Video (on the resolver.py ?)
 
 # LCP contient deux sources de video pour les replays
 # Old : play1.qbrick.com
@@ -597,7 +596,10 @@ def get_video_url(params):
             video_id = re.compile(
                 r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(
                 html_video)[0]
-            return resolver.get_stream_dailymotion(video_id)
+            if params.next == 'download_video':
+                return resolver.get_stream_dailymotion(video_id, True)
+            else:
+                return resolver.get_stream_dailymotion(video_id, False)
         else:
             # get videoId and accountId
             videoId, accountId = re.compile(

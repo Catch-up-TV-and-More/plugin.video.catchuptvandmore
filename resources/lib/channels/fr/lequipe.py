@@ -29,7 +29,6 @@ from resources.lib import common
 
 # TO DO
 # Get Info Live
-# Fix Download Video (on the resolver.py ?)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -323,7 +322,9 @@ def list_live(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    if params.next == 'play_r' or params.next == 'download_video':
-        return resolver.get_stream_dailymotion(params.video_id)
+    if params.next == 'play_r':
+        return resolver.get_stream_dailymotion(params.video_id, False)
     elif params.next == 'play_l':
-        return resolver.get_stream_dailymotion(params.video_id)
+        return resolver.get_stream_dailymotion(params.video_id, False)
+    elif params.next == 'download_video':
+        return resolver.get_stream_dailymotion(params.video_id, True)
