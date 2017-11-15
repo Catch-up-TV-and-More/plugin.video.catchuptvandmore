@@ -27,6 +27,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from youtube_dl import YoutubeDL
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
