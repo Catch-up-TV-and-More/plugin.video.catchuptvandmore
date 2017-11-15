@@ -36,11 +36,15 @@ _ = common.ADDON.initialize_gettext()
 URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
 
-def get_stream_dailymotion(video_id):
+def get_stream_dailymotion(video_id, isDownloadVideo):
 
     desired_quality = common.PLUGIN.get_setting('quality')
 
     url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
+
+    if isDownloadVideo == True:
+        return url_dmotion
+
     html_video = utils.get_webcontent(url_dmotion)
     html_video = html_video.replace('\\', '')
 
