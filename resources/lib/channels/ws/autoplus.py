@@ -24,17 +24,14 @@ import ast
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
 # Get Image KO there is this caracter '|' in the url (not working in Kodi)
 # Dailymotion Not working on Jarvis
-# Create resolver.py and move Dailymotion code in it
 
 URL_ROOT = 'https://video.autoplus.fr'
-
-URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
-# Video_id
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -176,46 +173,10 @@ def list_videos(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    desired_quality = common.PLUGIN.get_setting('quality')
 
     video_html = utils.get_webcontent(params.video_url)
     # Get DailyMotion Id Video
     video_id = re.compile(
         r'embed/video/(.*?)[\"\?]').findall(
         video_html)[0]
-    url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
-    html_video = utils.get_webcontent(url_dmotion)
-    html_video = html_video.replace('\\', '')
-    url_video_auto = re.compile(
-        r'{"type":"application/x-mpegURL","url":"(.*?)"'
-        ).findall(html_video)[0]
-    m3u8_video_auto = utils.get_webcontent(url_video_auto)
-    lines = m3u8_video_auto.splitlines()
-    if desired_quality == "DIALOG":
-        all_datas_videos_quality = []
-        all_datas_videos_path = []
-        for k in range(0, len(lines) - 1):
-            if 'RESOLUTION=' in lines[k]:
-                all_datas_videos_quality.append(
-                    re.compile(
-                    r'RESOLUTION=(.*?),').findall(
-                    lines[k])[0])
-                all_datas_videos_path.append(
-                    lines[k + 1])
-        seleted_item = common.sp.xbmcgui.Dialog().select(
-            _('Choose video quality'),
-            all_datas_videos_quality)
-        return all_datas_videos_path[seleted_item].encode(
-            'utf-8')
-    elif desired_quality == 'BEST':
-        # Last video in the Best
-        for k in range(0, len(lines) - 1):
-            if 'RESOLUTION=' in lines[k]:
-                url = lines[k + 1]
-        return url
-    else:
-        for k in range(0, len(lines) - 1):
-            if 'RESOLUTION=' in lines[k]:
-                url = lines[k + 1]
-            break
-        return url
+    return resolver.get_stream_dailymotion(video_id)

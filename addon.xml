@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.7~beta010"
+       version="0.1.7~beta011"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -51,6 +51,7 @@
 [Fix] No sound live TV FranceTelevision on Jarvis (SylvainCecchetto)
 [Fix] France 3 Région and Multi-audio FranceTelevision for Krypton and Next Version (SylvainCecchetto, wwark)
 [Add Website] Auto Plus (wwark)
+[Change] Create resolver.py and move code Dailymotion on it for Auto plus (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
