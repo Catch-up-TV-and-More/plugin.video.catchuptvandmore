@@ -51,7 +51,7 @@
 [Fix] No sound live TV FranceTelevision on Jarvis (SylvainCecchetto)
 [Fix] France 3 Région and Multi-audio FranceTelevision for Krypton and Next Version (SylvainCecchetto, wwark)
 [Add Website] Auto Plus (wwark)
-[Change] Create resolver.py and move code Dailymotion Auto plus, Allocine, PublicSenat (wwark)
+[Change] Create resolver.py and move code Dailymotion Auto plus, Allocine, PublicSenat, LCP, LEquipe and Numero 23  (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

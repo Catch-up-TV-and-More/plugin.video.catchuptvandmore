@@ -24,11 +24,13 @@ import re
 import json
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
 # Get more info Live TV (picture, plot)
 # Get year from Replay
+# Fix Download Video (on the resolver.py ?)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -42,9 +44,6 @@ URL_REPLAY = 'http://www.numero23.fr/replay/'
 
 URL_INFO_LIVE_JSON = 'http://www.numero23.fr/wp-content/cache/n23-direct.json'
 # Title, DailyMotion Id (Video)
-
-URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
-# Video_id
 
 
 def channel_entry(params):
@@ -344,43 +343,7 @@ def list_live(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    url_video = URL_DAILYMOTION_EMBED % params.video_id
-
-    desired_quality = common.PLUGIN.get_setting('quality')
-
-    if params.next == 'download_video':
-        return url_video
-    else:
-        html_video = utils.get_webcontent(url_video)
-        html_video = html_video.replace('\\', '')
-
-        if params.next == 'play_l':
-            all_url_video = re.compile(
-                r'{"type":"application/x-mpegURL","url":"(.*?)"'
-            ).findall(html_video)
-            # Just One Quality
-            return all_url_video[0]
-        elif params.next == 'play_r':
-            all_url_video = re.compile(
-                r'{"type":"video/mp4","url":"(.*?)"').findall(html_video)
-            if desired_quality == "DIALOG":
-                all_datas_videos_quality = []
-                all_datas_videos_path = []
-                for datas in all_url_video:
-                    datas_quality = re.search(
-                        'H264-(.+?)/', datas).group(1)
-                    all_datas_videos_quality.append(
-                        'H264-' + datas_quality)
-                    all_datas_videos_path.append(datas)
-
-                seleted_item = common.sp.xbmcgui.Dialog().select(
-                    _('Choose video quality'), all_datas_videos_quality)
-
-                return all_datas_videos_path[seleted_item].encode('utf-8')
-            elif desired_quality == 'BEST':
-                # Last video in the Best
-                for datas in all_url_video:
-                    url = datas
-                return url
-            else:
-                return all_url_video[0]
+    if params.next == 'play_r' or params.next == 'download_video':
+        return resolver.get_stream_dailymotion(params.video_id)
+    elif params.next == 'play_l':
+        return resolver.get_stream_dailymotion(params.video_id)

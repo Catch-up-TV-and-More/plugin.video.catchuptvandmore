@@ -445,7 +445,7 @@ def get_video_url(params):
     if params.next == 'play_r' or params.next == 'download_video':
         html_video = utils.get_webcontent(params.url_video)
         video_id = re.compile(
-            r'www.dailymotion.com/embed/video/(.*?)\?').findall(
+            r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(
             html_video)[0]
         return resolver.get_stream_dailymotion(video_id)
     elif params.next == 'play_l':
