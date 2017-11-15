@@ -29,7 +29,8 @@ from resources.lib import common
 
 # TO DO
 # Get Image KO there is this caracter '|' in the url (not working in Kodi)
-# Dailymotion Not working on Jarvis
+# 21:10:18.351 T:18446744071951350064   DEBUG: GetImageHash - unable to stat url https://img.autoplus.fr/video/2017/11/13/1522171/816|612|JLM.jpg?r
+# 21:10:18.623 T:18446744071937915184   DEBUG: CCurlFile::GetMimeType - https://img.autoplus.fr/video/2017/11/13/1522171/816|612|JLM.jpg?r -> failed
 
 URL_ROOT = 'https://video.autoplus.fr'
 

@@ -28,8 +28,6 @@ from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# Lot Code DailyMotion are present in some channel
-# (create function to pass video_id from each channel using DailyMotion)
 # Get Info Live
 # Fix Download Video (on the resolver.py ?)
 
