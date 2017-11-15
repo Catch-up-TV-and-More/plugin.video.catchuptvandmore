@@ -118,6 +118,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Taratata <http://mytaratata.com/>
 - Noob TV <http://noob-tv.com/>
 - Culturepub <http://www.culturepub.fr/>
+- Auto Plus <https://video.autoplus.fr>
 
 ## Bugs et améliorations — *Bugs and improvements*
 Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.

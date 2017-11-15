@@ -270,6 +270,9 @@
             <setting label="Culturepub" type="bool" id="channels.ws.culturepub.culturepub" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.culturepub.culturepub.order" default="5"/>
 
+            <setting label="Auto Plus" type="bool" id="channels.ws.autoplus.autoplus" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.autoplus.autoplus.order" default="6"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->
