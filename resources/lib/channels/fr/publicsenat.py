@@ -31,7 +31,6 @@ from resources.lib import common
 # TO DO
 # Add info LIVE TV
 # Get First-diffusion (date of replay Video)
-# Fix Download Video pass by resolver.py ?
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
