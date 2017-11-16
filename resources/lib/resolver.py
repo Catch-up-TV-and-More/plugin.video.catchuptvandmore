@@ -38,6 +38,10 @@ URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 
 def get_stream_dailymotion(video_id, isDownloadVideo):
 
+    # Sous Jarvis nous avons ces éléments qui ne fonctionnent pas :
+    # * Les vidéos au format dailymotion proposé par Allociné
+    # * Les directs TV  de PublicSenat, LCP, L"Equipe TV et Numero 23 herbergés par dailymotion.
+
     desired_quality = common.PLUGIN.get_setting('quality')
 
     url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
@@ -114,7 +118,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
                 # Last video in the Best
                 for k in range(0, len(lines) - 1):
                     if 'RESOLUTION=' in lines[k]:
-                        url = '"' + lines[k + 1] + '"'
+                        url = lines[k + 1]
                 return url
             else:
                 for k in range(0, len(lines) - 1):
