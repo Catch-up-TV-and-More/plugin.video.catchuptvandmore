@@ -46,7 +46,7 @@ _ = common.ADDON.initialize_gettext()
 context_menu = []
 context_menu.append(utils.vpn_context_menu_item())
 
-QUALITIES_STREAM = ['low', 'mini', 'hd']
+QUALITIES_STREAM = ['low', 'hd']
 
 
 def channel_entry(params):
@@ -173,8 +173,8 @@ def list_videos(params):
 
             video_title = video.find('h2').find(
                 'a').get('title').encode('utf-8')
-            if 'data-src' in video.find('img'):
-                video_img = video.find('img').get('data-src')
+            if video.find('a').find('img'):
+                video_img = video.find('a').find('img').get('data-src')
             else:
                 video_img = video.find('img').get('src')
             video_url = URL_ROOT + video.find('h2').find(
