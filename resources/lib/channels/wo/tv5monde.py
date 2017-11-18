@@ -416,7 +416,7 @@ def list_videos(params):
         elif params.channel_name == 'tv5monde':
 
             replay_videos_html = utils.get_webcontent(
-                params.category_url + '?page=%s' + params.page)
+                params.category_url + '?page=%s' % params.page)
             replay_videos_soup = bs(replay_videos_html, 'html.parser')
 
             all_videos = replay_videos_soup.find_all('article')
