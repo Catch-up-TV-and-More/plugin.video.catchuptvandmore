@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.7~beta017"
+       version="0.1.7~beta018"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -51,8 +51,9 @@
 [Fix] No sound live TV FranceTelevision on Jarvis (SylvainCecchetto)
 [Fix] France 3 Région and Multi-audio FranceTelevision for Krypton and Next Version (SylvainCecchetto, wwark)
 [Add Website] Auto Plus (wwark)
-[Change] Create resolver.py and move code Dailymotion Auto plus, Allocine, PublicSenat, LCP, LEquipe and Numero 23  (wwark)
+[Change] Move dailymotion code from Auto plus, Allocine, PublicSenat, LCP, LEquipe and Numero 23 to resolver.y (wwark)
 [Fix] Dailymotion and Jarvis : Can't play M3U8 (so Live TV KO and some video don't work) but if there is some MP4 it is playable in Jarvis (wwark)
+[Change] Move vimeo code from allocine to resolver.py (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

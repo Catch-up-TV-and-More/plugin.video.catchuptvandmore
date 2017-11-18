@@ -46,9 +46,6 @@ URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
 
 PARTNER = 'YW5kcm9pZC12Mg'
 
-URL_VIMEO = 'https://player.vimeo.com/video/%s'
-# Video_id
-
 URL_YT = 'https://www.youtube.com/watch?v=%s'
 # Video_id
 
@@ -762,12 +759,12 @@ def get_video_url(params):
             elif 'vimeo' in url_video_resolver:
                 video_id = re.compile('player.vimeo.com/video/(.*?)"').findall(
                     url_video_resolver)[0]
-                html_vimeo = utils.get_webcontent(URL_VIMEO % video_id)
-                json_vimeo = json.loads(re.compile('var t=(.*?);').findall(
-                    html_vimeo)[0])
-                hls_json = json_vimeo["request"]["files"]["hls"]
-                default_cdn = hls_json["default_cdn"]
-                return hls_json["cdns"][default_cdn]["url"]
+                if params.next == 'download_video':
+                    return resolver.get_stream_vimeo(
+                        video_id, True)
+                else:
+                    return resolver.get_stream_vimeo(
+                        video_id, False)
             # TO DO ? (return an error)
             else:
                 return ''

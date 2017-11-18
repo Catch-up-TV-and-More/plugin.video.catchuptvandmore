@@ -20,13 +20,14 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import json
 import re
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Dailymotion JARVIS (KO for playing m3u8 but MP4 work)
-# Dailymotion JARVIS (if there is some MP4 use them on Jarvis)
+# Dailymotion on JARVIS
+# Quality VIMEO
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -36,9 +37,13 @@ _ = common.ADDON.initialize_gettext()
 URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
 
+URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s'
+# Video_id
+
 def get_stream_dailymotion(video_id, isDownloadVideo):
 
     # Sous Jarvis nous avons ces éléments qui ne fonctionnent pas :
+    # * KO for playing m3u8 but MP4 work
     # * Les vidéos au format dailymotion proposé par Allociné
     # * Les directs TV  de PublicSenat, LCP, L"Equipe TV et Numero 23 herbergés par dailymotion.
 
@@ -126,3 +131,19 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
                         url = lines[k + 1]
                     break
                 return url
+
+def get_stream_vimeo(video_id, isDownloadVideo):
+
+    desired_quality = common.PLUGIN.get_setting('quality')
+
+    url_vimeo = URL_VIMEO_BY_ID % (video_id)
+
+    if isDownloadVideo == True:
+        return url_vimeo
+
+    html_vimeo = utils.get_webcontent(url_vimeo)
+    json_vimeo = json.loads(re.compile('var t=(.*?);').findall(
+        html_vimeo)[0])
+    hls_json = json_vimeo["request"]["files"]["hls"]
+    default_cdn = hls_json["default_cdn"]
+    return hls_json["cdns"][default_cdn]["url"]
