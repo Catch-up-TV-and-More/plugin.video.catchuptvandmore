@@ -20,6 +20,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import ast
 import json
 import re
 from bs4 import BeautifulSoup as bs
@@ -41,6 +42,8 @@ context_menu.append(utils.vpn_context_menu_item())
 URL_TV5MAF_ROOT = 'https://afrique.tv5monde.com'
 
 URL_TV5MONDE_LIVE = 'http://live.tv5monde.com/'
+
+URL_TV5MONDE_ROOT = 'http://www.tv5mondeplus.com'
 
 
 def channel_entry(params):
@@ -67,14 +70,25 @@ LIST_LIVE_TIVI5MONDE = {
     _('Live TV') + ' TIVI 5Monde': 'tivi5monde'
 }
 
+CATEGORIES_VIDEOS_TV5MONDE = {
+    'Information': '1',
+    'Série & Fiction': '2',
+    'Sport': '3',
+    'Documentaire': '4',
+    'Jeunesse': '5',
+    'Musique': '6',
+    'Bonus': '7',
+    'Magazine': '9',
+    'Divertissement': '8'
+}
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     modes = []
 
     # Add Replay
-    if params.channel_name != 'tv5monde' and \
-       params.channel_name != 'tivi5monde':
+    if params.channel_name != 'tivi5monde':
         modes.append({
             'label': 'Replay',
             'url': common.PLUGIN.get_url(
@@ -142,6 +156,43 @@ def list_shows(params):
                     'context_menu': context_menu
                 })
 
+        elif params.channel_name == 'tv5monde':
+
+            list_categories_html = utils.get_webcontent(
+                URL_TV5MONDE_ROOT + '/toutes-les-videos')
+            list_categories_soup = bs(
+                list_categories_html, 'html.parser')
+            category_title = list_categories_soup.find(
+                'nav', class_='footer__emissions').find(
+                'div', class_='footer__title').get_text().strip()
+
+            shows.append({
+                'label': category_title,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='list_shows_2',
+                    title=category_title,
+                    window_title=category_title
+                ),
+                'context_menu': context_menu
+            })
+
+            for category_title, category_type in CATEGORIES_VIDEOS_TV5MONDE.iteritems():
+
+                shows.append({
+                    'label': category_title,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='list_videos_2',
+                        page='1',
+                        type_video=category_type,
+                        title=category_title,
+                        category_type=category_type,
+                        window_title=category_title
+                    ),
+                    'context_menu': context_menu
+                })
+
     elif params.next == 'list_shows_2':
         if params.channel_name == 'tv5mondeafrique':
 
@@ -177,6 +228,34 @@ def list_shows(params):
                     'context_menu': context_menu
                 })
 
+        elif params.channel_name == 'tv5monde':
+
+            list_categories_html = utils.get_webcontent(
+                URL_TV5MONDE_ROOT)
+            list_categories_soup = bs(
+                list_categories_html, 'html.parser')
+            list_categories = list_categories_soup.find(
+                'nav', class_='footer__emissions').find_all('li')
+
+            for category in list_categories:
+
+                category_title = category.find('a').get_text().strip()
+                category_url = URL_TV5MONDE_ROOT + category.find(
+                    'a').get('href')
+
+                shows.append({
+                    'label': category_title,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='list_videos_1',
+                        page='1',
+                        title=category_title,
+                        category_url=category_url,
+                        window_title=category_title
+                    ),
+                    'context_menu': context_menu
+                })
+
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
@@ -190,6 +269,8 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_videos_1':
         if params.channel_name == 'tv5mondeafrique':
@@ -240,7 +321,7 @@ def list_videos(params):
                     'fanart': video_img,
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
-                        next='play_r_tv5mondeafrique',
+                        next='play_r',
                         video_url=params.category_url
                     ),
                     'is_playable': True,
@@ -324,13 +405,89 @@ def list_videos(params):
                             'thumb': video_img,
                             'url': common.PLUGIN.get_url(
                                 action='channel_entry',
-                                next='play_r_tv5mondeafrique',
+                                next='play_r',
                                 video_url=video_url
                             ),
                             'is_playable': True,
                             'info': info,
                             'context_menu': context_menu
                         })
+
+        elif params.channel_name == 'tv5monde':
+
+            replay_videos_html = utils.get_webcontent(
+                params.category_url + '?page=%s' + params.page)
+            replay_videos_soup = bs(replay_videos_html, 'html.parser')
+
+            all_videos = replay_videos_soup.find_all('article')
+
+            for video in all_videos:
+
+                if video.find('p', class_='video-item__subtitle'):
+                    video_title = video.find('h3').get_text(
+                    ).strip() + ' - ' + video.find(
+                    'p', class_='video-item__subtitle').get_text(
+                    ).strip()
+                else:
+                    video_title = video.find('h3').get_text(
+                    ).strip()
+                if 'http' in video.find('img').get('src'):
+                    video_img = video.find('img').get('src')
+                else:
+                    video_img = URL_TV5MONDE_ROOT + video.find(
+                        'img').get('src')
+                video_url = URL_TV5MONDE_ROOT + video.find(
+                    'a').get('href')
+
+                info = {
+                    'video': {
+                        'title': video_title,
+                        # 'aired': aired,
+                        # 'date': date,
+                        # 'duration': video_duration,
+                        # 'plot': video_plot,
+                        # 'year': year,
+                        'mediatype': 'tvshow'
+                    }
+                }
+
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        video_url=video_url) + ')'
+                )
+                context_menu = []
+                # context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
+
+                videos.append({
+                    'label': video_title,
+                    'thumb': video_img,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='play_r',
+                        video_url=video_url
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
+
+            # More videos...
+            videos.append({
+                'label': common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    category_url=params.category_url,
+                    next=params.next,
+                    page=str(int(params.page) + 1),
+                    title=params.title,
+                    window_title=params.window_title,
+                    update_listing=True,
+                    previous_listing=str(videos)
+                )
+            })
 
     elif params.next == 'list_videos_2':
         if params.channel_name == 'tv5mondeafrique':
@@ -377,13 +534,94 @@ def list_videos(params):
                     'thumb': video_img,
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
-                        next='play_r_tv5mondeafrique',
+                        next='play_r',
                         video_url=video_url
                     ),
                     'is_playable': True,
                     'info': info,
                     'context_menu': context_menu
                 })
+
+        elif params.channel_name == 'tv5monde':
+
+            replay_videos_html = utils.get_webcontent(
+                URL_TV5MONDE_ROOT + '/toutes-les-videos?order=1&type=%s&page=%s' % (
+                params.category_type, params.page))
+            replay_videos_soup = bs(replay_videos_html, 'html.parser')
+
+            all_videos = replay_videos_soup.find_all('article')
+
+            for video in all_videos:
+
+                if video.find(
+                    'a', class_='video-item__link').get(
+                    'href') != '':
+
+                    if video.find('p', class_='video-item__subtitle'):
+                        video_title = video.find('h3').get_text(
+                        ).strip() + ' - ' + video.find(
+                        'p', class_='video-item__subtitle').get_text(
+                        ).strip()
+                    else:
+                        video_title = video.find('h3').get_text(
+                        ).strip()
+                    if 'http' in video.find('img').get('src'):
+                        video_img = video.find('img').get('src')
+                    else:
+                        video_img = URL_TV5MONDE_ROOT + video.find(
+                            'img').get('src')
+                    video_url = URL_TV5MONDE_ROOT + video.find(
+                        'a').get('href')
+
+                    info = {
+                        'video': {
+                            'title': video_title,
+                            # 'aired': aired,
+                            # 'date': date,
+                            # 'duration': video_duration,
+                            # 'plot': video_plot,
+                            # 'year': year,
+                            'mediatype': 'tvshow'
+                        }
+                    }
+
+                    download_video = (
+                        _('Download'),
+                        'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                            action='download_video',
+                            video_url=video_url) + ')'
+                    )
+                    context_menu = []
+                    # context_menu.append(download_video)
+                    context_menu.append(utils.vpn_context_menu_item())
+
+                    videos.append({
+                        'label': video_title,
+                        'thumb': video_img,
+                        'url': common.PLUGIN.get_url(
+                            action='channel_entry',
+                            next='play_r',
+                            video_url=video_url
+                        ),
+                        'is_playable': True,
+                        'info': info,
+                        'context_menu': context_menu
+                    })
+
+            # More videos...
+            videos.append({
+                'label': common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next=params.next,
+                    page=str(int(params.page) + 1),
+                    category_type=params.category_type,
+                    title=params.title,
+                    window_title=params.window_title,
+                    update_listing=True,
+                    previous_listing=str(videos)
+                )
+            })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -477,7 +715,7 @@ def list_live(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
 
-    if params.next == 'play_r_tv5mondeafrique':
+    if params.next == 'play_r':
         info_video_html = utils.get_webcontent(params.video_url)
         video_json = re.compile(
             'data-broadcast=\'(.*?)\'').findall(
