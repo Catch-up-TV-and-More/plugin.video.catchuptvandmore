@@ -49,9 +49,6 @@ PARTNER = 'YW5kcm9pZC12Mg'
 URL_YT = 'https://www.youtube.com/watch?v=%s'
 # Video_id
 
-URL_FACEBOOK = 'https://www.facebook.com/allocine/videos/%s'
-# Video_id
-
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -722,39 +719,12 @@ def get_video_url(params):
                 video_id = re.compile(
                     'www.facebook.com/allocine/videos/(.*?)/').findall(
                     url_video_resolver)[0]
-                url_fbook = utils.get_webcontent(
-                    URL_FACEBOOK % video_id)
-                if len(re.compile(
-                    r'hd_src_no_ratelimit:"(.*?)"').findall(
-                    url_fbook)) > 0:
-                    if desired_quality == "DIALOG":
-                        all_datas_videos_quality = []
-                        all_datas_videos_path = []
-                        all_datas_videos_quality.append('SD')
-                        all_datas_videos_path.append(re.compile(
-                            r'sd_src_no_ratelimit:"(.*?)"').findall(
-                            url_fbook)[0])
-                        all_datas_videos_quality.append('HD')
-                        all_datas_videos_path.append(re.compile(
-                            r'hd_src_no_ratelimit:"(.*?)"').findall(
-                            url_fbook)[0])
-                        seleted_item = common.sp.xbmcgui.Dialog().select(
-                            _('Choose video quality'),
-                            all_datas_videos_quality)
-                        return all_datas_videos_path[seleted_item].encode(
-                            'utf-8')
-                    elif desired_quality == 'BEST':
-                        return re.compile(
-                            r'hd_src_no_ratelimit:"(.*?)"').findall(
-                            url_fbook)[0]
-                    else:
-                        return re.compile(
-                            r'sd_src_no_ratelimit:"(.*?)"').findall(
-                            url_fbook)[0]
+                if params.next == 'download_video':
+                    return resolver.get_stream_facebook(
+                        video_id, True)
                 else:
-                    return re.compile(
-                        r'sd_src_no_ratelimit:"(.*?)"').findall(
-                        url_fbook)[0]
+                    return resolver.get_stream_facebook(
+                        video_id, False)
             # Case Vimeo
             elif 'vimeo' in url_video_resolver:
                 video_id = re.compile('player.vimeo.com/video/(.*?)"').findall(

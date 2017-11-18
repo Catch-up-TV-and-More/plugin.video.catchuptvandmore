@@ -28,16 +28,22 @@ from resources.lib import common
 # TO DO
 # Dailymotion on JARVIS
 # Quality VIMEO
+# Download Mode with Facebook (the video has no audio)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
+DESIRED_QUALITY = common.PLUGIN.get_setting('quality')
+
 URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
 
 URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s'
+# Video_id
+
+URL_FACEBOOK_BY_ID = 'https://www.facebook.com/allocine/videos/%s'
 # Video_id
 
 def get_stream_dailymotion(video_id, isDownloadVideo):
@@ -46,8 +52,6 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
     # * KO for playing m3u8 but MP4 work
     # * Les vidéos au format dailymotion proposé par Allociné
     # * Les directs TV  de PublicSenat, LCP, L"Equipe TV et Numero 23 herbergés par dailymotion.
-
-    desired_quality = common.PLUGIN.get_setting('quality')
 
     url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
 
@@ -62,7 +66,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
         all_url_video = re.compile(
             r'{"type":"video/mp4","url":"(.*?)"').findall(html_video)
         if len(all_url_video) > 0:
-            if desired_quality == "DIALOG":
+            if DESIRED_QUALITY == "DIALOG":
                 all_datas_videos_quality = []
                 all_datas_videos_path = []
                 for datas in all_url_video:
@@ -76,7 +80,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
                     _('Choose video quality'), all_datas_videos_quality)
 
                 return all_datas_videos_path[seleted_item].encode('utf-8')
-            elif desired_quality == 'BEST':
+            elif DESIRED_QUALITY == 'BEST':
                 # Last video in the Best
                 for datas in all_url_video:
                     url = datas
@@ -103,7 +107,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
         else:
             url = ''
             lines = m3u8_video_auto.splitlines()
-            if desired_quality == "DIALOG":
+            if DESIRED_QUALITY == "DIALOG":
                 all_datas_videos_quality = []
                 all_datas_videos_path = []
                 for k in range(0, len(lines) - 1):
@@ -119,7 +123,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
                     all_datas_videos_quality)
                 return all_datas_videos_path[seleted_item].encode(
                     'utf-8')
-            elif desired_quality == 'BEST':
+            elif DESIRED_QUALITY == 'BEST':
                 # Last video in the Best
                 for k in range(0, len(lines) - 1):
                     if 'RESOLUTION=' in lines[k]:
@@ -134,8 +138,6 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
 
 def get_stream_vimeo(video_id, isDownloadVideo):
 
-    desired_quality = common.PLUGIN.get_setting('quality')
-
     url_vimeo = URL_VIMEO_BY_ID % (video_id)
 
     if isDownloadVideo == True:
@@ -147,3 +149,44 @@ def get_stream_vimeo(video_id, isDownloadVideo):
     hls_json = json_vimeo["request"]["files"]["hls"]
     default_cdn = hls_json["default_cdn"]
     return hls_json["cdns"][default_cdn]["url"]
+
+def get_stream_facebook(video_id, isDownloadVideo):
+
+    url_facebook = URL_FACEBOOK_BY_ID % (video_id)
+
+    if isDownloadVideo == True:
+        return url_facebook
+
+    html_facebook = utils.get_webcontent(url_facebook)
+
+    if len(re.compile(
+        r'hd_src_no_ratelimit:"(.*?)"').findall(
+        html_facebook)) > 0:
+        if DESIRED_QUALITY == "DIALOG":
+            all_datas_videos_quality = []
+            all_datas_videos_path = []
+            all_datas_videos_quality.append('SD')
+            all_datas_videos_path.append(re.compile(
+                r'sd_src_no_ratelimit:"(.*?)"').findall(
+                html_facebook)[0])
+            all_datas_videos_quality.append('HD')
+            all_datas_videos_path.append(re.compile(
+                r'hd_src_no_ratelimit:"(.*?)"').findall(
+                html_facebook)[0])
+            seleted_item = common.sp.xbmcgui.Dialog().select(
+                _('Choose video quality'),
+                all_datas_videos_quality)
+            return all_datas_videos_path[seleted_item].encode(
+                'utf-8')
+        elif DESIRED_QUALITY == 'BEST':
+            return re.compile(
+                r'hd_src_no_ratelimit:"(.*?)"').findall(
+                html_facebook)[0]
+        else:
+            return re.compile(
+                r'sd_src_no_ratelimit:"(.*?)"').findall(
+                html_facebook)[0]
+    else:
+        return re.compile(
+            r'sd_src_no_ratelimit:"(.*?)"').findall(
+            html_facebook)[0]
