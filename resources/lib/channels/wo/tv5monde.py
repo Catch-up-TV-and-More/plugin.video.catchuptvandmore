@@ -266,6 +266,10 @@ def list_videos(params):
                             }
                         }
 
+                        context_menu = []
+                        # context_menu.append(download_video)
+                        context_menu.append(utils.vpn_context_menu_item())
+
                         videos.append({
                             'label': video_title,
                             'url': common.PLUGIN.get_url(
