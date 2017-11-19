@@ -29,7 +29,6 @@ from resources.lib import common
 
 # TO DO
 # Download Mode / QUality Mode
-# TV5Monde+, TIVI5+
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -44,6 +43,8 @@ URL_TV5MAF_ROOT = 'https://afrique.tv5monde.com'
 URL_TV5MONDE_LIVE = 'http://live.tv5monde.com/'
 
 URL_TV5MONDE_ROOT = 'http://www.tv5mondeplus.com'
+
+URL_TIVI5MONDE_ROOT = 'http://www.tivi5mondeplus.com'
 
 
 def channel_entry(params):
@@ -82,23 +83,29 @@ CATEGORIES_VIDEOS_TV5MONDE = {
     'Divertissement': '8'
 }
 
+CATEGORIES_VIDEOS_TIVI5MONDE = {
+    '/series/decouverte': 'REPLAY PROGRAMMES JEUNESSE DÉCOUVERTE',
+    '/decouverte': 'LES DERNIERS ÉPISODES DE TES ÉMISSIONS DÉCOUVERTE',
+    '/series/dessins-animes': 'REPLAY DESSINS ANIMÉS',
+    '/dessins-animes': 'LES DERNIERS ÉPISODES DE TES DESSINS ANIMÉS PRÉFÉRÉS'
+}
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     modes = []
 
     # Add Replay
-    if params.channel_name != 'tivi5monde':
-        modes.append({
-            'label': 'Replay',
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='list_shows_1',
-                category='%s Replay' % params.channel_name.upper(),
-                window_title='%s Replay' % params.channel_name.upper()
-            ),
-            'context_menu': context_menu
-        })
+    modes.append({
+        'label': 'Replay',
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
+        'context_menu': context_menu
+    })
 
     # Add Live
     if params.channel_name != 'tv5mondeafrique':
@@ -185,9 +192,32 @@ def list_shows(params):
                         action='channel_entry',
                         next='list_videos_2',
                         page='1',
-                        type_video=category_type,
                         title=category_title,
                         category_type=category_type,
+                        window_title=category_title
+                    ),
+                    'context_menu': context_menu
+                })
+
+        elif params.channel_name == 'tivi5monde':
+
+            for category_context, category_title in CATEGORIES_VIDEOS_TIVI5MONDE.iteritems():
+
+                category_url = URL_TIVI5MONDE_ROOT + category_context
+
+                if 'REPLAY' in category_title:
+                    value_next = 'list_shows_2'
+                else:
+                    value_next = 'list_videos_1'
+
+                shows.append({
+                    'label': category_title,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next=value_next,
+                        page='0',
+                        title=category_title,
+                        category_url=category_url,
                         window_title=category_title
                     ),
                     'context_menu': context_menu
@@ -249,6 +279,37 @@ def list_shows(params):
                         action='channel_entry',
                         next='list_videos_1',
                         page='1',
+                        title=category_title,
+                        category_url=category_url,
+                        window_title=category_title
+                    ),
+                    'context_menu': context_menu
+                })
+
+        elif params.channel_name == 'tivi5monde':
+
+            list_categories_html = utils.get_webcontent(
+                params.category_url)
+            list_categories_soup = bs(
+                list_categories_html, 'html.parser')
+            list_categories = list_categories_soup.find_all(
+                'div', class_='views-field views-field-nothing')
+
+            for category in list_categories:
+
+                category_title = category.find('h3').find(
+                    'a').get_text().strip()
+                category_url = URL_TIVI5MONDE_ROOT + category.find(
+                    'a').get('href')
+                category_image = category.find('img').get('src')
+
+                shows.append({
+                    'label': category_title,
+                    'thumb': category_image,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='list_videos_1',
+                        page='0',
                         title=category_title,
                         category_url=category_url,
                         window_title=category_title
@@ -467,6 +528,72 @@ def list_videos(params):
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         next='play_r',
+                        video_url=video_url
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
+
+            # More videos...
+            videos.append({
+                'label': common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    category_url=params.category_url,
+                    next=params.next,
+                    page=str(int(params.page) + 1),
+                    title=params.title,
+                    window_title=params.window_title,
+                    update_listing=True,
+                    previous_listing=str(videos)
+                )
+            })
+
+        elif params.channel_name == 'tivi5monde':
+
+            replay_videos_html = utils.get_webcontent(
+                params.category_url + '?page=%s' % params.page)
+            replay_videos_soup = bs(replay_videos_html, 'html.parser')
+
+            all_videos = replay_videos_soup.find_all(
+                'div', class_='row-vignette')
+
+            for video in all_videos:
+
+                video_title = video.find('img').get('alt')
+                video_img = video.find('img').get('src')
+                video_url = URL_TIVI5MONDE_ROOT + video.find(
+                    'a').get('href')
+
+                info = {
+                    'video': {
+                        'title': video_title,
+                        # 'aired': aired,
+                        # 'date': date,
+                        # 'duration': video_duration,
+                        # 'plot': video_plot,
+                        # 'year': year,
+                        'mediatype': 'tvshow'
+                    }
+                }
+
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        video_url=video_url) + ')'
+                )
+                context_menu = []
+                # context_menu.append(download_video)
+                context_menu.append(utils.vpn_context_menu_item())
+
+                videos.append({
+                    'label': video_title,
+                    'thumb': video_img,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='play_r_tivi5monde',
                         video_url=video_url
                     ),
                     'is_playable': True,
@@ -722,5 +849,11 @@ def get_video_url(params):
             info_video_html)[0]
         video_json = json.loads(video_json)
         return video_json["files"][0]["url"]
+    elif params.next == 'play_r_tivi5monde':
+        info_video_html = utils.get_webcontent(params.video_url)
+        video_url = re.compile(
+            'contentUrl\"\: \"(.*?)\"').findall(
+            info_video_html)[0]
+        return video_url
     elif params.next == 'play_l':
         return params.live_url
