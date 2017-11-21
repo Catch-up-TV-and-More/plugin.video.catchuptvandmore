@@ -762,12 +762,4 @@ def get_video_url(params):
         url_video = json.loads(url_video)
         url_video = url_video['message'].replace('\\', '')
 
-        desired_quality = common.PLUGIN.get_setting('quality')
-
-        if desired_quality == 'BEST' or desired_quality == 'DIALOG':
-            try:
-                url_video = url_video.split('&bwmax')[0]
-            except Exception:
-                pass
-
-        return url_video
+        return url_video.split('&b=')[0]
