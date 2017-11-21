@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.7~beta020"
+       version="0.1.7~beta021"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -55,6 +55,7 @@
 [Fix] Dailymotion and Jarvis : Can't play M3U8 (so Live TV KO and some video don't work) but if there is some MP4 it is playable in Jarvis (wwark)
 [Change] Move vimeo code from allocine to resolver.py (wwark)
 [Change] Move Facebook code from allocine to resolver.py (wwark)
+[Fix] Replay emission equipe de france (use id data-watid more reliable) - Group TF1 (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

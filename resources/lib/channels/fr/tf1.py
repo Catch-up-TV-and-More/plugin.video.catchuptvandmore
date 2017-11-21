@@ -657,6 +657,7 @@ def get_video_url(params):
     """Get video URL and start video player"""
 
     if params.next == 'play_r' or params.next == 'download_video':
+
         if 'www.wat.tv/embedframe' in params.program_id:
             url = 'http:' + params.program_id
         elif "http" not in params.program_id:
@@ -674,12 +675,7 @@ def get_video_url(params):
             iframe_player_soup = video_html_soup.find(
                 'div',
                 class_='iframe_player')
-
-            if params.channel_name == 'lci':
-                video_id = iframe_player_soup['data-watid'].encode('utf-8')
-            else:
-                data_src = iframe_player_soup['data-src'].encode('utf-8')
-                video_id = data_src[-8:]
+            video_id = iframe_player_soup['data-watid'].encode('utf-8')
 
         timeserver = str(utils.get_webcontent(URL_TIME))
 
