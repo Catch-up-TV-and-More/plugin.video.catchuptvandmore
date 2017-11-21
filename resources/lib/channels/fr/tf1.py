@@ -24,12 +24,13 @@
 import ast
 import json
 import re
+import os
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Rework QUALITY (SD in Kodi Jarvis)
+# Quality Mode on LIVE TV
 # Replay LCI add More Buttons
 
 # Initialize GNU gettext emulation in addon
@@ -58,6 +59,9 @@ HOSTING_APPLICATION_VERSION = '7.0.4'
 IMG_WIDTH = 640
 IMG_HEIGHT = 360
 
+URL_VIDEO_STREAM = 'https://www.wat.tv/get/webhtml/%s'
+
+DESIRED_QUALITY = common.PLUGIN.get_setting('quality')
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -677,53 +681,51 @@ def get_video_url(params):
                 class_='iframe_player')
             video_id = iframe_player_soup['data-watid'].encode('utf-8')
 
-        timeserver = str(utils.get_webcontent(URL_TIME))
-
-        auth_key = '%s-%s-%s-%s-%s' % (
-            video_id,
-            SECRET_KEY,
-            APP_NAME,
-            SECRET_KEY,
-            timeserver
-        )
-
-        auth_key = common.sp.md5(auth_key).hexdigest()
-        auth_key = auth_key + '/' + timeserver
-
-        post_data = {
-            'appName': APP_NAME,
-            'method': 'getUrl',
-            'mediaId': video_id,
-            'authKey': auth_key,
-            'version': VERSION,
-            'hostingApplicationName': HOSTING_APPLICATION_NAME,
-            'hostingApplicationVersion': HOSTING_APPLICATION_VERSION
-        }
-
-        url_video = utils.get_webcontent(
-            url=URL_TOKEN,
-            request_type='post',
-            post_dic=post_data)
-        url_video = json.loads(url_video)
-        url_video = url_video['message'].replace('\\', '')
-
-        desired_quality = common.PLUGIN.get_setting('quality')
-
-        if desired_quality == 'BEST' or desired_quality == 'DIALOG':
-            try:
-                url_video = url_video.split('&bwmax')[0]
-            except Exception:
-                pass
+        url_json = URL_VIDEO_STREAM % video_id
+        htlm_json = utils.get_webcontent(url_json, random_ua=True)
+        json_parser = json.loads(htlm_json)
 
         # Check DRM in the m3u8 file
         manifest = utils.get_webcontent(
-            url_video,
+            json_parser["hls"],
             random_ua=True)
         if 'drm' in manifest:
             utils.send_notification(common.ADDON.get_localized_string(30102))
             return ''
 
-        return url_video
+        root = os.path.dirname(json_parser["hls"])
+        manifest = utils.get_webcontent(
+            json_parser["hls"].split('&max_bitrate=')[0])
+
+        lines = manifest.splitlines()
+        if DESIRED_QUALITY == "DIALOG":
+            all_datas_videos_quality = []
+            all_datas_videos_path = []
+            for k in range(0, len(lines) - 1):
+                if 'RESOLUTION=' in lines[k]:
+                    all_datas_videos_quality.append(
+                        re.compile(
+                        r'RESOLUTION=(.*?),').findall(
+                        lines[k])[0])
+                    all_datas_videos_path.append(
+                        root + '/' + lines[k + 1])
+            seleted_item = common.sp.xbmcgui.Dialog().select(
+                _('Choose video quality'),
+                all_datas_videos_quality)
+            return all_datas_videos_path[seleted_item].encode(
+                'utf-8')
+        elif DESIRED_QUALITY == 'BEST':
+            # Last video in the Best
+            for k in range(0, len(lines) - 1):
+                if 'RESOLUTION=' in lines[k]:
+                    url = root + '/' + lines[k + 1]
+            return url
+        else:
+            for k in range(0, len(lines) - 1):
+                if 'RESOLUTION=' in lines[k]:
+                    url = root + '/' + lines[k + 1]
+                break
+            return url
 
     elif params.next == 'play_l':
 
