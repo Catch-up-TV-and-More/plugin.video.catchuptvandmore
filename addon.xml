@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.7~beta023"
+       version="0.1.7~beta024"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -58,6 +58,7 @@
 [Fix] Replay emission equipe de france (use id data-watid more reliable) - Group TF1 (wwark)
 [Improvement] Add Quality Mode and 720p working on Jarvis - Group TF1 (wwark)
 [Improvement] 720p for Live TV - Group TF1 (wwark)
+[Fix] Live TV without episode value - Group TF1 (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

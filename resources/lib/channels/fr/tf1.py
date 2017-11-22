@@ -600,8 +600,11 @@ def list_live(params):
     file_info_live = open(file_path).read()
     json_parser = json.loads(file_info_live)
 
-    title = json_parser["current"]["title"].encode('utf-8') + ' - ' \
-        + json_parser["current"]["episode"].encode('utf-8')
+    if "episode" in json_parser["current"]:
+        title = json_parser["current"]["title"].encode('utf-8') + ' - ' \
+            + json_parser["current"]["episode"].encode('utf-8')
+    else:
+        title = json_parser["current"]["title"].encode('utf-8')
     if "description" in json_parser["current"]:
         plot = json_parser["current"]["humanStartDate"].encode('utf-8') + \
             ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8') \
