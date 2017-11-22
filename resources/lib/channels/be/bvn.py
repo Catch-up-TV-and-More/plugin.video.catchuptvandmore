@@ -37,9 +37,6 @@ from bs4 import BeautifulSoup as bs
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_ROOT = 'https://www.bvn.tv'
 
 # LIVE :
@@ -88,8 +85,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -100,8 +96,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -157,8 +152,7 @@ def list_shows(params):
                     category_url=category_url,
                     window_title=category_name,
                     category_name=category_name,
-                ),
-                'context_menu': context_menu
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -275,7 +269,6 @@ def list_videos(params):
         )
         context_menu = []
         context_menu.append(download_video)
-        context_menu.append(utils.vpn_context_menu_item())
 
         if url_hls != '':
             videos.append({
@@ -362,8 +355,7 @@ def list_live(params):
             url_live=url_live,
         ),
         'is_playable': True,
-        'info': info,
-        'context_menu': context_menu
+        'info': info
     })
 
     return common.PLUGIN.create_listing(

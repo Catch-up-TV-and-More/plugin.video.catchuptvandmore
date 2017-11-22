@@ -41,9 +41,6 @@ URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -92,8 +89,7 @@ def root(params):
                 page='1',
                 category_url=category_url,
                 window_title=category_title
-            ),
-            'context_menu': context_menu
+            )
         })
 
     return common.PLUGIN.create_listing(
@@ -137,8 +133,7 @@ def list_shows(params):
                     title=show_title,
                     category_url=show_url,
                     window_title=show_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
         # More programs...
@@ -151,8 +146,7 @@ def list_shows(params):
                 update_listing=True,
                 category_url=params.category_url,
                 previous_listing=str(shows)
-            ),
-            'context_menu': context_menu
+            )
         })
 
     elif params.next == 'list_shows_artistes_1':
@@ -176,8 +170,7 @@ def list_shows(params):
                     title=alphabet_title,
                     category_url=alphabet_url,
                     window_title=alphabet_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_artistes_2':
@@ -203,8 +196,7 @@ def list_shows(params):
                     title=artiste_title,
                     category_url=artiste_url,
                     window_title=artiste_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_artistes_3':
@@ -229,8 +221,7 @@ def list_shows(params):
                         title=videos_title,
                         category_url=videos_url,
                         window_title=videos_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     elif params.next == 'list_shows_bonus':
@@ -255,8 +246,7 @@ def list_shows(params):
                     page='1',
                     category_url=bonus_url,
                     window_title=bonus_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -318,8 +308,7 @@ def list_videos(params):
                     video_url=video_url) + ')'
             )
             context_menu = []
-            # context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
+            context_menu.append(download_video)
 
             videos.append({
                 'label': video_title,
@@ -359,8 +348,7 @@ def list_videos(params):
                     video_url=video_url) + ')'
             )
             context_menu = []
-            # context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
+            context_menu.append(download_video)
 
             videos.append({
                 'label': video_title,
@@ -388,9 +376,7 @@ def list_videos(params):
                 window_title=params.window_title,
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
-            'context_menu': context_menu
-
+            )
         })
 
     return common.PLUGIN.create_listing(

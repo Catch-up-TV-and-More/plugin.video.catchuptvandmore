@@ -35,9 +35,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 SECRET_KEY = '19nBVBxv791Xs'
 
 CATEGORIES = {}
@@ -111,8 +108,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -123,8 +119,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -152,18 +147,8 @@ def list_shows(params):
                     next='list_shows_cat',
                     title=category_title,
                     window_title=category_title
-                ),
-                'context_menu': context_menu
+                )
             })
-
-        return common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
 
     elif params.next == 'list_shows_cat':
         file_path = utils.download_catalog(
@@ -188,18 +173,17 @@ def list_shows(params):
                     next='list_videos',
                     title=program_title,
                     window_title=program_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
-        return common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
+    return common.PLUGIN.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -259,7 +243,6 @@ def list_videos(params):
         )
         context_menu = []
         context_menu.append(download_video)
-        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': episode_title,
@@ -345,8 +328,7 @@ def list_live(params):
             url_live=url_live,
         ),
         'is_playable': True,
-        'info': info,
-        'context_menu': context_menu
+        'info': info
     })
 
     return common.PLUGIN.create_listing(

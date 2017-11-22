@@ -36,9 +36,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_EMISSIONS_AUVIO = 'https://www.rtbf.be/auvio/emissions'
 
 URL_JSON_EMISSION_BY_ID = 'https://www.rtbf.be/api/media/video?' \
@@ -76,7 +73,7 @@ def channel_entry(params):
 
 
 def get_partener_key(params):
-
+    """Get Partener Key"""
     file_path_root_live = utils.download_catalog(
         URL_ROOT_LIVE,
         '%s_root_live.html' % params.channel_name,
@@ -108,12 +105,14 @@ def get_partener_key(params):
 
 
 def format_hours(date):
+    """Format hours"""
     date_list = date.split('T')
     date_hour = date_list[1][:5]
     return date_hour
 
 
 def format_day(date):
+    """Format day"""
     date_list = date.split('T')
     date_dmy = date_list[0].replace('-', '/')
     return date_dmy
@@ -121,6 +120,7 @@ def format_day(date):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -131,8 +131,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -143,8 +142,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -159,6 +157,7 @@ def root(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build categories listing"""
     shows = []
 
     if params.next == 'list_shows_1':
@@ -172,8 +171,7 @@ def list_shows(params):
                 action='channel_entry',
                 next='list_shows_2',
                 window_title=emission_title
-            ),
-            'context_menu': context_menu
+            )
         })
 
         file_path = utils.get_webcontent(URL_CATEGORIES)
@@ -194,8 +192,7 @@ def list_shows(params):
                                 category_name=category_name,
                                 next='list_videos_categorie',
                                 window_title=category_name
-                            ),
-                            'context_menu': context_menu
+                            )
                         })
 
     elif params.next == 'list_shows_2':
@@ -221,8 +218,7 @@ def list_shows(params):
                     emission_id=emission_id,
                     next='list_videos_emission',
                     window_title=emission_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -237,6 +233,7 @@ def list_shows(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     if params.next == 'list_videos_emission':
@@ -295,7 +292,6 @@ def list_videos(params):
             )
             context_menu = []
             context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -357,7 +353,6 @@ def list_videos(params):
                 )
                 context_menu = []
                 context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -386,7 +381,7 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -442,8 +437,7 @@ def list_live(params):
                 url_live=url_live,
             ),
             'is_playable': True,
-            'info': info,
-            'context_menu': context_menu
+            'info': info
         })
 
     return common.PLUGIN.create_listing(
@@ -458,6 +452,7 @@ def list_live(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
+    """Get video URL and start video player"""
     if params.next == 'play_l':
         return params.url_live
     elif params.next == 'play_r_categorie':

@@ -37,9 +37,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_ROOT = 'https://www.publicsenat.fr'
 
 URL_LIVE_SITE = 'https://www.publicsenat.fr/direct'
@@ -98,8 +95,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -110,8 +106,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -142,8 +137,7 @@ def list_shows(params):
                     page='0',
                     next='list_videos_1',
                     window_title=category_name
-                ),
-                'context_menu': context_menu
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -342,7 +336,6 @@ def list_videos(params):
             )
             context_menu = []
             context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -369,8 +362,7 @@ def list_videos(params):
             page=str(int(params.page) + 1),
             update_listing=True,
             previous_listing=str(videos)
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -424,8 +416,7 @@ def list_live(params):
             video_id=video_id,
         ),
         'is_playable': True,
-        'info': info,
-        'context_menu': context_menu
+        'info': info
     })
 
     return common.PLUGIN.create_listing(

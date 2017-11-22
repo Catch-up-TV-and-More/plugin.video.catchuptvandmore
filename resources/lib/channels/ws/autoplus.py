@@ -39,9 +39,6 @@ URL_ROOT = 'https://video.autoplus.fr'
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -71,8 +68,7 @@ def root(params):
             title=category_title,
             page='1',
             window_title=category_title
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -132,7 +128,6 @@ def list_videos(params):
             )
             context_menu = []
             context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': video_title,
@@ -156,8 +151,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
-            'context_menu': context_menu
+            )
         })
 
     return common.PLUGIN.create_listing(

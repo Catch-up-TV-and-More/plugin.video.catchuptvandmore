@@ -28,9 +28,6 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -133,8 +130,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -145,8 +141,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -193,8 +188,7 @@ def list_shows(params):
                         category_name=category_name,
                         next='list_shows_2',
                         window_title=category_name
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     elif params.next == 'list_shows_2' and params.channel_name == 'cnews':
@@ -224,8 +218,7 @@ def list_shows(params):
                         category_name=category_name,
                         next='list_videos',
                         window_title=category_name
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
         else:
             # Find all emissions
@@ -258,8 +251,7 @@ def list_shows(params):
                         category_name=category_name,
                         next='list_videos',
                         window_title=category_name
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     # ################## END CNEWS ###########################
@@ -286,8 +278,7 @@ def list_shows(params):
                     next='list_shows_2',
                     title=title,
                     window_title=title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_2' and \
@@ -318,8 +309,7 @@ def list_shows(params):
                             slug=slug,
                             title=title,
                             window_title=title
-                        ),
-                        'context_menu': context_menu
+                        )
                     })
     # ################## END C8 and CStar ##################
 
@@ -352,8 +342,7 @@ def list_shows(params):
                         category_name=category_name,
                         next='list_shows_2',
                         window_title=category_name
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     elif params.next == 'list_shows_2' and params.channel_name == 'cplus':
@@ -380,8 +369,7 @@ def list_shows(params):
                     category_section=section,
                     next='list_videos',
                     window_title=section
-                ),
-                'context_menu': context_menu
+                )
             })
 
     # ################## END CANAL + ##################
@@ -461,7 +449,6 @@ def list_videos(params):
             )
             context_menu = []
             context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -488,8 +475,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
-            'context_menu': context_menu
+            )
         })
     # ################## END CNEWS ###########################
 
@@ -551,7 +537,6 @@ def list_videos(params):
             )
             context_menu = []
             context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -628,7 +613,6 @@ def list_videos(params):
                     )
                     context_menu = []
                     context_menu.append(download_video)
-                    context_menu.append(utils.vpn_context_menu_item())
 
                     videos.append({
                         'label': title,
@@ -729,8 +713,7 @@ def list_live(params):
             url=url_live,
         ),
         'is_playable': True,
-        'info': info,
-        'context_menu': context_menu
+        'info': info
     })
 
     return common.PLUGIN.create_listing(

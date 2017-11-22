@@ -29,8 +29,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
 
 URL_ROOT = 'http://news.tbs.co.jp'
 
@@ -58,6 +56,7 @@ def channel_entry(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add News
@@ -69,8 +68,7 @@ def root(params):
             page='1',
             category='TBS ニュース',
             window_title='TBS ニュース'
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Weather
@@ -81,8 +79,7 @@ def root(params):
             next='list_videos_weather',
             category='TBS ニュース - 気象',
             window_title='TBS ニュース - 気象'
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -102,14 +99,19 @@ def list_shows(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     if params.next == 'list_videos_weather':
 
         weather_html = utils.get_webcontent(URL_CONTENT % 'weather')
         weather_soup = bs(weather_html, 'html.parser')
-        title = weather_soup.find('article', class_='md-mainArticle').find_all('img', class_='lazy')[0].get('alt').encode('utf-8')
-        img = weather_soup.find('article', class_='md-mainArticle').find_all('img', class_='lazy')[0].get('data-original')
+        title = weather_soup.find(
+            'article', class_='md-mainArticle').find_all(
+            'img', class_='lazy')[0].get('alt').encode('utf-8')
+        img = weather_soup.find(
+            'article', class_='md-mainArticle').find_all(
+            'img', class_='lazy')[0].get('data-original')
         duration = 0
         video_url = URL_STREAM % 'weather'
 
@@ -136,7 +138,6 @@ def list_videos(params):
         )
         context_menu = []
         context_menu.append(download_video)
-        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': title,
@@ -158,8 +159,12 @@ def list_videos(params):
 
             news_html = utils.get_webcontent(URL_CONTENT % content)
             news_soup = bs(news_html, 'html.parser')
-            title = news_soup.find('article', class_='md-mainArticle').find_all('img', class_='lazy')[0].get('alt').encode('utf-8')
-            img = URL_ROOT + news_soup.find('article', class_='md-mainArticle').find_all('img', class_='lazy')[0].get('data-original')
+            title = news_soup.find(
+                'article', class_='md-mainArticle').find_all(
+                'img', class_='lazy')[0].get('alt').encode('utf-8')
+            img = URL_ROOT + news_soup.find(
+                'article', class_='md-mainArticle').find_all(
+                'img', class_='lazy')[0].get('data-original')
             duration = 0
             video_url = URL_STREAM % content
 
@@ -186,7 +191,6 @@ def list_videos(params):
             )
             context_menu = []
             context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -224,7 +228,7 @@ def list_live(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_r':
         return params.video_url
 

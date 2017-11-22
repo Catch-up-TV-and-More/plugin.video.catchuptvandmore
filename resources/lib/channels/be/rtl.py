@@ -29,8 +29,6 @@ from resources.lib import common
 # TO DO
 # emissions alphabetics
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
 
 URL_ROOT = 'http://www.rtl.be/tv/%s/replay'
 # channel name : plugrtl, rtltvi or clubrtl
@@ -74,8 +72,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -86,8 +83,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name.upper()
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -154,8 +150,7 @@ def list_shows(params):
                         next=next,
                         window_title=category_title,
                         videos_len=videos_len
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     elif params.next == 'list_shows_carousel':
@@ -185,8 +180,7 @@ def list_shows(params):
                     next='list_shows_cat',
                     window_title=category_title,
                     index_page='1'
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_cat':
@@ -221,8 +215,7 @@ def list_shows(params):
                     program_url=program_url,
                     next='list_videos',
                     window_title=program_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
         if category_soup.find('nav', attrs={'pagination': 'infinite'}):
@@ -242,9 +235,7 @@ def list_shows(params):
                     index_page=str(int(params.index_page) + 1),
                     update_listing=True,
                     previous_listing=str(shows)
-                ),
-                'context_menu': context_menu
-
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -353,6 +344,15 @@ def list_videos(params):
             }
         }
 
+        download_video = (
+            _('Download'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='download_video',
+                video_url=video_url) + ')'
+        )
+        context_menu = []
+        context_menu.append(download_video)
+
         videos.append({
             'label': video_title,
             'thumb': video_img,
@@ -387,8 +387,7 @@ def list_videos(params):
                     index_page=str(int(index_page) + 1),
                     update_listing=True,
                     previous_listing=str(videos)
-                ),
-                'context_menu': context_menu
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -462,8 +461,7 @@ def list_live(params):
                 url_live=url_live,
             ),
             'is_playable': True,
-            'info': info,
-            'context_menu': context_menu
+            'info': info
         })
     # No live
     else:
@@ -489,8 +487,7 @@ def list_live(params):
                 url_live=url_live,
             ),
             'is_playable': False,
-            'info': info,
-            'context_menu': context_menu
+            'info': info
         })
 
     return common.PLUGIN.create_listing(

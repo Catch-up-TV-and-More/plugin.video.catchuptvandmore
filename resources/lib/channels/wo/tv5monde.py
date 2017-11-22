@@ -35,9 +35,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_TV5MAF_ROOT = 'https://afrique.tv5monde.com'
 
 URL_TV5MONDE_LIVE = 'http://live.tv5monde.com/'
@@ -103,8 +100,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -116,8 +112,7 @@ def root(params):
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
                 window_title='%s Live TV' % params.channel_name.upper()
-            ),
-            'context_menu': context_menu
+            )
         })
 
     return common.PLUGIN.create_listing(
@@ -159,8 +154,7 @@ def list_shows(params):
                         title=category_title,
                         category_url=category_url,
                         window_title=category_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
         elif params.channel_name == 'tv5monde':
@@ -180,8 +174,7 @@ def list_shows(params):
                     next='list_shows_2',
                     title=category_title,
                     window_title=category_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
             for category_title, category_type in CATEGORIES_VIDEOS_TV5MONDE.iteritems():
@@ -195,8 +188,7 @@ def list_shows(params):
                         title=category_title,
                         category_type=category_type,
                         window_title=category_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
         elif params.channel_name == 'tivi5monde':
@@ -219,8 +211,7 @@ def list_shows(params):
                         title=category_title,
                         category_url=category_url,
                         window_title=category_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     elif params.next == 'list_shows_2':
@@ -254,8 +245,7 @@ def list_shows(params):
                         title=show_title,
                         category_url=show_url,
                         window_title=show_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
         elif params.channel_name == 'tv5monde':
@@ -282,8 +272,7 @@ def list_shows(params):
                         title=category_title,
                         category_url=category_url,
                         window_title=category_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
         elif params.channel_name == 'tivi5monde':
@@ -313,8 +302,7 @@ def list_shows(params):
                         title=category_title,
                         category_url=category_url,
                         window_title=category_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     return common.PLUGIN.create_listing(
@@ -373,8 +361,7 @@ def list_videos(params):
                         video_url=params.category_url) + ')'
                 )
                 context_menu = []
-                # context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
+                context_menu.append(download_video)
 
                 videos.append({
                     'label': video_title,
@@ -409,8 +396,7 @@ def list_videos(params):
                         }
 
                         context_menu = []
-                        # context_menu.append(download_video)
-                        context_menu.append(utils.vpn_context_menu_item())
+                        context_menu.append(download_video)
 
                         videos.append({
                             'label': video_title,
@@ -458,8 +444,7 @@ def list_videos(params):
                                 video_url=video_url) + ')'
                         )
                         context_menu = []
-                        # context_menu.append(download_video)
-                        context_menu.append(utils.vpn_context_menu_item())
+                        context_menu.append(download_video)
 
                         videos.append({
                             'label': video_title,
@@ -519,8 +504,7 @@ def list_videos(params):
                         video_url=video_url) + ')'
                 )
                 context_menu = []
-                # context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
+                context_menu.append(download_video)
 
                 videos.append({
                     'label': video_title,
@@ -585,8 +569,7 @@ def list_videos(params):
                         video_url=video_url) + ')'
                 )
                 context_menu = []
-                # context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
+                context_menu.append(download_video)
 
                 videos.append({
                     'label': video_title,
@@ -653,8 +636,7 @@ def list_videos(params):
                         video_url=video_url) + ')'
                 )
                 context_menu = []
-                # context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
+                context_menu.append(download_video)
 
                 videos.append({
                     'label': video_title,
@@ -719,8 +701,7 @@ def list_videos(params):
                             video_url=video_url) + ')'
                     )
                     context_menu = []
-                    # context_menu.append(download_video)
-                    context_menu.append(utils.vpn_context_menu_item())
+                    context_menu.append(download_video)
 
                     videos.append({
                         'label': video_title,
@@ -841,7 +822,7 @@ def list_live(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_r':
         info_video_html = utils.get_webcontent(params.video_url)
         video_json = re.compile(

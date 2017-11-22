@@ -35,9 +35,6 @@ from resources.lib import common
 # Get Partner Id ?
 # Todo get Aired, Year, Date of the Video
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_ROOT = 'http://www.allocine.fr'
 
 URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
@@ -102,8 +99,7 @@ def root(params):
                 category_name=category_name,
                 next=next_value,
                 window_title=category_name
-            ),
-            'context_menu': context_menu
+            )
         })
 
     return common.PLUGIN.create_listing(
@@ -148,8 +144,7 @@ def list_shows(params):
                     title=categorie_programs_title,
                     categorie_programs_url=categorie_programs_url,
                     window_title=categorie_programs_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_emissions_2':
@@ -173,8 +168,7 @@ def list_shows(params):
                 page='1',
                 show_url=show_url,
                 window_title=show_title
-            ),
-            'context_menu': context_menu
+            )
         })
 
         # Les programmes
@@ -192,8 +186,7 @@ def list_shows(params):
                 page='1',
                 programs_url=programs_url,
                 window_title=programs_title
-            ),
-            'context_menu': context_menu
+            )
         })
 
         # Subcategories
@@ -213,8 +206,7 @@ def list_shows(params):
                     title=subcategorie_programs_title,
                     subcategorie_programs_url=subcategorie_programs_url,
                     window_title=subcategorie_programs_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_emissions_3':
@@ -232,8 +224,7 @@ def list_shows(params):
                 page='1',
                 show_url=show_url,
                 window_title=show_title
-            ),
-            'context_menu': context_menu
+            )
         })
 
         # Les programmes
@@ -251,8 +242,7 @@ def list_shows(params):
                 page='1',
                 programs_url=programs_url,
                 window_title=programs_title
-            ),
-            'context_menu': context_menu
+            )
         })
 
     elif params.next == 'list_shows_emissions_4':
@@ -282,8 +272,7 @@ def list_shows(params):
                     program_title=program_title,
                     program_url=program_url,
                     window_title=program_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
         if replay_programs_soup.find('div', class_='pager pager margin_40t') \
@@ -298,8 +287,7 @@ def list_shows(params):
                     page=str(int(params.page) + 1),
                     update_listing=True,
                     previous_listing=str(shows)
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_emissions_5':
@@ -336,8 +324,7 @@ def list_shows(params):
                         last_page=last_page,
                         show_url=show_season_url,
                         window_title=season_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
         else:
@@ -367,8 +354,7 @@ def list_shows(params):
                     last_page=last_page,
                     show_url=show_season_url,
                     window_title=season_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_films_series_1':
@@ -393,8 +379,7 @@ def list_shows(params):
                 page='1',
                 show_url=show_url,
                 window_title=show_title
-            ),
-            'context_menu': context_menu
+            )
         })
 
         for all_types in replay_types_films_series.find_all('a'):
@@ -411,8 +396,7 @@ def list_shows(params):
                     title=show_title,
                     show_url=show_url,
                     window_title=show_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     elif params.next == 'list_shows_films_series_2':
@@ -430,8 +414,7 @@ def list_shows(params):
                 show_url=show_url,
                 page='1',
                 window_title=show_title
-            ),
-            'context_menu': context_menu
+            )
         })
 
         for language, language_url in CATEGORIES_LANGUAGE.iteritems():
@@ -449,8 +432,7 @@ def list_shows(params):
                     show_url=show_url,
                     page='1',
                     window_title=show_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -506,8 +488,7 @@ def list_videos(params):
                     video_id=video_id) + ')'
             )
             context_menu = []
-            # context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
+            context_menu.append(download_video)
 
             videos.append({
                 'label': video_title,
@@ -532,8 +513,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
-            'context_menu': context_menu
+            )
         })
 
     elif params.next == 'list_videos_emissions_1':
@@ -598,7 +578,6 @@ def list_videos(params):
             )
             context_menu = []
             context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': video_title,
@@ -624,8 +603,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
-            'context_menu': context_menu
+            )
         })
 
     return common.PLUGIN.create_listing(

@@ -33,9 +33,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_LIVE_API = 'http://%s.euronews.com/api/watchlive.json'
 # Language
 
@@ -105,13 +102,12 @@ def list_shows(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
-
     return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -192,8 +188,7 @@ def list_live(params):
             url=url_live,
         ),
         'is_playable': True,
-        'info': info,
-        'context_menu': context_menu
+        'info': info
     })
 
     return common.PLUGIN.create_listing(
@@ -208,6 +203,6 @@ def list_live(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_l':
         return params.url

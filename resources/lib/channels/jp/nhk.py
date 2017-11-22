@@ -35,9 +35,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_ROOT = 'http://www3.nhk.or.jp/'
 
 URL_ROOT_2 = 'http://www.nhk.or.jp'
@@ -92,6 +89,7 @@ CORRECT_MONTH = {
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     if params.channel_name == 'nhknews':
@@ -105,8 +103,7 @@ def root(params):
                 page='1',
                 category='NHK ニュース',
                 window_title='NHK ニュース'
-            ),
-            'context_menu': context_menu
+            )
         })
 
         # Add Weather
@@ -117,8 +114,7 @@ def root(params):
                 next='list_videos_weather',
                 category='NHK ニュース - 気象',
                 window_title='NHK ニュース - 気象'
-            ),
-            'context_menu': context_menu
+            )
         })
 
     elif params.channel_name == 'nhklifestyle':
@@ -142,8 +138,7 @@ def root(params):
                         title=category_title,
                         category_url=category_url,
                         window_title=category_title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     return common.PLUGIN.create_listing(
@@ -163,6 +158,7 @@ def list_shows(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
     if 'previous_listing' in params:
         videos = ast.literal_eval(params['previous_listing'])
@@ -204,7 +200,6 @@ def list_videos(params):
         )
         context_menu = []
         context_menu.append(download_video)
-        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': title,
@@ -283,7 +278,6 @@ def list_videos(params):
             )
             context_menu = []
             context_menu.append(download_video)
-            context_menu.append(utils.vpn_context_menu_item())
 
             videos.append({
                 'label': title,
@@ -371,7 +365,6 @@ def list_videos(params):
                 )
                 context_menu = []
                 context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -410,7 +403,7 @@ def list_live(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_weather_r':
         return params.video_url
     elif params.next == 'play_news_r':

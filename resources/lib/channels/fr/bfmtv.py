@@ -28,9 +28,6 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 # TO DO
 # Add Live TV (ONENET ???)
 
@@ -134,8 +131,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -147,8 +143,7 @@ def root(params):
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
                 window_title='%s Live TV' % params.channel_name
-            ),
-            'context_menu': context_menu
+            )
         })
 
     return common.PLUGIN.create_listing(
@@ -203,8 +198,7 @@ def list_shows(params):
                     title=video_title,
                     page='1',
                     window_title=video_title
-                ),
-                'context_menu': context_menu
+                )
             })
 
     else:
@@ -233,8 +227,7 @@ def list_shows(params):
                         title=title,
                         page='1',
                         window_title=title
-                    ),
-                    'context_menu': context_menu
+                    )
                 })
 
     return common.PLUGIN.create_listing(
@@ -325,7 +318,6 @@ def list_videos(params):
         )
         context_menu = []
         context_menu.append(download_video)
-        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': video_title,
@@ -400,7 +392,7 @@ def list_videos(params):
                 )
                 context_menu = []
                 context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
+
                 videos.append({
                     'label': title,
                     'thumb': image,
@@ -427,9 +419,7 @@ def list_videos(params):
                     window_title=params.window_title,
                     update_listing=True,
                     previous_listing=str(videos)
-                ),
-                'context_menu': context_menu
-
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -510,8 +500,7 @@ def list_live(params):
                 url_live=url_live,
             ),
             'is_playable': True,
-            'info': info,
-            'context_menu': context_menu
+            'info': info
         })
 
     else:
@@ -546,8 +535,7 @@ def list_live(params):
                     url_live=url_live,
                 ),
                 'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
+                'info': info
             })
 
             # BFM PARIS
@@ -609,8 +597,7 @@ def list_live(params):
                     url_live=url_live_paris,
                 ),
                 'is_playable': True,
-                'info': info_paris,
-                'context_menu': context_menu
+                'info': info_paris
             })
 
         elif params.channel_name == 'bfmbusiness':
@@ -669,8 +656,7 @@ def list_live(params):
                     url_live=url_live,
                 ),
                 'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
+                'info': info
             })
 
         elif params.channel_name == 'rmc':
@@ -730,8 +716,7 @@ def list_live(params):
                     url_live=url_live,
                 ),
                 'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
+                'info': info
             })
 
         elif params.channel_name == '01net':

@@ -34,9 +34,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_ROOT = 'http://www3.nhk.or.jp/'
 
 URL_LIVE_NHK = 'http://www3.nhk.or.jp/%s/app/tv/hlslive_tv.xml'
@@ -115,6 +112,7 @@ def get_api_key(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
+    """Add Replay and Live in the listing"""
     modes = []
 
     # Add Replay
@@ -125,8 +123,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -137,8 +134,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -153,6 +149,7 @@ def root(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
+    """Build shows listing"""
     shows = []
 
     if params.next == 'list_shows_1':
@@ -160,15 +157,14 @@ def list_shows(params):
         all_video = common.ADDON.get_localized_string(30101)
 
         shows.append({
-            'label': all_video,
+            'label': _(All videos),
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_cat',
                 category_id=0,
                 all_video=all_video,
                 window_title=all_video
-            ),
-            'context_menu': context_menu
+            )
         })
 
         file_path = utils.download_catalog(
@@ -191,8 +187,7 @@ def list_shows(params):
                     category_id=category_id,
                     name_category=name_category,
                     window_title=name_category
-                ),
-                'context_menu': context_menu
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -207,6 +202,7 @@ def list_shows(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
+    """Build videos listing"""
     videos = []
 
     if params.next == 'list_videos_cat':
@@ -273,7 +269,6 @@ def list_videos(params):
                 )
                 context_menu = []
                 context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -306,7 +301,7 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
-
+    """Build live listing"""
     lives = []
 
     title = ''
@@ -373,8 +368,7 @@ def list_live(params):
             url=url_live,
         ),
         'is_playable': True,
-        'info': info,
-        'context_menu': context_menu
+        'info': info
     })
 
     return common.PLUGIN.create_listing(
@@ -389,7 +383,7 @@ def list_live(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
-
+    """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
         url = ''
         file_path = utils.download_catalog(

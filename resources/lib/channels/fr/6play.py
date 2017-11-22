@@ -26,9 +26,6 @@ import json
 from resources.lib import utils
 from resources.lib import common
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 # TO DO
 # LIVE TV protected by #EXT-X-FAXS-CM
 # https://helpx.adobe.com/adobe-media-server/dev/configuring-content-protection-hls.html
@@ -171,18 +168,8 @@ def list_shows(params):
                     next='list_shows_2',
                     title=category_name,
                     window_title=category_name
-                ),
-                'context_menu': context_menu
+                )
             })
-
-        shows = common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
 
     elif params.next == 'list_shows_2':
         file_prgm = utils.get_webcontent(
@@ -226,18 +213,8 @@ def list_shows(params):
                     title=program_title,
                     window_title=program_title
                 ),
-                'info': info,
-                'context_menu': context_menu
+                'info': info
             })
-
-        shows = common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
 
     elif params.next == 'list_shows_3':
         program_json = utils.get_webcontent(
@@ -273,8 +250,7 @@ def list_shows(params):
                     sub_category_id=sub_category_id,
                     window_title=sub_category_title
                 ),
-                'info': info,
-                'context_menu': context_menu
+                'info': info
             })
 
         info = {
@@ -296,20 +272,17 @@ def list_shows(params):
                 window_title=params.window_title
 
             ),
-            'info': info,
-            'context_menu': context_menu
+            'info': info
         })
 
-        shows = common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
-
-    return shows
+    return common.PLUGIN.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -379,7 +352,6 @@ def list_videos(params):
         )
         context_menu = []
         context_menu.append(download_video)
-        context_menu.append(utils.vpn_context_menu_item())
 
         videos.append({
             'label': title,

@@ -37,9 +37,6 @@ from resources.lib import common
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-context_menu = []
-context_menu.append(utils.vpn_context_menu_item())
-
 URL_ROOT = 'http://www.nrj-play.fr'
 
 URL_REPLAY = 'http://www.nrj-play.fr/%s/replay'
@@ -94,8 +91,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Replay
@@ -106,8 +102,7 @@ def root(params):
             next='list_shows_without_categories',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     # Add Live
@@ -118,8 +113,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
-        'context_menu': context_menu
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -150,8 +144,7 @@ def list_shows(params):
                 next='list_videos_1',
                 # title_category=category_name,
                 window_title=state_video
-            ),
-            'context_menu': context_menu
+            )
         })
 
     else:
@@ -181,8 +174,7 @@ def list_shows(params):
                     next='list_videos_1',
                     # title_category=category_name,
                     window_title=state_video
-                ),
-                'context_menu': context_menu
+                )
             })
 
             for collection in collections:
@@ -200,8 +192,7 @@ def list_shows(params):
                             next='list_shows_programs',
                             # title_category=category_name,
                             window_title=category_name
-                        ),
-                        'context_menu': context_menu
+                        )
                     })
 
         elif 'list_shows_programs' in params.next:
@@ -229,8 +220,7 @@ def list_shows(params):
                             id_program=id_program,
                             # title_program=name_program,
                             window_title=name_program
-                        ),
-                        'context_menu': context_menu
+                        )
                     })
 
     return common.PLUGIN.create_listing(
@@ -329,7 +319,6 @@ def list_videos(params):
                 )
                 context_menu = []
                 context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -417,7 +406,6 @@ def list_videos(params):
                 )
                 context_menu = []
                 context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
 
                 videos.append({
                     'label': title,
@@ -492,8 +480,7 @@ def list_videos(params):
                         url_video=url) + ')'
                 )
                 context_menu = []
-                # context_menu.append(download_video)
-                context_menu.append(utils.vpn_context_menu_item())
+                context_menu.append(download_video)
 
                 videos.append({
                     'label': title,
@@ -589,8 +576,7 @@ def list_live(params):
             url_live=url_live,
         ),
         'is_playable': True,
-        'info': info,
-        'context_menu': context_menu
+        'info': info
     })
 
     return common.PLUGIN.create_listing(
