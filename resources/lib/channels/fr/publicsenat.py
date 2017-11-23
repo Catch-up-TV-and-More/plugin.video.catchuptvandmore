@@ -442,4 +442,4 @@ def get_video_url(params):
         else:
             return resolver.get_stream_dailymotion(video_id, False)
     elif params.next == 'play_l':
-        return resolver.get_stream_dailymotion(params.video_id)
+        return resolver.get_stream_dailymotion(params.video_id, False)
