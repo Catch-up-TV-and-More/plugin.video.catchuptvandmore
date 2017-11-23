@@ -686,9 +686,42 @@ def get_video_url(params):
                 video_id = re.compile(
                     r'embed/video/(.*?)[\"\?]').findall(
                     url_video_resolver)[0]
+<<<<<<< HEAD
                 if params.next == 'download_video':
                     return resolver.get_stream_dailymotion(
                         video_id, True)
+=======
+                url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
+                html_video = utils.get_webcontent(url_dmotion)
+                html_video = html_video.replace('\\', '')
+                url_video_auto = re.compile(
+                    r'{"type":"application/x-mpegURL","url":"(.*?)"'
+                    ).findall(html_video)[0]
+                m3u8_video_auto = utils.get_webcontent(url_video_auto)
+                lines = m3u8_video_auto.splitlines()
+                if desired_quality == "DIALOG":
+                    all_datas_videos_quality = []
+                    all_datas_videos_path = []
+                    for k in range(0, len(lines) - 1):
+                        if 'RESOLUTION=' in lines[k]:
+                            all_datas_videos_quality.append(
+                                re.compile(
+                                r'RESOLUTION=(.*?),').findall(
+                                lines[k])[0])
+                            all_datas_videos_quality.append(
+                                lines[k + 1])
+                    seleted_item = common.sp.xbmcgui.Dialog().select(
+                        _('Choose video quality'),
+                        all_datas_videos_quality)
+                    return all_datas_videos_path[seleted_item].encode(
+                        'utf-8')
+                elif desired_quality == 'BEST':
+                    # Last video in the Best
+                    for k in range(0, len(lines) - 1):
+                        if 'RESOLUTION=' in lines[k]:
+                            url = lines[k + 1]
+                    return url
+>>>>>>> master
                 else:
                     return resolver.get_stream_dailymotion(
                         video_id, False)
@@ -697,9 +730,41 @@ def get_video_url(params):
                 video_id = re.compile(
                     'www.facebook.com/allocine/videos/(.*?)/').findall(
                     url_video_resolver)[0]
+<<<<<<< HEAD
                 if params.next == 'download_video':
                     return resolver.get_stream_facebook(
                         video_id, True)
+=======
+                url_fbook = utils.get_webcontent(
+                    URL_FACEBOOK % video_id)
+                if len(re.compile(
+                    r'hd_src_no_ratelimit:"(.*?)"').findall(
+                    url_fbook)) > 0:
+                    if desired_quality == "DIALOG":
+                        all_datas_videos_quality = []
+                        all_datas_videos_path = []
+                        all_datas_videos_quality.append('SD')
+                        all_datas_videos_path.append(re.compile(
+                            r'sd_src_no_ratelimit:"(.*?)"').findall(
+                            url_fbook)[0])
+                        all_datas_videos_quality.append('HD')
+                        all_datas_videos_path.append(re.compile(
+                            r'hd_src_no_ratelimit:"(.*?)"').findall(
+                            url_fbook)[0])
+                        seleted_item = common.sp.xbmcgui.Dialog().select(
+                            _('Choose video quality'),
+                            all_datas_videos_quality)
+                        return all_datas_videos_path[seleted_item].encode(
+                            'utf-8')
+                    elif desired_quality == 'BEST':
+                        return re.compile(
+                            r'hd_src_no_ratelimit:"(.*?)"').findall(
+                            url_fbook)[0]
+                    else:
+                        return re.compile(
+                            r'sd_src_no_ratelimit:"(.*?)"').findall(
+                            url_fbook)[0]
+>>>>>>> master
                 else:
                     return resolver.get_stream_facebook(
                         video_id, False)
