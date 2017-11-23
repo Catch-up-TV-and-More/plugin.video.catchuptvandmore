@@ -27,6 +27,11 @@ import requests
 from random import randint
 from resources.lib import common
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.ADDON.initialize_gettext()
+
 cache_path = common.sp.xbmc.translatePath(
     os.path.join(
         'special://profile/addon_data',
@@ -171,6 +176,29 @@ def send_notification(
     common.sp.xbmcgui.Dialog().notification(
         title, message, common.ADDON.icon, time)
 
+
 def clear_cache():
-    common.sp.xbmcgui.Dialog().notification(
-        common.PLUGIN_NAME, 'test', common.ADDON.icon, 5000)
+    for file in os.listdir(cache_path):
+        file_path = os.path.join(cache_path, file)
+        try:
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        except Exception as e:
+            print(e)
+    send_notification(_('Cache cleared'))
+
+
+def vpn_context_menu_item():
+    vpn_label = _('Connect VPN')
+    storage = common.sp.MemStorage('vpn')
+    if 'status' in storage:
+        if storage['status'] == "connected":
+            vpn_label = _('Disconnect VPN')
+    else:
+        storage['status'] = "disconnected"
+    vpn = (
+        vpn_label,
+        'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+            action='vpn_entry') + ')'
+    )
+    return vpn

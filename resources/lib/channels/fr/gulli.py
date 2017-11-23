@@ -108,7 +108,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Live
@@ -119,7 +119,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -150,15 +150,6 @@ def list_shows(params):
                 )
             })
 
-        return common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
-
     elif params.next == 'list_shows_cat':
         file_path = utils.download_catalog(
             params.category_url,
@@ -185,14 +176,14 @@ def list_shows(params):
                 )
             })
 
-        return common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
+    return common.PLUGIN.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -244,13 +235,13 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 url_streaming=url_streaming) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
 
         videos.append({

@@ -30,11 +30,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV Communauté allemande — *German Community TV*
 - BRF *(Replay)*
 
-### Europe
-- Arte *(Replay, Live TV)* *(Contents {FR|DE})*
-- Euronews *(Live TV)* *(Contents {FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU})*
-- France 24 *(Replay, Live TV)* *(Contents {FR|EN|AR|ES})*
-
 ### France
 ##### TV
 - TF1 *(Replay, Live TV)*
@@ -81,22 +76,49 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - 01Net TV *(Replay)*
 - France TV Sport — francetv *(Replay, Live)*
 
-### Japon — *Japan*
+### Internationales — *International*
 ##### TV
+- TV5Monde Afrique *(Replay)*
+- Arte *(Replay, Live TV)* *(Contents {FR|DE})*
+- Euronews *(Live TV)* *(Contents {FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU})*
+- France 24 *(Replay, Live TV)* *(Contents {FR|EN|AR|ES})*
 - NHK World *(Replay, Live TV)*
+- TV5Monde *(Replay, Live TV)*
+- Tivi 5Monde *(Replay, Live TV)*
 
+### Japon — *Japan*
 ##### Web TV
 - NHK ニュース *(Replay)*
 - NHKらいふ *(Replay)*
+- TBS ニュース *(Replay)*
 
-### Sites internet — *Websites*
-#### Canada
+### Suisse — *Switzerland*
+##### TV Communauté française — *French Community TV*
+- RTS *(Replay, Live TV)*
+
+##### TV Communauté italienne — *Italian Community TV*
+- RSI *(Replay, Live TV)*
+
+##### TV Communauté allemande — *German Community TV*
+- SRF *(Replay, Live TV)*
+
+##### TV Communauté romanche — *Romansh Community TV*
+- RTR *(Replay, Live TV)*
+
+##### Web TV
+- SWISSINFO *(Replay)*
+
+## Sites internet disponibles — *Available Websites*
+### Canada
 ##### Communauté française — *French Community*
 - Au pays des Têtes à claques <https://www.tetesaclaques.tv/>
 
-#### France
+### France
 - Allociné <http://www.allocine.fr/>
 - Taratata <http://mytaratata.com/>
+- Noob TV <http://noob-tv.com/>
+- Culturepub <http://www.culturepub.fr/>
+- Auto Plus <https://video.autoplus.fr>
 
 ## Bugs et améliorations — *Bugs and improvements*
 Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.

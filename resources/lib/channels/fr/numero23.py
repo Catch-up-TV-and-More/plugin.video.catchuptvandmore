@@ -24,6 +24,7 @@ import re
 import json
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
@@ -39,9 +40,6 @@ URL_REPLAY = 'http://www.numero23.fr/replay/'
 
 URL_INFO_LIVE_JSON = 'http://www.numero23.fr/wp-content/cache/n23-direct.json'
 # Title, DailyMotion Id (Video)
-
-URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
-# Video_id
 
 
 def channel_entry(params):
@@ -89,7 +87,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Live
@@ -100,7 +98,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -231,13 +229,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_id=video_id) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -336,6 +334,14 @@ def list_live(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
+<<<<<<< HEAD
+    if params.next == 'play_r':
+        return resolver.get_stream_dailymotion(params.video_id, False)
+    elif params.next == 'play_l':
+        return resolver.get_stream_dailymotion(params.video_id, False)
+    elif params.next == 'download_video':
+        return resolver.get_stream_dailymotion(params.video_id, True)
+=======
     url_video = URL_DAILYMOTION_EMBED % params.video_id
 
     desired_quality = common.PLUGIN.get_setting('quality')
@@ -376,3 +382,4 @@ def get_video_url(params):
                 return url
             else:
                 return all_url_video[0]
+>>>>>>> master

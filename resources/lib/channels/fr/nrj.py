@@ -91,7 +91,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Replay
@@ -102,7 +102,7 @@ def root(params):
             next='list_shows_without_categories',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Live
@@ -113,7 +113,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -311,13 +311,13 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         url_video=url_site) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
 
                 videos.append({
@@ -398,13 +398,13 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         url_video=url) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
 
                 videos.append({
@@ -473,13 +473,13 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         url_video=url) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
 
                 videos.append({
@@ -492,8 +492,8 @@ def list_videos(params):
                         url_video=url
                     ),
                     'is_playable': True,
-                    'info': info
-                    # 'context_menu': context_menu
+                    'info': info,
+                    'context_menu': context_menu
                 })
 
     return common.PLUGIN.create_listing(

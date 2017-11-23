@@ -36,6 +36,7 @@ _ = common.ADDON.initialize_gettext()
 
 URL_ROOT_BRF = 'https://m.brf.be/'
 
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
@@ -51,6 +52,7 @@ def channel_entry(params):
     else:
         return None
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
@@ -60,11 +62,11 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-        action='channel_entry',
+            action='channel_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -75,6 +77,7 @@ def root(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -118,6 +121,7 @@ def list_shows(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -165,7 +169,7 @@ def list_videos(params):
 
         duration_list = program.find(
             'time').get_text().split('-')[1].strip().split(':')
-        duration =  int(duration_list[0])*60 + int(duration_list[1])
+        duration = int(duration_list[0]) * 60 + int(duration_list[1])
 
         info = {
             'video': {
@@ -178,13 +182,13 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_url=video_url) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
 
         videos.append({
@@ -212,7 +216,7 @@ def list_videos(params):
             page=str(int(params.page) + 1),
             update_listing=True,
             previous_listing=str(videos)
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -229,11 +233,11 @@ def list_videos(params):
         category=common.get_window_title()
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
-    """Build live listing"""
-    lives = []
     return None
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
@@ -242,12 +246,12 @@ def get_video_url(params):
         video_html = utils.get_webcontent(
             params.video_url)
         url_video = re.compile(
-            r'jQuery.get\( "(.*?)"').findall(video_html)[0]
+            r'jQuery.get\("(.*?)"').findall(video_html)[0]
         if params.next == 'download_video':
             return url_video
         else:
             url = utils.get_webcontent(
                 url_video)
             return re.compile(
-                r'data-src="(.*?)"').findall(url)[0]
-    
+                r'src="(.*?)"').findall(url)[0]
+

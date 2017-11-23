@@ -27,6 +27,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from youtube_dl import YoutubeDL
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
@@ -42,16 +43,7 @@ URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
 
 PARTNER = 'YW5kcm9pZC12Mg'
 
-URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
-# Video_id
-
-URL_VIMEO = 'https://player.vimeo.com/video/%s'
-# Video_id
-
 URL_YT = 'https://www.youtube.com/watch?v=%s'
-# Video_id
-
-URL_FACEBOOK = 'https://www.facebook.com/allocine/videos/%s'
 # Video_id
 
 # Initialize GNU gettext emulation in addon
@@ -295,7 +287,7 @@ def list_shows(params):
                     page=str(int(params.page) + 1),
                     update_listing=True,
                     previous_listing=str(shows)
-                ),
+                )
             })
 
     elif params.next == 'list_shows_emissions_5':
@@ -489,13 +481,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_id=video_id) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -507,8 +499,8 @@ def list_videos(params):
                     video_id=video_id
                 ),
                 'is_playable': True,
-                'info': info  # ,
-                # 'context_menu': context_menu
+                'info': info,
+                'context_menu': context_menu
             })
 
         # More videos...
@@ -521,7 +513,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
+            )
         })
 
     elif params.next == 'list_videos_emissions_1':
@@ -578,13 +570,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_id=video_id) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -596,8 +588,8 @@ def list_videos(params):
                     video_id=video_id
                 ),
                 'is_playable': True,
-                'info': info  # ,
-                # 'context_menu': context_menu
+                'info': info,
+                'context_menu': context_menu
             })
 
         # More videos...
@@ -611,7 +603,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
+            )
         })
 
     return common.PLUGIN.create_listing(
@@ -694,6 +686,11 @@ def get_video_url(params):
                 video_id = re.compile(
                     r'embed/video/(.*?)[\"\?]').findall(
                     url_video_resolver)[0]
+<<<<<<< HEAD
+                if params.next == 'download_video':
+                    return resolver.get_stream_dailymotion(
+                        video_id, True)
+=======
                 url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
                 html_video = utils.get_webcontent(url_dmotion)
                 html_video = html_video.replace('\\', '')
@@ -724,17 +721,20 @@ def get_video_url(params):
                         if 'RESOLUTION=' in lines[k]:
                             url = lines[k + 1]
                     return url
+>>>>>>> master
                 else:
-                    for k in range(0, len(lines) - 1):
-                        if 'RESOLUTION=' in lines[k]:
-                            url = lines[k + 1]
-                            break
-                    return url
+                    return resolver.get_stream_dailymotion(
+                        video_id, False)
             # Case Facebook
             elif 'facebook' in url_video_resolver:
                 video_id = re.compile(
                     'www.facebook.com/allocine/videos/(.*?)/').findall(
                     url_video_resolver)[0]
+<<<<<<< HEAD
+                if params.next == 'download_video':
+                    return resolver.get_stream_facebook(
+                        video_id, True)
+=======
                 url_fbook = utils.get_webcontent(
                     URL_FACEBOOK % video_id)
                 if len(re.compile(
@@ -764,20 +764,20 @@ def get_video_url(params):
                         return re.compile(
                             r'sd_src_no_ratelimit:"(.*?)"').findall(
                             url_fbook)[0]
+>>>>>>> master
                 else:
-                    return re.compile(
-                        r'sd_src_no_ratelimit:"(.*?)"').findall(
-                        url_fbook)[0]
+                    return resolver.get_stream_facebook(
+                        video_id, False)
             # Case Vimeo
             elif 'vimeo' in url_video_resolver:
                 video_id = re.compile('player.vimeo.com/video/(.*?)"').findall(
                     url_video_resolver)[0]
-                html_vimeo = utils.get_webcontent(URL_VIMEO % video_id)
-                json_vimeo = json.loads(re.compile('var t=(.*?);').findall(
-                    html_vimeo)[0])
-                hls_json = json_vimeo["request"]["files"]["hls"]
-                default_cdn = hls_json["default_cdn"]
-                return hls_json["cdns"][default_cdn]["url"]
+                if params.next == 'download_video':
+                    return resolver.get_stream_vimeo(
+                        video_id, True)
+                else:
+                    return resolver.get_stream_vimeo(
+                        video_id, False)
             # TO DO ? (return an error)
             else:
                 return ''

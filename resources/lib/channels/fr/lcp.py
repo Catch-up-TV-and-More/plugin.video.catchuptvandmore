@@ -26,6 +26,7 @@ import ast
 import json
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
@@ -33,8 +34,8 @@ from resources.lib import common
 # Add info LIVE TV
 
 # LCP contient deux sources de video pour les replays
-# New : play1.qbrick.com
-# Old : www.dailymotion.com
+# Old : play1.qbrick.com
+# New : www.dailymotion.com
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -44,8 +45,6 @@ _ = common.ADDON.initialize_gettext()
 URL_ROOT = 'http://www.lcp.fr'
 
 URL_LIVE_SITE = 'http://www.lcp.fr/le-direct'
-
-URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 
 URL_VIDEO_REPLAY = 'http://play1.qbrick.com/config/avp/v1/player/' \
                    'media/%s/darkmatter/%s/'
@@ -101,7 +100,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Live
@@ -112,7 +111,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -275,16 +274,14 @@ def list_videos(params):
                 }
             }
 
-            # Nouveau pour ajouter le menu pour télécharger la vidéo
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     url_video=url_video) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
-            # Fin
 
             videos.append({
                 'label': title,
@@ -311,7 +308,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
+            )
         })
 
     elif params.next == 'list_videos_actualites':
@@ -359,16 +356,14 @@ def list_videos(params):
                 }
             }
 
-            # Nouveau pour ajouter le menu pour télécharger la vidéo
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     url_video=url_video) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
-            # Fin
 
             videos.append({
                 'label': title,
@@ -395,7 +390,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
+            )
         })
 
     elif params.next == 'list_videos_emissions':
@@ -471,16 +466,14 @@ def list_videos(params):
                 }
             }
 
-            # Nouveau pour ajouter le menu pour télécharger la vidéo
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     url_video=url_video) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
-            # Fin
 
             videos.append({
                 'label': title,
@@ -507,7 +500,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
+            )
         })
 
     return common.PLUGIN.create_listing(
@@ -537,13 +530,9 @@ def list_live(params):
     url_live = ''
 
     html_live = utils.get_webcontent(URL_LIVE_SITE)
-    root_soup = bs(html_live, 'html.parser')
-    live_soup = root_soup.find(
-        'iframe',
-        class_='embed-responsive-item')
-
-    url_live_embeded = live_soup.get('src')
-    url_live = 'http:%s' % url_live_embeded
+    video_id = re.compile(
+        r'www.dailymotion.com/embed/video/(.*?)\?').findall(
+        html_live)[0]
 
     title = '%s Live' % params.channel_name.upper()
 
@@ -562,7 +551,7 @@ def list_live(params):
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
-            url=url_live,
+            video_id=video_id,
         ),
         'is_playable': True,
         'info': info
@@ -586,25 +575,19 @@ def get_video_url(params):
         url = ''
 
         html_video = utils.get_webcontent(params.url_video)
-        url_video_embed = re.compile(
-            r'<iframe src="(.*?)"').findall(html_video)[0]
 
-        if 'dailymotion' in url_video_embed:
-
-            url_video_embed_http = 'http:%s' % url_video_embed
+        if 'dailymotion' in html_video:
+            video_id = re.compile(
+                r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(
+                html_video)[0]
             if params.next == 'download_video':
-                return url_video_embed_http
-            html_video = utils.get_webcontent(url_video_embed_http)
-            html_video = html_video.replace('\\', '')
-
-            all_url_video = re.compile(
-                r'"type":"video/mp4","url":"(.*?)"').findall(html_video)
-            for datas in all_url_video:
-                url = datas
+                return resolver.get_stream_dailymotion(video_id, True)
+            else:
+                return resolver.get_stream_dailymotion(video_id, False)
         else:
             # get videoId and accountId
             videoId, accountId = re.compile(
-                r'embed/(.*?)/(.*?)/').findall(url_video_embed)[0]
+                r'embed/(.*?)/(.*?)/').findall(html_video)[0]
 
             html_json = utils.get_webcontent(
                 URL_VIDEO_REPLAY % (videoId, accountId))
@@ -616,17 +599,7 @@ def get_video_url(params):
                 datas_video = playlist['MediaFiles']['M3u8']
                 for data in datas_video:
                     url = data['Url']
-
-        return url
+            return url
 
     elif params.next == 'play_l':
-
-        html_live = utils.get_webcontent(params.url)
-        html_live = html_live.replace('\\', '')
-
-        url_live = re.compile(
-            r'{"type":"application/x-mpegURL","url":"(.*?)"}]}'
-        ).findall(html_live)
-
-        # Just one flux no quality to choose
-        return url_live[0]
+        return resolver.get_stream_dailymotion(params.video_id, False)

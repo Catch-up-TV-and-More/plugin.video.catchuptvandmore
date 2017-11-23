@@ -25,10 +25,12 @@ import re
 import ast
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
 # Add info LIVE TV
+# Get First-diffusion (date of replay Video)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -38,8 +40,6 @@ _ = common.ADDON.initialize_gettext()
 URL_ROOT = 'https://www.publicsenat.fr'
 
 URL_LIVE_SITE = 'https://www.publicsenat.fr/direct'
-
-URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 
 
 def channel_entry(params):
@@ -95,7 +95,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Live
@@ -106,7 +106,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -284,20 +284,26 @@ def list_videos(params):
                     class_="field-item even"
                 ).get_text().encode('utf-8')
 
-            value_date = video.find(
-                'div',
-                class_="content"
-            ).find('div', class_="first-diffusion").get_text().encode('utf-8')
-            date = value_date.split(' ')
-            day = date[2]
-            try:
-                mounth = CORRECT_MONTH[date[3]]
-            except Exception:
-                mounth = '00'
-            year = date[4]
+            # value_date = video.find(
+                # 'div',
+                # class_="content"
+            # ).find(
+                # 'div',
+                # class_='replay__contenu field-group-html-element'
+            # ).find(
+                # 'div',
+                # class_="first-diffusion"
+            # ).get_text().encode('utf-8')
+            # date = value_date.split(' ')
+            # day = date[2]
+            # try:
+                # mounth = CORRECT_MONTH[date[3]]
+            # except Exception:
+                # mounth = '00'
+            # year = date[4]
 
-            date = '.'.join((day, mounth, year))
-            aired = '-'.join((year, mounth, day))
+            # date = '.'.join((day, mounth, year))
+            # aired = '-'.join((year, mounth, day))
 
             duration = 0
             duration = int(video.find('div', class_="content").find(
@@ -307,27 +313,28 @@ def list_videos(params):
                     'utf-8')[:-3]) * 60
 
             url_video = URL_ROOT + video.find(
-                'div', class_="content").find('a').get('href').encode('utf-8')
+                'div', class_="content").find(
+                'a').get('href').encode('utf-8')
 
             info = {
                 'video': {
                     'title': title,
-                    'aired': aired,
-                    'date': date,
+                    # 'aired': aired,
+                    # 'date': date,
                     'duration': duration,
-                    'year': year,
+                    # 'year': year,
                     'plot': plot,
                     'mediatype': 'tvshow'
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     url_video=url_video) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -355,7 +362,7 @@ def list_videos(params):
             page=str(int(params.page) + 1),
             update_listing=True,
             previous_listing=str(videos)
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -385,12 +392,9 @@ def list_live(params):
     url_live = ''
 
     html_live = utils.get_webcontent(URL_LIVE_SITE)
-    root_soup = bs(html_live, 'html.parser')
-    live_soup = root_soup.find(
-        'div',
-        class_='iframe-responsive')
-
-    url_live = live_soup.find('iframe').get('src')
+    video_id = re.compile(
+        r'www.dailymotion.com/embed/video/(.*?)\?').findall(
+        html_live)[0]
 
     title = '%s Live' % params.channel_name.upper()
 
@@ -409,7 +413,7 @@ def list_live(params):
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
-            url=url_live,
+            video_id=video_id,
         ),
         'is_playable': True,
         'info': info
@@ -429,38 +433,13 @@ def list_live(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-
-        url = ''
-
         html_video = utils.get_webcontent(params.url_video)
-        ur_video_soup = bs(html_video, 'html.parser')
-        urlembeded_videos_soup = ur_video_soup.find_all('iframe')
-
-        for url in urlembeded_videos_soup:
-            url_video_embed = url.get('src').encode('utf-8')
-            break  # get first video hard to find by another method
-
-        url_video_embed_http = url_video_embed
+        video_id = re.compile(
+            r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(
+            html_video)[0]
         if params.next == 'download_video':
-            return url_video_embed_http
-        html_video = utils.get_webcontent(url_video_embed_http)
-        html_video = html_video.replace('\\', '')
-
-        all_url_video = re.compile(
-            r'"type":"video/mp4","url":"(.*?)"').findall(html_video)
-        for datas in all_url_video:
-            url = datas
-
-        return url
-
+            return resolver.get_stream_dailymotion(video_id, True)
+        else:
+            return resolver.get_stream_dailymotion(video_id, False)
     elif params.next == 'play_l':
-
-        html_live = utils.get_webcontent(params.url)
-        html_live = html_live.replace('\\', '')
-
-        url_live = re.compile(
-            r'{"type":"application/x-mpegURL","url":"(.*?)"}]}'
-        ).findall(html_live)
-
-        # Just one flux no quality to choose
-        return url_live[0]
+        return resolver.get_stream_dailymotion(params.video_id, False)

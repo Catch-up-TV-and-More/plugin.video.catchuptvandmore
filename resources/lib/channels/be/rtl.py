@@ -29,6 +29,11 @@ from resources.lib import common
 # TO DO
 # emissions alphabetics
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.ADDON.initialize_gettext()
+
 URL_ROOT = 'http://www.rtl.be/tv/%s/replay'
 # channel name : plugrtl, rtltvi or clubrtl
 
@@ -40,6 +45,7 @@ URL_ROOT_LIVE = 'http://www.rtl.be/tv/%s/live'
 
 URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/11000/%s.xml'
 # live id
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -56,6 +62,7 @@ def channel_entry(params):
     else:
         return None
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
@@ -69,7 +76,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
-        ),
+        )
     })
 
     # Add Live
@@ -80,7 +87,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name.upper()
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -91,6 +98,7 @@ def root(params):
         ),
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -219,6 +227,7 @@ def list_shows(params):
                 'nav', attrs={'pagination': 'infinite'}).find(
                 'a')['href'].encode('utf-8').replace('//', 'http://')
             # More programs...
+
             shows.append({
                 'label': common.ADDON.get_localized_string(30108),
                 'url': common.PLUGIN.get_url(
@@ -231,7 +240,6 @@ def list_shows(params):
                     update_listing=True,
                     previous_listing=str(shows)
                 )
-
             })
 
     return common.PLUGIN.create_listing(
@@ -243,6 +251,7 @@ def list_shows(params):
         update_listing='update_listing' in params,
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
@@ -339,6 +348,15 @@ def list_videos(params):
             }
         }
 
+        download_video = (
+            _('Download'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='download_video',
+                video_url=video_url) + ')'
+        )
+        context_menu = []
+        context_menu.append(download_video)
+
         videos.append({
             'label': video_title,
             'thumb': video_img,
@@ -348,7 +366,8 @@ def list_videos(params):
                 video_url=video_url
             ),
             'is_playable': True,
-            'info': info
+            'info': info,
+            'context_menu': context_menu
         })
 
     if videos_len_bool is False:
@@ -359,6 +378,7 @@ def list_videos(params):
             url = prev_next_soup.find(
                 'a', class_='next')['href'].encode('utf-8').replace('//', '')
             url = 'http://' + url
+
             # More videos...
             videos.append({
                 'label': common.ADDON.get_localized_string(30100),
@@ -372,7 +392,6 @@ def list_videos(params):
                     update_listing=True,
                     previous_listing=str(videos)
                 )
-
             })
 
     return common.PLUGIN.create_listing(
@@ -386,6 +405,7 @@ def list_videos(params):
         update_listing='update_listing' in params,
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
@@ -483,11 +503,12 @@ def list_live(params):
         category=common.get_window_title()
     )
 
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 
-    if params.next == 'play_r':
+    if params.next == 'play_r' or params.next == 'download_video':
         video_html = utils.get_webcontent(params.video_url)
         video_soup = bs(video_html, 'html.parser')
         video_id = video_soup.find('div', class_='player')

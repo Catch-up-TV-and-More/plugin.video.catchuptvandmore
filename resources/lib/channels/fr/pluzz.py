@@ -31,7 +31,6 @@ import time
 from resources.lib import utils
 from resources.lib import common
 
-
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -211,7 +210,7 @@ def root(params):
 
     # Add Replay
     if params.channel_name != 'franceinfo' and \
-        params.channel_name != 'france3regions':
+            params.channel_name != 'france3regions':
         modes.append({
             'label': 'Replay',
             'url': common.PLUGIN.get_url(
@@ -221,7 +220,7 @@ def root(params):
                 page='1',
                 category='%s Replay' % params.channel_name.upper(),
                 window_title='%s Replay' % params.channel_name
-            ),
+            )
         })
 
     # Add Live
@@ -233,7 +232,7 @@ def root(params):
             mode='live',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
+        )
     })
 
     # Add Videos
@@ -247,7 +246,7 @@ def root(params):
                 page='1',
                 category='%s Videos' % params.channel_name.upper(),
                 window_title='%s Videos' % params.channel_name
-            ),
+            )
         })
 
     return common.PLUGIN.create_listing(
@@ -502,13 +501,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     id_diffusion=id_diffusion) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -538,7 +537,6 @@ def list_videos(params):
                 update_listing=True,
                 previous_listing=str(videos)
             )
-
         })
 
     else:
@@ -676,13 +674,13 @@ def list_videos(params):
                         }
                     }
 
-                    context_menu = []
                     download_video = (
                         _('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             id_diffusion=id_diffusion) + ')'
                     )
+                    context_menu = []
                     context_menu.append(download_video)
 
                     videos.append({
@@ -711,7 +709,6 @@ def list_videos(params):
                     window_title=params.window_title,
                     update_listing=True,
                     previous_listing=str(videos)
-
                 )
             })
 
@@ -729,7 +726,6 @@ def list_videos(params):
                     update_listing=True,
                     previous_listing=str(videos)
                 )
-
             })
 
     return common.PLUGIN.create_listing(
@@ -1053,7 +1049,7 @@ def get_video_url(params):
     elif params.next == 'play_l':
 
         if params.channel_name == 'la_1ere' or \
-            params.channel_name == 'france3regions':
+                params.channel_name == 'france3regions':
             file_prgm = utils.get_webcontent(
                 LIVE_INFO % (params.id_stream))
         elif params.channel_name == 'francetvsport':
@@ -1062,14 +1058,38 @@ def get_video_url(params):
         else:
             file_prgm = utils.get_webcontent(
                 LIVE_INFO % (params.channel_name))
+
         json_parser = json.loads(file_prgm)
 
-        url_protected = ''
-        for video in json_parser['videos']:
-            if 'hls' in video['format']:
-                url_protected = video['url']
+        url_hls_v1 = ''
+        url_hls_v5 = ''
+        url_hls = ''
 
-        file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_protected))
+        for video in json_parser['videos']:
+            if 'hls_v1_os' in video['format'] and \
+                    video['geoblocage'] is not None:
+                url_hls_v1 = video['url']
+            if 'hls_v5_os' in video['format'] and \
+                    video['geoblocage'] is not None:
+                url_hls_v5 = video['url']
+            if 'hls' in video['format']:
+                url_hls = video['url']
+
+        final_url = ''
+        # Case France 3 Région
+        if url_hls_v1 == '' and url_hls_v5 == '':
+            final_url = url_hls
+        # Case Jarvis
+        if common.sp.xbmc.__version__ == '2.24.0' \
+                and url_hls_v1 != '':
+            final_url = url_hls_v1
+        # Case Krypton, Leia, ...
+        if final_url == '' and url_hls_v5 != '':
+            final_url = url_hls_v5
+        elif final_url == '':
+            final_url = url_hls_v1
+
+        file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (final_url))
         json_parser2 = json.loads(file_prgm2)
 
         return json_parser2['url']

@@ -82,7 +82,7 @@ def root(params):
             page='0',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Live
@@ -93,7 +93,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -150,7 +150,7 @@ def list_shows(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(shows)
-            ),
+            )
         })
 
     elif params.next == 'list_shows_2':
@@ -242,13 +242,13 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_url=video_url) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
 
         videos.append({
@@ -261,8 +261,8 @@ def list_videos(params):
                 video_url=video_url
             ),
             'is_playable': True,
-            'info': info  # ,
-            # 'context_menu': context_menu
+            'info': info,
+            'context_menu': context_menu
         })
 
     return common.PLUGIN.create_listing(

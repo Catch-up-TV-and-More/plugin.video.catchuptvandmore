@@ -28,6 +28,10 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.ADDON.initialize_gettext()
 
 # TO DO
 # Replay (More Refactoring todo) /
@@ -79,11 +83,6 @@ CHANNEL_NAME_CATALOG = {
     'cnews': 'itele'
 }
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -131,7 +130,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Live
@@ -142,7 +141,7 @@ def root(params):
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -442,13 +441,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     id=id) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -476,7 +475,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
+            )
         })
     # ################## END CNEWS ###########################
 
@@ -530,13 +529,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     id=id) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -606,13 +605,13 @@ def list_videos(params):
                         }
                     }
 
-                    context_menu = []
                     download_video = (
                         _('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             id=id) + ')'
                     )
+                    context_menu = []
                     context_menu.append(download_video)
 
                     videos.append({

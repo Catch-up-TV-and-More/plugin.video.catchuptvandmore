@@ -23,10 +23,11 @@
 
 CATEGORIES = {
     'main_menu.be': 'Belgian channels',
-    'main_menu.eu': 'European channels',
     'main_menu.fr': 'French channels',
     'main_menu.jp': 'Japanese channels',
+    'main_menu.sw': 'Switzerland channels',
     'main_menu.uk': 'United Kingdom channels',
+    'main_menu.wo': 'International channels',
     'main_menu.ws': 'Websites'
 }
 
@@ -41,10 +42,12 @@ CHANNELS = {
         'channels.be.rtl.clubrtl': 'CLUB RTL'
     },
 
-    'main_menu.eu': {
-        'channels.eu.arte.arte': 'Arte',
-        'channels.eu.euronews.euronews': 'Euronews',
-        'channels.eu.france24.france24': 'France 24'
+    'main_menu.sw': {
+        'channels.sw.srgssr.rts': 'RTS',
+        'channels.sw.srgssr.rsi': 'RSI',
+        'channels.sw.srgssr.srf': 'SRF',
+        'channels.sw.srgssr.rtr': 'RTR',
+        'channels.sw.srgssr.swissinfo': 'SWISSINFO'
     },
 
     'main_menu.fr': {
@@ -92,9 +95,9 @@ CHANNELS = {
     },
 
     'main_menu.jp': {
-        'channels.jp.nhk.nhkworld': 'NHK World',
         'channels.jp.nhk.nhknews': 'NHK ニュース',
-        'channels.jp.nhk.nhklifestyle': 'NHKらいふ'
+        'channels.jp.nhk.nhklifestyle': 'NHKらいふ',
+        'channels.jp.tbs.tbsnews': 'TBS ニュース'
     },
 
     'main_menu.uk': {
@@ -105,9 +108,22 @@ CHANNELS = {
         'channels.uk.uktvplay.drama': 'Drama'
     },
 
+    'main_menu.wo': {
+        'channels.wo.tv5monde.tv5mondeafrique': 'TV5Monde Afrique',
+        'channels.wo.arte.arte': 'Arte',
+        'channels.wo.euronews.euronews': 'Euronews',
+        'channels.wo.france24.france24': 'France 24',
+        'channels.wo.nhkworld.nhkworld': 'NHK World',
+        'channels.wo.tv5monde.tv5monde': 'TV5Monde',
+        'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde'
+    },
+
     'main_menu.ws': {
         'channels.ws.allocine.allocine': 'Allociné',
         'channels.ws.tetesaclaques.tetesaclaques': 'Au pays des Têtes à claques',
-        'channels.ws.taratata.taratata': 'Taratata'
+        'channels.ws.taratata.taratata': 'Taratata',
+        'channels.ws.noob.noob': 'Noob TV',
+        'channels.ws.culturepub.culturepub': 'Culturepub',
+        'channels.ws.autoplus.autoplus': 'Auto Plus'
     }
 }

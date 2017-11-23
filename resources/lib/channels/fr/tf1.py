@@ -24,13 +24,14 @@
 import ast
 import json
 import re
+import os
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Rework QUALITY
-# Replay LCI (Add date, aired, year, fix some elements)
+# Quality Mode on LIVE TV
+# Replay LCI add More Buttons
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -55,6 +56,9 @@ HOSTING_APPLICATION_VERSION = '7.0.4'
 IMG_WIDTH = 640
 IMG_HEIGHT = 360
 
+URL_VIDEO_STREAM = 'https://www.wat.tv/get/webhtml/%s'
+
+DESIRED_QUALITY = common.PLUGIN.get_setting('quality')
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -64,6 +68,8 @@ def channel_entry(params):
         return list_shows(params)
     elif 'list_videos_categories' in params.next:
         return list_videos_categories(params)
+    elif 'list_videos_lci' in params.next:
+        return list_videos_lci(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:
@@ -86,7 +92,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     # Add Live
@@ -98,7 +104,7 @@ def root(params):
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
                 window_title='%s Live TV' % params.channel_name
-            ),
+            )
         })
 
     return common.PLUGIN.create_listing(
@@ -148,7 +154,7 @@ def list_shows(params):
                     'url': common.PLUGIN.get_url(
                         action='channel_entry',
                         program_url=program_url,
-                        next='list_videos',
+                        next='list_videos_lci',
                         window_title=program_name
                     )
                 })
@@ -297,11 +303,9 @@ def list_videos_categories(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_videos(params):
+def list_videos_lci(params):
     """Build videos listing"""
     videos = []
-    if 'previous_listing' in params:
-        videos = ast.literal_eval(params['previous_listing'])
 
     if params.channel_name == 'lci':
         program_html = utils.get_webcontent(params.program_url)
@@ -313,52 +317,73 @@ def list_videos(params):
 
         for replay in list_replay:
 
-            title = replay.find_all('img')[0].get('alt').encode('utf-8')
-            duration = 0
-            img = replay.find_all('source')[0]
-            try:
-                img = img['data-srcset'].encode('utf-8')
-            except Exception:
-                img = img['srcset'].encode('utf-8')
+            if 'Replay' in replay.find(
+                    'span', class_='emission-infos-type').get_text():
+                title = replay.find_all(
+                    'img')[0].get('alt').encode('utf-8')
+                duration = 0
+                img = replay.find_all('source')[0]
+                try:
+                    img = img['data-srcset'].encode('utf-8')
+                except Exception:
+                    img = img['srcset'].encode('utf-8')
 
-            img = img.split(',')[0].split(' ')[0]
-            program_id = URL_LCI_ROOT + replay.get('href').encode('utf-8')
+                img = img.split(',')[0].split(' ')[0]
+                program_id = URL_LCI_ROOT + replay.get(
+                    'href').encode('utf-8')
 
-            info = {
-                'video': {
-                    'title': title,
-                    # 'plot': stitle,
-                    # 'aired': aired,
-                    # 'date': date,
-                    'duration': duration,
-                    # 'year': int(aired[:4]),
-                    'mediatype': 'tvshow'
+                info = {
+                    'video': {
+                        'title': title,
+                        # 'plot': stitle,
+                        # 'aired': aired,
+                        # 'date': date,
+                        'duration': duration,
+                        # 'year': int(aired[:4]),
+                        'mediatype': 'tvshow'
+                    }
                 }
-            }
 
-            context_menu = []
-            download_video = (
-                _('Download'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='download_video',
-                    program_id=program_id) + ')'
-            )
-            context_menu.append(download_video)
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        program_id=program_id) + ')'
+                )
+                context_menu = []
+                context_menu.append(download_video)
 
-            videos.append({
-                'label': title,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_r',
-                    program_id=program_id,
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
-            })
+                videos.append({
+                    'label': title,
+                    'thumb': img,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='play_r',
+                        program_id=program_id,
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
 
-    elif 'meteo.tf1.fr/meteo-france' in params.program_url:
+    return common.PLUGIN.create_listing(
+        videos,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+        ),
+        content='tvshows',
+        category=common.get_window_title()
+    )
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_videos(params):
+    """Build videos listing"""
+    videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
+
+    if 'meteo.tf1.fr/meteo-france' in params.program_url:
         program_html = utils.get_webcontent(params.program_url)
         program_soup = bs(program_html, 'html.parser')
 
@@ -368,7 +393,8 @@ def list_videos(params):
 
         title = wat_info.find('h3').get_text()
 
-        program_id = re.compile('; src = \'(.*?)\?').findall(program_html)[0]
+        program_id = re.compile(
+            '; src = \'(.*?)\?').findall(program_html)[0]
 
         info = {
             'video': {
@@ -382,13 +408,13 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             ('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 program_id=program_id) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
 
         videos.append({
@@ -496,13 +522,13 @@ def list_videos(params):
                         }
                     }
 
-                    context_menu = []
                     download_video = (
                         _('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             program_id=program_id) + ')'
                     )
+                    context_menu = []
                     context_menu.append(download_video)
 
                     videos.append({
@@ -531,7 +557,7 @@ def list_videos(params):
                     page=str(int(params.page) + 1),
                     update_listing=True,
                     previous_listing=str(videos)
-                ),
+                )
             })
 
     return common.PLUGIN.create_listing(
@@ -560,8 +586,11 @@ def list_live(params):
     file_info_live = open(file_path).read()
     json_parser = json.loads(file_info_live)
 
-    title = json_parser["current"]["title"].encode('utf-8') + ' - ' \
-        + json_parser["current"]["episode"].encode('utf-8')
+    if "episode" in json_parser["current"]:
+        title = json_parser["current"]["title"].encode('utf-8') + ' - ' \
+            + json_parser["current"]["episode"].encode('utf-8')
+    else:
+        title = json_parser["current"]["title"].encode('utf-8')
     if "description" in json_parser["current"]:
         plot = json_parser["current"]["humanStartDate"].encode('utf-8') + \
             ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8') \
@@ -620,6 +649,7 @@ def get_video_url(params):
     """Get video URL and start video player"""
 
     if params.next == 'play_r' or params.next == 'download_video':
+
         if 'www.wat.tv/embedframe' in params.program_id:
             url = 'http:' + params.program_id
         elif "http" not in params.program_id:
@@ -637,60 +667,53 @@ def get_video_url(params):
             iframe_player_soup = video_html_soup.find(
                 'div',
                 class_='iframe_player')
+            video_id = iframe_player_soup['data-watid'].encode('utf-8')
 
-            if params.channel_name == 'lci':
-                video_id = iframe_player_soup['data-watid'].encode('utf-8')
-            else:
-                data_src = iframe_player_soup['data-src'].encode('utf-8')
-                video_id = data_src[-8:]
-
-        timeserver = str(utils.get_webcontent(URL_TIME))
-
-        auth_key = '%s-%s-%s-%s-%s' % (
-            video_id,
-            SECRET_KEY,
-            APP_NAME,
-            SECRET_KEY,
-            timeserver
-        )
-
-        auth_key = common.sp.md5(auth_key).hexdigest()
-        auth_key = auth_key + '/' + timeserver
-
-        post_data = {
-            'appName': APP_NAME,
-            'method': 'getUrl',
-            'mediaId': video_id,
-            'authKey': auth_key,
-            'version': VERSION,
-            'hostingApplicationName': HOSTING_APPLICATION_NAME,
-            'hostingApplicationVersion': HOSTING_APPLICATION_VERSION
-        }
-
-        url_video = utils.get_webcontent(
-            url=URL_TOKEN,
-            request_type='post',
-            post_dic=post_data)
-        url_video = json.loads(url_video)
-        url_video = url_video['message'].replace('\\', '')
-
-        desired_quality = common.PLUGIN.get_setting('quality')
-
-        if desired_quality == 'BEST' or desired_quality == 'DIALOG':
-            try:
-                url_video = url_video.split('&bwmax')[0]
-            except Exception:
-                pass
+        url_json = URL_VIDEO_STREAM % video_id
+        htlm_json = utils.get_webcontent(url_json, random_ua=True)
+        json_parser = json.loads(htlm_json)
 
         # Check DRM in the m3u8 file
         manifest = utils.get_webcontent(
-            url_video,
+            json_parser["hls"],
             random_ua=True)
         if 'drm' in manifest:
             utils.send_notification(common.ADDON.get_localized_string(30102))
             return ''
 
-        return url_video
+        root = os.path.dirname(json_parser["hls"])
+        manifest = utils.get_webcontent(
+            json_parser["hls"].split('&max_bitrate=')[0])
+
+        lines = manifest.splitlines()
+        if DESIRED_QUALITY == "DIALOG":
+            all_datas_videos_quality = []
+            all_datas_videos_path = []
+            for k in range(0, len(lines) - 1):
+                if 'RESOLUTION=' in lines[k]:
+                    all_datas_videos_quality.append(
+                        re.compile(
+                        r'RESOLUTION=(.*?),').findall(
+                        lines[k])[0])
+                    all_datas_videos_path.append(
+                        root + '/' + lines[k + 1])
+            seleted_item = common.sp.xbmcgui.Dialog().select(
+                _('Choose video quality'),
+                all_datas_videos_quality)
+            return all_datas_videos_path[seleted_item].encode(
+                'utf-8')
+        elif DESIRED_QUALITY == 'BEST':
+            # Last video in the Best
+            for k in range(0, len(lines) - 1):
+                if 'RESOLUTION=' in lines[k]:
+                    url = root + '/' + lines[k + 1]
+            return url
+        else:
+            for k in range(0, len(lines) - 1):
+                if 'RESOLUTION=' in lines[k]:
+                    url = root + '/' + lines[k + 1]
+                break
+            return url
 
     elif params.next == 'play_l':
 
@@ -727,12 +750,4 @@ def get_video_url(params):
         url_video = json.loads(url_video)
         url_video = url_video['message'].replace('\\', '')
 
-        desired_quality = common.PLUGIN.get_setting('quality')
-
-        if desired_quality == 'BEST' or desired_quality == 'DIALOG':
-            try:
-                url_video = url_video.split('&bwmax')[0]
-            except Exception:
-                pass
-
-        return url_video
+        return url_video.split('&b=')[0]

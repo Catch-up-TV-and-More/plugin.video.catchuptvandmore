@@ -159,6 +159,7 @@ def list_shows(params):
         for array in json_parser:
             category_id = str(array['id'])
             category_name = array['name'].encode('utf-8')
+
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
@@ -169,15 +170,6 @@ def list_shows(params):
                     window_title=category_name
                 )
             })
-
-        shows = common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
 
     elif params.next == 'list_shows_2':
         file_prgm = utils.get_webcontent(
@@ -206,6 +198,7 @@ def list_shows(params):
                     'plot': program_desc
                 }
             }
+
             shows.append({
                 'label': program_title,
                 'thumb': program_img,
@@ -222,15 +215,6 @@ def list_shows(params):
                 ),
                 'info': info
             })
-
-        shows = common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
 
     elif params.next == 'list_shows_3':
         program_json = utils.get_webcontent(
@@ -275,6 +259,7 @@ def list_shows(params):
                 'plot': params.program_desc
             }
         }
+
         shows.append({
             'label': common.ADDON.get_localized_string(30101),
             'thumb': params.program_img,
@@ -290,16 +275,14 @@ def list_shows(params):
             'info': info
         })
 
-        shows = common.PLUGIN.create_listing(
-            shows,
-            sort_methods=(
-                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-                common.sp.xbmcplugin.SORT_METHOD_LABEL
-            ),
-            category=common.get_window_title()
-        )
-
-    return shows
+    return common.PLUGIN.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -361,13 +344,13 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_id=video_id) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
 
         videos.append({

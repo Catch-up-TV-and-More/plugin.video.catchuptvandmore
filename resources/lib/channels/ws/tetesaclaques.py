@@ -172,13 +172,13 @@ def list_videos(params):
                         }
                     }
 
-                    context_menu = []
                     download_video = (
                         _('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             video_url=video_url) + ')'
                     )
+                    context_menu = []
                     context_menu.append(download_video)
 
                     videos.append({
@@ -190,8 +190,8 @@ def list_videos(params):
                             video_url=video_url
                         ),
                         'is_playable': True,
-                        'info': info  # ,
-                        # 'context_menu': context_menu
+                        'info': info,
+                        'context_menu': context_menu
                     })
         else:
             episodes = replay_episodes_soup.find_all(
@@ -215,13 +215,13 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=video_url) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
 
                 videos.append({
@@ -233,8 +233,8 @@ def list_videos(params):
                         video_url=video_url
                     ),
                     'is_playable': True,
-                    'info': info  # ,
-                    # 'context_menu': context_menu
+                    'info': info,
+                    'context_menu': context_menu
                 })
 
         # More videos...
@@ -247,7 +247,7 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
-            ),
+            )
         })
 
     elif 'list_videos_2':
@@ -275,13 +275,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -293,8 +293,8 @@ def list_videos(params):
                     video_url=video_url
                 ),
                 'is_playable': True,
-                'info': info  # ,
-                # 'context_menu': context_menu
+                'info': info,
+                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(

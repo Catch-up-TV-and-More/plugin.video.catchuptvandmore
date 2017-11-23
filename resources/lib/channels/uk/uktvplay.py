@@ -102,7 +102,7 @@ def root(params):
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
-        ),
+        )
     })
 
     return common.PLUGIN.create_listing(
@@ -265,7 +265,6 @@ def list_videos(params):
                     }
                 }
 
-                context_menu = []
                 download_video = (
                     _('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
@@ -274,6 +273,7 @@ def list_videos(params):
                         data_account=data_account,
                         data_player=data_player) + ')'
                 )
+                context_menu = []
                 context_menu.append(download_video)
 
                 videos.append({
@@ -333,7 +333,6 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
@@ -342,6 +341,7 @@ def list_videos(params):
                     data_account=data_account,
                     data_player=data_player) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -403,7 +403,6 @@ def list_videos(params):
             }
         }
 
-        context_menu = []
         download_video = (
             _('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
@@ -412,6 +411,7 @@ def list_videos(params):
                 data_account=data_account,
                 data_player=data_player) + ')'
         )
+        context_menu = []
         context_menu.append(download_video)
 
         videos.append({

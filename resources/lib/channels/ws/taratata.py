@@ -69,7 +69,7 @@ def root(params):
 
         category_title = category.get_text()
         category_url = URL_ROOT + category.get('href')
-        
+
         value_next = ''
         if 'taratata' in category.get('href'):
             value_next = 'list_shows_taratata'
@@ -110,12 +110,12 @@ def list_shows(params):
         shows = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_shows_taratata':
-        
-        list_shows_html = utils.get_webcontent(params.category_url + \
-                          '?page=%s' % params.page)
+
+        list_shows_html = utils.get_webcontent(
+            params.category_url + '?page=%s' % params.page)
         list_shows_soup = bs(list_shows_html, 'html.parser')
         list_shows = list_shows_soup.find_all(
-                     'div', class_='col-md-6')
+            'div', class_='col-md-6')
 
         for live in list_shows:
 
@@ -135,7 +135,7 @@ def list_shows(params):
                     window_title=show_title
                 )
             })
-        
+
         # More programs...
         shows.append({
             'label': common.ADDON.get_localized_string(30108),
@@ -146,7 +146,7 @@ def list_shows(params):
                 update_listing=True,
                 category_url=params.category_url,
                 previous_listing=str(shows)
-            ),
+            )
         })
 
     elif params.next == 'list_shows_artistes_1':
@@ -301,13 +301,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -319,8 +319,8 @@ def list_videos(params):
                     video_url=video_url
                 ),
                 'is_playable': True,
-                'info': info # ,
-                # 'context_menu': context_menu
+                'info': info,
+                'context_menu': context_menu
             })
 
         for video in all_videos:
@@ -341,13 +341,13 @@ def list_videos(params):
                 }
             }
 
-            context_menu = []
             download_video = (
                 _('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
             )
+            context_menu = []
             context_menu.append(download_video)
 
             videos.append({
@@ -359,8 +359,8 @@ def list_videos(params):
                     video_url=video_url
                 ),
                 'is_playable': True,
-                'info': info # ,
-                # 'context_menu': context_menu
+                'info': info,
+                'context_menu': context_menu
             })
 
     if params.page is not None:
@@ -377,7 +377,6 @@ def list_videos(params):
                 update_listing=True,
                 previous_listing=str(videos)
             )
-
         })
 
     return common.PLUGIN.create_listing(
