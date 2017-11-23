@@ -47,7 +47,8 @@ CHANNELS = {
         'channels.sw.srgssr.rsi': 'RSI',
         'channels.sw.srgssr.srf': 'SRF',
         'channels.sw.srgssr.rtr': 'RTR',
-        'channels.sw.srgssr.swissinfo': 'SWISSINFO'
+        'channels.sw.srgssr.swissinfo': 'SWISSINFO',
+        'channels.sw.rougetv.rougetv': 'Rouge TV'
     },
 
     'main_menu.fr': {

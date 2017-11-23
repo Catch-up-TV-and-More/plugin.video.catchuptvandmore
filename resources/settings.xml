@@ -194,6 +194,9 @@
             <setting label="SWISSINFO" type="bool" id="channels.sw.srgssr.swissinfo" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.sw.srgssr.swissinfo.order" default="5"/>
 
+            <setting label="Rouge TV" type="bool" id="channels.sw.rougetv.rougetv" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.sw.rougetv.rougetv.order" default="6"/>
+
         <setting label="" type="number" visible="false" id="main_menu.jp.order" default="4"/>
         <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30022" type="bool" id="main_menu.jp" default="true" visible="false"/>
