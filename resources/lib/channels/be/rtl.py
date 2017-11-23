@@ -29,6 +29,10 @@ from resources.lib import common
 # TO DO
 # emissions alphabetics
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+_ = common.ADDON.initialize_gettext()
 
 URL_ROOT = 'http://www.rtl.be/tv/%s/replay'
 # channel name : plugrtl, rtltvi or clubrtl
@@ -504,7 +508,7 @@ def list_live(params):
 def get_video_url(params):
     """Get video URL and start video player"""
 
-    if params.next == 'play_r':
+    if params.next == 'play_r' or params.next == 'download_video':
         video_html = utils.get_webcontent(params.video_url)
         video_soup = bs(video_html, 'html.parser')
         video_id = video_soup.find('div', class_='player')

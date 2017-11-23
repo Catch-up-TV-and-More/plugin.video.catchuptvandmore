@@ -61,6 +61,7 @@
 [Improvement] 720p for Live TV - Group TF1 (wwark)
 [Fix] Live TV without episode value - Group TF1 (wwark)
 [Fix] Replay - Channel BRF (BE) (wwark)
+[Fix] Replay - Group RTL (BE) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
