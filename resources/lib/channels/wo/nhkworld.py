@@ -157,7 +157,7 @@ def list_shows(params):
         all_video = common.ADDON.get_localized_string(30101)
 
         shows.append({
-            'label': _(All videos),
+            'label': _('All videos'),
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_cat',

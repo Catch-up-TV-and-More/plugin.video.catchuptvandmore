@@ -395,9 +395,6 @@ def list_videos(params):
                             }
                         }
 
-                        context_menu = []
-                        context_menu.append(download_video)
-
                         videos.append({
                             'label': video_title,
                             'url': common.PLUGIN.get_url(
@@ -406,8 +403,7 @@ def list_videos(params):
                                 category_url=video_url
                             ),
                             'is_playable': False,
-                            'info': info,
-                            'context_menu': context_menu
+                            'info': info
                         })
                 else:
                     all_videos = replay_videos_soup.find(
