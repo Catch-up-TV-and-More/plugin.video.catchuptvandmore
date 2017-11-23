@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-<<<<<<< HEAD
        version="0.1.7"
-=======
-       version="0.1.6"
->>>>>>> master
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -34,7 +30,6 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-<<<<<<< HEAD
 [Version 0.1.7]
 [Add Website] Noob TV (wwark)
 [Add Website] Culturepub (wwark, SylvainCecchetto)
@@ -68,11 +63,6 @@
 [Fix] Replay - Channel BRF (BE) (wwark)
 [Fix] Replay - Group RTL (BE) (wwark)
 [Fix] Live TV - LCP, Public Senat (wwark)
-=======
-[Version 0.1.6]
-[Fix] Dialog Select(content, quality) not working in Kodi Jarvis for all channels using it (wwark, thanks NenesSix)
-[Fix] Try to fix random crash with simpleplugin storage feature (SylvainCecchetto, thanks romanvm)
->>>>>>> master
     </news>
     <assets>
       <icon>icon.png</icon>
