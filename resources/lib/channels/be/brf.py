@@ -246,12 +246,12 @@ def get_video_url(params):
         video_html = utils.get_webcontent(
             params.video_url)
         url_video = re.compile(
-            r'jQuery.get\( "(.*?)"').findall(video_html)[0]
+            r'jQuery.get\("(.*?)"').findall(video_html)[0]
         if params.next == 'download_video':
             return url_video
         else:
             url = utils.get_webcontent(
                 url_video)
             return re.compile(
-                r'data-src="(.*?)"').findall(url)[0]
+                r'src="(.*?)"').findall(url)[0]
 
