@@ -63,6 +63,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - LCP Assemblée Nationale *(Replay, Live TV)*
 - Public Sénat *(Replay, Live TV)*
 - France 3 Régions *(Live TV)*
+- Histoire *(Replay)*
+- TV Breizh *(Replay)*
+- Ushuaïa TV *(Replay)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*

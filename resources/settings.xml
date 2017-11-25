@@ -147,11 +147,20 @@
             <setting label="France TV Sport (francetv)" type="bool" id="channels.fr.pluzz.francetvsport" default="true" visible="eq(-81,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.francetvsport.order" default="41"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-83,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="42"/>
+            <setting label="Histoire" type="bool" id="channels.fr.tf1thematiques.histoire" default="true" visible="eq(-83,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1thematiques.histoire.order" default="42"/>
 
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-85,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="43"/>-->
+            <setting label="TV Breizh" type="bool" id="channels.fr.tf1thematiques.tvbreizh" default="true" visible="eq(-85,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1thematiques.tvbreizh.order" default="43"/>
+
+            <setting label="Ushuaïa TV" type="bool" id="channels.fr.tf1thematiques.ushuaiatv" default="true" visible="eq(-87,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1thematiques.ushuaiatv.order" default="44"/>
+
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-89,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="45"/>
+
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-91,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="46"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>

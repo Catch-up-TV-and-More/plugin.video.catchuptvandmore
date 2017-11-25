@@ -92,7 +92,10 @@ CHANNELS = {
         'channels.fr.6play.comedy': 'Comic (6play)',
         'channels.fr.publicsenat.publicsenat': 'Public Sénat',
         'channels.fr.pluzz.france3regions': 'France 3 Régions',
-        'channels.fr.pluzz.francetvsport': 'France TV Sport (francetv)'
+        'channels.fr.pluzz.francetvsport': 'France TV Sport (francetv)',
+        'channels.fr.tf1thematiques.histoire': 'Histoire',
+        'channels.fr.tf1thematiques.tvbreizh': 'TV Breizh',
+        'channels.fr.tf1thematiques.ushuaiatv': 'Ushuaïa TV'
     },
 
     'main_menu.jp': {
