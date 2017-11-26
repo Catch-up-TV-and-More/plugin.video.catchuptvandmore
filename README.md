@@ -11,11 +11,16 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ## Chaînes disponibles — *Available channels*
 ### Angleterre — *United Kingdom*
+##### TV
 - Blaze *(Replay, Live TV)*
 - Dave *(Replay with UKTVPlay account)*
 - Drama *(Replay with UKTVPlay account)*
 - Really *(Replay with UKTVPlay account)*
 - Yesterday *(Replay with UKTVPlay account)*
+- Sky News *(Replay, Live TV)*
+
+##### Web TV
+- Sky Sports — Sky *(Replay)*
 
 ### Belgique — *Belgium*
 ##### TV Communauté française — *French Community TV*

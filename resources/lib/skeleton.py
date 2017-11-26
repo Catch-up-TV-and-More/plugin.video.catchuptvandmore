@@ -109,7 +109,9 @@ CHANNELS = {
         'channels.uk.uktvplay.dave': 'Dave',
         'channels.uk.uktvplay.really': 'Really',
         'channels.uk.uktvplay.yesterday': 'Yesterday',
-        'channels.uk.uktvplay.drama': 'Drama'
+        'channels.uk.uktvplay.drama': 'Drama',
+        'channels.uk.sky.skynews': 'Sky News',
+        'channels.uk.sky.skysports': 'Sky sports'
     },
 
     'main_menu.wo': {

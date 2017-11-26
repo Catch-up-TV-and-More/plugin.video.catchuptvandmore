@@ -238,6 +238,12 @@
             <setting label="Drama" type="bool" id="channels.uk.uktvplay.drama" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.uk.uktvplay.drama.order" default="5"/>
 
+            <setting label="Sky News" type="bool" id="channels.uk.sky.skynews" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.sky.skynews.order" default="6"/>
+
+            <setting label="Sky sports" type="bool" id="channels.uk.sky.skysports" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.sky.skysports.order" default="7"/>
+
         <setting label="" type="number" visible="false" id="main_menu.wo.order" default="6"/>
         <setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30025" type="bool" id="main_menu.wo" default="true" visible="false"/>

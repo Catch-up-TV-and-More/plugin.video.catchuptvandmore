@@ -24,11 +24,13 @@ import json
 import re
 from resources.lib import utils
 from resources.lib import common
+from youtube_dl import YoutubeDL
 
 # TO DO
 # Dailymotion on JARVIS
 # Quality VIMEO
 # Download Mode with Facebook (the video has no audio)
+# Quality Youtube
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -44,6 +46,9 @@ URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s'
 # Video_id
 
 URL_FACEBOOK_BY_ID = 'https://www.facebook.com/allocine/videos/%s'
+# Video_id
+
+URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
 # Video_id
 
 def get_stream_dailymotion(video_id, isDownloadVideo):
@@ -190,3 +195,19 @@ def get_stream_facebook(video_id, isDownloadVideo):
         return re.compile(
             r'sd_src_no_ratelimit:"(.*?)"').findall(
             html_facebook)[0]
+
+def get_stream_youtube(video_id, isDownloadVideo):
+
+    url_youtube = URL_YOUTUBE % video_id
+
+    if isDownloadVideo == True:
+        return url_youtube
+
+    ydl = YoutubeDL()
+    ydl.add_default_info_extractors()
+    with ydl:
+        result = ydl.extract_info(url_youtube,
+            download=False)
+        for format_video in result['formats']:
+            url_live = format_video['url']
+    return url_live
