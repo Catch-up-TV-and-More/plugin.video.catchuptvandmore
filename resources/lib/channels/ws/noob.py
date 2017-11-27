@@ -22,16 +22,13 @@
 
 import re
 from bs4 import BeautifulSoup as bs
-from youtube_dl import YoutubeDL
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
 
 URL_ROOT = 'http://noob-tv.com'
-
-URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
-# YTid
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -203,13 +200,10 @@ def list_videos(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     video_html = utils.get_webcontent(params.video_url)
-    url_ytdl = URL_YOUTUBE % re.compile(
+    video_id = re.compile(
         r'www.youtube.com/embed/(.*?)\?').findall(video_html)[0]
 
-    ydl = YoutubeDL()
-    ydl.add_default_info_extractors()
-    with ydl:
-        result = ydl.extract_info(url_ytdl, download=False)
-        for format_video in result['formats']:
-            url = format_video['url']
-    return url
+    if params.next == 'download_video':
+        return resolver.get_stream_youtube(video_id, True)
+    else:
+        return resolver.get_stream_youtube(video_id, False)

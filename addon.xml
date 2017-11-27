@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.8~beta003"
+       version="0.1.8~beta004"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -37,6 +37,7 @@
 [Add Channel] Ushuaïa TV (wwark)
 [Add Channel - Live TV] Sky News (UK) (wwark)
 [Add WebTV] Sky sports (UK) (wwark)
+[Change] Move youtube code to resoler.py for Allociné, Noob TV, Taratata and Teteaclaques (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

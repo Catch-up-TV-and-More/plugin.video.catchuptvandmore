@@ -25,16 +25,23 @@ import re
 from bs4 import BeautifulSoup as bs
 from youtube_dl import YoutubeDL
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
 # Download Video
 # Find a better solution to strip some text
+# remove YT_DL use API FTV
 
 URL_ROOT = 'http://mytaratata.com'
 
-URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
-# YTid
+URL_EMBED_FTV = 'http://api-embed.webservices.francetelevisions.fr/key/%s'
+# Id Video
+# http://embed.francetv.fr/?ue=fb23d5e2c7e5c020b2e710c5fe233aea
+
+SHOW_INFO_FTV = 'http://webservices.francetelevisions.fr/tools/' \
+                'getInfosOeuvre/v2/?idDiffusion=%s'
+# idDiffusion
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -418,15 +425,9 @@ def get_video_url(params):
                         url = stream.get('data-source')
             # Cas Yt
             else:
-                url_ytdl = re.compile(
+                video_id = re.compile(
                     'youtube.com/embed/(.*?)\?').findall(videos_html)[0]
-                ydl = YoutubeDL()
-                ydl.add_default_info_extractors()
-                with ydl:
-                    result = ydl.extract_info(
-                        url_ytdl, download=False)
-                    for format_video in result['formats']:
-                        url = format_video['url']
+                url = resolver.get_stream_youtube(video_id, False)
             all_datas_videos_path.append(url)
         # Get link from FranceTV
         elif '#ftv-player-' in video.get('href'):
