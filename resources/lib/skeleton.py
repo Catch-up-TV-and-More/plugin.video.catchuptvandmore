@@ -130,6 +130,7 @@ CHANNELS = {
         'channels.ws.taratata.taratata': 'Taratata',
         'channels.ws.noob.noob': 'Noob TV',
         'channels.ws.culturepub.culturepub': 'Culturepub',
-        'channels.ws.autoplus.autoplus': 'Auto Plus'
+        'channels.ws.autoplus.autoplus': 'Auto Plus',
+        'channels.ws.notrehistoirech.notrehistoirech': 'Notre Histoire.ch'
     }
 }

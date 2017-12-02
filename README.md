@@ -129,6 +129,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Culturepub <http://www.culturepub.fr/>
 - Auto Plus <https://video.autoplus.fr>
 
+### Suisse — *Switzerland*
+##### TV Communauté française — *French Community TV*
+- Notre Histoire.ch <http://www.notrehistoire.ch>
+
 ## Bugs et améliorations — *Bugs and improvements*
 Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.
 *Bug reports, suggestions for improvements or content additions are welcome! GitHub or e-mail.*

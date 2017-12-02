@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.8~beta004"
+       version="0.1.8~beta005"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -31,13 +31,14 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.1.8]
-[Add Channel - Live TV] Rouge TV (SW) (wwark)
+[Add Channel - Live TV] Rouge TV (CH) (wwark)
 [Add Channel] Histoire (wwark)
 [Add Channel] TV Breizh (wwark)
 [Add Channel] Ushuaïa TV (wwark)
 [Add Channel - Live TV] Sky News (UK) (wwark)
 [Add WebTV] Sky sports (UK) (wwark)
 [Change] Move youtube code to resoler.py for Allociné, Noob TV, Taratata and Teteaclaques (wwark)
+[Add Website] Notrehistoire.ch (CH) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

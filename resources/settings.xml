@@ -291,6 +291,9 @@
             <setting label="Auto Plus" type="bool" id="channels.ws.autoplus.autoplus" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.autoplus.autoplus.order" default="6"/>
 
+            <setting label="Notre Histoire.ch" type="bool" id="channels.ws.notrehistoirech.notrehistoirech" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.notrehistoirech.notrehistoirech.order" default="7"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->
