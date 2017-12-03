@@ -95,7 +95,9 @@ CHANNELS = {
         'channels.fr.pluzz.francetvsport': 'France TV Sport (francetv)',
         'channels.fr.tf1thematiques.histoire': 'Histoire',
         'channels.fr.tf1thematiques.tvbreizh': 'TV Breizh',
-        'channels.fr.tf1thematiques.ushuaiatv': 'Ushuaïa TV'
+        'channels.fr.tf1thematiques.ushuaiatv': 'Ushuaïa TV',
+        'channels.fr.pluzz.studio-4': 'Studio 4 (francetv)',
+        'channels.fr.pluzz.irl': 'IRL (francetv)'
     },
 
     'main_menu.jp': {

@@ -156,11 +156,17 @@
             <setting label="Ushuaïa TV" type="bool" id="channels.fr.tf1thematiques.ushuaiatv" default="true" visible="eq(-87,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.tf1thematiques.ushuaiatv.order" default="44"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-89,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="45"/>
+            <setting label="Studio 4 (francetv)" type="bool" id="channels.fr.pluzz.studio-4" default="true" visible="eq(-89,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.studio-4.order" default="45"/>
 
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-91,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="46"/>-->
+            <setting label="IRL (francetv)" type="bool" id="channels.fr.pluzz.irl" default="true" visible="eq(-91,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.irl.order" default="46"/>
+
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-93,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="47"/>
+
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-95,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="48"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>

@@ -28,7 +28,9 @@
 import ast
 import json
 import time
+from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # Initialize GNU gettext emulation in addon
@@ -68,6 +70,9 @@ URL_ALPHA = 'https://pluzz.webservices.francetelevisions.fr/' \
 URL_FRANCETV_SPORT = 'https://api-sport-events.webservices.' \
                      'francetelevisions.fr/%s'
 # RootMode
+
+URL_ROOT_NOUVELLES_ECRITURES = 'http://%s.nouvelles-ecritures.francetv.fr'
+# channel name
 
 CATEGORIES_DISPLAY = {
     "france2": "France 2",
@@ -205,6 +210,9 @@ def root(params):
 
     if params.channel_name == 'francetvsport':
         next_replay = 'list_videos_ftvsport'
+    elif params.channel_name == 'studio-4' or \
+        params.channel_name == 'irl':
+        next_replay = 'list_shows_necritures_1'
     else:
         next_replay = 'list_shows_1'
 
@@ -224,16 +232,18 @@ def root(params):
         })
 
     # Add Live
-    modes.append({
-        'label': _('Live TV'),
-        'url': common.PLUGIN.get_url(
-            action='channel_entry',
-            next='live_cat',
-            mode='live',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name
-        )
-    })
+    if params.channel_name != 'studio-4' and \
+        params.channel_name != 'irl':
+        modes.append({
+            'label': _('Live TV'),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='live_cat',
+                mode='live',
+                category='%s Live TV' % params.channel_name.upper(),
+                window_title='%s Live TV' % params.channel_name
+            )
+        })
 
     # Add Videos
     if params.channel_name == 'francetvsport':
@@ -458,6 +468,57 @@ def list_shows(params):
                 )
             })
 
+    elif 'list_shows_necritures_1' in params.next:
+        categories_html = utils.get_webcontent(
+            URL_ROOT_NOUVELLES_ECRITURES % params.channel_name)
+        categories_soup = bs(categories_html, 'html.parser')
+        categories = categories_soup.find_all(
+                'li', class_='genre-item')
+
+        for category in categories:
+
+            category_title = category.find('a').get_text().strip()
+            category_data_panel = category.get('data-panel')
+
+            shows.append({
+                'label': category_title,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    category_data_panel=category_data_panel,
+                    title=category_title,
+                    next='list_shows_necritures_2',
+                    window_title=category_title
+                )
+            })
+
+    elif 'list_shows_necritures_2' in params.next:
+
+        shows_html = utils.get_webcontent(
+            URL_ROOT_NOUVELLES_ECRITURES % params.channel_name)
+        shows_soup = bs(shows_html, 'html.parser')
+        class_panel_value = 'panel %s' % params.category_data_panel
+        list_shows = shows_soup.find(
+                'div', class_=class_panel_value).find_all('li')
+
+        for show_data in list_shows:
+
+            show_url = URL_ROOT_NOUVELLES_ECRITURES % params.channel_name + \
+                show_data.find('a').get('href')
+            show_title = show_data.find('a').get_text().strip()
+            show_image = show_data.find('a').get('data-img')
+
+            shows.append({
+                'label': show_title,
+                'thumb': show_image,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    show_url=show_url,
+                    title=show_title,
+                    next='list_videos_necritures_1',
+                    window_title=show_title
+                )
+            })
+
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
@@ -538,6 +599,65 @@ def list_videos(params):
                 previous_listing=str(videos)
             )
         })
+
+    elif params.next == 'list_videos_necritures_1':
+
+        replay_episodes_html = utils.get_webcontent(
+            params.show_url)
+        replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
+        episodes = replay_episodes_soup.find_all(
+            'li', class_='push type-episode')
+
+        for episode in episodes:
+            if episode.find('div', class_='description'):
+                video_title = episode.find(
+                    'div', class_='title').get_text().strip() + ' - ' + \
+                episode.find(
+                    'div', class_='description').get_text().strip()
+            else:
+                video_title = episode.find(
+                    'div', class_='title').get_text().strip()
+            video_url = URL_ROOT_NOUVELLES_ECRITURES % params.channel_name + \
+                episode.find('a').get('href')
+            if episode.find('img'):
+                video_img = episode.find('img').get('src')
+            else:
+                video_img = ''
+            video_duration = 0
+
+            info = {
+                'video': {
+                    'title': video_title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': video_duration,
+                    # 'plot': video_plot,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    video_url=video_url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': video_title,
+                'thumb': video_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    video_url=video_url
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
 
     else:
 
@@ -1005,46 +1125,124 @@ def list_live(params):
 def get_video_url(params):
     """Get video URL and start video player"""
 
+    desired_quality = common.PLUGIN.get_setting('quality')
+
     if params.next == 'play_r' or params.next == 'download_video':
-        file_prgm = utils.get_webcontent(SHOW_INFO % (params.id_diffusion))
-        json_parser = json.loads(file_prgm)
+        if params.channel_name == 'studio-4' or params.channel_name == 'irl':
 
-        desired_quality = common.PLUGIN.get_setting('quality')
+            video_html = utils.get_webcontent(
+            params.video_url)
+            video_soup = bs(video_html, 'html.parser')
+            video_data = video_soup.find(
+                'div', class_='player-wrapper')
 
-        url_selected = ''
+            if video_data.find('a', class_='video_link'):
+                id_diffusion = video_data.find(
+                    'a', class_='video_link').get(
+                    'href').split('video/')[1].split('@')[0]
+                file_prgm = utils.get_webcontent(SHOW_INFO % id_diffusion)
+                json_parser = json.loads(file_prgm)
 
-        if desired_quality == "DIALOG":
-            all_datas_videos_quality = []
-            all_datas_videos_path = []
+                url_selected = ''
 
-            for video in json_parser['videos']:
-                if video['format'] == 'hls_v5_os' or \
-                        video['format'] == 'm3u8-download':
-                    if video['format'] == 'hls_v5_os':
-                        all_datas_videos_quality.append("HD")
+                if desired_quality == "DIALOG":
+                    all_datas_videos_quality = []
+                    all_datas_videos_path = []
+
+                    for video in json_parser['videos']:
+                        if video['format'] == 'hls_v5_os' or \
+                                video['format'] == 'm3u8-download':
+                            if video['format'] == 'hls_v5_os':
+                                all_datas_videos_quality.append("HD")
+                            else:
+                                all_datas_videos_quality.append("SD")
+                            all_datas_videos_path.append(video['url'])
+
+                    seleted_item = common.sp.xbmcgui.Dialog().select(
+                        _('Choose video quality'),
+                        all_datas_videos_quality)
+
+                    if seleted_item == -1:
+                        return None
+
+                    url_selected = all_datas_videos_path[seleted_item]
+
+                elif desired_quality == "BEST":
+                    for video in json_parser['videos']:
+                        if video['format'] == 'hls_v5_os':
+                            url_selected = video['url']
+                else:
+                    for video in json_parser['videos']:
+                        if video['format'] == 'm3u8-download':
+                            url_selected = video['url']
+
+                return url_selected
+
+            else:
+                url_video_resolver = video_data.find('iframe').get('src')
+                # Case Youtube
+                if 'youtube' in url_video_resolver:
+                    video_id = url_video_resolver.split(
+                        'youtube.com/embed/')[1]
+                    print 'video_id youtube : ' + video_id
+                    if params.next == 'download_video':
+                        return resolver.get_stream_youtube(
+                            video_id, True)
                     else:
-                        all_datas_videos_quality.append("SD")
-                    all_datas_videos_path.append(video['url'])
-
-            seleted_item = common.sp.xbmcgui.Dialog().select(
-                _('Choose video quality'),
-                all_datas_videos_quality)
-
-            if seleted_item == -1:
-                return None
-
-            url_selected = all_datas_videos_path[seleted_item]
-
-        elif desired_quality == "BEST":
-            for video in json_parser['videos']:
-                if video['format'] == 'hls_v5_os':
-                    url_selected = video['url']
+                        return resolver.get_stream_youtube(
+                            video_id, False)
+                # Case DailyMotion
+                elif 'dailymotion' in url_video_resolver:
+                    video_id = url_video_resolver.split(
+                        'dailymotion.com/embed/video/')[1]
+                    print 'video_id dailymotion : ' + video_id
+                    if params.next == 'download_video':
+                        return resolver.get_stream_dailymotion(
+                            video_id, True)
+                    else:
+                        return resolver.get_stream_dailymotion(
+                            video_id, False)
+                else:
+                    # TO DO add new video hosting ?
+                    return None
         else:
-            for video in json_parser['videos']:
-                if video['format'] == 'm3u8-download':
-                    url_selected = video['url']
+            file_prgm = utils.get_webcontent(SHOW_INFO % (params.id_diffusion))
+            json_parser = json.loads(file_prgm)
 
-        return url_selected
+            url_selected = ''
+
+            if desired_quality == "DIALOG":
+                all_datas_videos_quality = []
+                all_datas_videos_path = []
+
+                for video in json_parser['videos']:
+                    if video['format'] == 'hls_v5_os' or \
+                            video['format'] == 'm3u8-download':
+                        if video['format'] == 'hls_v5_os':
+                            all_datas_videos_quality.append("HD")
+                        else:
+                            all_datas_videos_quality.append("SD")
+                        all_datas_videos_path.append(video['url'])
+
+                seleted_item = common.sp.xbmcgui.Dialog().select(
+                    _('Choose video quality'),
+                    all_datas_videos_quality)
+
+                if seleted_item == -1:
+                    return None
+
+                url_selected = all_datas_videos_path[seleted_item]
+
+            elif desired_quality == "BEST":
+                for video in json_parser['videos']:
+                    if video['format'] == 'hls_v5_os':
+                        url_selected = video['url']
+            else:
+                for video in json_parser['videos']:
+                    if video['format'] == 'm3u8-download':
+                        url_selected = video['url']
+
+            return url_selected
 
     elif params.next == 'play_l':
 
