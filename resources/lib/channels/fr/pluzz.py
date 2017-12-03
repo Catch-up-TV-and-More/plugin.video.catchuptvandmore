@@ -27,6 +27,7 @@
 
 import ast
 import json
+import re
 import time
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
@@ -606,7 +607,7 @@ def list_videos(params):
             params.show_url)
         replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
         episodes = replay_episodes_soup.find_all(
-            'li', class_='push type-episode')
+            'li', class_=re.compile("push type-episode"))
 
         for episode in episodes:
             if episode.find('div', class_='description'):
