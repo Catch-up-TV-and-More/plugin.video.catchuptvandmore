@@ -607,7 +607,9 @@ def list_videos(params):
             params.show_url)
         replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
         episodes = replay_episodes_soup.find_all(
-            'li', class_=re.compile("push type-episode"))
+            "li", class_="push type-episode")
+        episodes += replay_episodes_soup.find_all(
+            "li", class_="push type-episode active")
 
         for episode in episodes:
             if episode.find('div', class_='description'):
