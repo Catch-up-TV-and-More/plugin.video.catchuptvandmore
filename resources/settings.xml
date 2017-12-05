@@ -338,6 +338,12 @@
             <setting label="NRJ Login" type="text" id="channels.fr.nrj.login" visible="eq(-1,true)" defaut=""/>
             <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
+        <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
+
+            <setting label="VRT NU Login" type="text" id="channels.be.vrt.login" visible="eq(-1,true)" defaut=""/>
+            <setting label="VRT NU Password" type="text" id="channels.be.vrt.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+
         <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
 
