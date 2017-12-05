@@ -541,6 +541,10 @@ def list_live(params):
     # LOGIN
     result_2 = session_requests.post(
         URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
+    if 'adresse e-mail ou le mot de passe est invalide.' in result_2.text.encode('utf-8'):
+        utils.send_notification(
+            common.ADDON.get_localized_string(30113))
+        return None
 
     # GET page with url_live with the session logged
     result_3 = session_requests.get(
