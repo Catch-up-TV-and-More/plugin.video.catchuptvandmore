@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.8~beta006"
+       version="0.1.8~beta007"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -41,6 +41,7 @@
 [Add Website] Notrehistoire.ch (CH) (wwark)
 [Add WebTV] Studio 4 (francetv) (wwark)
 [Add WebTV] IRL (francetv) (wwark)
+[Add Live TV] VRT NU (BE) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

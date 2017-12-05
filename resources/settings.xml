@@ -190,6 +190,9 @@
             <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="6"/>
 
+            <setting label="VRT NU" type="bool" id="channels.be.vrt.vrt" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.vrt.order" default="7"/>
+
         <setting label="" type="number" visible="false" id="main_menu.sw.order" default="3"/>
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.sw" default="true" visible="false"/>

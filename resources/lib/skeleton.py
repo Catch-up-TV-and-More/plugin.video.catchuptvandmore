@@ -39,7 +39,8 @@ CHANNELS = {
         'channels.be.brf.brf': 'BRF Mediathek',
         'channels.be.rtl.rtltvi': 'RTL-TVI',
         'channels.be.rtl.plugrtl': 'PLUG RTL',
-        'channels.be.rtl.clubrtl': 'CLUB RTL'
+        'channels.be.rtl.clubrtl': 'CLUB RTL',
+        'channels.be.vrt.vrt': 'VRT NU'
     },
 
     'main_menu.sw': {
