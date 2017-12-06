@@ -13,10 +13,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Angleterre — *United Kingdom*
 ##### TV
 - Blaze *(Replay, Live TV)*
-- Dave *(Replay with UKTVPlay account)*
-- Drama *(Replay with UKTVPlay account)*
-- Really *(Replay with UKTVPlay account)*
-- Yesterday *(Replay with UKTVPlay account)*
+- Dave *(Replay)*
+- Drama *(Replay)*
+- Really *(Replay)*
+- Yesterday *(Replay)*
 - Sky News *(Replay, Live TV)*
 
 ##### Web TV
@@ -31,7 +31,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ##### TV Communauté flamande — *Flemish Community TV*
 - BVN *(Replay, Live TV)*
-- VRT NU (Eèn, Canvas, ...) *(Replay, Live TV)*
+- VRT NU (Eèn, Canvas, ...) *(Replay with VRT NU account, Live TV)*
 
 ##### TV Communauté allemande — *German Community TV*
 - BRF *(Replay)*
