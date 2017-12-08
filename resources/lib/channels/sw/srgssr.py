@@ -49,8 +49,8 @@ URL_EMISSIONS = 'https://www.%s.ch/play/tv/%s?index=all'
 # channel_name, name_emission
 
 URL_LIST_EPISODES = 'https://www.%s.ch/play/v2/tv/show/%s/' \
-                    'latestEpisodes/tillMonth/%s?' \
-                    'numberOfEpisodes=50&layout=json'
+                    'latestEpisodes?numberOfEpisodes=50' \
+                    '&tillMonth=%s&layout=json'
 # channel_name, IdEmission, ThisMonth (11-2017)
 
 # Live
