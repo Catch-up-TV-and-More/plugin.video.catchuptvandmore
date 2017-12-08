@@ -134,6 +134,7 @@ CHANNELS = {
         'channels.ws.noob.noob': 'Noob TV',
         'channels.ws.culturepub.culturepub': 'Culturepub',
         'channels.ws.autoplus.autoplus': 'Auto Plus',
-        'channels.ws.notrehistoirech.notrehistoirech': 'Notre Histoire.ch'
+        'channels.ws.notrehistoirech.notrehistoirech': 'Notre Histoire.ch',
+        'channels.ws.30millionsdamis.30millionsdamis': '30 Millions d\'Amis'
     }
 }

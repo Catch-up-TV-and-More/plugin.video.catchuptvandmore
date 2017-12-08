@@ -303,6 +303,9 @@
             <setting label="Notre Histoire.ch" type="bool" id="channels.ws.notrehistoirech.notrehistoirech" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.notrehistoirech.notrehistoirech.order" default="7"/>
 
+            <setting label="30 Millions d'Amis" type="bool" id="channels.ws.30millionsdamis.30millionsdamis" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.30millionsdamis.30millionsdamis.order" default="8"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->
