@@ -28,6 +28,7 @@ from resources.lib import common
 
 # TO DO
 # Info Videos (date, plot, etc ...)
+# HTML not well formatted (some videos not grabb by bs)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -37,7 +38,8 @@ _ = common.ADDON.initialize_gettext()
 URL_ROOT = 'https://%s.ca'
 # Channel Name
 
-URL_VIDEOS = 'https://%s.ca/videos?params[%s]=%s&options[page]=%s'
+URL_VIDEOS = 'https://%s.ca/videos?params[%s]=%s'\
+             '&options[sort]=publish_start&options[page]=%s'
 # Channel Name, theme|serie, Value, page
 
 URL_STREAM = 'https://production-ps.lvp.llnw.net/r/PlaylistService' \
@@ -191,15 +193,17 @@ def list_videos(params):
     root_html = utils.get_webcontent(url_videos)
     root_soup = bs(root_html, 'html.parser')
     episodes = root_soup.find(
-        'div',
-        class_='listing-carousel-container').find(
-        'div', class_='listing-carousel-inner').find_all('div')
+        'div', class_='listing video-block js-listing').find_all(
+        'div', class_='media-thumb ')
 
     for episode in episodes:
 
         video_title = episode.find('img').get('alt')
-        video_url = (URL_ROOT % params.channel_name) + \
-            episode.find('a').get('href')
+        if episode.find('a'):
+            video_url = (URL_ROOT % params.channel_name) + \
+                episode.find('a').get('href')
+        else:
+            video_url = ''
         video_img = episode.find('img').get('data-src')
         video_duration = 0
         video_plot = ''
@@ -275,6 +279,8 @@ def list_live(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
+        if params.video_url == '':
+            return None
         video_html = utils.get_webcontent(
             params.video_url)
         stream_id = re.compile(
