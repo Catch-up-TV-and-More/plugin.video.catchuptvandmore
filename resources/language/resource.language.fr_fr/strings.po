@@ -87,6 +87,10 @@ msgctxt "#30027"
 msgid "Connect VPN"
 msgstr "Connecter le VPN"
 
+msgctxt "#30028"
+msgid "Canadian channels"
+msgstr "Chaînes canadiènnes"
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"

@@ -12,6 +12,7 @@
         <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
         <setting label="30025" type="bool" id="main_menu.wo" default="true"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true"/>
+        <setting label="30028" type="bool" id="main_menu.ca" default="true"/>
     </category>
 
 
@@ -305,6 +306,16 @@
 
             <setting label="30 Millions d'Amis" type="bool" id="channels.ws.30millionsdamis.30millionsdamis" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.30millionsdamis.30millionsdamis.order" default="8"/>
+
+        <setting label="" type="number" visible="false" id="main_menu.ca.order" default="8"/>
+        <setting label="30028" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30028" type="bool" id="main_menu.ca" default="true" visible="false"/>
+
+            <setting label="TV5" type="bool" id="channels.ca.tv5.tv5" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ca.tv5.tv5.order" default="1"/>
+
+            <setting label="UNIS" type="bool" id="channels.ca.tv5.unis" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ca.tv5.unis.order" default="2"/>
 
     </category>
 

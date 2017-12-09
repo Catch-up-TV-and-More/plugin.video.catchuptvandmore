@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.8~beta012"
+       version="0.1.8~beta013"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -47,6 +47,8 @@
 [Add Website] 30 Millions d'Amis (wwark)
 [Fix] Change json api - Channels RTS, SRF, ... (CH) (wwark)
 [Fix] __gettext__.pcl without 'hash' value - simpleplugin.py (wwark)
+[Add Channel] Add replay TV5 (CA) (wwark)
+[Add Channel] Add replay UNIS (CA) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

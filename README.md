@@ -36,6 +36,11 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV Communauté allemande — *German Community TV*
 - BRF *(Replay)*
 
+### Canada
+##### TV Communauté française — *French Community TV*
+- TV5 *(Replay)*
+- UNIS *(Replay)*
+
 ### France
 ##### TV
 - TF1 *(Replay, Live TV)*

@@ -23,6 +23,7 @@
 
 CATEGORIES = {
     'main_menu.be': 'Belgian channels',
+    'main_menu.ca': 'Canadian channels',
     'main_menu.fr': 'French channels',
     'main_menu.jp': 'Japanese channels',
     'main_menu.sw': 'Switzerland channels',
@@ -41,6 +42,11 @@ CHANNELS = {
         'channels.be.rtl.plugrtl': 'PLUG RTL',
         'channels.be.rtl.clubrtl': 'CLUB RTL',
         'channels.be.vrt.vrt': 'VRT NU'
+    },
+
+    'main_menu.ca': {
+        'channels.ca.tv5.tv5': 'TV5',
+        'channels.ca.tv5.unis': 'UNIS'
     },
 
     'main_menu.sw': {
