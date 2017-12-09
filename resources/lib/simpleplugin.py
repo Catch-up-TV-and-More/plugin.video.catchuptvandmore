@@ -754,7 +754,15 @@ class Addon(object):
             gettext_pcl = '__gettext__.pcl'
             with self.get_storage(gettext_pcl) as ui_strings_map:
                 if (not os.path.exists(os.path.join(self._configdir, gettext_pcl)) or
-                        raw_strings_hash != ui_strings_map['hash']):
+                        'hash' not in ui_strings_map):
+                    ui_strings = self._parse_po(raw_strings.split('\n'))
+                    self._ui_strings_map = {
+                        'hash': raw_strings_hash,
+                        'strings': ui_strings
+                    }
+                    ui_strings_map['hash'] = raw_strings_hash
+                    ui_strings_map['strings'] = ui_strings.copy()
+                elif raw_strings_hash != ui_strings_map['hash']:
                     ui_strings = self._parse_po(raw_strings.split('\n'))
                     self._ui_strings_map = {
                         'hash': raw_strings_hash,
