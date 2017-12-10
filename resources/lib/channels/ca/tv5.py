@@ -203,7 +203,7 @@ def list_videos(params):
             video_url = (URL_ROOT % params.channel_name) + \
                 episode.find('a').get('href')
         else:
-            video_url = ''
+            video_url = 'NO_URL'
         video_img = episode.find('img').get('data-src')
         video_duration = 0
         video_plot = ''
@@ -279,17 +279,25 @@ def list_live(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        if params.video_url == '':
-            return None
-        video_html = utils.get_webcontent(
-            params.video_url)
-        stream_id = re.compile(
-            '\'media_id\' : "(.*?)"').findall(video_html)[0]
-        streams_jsonparser = json.loads(
-            utils.get_webcontent(URL_STREAM % stream_id))
+        if 'http' in params.video_url:
+            video_html = utils.get_webcontent(
+                params.video_url)
+            stream_id = re.compile(
+                '\'media_id\' : "(.*?)"').findall(video_html)[0]
+            streams_jsonparser = json.loads(
+                utils.get_webcontent(URL_STREAM % stream_id))
 
-        url = ''
-        for stream in streams_jsonparser["mediaList"][0]["mobileUrls"]:
-            if 'HttpLiveStreaming' in stream["targetMediaPlatform"]:
-                url = stream["mobileUrl"]
-        return url
+            url = ''
+            # Case Jarvis
+            if common.sp.xbmc.__version__ == '2.24.0':
+                for stream in streams_jsonparser["mediaList"][0]["mobileUrls"]:
+                    if 'MobileH264' in stream["targetMediaPlatform"]:
+                        url = stream["mobileUrl"]
+            # Case Krypton and ...
+            else:
+                for stream in streams_jsonparser["mediaList"][0]["mobileUrls"]:
+                    if 'HttpLiveStreaming' in stream["targetMediaPlatform"]:
+                        url = stream["mobileUrl"]
+            return url
+        else:
+            return ''
