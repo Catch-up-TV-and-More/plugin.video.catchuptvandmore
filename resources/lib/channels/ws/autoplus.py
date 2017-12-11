@@ -21,6 +21,7 @@
 '''
 
 import ast
+import json
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
@@ -98,6 +99,57 @@ def list_videos(params):
         replay_episodes_html = utils.get_webcontent(
             URL_ROOT + '/?page=%s' % params.page)
         replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
+
+        # Get Video First Page
+        if replay_episodes_soup.find('iframe'):
+            url_first_video = replay_episodes_soup.find(
+                'iframe').get('src')
+            info_first_video = utils.get_webcontent(url_first_video)
+            info_first_video_json = re.compile(
+                'config = (.*?)};').findall(info_first_video)[0]
+            print 'info_first_video_json : ' + info_first_video_json + '}'
+            info_first_video_jsonparser = json.loads(
+                info_first_video_json + '}')
+
+            video_title = info_first_video_jsonparser["metadata"]["title"]
+            video_url = info_first_video_jsonparser["metadata"]["url"] + '?'
+            video_img = info_first_video_jsonparser["metadata"]["poster_url"]
+            video_duration = 0
+
+            info = {
+                'video': {
+                    'title': video_title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': video_duration,
+                    # 'plot': video_plot,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    video_url=video_url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': video_title,
+                'thumb': video_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    video_url=video_url
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
         episodes = replay_episodes_soup.find_all(
             'div', class_='col-xs-6 col-sm-12')
 
@@ -105,7 +157,7 @@ def list_videos(params):
             video_title = episode.find('img').get('alt')
             video_url = episode.find('a').get('href')
             video_img = episode.find(
-                'img').get('src').encode('utf-8')
+                'img').get('src').replace('|','%7C')
             video_duration = 0
 
             info = {
