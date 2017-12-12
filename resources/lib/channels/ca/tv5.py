@@ -292,16 +292,19 @@ def get_video_url(params):
                 utils.get_webcontent(URL_STREAM % stream_id))
 
             url = ''
-            # Case Jarvis
-            if common.sp.xbmc.__version__ == '2.24.0':
-                for stream in streams_jsonparser["mediaList"][0]["mobileUrls"]:
-                    if 'MobileH264' in stream["targetMediaPlatform"]:
-                        url = stream["mobileUrl"]
-            # Case Krypton and ...
+            if 'mediaList' in streams_jsonparser:
+                # Case Jarvis
+                if common.sp.xbmc.__version__ == '2.24.0':
+                    for stream in streams_jsonparser["mediaList"][0]["mobileUrls"]:
+                        if 'MobileH264' in stream["targetMediaPlatform"]:
+                            url = stream["mobileUrl"]
+                # Case Krypton and ...
+                else:
+                    for stream in streams_jsonparser["mediaList"][0]["mobileUrls"]:
+                        if 'HttpLiveStreaming' in stream["targetMediaPlatform"]:
+                            url = stream["mobileUrl"]
+                return url
             else:
-                for stream in streams_jsonparser["mediaList"][0]["mobileUrls"]:
-                    if 'HttpLiveStreaming' in stream["targetMediaPlatform"]:
-                        url = stream["mobileUrl"]
-            return url
+                return ''
         else:
             return ''
