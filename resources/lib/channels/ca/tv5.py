@@ -20,6 +20,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import ast
 import json
 import re
 from bs4 import BeautifulSoup as bs
@@ -191,9 +192,12 @@ def list_videos(params):
         params.page)
 
     root_html = utils.get_webcontent(url_videos)
-    root_soup = bs(root_html, 'html.parser')
-    episodes = root_soup.find(
-        'div', class_='listing video-block js-listing').find_all(
+    part_page = re.split(
+        '<div class="listing-carousel-container">', root_html)
+    part_page = re.split(
+        '<div class="pagination-block js-pagination-block">', part_page[1])
+    root_soup = bs(part_page[0], 'html.parser')
+    episodes = root_soup.find_all(
         'div', class_='media-thumb ')
 
     for episode in episodes:
