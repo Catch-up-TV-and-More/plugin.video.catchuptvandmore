@@ -44,7 +44,7 @@ URL_LIVE_SKYNEWS = 'http://news.sky.com/watch-live'
 URL_IMG_YOUTUBE = 'https://i.ytimg.com/vi/%s/hqdefault.jpg'
 # video_id
 
-URL_VIDEOS_CHANNEL_YT = 'https://www.youtube.com/user/%s/videos'
+URL_VIDEOS_CHANNEL_YT = 'https://www.youtube.com/channel/%s/videos'
 # Channel_name
 
 URL_VIDEOS_SKYSPORTS = 'http://www.skysports.com/watch/video'
@@ -120,13 +120,41 @@ def list_shows(params):
 
     if params.next == 'list_shows_sports':
 
-        title = 'Videos Youtube'
+        title = 'Soccer AM (youtube)'
         shows.append({
             'label': title,
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='list_videos_youtube',
                 page='1',
+                channel_youtube = 'UCE97AW7eR8VVbVPBy4cCLKg',
+                title=title,
+                window_title=title
+            )
+        })
+
+        # TO DO (find a way to get json ?)
+        #title = 'Sky Sports Football (youtube)'
+        #shows.append({
+            #'label': title,
+            #'url': common.PLUGIN.get_url(
+                #action='channel_entry',
+                #next='list_videos_youtube',
+                #page='1',
+                #channel_youtube = 'UCNAf1k0yIjyGu3k9BwAg3lg',
+                #title=title,
+                #window_title=title
+            #)
+        #})
+
+        title = 'Sky Sports (youtube)'
+        shows.append({
+            'label': title,
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='list_videos_youtube',
+                page='1',
+                channel_youtube = 'UCTU_wC79Dgi9rh4e9-baTqA',
                 title=title,
                 window_title=title
             )
@@ -175,9 +203,9 @@ def list_videos(params):
     if params.next == 'list_videos_youtube':
 
         if params.channel_name == 'skysports':
-            c_name = 'SkySportsOfficial'
-        else:
-            c_name = params.channel_name
+            c_name = params.channel_youtube
+        elif params.channel_name == 'skynews':
+            c_name = 'UCoMdktPbSTixAyNGwb-UYkQ'
 
         list_videos = utils.get_webcontent(
             URL_VIDEOS_CHANNEL_YT % c_name)
