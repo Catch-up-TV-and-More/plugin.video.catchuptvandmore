@@ -27,6 +27,7 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
+# Add http://www.rougefm.com/rouge-play/
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -34,14 +35,14 @@ from resources.lib import common
 _ = common.ADDON.initialize_gettext()
 
 
-URL_ROOT = 'http://www.rougetv.ch'
+URL_ROOT = 'http://www.rougefm.com'
 # (www or play), channel_name
 
 # Replay
-URL_REPLAY = URL_ROOT + '/replays'
+URL_REPLAY = URL_ROOT + '/rouge-tv/'
 
 # Live
-URL_LIVE = URL_ROOT + '/live'
+URL_LIVE = URL_ROOT + '/rouge-tv/'
 # channel_name
 
 URL_LIVE_JSON = 'http://livevideo.infomaniak.com/player_config/%s.json'
@@ -114,15 +115,18 @@ def list_videos(params):
         file_path = utils.get_webcontent(URL_REPLAY)
         replay_episodes_soup = bs(file_path, 'html.parser')
         episodes = replay_episodes_soup.find_all(
-            'article', class_='fourcol col animado')
+            'div', class_='modal fade replaytv_modal')
 
         for episode in episodes:
 
-            video_title = episode.find('h1').get_text().strip()
+            video_title = episode.find(
+                'h4', class_='m-t-30').get_text().strip()
             video_duration = 0
-            video_plot = ''
-            video_img = URL_ROOT + '/' + episode.find('img').get('src')
-            video_url = URL_ROOT + '/' + episode.find('a').get('href')
+            video_plot = episode.find('p').get_text().strip()
+            video_url = episode.find(
+                'div', class_='replaytv_video').get('video-src')
+            # TO DO Get IMG
+            video_img = ''
 
             info = {
                 'video': {
@@ -187,7 +191,7 @@ def list_live(params):
 
     live_html = utils.get_webcontent(URL_LIVE)
     live_id = re.compile(
-        '\&player=(.*?)\"').findall(live_html)[0]
+        '\&player=(.*?)[\"\']').findall(live_html)[0]
     live_json = utils.get_webcontent(URL_LIVE_JSON % live_id)
     lives_json_parser = json.loads(live_json)
 
