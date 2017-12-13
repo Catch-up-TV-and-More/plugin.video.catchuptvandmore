@@ -667,7 +667,7 @@ def get_video_url(params):
             # Case Youtube
             if 'youtube' in url_video_resolver:
                 video_id = re.compile(
-                    'www.youtube.com/embed/(.*?)"').findall(
+                    'www.youtube.com/embed/(.*?)[\?\"\&]').findall(
                     url_video_resolver)[0]
                 if params.next == 'download_video':
                     return resolver.get_stream_youtube(
@@ -714,7 +714,7 @@ def get_video_url(params):
             # Case Youtube
             if 'youtube' in url_video_embeded:
                 video_id = re.compile(
-                    'www.youtube.com/embed/(.*?)[\?\"]').findall(
+                    'www.youtube.com/embed/(.*?)[\?\"\&]').findall(
                     url_video_embeded)[0]
                 if params.next == 'download_video':
                     return resolver.get_stream_youtube(
