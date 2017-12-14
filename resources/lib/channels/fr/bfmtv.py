@@ -26,10 +26,10 @@ import time
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# Add Live TV (ONENET ???)
 
 # BFMTV, RMC, ONENET, etc ...
 URL_TOKEN = 'http://api.nextradiotv.com/%s-applications/'
@@ -51,9 +51,6 @@ URL_VIDEO = 'http://api.nextradiotv.com/%s-applications/%s/' \
 # channel, token, video_id
 
 # URL Live
-# Channel ONENET
-URL_LIVE_ONENET = 'http://www.01net.com/mediaplayer/live-video/'
-
 # Channel BFMTV
 URL_LIVE_BFMTV = 'http://www.bfmtv.com/mediaplayer/live-video/'
 
@@ -74,13 +71,6 @@ URL_VIDEO_HTML_RMCDECOUVERTE = 'http://rmcdecouverte.bfmtv.com/'\
 
 URL_LIVE_RMCDECOUVERTE = 'http://rmcdecouverte.bfmtv.com/mediaplayer-direct/'
 
-URL_JS_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.min.js'
-# AccountId, PlayerId
-
-URL_VIDEO_JSON_BRIGHTCOVE = 'https://edge.api.brightcove.com/'\
-                            'playback/v1/accounts/%s/videos/%s'
-# AccountId, VideoId
-
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
@@ -93,15 +83,6 @@ def get_token(channel_name):
     file_token = utils.get_webcontent(URL_TOKEN % (channel_name))
     token_json = json.loads(file_token)
     return token_json['session']['token'].encode('utf-8')
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_policy_key(data_account, data_player):
-    """Get policy key"""
-    file_js = utils.get_webcontent(
-        URL_JS_POLICY_KEY % (data_account, data_player))
-    return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
-
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -258,19 +239,10 @@ def list_videos(params):
         data_video_id = data_video_soup['data-video-id']
         data_player = data_video_soup['data-player']
 
-        # Method to get JSON from 'edge.api.brightcove.com'
-        file_json = utils.download_catalog(
-            URL_VIDEO_JSON_BRIGHTCOVE % (data_account, data_video_id),
-            '%s_%s_replay.json' % (data_account, data_video_id),
-            force_dl=False,
-            request_type='get',
-            post_dic={},
-            random_ua=False,
-            specific_headers={'Accept': 'application/json;pk=%s' % (
-                get_policy_key(data_account, data_player))},
-            params={})
-        video_json = open(file_json).read()
-        json_parser = json.loads(video_json)
+        json_parser = resolver.get_brightcove_video_json(
+            data_account,
+            data_player,
+            data_video_id)
 
         video_title = ''
         program_title = ''
@@ -448,39 +420,56 @@ def list_live(params):
     img = ''
     url_live = ''
 
-    if params.channel_name == 'rmcdecouverte':
+    list_urls_live = []
 
-        file_path = utils.download_catalog(
-            URL_LIVE_RMCDECOUVERTE,
-            '%s_live.html' % (params.channel_name))
-        live_html = open(file_path).read()
+    if params.channel_name == 'rmcdecouverte':
+        list_urls_live.append(URL_LIVE_RMCDECOUVERTE)
+    elif params.channel_name == 'bfmtv':
+        list_urls_live.append(URL_LIVE_BFMTV)
+        list_urls_live.append(URL_LIVE_BFM_PARIS)
+    elif params.channel_name == 'bfmbusiness':
+        list_urls_live.append(URL_LIVE_BFMBUSINESS)
+    elif params.channel_name == 'rmc':
+        list_urls_live.append(URL_LIVE_BFM_SPORT)
+
+    for url_live_data in list_urls_live:
+
+        live_html = utils.get_webcontent(
+            url_live_data)
 
         live_soup = bs(live_html, 'html.parser')
-        data_live_soup = live_soup.find('div', class_='next-player')
+        if params.channel_name == 'rmcdecouverte':
+            data_live_soup = live_soup.find(
+                'div', class_='next-player')
+            data_account = data_live_soup['data-account']
+            data_video_id = data_live_soup['data-video-id']
+            data_player = data_live_soup['data-player']
+        else:
+            data_live_soup = live_soup.find(
+                'div', class_='BCLvideoWrapper')
+            data_account = data_live_soup.find(
+                'script')['data-account']
+            data_video_id = data_live_soup.find(
+                'script')['data-video-id']
+            data_player = data_live_soup.find(
+                'script')['data-player']
 
-        data_account = data_live_soup['data-account']
-        data_video_id = data_live_soup['data-video-id']
-        data_player = data_live_soup['data-player']
-
-        # Method to get JSON from 'edge.api.brightcove.com'
-        file_json = utils.download_catalog(
-            URL_VIDEO_JSON_BRIGHTCOVE % (data_account, data_video_id),
-            '%s_%s_live.json' % (data_account, data_video_id),
-            force_dl=False,
-            request_type='get',
-            post_dic={},
-            random_ua=False,
-            specific_headers={'Accept': 'application/json;pk=%s' % (
-                get_policy_key(data_account, data_player))},
-            params={})
-        video_json = open(file_json).read()
-        json_parser = json.loads(video_json)
+        json_parser = resolver.get_brightcove_video_json(
+            data_account,
+            data_player,
+            data_video_id)
 
         title = json_parser["name"]
-        plot = json_parser["long_description"].encode('utf-8')
+        plot = ''
+        if json_parser["long_description"]:
+            plot = json_parser["long_description"]
+            plot = plot.encode('utf-8')
 
         for url in json_parser["sources"]:
             url_live = url["src"].encode('utf-8')
+
+        if 'poster' in json_parser:
+            img = json_parser["poster"].encode('utf-8')
 
         info = {
             'video': {
@@ -502,228 +491,6 @@ def list_live(params):
             'is_playable': True,
             'info': info
         })
-
-    else:
-
-        if params.channel_name == 'bfmtv':
-
-            # BFMTV
-            file_path = utils.download_catalog(
-                URL_LIVE_BFMTV,
-                '%s_live.html' % (params.channel_name))
-            live_html = open(file_path).read()
-
-            url_live = re.compile(r'file: \'(.*?)\'').findall(live_html)[0]
-
-            title = '%s Live' % params.channel_name.upper()
-
-            info = {
-                'video': {
-                    'title': title,
-                    'plot': plot,
-                    'duration': duration
-                }
-            }
-
-            lives.append({
-                'label': title,
-                'fanart': img,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_l',
-                    url_live=url_live,
-                ),
-                'is_playable': True,
-                'info': info
-            })
-
-            # BFM PARIS
-            file_paris_path = utils.download_catalog(
-                URL_LIVE_BFM_PARIS,
-                'bfm_paris_live.html')
-            live_paris_html = open(file_paris_path).read()
-
-            live_paris_soup = bs(live_paris_html, 'html.parser')
-            data_live_paris_soup = live_paris_soup.find(
-                'div', class_='BCLvideoWrapper')
-
-            data_account_paris = data_live_paris_soup.find(
-                'script')['data-account']
-            data_video_id_paris = data_live_paris_soup.find(
-                'script')['data-video-id']
-            data_player_paris = data_live_paris_soup.find(
-                'script')['data-player']
-
-            # Method to get JSON from 'edge.api.brightcove.com'
-            file_json_paris = utils.download_catalog(
-                URL_VIDEO_JSON_BRIGHTCOVE % (
-                    data_account_paris, data_video_id_paris),
-                '%s_%s_live.json' % (data_account_paris, data_video_id_paris),
-                force_dl=False,
-                request_type='get',
-                post_dic={},
-                random_ua=False,
-                specific_headers={'Accept': 'application/json;pk=%s' % (
-                    get_policy_key(data_account_paris, data_player_paris))},
-                params={})
-            video_json_paris = open(file_json_paris).read()
-            json_parser_paris = json.loads(video_json_paris)
-
-            title_paris = json_parser_paris["name"]
-            plot_paris = ''
-            if json_parser_paris["long_description"]:
-                plot_paris = json_parser_paris["long_description"]
-                plot_paris = plot_paris.encode('utf-8')
-
-            for url_paris in json_parser_paris["sources"]:
-                url_live_paris = url_paris["src"].encode('utf-8')
-
-            info_paris = {
-                'video': {
-                    'title': title_paris,
-                    'plot': plot_paris,
-                    'duration': duration
-                }
-            }
-
-            lives.append({
-                'label': title_paris,
-                'fanart': img,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_l',
-                    url_live=url_live_paris,
-                ),
-                'is_playable': True,
-                'info': info_paris
-            })
-
-        elif params.channel_name == 'bfmbusiness':
-
-            # BFM BUSINESS
-            file_path = utils.download_catalog(
-                URL_LIVE_BFMBUSINESS,
-                '%s_live.html' % (params.channel_name))
-            live_html = open(file_path).read()
-
-            live_soup = bs(live_html, 'html.parser')
-            data_live_soup = live_soup.find('div', class_='BCLvideoWrapper')
-
-            data_account = data_live_soup.find('script')['data-account']
-            data_video_id = data_live_soup.find('script')['data-video-id']
-            data_player = data_live_soup.find('script')['data-player']
-
-            # Method to get JSON from 'edge.api.brightcove.com'
-            file_json = utils.download_catalog(
-                URL_VIDEO_JSON_BRIGHTCOVE % (data_account, data_video_id),
-                '%s_%s_live.json' % (data_account, data_video_id),
-                force_dl=False,
-                request_type='get',
-                post_dic={},
-                random_ua=False,
-                specific_headers={'Accept': 'application/json;pk=%s' % (
-                    get_policy_key(data_account, data_player))},
-                params={})
-            video_json = open(file_json).read()
-            json_parser = json.loads(video_json)
-
-            title = json_parser["name"]
-            plot = ''
-            if json_parser["long_description"]:
-                plot = json_parser["long_description"].encode('utf-8')
-
-            for url in json_parser["sources"]:
-                url_live = url["src"].encode('utf-8')
-            img = json_parser["poster"].encode('utf-8')
-
-            info = {
-                'video': {
-                    'title': title,
-                    'plot': plot,
-                    'duration': duration
-                }
-            }
-
-            lives.append({
-                'label': title,
-                'fanart': img,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_l',
-                    url_live=url_live,
-                ),
-                'is_playable': True,
-                'info': info
-            })
-
-        elif params.channel_name == 'rmc':
-
-            # BFM SPORT
-            file_path = utils.download_catalog(
-                URL_LIVE_BFM_SPORT,
-                'bfm_sport_live.html')
-            live_html = open(file_path).read()
-
-            live_soup = bs(live_html, 'html.parser')
-
-            data_live_soup = live_soup.find('div', class_='BCLvideoWrapper')
-
-            data_account = data_live_soup.find('script')['data-account']
-            data_video_id = data_live_soup.find('script')['data-video-id']
-            data_player = data_live_soup.find('script')['data-player']
-
-            # Method to get JSON from 'edge.api.brightcove.com'
-            file_json = utils.download_catalog(
-                URL_VIDEO_JSON_BRIGHTCOVE % (data_account, data_video_id),
-                '%s_%s_live.json' % (data_account, data_video_id),
-                force_dl=False,
-                request_type='get',
-                post_dic={},
-                random_ua=False,
-                specific_headers={'Accept': 'application/json;pk=%s' % (
-                    get_policy_key(data_account, data_player))},
-                params={})
-            video_json = open(file_json).read()
-            json_parser = json.loads(video_json)
-
-            title = json_parser["name"]
-            plot = ''
-            if json_parser["long_description"]:
-                plot = json_parser["long_description"].encode('utf-8')
-
-            for url in json_parser["sources"]:
-                url_live = url["src"].encode('utf-8')
-                break
-
-            info = {
-                'video': {
-                    'title': title,
-                    'plot': plot,
-                    'duration': duration
-                }
-            }
-
-            lives.append({
-                'label': title,
-                'fanart': img,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_l',
-                    url_live=url_live,
-                ),
-                'is_playable': True,
-                'info': info
-            })
-
-        elif params.channel_name == '01net':
-
-            # TO DO
-
-            return None
 
     return common.PLUGIN.create_listing(
         lives,

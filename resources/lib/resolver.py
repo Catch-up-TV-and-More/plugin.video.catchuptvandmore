@@ -51,6 +51,14 @@ URL_FACEBOOK_BY_ID = 'https://www.facebook.com/allocine/videos/%s'
 URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
 # Video_id
 
+URL_BRIGHTCOVE_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.min.js'
+# AccountId, PlayerId
+
+URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/'\
+                            'playback/v1/accounts/%s/videos/%s'
+# AccountId, VideoId
+
+# DailyMotion Part
 def get_stream_dailymotion(video_id, isDownloadVideo):
 
     # Sous Jarvis nous avons ces éléments qui ne fonctionnent pas :
@@ -141,6 +149,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
                     break
                 return url
 
+# Vimeo Part
 def get_stream_vimeo(video_id, isDownloadVideo):
 
     url_vimeo = URL_VIMEO_BY_ID % (video_id)
@@ -155,6 +164,7 @@ def get_stream_vimeo(video_id, isDownloadVideo):
     default_cdn = hls_json["default_cdn"]
     return hls_json["cdns"][default_cdn]["url"]
 
+# Facebook Part
 def get_stream_facebook(video_id, isDownloadVideo):
 
     url_facebook = URL_FACEBOOK_BY_ID % (video_id)
@@ -196,6 +206,7 @@ def get_stream_facebook(video_id, isDownloadVideo):
             r'sd_src_no_ratelimit:"(.*?)"').findall(
             html_facebook)[0]
 
+# Youtube Part
 def get_stream_youtube(video_id, isDownloadVideo):
 
     url_youtube = URL_YOUTUBE % video_id
@@ -211,3 +222,28 @@ def get_stream_youtube(video_id, isDownloadVideo):
         for format_video in result['formats']:
             url_live = format_video['url']
     return url_live
+
+# BRIGHTCOVE Part
+def get_brightcove_policy_key(data_account, data_player):
+    """Get policy key"""
+    file_js = utils.get_webcontent(
+        URL_BRIGHTCOVE_POLICY_KEY % (data_account, data_player))
+    return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
+
+def get_brightcove_video_json(data_account, data_player, data_video_id):
+
+    # Method to get JSON from 'edge.api.brightcove.com'
+    file_json = utils.download_catalog(
+        URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
+        '%s_%s_replay.json' % (data_account, data_video_id),
+        force_dl=False,
+        request_type='get',
+        post_dic={},
+        random_ua=False,
+        specific_headers={'Accept': 'application/json;pk=%s' % (
+            get_brightcove_policy_key(data_account, data_player))},
+        params={})
+    video_json = open(file_json).read()
+    print 'video_json : '  + video_json
+    json_parser = json.loads(video_json)
+    return json_parser

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.8~beta017"
+       version="0.1.8~beta018"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -52,6 +52,7 @@
 [Fix/Improvement] Fix image videos and Add First Video - Website Autoplus (wwark)
 [Fix] Show image - Website Culturepub (wwark)
 [Fix] Playing some youtube videos - Website Allocine (wwark)
+[Fix/Refactoring] Live TV BFMTV and move brightcove code to resolver.py - channel BFMTV (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
