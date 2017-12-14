@@ -244,6 +244,5 @@ def get_brightcove_video_json(data_account, data_player, data_video_id):
             get_brightcove_policy_key(data_account, data_player))},
         params={})
     video_json = open(file_json).read()
-    print 'video_json : '  + video_json
     json_parser = json.loads(video_json)
     return json_parser

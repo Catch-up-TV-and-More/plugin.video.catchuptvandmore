@@ -134,15 +134,16 @@ def root(params):
     })
 
     # Add Live
-    modes.append({
-        'label': _('Live TV'),
-        'url': common.PLUGIN.get_url(
-            action='channel_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name
-        )
-    })
+    if params.channel_name == 'cnews':
+        modes.append({
+            'label': _('Live TV'),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='live_cat',
+                category='%s Live TV' % params.channel_name.upper(),
+                window_title='%s Live TV' % params.channel_name
+            )
+        })
 
     return common.PLUGIN.create_listing(
         modes,

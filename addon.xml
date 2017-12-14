@@ -53,6 +53,7 @@
 [Fix] Show image - Website Culturepub (wwark)
 [Fix] Playing some youtube videos - Website Allocine (wwark)
 [Fix/Refactoring] Live TV BFMTV and move brightcove code to resolver.py - channel BFMTV (wwark)
+[Remove] Live TV (not working) - Channel Canal+, c8, cstar (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
