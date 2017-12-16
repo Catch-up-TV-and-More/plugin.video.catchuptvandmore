@@ -34,8 +34,8 @@
             <setting label="France 3" type="bool" id="channels.fr.pluzz.france3" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3.order" default="3"/>
 
-            <setting label="Canal +" type="bool" id="channels.fr.groupecanal.cplus" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cplus.order" default="4"/>
+            <setting label="Canal +" type="bool" id="channels.fr.mycanal.canalplus" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.canalplus.order" default="4"/>
 
             <setting label="France 5" type="bool" id="channels.fr.pluzz.france5" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france5.order" default="5"/>
@@ -43,8 +43,8 @@
             <setting label="M6" type="bool" id="channels.fr.6play.m6" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.m6.order" default="6"/>
 
-            <setting label="C8" type="bool" id="channels.fr.groupecanal.c8" default="true" visible="eq(-13,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.c8.order" default="7"/>
+            <setting label="C8" type="bool" id="channels.fr.mycanal.c8" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.c8.order" default="7"/>
 
             <setting label="W9" type="bool" id="channels.fr.6play.w9" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.w9.order" default="8"/>
@@ -64,11 +64,11 @@
             <setting label="BFM TV" type="bool" id="channels.fr.bfmtv.bfmtv" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.bfmtv.order" default="13"/>
 
-            <setting label="CNews" type="bool" id="channels.fr.groupecanal.cnews" default="true" visible="eq(-27,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cnews.order" default="14"/>
+            <setting label="CNews" type="bool" id="channels.fr.cnews.cnews" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.cnews.cnews.order" default="14"/>
 
-            <setting label="CStar" type="bool" id="channels.fr.groupecanal.cstar" default="true" visible="eq(-29,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cstar.order" default="15"/>
+            <setting label="CStar" type="bool" id="channels.fr.mycanal.cstar" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.cstar.order" default="15"/>
 
             <setting label="Gulli" type="bool" id="channels.fr.gulli.gulli" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.gulli.gulli.order" default="16"/>
@@ -163,11 +163,29 @@
             <setting label="IRL (francetv)" type="bool" id="channels.fr.pluzz.irl" default="true" visible="eq(-91,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.irl.order" default="46"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-93,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="47"/>
+            <setting label="Seasons" type="bool" id="channels.fr.mycanal.seasons" default="true" visible="eq(-93,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.seasons.order" default="47"/>
 
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-95,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="48"/>-->
+            <setting label="Comédie +" type="bool" id="channels.fr.mycanal.comedie" default="true" visible="eq(-95,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.comedie.order" default="48"/>
+
+            <setting label="Les chaînes planètes +" type="bool" id="channels.fr.mycanal.les-chaines-planete" default="true" visible="eq(-97,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.les-chaines-planete.order" default="49"/>
+
+            <setting label="Golf +" type="bool" id="channels.fr.mycanal.golfplus" default="true" visible="eq(-99,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.golfplus.order" default="50"/>
+
+            <setting label="Ciné +" type="bool" id="channels.fr.mycanal.cineplus" default="true" visible="eq(-101,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.cineplus.order" default="51"/>
+
+            <setting label="INFOSPORT+" type="bool" id="channels.fr.mycanal.infosportplus" default="true" visible="eq(-103,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.infosportplus.order" default="52"/>
+
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-105,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="53"/>
+
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-107,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="54"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.8~beta018"
+       version="0.1.8~beta019"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -54,6 +54,14 @@
 [Fix] Playing some youtube videos - Website Allocine (wwark)
 [Fix/Refactoring] Live TV BFMTV and move brightcove code to resolver.py - channel BFMTV (wwark)
 [Remove] Live TV (not working) - Channel Canal+, c8, cstar (wwark)
+[Move] Cnews code to cnews.py - Replay and Live TV Cnews (wwark)
+[Rework] Replay - Channel Canal+, C8, Cstar (wwark)
+[Add Channel] Seasons (wwark)
+[Add Channel] Comédie + (wwark)
+[Add Channel] Les chaînes planètes + (wwark)
+[Add Channel] Golf + (wwark)
+[Add Channel] Ciné + (wwark)
+[Add Channel] INFOSPORT+ (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

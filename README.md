@@ -77,6 +77,12 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Histoire *(Replay)*
 - TV Breizh *(Replay)*
 - Ushuaïa TV *(Replay)*
+- Seasons *(Replay)*
+- Comédie + *(Replay)*
+- Les chaînes planètes + *(Replay)*
+- Golf + *(Replay)*
+- Ciné + *(Replay)*
+- INFOSPORT+ *(Replay)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
