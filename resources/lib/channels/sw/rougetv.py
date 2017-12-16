@@ -191,7 +191,7 @@ def list_live(params):
 
     live_html = utils.get_webcontent(URL_LIVE)
     live_id = re.compile(
-        '\&player=(.*?)[\"\']').findall(live_html)[0]
+        'name=rougetv_2015\&player=(.*?)[\"\']').findall(live_html)[0]
     live_json = utils.get_webcontent(URL_LIVE_JSON % live_id)
     lives_json_parser = json.loads(live_json)
 
