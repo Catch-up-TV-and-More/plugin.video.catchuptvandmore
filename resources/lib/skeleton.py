@@ -23,6 +23,7 @@
 
 CATEGORIES = {
     'main_menu.be': 'Belgian channels',
+    'main_menu.ca': 'Canadian channels',
     'main_menu.fr': 'French channels',
     'main_menu.jp': 'Japanese channels',
     'main_menu.sw': 'Switzerland channels',
@@ -39,7 +40,13 @@ CHANNELS = {
         'channels.be.brf.brf': 'BRF Mediathek',
         'channels.be.rtl.rtltvi': 'RTL-TVI',
         'channels.be.rtl.plugrtl': 'PLUG RTL',
-        'channels.be.rtl.clubrtl': 'CLUB RTL'
+        'channels.be.rtl.clubrtl': 'CLUB RTL',
+        'channels.be.vrt.vrt': 'VRT NU'
+    },
+
+    'main_menu.ca': {
+        'channels.ca.tv5.tv5': 'TV5',
+        'channels.ca.tv5.unis': 'UNIS'
     },
 
     'main_menu.sw': {
@@ -47,25 +54,26 @@ CHANNELS = {
         'channels.sw.srgssr.rsi': 'RSI',
         'channels.sw.srgssr.srf': 'SRF',
         'channels.sw.srgssr.rtr': 'RTR',
-        'channels.sw.srgssr.swissinfo': 'SWISSINFO'
+        'channels.sw.srgssr.swissinfo': 'SWISSINFO',
+        'channels.sw.rougetv.rougetv': 'Rouge TV'
     },
 
     'main_menu.fr': {
         'channels.fr.tf1.tf1': 'TF1',
         'channels.fr.pluzz.france2': 'France 2',
         'channels.fr.pluzz.france3': 'France 3',
-        'channels.fr.groupecanal.cplus': 'Canal +',
+        'channels.fr.mycanal.canalplus': 'Canal +',
         'channels.fr.pluzz.france5': 'France 5',
         'channels.fr.6play.m6': 'M6',
-        'channels.fr.groupecanal.c8': 'C8',
+        'channels.fr.mycanal.c8': 'C8',
         'channels.fr.6play.w9': 'W9',
         'channels.fr.tf1.tmc': 'TMC',
         'channels.fr.tf1.nt1': 'NT1',
         'channels.fr.nrj.nrj12': 'NRJ 12',
         'channels.fr.pluzz.france4': 'France 4',
         'channels.fr.bfmtv.bfmtv': 'BFM TV',
-        'channels.fr.groupecanal.cnews': 'CNews',
-        'channels.fr.groupecanal.cstar': 'CStar',
+        'channels.fr.cnews.cnews': 'CNews',
+        'channels.fr.mycanal.cstar': 'CStar',
         'channels.fr.gulli.gulli': 'Gulli',
         'channels.fr.pluzz.franceo': 'France Ô',
         'channels.fr.tf1.hd1': 'HD1',
@@ -91,7 +99,18 @@ CHANNELS = {
         'channels.fr.6play.comedy': 'Comic (6play)',
         'channels.fr.publicsenat.publicsenat': 'Public Sénat',
         'channels.fr.pluzz.france3regions': 'France 3 Régions',
-        'channels.fr.pluzz.francetvsport': 'France TV Sport (francetv)'
+        'channels.fr.pluzz.francetvsport': 'France TV Sport (francetv)',
+        'channels.fr.tf1thematiques.histoire': 'Histoire',
+        'channels.fr.tf1thematiques.tvbreizh': 'TV Breizh',
+        'channels.fr.tf1thematiques.ushuaiatv': 'Ushuaïa TV',
+        'channels.fr.pluzz.studio-4': 'Studio 4 (francetv)',
+        'channels.fr.pluzz.irl': 'IRL (francetv)',
+        'channels.fr.mycanal.seasons': 'Seasons',
+        'channels.fr.mycanal.comedie': 'Comédie +',
+        'channels.fr.mycanal.les-chaines-planete': 'Les chaînes planètes +',
+        'channels.fr.mycanal.golfplus': 'Golf +',
+        'channels.fr.mycanal.cineplus': 'Ciné +',
+        'channels.fr.mycanal.infosportplus': 'INFOSPORT+'
     },
 
     'main_menu.jp': {
@@ -105,7 +124,9 @@ CHANNELS = {
         'channels.uk.uktvplay.dave': 'Dave',
         'channels.uk.uktvplay.really': 'Really',
         'channels.uk.uktvplay.yesterday': 'Yesterday',
-        'channels.uk.uktvplay.drama': 'Drama'
+        'channels.uk.uktvplay.drama': 'Drama',
+        'channels.uk.sky.skynews': 'Sky News',
+        'channels.uk.sky.skysports': 'Sky sports'
     },
 
     'main_menu.wo': {
@@ -124,6 +145,8 @@ CHANNELS = {
         'channels.ws.taratata.taratata': 'Taratata',
         'channels.ws.noob.noob': 'Noob TV',
         'channels.ws.culturepub.culturepub': 'Culturepub',
-        'channels.ws.autoplus.autoplus': 'Auto Plus'
+        'channels.ws.autoplus.autoplus': 'Auto Plus',
+        'channels.ws.notrehistoirech.notrehistoirech': 'Notre Histoire.ch',
+        'channels.ws.30millionsdamis.30millionsdamis': '30 Millions d\'Amis'
     }
 }

@@ -87,6 +87,10 @@ msgctxt "#30027"
 msgid "Connect VPN"
 msgstr "Connecter le VPN"
 
+msgctxt "#30028"
+msgid "Canadian channels"
+msgstr "Chaînes canadiènnes"
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"
@@ -192,6 +196,11 @@ msgstr "Le flux vidéo n'existe plus"
 msgctxt "#30112"
 msgid "Video with an account needed"
 msgstr "Vidéo avec un compte requis"
+
+msgctxt "#30113"
+msgid "Authentication failed"
+msgstr "Authentification échouée"
+
 # Download (from 30200 to 30240)
 
 msgctxt "#30200"

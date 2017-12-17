@@ -457,16 +457,6 @@ def get_video_url(params):
 
         session_requests = requests.session()
 
-        # Build PAYLOAD
-        """
-        payload = {
-            'email': common.PLUGIN.get_setting(
-                params.channel_id.rsplit('.', 1)[0] + '.login'),
-            'password': common.PLUGIN.get_setting(
-                params.channel_id.rsplit('.', 1)[0] + '.password')
-        }
-        result = session_requests.post(URL_AUTHENTICATE,payload)
-        """
         result_2 = session_requests.get(
             URL_BRIGHTCOVE_API % (params.data_account, params.data_vidid),
             headers={'Accept': 'application/json;pk=%s' % get_policy_key(

@@ -21,7 +21,6 @@
 '''
 
 import ast
-import json
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
@@ -29,11 +28,8 @@ from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# Get Image KO there is this caracter '|' in the url (not working in Kodi)
-# 21:10:18.351 T:18446744071951350064   DEBUG: GetImageHash - unable to stat url https://img.autoplus.fr/video/2017/11/13/1522171/816|612|JLM.jpg?r
-# 21:10:18.623 T:18446744071937915184   DEBUG: CCurlFile::GetMimeType - https://img.autoplus.fr/video/2017/11/13/1522171/816|612|JLM.jpg?r -> failed
 
-URL_ROOT = 'https://video.autoplus.fr'
+URL_ROOT = 'http://www.30millionsdamis.fr'
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -59,23 +55,32 @@ def root(params):
     """Add modes in the listing"""
     modes = []
 
-    category_title = _('All videos')
+    categories_html = utils.get_webcontent(
+        URL_ROOT + '/actualites/videos')
+    categories_soup = bs(categories_html, 'html.parser')
+    categories = categories_soup.find(
+            'select', class_='selecttourl').find_all(
+            'option')
 
-    modes.append({
-        'label': category_title,
-        'url': common.PLUGIN.get_url(
-            action='channel_entry',
-            next='list_videos_1',
-            title=category_title,
-            page='1',
-            window_title=category_title
-        )
-    })
+    for category in categories:
+        category_title = category.get_text().strip().encode('utf-8')
+        category_url = category.get('value')
+
+        modes.append({
+            'label': category_title,
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='list_videos_1',
+                title=category_title,
+                category_url=category_url,
+                page='0',
+                window_title=category_title
+            )
+        })
 
     return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_LABEL,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         category=common.get_window_title()
@@ -96,69 +101,26 @@ def list_videos(params):
 
     if params.next == 'list_videos_1':
 
-        replay_episodes_html = utils.get_webcontent(
-            URL_ROOT + '/?page=%s' % params.page)
+        if int(params.page) > 0:
+            replay_episodes_html = utils.get_webcontent(
+                params.category_url + 'actu-page/%s/' % params.page)
+        else:
+            replay_episodes_html = utils.get_webcontent(
+                params.category_url)
         replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
 
-        # Get Video First Page
-        if replay_episodes_soup.find('iframe'):
-            url_first_video = replay_episodes_soup.find(
-                'iframe').get('src')
-            info_first_video = utils.get_webcontent(url_first_video)
-            info_first_video_json = re.compile(
-                'config = (.*?)};').findall(info_first_video)[0]
-            print 'info_first_video_json : ' + info_first_video_json + '}'
-            info_first_video_jsonparser = json.loads(
-                info_first_video_json + '}')
-
-            video_title = info_first_video_jsonparser["metadata"]["title"]
-            video_url = info_first_video_jsonparser["metadata"]["url"] + '?'
-            video_img = info_first_video_jsonparser["metadata"]["poster_url"]
-            video_duration = 0
-
-            info = {
-                'video': {
-                    'title': video_title,
-                    # 'aired': aired,
-                    # 'date': date,
-                    'duration': video_duration,
-                    # 'plot': video_plot,
-                    # 'year': year,
-                    'mediatype': 'tvshow'
-                }
-            }
-
-            download_video = (
-                _('Download'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='download_video',
-                    video_url=video_url) + ')'
-            )
-            context_menu = []
-            context_menu.append(download_video)
-
-            videos.append({
-                'label': video_title,
-                'thumb': video_img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_r',
-                    video_url=video_url
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
-            })
-
         episodes = replay_episodes_soup.find_all(
-            'div', class_='col-xs-6 col-sm-12')
+            'div', class_='news-latest')
 
         for episode in episodes:
-            video_title = episode.find('img').get('alt')
-            video_url = episode.find('a').get('href')
-            video_img = episode.find(
-                'img').get('src').replace('|','%7C')
+
+            video_title = episode.find(
+                'a').get('title')
+            video_url = URL_ROOT + episode.find('a').get('href')
+            video_img = URL_ROOT + episode.find('img').get('src')
             video_duration = 0
+            video_plot = episode.find(
+                'p').get_text().strip().encode('utf-8')
 
             info = {
                 'video': {
@@ -166,7 +128,7 @@ def list_videos(params):
                     # 'aired': aired,
                     # 'date': date,
                     'duration': video_duration,
-                    # 'plot': video_plot,
+                    'plot': video_plot,
                     # 'year': year,
                     'mediatype': 'tvshow'
                 }
@@ -201,6 +163,7 @@ def list_videos(params):
                 action='channel_entry',
                 next='list_videos_1',
                 page=str(int(params.page) + 1),
+                category_url=params.category_url,
                 update_listing=True,
                 previous_listing=str(videos)
             )
@@ -220,13 +183,11 @@ def list_videos(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-
     video_html = utils.get_webcontent(params.video_url)
-    # Get DailyMotion Id Video
     video_id = re.compile(
-        r'embed/video/(.*?)[\"\?]').findall(
-        video_html)[0]
-    if params.next == 'play_r':
-        return resolver.get_stream_dailymotion(video_id, False)
-    elif params.next == 'download_video':
-        return resolver.get_stream_dailymotion(video_id, True)
+        r'www.youtube.com/embed/(.*?)[\?\"]').findall(video_html)[0]
+
+    if params.next == 'download_video':
+        return resolver.get_stream_youtube(video_id, True)
+    else:
+        return resolver.get_stream_youtube(video_id, False)

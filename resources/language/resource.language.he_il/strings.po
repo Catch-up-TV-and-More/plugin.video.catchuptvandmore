@@ -87,6 +87,10 @@ msgctxt "#30027"
 msgid "Connect VPN"
 msgstr ""
 
+msgctxt "#30028"
+msgid "Canadian channels"
+msgstr ""
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"
@@ -192,6 +196,10 @@ msgstr "הזרמת הווידאו כבר לא קיימת"
 msgctxt "#30112"
 msgid "Video with an account needed"
 msgstr "נדרש וידאו שמקושר לחשבון"
+
+msgctxt "#30113"
+msgid "Authentication failed"
+msgstr ""
 
 # Download (from 30200 to 30240)
 msgctxt "#30200"

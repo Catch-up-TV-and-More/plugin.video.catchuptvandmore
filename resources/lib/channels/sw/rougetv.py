@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
     Catch-up TV & More
     Copyright (C) 2017  SylvainCecchetto
 
@@ -18,17 +18,16 @@
     You should have received a copy of the GNU General Public License along
     with Catch-up TV & More; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-'''
+"""
 
+import json
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
-from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-
-URL_ROOT = 'http://noob-tv.com'
+# Add http://www.rougefm.com/rouge-play/
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -36,53 +35,67 @@ URL_ROOT = 'http://noob-tv.com'
 _ = common.ADDON.initialize_gettext()
 
 
+URL_ROOT = 'http://www.rougefm.com'
+# (www or play), channel_name
+
+# Replay
+URL_REPLAY = URL_ROOT + '/rouge-tv/'
+
+# Live
+URL_LIVE = URL_ROOT + '/rouge-tv/'
+# channel_name
+
+URL_LIVE_JSON = 'http://livevideo.infomaniak.com/player_config/%s.json'
+# IdLive
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
-    if 'list_shows' in params.next:
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     return None
 
 
-CATEGORIES = {
-    'Noob': URL_ROOT + '/videos.php?id=1',
-    'WarpZone Project': URL_ROOT + '/videos.php?id=4',
-    'Blog de Gaea': URL_ROOT + '/videos.php?id=2',
-    'Funglisoft': URL_ROOT + '/videos.php?id=6',
-    'Flander''s Company': URL_ROOT + '/videos.php?id=7',
-    'Damned 7': URL_ROOT + '/videos.php?id=8',
-    'IRL': URL_ROOT + '/videos.php?id=9',
-    'Emissions': URL_ROOT + '/videos.php?id=5'
-}
-
-
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
-    """Add modes in the listing"""
+    """Add Replay and Live in the listing"""
     modes = []
 
-    for category_name, category_url in CATEGORIES.iteritems():
-        modes.append({
-            'label': category_name,
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                category_url=category_url,
-                category_name=category_name,
-                next='list_shows_1',
-                window_title=category_name
-            )
-        })
+    # Add Replay
+    modes.append({
+        'label': 'Replay',
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='list_videos_1',
+            page='0',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name
+        )
+    })
+
+    # Add Live
+    modes.append({
+        'label': _('Live TV'),
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='live_cat',
+            category='%s Live TV' % params.channel_name.upper(),
+            window_title='%s Live TV' % params.channel_name
+        )
+    })
 
     return common.PLUGIN.create_listing(
         modes,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_LABEL,
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
         category=common.get_window_title()
     )
@@ -90,38 +103,7 @@ def root(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
-    """Build categories listing"""
-    shows = []
-
-    list_shows_html = utils.get_webcontent(params.category_url)
-    list_shows_soup = bs(list_shows_html, 'html.parser')
-    list_shows = list_shows_soup.find(
-        'p', class_='mod-articles-category-introtext').find_all('a')
-
-    for show in list_shows:
-
-        show_title = show.get_text().encode('utf-8')
-        show_url = URL_ROOT + '/' + show.get('href').encode('utf-8')
-
-        shows.append({
-            'label': show_title,
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='list_videos_1',
-                title=show_title,
-                category_url=show_url,
-                window_title=show_title
-            )
-        })
-
-    return common.PLUGIN.create_listing(
-        shows,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_LABEL,
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
-        ),
-        category=common.get_window_title()
-    )
+    return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -130,25 +112,21 @@ def list_videos(params):
     videos = []
 
     if params.next == 'list_videos_1':
-
-        replay_episodes_html = utils.get_webcontent(
-            params.category_url)
-        replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-
+        file_path = utils.get_webcontent(URL_REPLAY)
+        replay_episodes_soup = bs(file_path, 'html.parser')
         episodes = replay_episodes_soup.find_all(
-            'div', class_='showcategory')
+            'div', class_='modal fade replaytv_modal')
 
         for episode in episodes:
 
             video_title = episode.find(
-                'h5').find('a').get_text().strip()
-            video_url = URL_ROOT + '/' + episode.find('a').get('href')
-            video_img = URL_ROOT + '/' + episode.find('img').get('src')
+                'h4', class_='m-t-30').get_text().strip()
             video_duration = 0
-            video_plot = episode.find(
-                'p',
-                class_='mod-articles-category-introtext'
-            ).get_text().strip().encode('utf-8')
+            video_plot = episode.find('p').get_text().strip()
+            video_url = episode.find(
+                'div', class_='replaytv_video').get('video-src')
+            # TO DO Get IMG
+            video_img = ''
 
             info = {
                 'video': {
@@ -174,6 +152,7 @@ def list_videos(params):
             videos.append({
                 'label': video_title,
                 'thumb': video_img,
+                'fanart': video_img,
                 'url': common.PLUGIN.get_url(
                     action='channel_entry',
                     next='play_r',
@@ -187,11 +166,65 @@ def list_videos(params):
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_DURATION,
             common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
+            common.sp.xbmcplugin.SORT_METHOD_GENRE,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
-        update_listing='update_listing' in params,
+        category=common.get_window_title()
+    )
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_live(params):
+    """Build live listing"""
+    lives = []
+
+    title = ''
+    # subtitle = ' - '
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
+
+    live_html = utils.get_webcontent(URL_LIVE)
+    live_id = re.compile(
+        'name=rougetv_2015\&player=(.*?)[\"\']').findall(live_html)[0]
+    live_json = utils.get_webcontent(URL_LIVE_JSON % live_id)
+    lives_json_parser = json.loads(live_json)
+
+    url_live = 'http://' + lives_json_parser["sPlaylist"]
+    img = lives_json_parser["preloadimg"]
+    title = lives_json_parser["streamname"]
+
+    info = {
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
+    }
+
+    lives.append({
+        'label': title,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='play_l',
+            url_live=url_live,
+        ),
+        'is_playable': True,
+        'info': info
+    })
+
+    return common.PLUGIN.create_listing(
+        lives,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
         category=common.get_window_title()
     )
 
@@ -199,11 +232,10 @@ def list_videos(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    video_html = utils.get_webcontent(params.video_url)
-    video_id = re.compile(
-        r'www.youtube.com/embed/(.*?)\?').findall(video_html)[0]
-
-    if params.next == 'download_video':
-        return resolver.get_stream_youtube(video_id, True)
-    else:
-        return resolver.get_stream_youtube(video_id, False)
+    if params.next == 'play_r' or params.next == 'download_video':
+        file_path = utils.get_webcontent(params.video_url)
+        url_video = re.compile(
+            'source src=\"(.*?)\"').findall(file_path)[0]
+        return url_video
+    elif params.next == 'play_l':
+        return params.url_live

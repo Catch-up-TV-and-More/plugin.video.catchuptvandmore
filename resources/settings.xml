@@ -12,6 +12,7 @@
         <setting label="30024" type="bool" id="main_menu.uk" default="true"/>
         <setting label="30025" type="bool" id="main_menu.wo" default="true"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true"/>
+        <setting label="30028" type="bool" id="main_menu.ca" default="true"/>
     </category>
 
 
@@ -33,8 +34,8 @@
             <setting label="France 3" type="bool" id="channels.fr.pluzz.france3" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3.order" default="3"/>
 
-            <setting label="Canal +" type="bool" id="channels.fr.groupecanal.cplus" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cplus.order" default="4"/>
+            <setting label="Canal +" type="bool" id="channels.fr.mycanal.canalplus" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.canalplus.order" default="4"/>
 
             <setting label="France 5" type="bool" id="channels.fr.pluzz.france5" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.france5.order" default="5"/>
@@ -42,8 +43,8 @@
             <setting label="M6" type="bool" id="channels.fr.6play.m6" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.m6.order" default="6"/>
 
-            <setting label="C8" type="bool" id="channels.fr.groupecanal.c8" default="true" visible="eq(-13,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.c8.order" default="7"/>
+            <setting label="C8" type="bool" id="channels.fr.mycanal.c8" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.c8.order" default="7"/>
 
             <setting label="W9" type="bool" id="channels.fr.6play.w9" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.6play.w9.order" default="8"/>
@@ -63,11 +64,11 @@
             <setting label="BFM TV" type="bool" id="channels.fr.bfmtv.bfmtv" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.bfmtv.bfmtv.order" default="13"/>
 
-            <setting label="CNews" type="bool" id="channels.fr.groupecanal.cnews" default="true" visible="eq(-27,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cnews.order" default="14"/>
+            <setting label="CNews" type="bool" id="channels.fr.cnews.cnews" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.cnews.cnews.order" default="14"/>
 
-            <setting label="CStar" type="bool" id="channels.fr.groupecanal.cstar" default="true" visible="eq(-29,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.groupecanal.cstar.order" default="15"/>
+            <setting label="CStar" type="bool" id="channels.fr.mycanal.cstar" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.cstar.order" default="15"/>
 
             <setting label="Gulli" type="bool" id="channels.fr.gulli.gulli" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.gulli.gulli.order" default="16"/>
@@ -147,11 +148,44 @@
             <setting label="France TV Sport (francetv)" type="bool" id="channels.fr.pluzz.francetvsport" default="true" visible="eq(-81,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.francetvsport.order" default="41"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-83,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="42"/>
+            <setting label="Histoire" type="bool" id="channels.fr.tf1thematiques.histoire" default="true" visible="eq(-83,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1thematiques.histoire.order" default="42"/>
 
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-85,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="43"/>-->
+            <setting label="TV Breizh" type="bool" id="channels.fr.tf1thematiques.tvbreizh" default="true" visible="eq(-85,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1thematiques.tvbreizh.order" default="43"/>
+
+            <setting label="Ushuaïa TV" type="bool" id="channels.fr.tf1thematiques.ushuaiatv" default="true" visible="eq(-87,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.tf1thematiques.ushuaiatv.order" default="44"/>
+
+            <setting label="Studio 4 (francetv)" type="bool" id="channels.fr.pluzz.studio-4" default="true" visible="eq(-89,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.studio-4.order" default="45"/>
+
+            <setting label="IRL (francetv)" type="bool" id="channels.fr.pluzz.irl" default="true" visible="eq(-91,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.irl.order" default="46"/>
+
+            <setting label="Seasons" type="bool" id="channels.fr.mycanal.seasons" default="true" visible="eq(-93,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.seasons.order" default="47"/>
+
+            <setting label="Comédie +" type="bool" id="channels.fr.mycanal.comedie" default="true" visible="eq(-95,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.comedie.order" default="48"/>
+
+            <setting label="Les chaînes planètes +" type="bool" id="channels.fr.mycanal.les-chaines-planete" default="true" visible="eq(-97,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.les-chaines-planete.order" default="49"/>
+
+            <setting label="Golf +" type="bool" id="channels.fr.mycanal.golfplus" default="true" visible="eq(-99,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.golfplus.order" default="50"/>
+
+            <setting label="Ciné +" type="bool" id="channels.fr.mycanal.cineplus" default="true" visible="eq(-101,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.cineplus.order" default="51"/>
+
+            <setting label="INFOSPORT+" type="bool" id="channels.fr.mycanal.infosportplus" default="true" visible="eq(-103,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.mycanal.infosportplus.order" default="52"/>
+
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-105,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="53"/>
+
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-107,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="54"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -175,6 +209,9 @@
             <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="6"/>
 
+            <setting label="VRT NU" type="bool" id="channels.be.vrt.vrt" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.vrt.order" default="7"/>
+
         <setting label="" type="number" visible="false" id="main_menu.sw.order" default="3"/>
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.sw" default="true" visible="false"/>
@@ -193,6 +230,9 @@
 
             <setting label="SWISSINFO" type="bool" id="channels.sw.srgssr.swissinfo" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.sw.srgssr.swissinfo.order" default="5"/>
+
+            <setting label="Rouge TV" type="bool" id="channels.sw.rougetv.rougetv" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.sw.rougetv.rougetv.order" default="6"/>
 
         <setting label="" type="number" visible="false" id="main_menu.jp.order" default="4"/>
         <setting label="30022" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -225,6 +265,12 @@
 
             <setting label="Drama" type="bool" id="channels.uk.uktvplay.drama" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="channels.uk.uktvplay.drama.order" default="5"/>
+
+            <setting label="Sky News" type="bool" id="channels.uk.sky.skynews" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.sky.skynews.order" default="6"/>
+
+            <setting label="Sky sports" type="bool" id="channels.uk.sky.skysports" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.uk.sky.skysports.order" default="7"/>
 
         <setting label="" type="number" visible="false" id="main_menu.wo.order" default="6"/>
         <setting label="30025" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -273,6 +319,22 @@
             <setting label="Auto Plus" type="bool" id="channels.ws.autoplus.autoplus" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.autoplus.autoplus.order" default="6"/>
 
+            <setting label="Notre Histoire.ch" type="bool" id="channels.ws.notrehistoirech.notrehistoirech" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.notrehistoirech.notrehistoirech.order" default="7"/>
+
+            <setting label="30 Millions d'Amis" type="bool" id="channels.ws.30millionsdamis.30millionsdamis" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.30millionsdamis.30millionsdamis.order" default="8"/>
+
+        <setting label="" type="number" visible="false" id="main_menu.ca.order" default="8"/>
+        <setting label="30028" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30028" type="bool" id="main_menu.ca" default="true" visible="false"/>
+
+            <setting label="TV5" type="bool" id="channels.ca.tv5.tv5" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ca.tv5.tv5.order" default="1"/>
+
+            <setting label="UNIS" type="bool" id="channels.ca.tv5.unis" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ca.tv5.unis.order" default="2"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->
@@ -308,11 +370,11 @@
             <setting label="NRJ Login" type="text" id="channels.fr.nrj.login" visible="eq(-1,true)" defaut=""/>
             <setting label="NRJ Password" type="text" id="channels.fr.nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
-        <setting label="30024" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="30024" type="bool" id="main_menu.uk" default="true" visible="false"/>
+        <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
 
-            <setting label="UKTVPlay Login" type="text" id="channels.uk.uktvplay.login" visible="eq(-1,true)" defaut=""/>
-            <setting label="UKTVPlay Password" type="text" id="channels.uk.uktvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+            <setting label="VRT NU Login" type="text" id="channels.be.vrt.login" visible="eq(-1,true)" defaut=""/>
+            <setting label="VRT NU Password" type="text" id="channels.be.vrt.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
     </category>
 

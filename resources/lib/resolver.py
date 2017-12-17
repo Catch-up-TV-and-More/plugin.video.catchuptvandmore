@@ -24,11 +24,13 @@ import json
 import re
 from resources.lib import utils
 from resources.lib import common
+from youtube_dl import YoutubeDL
 
 # TO DO
 # Dailymotion on JARVIS
 # Quality VIMEO
 # Download Mode with Facebook (the video has no audio)
+# Quality Youtube
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -46,6 +48,17 @@ URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s'
 URL_FACEBOOK_BY_ID = 'https://www.facebook.com/allocine/videos/%s'
 # Video_id
 
+URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
+# Video_id
+
+URL_BRIGHTCOVE_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.min.js'
+# AccountId, PlayerId
+
+URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/'\
+                            'playback/v1/accounts/%s/videos/%s'
+# AccountId, VideoId
+
+# DailyMotion Part
 def get_stream_dailymotion(video_id, isDownloadVideo):
 
     # Sous Jarvis nous avons ces éléments qui ne fonctionnent pas :
@@ -136,6 +149,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
                     break
                 return url
 
+# Vimeo Part
 def get_stream_vimeo(video_id, isDownloadVideo):
 
     url_vimeo = URL_VIMEO_BY_ID % (video_id)
@@ -150,6 +164,7 @@ def get_stream_vimeo(video_id, isDownloadVideo):
     default_cdn = hls_json["default_cdn"]
     return hls_json["cdns"][default_cdn]["url"]
 
+# Facebook Part
 def get_stream_facebook(video_id, isDownloadVideo):
 
     url_facebook = URL_FACEBOOK_BY_ID % (video_id)
@@ -190,3 +205,44 @@ def get_stream_facebook(video_id, isDownloadVideo):
         return re.compile(
             r'sd_src_no_ratelimit:"(.*?)"').findall(
             html_facebook)[0]
+
+# Youtube Part
+def get_stream_youtube(video_id, isDownloadVideo):
+
+    url_youtube = URL_YOUTUBE % video_id
+
+    if isDownloadVideo == True:
+        return url_youtube
+
+    ydl = YoutubeDL()
+    ydl.add_default_info_extractors()
+    with ydl:
+        result = ydl.extract_info(url_youtube,
+            download=False)
+        for format_video in result['formats']:
+            url_live = format_video['url']
+    return url_live
+
+# BRIGHTCOVE Part
+def get_brightcove_policy_key(data_account, data_player):
+    """Get policy key"""
+    file_js = utils.get_webcontent(
+        URL_BRIGHTCOVE_POLICY_KEY % (data_account, data_player))
+    return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
+
+def get_brightcove_video_json(data_account, data_player, data_video_id):
+
+    # Method to get JSON from 'edge.api.brightcove.com'
+    file_json = utils.download_catalog(
+        URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
+        '%s_%s_replay.json' % (data_account, data_video_id),
+        force_dl=False,
+        request_type='get',
+        post_dic={},
+        random_ua=False,
+        specific_headers={'Accept': 'application/json;pk=%s' % (
+            get_brightcove_policy_key(data_account, data_player))},
+        params={})
+    video_json = open(file_json).read()
+    json_parser = json.loads(video_json)
+    return json_parser

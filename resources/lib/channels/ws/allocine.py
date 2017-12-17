@@ -25,7 +25,6 @@ import json
 import re
 import requests
 from bs4 import BeautifulSoup as bs
-from youtube_dl import YoutubeDL
 from resources.lib import utils
 from resources.lib import resolver
 from resources.lib import common
@@ -42,9 +41,6 @@ URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
 # videoId, PARTENER
 
 PARTNER = 'YW5kcm9pZC12Mg'
-
-URL_YT = 'https://www.youtube.com/watch?v=%s'
-# Video_id
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -671,16 +667,14 @@ def get_video_url(params):
             # Case Youtube
             if 'youtube' in url_video_resolver:
                 video_id = re.compile(
-                    'www.youtube.com/embed/(.*?)"').findall(
+                    'www.youtube.com/embed/(.*?)[\?\"\&]').findall(
                     url_video_resolver)[0]
-                url_ytdl = URL_YT % video_id
-                ydl = YoutubeDL()
-                ydl.add_default_info_extractors()
-                with ydl:
-                    result = ydl.extract_info(url_ytdl, download=False)
-                    for format_video in result['formats']:
-                        url = format_video['url']
-                return url
+                if params.next == 'download_video':
+                    return resolver.get_stream_youtube(
+                        video_id, True)
+                else:
+                    return resolver.get_stream_youtube(
+                        video_id, False)
             # Case DailyMotion
             elif 'dailymotion' in url_video_resolver:
                 video_id = re.compile(
@@ -719,13 +713,15 @@ def get_video_url(params):
         else:
             # Case Youtube
             if 'youtube' in url_video_embeded:
-                ydl = YoutubeDL()
-                ydl.add_default_info_extractors()
-                with ydl:
-                    result = ydl.extract_info(url_video_embeded, download=False)
-                    for format_video in result['formats']:
-                        url = format_video['url']
-                return url
+                video_id = re.compile(
+                    'www.youtube.com/embed/(.*?)[\?\"\&]').findall(
+                    url_video_embeded)[0]
+                if params.next == 'download_video':
+                    return resolver.get_stream_youtube(
+                        video_id, True)
+                else:
+                    return resolver.get_stream_youtube(
+                        video_id, False)
             # TO DO ? (return an error)
             else:
                 return ''

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.7"
+       version="0.1.8"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,39 +30,38 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.7]
-[Add Website] Noob TV (wwark)
-[Add Website] Culturepub (wwark, SylvainCecchetto)
-[Add Channel] TV5Monde Afrique (wwark)
-[Fix] some fixes for Replay LCI (wwark)
-[Move] Arte, Euronews, France 24 to International channels (wwark)
-[Move] NHK World to International channels (wwark)
-[Add WebTV] TBS ニュース (JP) (wwark)
-[Add Channel - Live TV] RTS (SW) (wwark)
-[Add Channel - Live TV] RSI (SW) (wwark)
-[Add Channel - Live TV] RTR (SW) (wwark)
-[Add Channel - Live TV] SRF (SW) (wwark)
-[Add WebTV] SWISSINFO (SW) (wwark)
-[Improvement] Add categories for RTBF Auvio (BE) (wwark)
-[Feature] Integrated OpenVPN client (BETA) (SylvainCecchetto, brianhornsby)
-[Change] Convert all fanart from PNG to JPG (wwark)
-[Add Channel - Live TV] TV5Monde (wwark)
-[Add Channel - Live TV] Tivi 5Monde (wwark)
-[Feature] Clear cache button (SylvainCecchetto)
-[Fix] No sound live TV FranceTelevision on Jarvis (SylvainCecchetto)
-[Fix] France 3 Région and Multi-audio FranceTelevision for Krypton and Next Version (SylvainCecchetto, wwark)
-[Add Website] Auto Plus (wwark)
-[Change] Move dailymotion code from Auto plus, Allocine, PublicSenat, LCP, LEquipe and Numero 23 to resolver.y (wwark)
-[Fix] Dailymotion and Jarvis : Can't play M3U8 (so Live TV KO and some video don't work) but if there is some MP4 it is playable in Jarvis (wwark)
-[Change] Move vimeo code from allocine to resolver.py (wwark)
-[Change] Move Facebook code from allocine to resolver.py (wwark)
-[Fix] Replay emission equipe de france (use id data-watid more reliable) - Group TF1 (wwark)
-[Improvement] Add Quality Mode and 720p working on Jarvis - Group TF1 (wwark)
-[Improvement] 720p for Live TV - Group TF1 (wwark)
-[Fix] Live TV without episode value - Group TF1 (wwark)
-[Fix] Replay - Channel BRF (BE) (wwark)
-[Fix] Replay - Group RTL (BE) (wwark)
-[Fix] Live TV - LCP, Public Senat (wwark)
+[Version 0.1.8]
+[Add Channel - Live TV] Rouge TV (CH) (wwark)
+[Add Channel] Histoire (wwark)
+[Add Channel] TV Breizh (wwark)
+[Add Channel] Ushuaïa TV (wwark)
+[Add Channel - Live TV] Sky News (UK) (wwark)
+[Add WebTV] Sky sports (UK) (wwark)
+[Change] Move youtube code to resoler.py for Allociné, Noob TV, Taratata and Teteaclaques (wwark)
+[Add Website] Notrehistoire.ch (CH) (wwark)
+[Add WebTV] Studio 4 (francetv) (wwark)
+[Add WebTV] IRL (francetv) (wwark)
+[Add Channel - Live TV] VRT NU (BE) (wwark)
+[Improvement] Send a notification when authentication failed - NRJ12 and Cherie25 Live TV (wwark)
+[Remove] Authentication - UKTVPlay channels (UK) (wwark)
+[Add Website] 30 Millions d'Amis (wwark)
+[Fix] Change json api - Channels RTS, SRF, ... (CH) (wwark)
+[Fix] __gettext__.pcl without 'hash' value - simpleplugin.py (wwark)
+[Add Channel] Add replay TV5 (CA) (wwark)
+[Add Channel] Add replay UNIS (CA) (wwark)
+[Fix/Improvement] Fix image videos and Add First Video - Website Autoplus (wwark)
+[Fix] Show image - Website Culturepub (wwark)
+[Fix] Playing some youtube videos - Website Allocine (wwark)
+[Fix/Refactoring] Live TV BFMTV and move brightcove code to resolver.py - channel BFMTV (wwark)
+[Remove] Live TV (not working) - Channel Canal+, c8, cstar (wwark)
+[Move] Cnews code to cnews.py - Replay and Live TV Cnews (wwark)
+[Rework] Replay - Channel Canal+, C8, Cstar (wwark)
+[Add Channel] Seasons (wwark)
+[Add Channel] Comédie + (wwark)
+[Add Channel] Les chaînes planètes + (wwark)
+[Add Channel] Golf + (wwark)
+[Add Channel] Ciné + (wwark)
+[Add Channel] INFOSPORT+ (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -168,8 +168,8 @@ def list_videos(params):
 
             video_title = video.find('h2').find(
                 'a').get('title').encode('utf-8')
-            if video.find('a').find('img'):
-                video_img = video.find('a').find('img').get('data-src')
+            if video.find('img').get('data-src'):
+                video_img = video.find('img').get('data-src')
             else:
                 video_img = video.find('img').get('src')
             video_url = URL_ROOT + video.find('h2').find(
