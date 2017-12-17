@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.9~beta001"
+       version="0.1.9~beta002"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -31,7 +31,8 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.1.9]
-[Move] BVN channel from belgium to internationals channels
+[Move] BVN channel from belgium to internationals channels (wwark)
+[Add Website] Elle (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

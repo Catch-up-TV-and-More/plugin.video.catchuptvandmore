@@ -147,6 +147,7 @@ CHANNELS = {
         'channels.ws.culturepub.culturepub': 'Culturepub',
         'channels.ws.autoplus.autoplus': 'Auto Plus',
         'channels.ws.notrehistoirech.notrehistoirech': 'Notre Histoire.ch',
-        'channels.ws.30millionsdamis.30millionsdamis': '30 Millions d\'Amis'
+        'channels.ws.30millionsdamis.30millionsdamis': '30 Millions d\'Amis',
+        'channels.ws.elle.elle': 'Elle'
     }
 }
