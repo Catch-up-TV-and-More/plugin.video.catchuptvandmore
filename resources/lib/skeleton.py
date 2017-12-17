@@ -36,7 +36,6 @@ CHANNELS = {
 
     'main_menu.be': {
         'channels.be.rtbf.auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
-        'channels.be.bvn.bvn': 'BVN',
         'channels.be.brf.brf': 'BRF Mediathek',
         'channels.be.rtl.rtltvi': 'RTL-TVI',
         'channels.be.rtl.plugrtl': 'PLUG RTL',
@@ -136,7 +135,8 @@ CHANNELS = {
         'channels.wo.france24.france24': 'France 24',
         'channels.wo.nhkworld.nhkworld': 'NHK World',
         'channels.wo.tv5monde.tv5monde': 'TV5Monde',
-        'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde'
+        'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde',
+        'channels.wo.bvn.bvn': 'BVN'
     },
 
     'main_menu.ws': {
