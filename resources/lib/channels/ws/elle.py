@@ -21,6 +21,7 @@
 '''
 
 import ast
+import json
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
@@ -31,7 +32,10 @@ from resources.lib import common
 
 URL_ROOT_VIDEOS = 'http://videos.elle.fr'
 
-URL_ROOT_ELLE_GIRL_TV = 'http://www.elle.fr/Elle-Girl'
+URL_ROOT_ELLE_GIRL_TV = 'http://www.elle.fr/'
+
+URL_JSON_ELLE_GIRL_TV = URL_ROOT_ELLE_GIRL_TV + 'ajax/last_articles/' \
+                        'Elle-Girl?page=%s'
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -68,6 +72,19 @@ CATEGORIES = {
 def root(params):
     """Add modes in the listing"""
     modes = []
+
+    category_name = 'ELLE Girl TV'
+
+    modes.append({
+        'label': category_name,
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            category_name=category_name,
+            page='0',
+            next='list_videos_2',
+            window_title=category_name
+        )
+    })
 
     for category_name, category_url in CATEGORIES.iteritems():
         modes.append({
@@ -111,9 +128,6 @@ def list_videos(params):
         episodes = replay_episodes_soup.find(
             'div', class_='video-list').find_all(
             'div', class_='video')
-        episodes += replay_episodes_soup.find(
-            'div', class_='video-list').find_all(
-            'div', class_='video last')
 
         for episode in episodes:
             video_title = episode.find(
@@ -170,6 +184,66 @@ def list_videos(params):
             )
         })
 
+    elif params.next == 'list_videos_2':
+
+        replay_episodes_html = utils.get_webcontent(
+            URL_JSON_ELLE_GIRL_TV % params.page)
+        episodes_jsonparser = json.loads(replay_episodes_html)
+
+        for episode in episodes_jsonparser:
+            video_title = episode["titre"]
+            video_url = URL_ROOT_ELLE_GIRL_TV + \
+                episode["url"].encode('utf-8')
+            video_img = URL_ROOT_ELLE_GIRL_TV + \
+                episode["imagePaysage"].encode('utf-8')
+            video_duration = 0
+
+            info = {
+                'video': {
+                    'title': video_title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': video_duration,
+                    # 'plot': video_plot,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    video_url=video_url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': video_title,
+                'thumb': video_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r_elle_girl_tv',
+                    video_url=video_url
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+        # More videos...
+        videos.append({
+            'label': '# ' + common.ADDON.get_localized_string(30100),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='list_videos_2',
+                page=str(int(params.page) + 1),
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
+
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
@@ -186,11 +260,33 @@ def get_video_url(params):
     """Get video URL and start video player"""
 
     video_html = utils.get_webcontent(params.video_url)
-    # Get DailyMotion Id Video
-    video_urls = re.compile(
-        'file: \"(.*?)\"').findall(video_html)
-    stream_url = ''
-    for video_url in video_urls:
-        if 'm3u8' in video_url:
-            stream_url = video_url
-    return stream_url
+
+    if params.next == 'play_r':
+        # Get DailyMotion Id Video
+        video_urls = re.compile(
+            'file: \"(.*?)\"').findall(video_html)
+        stream_url = ''
+        for video_url in video_urls:
+            if 'm3u8' in video_url:
+                stream_url = video_url
+        return stream_url
+    elif params.next == 'play_r_elle_girl_tv':
+        # Get DailyMotion Id Video
+        video_id = re.compile(
+            r'embed/video/(.*?)[\"\?\']').findall(
+            video_html)[0]
+        return resolver.get_stream_dailymotion(video_id, False)
+    elif params.next == 'download_video':
+        if 'dailymotion.com/embed' in video_html:
+            video_id = re.compile(
+                r'embed/video/(.*?)[\"\?\']').findall(
+                video_html)[0]
+            return resolver.get_stream_dailymotion(video_id, True)
+        else:
+            video_urls = re.compile(
+                'file: \"(.*?)\"').findall(video_html)
+            stream_url = ''
+            for video_url in video_urls:
+                if 'm3u8' in video_url:
+                    stream_url = video_url
+            return stream_url
