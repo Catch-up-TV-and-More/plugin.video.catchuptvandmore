@@ -297,6 +297,9 @@
             <setting label="BVN" type="bool" id="channels.wo.bvn.bvn" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="channels.wo.bvn.bvn.order" default="8"/>
 
+            <setting label="ICI Télévision" type="bool" id="channels.wo.icitelevision.icitelevision" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.icitelevision.icitelevision.order" default="9"/>
+
         <setting label="" type="number" visible="false" id="main_menu.ws.order" default="7"/>
         <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true" visible="false"/>

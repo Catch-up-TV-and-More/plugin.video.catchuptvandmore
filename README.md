@@ -107,6 +107,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TV5Monde *(Replay, Live TV)*
 - Tivi 5Monde *(Replay, Live TV)*
 - BVN *(Replay, Live TV)*
+- ICI Télévision *(Replay, Live TV)*
 
 ### Japon — *Japan*
 ##### Web TV

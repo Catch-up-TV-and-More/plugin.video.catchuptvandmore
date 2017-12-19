@@ -29,7 +29,6 @@ from resources.lib import common
 
 # TO DO
 # Info Videos (date, plot, etc ...)
-# HTML not well formatted (some videos not grabb by bs)
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English

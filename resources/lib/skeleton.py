@@ -136,7 +136,8 @@ CHANNELS = {
         'channels.wo.nhkworld.nhkworld': 'NHK World',
         'channels.wo.tv5monde.tv5monde': 'TV5Monde',
         'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde',
-        'channels.wo.bvn.bvn': 'BVN'
+        'channels.wo.bvn.bvn': 'BVN',
+        'channels.wo.icitelevision.icitelevision': 'ICI Télévision'
     },
 
     'main_menu.ws': {
