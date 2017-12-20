@@ -45,7 +45,8 @@ CHANNELS = {
 
     'main_menu.ca': {
         'channels.ca.tv5.tv5': 'TV5',
-        'channels.ca.tv5.unis': 'UNIS'
+        'channels.ca.tv5.unis': 'UNIS',
+        'channels.ca.yestv.yestv': 'YES TV'
     },
 
     'main_menu.sw': {

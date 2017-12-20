@@ -341,6 +341,9 @@
             <setting label="UNIS" type="bool" id="channels.ca.tv5.unis" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.ca.tv5.unis.order" default="2"/>
 
+            <setting label="YES TV" type="bool" id="channels.ca.yestv.yestv" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ca.yestv.yestv.order" default="3"/>
+
     </category>
 
     <!-- Quality and Content (and also hidden settings) -->

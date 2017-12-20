@@ -56,16 +56,16 @@ def channel_entry(params):
     return None
 
 CATEGORIES = {
-    'Mode' : URL_ROOT_VIDEOS + '/les_videos/archive/Mode/%s',
-    'Beaute' : URL_ROOT_VIDEOS + '/les_videos/archive/Beaute/%s',
-    'Minceur' : URL_ROOT_VIDEOS + '/les_videos/archive/Minceur/%s',
-    'People' : URL_ROOT_VIDEOS + '/les_videos/archive/People/%s',
-    'Cuisine' : URL_ROOT_VIDEOS + '/les_videos/archive/Cuisine/%s',
-    'Deco' : URL_ROOT_VIDEOS + '/les_videos/archive/Deco/%s',
-    'Musique' : URL_ROOT_VIDEOS + '/les_videos/archive/Musique/%s',
-    'Cinema' : URL_ROOT_VIDEOS + '/les_videos/archive/Cinema/%s',
-    'Societe' : URL_ROOT_VIDEOS + '/les_videos/archive/Societe/%s',
-    'Love & Sexe' : URL_ROOT_VIDEOS + '/les_videos/archive/Love&Sexe/%s'
+    'Mode': URL_ROOT_VIDEOS + '/les_videos/archive/Mode/%s',
+    'Beaute': URL_ROOT_VIDEOS + '/les_videos/archive/Beaute/%s',
+    'Minceur': URL_ROOT_VIDEOS + '/les_videos/archive/Minceur/%s',
+    'People': URL_ROOT_VIDEOS + '/les_videos/archive/People/%s',
+    'Cuisine': URL_ROOT_VIDEOS + '/les_videos/archive/Cuisine/%s',
+    'Deco': URL_ROOT_VIDEOS + '/les_videos/archive/Deco/%s',
+    'Musique': URL_ROOT_VIDEOS + '/les_videos/archive/Musique/%s',
+    'Cinema': URL_ROOT_VIDEOS + '/les_videos/archive/Cinema/%s',
+    'Societe': URL_ROOT_VIDEOS + '/les_videos/archive/Societe/%s',
+    'Love & Sexe': URL_ROOT_VIDEOS + '/les_videos/archive/Love&Sexe/%s'
 }
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

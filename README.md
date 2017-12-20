@@ -40,6 +40,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TV5 *(Replay)*
 - UNIS *(Replay)*
 
+##### TV Communauté anglaise — *English Community TV*
+- YES TV *(Live TV)*
+
 ### France
 ##### TV
 - TF1 *(Replay, Live TV)*
