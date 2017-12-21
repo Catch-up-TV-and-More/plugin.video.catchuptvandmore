@@ -272,6 +272,49 @@ def list_videos(params):
                                 'info': info,
                                 'context_menu': context_menu
                             })
+                    elif 'title' in emissions:
+                        if emissions['title'].encode('utf-8') == params.title:
+                            for emission in emissions["contents"]:
+                                title = emission["title"].encode('utf-8')
+                                plot = emission["subtitle"].encode('utf-8')
+                                img = emission['URLImage'].encode('utf-8')
+                                video_id = emission["contentID"]
+                                duration = 0
+
+                                info = {
+                                    'video': {
+                                        'title': title,
+                                        'plot': plot,
+                                        # 'aired': aired,
+                                        # 'date': date,
+                                        'duration': duration,
+                                        # 'year': year,
+                                        # 'genre': category,
+                                        'mediatype': 'tvshow'
+                                    }
+                                }
+
+                                download_video = (
+                                    _('Download'),
+                                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                                        action='download_video',
+                                        video_id=video_id) + ')'
+                                )
+                                context_menu = []
+                                context_menu.append(download_video)
+
+                                videos.append({
+                                    'label': title,
+                                    'thumb': img,
+                                    'url': common.PLUGIN.get_url(
+                                        action='channel_entry',
+                                        next='play_r',
+                                        video_id=video_id,
+                                    ),
+                                    'is_playable': True,
+                                    'info': info,
+                                    'context_menu': context_menu
+                                })
                 else:
                     if 'title' in emissions:
                         if emissions['title'].encode('utf-8') == params.title:
