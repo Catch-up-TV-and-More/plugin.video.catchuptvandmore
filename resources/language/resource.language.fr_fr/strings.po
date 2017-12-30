@@ -91,6 +91,10 @@ msgctxt "#30028"
 msgid "Canadian channels"
 msgstr "Chaînes canadiènnes"
 
+msgctxt "#30029"
+msgid "United States channels"
+msgstr "Chaînes américaines"
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"

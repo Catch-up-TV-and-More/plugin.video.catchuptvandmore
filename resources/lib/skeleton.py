@@ -28,6 +28,7 @@ CATEGORIES = {
     'main_menu.jp': 'Japanese channels',
     'main_menu.sw': 'Switzerland channels',
     'main_menu.uk': 'United Kingdom channels',
+    'main_menu.us': 'United States channels',
     'main_menu.wo': 'International channels',
     'main_menu.ws': 'Websites'
 }
@@ -127,6 +128,10 @@ CHANNELS = {
         'channels.uk.uktvplay.drama': 'Drama',
         'channels.uk.sky.skynews': 'Sky News',
         'channels.uk.sky.skysports': 'Sky sports'
+    },
+
+    'main_menu.us': {
+        'channels.us.nbc.nbc': 'NBC'
     },
 
     'main_menu.wo': {
