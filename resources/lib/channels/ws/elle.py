@@ -127,7 +127,7 @@ def list_videos(params):
         replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
         episodes = replay_episodes_soup.find(
             'div', class_='video-list').find_all(
-            'div', class_='video')
+                'div', class_='video')
 
         for episode in episodes:
             video_title = episode.find(
@@ -274,13 +274,13 @@ def get_video_url(params):
         # Get DailyMotion Id Video
         video_id = re.compile(
             r'embed/video/(.*?)[\"\?\']').findall(
-            video_html)[0]
+                video_html)[0]
         return resolver.get_stream_dailymotion(video_id, False)
     elif params.next == 'download_video':
         if 'dailymotion.com/embed' in video_html:
             video_id = re.compile(
                 r'embed/video/(.*?)[\"\?\']').findall(
-                video_html)[0]
+                    video_html)[0]
             return resolver.get_stream_dailymotion(video_id, True)
         else:
             video_urls = re.compile(

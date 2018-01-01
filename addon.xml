@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.9~beta007"
+       version="0.1.9~beta008"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -37,6 +37,7 @@
 [Add Live TV] YES TV (CA) (wwark)
 [Improvement] Get more videos for mycanal.fr (wwark)
 [Add Channel] NBC (US) (wwark)
+[Add Channel] Télé MB (BE) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

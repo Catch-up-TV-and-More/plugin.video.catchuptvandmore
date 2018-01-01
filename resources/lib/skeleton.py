@@ -41,7 +41,8 @@ CHANNELS = {
         'channels.be.rtl.rtltvi': 'RTL-TVI',
         'channels.be.rtl.plugrtl': 'PLUG RTL',
         'channels.be.rtl.clubrtl': 'CLUB RTL',
-        'channels.be.vrt.vrt': 'VRT NU'
+        'channels.be.vrt.vrt': 'VRT NU',
+        'channels.be.telemb.telemb': 'Télé MB'
     },
 
     'main_menu.ca': {
