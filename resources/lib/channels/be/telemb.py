@@ -28,7 +28,7 @@ from resources.lib import common
 
 # TO DO
 # Add Live when it is working
-# Parse XML not well formated
+# RSS get more video ?
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -151,6 +151,8 @@ def list_videos(params):
 
     videos_html = utils.get_webcontent(
         URL_VIDEOS % (params.category_id))
+    videos_html = videos_html.strip()
+    videos_html = videos_html.replace('&', '&amp;')
     xml_elements = ET.XML(videos_html)
     # TO DO Some xml not well formated
     for video in xml_elements.find("channel").findall("item"):
