@@ -182,11 +182,14 @@
             <setting label="INFOSPORT+" type="bool" id="channels.fr.mycanal.infosportplus" default="true" visible="eq(-103,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.mycanal.infosportplus.order" default="52"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-105,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="53"/>
+            <setting label="Game One" type="bool" id="channels.fr.gameone.gameone" default="true" visible="eq(-105,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.gameone.gameone.order" default="53"/>
 
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-107,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="54"/>-->
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-107,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="54"/>
+
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-109,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="55"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>

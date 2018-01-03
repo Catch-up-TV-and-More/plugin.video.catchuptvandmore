@@ -98,7 +98,9 @@ def list_shows(params):
             if 'meteo' in category.find('a').get('href') or \
                'actualite' in category.find('a').get('href') or \
                'sports' in category.find('a').get('href') or \
-               'emissions' in category.find('a').get('href'):
+               'emissions' in category.find('a').get('href') or \
+               'concours' in category.find('a').get('href') or \
+               'programmes' in category.find('a').get('href'):
 
                 category_name = category.find('a').get_text()
                 category_id = category.find('a').get(
@@ -154,7 +156,6 @@ def list_videos(params):
     videos_html = videos_html.strip()
     videos_html = videos_html.replace('&', '&amp;')
     xml_elements = ET.XML(videos_html)
-    # TO DO Some xml not well formated
     for video in xml_elements.find("channel").findall("item"):
 
         title = video.find("title").text.encode('utf-8')

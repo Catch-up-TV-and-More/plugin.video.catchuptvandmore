@@ -112,7 +112,8 @@ CHANNELS = {
         'channels.fr.mycanal.les-chaines-planete': 'Les chaînes planètes +',
         'channels.fr.mycanal.golfplus': 'Golf +',
         'channels.fr.mycanal.cineplus': 'Ciné +',
-        'channels.fr.mycanal.infosportplus': 'INFOSPORT+'
+        'channels.fr.mycanal.infosportplus': 'INFOSPORT+',
+        'channels.fr.gameone.gameone': 'Game One'
     },
 
     'main_menu.jp': {
