@@ -42,7 +42,8 @@ CHANNELS = {
         'channels.be.rtl.plugrtl': 'PLUG RTL',
         'channels.be.rtl.clubrtl': 'CLUB RTL',
         'channels.be.vrt.vrt': 'VRT NU',
-        'channels.be.telemb.telemb': 'Télé MB'
+        'channels.be.telemb.telemb': 'Télé MB',
+        'channels.be.rtc.rtc': 'RTC Télé Liège'
     },
 
     'main_menu.ca': {

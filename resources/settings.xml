@@ -216,6 +216,9 @@
             <setting label="Télé MB" type="bool" id="channels.be.telemb.telemb" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="channels.be.telemb.telemb.order" default="7"/>
 
+            <setting label="RTC Télé Liège" type="bool" id="channels.be.rtc.rtc" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtc.rtc.order" default="8"/>
+
         <setting label="" type="number" visible="false" id="main_menu.sw.order" default="3"/>
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30023" type="bool" id="main_menu.sw" default="true" visible="false"/>
