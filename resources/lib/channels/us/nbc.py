@@ -22,6 +22,7 @@
 
 import json
 import re
+import urllib
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
@@ -30,7 +31,6 @@ from resources.lib import common
 # Live TV
 # KO Download Mode | How to fix ?
 # Get policyID, Player (build url platform)
-# Implement this case 'if len(replay_show_seasons) == 0'
 
 URL_ROOT = 'http://www.nbc.com'
 
@@ -45,10 +45,8 @@ URL_VIDEOS = 'https://api.nbc.com/v3.14/videos?filter[entitlement]' \
 # Get 50 videos (more add a button)
 # ShowId, SeasonID
 
-URL_STREAM = 'http://link.theplatform.com/s/NnzsPC/media/%s?policy=%s' \
-             '&player=%s&formats=m3u,mpeg4&format=SMIL&embedded=true&' \
-             'tracking=true'
-# IdChannel (NnzsPC), VideoId, policyId, player
+URL_STREAM = 'http://link.theplatform.com/s/NnzsPC/media/%s?'
+# IdChannel (NnzsPC), VideoId
 
 URL_VIDEO_INFO = 'http://link.theplatform.com/s/NnzsPC/media/guid/%s' \
                  '?format=preview'
@@ -144,12 +142,31 @@ def list_shows(params):
         replay_show_html = open(file_path).read()
 
         replay_show_seasons_soup = bs(replay_show_html, 'html.parser')
-        replay_show_seasons = replay_show_seasons_soup.find_all(
-            'span', class_='filter-select__link')
+        if replay_show_seasons_soup.find('div', class_='filter-select'):
+            replay_show_seasons = replay_show_seasons_soup.find_all(
+                'span', class_='filter-select__link')
 
-        for season in replay_show_seasons:
+            for season in replay_show_seasons:
 
-            season_title = season.get_text().encode('utf-8')
+                if 'Season' in season.get_text():
+                    season_title = season.get_text().encode('utf-8')
+                    show_season_url = URL_SHOW_SEASON % (
+                        params.show_alias, season_title.split(' ')[1])
+
+                    shows.append({
+                        'label': season_title,
+                        'url': common.PLUGIN.get_url(
+                            action='channel_entry',
+                            next='list_videos_1',
+                            title=season_title,
+                            show_season_url=show_season_url,
+                            show_alias=params.show_alias,
+                            window_title=season_title
+                            )
+                        })
+        else:
+
+            season_title = 'Season 1'
             show_season_url = URL_SHOW_SEASON % (
                 params.show_alias, season_title.split(' ')[1])
 
@@ -162,10 +179,8 @@ def list_shows(params):
                     show_season_url=show_season_url,
                     show_alias=params.show_alias,
                     window_title=season_title
-                    )
-                })
-
-        #TO DO if len(replay_show_seasons) == 0
+                )
+            })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -215,9 +230,13 @@ def list_videos(params):
         episode_show_json = open(episode_path_json).read()
         episode_show_json_parser = json.loads(episode_show_json)
 
-        video_title = 'S%sE%s - ' % (
-            episode_show_json_parser['nbcu$seasonNumber'],
-            episode_show_json_parser['nbcu$airOrder']) + episode_show_json_parser['title']
+        if 'nbcu$airOrder' in episode_show_json_parser:
+            video_title = 'S%sE%s - ' % (
+                episode_show_json_parser['nbcu$seasonNumber'],
+                episode_show_json_parser['nbcu$airOrder']) + episode_show_json_parser['title']
+        else:
+            video_title = 'S%s - ' % (episode_show_json_parser['nbcu$seasonNumber']) + \
+            episode_show_json_parser['title']
         video_plot = episode_show_json_parser.get('description')
         video_duration = 0
         video_img = episode_show_json_parser.get('defaultThumbnailUrl')
@@ -279,7 +298,17 @@ def list_live(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        url_to_get_stream = 'http://link.theplatform.com/s/NnzsPC/media/'+params.video_id+'?policy=43674&player=NBC.com%20Instance%20of%3A%20rational-player-production&formats=m3u,mpeg4&format=SMIL&embedded=true&tracking=true'
+
+        value_to_encode = {
+            'policy' : '43674',
+            'player' : 'NBC.com Instance of: rational-player-production',
+            'formats' : 'm3u,mpeg4',
+            'format' : 'SMIL',
+            'embedded' : 'true',
+            'tracking' : 'true'
+        }
+
+        url_to_get_stream = (URL_STREAM % params.video_id) + urllib.urlencode(value_to_encode)
 
         file_path = utils.download_catalog(
             url_to_get_stream,
