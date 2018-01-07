@@ -146,7 +146,8 @@ CHANNELS = {
         'channels.wo.tv5monde.tv5monde': 'TV5Monde',
         'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde',
         'channels.wo.bvn.bvn': 'BVN',
-        'channels.wo.icitelevision.icitelevision': 'ICI Télévision'
+        'channels.wo.icitelevision.icitelevision': 'ICI Télévision',
+        'channels.wo.mtv.mtv': 'MTV'
     },
 
     'main_menu.ws': {

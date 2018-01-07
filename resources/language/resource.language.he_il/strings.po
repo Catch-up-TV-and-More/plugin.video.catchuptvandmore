@@ -143,6 +143,10 @@ msgctxt "#30082"
 msgid "Euronews: Choose Channel"
 msgstr "Euronews: בחר ערוץ"
 
+msgctxt "#30083"
+msgid "MTV: Choose Channel"
+msgstr "MTV: בחר ערוץ"
+
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
 msgstr "איכות וידאו (הטוב ביותר|ברירת מחדל|תיבת דו-שיח)"

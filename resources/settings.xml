@@ -310,6 +310,9 @@
             <setting label="ICI Télévision" type="bool" id="channels.wo.icitelevision.icitelevision" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="channels.wo.icitelevision.icitelevision.order" default="9"/>
 
+            <setting label="MTV" type="bool" id="channels.wo.mtv.mtv" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.mtv.mtv.order" default="10"/>
+
         <setting label="" type="number" visible="false" id="main_menu.ws.order" default="7"/>
         <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true" visible="false"/>
@@ -377,6 +380,7 @@
                 <setting label="30080" type="labelenum" id="channels.wo.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
                 <setting label="30082" type="labelenum" id="channels.wo.euronews.euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
                 <setting label="30081" type="labelenum" id="channels.wo.france24.france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES"/>
+                <setting label="30083" type="labelenum" id="channels.wo.mtv.mtv.language" visible="eq(-4,true)" values="FR"/>
 
             <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>

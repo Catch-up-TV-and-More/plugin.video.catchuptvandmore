@@ -144,6 +144,10 @@ msgctxt "#30082"
 msgid "Euronews: Choose Channel"
 msgstr ""
 
+msgctxt "#30083"
+msgid "MTV: Choose Channel"
+msgstr ""
+
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
 msgstr ""
