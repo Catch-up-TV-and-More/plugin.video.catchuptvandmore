@@ -68,6 +68,8 @@ URL_ALPHA = 'https://pluzz.webservices.francetelevisions.fr/' \
 # sens: asc or desc
 # page inc: 100
 
+URL_ROOT_SPORT = 'https://sport.francetvinfo.fr'
+
 URL_FRANCETV_SPORT = 'https://api-sport-events.webservices.' \
                      'francetelevisions.fr/%s'
 # RootMode
@@ -474,7 +476,7 @@ def list_shows(params):
             URL_ROOT_NOUVELLES_ECRITURES % params.channel_name)
         categories_soup = bs(categories_html, 'html.parser')
         categories = categories_soup.find_all(
-                'li', class_='genre-item')
+            'li', class_='genre-item')
 
         for category in categories:
 
@@ -499,7 +501,7 @@ def list_shows(params):
         shows_soup = bs(shows_html, 'html.parser')
         class_panel_value = 'panel %s' % params.category_data_panel
         list_shows = shows_soup.find(
-                'div', class_=class_panel_value).find_all('li')
+            'div', class_=class_panel_value).find_all('li')
 
         for show_data in list_shows:
 
@@ -540,17 +542,20 @@ def list_videos(params):
 
     if params.next == 'list_videos_ftvsport':
 
-        list_videos = utils.get_webcontent(
+        list_videos_html = utils.get_webcontent(
             URL_FRANCETV_SPORT % (params.mode) + \
             '?page=%s' % (params.page))
-        list_videos_parserjson = json.loads(list_videos)
+        list_videos_parserjson = json.loads(list_videos_html)
 
         for video in list_videos_parserjson["page"]["flux"]:
 
             title = video["title"]
             image = video["image"]["large_16_9"]
             duration = int(video["duration"])
-            id_diffusion = video["sivideo-id"]
+            url_sport = URL_ROOT_SPORT + video["url"]
+            html_sport = utils.get_webcontent(url_sport)
+            id_diffusion = re.compile(
+                r'data-video="(.*)"').findall(html_sport)[0]
 
             info = {
                 'video': {
@@ -1134,7 +1139,7 @@ def get_video_url(params):
         if params.channel_name == 'studio-4' or params.channel_name == 'irl':
 
             video_html = utils.get_webcontent(
-            params.video_url)
+                params.video_url)
             video_soup = bs(video_html, 'html.parser')
             video_data = video_soup.find(
                 'div', class_='player-wrapper')
@@ -1142,7 +1147,7 @@ def get_video_url(params):
             if video_data.find('a', class_='video_link'):
                 id_diffusion = video_data.find(
                     'a', class_='video_link').get(
-                    'href').split('video/')[1].split('@')[0]
+                        'href').split('video/')[1].split('@')[0]
                 file_prgm = utils.get_webcontent(SHOW_INFO % id_diffusion)
                 json_parser = json.loads(file_prgm)
 
