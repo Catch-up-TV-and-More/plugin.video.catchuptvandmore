@@ -114,7 +114,8 @@ CHANNELS = {
         'channels.fr.mycanal.golfplus': 'Golf +',
         'channels.fr.mycanal.cineplus': 'Ciné +',
         'channels.fr.mycanal.infosportplus': 'INFOSPORT+',
-        'channels.fr.gameone.gameone': 'Game One'
+        'channels.fr.gameone.gameone': 'Game One',
+        'channels.fr.pluzz.francetveducation': 'France TV Education (francetv)'
     },
 
     'main_menu.jp': {
