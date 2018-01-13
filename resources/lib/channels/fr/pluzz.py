@@ -82,6 +82,9 @@ URL_ROOT_EDUCATION = 'http://education.francetv.fr'
 URL_VIDEO_DATA_EDUCTATION = URL_ROOT_EDUCATION + '/video/%s/sisters'
 # TitleVideo
 
+URL_SERIE_DATA_EDUCTION = URL_ROOT_EDUCATION + '/programme/%s/section?page=%s'
+# TitleSerie, page
+
 CATEGORIES_DISPLAY = {
     "france2": "France 2",
     "france3": "France 3",
@@ -147,7 +150,7 @@ LIVE_FR3_REGIONS = {
 }
 
 CATEGORIES_EDUCATION = {
-    # 'Séries': URL_ROOT_EDUCATION + '/recherche?q=&type=series&page=%s',
+    'Séries': URL_ROOT_EDUCATION + '/recherche?q=&type=series&page=%s',
     'Vidéos': URL_ROOT_EDUCATION + '/recherche?q=&type=video&page=%s'
 }
 
@@ -567,8 +570,8 @@ def list_shows(params):
 
         for show_data in list_shows_education:
 
-            show_url = show_data.find('h4').find(
-                'a').get('href')
+            show_data_name = show_data.find(
+                'div', class_='ftve-thumbnail ').get('data-contenu')
             show_title = show_data.find('h4').find(
                 'a').get('title')
             show_image = show_data.find(
@@ -579,7 +582,7 @@ def list_shows(params):
                 'thumb': show_image,
                 'url': common.PLUGIN.get_url(
                     action='channel_entry',
-                    category_url=show_url,
+                    show_data_name=show_data_name,
                     page='1',
                     title=show_title,
                     next='list_videos_education_2',
@@ -756,7 +759,77 @@ def list_videos(params):
         })
 
     elif params.next == 'list_videos_education_2':
-        return None
+
+        list_videos_html = utils.get_webcontent(
+            URL_SERIE_DATA_EDUCTION % (params.show_data_name, params.page))
+        print 'URL_SERIE_DATA_EDUCTION : ' + URL_SERIE_DATA_EDUCTION % (params.show_data_name, params.page)
+        list_videos_soup = bs(list_videos_html, 'html.parser')
+        list_videos_datas = list_videos_soup.find(
+            'div', class_='content-section').find_all(
+                'div', class_='col-xs-3 ')
+
+        for video_data in list_videos_datas:
+
+            title = video_data.find('h4').find(
+                'a').get('title')
+            image = video_data.find(
+                'div', class_='thumbnail-img lazy').get('data-original')
+            duration = 0
+            data_video_title = video_data.find(
+                'div', class_='ftve-thumbnail ').get('data-contenu')
+            html_video_data = utils.get_webcontent(
+                URL_VIDEO_DATA_EDUCTATION % data_video_title)
+            id_diffusion = re.compile(
+                r'videos.francetv.fr\/video\/(.*?)\@').findall(html_video_data)[0]
+
+            info = {
+                'video': {
+                    'title': title,
+                    # 'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    id_diffusion=id_diffusion) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'fanart': image,
+                'thumb': image,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    id_diffusion=id_diffusion
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+        # More videos...
+        videos.append({
+            'label': common.ADDON.get_localized_string(30100),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                show_data_name=params.show_data_name,
+                next='list_videos_education_2',
+                page=str(int(params.page) + 1),
+                title=params.title,
+                window_title=params.window_title,
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
 
     elif params.next == 'list_videos_necritures_1':
 
