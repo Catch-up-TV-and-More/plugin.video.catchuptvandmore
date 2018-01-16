@@ -23,7 +23,6 @@
 import ast
 import json
 import re
-from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
@@ -118,27 +117,54 @@ def list_shows(params):
         })
 
         # Get Emission :
-        root_html = utils.get_webcontent(
-            URL_EMISSION)
-        root_soup = bs(root_html, 'html.parser')
-        emissions_soup = root_soup.find(
-            'div', class_="module intl_m150").find_all('li')
+        root_json = utils.get_webcontent(
+            URL_JSON_MTV % URL_EMISSION)
+        json_emission_mtv = json.loads(root_json)
+        emission_json_url = json_emission_mtv["manifest"]["zones"]["t5_lc_promo1"]["feed"]
+        emission_json = utils.get_webcontent(emission_json_url)
+        emission_json_parser = json.loads(emission_json)
 
-        for emission in emissions_soup:
-
-            emission_name = emission.find('a').get_text()
-            emission_url = emission.find('a').get('href') + '/videos'
-
+        for emissions in emission_json_parser["result"]["shows"]:
+            emissions_letter = emissions["key"]
             shows.append({
-                'label': emission_name,
+                'label': emissions_letter,
                 'url': common.PLUGIN.get_url(
                     action='channel_entry',
-                    emission_url=emission_url,
-                    category_name=emission_name,
-                    next='list_videos_2',
-                    window_title=emission_name
+                    emissions_letter=emissions_letter,
+                    category_name=emissions_letter,
+                    next='list_shows_2',
+                    window_title=emissions_letter
                 )
-            })
+           })
+
+    elif params.next == 'list_shows_2':
+
+        root_json = utils.get_webcontent(
+            URL_JSON_MTV % URL_EMISSION)
+        json_emission_mtv = json.loads(root_json)
+        emission_json_url = json_emission_mtv["manifest"]["zones"]["t5_lc_promo1"]["feed"]
+        emission_json = utils.get_webcontent(emission_json_url)
+        emission_json_parser = json.loads(emission_json)
+
+        for emissions in emission_json_parser["result"]["shows"]:
+            if params.emissions_letter == emissions["key"]:
+                for emission in emissions["value"]:
+                    emission_name = emission["title"]
+                    file_path_2 = utils.get_webcontent(
+                        URL_JSON_MTV % emission["url"])
+                    json_mtv = json.loads(file_path_2)
+                    emission_url = json_mtv["manifest"]["zones"]["t5_lc_promo1"]["feed"]
+
+                    shows.append({
+                        'label': emission_name,
+                        'url': common.PLUGIN.get_url(
+                            action='channel_entry',
+                            emission_url=emission_url,
+                            category_name=emission_name,
+                            next='list_videos_1',
+                            window_title=emission_name
+                        )
+                    })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -161,51 +187,52 @@ def list_videos(params):
             params.emission_url)
         json_mtv = json.loads(file_path)
 
-        for episode in json_mtv["result"]["data"]["items"]:
+        if 'data' in json_mtv["result"]:
+            for episode in json_mtv["result"]["data"]["items"]:
 
-            video_title = episode["title"]
-            video_plot = episode["description"]
-            video_duration = 0
-            video_url = episode["canonicalURL"]
-            if 'images' in episode:
-                video_img = episode["images"]["url"]
-            else:
-                video_img = ''
+                video_title = episode["title"]
+                video_plot = episode["description"]
+                video_duration = 0
+                video_url = episode["canonicalURL"]
+                if 'images' in episode:
+                    video_img = episode["images"]["url"]
+                else:
+                    video_img = ''
 
-            info = {
-                'video': {
-                    'title': video_title,
-                    # 'aired': aired,
-                    # 'date': date,
-                    'duration': video_duration,
-                    'plot': video_plot,
-                    # 'year': year,
-                    'mediatype': 'tvshow'
+                info = {
+                    'video': {
+                        'title': video_title,
+                        # 'aired': aired,
+                        # 'date': date,
+                        'duration': video_duration,
+                        'plot': video_plot,
+                        # 'year': year,
+                        'mediatype': 'tvshow'
+                    }
                 }
-            }
 
-            download_video = (
-                _('Download'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='download_video',
-                    video_url=video_url) + ')'
-            )
-            context_menu = []
-            context_menu.append(download_video)
+                download_video = (
+                    _('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        video_url=video_url) + ')'
+                )
+                context_menu = []
+                context_menu.append(download_video)
 
-            videos.append({
-                'label': video_title,
-                'thumb': video_img,
-                'fanart': video_img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_r',
-                    video_url=video_url
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
-            })
+                videos.append({
+                    'label': video_title,
+                    'thumb': video_img,
+                    'fanart': video_img,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='play_r',
+                        video_url=video_url
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
 
         # More videos...
         if 'nextPageURL' in json_mtv["result"]:
@@ -218,60 +245,6 @@ def list_videos(params):
                     emission_url=json_mtv["result"]["nextPageURL"],
                     previous_listing=str(videos)
                 )
-            })
-
-    elif params.next == 'list_videos_2':
-        file_path = utils.get_webcontent(params.emission_url)
-        replay_episodes_soup = bs(file_path, 'html.parser')
-        episodes = replay_episodes_soup.find_all(
-            'a', class_=re.compile("isVideo"))
-
-        for episode in episodes:
-
-            episode_datas_json = json.loads(episode.find('script').get_text())
-
-            video_title = episode_datas_json["name"]
-            video_plot = episode_datas_json["description"]
-            video_duration = 0
-            video_url = episode_datas_json["contentUrl"]
-            if 'thumbnailUrl' in episode_datas_json:
-                video_img = episode_datas_json["thumbnailUrl"].replace('http:http:', 'http:')
-            else:
-                video_img = ''
-
-            info = {
-                'video': {
-                    'title': video_title,
-                    # 'aired': aired,
-                    # 'date': date,
-                    'duration': video_duration,
-                    'plot': video_plot,
-                    # 'year': year,
-                    'mediatype': 'tvshow'
-                }
-            }
-
-            download_video = (
-                _('Download'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='download_video',
-                    video_url=video_url) + ')'
-            )
-            context_menu = []
-            context_menu.append(download_video)
-
-            videos.append({
-                'label': video_title,
-                'thumb': video_img,
-                'fanart': video_img,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='play_r',
-                    video_url=video_url
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
             })
 
     return common.PLUGIN.create_listing(
