@@ -20,6 +20,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import ast
 import json
 import re
 from bs4 import BeautifulSoup as bs
@@ -37,6 +38,9 @@ _ = common.ADDON.initialize_gettext()
 
 URL_ROOT = 'http://www.mtv.fr'
 # Contents
+
+URL_JSON_MTV = URL_ROOT + '/feeds/triforce/manifest/v8?url=%s'
+# URL
 
 URL_EMISSION = URL_ROOT + '/emissions/'
 
@@ -96,11 +100,17 @@ def list_shows(params):
     if params.next == 'list_shows_1':
 
         emission_name = _('All videos')
+
+        file_path = utils.get_webcontent(
+            URL_JSON_MTV % URL_VIDEOS)
+        json_mtv = json.loads(file_path)
+        emission_url = json_mtv["manifest"]["zones"]["t4_lc_promo1"]["feed"]
+
         shows.append({
             'label': emission_name,
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
-                emission_url=URL_VIDEOS,
+                emission_url=emission_url,
                 category_name=emission_name,
                 next='list_videos_1',
                 window_title=emission_name
@@ -125,7 +135,7 @@ def list_shows(params):
                     action='channel_entry',
                     emission_url=emission_url,
                     category_name=emission_name,
-                    next='list_videos_1',
+                    next='list_videos_2',
                     window_title=emission_name
                 )
             })
@@ -142,8 +152,75 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_videos_1':
+
+        file_path = utils.get_webcontent(
+            params.emission_url)
+        json_mtv = json.loads(file_path)
+
+        for episode in json_mtv["result"]["data"]["items"]:
+
+            video_title = episode["title"]
+            video_plot = episode["description"]
+            video_duration = 0
+            video_url = episode["canonicalURL"]
+            if 'images' in episode:
+                video_img = episode["images"]["url"]
+            else:
+                video_img = ''
+
+            info = {
+                'video': {
+                    'title': video_title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': video_duration,
+                    'plot': video_plot,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    video_url=video_url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': video_title,
+                'thumb': video_img,
+                'fanart': video_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    video_url=video_url
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+        # More videos...
+        if 'nextPageURL' in json_mtv["result"]:
+            videos.append({
+                'label': '# ' + common.ADDON.get_localized_string(30100),
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='list_videos_1',
+                    update_listing=True,
+                    emission_url=json_mtv["result"]["nextPageURL"],
+                    previous_listing=str(videos)
+                )
+            })
+
+    elif params.next == 'list_videos_2':
         file_path = utils.get_webcontent(params.emission_url)
         replay_episodes_soup = bs(file_path, 'html.parser')
         episodes = replay_episodes_soup.find_all(
@@ -207,6 +284,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
+        update_listing='update_listing' in params,
         category=common.get_window_title()
     )
 
