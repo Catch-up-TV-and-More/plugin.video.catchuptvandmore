@@ -92,6 +92,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Ciné + *(Replay)*
 - INFOSPORT+ *(Replay)*
 - Game One *(Replay)*
+- Gong *(Replay, Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*

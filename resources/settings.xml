@@ -188,11 +188,14 @@
             <setting label="FranceTV Education (francetv)" type="bool" id="channels.fr.pluzz.francetveducation" default="true" visible="eq(-107,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.pluzz.francetveducation.order" default="54"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-109,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="55"/>
+            <setting label="Gong" type="bool" id="channels.fr.gong.gong" default="true" visible="eq(-109,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.gong.gong.order" default="55"/>
 
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-111,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="56"/>-->
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-111,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="56"/>
+
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-113,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="57"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>

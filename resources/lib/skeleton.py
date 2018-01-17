@@ -115,7 +115,8 @@ CHANNELS = {
         'channels.fr.mycanal.cineplus': 'Ciné +',
         'channels.fr.mycanal.infosportplus': 'INFOSPORT+',
         'channels.fr.gameone.gameone': 'Game One',
-        'channels.fr.pluzz.francetveducation': 'France TV Education (francetv)'
+        'channels.fr.pluzz.francetveducation': 'France TV Education (francetv)',
+        'channels.fr.gong.gong': 'Gong'
     },
 
     'main_menu.jp': {
