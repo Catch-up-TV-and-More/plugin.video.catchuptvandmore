@@ -63,16 +63,15 @@ def root(params):
     modes = []
 
     # Add Replay
-    if params.channel_name != 'euronews':
-        modes.append({
-            'label': 'Replay',
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='list_shows_1',
-                category='%s Replay' % params.channel_name.upper(),
-                window_title='%s Replay' % params.channel_name.upper()
-            ),
-        })
+    modes.append({
+        'label': 'Replay',
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
+    })
 
     # Add Live
     modes.append({
