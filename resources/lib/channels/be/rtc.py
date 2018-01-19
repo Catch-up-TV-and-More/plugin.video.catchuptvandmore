@@ -20,6 +20,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import ast
+import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
@@ -35,6 +37,10 @@ _ = common.ADDON.initialize_gettext()
 URL_ROOT = 'https://www.rtc.be'
 
 URL_LIVE = URL_ROOT + '/live'
+
+URL_VIDEOS = URL_ROOT + '/videos'
+
+URL_EMISSIONS = URL_ROOT + '/emissions'
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -56,17 +62,17 @@ def root(params):
     """Add Replay and Live in the listing"""
     modes = []
 
-    # Add Replay Desactiver
-    # if params.channel_name != 'euronews':
-    #     modes.append({
-    #         'label': 'Replay',
-    #         'url': common.PLUGIN.get_url(
-    #             action='channel_entry',
-    #             next='list_shows_1',
-    #             category='%s Replay' % params.channel_name.upper(),
-    #             window_title='%s Replay' % params.channel_name.upper()
-    #         ),
-    #     })
+    # Add Replay
+    if params.channel_name != 'euronews':
+        modes.append({
+            'label': 'Replay',
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='list_shows_1',
+                category='%s Replay' % params.channel_name.upper(),
+                window_title='%s Replay' % params.channel_name.upper()
+            ),
+        })
 
     # Add Live
     modes.append({
@@ -90,12 +96,139 @@ def root(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
-    return None
+    """Build categories listing"""
+    shows = []
+
+    if params.next == 'list_shows_1':
+
+        category_name = _('All videos')
+        category_url = URL_VIDEOS
+        shows.append({
+            'label': category_name,
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                category_url=category_url,
+                category_name=category_name,
+                next='list_videos_1',
+                page='0',
+                window_title=category_name
+            )
+        })
+
+        replay_categories_html = utils.get_webcontent(URL_EMISSIONS)
+        replay_categories_soup = bs(replay_categories_html, 'html.parser')
+        categories = replay_categories_soup.find_all(
+            'div', class_='col-sm-4')
+
+        for category in categories:
+
+            category_name = category.find('h3').get_text()
+            category_img = URL_ROOT + '/' + category.find(
+                'img').get('src')
+            category_url = URL_ROOT + '/' + category.find(
+                "a").get("href")
+            shows.append({
+                'label': category_name,
+                'thumb': category_img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    category_url=category_url,
+                    category_name=category_name,
+                    next='list_videos_1',
+                    page='0',
+                    window_title=category_name
+                )
+            })
+
+    return common.PLUGIN.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
-    return None
+    """Build videos listing"""
+    videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
+
+    if params.next == 'list_videos_1':
+        list_videos_html = utils.get_webcontent(
+            params.category_url + '?lim_un=%s' % params.page)
+        list_videos_soup = bs(list_videos_html, 'html.parser')
+
+        videos_data = list_videos_soup.find_all(
+            'div', class_='col-sm-4')
+
+        for video in videos_data:
+
+            title = video.find('h3').get_text()
+            plot = ''
+            duration = 0
+            img = video.find('img').get('src')
+            video_url = video.find('a').get('href')
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    video_url=video_url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'thumb': img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    video_url=video_url,
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+        # More videos...
+        videos.append({
+            'label': common.ADDON.get_localized_string(30100),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='list_videos_1',
+                category_url = params.category_url,
+                page=str(int(params.page) + 12),
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
+
+    return common.PLUGIN.create_listing(
+        videos,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+        ),
+        content='tvshows',
+        update_listing='update_listing' in params,
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -152,5 +285,14 @@ def list_live(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    if params.next == 'play_l':
+    if params.next == 'play_r' or params.next == 'download_video':
+        video_html = utils.get_webcontent(params.video_url)
+        streams_url = re.compile(
+            r'file: "(.*?)"').findall(video_html)
+        stream_url = ''
+        for stream in streams_url:
+            if 'm3u8' in stream:
+                stream_url = stream
+        return stream_url
+    elif params.next == 'play_l':
         return params.url
