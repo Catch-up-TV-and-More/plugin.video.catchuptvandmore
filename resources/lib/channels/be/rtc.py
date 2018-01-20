@@ -27,7 +27,7 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Add Replay
+# ....
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English

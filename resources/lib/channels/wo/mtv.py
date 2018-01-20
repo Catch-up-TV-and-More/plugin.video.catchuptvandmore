@@ -45,8 +45,9 @@ URL_EMISSION = URL_ROOT + '/emissions/'
 
 URL_VIDEOS = URL_ROOT + '/dernieres-videos'
 
-URL_STREAM = 'http://intl.mtvnservices.com/mediagen/' \
-             'mgid:arc:video:mtv.fr:%s/?device=ipad'
+URL_STREAM = 'https://media-utils.mtvnservices.com/services/' \
+             'MediaGenerator/mgid:arc:video:mtv.fr:%s?' \
+             '&format=json&acceptMethods=hls'
 # videoID
 
 def channel_entry(params):
@@ -274,7 +275,7 @@ def get_video_url(params):
             params.video_url)
         video_id = re.compile(
             r'itemId":"(.*?)"').findall(video_html)[0]
-        xml_video_stream = utils.get_webcontent(
+        json_video_stream = utils.get_webcontent(
             URL_STREAM % video_id)
-        return re.compile(
-            r'src\>(.*?)\<').findall(xml_video_stream)[0]
+        json_video_stream_parser = json.loads(json_video_stream)
+        return json_video_stream_parser["package"]["video"]["item"][0]["rendition"][0]["src"]
