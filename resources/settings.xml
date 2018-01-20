@@ -363,6 +363,9 @@
             <setting label="YES TV" type="bool" id="channels.ca.yestv.yestv" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="channels.ca.yestv.yestv.order" default="3"/>
 
+            <setting label="Télé-Québec" type="bool" id="channels.ca.telequebec.telequebec" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ca.telequebec.telequebec.order" default="4"/>
+
         <setting label="" type="number" visible="false" id="main_menu.us.order" default="9"/>
         <setting label="30029" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30029" type="bool" id="main_menu.us" default="true" visible="false"/>

@@ -49,7 +49,8 @@ CHANNELS = {
     'main_menu.ca': {
         'channels.ca.tv5.tv5': 'TV5',
         'channels.ca.tv5.unis': 'UNIS',
-        'channels.ca.yestv.yestv': 'YES TV'
+        'channels.ca.yestv.yestv': 'YES TV',
+        'channels.ca.telequebec.telequebec': 'Télé-Québec'
     },
 
     'main_menu.sw': {
