@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.9~beta019"
+       version="0.1.9~beta020"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -44,7 +44,7 @@
 [Fix] Get Replay/Videos France TV Sports (wwark)
 [Add WebTV] FranceTV Education (wwark)
 [Add Channel - Live TV] Gong (wwark)
-[Add Live TV] Télé-Québec (CA) (wwark)
+[Add Channel - Live TV] Télé-Québec (CA) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

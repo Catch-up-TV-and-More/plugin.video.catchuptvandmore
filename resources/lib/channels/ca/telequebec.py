@@ -21,12 +21,12 @@
 """
 
 import re
+from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Replay add emissions
-# Add info LIVE TV
+# Add info LIVE TV, Replay
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -36,6 +36,11 @@ _ = common.ADDON.initialize_gettext()
 URL_ROOT = 'http://zonevideo.telequebec.tv'
 
 URL_LIVE = 'https://player.telequebec.tv/Tq_VideoPlayer.js'
+
+URL_EMISSIONS = URL_ROOT + '/a-z/'
+
+URL_STREAM = 'https://mnmedias.api.telequebec.tv/m3u8/%s.m3u8'
+# VideoId
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -55,6 +60,17 @@ def channel_entry(params):
 def root(params):
     """choose mode"""
     modes = []
+
+    # Add Replay
+    modes.append({
+        'label': 'Replay',
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='list_shows_1',
+            category='%s Replay' % params.channel_name.upper(),
+            window_title='%s Replay' % params.channel_name.upper()
+        ),
+    })
 
     # Add Live
     modes.append({
@@ -78,12 +94,105 @@ def root(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
-    return None
+    """Build categories listing"""
+    shows = []
+
+    if params.next == 'list_shows_1':
+
+        replay_categories_html = utils.get_webcontent(URL_EMISSIONS)
+        replay_categories_soup = bs(replay_categories_html, 'html.parser')
+        categories = replay_categories_soup.find(
+            'div', class_='list').find_all('li')
+
+        for category in categories:
+
+            category_name = category.find('a').get_text()
+            category_url = URL_ROOT + category.find(
+                "a").get("href")
+            shows.append({
+                'label': category_name,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    category_url=category_url,
+                    category_name=category_name,
+                    next='list_videos_1',
+                    window_title=category_name
+                )
+            })
+
+    return common.PLUGIN.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
-    return None
+    """Build videos listing"""
+    videos = []
+
+    if params.next == 'list_videos_1':
+        list_videos_html = utils.get_webcontent(
+            params.category_url)
+        list_videos_soup = bs(list_videos_html, 'html.parser')
+
+        videos_data = list_videos_soup.find_all(
+            'div', class_='item')
+
+        for video in videos_data:
+
+            title = video.find('h4').get_text()
+            plot = video.find('p').get_text()
+            duration = 0
+            img = video.find('img').get('src')
+            video_id = video.get('data-mediaid')
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    video_id=video_id) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'thumb': img,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    video_id=video_id,
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+    return common.PLUGIN.create_listing(
+        videos,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+        ),
+        content='tvshows',
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -137,5 +246,7 @@ def list_live(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    if params.next == 'play_l':
+    if params.next == 'play_r' or params.next == 'download_video':
+        return URL_STREAM % params.video_id
+    elif params.next == 'play_l':
         return params.url
