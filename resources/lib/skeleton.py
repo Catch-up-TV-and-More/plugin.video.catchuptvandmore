@@ -150,7 +150,8 @@ CHANNELS = {
         'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde',
         'channels.wo.bvn.bvn': 'BVN',
         'channels.wo.icitelevision.icitelevision': 'ICI Télévision',
-        'channels.wo.mtv.mtv': 'MTV'
+        'channels.wo.mtv.mtv': 'MTV',
+        'channels.wo.arirang.arirang': 'Arirang (아리랑)'
     },
 
     'main_menu.ws': {
