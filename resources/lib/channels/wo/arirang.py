@@ -22,20 +22,21 @@
 
 import re
 from resources.lib import utils
-from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
 # Replay add emissions
-# Add info LIVE TV
+# Find a way to get M3U8
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
 # strings.po file instead of numeric codes
 _ = common.ADDON.initialize_gettext()
 
-URL_LIVE = 'http://www.arirang.com/Tv/Tv_Index.asp'
-# Language
+URL_LIVE = 'http://www.arirang.com/mobile/index.asp'
+
+URL_STREAM = 'http://amdlive.ctnd.com.edgesuite.net/' \
+             'arirang_1ch/smil:arirang_1ch.smil/playlist.m3u8'
 
 
 def channel_entry(params):
@@ -98,13 +99,10 @@ def list_live(params):
     plot = ''
     duration = 0
     img = ''
-    live_id = ''
+    live_url = ''
 
     title = params.channel_name + ' Live TV'
-    live_html = utils.get_webcontent(URL_LIVE)
-    live_id = re.compile(
-        'www.youtube.com/embed/(.*?)[\?\"\&]').findall(
-            live_html)[0]
+    live_url = URL_STREAM
 
     info = {
         'video': {
@@ -121,7 +119,7 @@ def list_live(params):
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next='play_l',
-            live_id=live_id,
+            live_url=live_url,
         ),
         'is_playable': True,
         'info': info
@@ -141,4 +139,4 @@ def list_live(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return resolver.get_stream_youtube(params.live_id, False)
+        return params.live_url
