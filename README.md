@@ -122,7 +122,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - BVN *(Replay, Live TV)*
 - ICI Télévision *(Replay, Live TV)*
 - MTV *(Replay)* *(Contents {FR})*
-- Arirang (아리랑) *(Live TV)*
+- Arirang (아리랑) *(Replay, Live TV)*
 
 ### Japon — *Japan*
 ##### Web TV
