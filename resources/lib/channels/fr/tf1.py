@@ -32,6 +32,7 @@ from resources.lib import common
 # TO DO
 # Quality Mode on LIVE TV
 # Replay LCI add More Buttons
+# DRM (SAMPLE-AES) for Replay => https://github.com/peak3d/inputstream.adaptive/issues/96
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
