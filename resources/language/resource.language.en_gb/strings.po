@@ -91,6 +91,10 @@ msgctxt "#30028"
 msgid "Canadian channels"
 msgstr ""
 
+msgctxt "#30029"
+msgid "United States channels"
+msgstr ""
+
 # Context menu (from 30040 to 30049)
 msgctxt "#30040"
 msgid "Move down"
@@ -138,6 +142,10 @@ msgstr ""
 
 msgctxt "#30082"
 msgid "Euronews: Choose Channel"
+msgstr ""
+
+msgctxt "#30083"
+msgid "MTV: Choose Channel"
 msgstr ""
 
 msgctxt "#30087"

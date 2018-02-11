@@ -68,12 +68,22 @@ URL_ALPHA = 'https://pluzz.webservices.francetelevisions.fr/' \
 # sens: asc or desc
 # page inc: 100
 
+URL_ROOT_SPORT = 'https://sport.francetvinfo.fr'
+
 URL_FRANCETV_SPORT = 'https://api-sport-events.webservices.' \
                      'francetelevisions.fr/%s'
 # RootMode
 
 URL_ROOT_NOUVELLES_ECRITURES = 'http://%s.nouvelles-ecritures.francetv.fr'
 # channel name
+
+URL_ROOT_EDUCATION = 'http://education.francetv.fr'
+
+URL_VIDEO_DATA_EDUCTATION = URL_ROOT_EDUCATION + '/video/%s/sisters'
+# TitleVideo
+
+URL_SERIE_DATA_EDUCTION = URL_ROOT_EDUCATION + '/programme/%s/section?page=%s'
+# TitleSerie, page
 
 CATEGORIES_DISPLAY = {
     "france2": "France 2",
@@ -138,6 +148,12 @@ LIVE_FR3_REGIONS = {
     "provence_alpes": "le direct France 3 PROVENCE-ALPES",
     "rhone_alpes": "le direct France 3 RHÔNE-ALPES"
 }
+
+CATEGORIES_EDUCATION = {
+    'Séries': URL_ROOT_EDUCATION + '/recherche?q=&type=series&page=%s',
+    'Vidéos': URL_ROOT_EDUCATION + '/recherche?q=&type=video&page=%s'
+}
+
 
 CATEGORIES = {
     'Toutes catégories': 'https://pluzz.webservices.francetelevisions.fr/'
@@ -214,6 +230,8 @@ def root(params):
     elif params.channel_name == 'studio-4' or \
         params.channel_name == 'irl':
         next_replay = 'list_shows_necritures_1'
+    elif params.channel_name == 'francetveducation':
+        next_replay = 'list_shows_education_1'
     else:
         next_replay = 'list_shows_1'
 
@@ -234,7 +252,8 @@ def root(params):
 
     # Add Live
     if params.channel_name != 'studio-4' and \
-        params.channel_name != 'irl':
+        params.channel_name != 'irl' and \
+        params.channel_name != 'francetveducation':
         modes.append({
             'label': _('Live TV'),
             'url': common.PLUGIN.get_url(
@@ -474,7 +493,7 @@ def list_shows(params):
             URL_ROOT_NOUVELLES_ECRITURES % params.channel_name)
         categories_soup = bs(categories_html, 'html.parser')
         categories = categories_soup.find_all(
-                'li', class_='genre-item')
+            'li', class_='genre-item')
 
         for category in categories:
 
@@ -498,10 +517,10 @@ def list_shows(params):
             URL_ROOT_NOUVELLES_ECRITURES % params.channel_name)
         shows_soup = bs(shows_html, 'html.parser')
         class_panel_value = 'panel %s' % params.category_data_panel
-        list_shows = shows_soup.find(
-                'div', class_=class_panel_value).find_all('li')
+        list_shows_necritures = shows_soup.find(
+            'div', class_=class_panel_value).find_all('li')
 
-        for show_data in list_shows:
+        for show_data in list_shows_necritures:
 
             show_url = URL_ROOT_NOUVELLES_ECRITURES % params.channel_name + \
                 show_data.find('a').get('href')
@@ -519,6 +538,70 @@ def list_shows(params):
                     window_title=show_title
                 )
             })
+
+    elif 'list_shows_education_1' in params.next:
+
+        for category_title, category_url in CATEGORIES_EDUCATION.iteritems():
+
+            if category_title == 'Séries':
+                next_value = 'list_shows_education_2'
+            else:
+                next_value = 'list_videos_education_1'
+
+            shows.append({
+                'label': category_title,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    category_url=category_url,
+                    title=category_title,
+                    page='1',
+                    next=next_value,
+                    window_title=category_title
+                )
+            })
+
+    elif 'list_shows_education_2' in params.next:
+
+        shows_html = utils.get_webcontent(
+            params.category_url % params.page)
+        shows_soup = bs(shows_html, 'html.parser')
+        list_shows_education = shows_soup.find_all(
+            'div', class_='col-xs-3 ')
+
+        for show_data in list_shows_education:
+
+            show_data_name = show_data.find(
+                'div', class_='ftve-thumbnail ').get('data-contenu')
+            show_title = show_data.find('h4').find(
+                'a').get('title')
+            show_image = show_data.find(
+                'div', class_='thumbnail-img lazy').get('data-original')
+
+            shows.append({
+                'label': show_title,
+                'thumb': show_image,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    show_data_name=show_data_name,
+                    page='1',
+                    title=show_title,
+                    next='list_videos_education_2',
+                    window_title=show_title
+                )
+            })
+
+        # More programs...
+        shows.append({
+            'label': common.ADDON.get_localized_string(30108),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='list_shows_education_2',
+                category_url=params.category_url,
+                page=str(int(params.page) + 1),
+                update_listing=True,
+                previous_listing=str(shows)
+            )
+        })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -540,17 +623,20 @@ def list_videos(params):
 
     if params.next == 'list_videos_ftvsport':
 
-        list_videos = utils.get_webcontent(
+        list_videos_html = utils.get_webcontent(
             URL_FRANCETV_SPORT % (params.mode) + \
             '?page=%s' % (params.page))
-        list_videos_parserjson = json.loads(list_videos)
+        list_videos_parserjson = json.loads(list_videos_html)
 
         for video in list_videos_parserjson["page"]["flux"]:
 
             title = video["title"]
             image = video["image"]["large_16_9"]
             duration = int(video["duration"])
-            id_diffusion = video["sivideo-id"]
+            url_sport = URL_ROOT_SPORT + video["url"]
+            html_sport = utils.get_webcontent(url_sport)
+            id_diffusion = re.compile(
+                r'data-video="(.*?)"').findall(html_sport)[0]
 
             info = {
                 'video': {
@@ -593,6 +679,150 @@ def list_videos(params):
                 action='channel_entry',
                 mode=params.mode,
                 next=params.next,
+                page=str(int(params.page) + 1),
+                title=params.title,
+                window_title=params.window_title,
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
+
+    elif params.next == 'list_videos_education_1':
+
+        list_videos_html = utils.get_webcontent(
+            params.category_url % (params.page))
+        list_videos_soup = bs(list_videos_html, 'html.parser')
+        list_videos_datas = list_videos_soup.find_all(
+            "div", class_="col-xs-3 ")
+
+        for video_data in list_videos_datas:
+
+            title = video_data.find('h4').find(
+                'a').get('title')
+            image = video_data.find(
+                'div', class_='thumbnail-img lazy').get('data-original')
+            duration = 0
+            data_video_title = video_data.find(
+                'div', class_='ftve-thumbnail ').get('data-contenu')
+            html_video_data = utils.get_webcontent(
+                URL_VIDEO_DATA_EDUCTATION % data_video_title)
+            id_diffusion = re.compile(
+                r'videos.francetv.fr\/video\/(.*?)\@').findall(html_video_data)[0]
+
+            info = {
+                'video': {
+                    'title': title,
+                    # 'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    id_diffusion=id_diffusion) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'fanart': image,
+                'thumb': image,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    id_diffusion=id_diffusion
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+        # More videos...
+        videos.append({
+            'label': common.ADDON.get_localized_string(30100),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                category_url=params.category_url,
+                next=params.next,
+                page=str(int(params.page) + 1),
+                title=params.title,
+                window_title=params.window_title,
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
+
+    elif params.next == 'list_videos_education_2':
+
+        list_videos_html = utils.get_webcontent(
+            URL_SERIE_DATA_EDUCTION % (params.show_data_name, params.page))
+        print 'URL_SERIE_DATA_EDUCTION : ' + URL_SERIE_DATA_EDUCTION % (params.show_data_name, params.page)
+        list_videos_soup = bs(list_videos_html, 'html.parser')
+        list_videos_datas = list_videos_soup.find(
+            'div', class_='content-section').find_all(
+                'div', class_='col-xs-3 ')
+
+        for video_data in list_videos_datas:
+
+            title = video_data.find('h4').find(
+                'a').get('title')
+            image = video_data.find(
+                'div', class_='thumbnail-img lazy').get('data-original')
+            duration = 0
+            data_video_title = video_data.find(
+                'div', class_='ftve-thumbnail ').get('data-contenu')
+            html_video_data = utils.get_webcontent(
+                URL_VIDEO_DATA_EDUCTATION % data_video_title)
+            id_diffusion = re.compile(
+                r'videos.francetv.fr\/video\/(.*?)\@').findall(html_video_data)[0]
+
+            info = {
+                'video': {
+                    'title': title,
+                    # 'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
+                }
+            }
+
+            download_video = (
+                _('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    id_diffusion=id_diffusion) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'fanart': image,
+                'thumb': image,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='play_r',
+                    id_diffusion=id_diffusion
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+        # More videos...
+        videos.append({
+            'label': common.ADDON.get_localized_string(30100),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                show_data_name=params.show_data_name,
+                next='list_videos_education_2',
                 page=str(int(params.page) + 1),
                 title=params.title,
                 window_title=params.window_title,
@@ -1134,7 +1364,7 @@ def get_video_url(params):
         if params.channel_name == 'studio-4' or params.channel_name == 'irl':
 
             video_html = utils.get_webcontent(
-            params.video_url)
+                params.video_url)
             video_soup = bs(video_html, 'html.parser')
             video_data = video_soup.find(
                 'div', class_='player-wrapper')
@@ -1142,7 +1372,7 @@ def get_video_url(params):
             if video_data.find('a', class_='video_link'):
                 id_diffusion = video_data.find(
                     'a', class_='video_link').get(
-                    'href').split('video/')[1].split('@')[0]
+                        'href').split('video/')[1].split('@')[0]
                 file_prgm = utils.get_webcontent(SHOW_INFO % id_diffusion)
                 json_parser = json.loads(file_prgm)
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.8"
+       version="0.1.9"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,38 +30,22 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.8]
-[Add Channel - Live TV] Rouge TV (CH) (wwark)
-[Add Channel] Histoire (wwark)
-[Add Channel] TV Breizh (wwark)
-[Add Channel] Ushuaïa TV (wwark)
-[Add Channel - Live TV] Sky News (UK) (wwark)
-[Add WebTV] Sky sports (UK) (wwark)
-[Change] Move youtube code to resoler.py for Allociné, Noob TV, Taratata and Teteaclaques (wwark)
-[Add Website] Notrehistoire.ch (CH) (wwark)
-[Add WebTV] Studio 4 (francetv) (wwark)
-[Add WebTV] IRL (francetv) (wwark)
-[Add Channel - Live TV] VRT NU (BE) (wwark)
-[Improvement] Send a notification when authentication failed - NRJ12 and Cherie25 Live TV (wwark)
-[Remove] Authentication - UKTVPlay channels (UK) (wwark)
-[Add Website] 30 Millions d'Amis (wwark)
-[Fix] Change json api - Channels RTS, SRF, ... (CH) (wwark)
-[Fix] __gettext__.pcl without 'hash' value - simpleplugin.py (wwark)
-[Add Channel] Add replay TV5 (CA) (wwark)
-[Add Channel] Add replay UNIS (CA) (wwark)
-[Fix/Improvement] Fix image videos and Add First Video - Website Autoplus (wwark)
-[Fix] Show image - Website Culturepub (wwark)
-[Fix] Playing some youtube videos - Website Allocine (wwark)
-[Fix/Refactoring] Live TV BFMTV and move brightcove code to resolver.py - channel BFMTV (wwark)
-[Remove] Live TV (not working) - Channel Canal+, c8, cstar (wwark)
-[Move] Cnews code to cnews.py - Replay and Live TV Cnews (wwark)
-[Rework] Replay - Channel Canal+, C8, Cstar (wwark)
-[Add Channel] Seasons (wwark)
-[Add Channel] Comédie + (wwark)
-[Add Channel] Les chaînes planètes + (wwark)
-[Add Channel] Golf + (wwark)
-[Add Channel] Ciné + (wwark)
-[Add Channel] INFOSPORT+ (wwark)
+[Version 0.1.9]
+[Move] BVN channel from belgium to internationals channels (wwark)
+[Add Website] Elle (wwark)
+[Add Channel - Live TV] ICI Télévision (International) (wwark)
+[Add Live TV] YES TV (CA) (wwark)
+[Improvement] Get more videos for mycanal.fr (wwark)
+[Add Channel - Live TV] Télé MB (BE) (wwark)
+[Add Channel] Game One (wwark)
+[Add Channel - Live TV] RTC Télé Liège (BE) (wwark)
+[Add Channel] MTV (Contents FR) (wwark)
+[Fix] Get Replay/Videos France TV Sports (wwark)
+[Add WebTV] FranceTV Education (wwark)
+[Add Channel - Live TV] Gong (wwark)
+[Add Channel - Live TV] Télé-Québec (CA) (wwark)
+[Add Channel - Live TV] Arirang (KOR/WORLD) (wwark)
+[Fix] Taratata website (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -13,6 +13,7 @@
         <setting label="30025" type="bool" id="main_menu.wo" default="true"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true"/>
         <setting label="30028" type="bool" id="main_menu.ca" default="true"/>
+        <!--<setting label="30029" type="bool" id="main_menu.us" default="true"/>-->
     </category>
 
 
@@ -181,36 +182,48 @@
             <setting label="INFOSPORT+" type="bool" id="channels.fr.mycanal.infosportplus" default="true" visible="eq(-103,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.mycanal.infosportplus.order" default="52"/>
 
-            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-105,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="53"/>
+            <setting label="Game One" type="bool" id="channels.fr.gameone.gameone" default="true" visible="eq(-105,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.gameone.gameone.order" default="53"/>
 
-            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-107,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="54"/>-->
+            <setting label="FranceTV Education (francetv)" type="bool" id="channels.fr.pluzz.francetveducation" default="true" visible="eq(-107,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.pluzz.francetveducation.order" default="54"/>
+
+            <setting label="Gong" type="bool" id="channels.fr.gong.gong" default="true" visible="eq(-109,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.gong.gong.order" default="55"/>
+
+            <!--<setting label="Teva" type="bool" id="channels.fr.6play.teva" default="true" visible="eq(-111,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.teva.order" default="56"/>
+
+            <setting label="Paris Première" type="bool" id="channels.fr.6play.parispremiere" default="true" visible="eq(-113,true)"/>
+            <setting label="" type="number" visible="false" id="channels.fr.6play.parispremiere.order" default="57"/>-->
 
         <setting label="" type="number" visible="false" id="main_menu.be.order" default="2"/>
         <setting label="30021" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30021" type="bool" id="main_menu.be" default="true" visible="false"/>
 
-            <setting label="BVN" type="bool" id="channels.be.bvn.bvn" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.bvn.bvn.order" default="1"/>
+            <setting label="BRF Mediathek" type="bool" id="channels.be.brf.brf" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.brf.brf.order" default="1"/>
 
-            <setting label="BRF Mediathek" type="bool" id="channels.be.brf.brf" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.brf.brf.order" default="2"/>
+            <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="2"/>
 
-            <setting label="RTL-TVI" type="bool" id="channels.be.rtl.rtltvi" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.rtltvi.order" default="3"/>
+            <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="3"/>
 
-            <setting label="PLUG RTL" type="bool" id="channels.be.rtl.plugrtl" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.plugrtl.order" default="4"/>
+            <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="4"/>
 
-            <setting label="CLUB RTL" type="bool" id="channels.be.rtl.clubrtl" default="true" visible="eq(-9,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtl.clubrtl.order" default="5"/>
+            <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="5"/>
 
-            <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="channels.be.rtbf.auvio" default="true" visible="eq(-11,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.rtbf.auvio.order" default="6"/>
+            <setting label="VRT NU" type="bool" id="channels.be.vrt.vrt" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.vrt.vrt.order" default="6"/>
 
-            <setting label="VRT NU" type="bool" id="channels.be.vrt.vrt" default="true" visible="eq(-13,true)"/>
-            <setting label="" type="number" visible="false" id="channels.be.vrt.vrt.order" default="7"/>
+            <setting label="Télé MB" type="bool" id="channels.be.telemb.telemb" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.telemb.telemb.order" default="7"/>
+
+            <setting label="RTC Télé Liège" type="bool" id="channels.be.rtc.rtc" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="channels.be.rtc.rtc.order" default="8"/>
 
         <setting label="" type="number" visible="false" id="main_menu.sw.order" default="3"/>
         <setting label="30023" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -297,6 +310,18 @@
             <setting label="Tivi 5Monde" type="bool" id="channels.wo.tv5monde.tivi5monde" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="channels.wo.tv5monde.tivi5monde.order" default="7"/>
 
+            <setting label="BVN" type="bool" id="channels.wo.bvn.bvn" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.bvn.bvn.order" default="8"/>
+
+            <setting label="ICI Télévision" type="bool" id="channels.wo.icitelevision.icitelevision" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.icitelevision.icitelevision.order" default="9"/>
+
+            <setting label="MTV" type="bool" id="channels.wo.mtv.mtv" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.mtv.mtv.order" default="10"/>
+
+            <setting label="Arirang (아리랑)" type="bool" id="channels.wo.arirang.arirang" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="channels.wo.arirang.arirang.order" default="11"/>
+
         <setting label="" type="number" visible="false" id="main_menu.ws.order" default="7"/>
         <setting label="30026" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true" visible="false"/>
@@ -325,6 +350,9 @@
             <setting label="30 Millions d'Amis" type="bool" id="channels.ws.30millionsdamis.30millionsdamis" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="channels.ws.30millionsdamis.30millionsdamis.order" default="8"/>
 
+            <setting label="Elle" type="bool" id="channels.ws.elle.elle" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ws.elle.elle.order" default="9"/>
+
         <setting label="" type="number" visible="false" id="main_menu.ca.order" default="8"/>
         <setting label="30028" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30028" type="bool" id="main_menu.ca" default="true" visible="false"/>
@@ -334,6 +362,19 @@
 
             <setting label="UNIS" type="bool" id="channels.ca.tv5.unis" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="channels.ca.tv5.unis.order" default="2"/>
+
+            <setting label="YES TV" type="bool" id="channels.ca.yestv.yestv" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ca.yestv.yestv.order" default="3"/>
+
+            <setting label="Télé-Québec" type="bool" id="channels.ca.telequebec.telequebec" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="channels.ca.telequebec.telequebec.order" default="4"/>
+
+        <!--<setting label="" type="number" visible="false" id="main_menu.us.order" default="9"/>
+        <setting label="30029" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="30029" type="bool" id="main_menu.us" default="true" visible="false"/>
+
+            <setting label="NBC" type="bool" id="channels.us.nbc.nbc" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="channels.us.nbc.nbc.order" default="1"/>-->
 
     </category>
 
@@ -351,6 +392,7 @@
                 <setting label="30080" type="labelenum" id="channels.wo.arte.arte.language" visible="eq(-1,true)" values="FR|DE"/>
                 <setting label="30082" type="labelenum" id="channels.wo.euronews.euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
                 <setting label="30081" type="labelenum" id="channels.wo.france24.france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES"/>
+                <setting label="30083" type="labelenum" id="channels.wo.mtv.mtv.language" visible="eq(-4,true)" values="FR"/>
 
             <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
     </category>

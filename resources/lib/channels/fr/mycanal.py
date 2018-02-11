@@ -32,7 +32,6 @@ _ = common.ADDON.initialize_gettext()
 
 # TO DO
 # Add Live TV ?
-# Some videos are not recovered (TO DO)
 
 # URL :
 URL_ROOT_SITE = 'https://www.mycanal.fr'
@@ -99,7 +98,6 @@ def list_shows(params):
         )
         json_replay = re.compile(
             'window.__data=(.*?)};').findall(replay_html)[0]
-        print 'json_replay : ' + json_replay
         replay_jsonparse = json.loads(json_replay + ('}'))
 
         for category in replay_jsonparse["landing"]["strates"]:
@@ -107,24 +105,26 @@ def list_shows(params):
                 category["type"] == "contentGrid":
                 if 'title' in category:
                     title = category['title'].encode('utf-8')
+                else:
+                    title = replay_jsonparse["page"]["displayName"].encode('utf-8')
 
-                    if category["contents"][0]["type"] == 'quicktime':
-                        value_next = 'list_videos_1'
-                    elif category["contents"][0]["type"] == 'landing':
-                        value_next = 'list_shows_2'
-                    if category["contents"][0]["type"] == 'pfv':
-                        value_next = 'list_videos_1'
+                if category["contents"][0]["type"] == 'quicktime':
+                    value_next = 'list_videos_1'
+                elif category["contents"][0]["type"] == 'landing':
+                    value_next = 'list_shows_2'
+                elif category["contents"][0]["type"] == 'pfv':
+                    value_next = 'list_videos_1'
 
-                    shows.append({
-                        'label': title,
-                        'url': common.PLUGIN.get_url(
-                            action='channel_entry',
-                            next=value_next,
-                            url_emission=URL_REPLAY % (params.channel_name),
-                            title=title,
-                            window_title=title
-                        )
-                    })
+                shows.append({
+                    'label': title,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next=value_next,
+                        url_next=URL_REPLAY % (params.channel_name),
+                        title=title,
+                        window_title=title
+                    )
+                })
 
     elif params.next == 'list_shows_2':
 
@@ -138,8 +138,8 @@ def list_shows(params):
         for emissions in replay_jsonparse["landing"]["strates"]:
             if emissions["type"] == "contentRow" or \
                 emissions["type"] == "contentGrid":
-                if 'title' in emissions:
-                    if emissions['title'].encode('utf-8') == params.title:
+                if params.title == replay_jsonparse["page"]["displayName"].encode('utf-8'):
+                    if 'title' not in emissions:
                         for emission in emissions["contents"]:
                             title = emission["onClick"]["displayName"].encode('utf-8')
                             img = emission['URLImage'].encode('utf-8')
@@ -152,15 +152,35 @@ def list_shows(params):
                                 'url': common.PLUGIN.get_url(
                                     action='channel_entry',
                                     next='list_shows_3',
-                                    url_emission=url_emission,
+                                    url_next=url_emission,
                                     title=title,
                                     window_title=title
                                 )
                             })
+                else:
+                    if 'title' in emissions:
+                        if emissions['title'].encode('utf-8') == params.title:
+                            for emission in emissions["contents"]:
+                                title = emission["onClick"]["displayName"].encode('utf-8')
+                                img = emission['URLImage'].encode('utf-8')
+                                url_emission = URL_ROOT_SITE + \
+                                    emission["onClick"]["path"].encode('utf-8')
+
+                                shows.append({
+                                    'label': title,
+                                    'thumb': img,
+                                    'url': common.PLUGIN.get_url(
+                                        action='channel_entry',
+                                        next='list_shows_3',
+                                        url_next=url_emission,
+                                        title=title,
+                                        window_title=title
+                                    )
+                                })
 
     elif params.next == 'list_shows_3':
 
-        replay_html = utils.get_webcontent(params.url_emission)
+        replay_html = utils.get_webcontent(params.url_next)
         json_replay = re.compile(
             'window.__data=(.*?)};').findall(replay_html)[0]
         replay_jsonparse = json.loads(json_replay + ('}'))
@@ -170,17 +190,18 @@ def list_shows(params):
                 category["type"] == "contentGrid":
                 if 'title' in category:
                     title = category['title'].encode('utf-8')
-
-                    shows.append({
-                        'label': title,
-                        'url': common.PLUGIN.get_url(
-                            action='channel_entry',
-                            next='list_videos_1',
-                            title=title,
-                            url_emission=params.url_emission,
-                            window_title=title
-                        )
-                    })
+                else:
+                    title = replay_jsonparse["page"]["displayName"].encode('utf-8')
+                shows.append({
+                    'label': title,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='list_videos_1',
+                        title=title,
+                        url_next=params.url_next,
+                        window_title=title
+                    )
+                })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -199,7 +220,7 @@ def list_videos(params):
 
     if params.next == 'list_videos_1':
 
-        replay_html = utils.get_webcontent(params.url_emission)
+        replay_html = utils.get_webcontent(params.url_next)
         json_replay = re.compile(
             'window.__data=(.*?)};').findall(replay_html)[0]
         replay_jsonparse = json.loads(json_replay + ('}'))
@@ -207,8 +228,9 @@ def list_videos(params):
         for emissions in replay_jsonparse["landing"]["strates"]:
             if emissions["type"] == "contentRow" or \
                 emissions["type"] == "contentGrid":
-                if 'title' in emissions:
-                    if emissions['title'].encode('utf-8') == params.title:
+
+                if params.title == replay_jsonparse["page"]["displayName"].encode('utf-8'):
+                    if 'title' not in emissions:
                         for emission in emissions["contents"]:
                             title = emission["title"].encode('utf-8')
                             plot = emission["subtitle"].encode('utf-8')
@@ -250,6 +272,93 @@ def list_videos(params):
                                 'info': info,
                                 'context_menu': context_menu
                             })
+                    elif 'title' in emissions:
+                        if emissions['title'].encode('utf-8') == params.title:
+                            for emission in emissions["contents"]:
+                                title = emission["title"].encode('utf-8')
+                                plot = emission["subtitle"].encode('utf-8')
+                                img = emission['URLImage'].encode('utf-8')
+                                video_id = emission["contentID"]
+                                duration = 0
+
+                                info = {
+                                    'video': {
+                                        'title': title,
+                                        'plot': plot,
+                                        # 'aired': aired,
+                                        # 'date': date,
+                                        'duration': duration,
+                                        # 'year': year,
+                                        # 'genre': category,
+                                        'mediatype': 'tvshow'
+                                    }
+                                }
+
+                                download_video = (
+                                    _('Download'),
+                                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                                        action='download_video',
+                                        video_id=video_id) + ')'
+                                )
+                                context_menu = []
+                                context_menu.append(download_video)
+
+                                videos.append({
+                                    'label': title,
+                                    'thumb': img,
+                                    'url': common.PLUGIN.get_url(
+                                        action='channel_entry',
+                                        next='play_r',
+                                        video_id=video_id,
+                                    ),
+                                    'is_playable': True,
+                                    'info': info,
+                                    'context_menu': context_menu
+                                })
+                else:
+                    if 'title' in emissions:
+                        if emissions['title'].encode('utf-8') == params.title:
+                            for emission in emissions["contents"]:
+                                title = emission["title"].encode('utf-8')
+                                plot = emission["subtitle"].encode('utf-8')
+                                img = emission['URLImage'].encode('utf-8')
+                                video_id = emission["contentID"]
+                                duration = 0
+
+                                info = {
+                                    'video': {
+                                        'title': title,
+                                        'plot': plot,
+                                        # 'aired': aired,
+                                        # 'date': date,
+                                        'duration': duration,
+                                        # 'year': year,
+                                        # 'genre': category,
+                                        'mediatype': 'tvshow'
+                                    }
+                                }
+
+                                download_video = (
+                                    _('Download'),
+                                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                                        action='download_video',
+                                        video_id=video_id) + ')'
+                                )
+                                context_menu = []
+                                context_menu.append(download_video)
+
+                                videos.append({
+                                    'label': title,
+                                    'thumb': img,
+                                    'url': common.PLUGIN.get_url(
+                                        action='channel_entry',
+                                        next='play_r',
+                                        video_id=video_id,
+                                    ),
+                                    'is_playable': True,
+                                    'info': info,
+                                    'context_menu': context_menu
+                                })
 
     return common.PLUGIN.create_listing(
         videos,

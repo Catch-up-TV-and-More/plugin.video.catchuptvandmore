@@ -42,7 +42,7 @@ DESIRED_QUALITY = common.PLUGIN.get_setting('quality')
 URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
 
-URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s'
+URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s?autoplay=1'
 # Video_id
 
 URL_FACEBOOK_BY_ID = 'https://www.facebook.com/allocine/videos/%s'

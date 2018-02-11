@@ -28,9 +28,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RTL-TVI *(Replay, Live TV)*
 - PLUG RTL *(Replay, Live TV)*
 - CLUB RTL *(Replay, Live TV)*
+- Télé MB *(Replay, Live TV)*
+- RTC Télé Liège *(Replay, Live TV)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
-- BVN *(Replay, Live TV)*
 - VRT NU (Eén, Canvas, ...) *(Replay with VRT NU account, Live TV)*
 
 ##### TV Communauté allemande — *German Community TV*
@@ -40,6 +41,14 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV Communauté française — *French Community TV*
 - TV5 *(Replay)*
 - UNIS *(Replay)*
+- Télé-Québec *(Replay, Live TV)*
+
+##### TV Communauté anglaise — *English Community TV*
+- YES TV *(Live TV)*
+
+### États-Unis d'Amérique — *United States of America*
+##### TV
+- NBC *(Replay)*
 
 ### France
 ##### TV
@@ -83,6 +92,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Golf + *(Replay)*
 - Ciné + *(Replay)*
 - INFOSPORT+ *(Replay)*
+- Game One *(Replay)*
+- Gong *(Replay, Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
@@ -97,6 +108,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France TV Sport — francetv *(Replay, Live)*
 - Studio 4 — francetv *(Replay)*
 - IRL — francetv *(Replay)*
+- France TV Education — francetv *(Replay)*
 
 ### Internationales — *International*
 ##### TV
@@ -107,6 +119,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - NHK World *(Replay, Live TV)*
 - TV5Monde *(Replay, Live TV)*
 - Tivi 5Monde *(Replay, Live TV)*
+- BVN *(Replay, Live TV)*
+- ICI Télévision *(Replay, Live TV)*
+- MTV *(Replay)* *(Contents {FR})*
+- Arirang (아리랑) *(Replay, Live TV)*
 
 ### Japon — *Japan*
 ##### Web TV
@@ -143,6 +159,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Culturepub <http://www.culturepub.fr/>
 - Auto Plus <https://video.autoplus.fr>
 - 30 Millions d'Amis <http://www.30millionsdamis.fr>
+- Elle <http://videos.elle.fr>
 
 ### Suisse — *Switzerland*
 ##### TV Communauté française — *French Community TV*

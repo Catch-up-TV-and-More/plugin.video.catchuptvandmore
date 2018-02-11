@@ -28,6 +28,7 @@ CATEGORIES = {
     'main_menu.jp': 'Japanese channels',
     'main_menu.sw': 'Switzerland channels',
     'main_menu.uk': 'United Kingdom channels',
+    # 'main_menu.us': 'United States channels',
     'main_menu.wo': 'International channels',
     'main_menu.ws': 'Websites'
 }
@@ -36,17 +37,20 @@ CHANNELS = {
 
     'main_menu.be': {
         'channels.be.rtbf.auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
-        'channels.be.bvn.bvn': 'BVN',
         'channels.be.brf.brf': 'BRF Mediathek',
         'channels.be.rtl.rtltvi': 'RTL-TVI',
         'channels.be.rtl.plugrtl': 'PLUG RTL',
         'channels.be.rtl.clubrtl': 'CLUB RTL',
-        'channels.be.vrt.vrt': 'VRT NU'
+        'channels.be.vrt.vrt': 'VRT NU',
+        'channels.be.telemb.telemb': 'Télé MB',
+        'channels.be.rtc.rtc': 'RTC Télé Liège'
     },
 
     'main_menu.ca': {
         'channels.ca.tv5.tv5': 'TV5',
-        'channels.ca.tv5.unis': 'UNIS'
+        'channels.ca.tv5.unis': 'UNIS',
+        'channels.ca.yestv.yestv': 'YES TV',
+        'channels.ca.telequebec.telequebec': 'Télé-Québec'
     },
 
     'main_menu.sw': {
@@ -110,7 +114,10 @@ CHANNELS = {
         'channels.fr.mycanal.les-chaines-planete': 'Les chaînes planètes +',
         'channels.fr.mycanal.golfplus': 'Golf +',
         'channels.fr.mycanal.cineplus': 'Ciné +',
-        'channels.fr.mycanal.infosportplus': 'INFOSPORT+'
+        'channels.fr.mycanal.infosportplus': 'INFOSPORT+',
+        'channels.fr.gameone.gameone': 'Game One',
+        'channels.fr.pluzz.francetveducation': 'France TV Education (francetv)',
+        'channels.fr.gong.gong': 'Gong'
     },
 
     'main_menu.jp': {
@@ -129,6 +136,10 @@ CHANNELS = {
         'channels.uk.sky.skysports': 'Sky sports'
     },
 
+    'main_menu.us': {
+        # 'channels.us.nbc.nbc': 'NBC'
+    },
+
     'main_menu.wo': {
         'channels.wo.tv5monde.tv5mondeafrique': 'TV5Monde Afrique',
         'channels.wo.arte.arte': 'Arte',
@@ -136,7 +147,11 @@ CHANNELS = {
         'channels.wo.france24.france24': 'France 24',
         'channels.wo.nhkworld.nhkworld': 'NHK World',
         'channels.wo.tv5monde.tv5monde': 'TV5Monde',
-        'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde'
+        'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde',
+        'channels.wo.bvn.bvn': 'BVN',
+        'channels.wo.icitelevision.icitelevision': 'ICI Télévision',
+        'channels.wo.mtv.mtv': 'MTV',
+        'channels.wo.arirang.arirang': 'Arirang (아리랑)'
     },
 
     'main_menu.ws': {
@@ -147,6 +162,7 @@ CHANNELS = {
         'channels.ws.culturepub.culturepub': 'Culturepub',
         'channels.ws.autoplus.autoplus': 'Auto Plus',
         'channels.ws.notrehistoirech.notrehistoirech': 'Notre Histoire.ch',
-        'channels.ws.30millionsdamis.30millionsdamis': '30 Millions d\'Amis'
+        'channels.ws.30millionsdamis.30millionsdamis': '30 Millions d\'Amis',
+        'channels.ws.elle.elle': 'Elle'
     }
 }
