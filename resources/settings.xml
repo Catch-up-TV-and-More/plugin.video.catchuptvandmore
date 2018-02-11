@@ -13,7 +13,7 @@
         <setting label="30025" type="bool" id="main_menu.wo" default="true"/>
         <setting label="30026" type="bool" id="main_menu.ws" default="true"/>
         <setting label="30028" type="bool" id="main_menu.ca" default="true"/>
-        <setting label="30029" type="bool" id="main_menu.us" default="true"/>
+        <!--<setting label="30029" type="bool" id="main_menu.us" default="true"/>-->
     </category>
 
 
@@ -369,12 +369,12 @@
             <setting label="Télé-Québec" type="bool" id="channels.ca.telequebec.telequebec" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="channels.ca.telequebec.telequebec.order" default="4"/>
 
-        <setting label="" type="number" visible="false" id="main_menu.us.order" default="9"/>
+        <!--<setting label="" type="number" visible="false" id="main_menu.us.order" default="9"/>
         <setting label="30029" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30029" type="bool" id="main_menu.us" default="true" visible="false"/>
 
             <setting label="NBC" type="bool" id="channels.us.nbc.nbc" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.us.nbc.nbc.order" default="1"/>
+            <setting label="" type="number" visible="false" id="channels.us.nbc.nbc.order" default="1"/>-->
 
     </category>
 
