@@ -33,7 +33,7 @@ from resources.lib import common
 # Find a better solution to strip some text
 # remove YT_DL use API FTV
 
-URL_ROOT = 'http://mytaratata.com'
+URL_ROOT = 'https://mytaratata.com'
 
 URL_EMBED_FTV = 'http://api-embed.webservices.francetelevisions.fr/key/%s'
 # Id Video
