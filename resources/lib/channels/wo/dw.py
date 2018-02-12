@@ -128,8 +128,12 @@ def list_live(params):
 
     file_path = utils.get_webcontent(
             URL_ROOT + '/%s' % desired_language.lower())
-    url_live = re.compile(
-        r'name="file_name" value="(.*?)"').findall(file_path)[0]
+    url_lives = re.compile(
+        r'name="file_name" value="(.*?)"').findall(file_path)
+
+    for urls in url_lives:
+        if 'm3u8' in urls:
+            url_live = urls
 
     info = {
         'video': {
