@@ -151,7 +151,8 @@ CHANNELS = {
         'channels.wo.bvn.bvn': 'BVN',
         'channels.wo.icitelevision.icitelevision': 'ICI Télévision',
         'channels.wo.mtv.mtv': 'MTV',
-        'channels.wo.arirang.arirang': 'Arirang (아리랑)'
+        'channels.wo.arirang.arirang': 'Arirang (아리랑)',
+        'channels.wo.dw.dw': 'DW'
     },
 
     'main_menu.ws': {

@@ -147,6 +147,10 @@ msgctxt "#30083"
 msgid "MTV: Choose Channel"
 msgstr "MTV: בחר ערוץ"
 
+msgctxt "#30084"
+msgid "DW: Choose Channel"
+msgstr "DW: בחר ערוץ"
+
 msgctxt "#30087"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
 msgstr "איכות וידאו (הטוב ביותר|ברירת מחדל|תיבת דו-שיח)"
