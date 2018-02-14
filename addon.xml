@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.10~beta001"
+       version="0.1.10~beta002"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -32,6 +32,7 @@
     <news>
 [Version 0.1.10]
 [Add Live TV] DW (Contents EN, DE, ES, AR) (wwark)
+[Fix] Default Quality for Replay group TF1 (Thanks Chris_wafer) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -687,17 +687,17 @@ def get_video_url(params):
             json_parser["hls"].split('&max_bitrate=')[0])
 
         lines = manifest.splitlines()
+        all_datas_videos_quality = []
+        all_datas_videos_path = []
+        for k in range(0, len(lines) - 1):
+            if 'RESOLUTION=' in lines[k]:
+                all_datas_videos_quality.append(
+                    re.compile(
+                    r'RESOLUTION=(.*?),').findall(
+                    lines[k])[0])
+                all_datas_videos_path.append(
+                    root + '/' + lines[k + 1])
         if DESIRED_QUALITY == "DIALOG":
-            all_datas_videos_quality = []
-            all_datas_videos_path = []
-            for k in range(0, len(lines) - 1):
-                if 'RESOLUTION=' in lines[k]:
-                    all_datas_videos_quality.append(
-                        re.compile(
-                        r'RESOLUTION=(.*?),').findall(
-                        lines[k])[0])
-                    all_datas_videos_path.append(
-                        root + '/' + lines[k + 1])
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 _('Choose video quality'),
                 all_datas_videos_quality)
@@ -705,16 +705,11 @@ def get_video_url(params):
                 'utf-8')
         elif DESIRED_QUALITY == 'BEST':
             # Last video in the Best
-            for k in range(0, len(lines) - 1):
-                if 'RESOLUTION=' in lines[k]:
-                    url = root + '/' + lines[k + 1]
+            for k in all_datas_videos_path:
+                url = k
             return url
         else:
-            for k in range(0, len(lines) - 1):
-                if 'RESOLUTION=' in lines[k]:
-                    url = root + '/' + lines[k + 1]
-                break
-            return url
+            return all_datas_videos_path[0]
 
     elif params.next == 'play_l':
 
