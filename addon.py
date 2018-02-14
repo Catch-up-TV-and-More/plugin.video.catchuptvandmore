@@ -61,93 +61,134 @@ def root(params):
     with all not hidden categories
     """
 
-    # First, we sort main menu by order
-    categories = []
-    for category_id, title in skeleton.CATEGORIES.iteritems():
-        # If category isn't disable
-        if common.PLUGIN.get_setting(category_id):
-            category_order = common.PLUGIN.get_setting(category_id + '.order')
-            category = (category_order, category_id, title)
-            categories.append(category)
+    # TO DO in this function :
+    # * Remettre ce qu'il faut pour passer directment si y'a qu'un seul élément dans le listing
 
-    categories = sorted(categories, key=lambda x: x[0])
+
+    print "# Enter in root"
+    print "# Params: "
+    print repr(params)
+    current_skeleton = skeleton.SKELETON[('root', 'root')]
+    current_path = ['root']
+
+    if 'item_skeleton' in params:
+        current_skeleton = eval(params.item_skeleton)
+        current_path = eval(params.item_path)
+
+    print "# Current skeleton: "
+    print repr(current_skeleton)
+    print "# Current path: " + repr(current_path)
+
+    # First we sort the current menu
+    menu = []
+    for value in current_skeleton:
+        print "# Value: " + repr(value)
+        item_id = value[0]
+        item_next = value[1]
+        # If menu item isn't disable
+        if common.PLUGIN.get_setting(item_id):
+            # Get order value in settings file
+            item_order = common.PLUGIN.get_setting(item_id + '.order')
+
+            # Get english item title in LABELS dict in skeleton file
+            # and check if this title has any translated version
+            item_title = ''
+            try:
+                item_title = common.PLUGIN.get_localized_string(
+                    skeleton.LABELS[item_id])
+            except TypeError:
+                item_title = skeleton.LABELS[item_id]
+
+            # Build step by step the module pathfile
+            item_path = list(current_path)
+            if item_id in skeleton.FOLDERS:
+                item_path.append(skeleton.FOLDERS[item_id])
+            else:
+                item_path.append(item_id)
+
+            item_skeleton = {}
+            try:
+                item_skeleton = current_skeleton[value]
+            except TypeError:
+                item_skeleton = {}
+
+            item = (item_order, item_id, item_title, item_path, item_next, item_skeleton)
+            menu.append(item)
+
+    menu = sorted(menu, key=lambda x: x[0])
 
     listing = []
-    last_category_id = ''
-    for index, (order, category_id, title) in enumerate(categories):
-        if common.PLUGIN.get_setting(category_id):
-            last_category_id = category_id
-            last_window_title = _(title)
+    for index, (item_order, item_id, item_title, item_path, item_next, item_skeleton) \
+            in enumerate(menu):
 
-            # Build context menu (Move up, move down, ...)
-            context_menu = []
+        # Build context menu (Move up, move down, ...)
+        context_menu = []
 
-            item_down = (
-                _('Move down'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='move',
-                    direction='down',
-                    item_id_order=category_id + '.order',
-                    displayed_items=categories) + ')'
+        item_down = (
+            _('Move down'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='move',
+                direction='down',
+                item_id_order=item_id + '.order',
+                displayed_items=menu) + ')'
+        )
+        item_up = (
+            _('Move up'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='move',
+                direction='up',
+                item_id_order=item_id + '.order',
+                displayed_items=menu) + ')'
+        )
+
+        if index == 0:
+            context_menu.append(item_down)
+        elif index == len(menu) - 1:
+            context_menu.append(item_up)
+        else:
+            context_menu.append(item_up)
+            context_menu.append(item_down)
+
+        hide = (
+            _('Hide'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='hide',
+                item_id=item_id) + ')'
+        )
+        context_menu.append(hide)
+
+        context_menu.append(utils.vpn_context_menu_item())
+
+        print "# Item path: " + repr(item_path)
+
+        media_item_path = common.sp.xbmc.translatePath(
+            common.sp.os.path.join(
+                MEDIA_PATH,
+                *(item_path)
             )
-            item_up = (
-                _('Move up'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='move',
-                    direction='up',
-                    item_id_order=category_id + '.order',
-                    displayed_items=categories) + ')'
-            )
+        )
 
-            if index == 0:
-                context_menu.append(item_down)
-            elif index == len(categories) - 1:
-                context_menu.append(item_up)
-            else:
-                context_menu.append(item_up)
-                context_menu.append(item_down)
+        media_item_path = media_item_path.decode(
+            "utf-8").encode(common.FILESYSTEM_CODING)
 
-            hide = (
-                _('Hide'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='hide',
-                    item_id=category_id) + ')'
-            )
-            context_menu.append(hide)
+        print "# Media item path: " + media_item_path
 
-            context_menu.append(utils.vpn_context_menu_item())
+        icon = media_item_path + '.png'
+        fanart = media_item_path + '_fanart.jpg'
 
-            media_category_path = common.sp.xbmc.translatePath(
-                common.sp.os.path.join(
-                    MEDIA_PATH,
-                    'categories',
-                    category_id[-2:]
-                )
-            )
-
-            media_category_path = media_category_path.decode(
-                "utf-8").encode(common.FILESYSTEM_CODING)
-
-            icon = media_category_path + '.png'
-            fanart = media_category_path + '_fanart.jpg'
-
-            listing.append({
-                'icon': icon,
-                'fanart': fanart,
-                'label': _(title),
-                'url': common.PLUGIN.get_url(
-                    action='list_channels',
-                    category_id=category_id,
-                    window_title=_(title)
-                ),
-                'context_menu': context_menu
-            })
-
-    # If only one category is present, directly open this category
-    if len(listing) == 1:
-        params['category_id'] = last_category_id
-        params['window_title'] = last_window_title
-        return list_channels(params)
+        listing.append({
+            'icon': icon,
+            'fanart': fanart,
+            'label': item_title,
+            'url': common.PLUGIN.get_url(
+                action=item_next,
+                item_id=item_id,
+                item_path=str(item_path),
+                item_skeleton=str(item_skeleton),
+                window_title=item_title
+            ),
+            'context_menu': context_menu
+        })
 
     return common.PLUGIN.create_listing(
         listing,
@@ -271,44 +312,51 @@ def list_channels(params):
 
 
 def get_channel_module(params):
-    if 'channel_name' in params and \
-            'channel_module' in params and \
-            'channel_id' in params and \
-            'channel_category' in params:
-        channel_name = params.channel_name
-        channel_module = params.channel_module
-        channel_id = params.channel_id
-        channel_category = params.channel_category
+
+    if 'channel_id' in params and \
+            'channel_path' in params:
         storage = common.sp.MemStorage('last_channel')
-        storage['last_channel_name'] = channel_name
-        storage['last_channel_module'] = channel_module
-        storage['last_channel_id'] = channel_id
-        storage['last_channel_category'] = channel_category
+        storage['last_channel_path'] = params.channel_path
+        storage['last_channel_id'] = params.channel_id
     else:
         storage = common.sp.MemStorage('last_channel')
-        channel_name = storage['last_channel_name']
-        channel_module = storage['last_channel_module']
-        channel_id = storage['last_channel_id']
-        channel_category = storage['last_channel_category']
-
-    params['channel_name'] = channel_name
-    params['channel_id'] = channel_id
-    params['channel_category'] = channel_category
+        params['channel_path'] = storage['last_channel_path']
+        params['channel_id'] = storage['last_channel_id']
 
     channel_path = common.sp.xbmc.translatePath(
         common.sp.os.path.join(
             LIB_PATH,
-            *(channel_module.split("."))
+            *(eval(params.channel_path))
         )
     )
     channel_filepath = channel_path + ".py"
     channel_filepath = channel_filepath.decode(
         "utf-8").encode(common.FILESYSTEM_CODING)
 
+    print " # Channel filepath : " + channel_filepath
+
     return imp.load_source(
-        channel_name,
+        params.channel_id,
         channel_filepath
     )
+
+
+@common.PLUGIN.action()
+def replay_entry(params):
+    print " # Entry in replay_entry"
+    params['channel_id'] = params.item_id    # w9
+    channel_path = eval(params.item_path)
+    channel_path.pop()
+    channel_path.append(skeleton.CHANNELS[params.channel_id])
+    params['channel_path'] = str(channel_path)  # ['root', 'channels', 'fr', '6play']
+    params['next'] = 'replay_entry'
+    print " # Params: " + repr(params)
+
+    channel = get_channel_module(params)
+
+    print "COUCOU"
+    # Let's go to the channel file ...
+    return channel.channel_entry(params)
 
 
 @common.PLUGIN.action()

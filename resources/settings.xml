@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 
+
+
+    <!-- Main menu -->
+    <category label="30000">
+        <!-- Hide main menu categories -->
+        <setting label="30010" type="lsep"/>
+
+        <setting label="Live TV" type="bool" id="live_tv" default="true"/>
+        <setting label="" type="number" visible="false" id="live_tv.order" default="1"/>
+
+        <setting label="Replay" type="bool" id="replay" default="true"/>
+        <setting label="" type="number" visible="false" id="replay.order" default="2"/>
+
+        <setting label="Websites" type="bool" id="websites" default="true"/>
+        <setting label="" type="number" visible="false" id="websites.order" default="3"/>
+    </category>
+    <!-- Main menu -->
+
+
+
+
+
     <!-- Main menu -->
     <category label="30000">
         <!-- Hide main menu categories -->
@@ -26,14 +48,14 @@
         <setting label="30020" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="30020" type="bool" id="main_menu.fr" default="true" visible="false"/>
 
-            <setting label="TF1" type="bool" id="channels.fr.tf1.tf1" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.tf1.tf1.order" default="1"/>
+            <setting label="TF1" type="bool" id="tf1" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="tf1.order" default="1"/>
 
-            <setting label="France 2" type="bool" id="channels.fr.pluzz.france2" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.pluzz.france2.order" default="2"/>
+            <setting label="France 2" type="bool" id="france2" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="france2.order" default="2"/>
 
-            <setting label="France 3" type="bool" id="channels.fr.pluzz.france3" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="channels.fr.pluzz.france3.order" default="3"/>
+            <setting label="France 3" type="bool" id="france3" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="france3.order" default="3"/>
 
             <setting label="Canal +" type="bool" id="channels.fr.mycanal.canalplus" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="channels.fr.mycanal.canalplus.order" default="4"/>
