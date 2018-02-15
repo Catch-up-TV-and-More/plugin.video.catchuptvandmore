@@ -23,6 +23,7 @@
 import re
 import json
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # Initialize GNU gettext emulation in addon
@@ -31,7 +32,7 @@ from resources.lib import common
 _ = common.ADDON.initialize_gettext()
 
 # TO DO
-# Add Live TV ?
+# Wait Kodi 18 to use live with DRM
 
 # URL :
 URL_ROOT_SITE = 'https://www.mycanal.fr'
@@ -60,6 +61,16 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+# Dailymotion Id get from these pages below
+# - http://www.dailymotion.com/cstar
+# - http://www.dailymotion.com/canalplus
+# - http://www.dailymotion.com/C8TV
+LIVE_DAILYMOTION_ID = {
+    'c8': 'x5gv5rr',
+    'cstar': 'x5gv5v0',
+    'canalplus': 'x5gv6be'
+}
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
@@ -75,6 +86,20 @@ def root(params):
             window_title='%s Replay' % params.channel_name
         )
     })
+
+    # Add Live
+    if params.channel_name == 'c8' or \
+        params.channel_name == 'cstar' or \
+        params.channel_name == 'canalplus':
+        modes.append({
+            'label': _('Live TV'),
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='live_cat',
+                category='%s Live TV' % params.channel_name.upper(),
+                window_title='%s Live TV' % params.channel_name
+            )
+        })
 
     return common.PLUGIN.create_listing(
         modes,
@@ -372,7 +397,50 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):
-    return None
+    """Build live listing"""
+    lives = []
+
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    live_dailymotion_id = ''
+
+    title = '%s Live' % (params.channel_name.upper())
+
+    for channel_name_value, live_dailymotion_id_value in LIVE_DAILYMOTION_ID.iteritems():
+        if channel_name_value in params.channel_name:
+            live_dailymotion_id = live_dailymotion_id_value
+
+    info = {
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
+        }
+    }
+
+    lives.append({
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='channel_entry',
+            next='play_l',
+            live_dailymotion_id=live_dailymotion_id,
+        ),
+        'is_playable': True,
+        'info': info
+    })
+
+    return common.PLUGIN.create_listing(
+        lives,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
@@ -391,3 +459,6 @@ def get_video_url(params):
                 if media['ID'] == params.video_id:
                     stream_url = media['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
         return stream_url
+    elif params.next == 'play_l':
+        return resolver.get_stream_dailymotion(
+            params.live_dailymotion_id, False)
