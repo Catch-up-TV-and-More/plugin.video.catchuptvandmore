@@ -88,7 +88,10 @@ def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
-    if 'list_shows' in params.next:
+    elif 'replay_entry' == params.next:
+        params.next = "list_shows_1"
+        return list_shows(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)

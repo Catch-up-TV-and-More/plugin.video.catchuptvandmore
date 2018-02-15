@@ -57,9 +57,12 @@ URL_OOYALA_VOD = 'https://player.ooyala.com/sas/player_api/v2/authorization/' \
 
 URL_PCODE_EMBED_TOKEN = 'http://www.skysports.com/watch/video/auth/v4/23'
 
+
 def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
+        return root(params)
+    elif 'replay_entry' == params.next:
         return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
@@ -80,9 +83,14 @@ def root(params):
     elif params.channel_name == 'skysports':
         next_value = 'list_shows_sports'
 
+    if params.next == "replay_entry":
+        params['next'] = next_value
+        params['page'] = '1'
+        return channel_entry(params)
+
     # Add Replay
     modes.append({
-        'label' : 'Replay',
+        'label': 'Replay',
         'url': common.PLUGIN.get_url(
             action='channel_entry',
             next=next_value,
@@ -95,7 +103,7 @@ def root(params):
     # Add Live
     if params.channel_name == 'skynews':
         modes.append({
-            'label' : _('Live TV'),
+            'label': _('Live TV'),
             'url': common.PLUGIN.get_url(
                 action='channel_entry',
                 next='live_cat',

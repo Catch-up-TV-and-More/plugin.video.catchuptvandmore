@@ -199,6 +199,8 @@ def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
+    elif 'replay_entry' == params.next:
+        return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
@@ -228,12 +230,18 @@ def root(params):
     if params.channel_name == 'francetvsport':
         next_replay = 'list_videos_ftvsport'
     elif params.channel_name == 'studio-4' or \
-        params.channel_name == 'irl':
+            params.channel_name == 'irl':
         next_replay = 'list_shows_necritures_1'
     elif params.channel_name == 'francetveducation':
         next_replay = 'list_shows_education_1'
     else:
         next_replay = 'list_shows_1'
+
+    if params.next == "replay_entry":
+        params['next'] = next_replay
+        params['page'] = '1'
+        params['mode'] = 'replay'
+        return channel_entry(params)
 
     # Add Replay
     if params.channel_name != 'franceinfo' and \
@@ -252,8 +260,8 @@ def root(params):
 
     # Add Live
     if params.channel_name != 'studio-4' and \
-        params.channel_name != 'irl' and \
-        params.channel_name != 'francetveducation':
+            params.channel_name != 'irl' and \
+            params.channel_name != 'francetveducation':
         modes.append({
             'label': _('Live TV'),
             'url': common.PLUGIN.get_url(

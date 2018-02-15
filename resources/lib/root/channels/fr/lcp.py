@@ -57,6 +57,9 @@ def channel_entry(params):
         return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
+    elif 'replay_entry' == params.next:
+        params.next = "list_shows_1"
+        return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
     elif 'live' in params.next:

@@ -50,6 +50,9 @@ def channel_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
+    elif 'replay_entry' == params.next:
+        params.next = "list_shows_1"
+        return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
@@ -59,6 +62,7 @@ def channel_entry(params):
     elif 'play' in params.next:
         return get_video_url(params)
     return None
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):

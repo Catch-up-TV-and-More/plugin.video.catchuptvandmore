@@ -106,12 +106,6 @@ SKELETON = {
                 ('gong', 'none')
             },
 
-            ('jp', 'build_live_tv_menu'): {
-                ('nhknews', 'none'),
-                ('nhklifestyle', 'none'),
-                ('tbsnews', 'none')
-            },
-
             ('ch', 'build_live_tv_menu'): {
                 ('rts', 'none'),
                 ('rsi', 'none'),
@@ -162,7 +156,6 @@ SKELETON = {
             ('ca', 'root'): {
                 ('tv5', 'replay_entry'),
                 ('unis', 'replay_entry'),
-                ('yestv', 'replay_entry'),
                 ('telequebec', 'replay_entry')
             },
 
@@ -252,7 +245,6 @@ SKELETON = {
             ('wo', 'root'): {
                 ('tv5mondeafrique', 'replay_entry'),
                 ('arte', 'replay_entry'),
-                ('euronews', 'replay_entry'),
                 ('france24', 'replay_entry'),
                 ('nhkworld', 'replay_entry'),
                 ('tv5monde', 'replay_entry'),
