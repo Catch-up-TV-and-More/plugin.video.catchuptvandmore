@@ -32,7 +32,7 @@
         <setting label="30051" type="bool" id="ch" default="true"/>
         <setting label="" type="number" visible="false" id="ch.order" default="2"/>
 
-        <setting label="30052" type="bool" id="gb" default="true"/>
+        <setting label="30052" type="bool" id="uk" default="true"/>
         <setting label="" type="number" visible="false" id="gb.order" default="3"/>
 
         <setting label="30053" type="bool" id="wo" default="true"/>

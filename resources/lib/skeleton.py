@@ -121,7 +121,7 @@ SKELETON = {
                 ('rougetv', 'none')
             },
 
-            ('gb', 'build_live_tv_menu'): {
+            ('uk', 'build_live_tv_menu'): {
                 ('blaze', 'none'),
                 ('dave', 'none'),
                 ('really', 'none'),
@@ -230,7 +230,7 @@ SKELETON = {
                 ('tbsnews', 'replay_entry')
             },
 
-            ('sw', 'root'): {
+            ('ch', 'root'): {
                 ('rts', 'replay_entry'),
                 ('rsi', 'replay_entry'),
                 ('srf', 'replay_entry'),
@@ -279,8 +279,6 @@ SKELETON = {
 }
 
 
-# FOLDERS dict corresponds to the folder to use for the label in SKELETON
-# If folder if the same as SKELETON label it's optionnal
 FOLDERS = {
     'live_tv': 'channels',
     'replay': 'channels'
@@ -385,7 +383,7 @@ CHANNELS = {
 }
 
 
-# LABELS dict is only used to retrieve string to display on Kodi
+# LABELS dict is only used to retrieve correct element in english strings.po
 LABELS = {
 
     # root
@@ -398,11 +396,12 @@ LABELS = {
     'fr': 'France',
     'jp': 'Japan',
     'ch': 'Switzerland',
-    'gb': 'United Kingdom',
+    'uk': 'United Kingdom',
     'wo': 'International',
+    'ca': 'Canada',
 
     # Belgium channels / live TV
-    'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ',
+    'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...) ',
     'brf': 'BRF Mediathek',
     'rtltvi': 'RTL-TVI',
     'plugrtl': 'PLUG RTL',
@@ -519,6 +518,4 @@ LABELS = {
     'notrehistoirech': 'Notre Histoire',
     '30millionsdamis': '30 Millions d\Amis',
     'elle': 'Elle'
-
-
 }

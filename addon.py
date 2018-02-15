@@ -57,17 +57,9 @@ _ = common.ADDON.initialize_gettext()
 @common.PLUGIN.action()
 def root(params):
     """
-    Build the addon main menu
-    with all not hidden categories
+    Build a generic addon menu
+    with all not hidden items
     """
-
-    # TO DO in this function :
-    # * Remettre ce qu'il faut pour passer directment si y'a qu'un seul élément dans le listing
-
-
-    print "# Enter in root"
-    print "# Params: "
-    print repr(params)
     current_skeleton = skeleton.SKELETON[('root', 'root')]
     current_path = ['root']
 
@@ -75,14 +67,9 @@ def root(params):
         current_skeleton = eval(params.item_skeleton)
         current_path = eval(params.item_path)
 
-    print "# Current skeleton: "
-    print repr(current_skeleton)
-    print "# Current path: " + repr(current_path)
-
     # First we sort the current menu
     menu = []
     for value in current_skeleton:
-        print "# Value: " + repr(value)
         item_id = value[0]
         item_next = value[1]
         # If menu item isn't disable
@@ -112,90 +99,111 @@ def root(params):
             except TypeError:
                 item_skeleton = {}
 
-            item = (item_order, item_id, item_title, item_path, item_next, item_skeleton)
+            item = (item_order, item_id, item_title, item_path, item_next,
+                    item_skeleton)
             menu.append(item)
 
     menu = sorted(menu, key=lambda x: x[0])
 
-    listing = []
-    for index, (item_order, item_id, item_title, item_path, item_next, item_skeleton) \
-            in enumerate(menu):
+    # If only one item is present, directly open this item
+    only_one_item = False
+    if len(menu) == 1:
+        only_one_item = True
+        item = menu[0]
+        item_id = item[1]
+        item_title = item[2]
+        item_path = item[3]
+        item_next = item[4]
+        item_skeleton = item[5]
 
-        # Build context menu (Move up, move down, ...)
-        context_menu = []
+        params['item_id'] = item_id
+        params['item_path'] = str(item_path)
+        params['item_skeleton'] = str(item_skeleton)
+        params['window_title'] = item_title
 
-        item_down = (
-            _('Move down'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='move',
-                direction='down',
-                item_id_order=item_id + '.order',
-                displayed_items=menu) + ')'
-        )
-        item_up = (
-            _('Move up'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='move',
-                direction='up',
-                item_id_order=item_id + '.order',
-                displayed_items=menu) + ')'
-        )
-
-        if index == 0:
-            context_menu.append(item_down)
-        elif index == len(menu) - 1:
-            context_menu.append(item_up)
+        if item_next == 'root':
+            return root(params)
+        elif item_next == 'replay_entry':
+            return replay_entry(params)
         else:
-            context_menu.append(item_up)
-            context_menu.append(item_down)
+            only_one_item = False
 
-        hide = (
-            _('Hide'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='hide',
-                item_id=item_id) + ')'
-        )
-        context_menu.append(hide)
+    if not only_one_item:
+        listing = []
+        for index, (item_order, item_id, item_title, item_path, item_next,
+                    item_skeleton) in enumerate(menu):
 
-        context_menu.append(utils.vpn_context_menu_item())
+            # Build context menu (Move up, move down, ...)
+            context_menu = []
 
-        print "# Item path: " + repr(item_path)
-
-        media_item_path = common.sp.xbmc.translatePath(
-            common.sp.os.path.join(
-                MEDIA_PATH,
-                *(item_path)
+            item_down = (
+                _('Move down'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='move',
+                    direction='down',
+                    item_id_order=item_id + '.order',
+                    displayed_items=menu) + ')'
             )
+            item_up = (
+                _('Move up'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='move',
+                    direction='up',
+                    item_id_order=item_id + '.order',
+                    displayed_items=menu) + ')'
+            )
+
+            if index == 0:
+                context_menu.append(item_down)
+            elif index == len(menu) - 1:
+                context_menu.append(item_up)
+            else:
+                context_menu.append(item_up)
+                context_menu.append(item_down)
+
+            hide = (
+                _('Hide'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='hide',
+                    item_id=item_id) + ')'
+            )
+            context_menu.append(hide)
+
+            context_menu.append(utils.vpn_context_menu_item())
+
+            media_item_path = common.sp.xbmc.translatePath(
+                common.sp.os.path.join(
+                    MEDIA_PATH,
+                    *(item_path)
+                )
+            )
+
+            media_item_path = media_item_path.decode(
+                "utf-8").encode(common.FILESYSTEM_CODING)
+
+            icon = media_item_path + '.png'
+            fanart = media_item_path + '_fanart.jpg'
+
+            listing.append({
+                'icon': icon,
+                'fanart': fanart,
+                'label': item_title,
+                'url': common.PLUGIN.get_url(
+                    action=item_next,
+                    item_id=item_id,
+                    item_path=str(item_path),
+                    item_skeleton=str(item_skeleton),
+                    window_title=item_title
+                ),
+                'context_menu': context_menu
+            })
+
+        return common.PLUGIN.create_listing(
+            listing,
+            sort_methods=(
+                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,),
+            category=common.get_window_title()
         )
-
-        media_item_path = media_item_path.decode(
-            "utf-8").encode(common.FILESYSTEM_CODING)
-
-        print "# Media item path: " + media_item_path
-
-        icon = media_item_path + '.png'
-        fanart = media_item_path + '_fanart.jpg'
-
-        listing.append({
-            'icon': icon,
-            'fanart': fanart,
-            'label': item_title,
-            'url': common.PLUGIN.get_url(
-                action=item_next,
-                item_id=item_id,
-                item_path=str(item_path),
-                item_skeleton=str(item_skeleton),
-                window_title=item_title
-            ),
-            'context_menu': context_menu
-        })
-
-    return common.PLUGIN.create_listing(
-        listing,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,),
-        category=common.get_window_title()
-    )
 
 
 @common.PLUGIN.action()
