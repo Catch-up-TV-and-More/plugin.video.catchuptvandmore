@@ -112,7 +112,7 @@ SKELETON = {
                 ('tbsnews', 'none')
             },
 
-            ('sw', 'build_live_tv_menu'): {
+            ('ch', 'build_live_tv_menu'): {
                 ('rts', 'none'),
                 ('rsi', 'none'),
                 ('srf', 'none'),
@@ -121,7 +121,7 @@ SKELETON = {
                 ('rougetv', 'none')
             },
 
-            ('uk', 'build_live_tv_menu'): {
+            ('gb', 'build_live_tv_menu'): {
                 ('blaze', 'none'),
                 ('dave', 'none'),
                 ('really', 'none'),
