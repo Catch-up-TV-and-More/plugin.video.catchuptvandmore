@@ -206,122 +206,7 @@ def root(params):
         )
 
 
-@common.PLUGIN.action()
-def list_channels(params):
-    """
-    Build the channels list
-    of the desired category
-    """
-
-    # First, we sort channels by order
-    channels_dict = skeleton.CHANNELS[params.category_id]
-    channels = []
-    for channel_id, title in channels_dict.iteritems():
-        # If channel isn't disable
-        if common.PLUGIN.get_setting(channel_id):
-            channel_order = common.PLUGIN.get_setting(channel_id + '.order')
-            channel = (channel_order, channel_id, title)
-            channels.append(channel)
-
-    channels = sorted(channels, key=lambda x: x[0])
-
-    # Secondly, we build channels list in Kodi
-    listing = []
-    for index, (order, channel_id, title) in enumerate(channels):
-        # channel_id = channels.fr.6play.w9
-        [
-            channel_type,  # channels
-            channel_category,  # fr
-            channel_file,  # 6play
-            channel_name  # w9
-        ] = channel_id.split('.')
-
-        # channel_module = channels.fr.6play
-        channel_module = '.'.join((
-            channel_type,
-            channel_category,
-            channel_file))
-
-        media_channel_path = common.sp.xbmc.translatePath(
-            common.sp.os.path.join(
-                MEDIA_PATH,
-                channel_type,
-                channel_category,
-                channel_name
-            )
-        )
-
-        media_channel_path = media_channel_path.decode(
-            "utf-8").encode(common.FILESYSTEM_CODING)
-
-        # Build context menu (Move up, move down, ...)
-        context_menu = []
-
-        item_down = (
-            _('Move down'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='move',
-                direction='down',
-                item_id_order=channel_id + '.order',
-                displayed_items=channels) + ')'
-        )
-        item_up = (
-            _('Move up'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='move',
-                direction='up',
-                item_id_order=channel_id + '.order',
-                displayed_items=channels) + ')'
-        )
-
-        if index == 0:
-            context_menu.append(item_down)
-        elif index == len(channels) - 1:
-            context_menu.append(item_up)
-        else:
-            context_menu.append(item_up)
-            context_menu.append(item_down)
-
-        hide = (
-            _('Hide'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='hide',
-                item_id=channel_id) + ')'
-        )
-        context_menu.append(hide)
-
-        context_menu.append(utils.vpn_context_menu_item())
-
-        icon = media_channel_path + '.png'
-        fanart = media_channel_path + '_fanart.jpg'
-
-        listing.append({
-            'icon': icon,
-            'fanart': fanart,
-            'label': title,
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='root',
-                channel_name=channel_name,
-                channel_module=channel_module,
-                channel_id=channel_id,
-                channel_category=channel_category,
-                window_title=title
-            ),
-            'context_menu': context_menu
-        })
-
-    return common.PLUGIN.create_listing(
-        listing,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,),
-        category=common.get_window_title()
-    )
-
-
 def get_channel_module(params):
-    print " # Entry in get_channel_module"
-
     if 'channel_name' in params and \
             'channel_path' in params:
         storage = common.sp.MemStorage('last_channel')
@@ -342,8 +227,6 @@ def get_channel_module(params):
     channel_filepath = channel_filepath.decode(
         "utf-8").encode(common.FILESYSTEM_CODING)
 
-    print " # Channel filepath : " + channel_filepath
-
     return imp.load_source(
         params.channel_name,
         channel_filepath
@@ -352,7 +235,6 @@ def get_channel_module(params):
 
 @common.PLUGIN.action()
 def replay_entry(params):
-    print " # Entry in replay_entry"
     params['channel_name'] = params.item_id  # w9
     channel_path = eval(params.item_path)
     channel_path.pop()
@@ -360,9 +242,7 @@ def replay_entry(params):
 
     # ['root', 'channels', 'fr', '6play']
     params['channel_path'] = str(channel_path)
-
     params['next'] = 'replay_entry'
-    print " # Params: " + repr(params)
 
     channel = get_channel_module(params)
 
@@ -381,6 +261,44 @@ def channel_entry(params):
 
     # Let's go to the channel file ...
     return channel.channel_entry(params)
+
+
+def get_website_module(params):
+    if 'website_name' in params and \
+            'website_path' in params:
+        storage = common.sp.MemStorage('last_website')
+        storage['last_channel_path'] = params.website_path
+        storage['last_channel_name'] = params.website_name
+    else:
+        storage = common.sp.MemStorage('last_website')
+        params['website_path'] = storage['last_website_path']
+        params['website_name'] = storage['last_website_name']
+
+    website_path = common.sp.xbmc.translatePath(
+        common.sp.os.path.join(
+            LIB_PATH,
+            *(eval(params.website_path))
+        )
+    )
+    website_filepath = website_path + ".py"
+    website_filepath = website_filepath.decode(
+        "utf-8").encode(common.FILESYSTEM_CODING)
+
+    return imp.load_source(
+        params.website_name,
+        website_filepath
+    )
+
+
+@common.PLUGIN.action()
+def website_entry(params):
+    params['website_name'] = params.item_id
+    params['website_path'] = params.item_path
+    params['next'] = 'website_entry'
+
+    website = get_website_module(params)
+
+    return website.website_entry(params)
 
 
 @common.PLUGIN.action()

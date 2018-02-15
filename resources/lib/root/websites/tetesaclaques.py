@@ -38,11 +38,13 @@ URL_ROOT = 'https://www.tetesaclaques.tv'
 _ = common.ADDON.initialize_gettext()
 
 
-def channel_entry(params):
+def website_entry(params):
     """Entry function of the module"""
     if 'root' in params.next:
         return root(params)
-    if 'list_shows' in params.next:
+    elif 'website_entry' == params.next:
+        return root(params)
+    elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
