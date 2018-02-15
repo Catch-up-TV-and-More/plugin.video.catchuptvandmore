@@ -312,16 +312,17 @@ def list_channels(params):
 
 
 def get_channel_module(params):
+    print " # Entry in get_channel_module"
 
-    if 'channel_id' in params and \
+    if 'channel_name' in params and \
             'channel_path' in params:
         storage = common.sp.MemStorage('last_channel')
         storage['last_channel_path'] = params.channel_path
-        storage['last_channel_id'] = params.channel_id
+        storage['last_channel_name'] = params.channel_name
     else:
         storage = common.sp.MemStorage('last_channel')
         params['channel_path'] = storage['last_channel_path']
-        params['channel_id'] = storage['last_channel_id']
+        params['channel_name'] = storage['last_channel_name']
 
     channel_path = common.sp.xbmc.translatePath(
         common.sp.os.path.join(
@@ -336,7 +337,7 @@ def get_channel_module(params):
     print " # Channel filepath : " + channel_filepath
 
     return imp.load_source(
-        params.channel_id,
+        params.channel_name,
         channel_filepath
     )
 
@@ -344,17 +345,19 @@ def get_channel_module(params):
 @common.PLUGIN.action()
 def replay_entry(params):
     print " # Entry in replay_entry"
-    params['channel_id'] = params.item_id    # w9
+    params['channel_name'] = params.item_id  # w9
     channel_path = eval(params.item_path)
     channel_path.pop()
-    channel_path.append(skeleton.CHANNELS[params.channel_id])
-    params['channel_path'] = str(channel_path)  # ['root', 'channels', 'fr', '6play']
+    channel_path.append(skeleton.CHANNELS[params.channel_name])
+
+    # ['root', 'channels', 'fr', '6play']
+    params['channel_path'] = str(channel_path)
+
     params['next'] = 'replay_entry'
     print " # Params: " + repr(params)
 
     channel = get_channel_module(params)
 
-    print "COUCOU"
     # Let's go to the channel file ...
     return channel.channel_entry(params)
 
