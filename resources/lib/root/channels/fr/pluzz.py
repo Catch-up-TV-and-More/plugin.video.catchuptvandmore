@@ -1106,10 +1106,7 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
-
+def get_live_item(params, listing):
     title = ''
     plot = ''
     duration = 0
@@ -1147,13 +1144,15 @@ def list_live(params):
                     }
                 }
 
-                lives.append({
+                listing.append({
                     'label': title,
                     'fanart': image,
                     'thumb': image,
                     'url': common.PLUGIN.get_url(
-                        action='replay_entry',
+                        action='start_live_tv_stream',
                         next='play_l',
+                        module_name=params.module_name,
+                        module_path=params.module_path,
                         id_diffusion=id_diffusion
                     ),
                     'is_playable': True,
@@ -1175,7 +1174,7 @@ def list_live(params):
 
             info = {
                 'video': {
-                    'title': title,
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
                     'plot': plot,
                     # 'aired': aired,
                     # 'date': date,
@@ -1184,13 +1183,15 @@ def list_live(params):
                 }
             }
 
-            lives.append({
-                'label': title,
+            listing.append({
+                'label': params.channel_label + " - [I]" + title + "[/I]",
                 'fanart': image,
                 'thumb': image,
                 'url': common.PLUGIN.get_url(
-                    action='replay_entry',
-                    next='list_live'
+                    action='start_live_tv_stream',
+                    next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path
                 ),
                 'is_playable': False,
                 'info': info
@@ -1202,18 +1203,20 @@ def list_live(params):
 
         info = {
             'video': {
-                'title': title,
+                'title': params.channel_label + " - [I]" + title + "[/I]",
                 'plot': plot,
                 'date': date,
                 'duration': duration
             }
         }
 
-        lives.append({
-            'label': title,
+        listing.append({
+            'label': params.channel_label + " - [I]" + title + "[/I]",
             'url': common.PLUGIN.get_url(
-                action='replay_entry',
-                next='play_l'
+                action='start_live_tv_stream',
+                next='play_l',
+                module_name=params.module_name,
+                module_path=params.module_path
             ),
             'is_playable': True,
             'info': info
@@ -1226,18 +1229,20 @@ def list_live(params):
 
             info = {
                 'video': {
-                    'title': title,
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
                     'plot': plot,
                     'date': date,
                     'duration': duration
                 }
             }
 
-            lives.append({
-                'label': title,
+            listing.append({
+                'label': params.channel_label + " - [I]" + title + "[/I]",
                 'url': common.PLUGIN.get_url(
-                    action='replay_entry',
+                    action='start_live_tv_stream',
                     next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path,
                     id_stream=id_stream
                 ),
                 'is_playable': True,
@@ -1251,18 +1256,20 @@ def list_live(params):
 
             info = {
                 'video': {
-                    'title': title,
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
                     'plot': plot,
                     'date': date,
                     'duration': duration
                 }
             }
 
-            lives.append({
-                'label': title,
+            listing.append({
+                'label': params.channel_label + " - [I]" + title + "[/I]",
                 'url': common.PLUGIN.get_url(
-                    action='replay_entry',
+                    action='start_live_tv_stream',
                     next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path,
                     id_stream=id_stream
                 ),
                 'is_playable': True,
@@ -1325,7 +1332,7 @@ def list_live(params):
 
             info = {
                 'video': {
-                    'title': title,
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
                     'plot': plot,
                     'aired': aired,
                     'date': date,
@@ -1340,26 +1347,21 @@ def list_live(params):
                 }
             }
 
-            lives.append({
-                'label': title,
+            listing.append({
+                'label': params.channel_label + " - [I]" + title + "[/I]",
                 'fanart': image,
                 'thumb': image,
                 'url': common.PLUGIN.get_url(
-                    action='replay_entry',
+                    action='start_live_tv_stream',
                     next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path
                 ),
                 'is_playable': True,
                 'info': info
             })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+    return listing
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

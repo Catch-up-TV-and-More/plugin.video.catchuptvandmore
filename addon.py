@@ -125,6 +125,8 @@ def root(params):
             return root(params)
         elif item_next == 'replay_entry':
             return replay_entry(params)
+        elif item_next == 'build_live_tv_menu':
+            return build_live_tv_menu(params)
         else:
             only_one_item = False
 
@@ -253,6 +255,49 @@ def replay_entry(params):
 
     # Let's go to the channel python file ...
     return channel.channel_entry(params)
+
+
+@common.PLUGIN.action()
+def build_live_tv_menu(params):
+    listing = []
+
+    folder_path = eval(params.item_path)
+    for channel in eval(params.item_skeleton):
+        channel_name = channel[0]
+        channel_path = list(folder_path)
+        channel_path.append(skeleton.CHANNELS[channel_name])
+
+        params['module_path'] = str(channel_path)
+        params['module_name'] = channel_name
+        params['channel_label'] = skeleton.LABELS[channel_name]
+
+        # Legacy fix (il faudrait remplacer channel_name par
+        # module_name dans tous les .py des chaines)
+        params['channel_name'] = params.module_name
+
+        channel = get_module(params)
+
+        listing = channel.get_live_item(params, listing)
+
+    return common.PLUGIN.create_listing(
+        listing,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
+
+
+@common.PLUGIN.action()
+def start_live_tv_stream(params):
+    # Legacy fix (il faudrait remplacer channel_name par
+    # module_name dans tous les .py des chaines)
+    params['channel_name'] = params.module_name
+
+    channel = get_module(params)
+
+    return channel.get_video_url(params)
 
 
 @common.PLUGIN.action()
