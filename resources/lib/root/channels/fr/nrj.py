@@ -515,10 +515,7 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
-
+def get_live_item(params, listing):
     title = ''
     plot = ''
     duration = 0
@@ -567,33 +564,28 @@ def list_live(params):
 
     info = {
         'video': {
-            'title': title,
+            'title': params.channel_label + " - [I]" + title + "[/I]",
             'plot': plot,
             'duration': duration
         }
     }
 
-    lives.append({
-        'label': title,
+    listing.append({
+        'label': params.channel_label + " - [I]" + title + "[/I]",
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
-            action='replay_entry',
+            action='start_live_tv_stream',
             next='play_l',
-            url_live=url_live,
+            module_name=params.module_name,
+            module_path=params.module_path,
+            url_live=url_live
         ),
         'is_playable': True,
         'info': info
     })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+    return listing
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

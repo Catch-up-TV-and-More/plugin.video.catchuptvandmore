@@ -31,8 +31,13 @@ SKELETON = {
         ('live_tv', 'root'): {
 
             ('fr', 'build_live_tv_menu'): {
+                ('tf1', 'none'),
                 ('france2', 'none'),
-                ('france3', 'none')
+                ('france3', 'none'),
+                ('france5', 'none'),
+                ('tmc', 'none'),
+                ('nt1', 'none')
+                # ('nrj12', 'none')
             }
         },
 

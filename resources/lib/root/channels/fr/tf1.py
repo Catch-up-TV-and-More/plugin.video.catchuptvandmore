@@ -64,9 +64,7 @@ DESIRED_QUALITY = common.PLUGIN.get_setting('quality')
 
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
@@ -77,49 +75,9 @@ def channel_entry(params):
         return list_videos_lci(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     return None
-
-
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
-    # Add Replay
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name
-        )
-    })
-
-    # Add Live
-    if params.channel_name != 'tfou' and params.channel_name != 'xtra':
-        modes.append({
-            'label': _('Live TV'),
-            'url': common.PLUGIN.get_url(
-                action='replay_entry',
-                next='live_cat',
-                category='%s Live TV' % params.channel_name.upper(),
-                window_title='%s Live TV' % params.channel_name
-            )
-        })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -580,10 +538,7 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
-
+def get_live_item(params, listing):
     file_path = utils.download_catalog(
         URL_LIVE_INFO % params.channel_name,
         '%s_info_live.json' % (params.channel_name)
@@ -621,32 +576,27 @@ def list_live(params):
 
     info = {
         'video': {
-            'title': title,
+            'title': params.channel_label + " - [I]" + title + "[/I]",
             'plot': plot,
             'duration': duration
         }
     }
 
-    lives.append({
-        'label': title,
+    listing.append({
+        'label': params.channel_label + " - [I]" + title + "[/I]",
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
-            action='replay_entry',
+            action='start_live_tv_stream',
             next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path
         ),
         'is_playable': True,
         'info': info
     })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+    return listing
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
