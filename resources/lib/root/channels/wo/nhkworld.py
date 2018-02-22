@@ -122,7 +122,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
@@ -133,7 +133,7 @@ def root(params):
     modes.append({
         'label': _('Live TV'),
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
@@ -162,7 +162,7 @@ def list_shows(params):
         shows.append({
             'label': _('All videos'),
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='list_videos_cat',
                 category_id=0,
                 all_video=all_video,
@@ -185,7 +185,7 @@ def list_shows(params):
             shows.append({
                 'label': name_category,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='list_videos_cat',
                     category_id=category_id,
                     name_category=name_category,
@@ -278,7 +278,7 @@ def list_videos(params):
                     'thumb': img,
                     'fanart': img,
                     'url': common.PLUGIN.get_url(
-                        action='channel_entry',
+                        action='replay_entry',
                         next='play_r',
                         video_id=video_id
                     ),
@@ -366,7 +366,7 @@ def list_live(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='play_l',
             url=url_live,
         ),

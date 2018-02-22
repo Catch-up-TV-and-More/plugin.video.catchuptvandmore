@@ -79,7 +79,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
@@ -113,7 +113,7 @@ def list_shows(params):
         shows.append({
             'label': emission_name,
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 emission_url=emission_url,
                 category_name=emission_name,
                 next='list_videos_1',
@@ -134,7 +134,7 @@ def list_shows(params):
             shows.append({
                 'label': emissions_letter,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     emissions_letter=emissions_letter,
                     category_name=emissions_letter,
                     next='list_shows_2',
@@ -163,7 +163,7 @@ def list_shows(params):
                     shows.append({
                         'label': emission_name,
                         'url': common.PLUGIN.get_url(
-                            action='channel_entry',
+                            action='replay_entry',
                             emission_url=emission_url,
                             category_name=emission_name,
                             next='list_videos_1',
@@ -230,7 +230,7 @@ def list_videos(params):
                     'thumb': video_img,
                     'fanart': video_img,
                     'url': common.PLUGIN.get_url(
-                        action='channel_entry',
+                        action='replay_entry',
                         next='play_r',
                         video_url=video_url
                     ),
@@ -244,7 +244,7 @@ def list_videos(params):
             videos.append({
                 'label': '# ' + common.ADDON.get_localized_string(30100),
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='list_videos_1',
                     update_listing=True,
                     emission_url=json_mtv["result"]["nextPageURL"],

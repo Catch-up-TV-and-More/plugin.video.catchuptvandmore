@@ -94,7 +94,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
@@ -105,7 +105,7 @@ def root(params):
     modes.append({
         'label': 'Live TV',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
@@ -134,7 +134,7 @@ def list_shows(params):
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     category_url=category_url,
                     category_name=category_name,
                     page='0',
@@ -345,7 +345,7 @@ def list_videos(params):
                 'thumb': img,
                 'fanart': img,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='play_r',
                     url_video=url_video
                 ),
@@ -358,7 +358,7 @@ def list_videos(params):
     videos.append({
         'label': common.ADDON.get_localized_string(30100),
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             category_url=params.category_url,
             category_name=params.category_name,
             next='list_videos_1',
@@ -414,7 +414,7 @@ def list_live(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='play_l',
             video_id=video_id,
         ),

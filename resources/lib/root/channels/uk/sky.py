@@ -92,7 +92,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next=next_value,
             page='1',
             category='%s Replay' % params.channel_name.upper(),
@@ -105,7 +105,7 @@ def root(params):
         modes.append({
             'label': _('Live TV'),
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
                 window_title='%s Live TV' % params.channel_name.upper()
@@ -132,7 +132,7 @@ def list_shows(params):
         shows.append({
             'label': title,
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='list_videos_youtube',
                 page='1',
                 channel_youtube = 'UCE97AW7eR8VVbVPBy4cCLKg',
@@ -146,7 +146,7 @@ def list_shows(params):
         #shows.append({
             #'label': title,
             #'url': common.PLUGIN.get_url(
-                #action='channel_entry',
+                #action='replay_entry',
                 #next='list_videos_youtube',
                 #page='1',
                 #channel_youtube = 'UCNAf1k0yIjyGu3k9BwAg3lg',
@@ -159,7 +159,7 @@ def list_shows(params):
         shows.append({
             'label': title,
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='list_videos_youtube',
                 page='1',
                 channel_youtube = 'UCTU_wC79Dgi9rh4e9-baTqA',
@@ -183,7 +183,7 @@ def list_shows(params):
             shows.append({
                 'label': category_title,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='list_videos_sports',
                     page='1',
                     title=category_title,
@@ -261,7 +261,7 @@ def list_videos(params):
                 'label': title,
                 'thumb': img,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='play_r_news',
                     video_id=video_id,
                 ),
@@ -274,7 +274,7 @@ def list_videos(params):
         # videos.append({
             # 'label': common.ADDON.get_localized_string(30100),
             # 'url': common.PLUGIN.get_url(
-                # action='channel_entry',
+                # action='replay_entry',
                 # next='list_videos_news',
                 # page=str(int(params.page) + 1),
                 # update_listing=True,
@@ -324,7 +324,7 @@ def list_videos(params):
                 'label': title,
                 'thumb': img,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='play_r_sports',
                     video_id=video_id,
                 ),
@@ -337,7 +337,7 @@ def list_videos(params):
         videos.append({
             'label': common.ADDON.get_localized_string(30100),
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='list_videos_sports',
                 category_url=params.category_url,
                 page=str(int(params.page) + 1),
@@ -394,7 +394,7 @@ def list_live(params):
         'fanart': img,
         'thumb': img,
         'url' : common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='play_l',
             video_id=video_id,
         ),

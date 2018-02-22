@@ -70,7 +70,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
@@ -81,7 +81,7 @@ def root(params):
     modes.append({
         'label': 'Live TV',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name.upper()
@@ -119,7 +119,7 @@ def list_shows(params):
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     category_url=category_url,
                     category_name=category_name,
                     next='list_shows_2',
@@ -144,7 +144,7 @@ def list_shows(params):
                 'label': show_name,
                 'thumb': show_img,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     show_url=show_url,
                     show_name=show_name,
                     next='list_videos_1',
@@ -211,7 +211,7 @@ def list_videos(params):
                 'label': title,
                 'thumb': img,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='play_r',
                     video_url=video_url,
                 ),
@@ -257,7 +257,7 @@ def list_live(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='play_l',
             live_url=live_url,
         ),

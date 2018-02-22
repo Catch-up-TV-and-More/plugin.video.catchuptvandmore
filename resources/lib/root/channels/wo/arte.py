@@ -69,7 +69,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
@@ -79,7 +79,7 @@ def root(params):
     modes.append({
         'label': 'Live TV',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
             window_title='%s Live TV' % params.channel_name
@@ -158,7 +158,7 @@ def list_shows(params):
         shows.append({
             'label': category,
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='list_videos_cat',
                 category=category,
                 window_title=category
@@ -227,7 +227,7 @@ def list_videos(params):
                     'label': title,
                     'thumb': emission['image'],
                     'url': common.PLUGIN.get_url(
-                        action='channel_entry',
+                        action='replay_entry',
                         next='play_r',
                         url=emission['video_url'],
                     ),
@@ -297,7 +297,7 @@ def list_live(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='play_l',
             url=url_live,
         ),

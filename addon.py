@@ -235,18 +235,23 @@ def get_module(params):
 
 @common.PLUGIN.action()
 def replay_entry(params):
-    params['module_name'] = params.item_id  # w9
-    module_path = eval(params.item_path)
-    module_path.pop()
-    module_path.append(skeleton.CHANNELS[params.module_path])
+    if 'item_id' in params:
+        params['module_name'] = params.item_id  # w9
+        module_path = eval(params.item_path)
+        module_path.pop()
+        module_path.append(skeleton.CHANNELS[params.module_name])
 
-    # ['root', 'channels', 'fr', '6play']
-    params['module_path'] = str(module_path)
-    params['next'] = 'replay_entry'
+        # ['root', 'channels', 'fr', '6play']
+        params['module_path'] = str(module_path)
+        params['next'] = 'replay_entry'
+
+    # Legacy fix (il faudrait remplacer channel_name par
+    # module_name dans tous les .py des chaines)
+    params['channel_name'] = params.module_name
 
     channel = get_module(params)
 
-    # Let's go to the channel file ...
+    # Let's go to the channel python file ...
     return channel.channel_entry(params)
 
 
@@ -259,6 +264,7 @@ def website_entry(params):
 
     website = get_module(params)
 
+    # Let's go to the website python file ...
     return website.website_entry(params)
 
 

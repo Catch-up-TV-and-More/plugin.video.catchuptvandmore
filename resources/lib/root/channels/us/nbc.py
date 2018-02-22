@@ -85,7 +85,7 @@ def root(params):
     modes.append({
         'label' : 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name.upper()
@@ -129,7 +129,7 @@ def list_shows(params):
                 'label': show_title,
                 'thumb': show_img,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='list_shows_2',
                     title=show_title,
                     show_url=show_url,
@@ -161,7 +161,7 @@ def list_shows(params):
                     shows.append({
                         'label': season_title,
                         'url': common.PLUGIN.get_url(
-                            action='channel_entry',
+                            action='replay_entry',
                             next='list_videos_1',
                             title=season_title,
                             show_season_url=show_season_url,
@@ -178,7 +178,7 @@ def list_shows(params):
             shows.append({
                 'label': season_title,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='list_videos_1',
                     title=season_title,
                     show_season_url=show_season_url,
@@ -273,7 +273,7 @@ def list_videos(params):
             'thumb': video_img,
             'fanart': video_img,
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='play_r',
                 video_id=video_id
             ),

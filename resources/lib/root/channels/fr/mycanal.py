@@ -73,7 +73,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
@@ -122,7 +122,7 @@ def list_shows(params):
                 shows.append({
                     'label': title,
                     'url': common.PLUGIN.get_url(
-                        action='channel_entry',
+                        action='replay_entry',
                         next=value_next,
                         url_next=URL_REPLAY % (params.channel_name),
                         title=title,
@@ -154,7 +154,7 @@ def list_shows(params):
                                 'label': title,
                                 'thumb': img,
                                 'url': common.PLUGIN.get_url(
-                                    action='channel_entry',
+                                    action='replay_entry',
                                     next='list_shows_3',
                                     url_next=url_emission,
                                     title=title,
@@ -174,7 +174,7 @@ def list_shows(params):
                                     'label': title,
                                     'thumb': img,
                                     'url': common.PLUGIN.get_url(
-                                        action='channel_entry',
+                                        action='replay_entry',
                                         next='list_shows_3',
                                         url_next=url_emission,
                                         title=title,
@@ -199,7 +199,7 @@ def list_shows(params):
                 shows.append({
                     'label': title,
                     'url': common.PLUGIN.get_url(
-                        action='channel_entry',
+                        action='replay_entry',
                         next='list_videos_1',
                         title=title,
                         url_next=params.url_next,
@@ -268,7 +268,7 @@ def list_videos(params):
                                 'label': title,
                                 'thumb': img,
                                 'url': common.PLUGIN.get_url(
-                                    action='channel_entry',
+                                    action='replay_entry',
                                     next='play_r',
                                     video_id=video_id,
                                 ),
@@ -311,7 +311,7 @@ def list_videos(params):
                                     'label': title,
                                     'thumb': img,
                                     'url': common.PLUGIN.get_url(
-                                        action='channel_entry',
+                                        action='replay_entry',
                                         next='play_r',
                                         video_id=video_id,
                                     ),
@@ -355,7 +355,7 @@ def list_videos(params):
                                     'label': title,
                                     'thumb': img,
                                     'url': common.PLUGIN.get_url(
-                                        action='channel_entry',
+                                        action='replay_entry',
                                         next='play_r',
                                         video_id=video_id,
                                     ),

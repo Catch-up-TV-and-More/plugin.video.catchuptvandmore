@@ -75,7 +75,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_videos_1',
             page='0',
             category='%s Replay' % params.channel_name.upper(),
@@ -150,7 +150,7 @@ def list_videos(params):
                 'label': title,
                 'thumb': img,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='play_r',
                     video_url=video_url,
                 ),
@@ -163,7 +163,7 @@ def list_videos(params):
         videos.append({
             'label': common.ADDON.get_localized_string(30100),
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='list_videos_1',
                 page=str(int(params.page) + 1),
                 update_listing=True,

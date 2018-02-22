@@ -106,7 +106,7 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
-            action='channel_entry',
+            action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
             window_title='%s Replay' % params.channel_name
@@ -166,7 +166,7 @@ def list_shows(params):
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     category_id=category_id,
                     next='list_shows_2',
                     title=category_name,
@@ -207,7 +207,7 @@ def list_shows(params):
                 'thumb': program_img,
                 'fanart': program_fanart,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='list_shows_3',
                     program_id=program_id,
                     program_img=program_img,
@@ -247,7 +247,7 @@ def list_shows(params):
                 'thumb': params.program_img,
                 'fanart': program_fanart,
                 'url': common.PLUGIN.get_url(
-                    action='channel_entry',
+                    action='replay_entry',
                     next='list_videos',
                     program_id=params.program_id,
                     sub_category_id=sub_category_id,
@@ -268,7 +268,7 @@ def list_shows(params):
             'thumb': params.program_img,
             'fanart': program_fanart,
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='list_videos',
                 program_id=params.program_id,
                 sub_category_id='null',
@@ -360,7 +360,7 @@ def list_videos(params):
             'label': title,
             'thumb': program_img,
             'url': common.PLUGIN.get_url(
-                action='channel_entry',
+                action='replay_entry',
                 next='play',
                 video_id=video_id,
             ),
