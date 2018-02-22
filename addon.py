@@ -206,97 +206,58 @@ def root(params):
         )
 
 
-def get_channel_module(params):
-    if 'channel_name' in params and \
-            'channel_path' in params:
-        storage = common.sp.MemStorage('last_channel')
-        storage['last_channel_path'] = params.channel_path
-        storage['last_channel_name'] = params.channel_name
+def get_module(params):
+    if 'module_name' in params and \
+            'module_path' in params:
+        storage = common.sp.MemStorage('last_module')
+        storage['last_module_path'] = params.module_path
+        storage['last_module_name'] = params.module_name
     else:
-        storage = common.sp.MemStorage('last_channel')
-        params['channel_path'] = storage['last_channel_path']
-        params['channel_name'] = storage['last_channel_name']
+        storage = common.sp.MemStorage('last_module')
+        params['module_path'] = storage['last_module_path']
+        params['module_name'] = storage['last_module_name']
 
-    channel_path = common.sp.xbmc.translatePath(
+    module_path = common.sp.xbmc.translatePath(
         common.sp.os.path.join(
             LIB_PATH,
-            *(eval(params.channel_path))
+            *(eval(params.module_path))
         )
     )
-    channel_filepath = channel_path + ".py"
-    channel_filepath = channel_filepath.decode(
+    module_filepath = module_path + ".py"
+    module_filepath = module_filepath.decode(
         "utf-8").encode(common.FILESYSTEM_CODING)
 
     return imp.load_source(
-        params.channel_name,
-        channel_filepath
+        params.module_name,
+        module_filepath
     )
 
 
 @common.PLUGIN.action()
 def replay_entry(params):
-    params['channel_name'] = params.item_id  # w9
-    channel_path = eval(params.item_path)
-    channel_path.pop()
-    channel_path.append(skeleton.CHANNELS[params.channel_name])
+    params['module_name'] = params.item_id  # w9
+    module_path = eval(params.item_path)
+    module_path.pop()
+    module_path.append(skeleton.CHANNELS[params.module_path])
 
     # ['root', 'channels', 'fr', '6play']
-    params['channel_path'] = str(channel_path)
+    params['module_path'] = str(module_path)
     params['next'] = 'replay_entry'
 
-    channel = get_channel_module(params)
+    channel = get_module(params)
 
     # Let's go to the channel file ...
     return channel.channel_entry(params)
-
-
-@common.PLUGIN.action()
-def channel_entry(params):
-    """
-    Last plugin action function in addon.py.
-    Now we are going into the channel python file.
-    The channel file can return folder or not item ; playable or not item
-    """
-    channel = get_channel_module(params)
-
-    # Let's go to the channel file ...
-    return channel.channel_entry(params)
-
-
-def get_website_module(params):
-    if 'website_name' in params and \
-            'website_path' in params:
-        storage = common.sp.MemStorage('last_website')
-        storage['last_channel_path'] = params.website_path
-        storage['last_channel_name'] = params.website_name
-    else:
-        storage = common.sp.MemStorage('last_website')
-        params['website_path'] = storage['last_website_path']
-        params['website_name'] = storage['last_website_name']
-
-    website_path = common.sp.xbmc.translatePath(
-        common.sp.os.path.join(
-            LIB_PATH,
-            *(eval(params.website_path))
-        )
-    )
-    website_filepath = website_path + ".py"
-    website_filepath = website_filepath.decode(
-        "utf-8").encode(common.FILESYSTEM_CODING)
-
-    return imp.load_source(
-        params.website_name,
-        website_filepath
-    )
 
 
 @common.PLUGIN.action()
 def website_entry(params):
-    params['website_name'] = params.item_id
-    params['website_path'] = params.item_path
-    params['next'] = 'website_entry'
+    if 'item_id' in params:
+        params['module_name'] = params.item_id
+        params['module_path'] = params.item_path
+        params['next'] = 'root'
 
-    website = get_website_module(params)
+    website = get_module(params)
 
     return website.website_entry(params)
 
