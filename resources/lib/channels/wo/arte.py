@@ -21,6 +21,7 @@
 """
 
 import json
+import re
 from resources.lib import utils
 from resources.lib import common
 
@@ -34,9 +35,8 @@ _ = common.ADDON.initialize_gettext()
 #   Most recent
 #   Most viewed
 
-URL_REPLAY = 'https://www.arte.tv/papi/tvguide/videos/' \
-             'ARTE_PLUS_SEVEN/%s.json?includeLongRights=true'
-# Langue, ...
+URL_ROOT = 'https://www.arte.tv/%s/'
+# Language
 
 URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v1/livestream/%s'
 # Langue, ...
@@ -56,6 +56,8 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+DESIRED_LANGUAGE = common.PLUGIN.get_setting(
+    'channels.wo.arte.arte.language')
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
@@ -73,15 +75,17 @@ def root(params):
         )
     })
 
-    modes.append({
-        'label': 'Live TV',
-        'url': common.PLUGIN.get_url(
-            action='channel_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name
-        )
-    })
+    if DESIRED_LANGUAGE == 'FR' or \
+        DESIRED_LANGUAGE == 'DE':
+        modes.append({
+            'label': 'Live TV',
+            'url': common.PLUGIN.get_url(
+                action='channel_entry',
+                next='live_cat',
+                category='%s Live TV' % params.channel_name.upper(),
+                window_title='%s Live TV' % params.channel_name
+            )
+        })
 
     return common.PLUGIN.create_listing(
         modes,
@@ -100,67 +104,32 @@ def list_shows(params):
     emissions_list = []
     categories = {}
 
-    desired_language = common.PLUGIN.get_setting(
-        params.channel_id + '.language')
-
-    if desired_language == 'DE':
-        desired_language = 'D'
-    else:
-        desired_language = 'F'
 
     file_path = utils.download_catalog(
-        URL_REPLAY % desired_language,
-        '%s_%s.json' % (params.channel_name, desired_language)
+        URL_ROOT % DESIRED_LANGUAGE.lower(),
+        '%s_%s.json' % (params.channel_name, DESIRED_LANGUAGE)
     )
     file_replay = open(file_path).read()
+    file_replay = re.compile(
+        r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
     json_parser = json.loads(file_replay)
 
-    for emission in json_parser['paginatedCollectionWrapper']['collection']:
-        emission_dict = {}
-        emission_dict['duration'] = emission['videoDurationSeconds']
-        emission_dict['video_url'] = emission['videoPlayerUrl'].encode('utf-8')
-        emission_dict['image'] = emission['programImage'].encode('utf-8')
-        try:
-            emission_dict['genre'] = emission['genre'].encode('utf-8')
-        except Exception:
-            emission_dict['genre'] = 'Unknown'
-        try:
-            emission_dict['director'] = emission['director'].encode('utf-8')
-        except Exception:
-            emission_dict['director'] = ''
-        emission_dict['production_year'] = emission['productionYear']
-        emission_dict['program_title'] = emission['VTI'].encode('utf-8')
-        try:
-            emission_dict['emission_title'] = emission['VSU'].encode('utf-8')
-        except Exception:
-            emission_dict['emission_title'] = ''
+    value_code = json_parser['pages']['currentCode']
 
-        emission_dict['category'] = emission['VCH'][0]['label'].encode('utf-8')
-        categories[emission_dict['category']] = emission_dict['category']
-        emission_dict['aired'] = emission['VDA'].encode('utf-8')
-        emission_dict['playcount'] = emission['VVI']
+    for category in json_parser['pages']['list'][value_code]['zones']:
 
-        try:
-            emission_dict['desc'] = emission['VDE'].encode('utf-8')
-        except Exception:
-            emission_dict['desc'] = ''
+        if category['type'] == 'category':
+            category_name = category['title']
 
-        emissions_list.append(emission_dict)
-
-    storage = common.sp.MemStorage('arte')
-    storage['emissions_list'] = emissions_list
-
-    for category in categories.keys():
-
-        shows.append({
-            'label': category,
-            'url': common.PLUGIN.get_url(
-                action='channel_entry',
-                next='list_videos_cat',
-                category=category,
-                window_title=category
-            )
-        })
+            shows.append({
+                'label': category_name,
+                'url': common.PLUGIN.get_url(
+                    action='channel_entry',
+                    next='list_videos_cat',
+                    category_name=category_name,
+                    window_title=category_name
+                )
+            })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -253,19 +222,11 @@ def list_live(params):
     """Build live listing"""
     lives = []
 
-    desired_language = common.PLUGIN.get_setting(
-        params.channel_id + '.language')
-
-    if desired_language == 'DE':
-        desired_language = 'de'
-    else:
-        desired_language = 'fr'
-
     url_live = ''
 
     file_path = utils.download_catalog(
-        URL_LIVE_ARTE % desired_language,
-        '%s_%s_live.json' % (params.channel_name, desired_language)
+        URL_LIVE_ARTE % DESIRED_LANGUAGE,
+        '%s_%s_live.json' % (params.channel_name, DESIRED_LANGUAGE)
     )
     file_live = open(file_path).read()
     json_parser = json.loads(file_live)
