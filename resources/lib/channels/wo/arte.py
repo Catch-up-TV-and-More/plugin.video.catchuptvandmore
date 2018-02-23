@@ -38,6 +38,9 @@ _ = common.ADDON.initialize_gettext()
 URL_ROOT = 'https://www.arte.tv/%s/'
 # Language
 
+URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
+# desired_language, videoid
+
 URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v1/livestream/%s'
 # Langue, ...
 
@@ -101,35 +104,64 @@ def root(params):
 def list_shows(params):
     """Build categories listing"""
     shows = []
-    emissions_list = []
-    categories = {}
 
+    if params.next == 'list_shows_1':
+        file_path = utils.download_catalog(
+            URL_ROOT % DESIRED_LANGUAGE.lower(),
+            '%s_%s.json' % (params.channel_name, DESIRED_LANGUAGE)
+        )
+        file_replay = open(file_path).read()
+        file_replay = re.compile(
+            r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
+        json_parser = json.loads(file_replay)
 
-    file_path = utils.download_catalog(
-        URL_ROOT % DESIRED_LANGUAGE.lower(),
-        '%s_%s.json' % (params.channel_name, DESIRED_LANGUAGE)
-    )
-    file_replay = open(file_path).read()
-    file_replay = re.compile(
-        r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
-    json_parser = json.loads(file_replay)
+        value_code = json_parser['pages']['currentCode']
 
-    value_code = json_parser['pages']['currentCode']
+        for category in json_parser['pages']['list'][value_code]['zones']:
 
-    for category in json_parser['pages']['list'][value_code]['zones']:
+            if category['type'] == 'category':
+                category_name = category['title']
+                category_url = category['link']['url']
 
-        if category['type'] == 'category':
-            category_name = category['title']
+                shows.append({
+                    'label': category_name,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='list_shows_2',
+                        category_name=category_name,
+                        category_url=category_url,
+                        window_title=category_name
+                    )
+                })
+    elif params.next == 'list_shows_2':
+        file_path = utils.download_catalog(
+            params.category_url,
+            '%s_%s_%s.json' % (
+                params.channel_name, DESIRED_LANGUAGE, params.category_name)
+        )
+        file_replay = open(file_path).read()
+        file_replay = re.compile(
+            r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
+        json_parser = json.loads(file_replay)
 
-            shows.append({
-                'label': category_name,
-                'url': common.PLUGIN.get_url(
-                    action='channel_entry',
-                    next='list_videos_cat',
-                    category_name=category_name,
-                    window_title=category_name
-                )
-            })
+        value_code = json_parser['pages']['currentCode']
+
+        for category in json_parser['pages']['list'][value_code]['zones']:
+
+            if category['type'] == 'category':
+                sub_category_name = category['title']
+                sub_category_url = category['link']['url']
+
+                shows.append({
+                    'label': sub_category_name,
+                    'url': common.PLUGIN.get_url(
+                        action='channel_entry',
+                        next='list_videos_1',
+                        sub_category_name=sub_category_name,
+                        sub_category_url=sub_category_url,
+                        window_title=sub_category_name
+                    )
+                })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -145,62 +177,75 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
-    storage = common.sp.MemStorage('arte')
-    emissions_list = storage['emissions_list']
+    
+    if params.next == 'list_videos_1':
+        file_path = utils.download_catalog(
+            params.sub_category_url,
+            '%s_%s_%s.json' % (
+                params.channel_name, DESIRED_LANGUAGE, params.sub_category_name)
+        )
+        file_replay = open(file_path).read()
+        file_replay = re.compile(
+            r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
+        json_parser = json.loads(file_replay)
 
-    if params.next == 'list_videos_cat':
-        for emission in emissions_list:
-            if emission['category'] == params.category:
-                if emission['emission_title']:
-                    title = emission['program_title'] + ' - [I]' + \
-                        emission['emission_title'] + '[/I]'
-                else:
-                    title = emission['program_title']
-                aired = emission['aired'].split(' ')[0]
-                aired_splited = aired.split('/')
-                day = aired_splited[0]
-                mounth = aired_splited[1]
-                year = aired_splited[2]
-                # date : string (%d.%m.%Y / 01.01.2009)
-                # aired : string (2008-12-07)
-                date = '.'.join((day, mounth, year))
-                aired = '-'.join((year, mounth, day))
-                info = {
-                    'video': {
-                        'title': title,
-                        'plot': emission['desc'],
-                        'aired': aired,
-                        'date': date,
-                        'duration': emission['duration'],
-                        'year': emission['production_year'],
-                        'genre': emission['genre'],
-                        'playcount': emission['playcount'],
-                        'director': emission['director'],
-                        'mediatype': 'tvshow'
+        value_code = json_parser['pages']['currentCode']
+
+        for videos_list in json_parser['pages']['list'][value_code]['zones']:
+    
+            if videos_list['type'] == 'listing':
+                for video in videos_list['data']:
+                    title = video['title']
+                    video_id = video['programId']
+                    img = ''
+                    for images in video['images']['landscape']['resolutions']:
+                        img = images['url']
+    
+                    # aired = emission['aired'].split(' ')[0]
+                    # aired_splited = aired.split('/')
+                    # day = aired_splited[0]
+                    # mounth = aired_splited[1]
+                    # year = aired_splited[2]
+                    # date : string (%d.%m.%Y / 01.01.2009)
+                    # aired : string (2008-12-07)
+                    # date = '.'.join((day, mounth, year))
+                    # aired = '-'.join((year, mounth, day))
+                    info = {
+                        'video': {
+                            'title': title,
+                            'plot': video['description'],
+                            # 'aired': aired,
+                            # 'date': date,
+                            # 'duration': vid['duration'],
+                            # 'year': emission['production_year'],
+                            # 'genre': emission['genre'],
+                            # 'playcount': emission['playcount'],
+                            # 'director': emission['director'],
+                            'mediatype': 'tvshow'
+                        }
                     }
-                }
 
-                download_video = (
-                    _('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        url=emission['video_url']) + ')'
-                )
-                context_menu = []
-                context_menu.append(download_video)
+                    download_video = (
+                        _('Download'),
+                        'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                            action='download_video',
+                            video_id=video_id) + ')'
+                    )
+                    context_menu = []
+                    context_menu.append(download_video)
 
-                videos.append({
-                    'label': title,
-                    'thumb': emission['image'],
-                    'url': common.PLUGIN.get_url(
-                        action='channel_entry',
-                        next='play_r',
-                        url=emission['video_url'],
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu
-                })
+                    videos.append({
+                        'label': title,
+                        'thumb': img,
+                        'url': common.PLUGIN.get_url(
+                            action='channel_entry',
+                            next='play_r',
+                            video_id=video_id,
+                        ),
+                        'is_playable': True,
+                        'info': info,
+                        'context_menu': context_menu
+                    })
 
         return common.PLUGIN.create_listing(
             videos,
@@ -278,7 +323,8 @@ def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
         file_medias = utils.get_webcontent(
-            params.url)
+            URL_REPLAY_ARTE % (
+                DESIRED_LANGUAGE.lower(), params.video_id))
         json_parser = json.loads(file_medias)
 
         url_selected = ''
@@ -305,10 +351,10 @@ def get_video_url(params):
                 'utf-8')
 
         elif desired_quality == "BEST":
-            url_selected = video_streams['HTTP_MP4_SQ_1']['url']
+            url_selected = video_streams['HTTPS_SQ_1']['url']
             url_selected = url_selected.encode('utf-8')
         else:
-            url_selected = video_streams['HLS_SQ_1']['url'].encode('utf-8')
+            url_selected = video_streams['HTTPS_HQ_1']['url'].encode('utf-8')
 
         return url_selected
     elif params.next == 'play_l':
