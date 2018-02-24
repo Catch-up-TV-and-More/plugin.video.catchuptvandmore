@@ -270,7 +270,7 @@ def list_live(params):
     url_live = ''
 
     file_path = utils.download_catalog(
-        URL_LIVE_ARTE % DESIRED_LANGUAGE,
+        URL_LIVE_ARTE % DESIRED_LANGUAGE.lower(),
         '%s_%s_live.json' % (params.channel_name, DESIRED_LANGUAGE)
     )
     file_live = open(file_path).read()
