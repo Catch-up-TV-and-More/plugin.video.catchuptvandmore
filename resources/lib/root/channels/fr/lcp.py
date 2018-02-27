@@ -53,17 +53,13 @@ URL_VIDEO_REPLAY = 'http://play1.qbrick.com/config/avp/v1/player/' \
 
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'list_shows' in params.next:
+    if 'list_shows' in params.next:
         return list_shows(params)
     elif 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -90,44 +86,7 @@ CORRECT_MOUNTH = {
 }
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
-    # Add Replay Desactiver
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name
-        )
-    })
-
-    # Add Live
-    modes.append({
-        'label': 'Live TV',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name
-        )
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
-
-
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build shows listing"""
     shows = []
@@ -214,7 +173,7 @@ def list_shows(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -521,31 +480,27 @@ def list_videos(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
-    title = ''
     plot = ''
     duration = 0
     img = ''
-    url_live = ''
 
     html_live = utils.get_webcontent(URL_LIVE_SITE)
     video_id = re.compile(
         r'www.dailymotion.com/embed/video/(.*?)\?').findall(
         html_live)[0]
 
-    title = '%s Live' % params.channel_name.upper()
-
     info = {
         'video': {
-            'title': params.channel_label + " - [I]" + title + "[/I]",
+            'title': params.channel_label,
             'plot': plot,
             'duration': duration
         }
     }
 
     return {
-        'label': params.channel_label + " - [I]" + title + "[/I]",
+        'label': params.channel_label,
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
@@ -560,7 +515,7 @@ def get_live_item(params):
     }
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':

@@ -51,7 +51,7 @@ def website_entry(params):
     return None
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add modes in the listing"""
     modes = []
@@ -106,12 +106,12 @@ def root(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     return None
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -191,7 +191,7 @@ def list_videos(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 

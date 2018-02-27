@@ -81,9 +81,8 @@ def root(params):
             # and check if this title has any translated version
             item_title = ''
             try:
-                item_title = common.PLUGIN.get_localized_string(
-                    skeleton.LABELS[item_id])
-            except TypeError:
+                item_title = _(skeleton.LABELS[item_id])
+            except Exception:
                 item_title = skeleton.LABELS[item_id]
 
             # Build step by step the module pathfile

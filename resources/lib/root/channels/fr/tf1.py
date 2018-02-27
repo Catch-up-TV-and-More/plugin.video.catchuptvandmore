@@ -80,7 +80,7 @@ def channel_entry(params):
     return None
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -205,7 +205,7 @@ def list_shows(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos_categories(params):
     """Build videos categories listing"""
     videos_categories = []
@@ -265,7 +265,7 @@ def list_videos_categories(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos_lci(params):
     """Build videos listing"""
     videos = []
@@ -339,7 +339,7 @@ def list_videos_lci(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -537,7 +537,7 @@ def list_videos(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
     file_path = utils.download_catalog(
         URL_LIVE_INFO % params.channel_name,
@@ -547,8 +547,10 @@ def get_live_item(params):
     json_parser = json.loads(file_info_live)
 
     if "episode" in json_parser["current"]:
-        title = json_parser["current"]["title"].encode('utf-8') + ' - ' \
-            + json_parser["current"]["episode"].encode('utf-8')
+        title = json_parser["current"]["title"].encode('utf-8')
+        episode = json_parser["current"]["episode"].encode('utf-8')
+        if title != episode:
+            title = title + ' - ' + episode
     else:
         title = json_parser["current"]["title"].encode('utf-8')
     if "description" in json_parser["current"]:
@@ -597,7 +599,7 @@ def get_live_item(params):
     }
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 

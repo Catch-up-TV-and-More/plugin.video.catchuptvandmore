@@ -20,7 +20,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import re
 import json
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
@@ -44,17 +43,13 @@ URL_INFO_LIVE_JSON = 'http://www.numero23.fr/wp-content/cache/n23-direct.json'
 
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
@@ -77,44 +72,7 @@ CORRECT_MONTH = {
 }
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
-    # Add Replay
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name
-        )
-    })
-
-    # Add Live
-    modes.append({
-        'label': 'Live TV',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name
-        )
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
-
-
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build shows listing"""
     shows = []
@@ -160,7 +118,7 @@ def list_shows(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -280,7 +238,7 @@ def list_videos(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
 
     title = ''
@@ -325,7 +283,7 @@ def get_live_item(params):
     }
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r':

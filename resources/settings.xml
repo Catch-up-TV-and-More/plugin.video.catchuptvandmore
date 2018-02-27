@@ -201,8 +201,8 @@
             <setting label="TMC" type="bool" id="tmc" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="tmc.order" default="9"/>
 
-            <setting label="NT1" type="bool" id="nt1" default="true" visible="eq(-19,true)"/>
-            <setting label="" type="number" visible="false" id="nt1.order" default="10"/>
+            <setting label="TFX" type="bool" id="tfx" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="tfx.order" default="10"/>
 
             <setting label="NRJ 12" type="bool" id="nrj12" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="nrj12.order" default="11"/>

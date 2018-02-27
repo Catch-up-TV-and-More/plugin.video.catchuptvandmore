@@ -23,7 +23,6 @@
 import json
 import ast
 import time
-import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import resolver
@@ -77,70 +76,29 @@ URL_LIVE_RMCDECOUVERTE = 'http://rmcdecouverte.bfmtv.com/mediaplayer-direct/'
 _ = common.ADDON.initialize_gettext()
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_token(channel_name):
     """Get session token"""
     file_token = utils.get_webcontent(URL_TOKEN % (channel_name))
     token_json = json.loads(file_token)
     return token_json['session']['token'].encode('utf-8')
 
+
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     return None
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
-    # Add Replay Desactiver
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name
-        )
-    })
-
-    # Add Live
-    if params.channel_name != '01net':
-        modes.append({
-            'label': 'Live TV',
-            'url': common.PLUGIN.get_url(
-                action='replay_entry',
-                next='live_cat',
-                category='%s Live TV' % params.channel_name.upper(),
-                window_title='%s Live TV' % params.channel_name
-            )
-        })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
-
-
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -224,7 +182,7 @@ def list_shows(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -412,7 +370,7 @@ def list_videos(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
     title = ''
     plot = ''
@@ -494,7 +452,7 @@ def get_live_item(params):
         }
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':

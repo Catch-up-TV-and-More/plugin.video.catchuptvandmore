@@ -397,7 +397,7 @@ msgid "Video stream no longer exists"
 msgstr ""
 
 msgctxt "#30711"
-msgid "Video with an account needed"
+msgid "Account needed for this video"
 msgstr ""
 
 msgctxt "#30712"

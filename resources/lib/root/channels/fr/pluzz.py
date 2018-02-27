@@ -214,7 +214,7 @@ def channel_entry(params):
     return None
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def change_to_nicer_name(original_name):
     """Convert id name to label name"""
     if original_name in CATEGORIES_DISPLAY:
@@ -222,7 +222,7 @@ def change_to_nicer_name(original_name):
     return original_name
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     """Add Replay and Live in the listing"""
     modes = []
@@ -297,7 +297,7 @@ def root(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
     shows = []
@@ -622,7 +622,7 @@ def list_shows(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -1105,7 +1105,7 @@ def list_videos(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
     title = ''
     plot = ''
@@ -1198,12 +1198,9 @@ def get_live_item(params):
             }
 
     elif params.channel_name == 'franceinfo':
-
-        title = '%s Live' % params.channel_name
-
         info = {
             'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
+                'title': params.channel_label,
                 'plot': plot,
                 'date': date,
                 'duration': duration
@@ -1211,7 +1208,7 @@ def get_live_item(params):
         }
 
         return {
-            'label': params.channel_label + " - [I]" + title + "[/I]",
+            'label': params.channel_label,
             'url': common.PLUGIN.get_url(
                 action='start_live_tv_stream',
                 next='play_l',
@@ -1362,7 +1359,7 @@ def get_live_item(params):
             }
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 
