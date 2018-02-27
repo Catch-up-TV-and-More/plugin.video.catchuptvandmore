@@ -42,58 +42,20 @@ URL_EMISSIONS = URL_ROOT + '/a-z/'
 URL_STREAM = 'https://mnmedias.api.telequebec.tv/m3u8/%s.m3u8'
 # VideoId
 
+
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     return None
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """choose mode"""
-    modes = []
-
-    # Add Replay
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
-        ),
-    })
-
-    # Add Live
-    modes.append({
-        'label': 'Live TV',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name.upper()
-        ),
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -199,51 +161,38 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
-
-    title = ''
+def get_live_item(params):
     plot = ''
     duration = 0
     img = ''
     url_live = ''
 
-
-    title = params.channel_name + ' Live TV'
     live_html = utils.get_webcontent(URL_LIVE)
     url_live = re.compile(
         r'm3U8Url:"(.*?)"').findall(live_html)[0]
 
     info = {
         'video': {
-            'title': title,
+            'title': params.channel_label,
             'plot': plot,
             'duration': duration
         }
     }
 
-    lives.append({
-        'label': title,
+    return {
+        'label': params.channel_label,
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
-            action='replay_entry',
+            action='start_live_tv_stream',
             next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
             url=url_live,
         ),
         'is_playable': True,
         'info': info
-    })
-
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+    }
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

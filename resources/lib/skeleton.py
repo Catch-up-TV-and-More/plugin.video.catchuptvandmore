@@ -69,6 +69,10 @@ SKELETON = {
                 ('rtc', 'none'),
                 ('telemb', 'none'),
                 ('vrt', 'none')
+            },
+
+            ('ca', 'build_live_tv_menu'): {
+                ('telequebec', 'none')
             }
         },
 

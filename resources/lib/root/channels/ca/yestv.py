@@ -37,65 +37,15 @@ _ = common.ADDON.initialize_gettext()
 URL_LIVE = 'http://www.yestv.com/watch-live/?stream=%s'
 # Town
 
-def channel_entry(params):
-    """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'list_shows' in params.next:
-        return list_shows(params)
-    elif 'list_videos' in params.next:
-        return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
-    elif 'play' in params.next:
-        return get_video_url(params)
-    return None
 
 LIVES_TOWN = {
     'Ontario': 'YESTV-ONT',
     'Alberta': 'YESTV-AB-C'
 }
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """choose mode"""
-    modes = []
-
-    # Add Live
-    modes.append({
-        'label': 'Live TV',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name.upper()
-        ),
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_shows(params):
-    return None
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_videos(params):
-    return None
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
-
+def get_live_item(params):
     title = ''
     plot = ''
     duration = 0
@@ -124,27 +74,20 @@ def list_live(params):
             }
         }
 
-        lives.append({
+        return {
             'label': title,
             'fanart': img,
             'thumb': img,
             'url': common.PLUGIN.get_url(
-                action='replay_entry',
+                action='start_live_tv_stream',
                 next='play_l',
+                module_name=params.module_name,
+                module_path=params.module_path,
                 url=url_live,
             ),
             'is_playable': True,
             'info': info
-        })
-
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+        }
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
