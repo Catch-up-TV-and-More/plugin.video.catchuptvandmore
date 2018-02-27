@@ -63,6 +63,12 @@ SKELETON = {
                 ('irl', 'none'),
                 ('francetveducation', 'none'),
                 ('gong', 'none')
+            },
+
+            ('be', 'build_live_tv_menu'): {
+                ('rtc', 'none'),
+                ('telemb', 'none'),
+                ('vrt', 'none')
             }
         },
 

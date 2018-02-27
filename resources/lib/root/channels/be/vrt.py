@@ -54,23 +54,21 @@ CATEGORIES_VRT = {
     '/vrtnu/categorieen/': 'Categorieën'
 }
 
+
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
         return None
+
 
 def get_api_key():
     api_key_html = utils.get_webcontent(
@@ -78,41 +76,6 @@ def get_api_key():
     return re.compile(
         'apiKey=(.*?)\&').findall(api_key_html)[0]
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
-    # Add Replay
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name
-        )
-    })
-
-    # Add Live
-    modes.append({
-        'label' : _('Live TV'),
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name.upper()
-        ),
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -340,11 +303,9 @@ def list_videos(params):
         category=common.get_window_title()
     )
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
 
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def get_live_item(params):
     title = ''
     plot = ''
     duration = 0
@@ -356,44 +317,38 @@ def list_live(params):
         '%s_live.json' % (params.channel_name))
     lives_json = open(file_path).read()
     lives_json = lives_json.replace(
-        ')','').replace('parseLiveJson(','')
+        ')', '').replace('parseLiveJson(', '')
     lives_jsonparser = json.loads(lives_json)
 
     for lives_value in lives_jsonparser.iteritems():
 
         title = str(lives_value[0]).replace(
-            'vualto_','').replace('_', ' ')
+            'vualto_', '').replace('_', ' ')
         url_live = lives_jsonparser[lives_value[0]]["hls"]
 
         info = {
             'video': {
-                'title': title,
+                'title': params.channel_label + " - [I]" + title + "[/I]",
                 'plot': plot,
                 'duration': duration
             }
         }
 
-        lives.append({
-            'label': title,
+        return {
+            'label': params.channel_label + " - [I]" + title + "[/I]",
             'fanart': img,
             'thumb': img,
-            'url' : common.PLUGIN.get_url(
-                action='replay_entry',
+            'url': common.PLUGIN.get_url(
+                action='start_live_tv_stream',
                 next='play_l',
+                module_name=params.module_name,
+                module_path=params.module_path,
                 url_live=url_live,
             ),
             'is_playable': True,
             'info': info
-        })
+        }
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_LABEL,
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
-        ),
-        category=common.get_window_title()
-    )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
