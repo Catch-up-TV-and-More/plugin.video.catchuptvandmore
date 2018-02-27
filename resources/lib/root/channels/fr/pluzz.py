@@ -1106,65 +1106,25 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params, listing):
-    try:
-        title = ''
-        plot = ''
-        duration = 0
-        date = ''
-        genre = ''
+def get_live_item(params):
+    title = ''
+    plot = ''
+    duration = 0
+    date = ''
+    genre = ''
 
-        if params.channel_name == 'francetvsport':
+    if params.channel_name == 'francetvsport':
 
-            list_lives = utils.get_webcontent(
-                URL_FRANCETV_SPORT % 'directs')
-            list_lives_parserjson = json.loads(list_lives)
+        list_lives = utils.get_webcontent(
+            URL_FRANCETV_SPORT % 'directs')
+        list_lives_parserjson = json.loads(list_lives)
 
-            if 'lives' in list_lives_parserjson["page"]:
+        if 'lives' in list_lives_parserjson["page"]:
 
-                for live in list_lives_parserjson["page"]["lives"]:
-                    title = live["title"]
-                    image = live["image"]["large_16_9"]
-                    id_diffusion = live["sivideo-id"]
-
-                    try:
-                        value_date = time.strftime(
-                            '%d/%m/%Y %H:%M', time.localtime(live["start"]))
-                    except Exception:
-                        value_date = ''
-                    plot = 'Live start at ' + value_date
-
-                    info = {
-                        'video': {
-                            'title': title,
-                            'plot': plot,
-                            # 'aired': aired,
-                            # 'date': date,
-                            'duration': duration,
-                            # 'year': year,
-                        }
-                    }
-
-                    listing.append({
-                        'label': title,
-                        'fanart': image,
-                        'thumb': image,
-                        'url': common.PLUGIN.get_url(
-                            action='start_live_tv_stream',
-                            next='play_l',
-                            module_name=params.module_name,
-                            module_path=params.module_path,
-                            id_diffusion=id_diffusion
-                        ),
-                        'is_playable': True,
-                        'info': info
-                    })
-
-            for live in list_lives_parserjson["page"]["upcoming-lives"]:
-
+            for live in list_lives_parserjson["page"]["lives"]:
                 title = live["title"]
                 image = live["image"]["large_16_9"]
-                # id_diffusion = live["sivideo-id"]
+                id_diffusion = live["sivideo-id"]
 
                 try:
                     value_date = time.strftime(
@@ -1175,7 +1135,7 @@ def get_live_item(params, listing):
 
                 info = {
                     'video': {
-                        'title': params.channel_label + " - [I]" + title + "[/I]",
+                        'title': title,
                         'plot': plot,
                         # 'aired': aired,
                         # 'date': date,
@@ -1184,23 +1144,88 @@ def get_live_item(params, listing):
                     }
                 }
 
-                listing.append({
-                    'label': params.channel_label + " - [I]" + title + "[/I]",
+                return {
+                    'label': title,
                     'fanart': image,
                     'thumb': image,
                     'url': common.PLUGIN.get_url(
                         action='start_live_tv_stream',
                         next='play_l',
                         module_name=params.module_name,
-                        module_path=params.module_path
+                        module_path=params.module_path,
+                        id_diffusion=id_diffusion
                     ),
-                    'is_playable': False,
+                    'is_playable': True,
                     'info': info
-                })
+                }
 
-        elif params.channel_name == 'franceinfo':
+        for live in list_lives_parserjson["page"]["upcoming-lives"]:
 
-            title = '%s Live' % params.channel_name
+            title = live["title"]
+            image = live["image"]["large_16_9"]
+            # id_diffusion = live["sivideo-id"]
+
+            try:
+                value_date = time.strftime(
+                    '%d/%m/%Y %H:%M', time.localtime(live["start"]))
+            except Exception:
+                value_date = ''
+            plot = 'Live start at ' + value_date
+
+            info = {
+                'video': {
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
+                    'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
+                }
+            }
+
+            return {
+                'label': params.channel_label + " - [I]" + title + "[/I]",
+                'fanart': image,
+                'thumb': image,
+                'url': common.PLUGIN.get_url(
+                    action='start_live_tv_stream',
+                    next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path
+                ),
+                'is_playable': False,
+                'info': info
+            }
+
+    elif params.channel_name == 'franceinfo':
+
+        title = '%s Live' % params.channel_name
+
+        info = {
+            'video': {
+                'title': params.channel_label + " - [I]" + title + "[/I]",
+                'plot': plot,
+                'date': date,
+                'duration': duration
+            }
+        }
+
+        return {
+            'label': params.channel_label + " - [I]" + title + "[/I]",
+            'url': common.PLUGIN.get_url(
+                action='start_live_tv_stream',
+                next='play_l',
+                module_name=params.module_name,
+                module_path=params.module_path
+            ),
+            'is_playable': True,
+            'info': info
+        }
+
+    elif params.channel_name == 'la_1ere':
+
+        for id_stream, title_stream in LIVE_LA_1ERE.iteritems():
+            title = '%s Live' % title_stream
 
             info = {
                 'video': {
@@ -1211,8 +1236,121 @@ def get_live_item(params, listing):
                 }
             }
 
-            listing.append({
+            return {
                 'label': params.channel_label + " - [I]" + title + "[/I]",
+                'url': common.PLUGIN.get_url(
+                    action='start_live_tv_stream',
+                    next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path,
+                    id_stream=id_stream
+                ),
+                'is_playable': True,
+                'info': info
+            }
+
+    elif params.channel_name == 'france3regions':
+
+        for id_stream, title_stream in LIVE_FR3_REGIONS.iteritems():
+            title = '%s Live' % title_stream
+
+            info = {
+                'video': {
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
+                    'plot': plot,
+                    'date': date,
+                    'duration': duration
+                }
+            }
+
+            return {
+                'label': params.channel_label + " - [I]" + title + "[/I]",
+                'url': common.PLUGIN.get_url(
+                    action='start_live_tv_stream',
+                    next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path,
+                    id_stream=id_stream
+                ),
+                'is_playable': True,
+                'info': info
+            }
+
+    else:
+        url_json_live = CHANNEL_LIVE % (params.channel_name)
+        file_path_live = utils.download_catalog(
+            url_json_live,
+            'live_%s.json' % (
+                params.channel_name))
+        file_prgm_live = open(file_path_live).read()
+        json_parser_live = json.loads(file_prgm_live)
+        emissions_live = json_parser_live['reponse']['emissions']
+
+        for emission in emissions_live:
+            start_time_emission = 'Début : ' + \
+                emission['date_diffusion'].split('T')[1].encode('utf-8')
+
+            if emission['accroche']:
+                plot = start_time_emission + '\n ' + \
+                    emission['accroche'].encode('utf-8')
+            elif emission['accroche_programme']:
+                plot = start_time_emission + '\n ' + \
+                    emission['accroche_programme'].encode('utf-8')
+            if emission['date_diffusion']:
+                date = emission['date_diffusion']
+                date = date.encode('utf-8')
+            if emission['duree']:
+                duration = int(emission['duree']) * 60
+            if emission['titre']:
+                title = emission['titre'].encode('utf-8')
+
+            if emission['genre'] != '':
+                genre = \
+                    emission['genre'].encode('utf-8')
+
+            episode = 0
+            if 'episode' in emission:
+                episode = emission['episode']
+
+            season = 0
+            if 'saison' in emission:
+                season = emission['saison']
+
+            cast = []
+            director = ''
+            if emission['realisateurs'] in emission:
+                director = emission['realisateurs'].encode('utf-8')
+            if emission['acteurs'] in emission:
+                cast.append(emission['acteurs'].encode('utf-8'))
+
+            year = int(date[:4])
+            month = int(date[5:7])
+            day = int(date[8:10])
+            aired = '-'.join((str(year), str(month), str(day)))
+
+            image = URL_IMG % (emission['image_large'])
+
+            info = {
+                'video': {
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
+                    'plot': plot,
+                    'aired': aired,
+                    'date': date,
+                    'duration': duration,
+                    # year': year,
+                    'genre': genre,
+                    'mediatype': 'tvshow',
+                    'season': season,
+                    'episode': episode,
+                    'cast': cast,
+                    'director': director
+                }
+            }
+
+            return {
+                'label': params.channel_label + " - [I]" + title + "[/I]",
+                'fanart': image,
+                'thumb': image,
                 'url': common.PLUGIN.get_url(
                     action='start_live_tv_stream',
                     next='play_l',
@@ -1221,150 +1359,7 @@ def get_live_item(params, listing):
                 ),
                 'is_playable': True,
                 'info': info
-            })
-
-        elif params.channel_name == 'la_1ere':
-
-            for id_stream, title_stream in LIVE_LA_1ERE.iteritems():
-                title = '%s Live' % title_stream
-
-                info = {
-                    'video': {
-                        'title': params.channel_label + " - [I]" + title + "[/I]",
-                        'plot': plot,
-                        'date': date,
-                        'duration': duration
-                    }
-                }
-
-                listing.append({
-                    'label': params.channel_label + " - [I]" + title + "[/I]",
-                    'url': common.PLUGIN.get_url(
-                        action='start_live_tv_stream',
-                        next='play_l',
-                        module_name=params.module_name,
-                        module_path=params.module_path,
-                        id_stream=id_stream
-                    ),
-                    'is_playable': True,
-                    'info': info
-                })
-
-        elif params.channel_name == 'france3regions':
-
-            for id_stream, title_stream in LIVE_FR3_REGIONS.iteritems():
-                title = '%s Live' % title_stream
-
-                info = {
-                    'video': {
-                        'title': params.channel_label + " - [I]" + title + "[/I]",
-                        'plot': plot,
-                        'date': date,
-                        'duration': duration
-                    }
-                }
-
-                listing.append({
-                    'label': params.channel_label + " - [I]" + title + "[/I]",
-                    'url': common.PLUGIN.get_url(
-                        action='start_live_tv_stream',
-                        next='play_l',
-                        module_name=params.module_name,
-                        module_path=params.module_path,
-                        id_stream=id_stream
-                    ),
-                    'is_playable': True,
-                    'info': info
-                })
-
-        else:
-            url_json_live = CHANNEL_LIVE % (params.channel_name)
-            file_path_live = utils.download_catalog(
-                url_json_live,
-                'live_%s.json' % (
-                    params.channel_name))
-            file_prgm_live = open(file_path_live).read()
-            json_parser_live = json.loads(file_prgm_live)
-            emissions_live = json_parser_live['reponse']['emissions']
-
-            for emission in emissions_live:
-                start_time_emission = 'Début : ' + \
-                    emission['date_diffusion'].split('T')[1].encode('utf-8')
-
-                if emission['accroche']:
-                    plot = start_time_emission + '\n ' + \
-                        emission['accroche'].encode('utf-8')
-                elif emission['accroche_programme']:
-                    plot = start_time_emission + '\n ' + \
-                        emission['accroche_programme'].encode('utf-8')
-                if emission['date_diffusion']:
-                    date = emission['date_diffusion']
-                    date = date.encode('utf-8')
-                if emission['duree']:
-                    duration = int(emission['duree']) * 60
-                if emission['titre']:
-                    title = emission['titre'].encode('utf-8')
-
-                if emission['genre'] != '':
-                    genre = \
-                        emission['genre'].encode('utf-8')
-
-                episode = 0
-                if 'episode' in emission:
-                    episode = emission['episode']
-
-                season = 0
-                if 'saison' in emission:
-                    season = emission['saison']
-
-                cast = []
-                director = ''
-                if emission['realisateurs'] in emission:
-                    director = emission['realisateurs'].encode('utf-8')
-                if emission['acteurs'] in emission:
-                    cast.append(emission['acteurs'].encode('utf-8'))
-
-                year = int(date[:4])
-                month = int(date[5:7])
-                day = int(date[8:10])
-                aired = '-'.join((str(year), str(month), str(day)))
-
-                image = URL_IMG % (emission['image_large'])
-
-                info = {
-                    'video': {
-                        'title': params.channel_label + " - [I]" + title + "[/I]",
-                        'plot': plot,
-                        'aired': aired,
-                        'date': date,
-                        'duration': duration,
-                        # year': year,
-                        'genre': genre,
-                        'mediatype': 'tvshow',
-                        'season': season,
-                        'episode': episode,
-                        'cast': cast,
-                        'director': director
-                    }
-                }
-
-                listing.append({
-                    'label': params.channel_label + " - [I]" + title + "[/I]",
-                    'fanart': image,
-                    'thumb': image,
-                    'url': common.PLUGIN.get_url(
-                        action='start_live_tv_stream',
-                        next='play_l',
-                        module_name=params.module_name,
-                        module_path=params.module_path
-                    ),
-                    'is_playable': True,
-                    'info': info
-                })
-
-        return listing
-    except Exception:
-        return listing
+            }
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

@@ -289,7 +289,51 @@ def build_live_tv_menu(params):
 
         channel = get_module(params)
 
-        listing = channel.get_live_item(params, listing)
+        item = {}
+        # Build context menu (Move up, move down, ...)
+        context_menu = []
+
+        item_down = (
+            _('Move down'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='move',
+                direction='down',
+                item_id_order=channel_name + '.order',
+                displayed_items=menu) + ')'
+        )
+        item_up = (
+            _('Move up'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='move',
+                direction='up',
+                item_id_order=channel_name + '.order',
+                displayed_items=menu) + ')'
+        )
+
+        if index == 0:
+            context_menu.append(item_down)
+        elif index == len(menu) - 1:
+            context_menu.append(item_up)
+        else:
+            context_menu.append(item_up)
+            context_menu.append(item_down)
+
+        hide = (
+            _('Hide'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='hide',
+                item_id=channel_name) + ')'
+        )
+        context_menu.append(hide)
+
+        context_menu.append(utils.vpn_context_menu_item())
+
+        try:
+            item = channel.get_live_item(params)
+            item['context_menu'] = context_menu
+            listing.append(item)
+        except Exception:
+            None
 
     return common.PLUGIN.create_listing(
         listing,

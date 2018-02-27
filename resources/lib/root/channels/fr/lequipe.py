@@ -265,47 +265,43 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params, listing):
-    try:
-        title = ''
-        plot = ''
-        duration = 0
-        img = ''
-        video_id = ''
+def get_live_item(params):
 
-        html_live_equipe = utils.get_webcontent(URL_ROOT_VIDEO_LEQUIPE)
-        video_id = re.compile(
-            r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?',
-            re.DOTALL).findall(html_live_equipe)[0]
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    video_id = ''
 
-        title = '%s Live' % params.channel_name.upper()
+    html_live_equipe = utils.get_webcontent(URL_ROOT_VIDEO_LEQUIPE)
+    video_id = re.compile(
+        r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?',
+        re.DOTALL).findall(html_live_equipe)[0]
 
-        info = {
-            'video': {
-                'title': title,
-                'plot': plot,
-                'duration': duration
-            }
+    title = '%s Live' % params.channel_name.upper()
+
+    info = {
+        'video': {
+            'title': title,
+            'plot': plot,
+            'duration': duration
         }
+    }
 
-        listing.append({
-            'label': title,
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                video_id=video_id,
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-        return listing
-    except Exception:
-        return listing
+    return {
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='start_live_tv_stream',
+            next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
+            video_id=video_id,
+        ),
+        'is_playable': True,
+        'info': info
+    }
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

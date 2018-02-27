@@ -281,52 +281,48 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params, listing):
-    try:
-        title = ''
-        plot = ''
-        duration = 0
-        img = ''
+def get_live_item(params):
 
-        file_path = utils.download_catalog(
-            URL_INFO_LIVE_JSON,
-            '%s_info_live.json' % (params.channel_name)
-        )
-        file_info_live = open(file_path).read()
-        json_parser = json.loads(file_info_live)
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
 
-        title = json_parser["titre"].encode('utf-8')
+    file_path = utils.download_catalog(
+        URL_INFO_LIVE_JSON,
+        '%s_info_live.json' % (params.channel_name)
+    )
+    file_info_live = open(file_path).read()
+    json_parser = json.loads(file_info_live)
 
-        video_id = json_parser["video"].encode('utf-8')
+    title = json_parser["titre"].encode('utf-8')
 
-        # url_live = url_dailymotion_embed % video_id
+    video_id = json_parser["video"].encode('utf-8')
 
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
-            }
+    # url_live = url_dailymotion_embed % video_id
+
+    info = {
+        'video': {
+            'title': params.channel_label + " - [I]" + title + "[/I]",
+            'plot': plot,
+            'duration': duration
         }
+    }
 
-        listing.append({
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                video_id=video_id,
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-        return listing
-    except Exception:
-        return listing
+    return {
+        'label': params.channel_label + " - [I]" + title + "[/I]",
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='start_live_tv_stream',
+            next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
+            video_id=video_id,
+        ),
+        'is_playable': True,
+        'info': info
+    }
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

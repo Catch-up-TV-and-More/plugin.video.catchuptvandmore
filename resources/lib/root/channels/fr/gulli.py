@@ -274,69 +274,65 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params, listing):
-    try:
-        title = ''
-        plot = ''
-        duration = 0
-        img = ''
-        url_live = ''
+def get_live_item(params):
 
-        file_path = utils.download_catalog(
-            URL_LIVE_TV,
-            params.channel_name + '_live.html')
-        root_live_html = open(file_path).read()
-        root_live_soup = bs(root_live_html, 'html.parser')
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
 
-        live_soup = root_live_soup.find(
-            'div',
-            class_='wrapperVideo'
-        )
+    file_path = utils.download_catalog(
+        URL_LIVE_TV,
+        params.channel_name + '_live.html')
+    root_live_html = open(file_path).read()
+    root_live_soup = bs(root_live_html, 'html.parser')
 
-        url_live_embeded = ''
-        for live in live_soup.find_all('iframe'):
-            url_live_embeded = live.get('src').encode('utf-8')
+    live_soup = root_live_soup.find(
+        'div',
+        class_='wrapperVideo'
+    )
 
-        file_path_2 = utils.download_catalog(
-            url_live_embeded,
-            params.channel_name + '_live_embeded.html')
-        root_live_embeded_html = open(file_path_2).read()
+    url_live_embeded = ''
+    for live in live_soup.find_all('iframe'):
+        url_live_embeded = live.get('src').encode('utf-8')
 
-        all_url_video = re.compile(
-            r'file: \'(.*?)\'').findall(root_live_embeded_html)
+    file_path_2 = utils.download_catalog(
+        url_live_embeded,
+        params.channel_name + '_live_embeded.html')
+    root_live_embeded_html = open(file_path_2).read()
 
-        for url_video in all_url_video:
-            if url_video.count('m3u8') > 0:
-                url_live = url_video
+    all_url_video = re.compile(
+        r'file: \'(.*?)\'').findall(root_live_embeded_html)
 
-        title = '%s Live' % params.channel_name.upper()
+    for url_video in all_url_video:
+        if url_video.count('m3u8') > 0:
+            url_live = url_video
 
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
-            }
+    title = '%s Live' % params.channel_name.upper()
+
+    info = {
+        'video': {
+            'title': params.channel_label + " - [I]" + title + "[/I]",
+            'plot': plot,
+            'duration': duration
         }
+    }
 
-        listing.append({
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                url_live=url_live,
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-        return listing
-    except Exception:
-        return listing
+    return {
+        'label': params.channel_label + " - [I]" + title + "[/I]",
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='start_live_tv_stream',
+            next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
+            url_live=url_live,
+        ),
+        'is_playable': True,
+        'info': info
+    }
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

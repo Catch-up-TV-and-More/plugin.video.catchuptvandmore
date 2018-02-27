@@ -185,47 +185,43 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params, listing):
-    try:
-        title = ''
-        plot = ''
-        duration = 0
-        img = ''
-        url_live = ''
+def get_live_item(params):
 
-        file_path = utils.get_webcontent(URL_LIVE)
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
 
-        url_live = re.compile(
-            r'x-mpegurl" src="(.*?)"').findall(file_path)[0]
+    file_path = utils.get_webcontent(URL_LIVE)
 
-        title = '%s Live' % params.channel_name.upper()
+    url_live = re.compile(
+        r'x-mpegurl" src="(.*?)"').findall(file_path)[0]
 
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
-            }
+    title = '%s Live' % params.channel_name.upper()
+
+    info = {
+        'video': {
+            'title': params.channel_label + " - [I]" + title + "[/I]",
+            'plot': plot,
+            'duration': duration
         }
+    }
 
-        listing.append({
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                url_live=url_live,
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-        return listing
-    except Exception:
-        return listing
+    return {
+        'label': params.channel_label + " - [I]" + title + "[/I]",
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='start_live_tv_stream',
+            next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
+            url_live=url_live,
+        ),
+        'is_playable': True,
+        'info': info
+    }
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

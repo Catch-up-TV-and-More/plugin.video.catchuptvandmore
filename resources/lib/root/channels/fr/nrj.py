@@ -515,80 +515,76 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params, listing):
-    try:
-        title = ''
-        plot = ''
-        duration = 0
-        img = ''
-        url_live = ''
+def get_live_item(params):
 
-        session_requests = requests.session()
-        result = session_requests.get(URL_COMPTE_LOGIN)
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
 
-        token_form_login = re.compile(
-            r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
-        ).findall(result.text)[0]
+    session_requests = requests.session()
+    result = session_requests.get(URL_COMPTE_LOGIN)
 
-        # Build PAYLOAD
-        payload = {
-            "login_form[email]": common.PLUGIN.get_setting(
-                params.channel_id.rsplit('.', 1)[0] + '.login'),
-            "login_form[password]": common.PLUGIN.get_setting(
-                params.channel_id.rsplit('.', 1)[0] + '.password'),
-            "login_form[_token]": token_form_login
+    token_form_login = re.compile(
+        r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
+    ).findall(result.text)[0]
+
+    # Build PAYLOAD
+    payload = {
+        "login_form[email]": common.PLUGIN.get_setting(
+            params.channel_id.rsplit('.', 1)[0] + '.login'),
+        "login_form[password]": common.PLUGIN.get_setting(
+            params.channel_id.rsplit('.', 1)[0] + '.password'),
+        "login_form[_token]": token_form_login
+    }
+
+    # LOGIN
+    result_2 = session_requests.post(
+        URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
+    if 'adresse e-mail ou le mot de passe est invalide.' in result_2.text.encode('utf-8'):
+        utils.send_notification(
+            common.ADDON.get_localized_string(30113))
+        return None
+
+    # GET page with url_live with the session logged
+    result_3 = session_requests.get(
+        URL_LIVE_WITH_TOKEN % (params.channel_name),
+        headers=dict(
+            referer=URL_LIVE_WITH_TOKEN % (params.channel_name)))
+
+    root_soup = bs(result_3.text, 'html.parser')
+    live_soup = root_soup.find('div', class_="player")
+
+    url_live_json = live_soup.get('data-options')
+    url_live_json_jsonparser = json.loads(url_live_json)
+
+    url_live = url_live_json_jsonparser["file"]
+
+    title = '%s Live' % params.channel_name.upper()
+
+    info = {
+        'video': {
+            'title': params.channel_label + " - [I]" + title + "[/I]",
+            'plot': plot,
+            'duration': duration
         }
+    }
 
-        # LOGIN
-        result_2 = session_requests.post(
-            URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
-        if 'adresse e-mail ou le mot de passe est invalide.' in result_2.text.encode('utf-8'):
-            utils.send_notification(
-                common.ADDON.get_localized_string(30113))
-            return None
-
-        # GET page with url_live with the session logged
-        result_3 = session_requests.get(
-            URL_LIVE_WITH_TOKEN % (params.channel_name),
-            headers=dict(
-                referer=URL_LIVE_WITH_TOKEN % (params.channel_name)))
-
-        root_soup = bs(result_3.text, 'html.parser')
-        live_soup = root_soup.find('div', class_="player")
-
-        url_live_json = live_soup.get('data-options')
-        url_live_json_jsonparser = json.loads(url_live_json)
-
-        url_live = url_live_json_jsonparser["file"]
-
-        title = '%s Live' % params.channel_name.upper()
-
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
-            }
-        }
-
-        listing.append({
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                url_live=url_live
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-        return listing
-    except Exception:
-        return listing
+    return {
+        'label': params.channel_label + " - [I]" + title + "[/I]",
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='start_live_tv_stream',
+            next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
+            url_live=url_live
+        ),
+        'is_playable': True,
+        'info': info
+    }
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

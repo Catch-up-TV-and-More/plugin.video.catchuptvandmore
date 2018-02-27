@@ -320,57 +320,52 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params, listing):
-    try:
-        title = ''
-        plot = ''
-        duration = 0
-        img = ''
-        url_live = ''
+def get_live_item(params):
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
+    url_live = ''
 
-        file_path_html = utils.download_catalog(
-            URL_LIVE_CNEWS,
-            '%s_live.html' % (params.channel_name)
-        )
-        html_live = open(file_path_html).read()
+    file_path_html = utils.download_catalog(
+        URL_LIVE_CNEWS,
+        '%s_live.html' % (params.channel_name)
+    )
+    html_live = open(file_path_html).read()
 
-        video_id_re = re.compile(r'content: \'(.*?)\'').findall(html_live)
+    video_id_re = re.compile(r'content: \'(.*?)\'').findall(html_live)
 
-        file_live_json = utils.get_webcontent(
-            URL_INFO_CONTENT % (video_id_re[0]))
-        json_parser = json.loads(file_live_json)
+    file_live_json = utils.get_webcontent(
+        URL_INFO_CONTENT % (video_id_re[0]))
+    json_parser = json.loads(file_live_json)
 
-        title = json_parser[0]["INFOS"]["TITRAGE"]["TITRE"].encode('utf-8')
-        plot = json_parser[0]["INFOS"]["DESCRIPTION"].encode('utf-8')
-        img = json_parser[0]["MEDIA"]["IMAGES"]["GRAND"].encode('utf-8')
-        url_live = json_parser[0]["MEDIA"]["VIDEOS"]["IPAD"].encode('utf-8')
+    title = json_parser[0]["INFOS"]["TITRAGE"]["TITRE"].encode('utf-8')
+    plot = json_parser[0]["INFOS"]["DESCRIPTION"].encode('utf-8')
+    img = json_parser[0]["MEDIA"]["IMAGES"]["GRAND"].encode('utf-8')
+    url_live = json_parser[0]["MEDIA"]["VIDEOS"]["IPAD"].encode('utf-8')
 
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
-            }
+    info = {
+        'video': {
+            'title': params.channel_label + " - [I]" + title + "[/I]",
+            'plot': plot,
+            'duration': duration
         }
+    }
 
-        listing.append({
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                url=url_live
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-        return listing
-    except Exception:
-        return listing
+    return {
+        'label': params.channel_label + " - [I]" + title + "[/I]",
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='start_live_tv_stream',
+            next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
+            url=url_live
+        ),
+        'is_playable': True,
+        'info': info
+    }
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

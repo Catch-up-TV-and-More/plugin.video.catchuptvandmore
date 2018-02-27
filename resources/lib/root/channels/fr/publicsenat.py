@@ -384,44 +384,39 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params, listing):
-    try:
-        title = ''
-        plot = ''
-        duration = 0
-        img = ''
+def get_live_item(params):
+    title = ''
+    plot = ''
+    duration = 0
+    img = ''
 
-        html_live = utils.get_webcontent(URL_LIVE_SITE)
-        video_id = re.compile(
-            r'www.dailymotion.com/embed/video/(.*?)\?').findall(
-            html_live)[0]
+    html_live = utils.get_webcontent(URL_LIVE_SITE)
+    video_id = re.compile(
+        r'www.dailymotion.com/embed/video/(.*?)\?').findall(
+        html_live)[0]
 
-        title = '%s Live' % params.channel_name.upper()
+    title = '%s Live' % params.channel_name.upper()
 
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
-            }
+    info = {
+        'video': {
+            'title': params.channel_label + " - [I]" + title + "[/I]",
+            'plot': plot,
+            'duration': duration
         }
+    }
 
-        listing.append({
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='replay_entry',
-                next='play_l',
-                video_id=video_id,
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-        return listing
-    except Exception:
-        return listing
+    return {
+        'label': params.channel_label + " - [I]" + title + "[/I]",
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='replay_entry',
+            next='play_l',
+            video_id=video_id,
+        ),
+        'is_playable': True,
+        'info': info
+    }
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
