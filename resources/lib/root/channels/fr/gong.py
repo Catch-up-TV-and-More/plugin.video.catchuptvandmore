@@ -185,52 +185,47 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
+def get_live_item(params, listing):
+    try:
+        title = ''
+        plot = ''
+        duration = 0
+        img = ''
+        url_live = ''
 
-    title = ''
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
+        file_path = utils.get_webcontent(URL_LIVE)
 
-    file_path = utils.get_webcontent(URL_LIVE)
+        url_live = re.compile(
+            r'x-mpegurl" src="(.*?)"').findall(file_path)[0]
 
-    url_live = re.compile(
-        r'x-mpegurl" src="(.*?)"').findall(file_path)[0]
+        title = '%s Live' % params.channel_name.upper()
 
-    title = '%s Live' % params.channel_name.upper()
-
-    info = {
-        'video': {
-            'title': title,
-            'plot': plot,
-            'duration': duration
+        info = {
+            'video': {
+                'title': params.channel_label + " - [I]" + title + "[/I]",
+                'plot': plot,
+                'duration': duration
+            }
         }
-    }
 
-    lives.append({
-        'label': title,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='play_l',
-            url_live=url_live,
-        ),
-        'is_playable': True,
-        'info': info
-    })
+        listing.append({
+            'label': params.channel_label + " - [I]" + title + "[/I]",
+            'fanart': img,
+            'thumb': img,
+            'url': common.PLUGIN.get_url(
+                action='start_live_tv_stream',
+                next='play_l',
+                module_name=params.module_name,
+                module_path=params.module_path,
+                url_live=url_live,
+            ),
+            'is_playable': True,
+            'info': info
+        })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+        return listing
+    except Exception:
+        return listing
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

@@ -270,6 +270,8 @@ def build_live_tv_menu(params):
         params['module_path'] = str(channel_path)
         params['module_name'] = channel_name
         params['channel_label'] = skeleton.LABELS[channel_name]
+        print "CURRENT CHANNEL : " + channel_name
+
 
         # Legacy fix (il faudrait remplacer channel_name par
         # module_name dans tous les .py des chaines)

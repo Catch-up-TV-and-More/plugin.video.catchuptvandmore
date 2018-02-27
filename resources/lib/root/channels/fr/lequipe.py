@@ -265,52 +265,47 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
+def get_live_item(params, listing):
+    try:
+        title = ''
+        plot = ''
+        duration = 0
+        img = ''
+        video_id = ''
 
-    title = ''
-    plot = ''
-    duration = 0
-    img = ''
-    video_id = ''
+        html_live_equipe = utils.get_webcontent(URL_ROOT_VIDEO_LEQUIPE)
+        video_id = re.compile(
+            r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?',
+            re.DOTALL).findall(html_live_equipe)[0]
 
-    html_live_equipe = utils.get_webcontent(URL_ROOT_VIDEO_LEQUIPE)
-    video_id = re.compile(
-        r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?',
-        re.DOTALL).findall(html_live_equipe)[0]
+        title = '%s Live' % params.channel_name.upper()
 
-    title = '%s Live' % params.channel_name.upper()
-
-    info = {
-        'video': {
-            'title': title,
-            'plot': plot,
-            'duration': duration
+        info = {
+            'video': {
+                'title': title,
+                'plot': plot,
+                'duration': duration
+            }
         }
-    }
 
-    lives.append({
-        'label': title,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='play_l',
-            video_id=video_id,
-        ),
-        'is_playable': True,
-        'info': info
-    })
+        listing.append({
+            'label': title,
+            'fanart': img,
+            'thumb': img,
+            'url': common.PLUGIN.get_url(
+                action='start_live_tv_stream',
+                next='play_l',
+                module_name=params.module_name,
+                module_path=params.module_path,
+                video_id=video_id,
+            ),
+            'is_playable': True,
+            'info': info
+        })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+        return listing
+    except Exception:
+        return listing
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

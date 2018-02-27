@@ -281,57 +281,52 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
+def get_live_item(params, listing):
+    try:
+        title = ''
+        plot = ''
+        duration = 0
+        img = ''
 
-    title = ''
-    plot = ''
-    duration = 0
-    img = ''
+        file_path = utils.download_catalog(
+            URL_INFO_LIVE_JSON,
+            '%s_info_live.json' % (params.channel_name)
+        )
+        file_info_live = open(file_path).read()
+        json_parser = json.loads(file_info_live)
 
-    file_path = utils.download_catalog(
-        URL_INFO_LIVE_JSON,
-        '%s_info_live.json' % (params.channel_name)
-    )
-    file_info_live = open(file_path).read()
-    json_parser = json.loads(file_info_live)
+        title = json_parser["titre"].encode('utf-8')
 
-    title = json_parser["titre"].encode('utf-8')
+        video_id = json_parser["video"].encode('utf-8')
 
-    video_id = json_parser["video"].encode('utf-8')
+        # url_live = url_dailymotion_embed % video_id
 
-    # url_live = url_dailymotion_embed % video_id
-
-    info = {
-        'video': {
-            'title': title,
-            'plot': plot,
-            'duration': duration
+        info = {
+            'video': {
+                'title': params.channel_label + " - [I]" + title + "[/I]",
+                'plot': plot,
+                'duration': duration
+            }
         }
-    }
 
-    lives.append({
-        'label': title,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='play_l',
-            video_id=video_id,
-        ),
-        'is_playable': True,
-        'info': info
-    })
+        listing.append({
+            'label': params.channel_label + " - [I]" + title + "[/I]",
+            'fanart': img,
+            'thumb': img,
+            'url': common.PLUGIN.get_url(
+                action='start_live_tv_stream',
+                next='play_l',
+                module_name=params.module_name,
+                module_path=params.module_path,
+                video_id=video_id,
+            ),
+            'is_playable': True,
+            'info': info
+        })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+        return listing
+    except Exception:
+        return listing
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)

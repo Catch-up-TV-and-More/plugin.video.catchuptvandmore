@@ -413,95 +413,90 @@ def list_videos(params):
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
-
-    title = ''
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    list_urls_live = []
-
-    if params.channel_name == 'rmcdecouverte':
-        list_urls_live.append(URL_LIVE_RMCDECOUVERTE)
-    elif params.channel_name == 'bfmtv':
-        list_urls_live.append(URL_LIVE_BFMTV)
-        list_urls_live.append(URL_LIVE_BFM_PARIS)
-    elif params.channel_name == 'bfmbusiness':
-        list_urls_live.append(URL_LIVE_BFMBUSINESS)
-    elif params.channel_name == 'rmc':
-        list_urls_live.append(URL_LIVE_BFM_SPORT)
-
-    for url_live_data in list_urls_live:
-
-        live_html = utils.get_webcontent(
-            url_live_data)
-
-        live_soup = bs(live_html, 'html.parser')
-        if params.channel_name == 'rmcdecouverte':
-            data_live_soup = live_soup.find(
-                'div', class_='next-player')
-            data_account = data_live_soup['data-account']
-            data_video_id = data_live_soup['data-video-id']
-            data_player = data_live_soup['data-player']
-        else:
-            data_live_soup = live_soup.find(
-                'div', class_='BCLvideoWrapper')
-            data_account = data_live_soup.find(
-                'script')['data-account']
-            data_video_id = data_live_soup.find(
-                'script')['data-video-id']
-            data_player = data_live_soup.find(
-                'script')['data-player']
-
-        json_parser = resolver.get_brightcove_video_json(
-            data_account,
-            data_player,
-            data_video_id)
-
-        title = json_parser["name"]
+def get_live_item(params, listing):
+    try:
+        title = ''
         plot = ''
-        if json_parser["long_description"]:
-            plot = json_parser["long_description"]
-            plot = plot.encode('utf-8')
+        duration = 0
+        img = ''
+        url_live = ''
 
-        for url in json_parser["sources"]:
-            url_live = url["src"].encode('utf-8')
+        list_urls_live = []
 
-        if 'poster' in json_parser:
-            img = json_parser["poster"].encode('utf-8')
+        if params.channel_name == 'rmcdecouverte':
+            list_urls_live.append(URL_LIVE_RMCDECOUVERTE)
+        elif params.channel_name == 'bfmtv':
+            list_urls_live.append(URL_LIVE_BFMTV)
+            list_urls_live.append(URL_LIVE_BFM_PARIS)
+        elif params.channel_name == 'bfmbusiness':
+            list_urls_live.append(URL_LIVE_BFMBUSINESS)
+        elif params.channel_name == 'rmc':
+            list_urls_live.append(URL_LIVE_BFM_SPORT)
 
-        info = {
-            'video': {
-                'title': title,
-                'plot': plot,
-                'duration': duration
+        for url_live_data in list_urls_live:
+
+            live_html = utils.get_webcontent(
+                url_live_data)
+
+            live_soup = bs(live_html, 'html.parser')
+            if params.channel_name == 'rmcdecouverte':
+                data_live_soup = live_soup.find(
+                    'div', class_='next-player')
+                data_account = data_live_soup['data-account']
+                data_video_id = data_live_soup['data-video-id']
+                data_player = data_live_soup['data-player']
+            else:
+                data_live_soup = live_soup.find(
+                    'div', class_='BCLvideoWrapper')
+                data_account = data_live_soup.find(
+                    'script')['data-account']
+                data_video_id = data_live_soup.find(
+                    'script')['data-video-id']
+                data_player = data_live_soup.find(
+                    'script')['data-player']
+
+            json_parser = resolver.get_brightcove_video_json(
+                data_account,
+                data_player,
+                data_video_id)
+
+            title = json_parser["name"]
+            plot = ''
+            if json_parser["long_description"]:
+                plot = json_parser["long_description"]
+                plot = plot.encode('utf-8')
+
+            for url in json_parser["sources"]:
+                url_live = url["src"].encode('utf-8')
+
+            if 'poster' in json_parser:
+                img = json_parser["poster"].encode('utf-8')
+
+            info = {
+                'video': {
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
+                    'plot': plot,
+                    'duration': duration
+                }
             }
-        }
 
-        lives.append({
-            'label': title,
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='replay_entry',
-                next='play_l',
-                url_live=url_live,
-            ),
-            'is_playable': True,
-            'info': info
-        })
+            listing.append({
+                'label': params.channel_label + " - [I]" + title + "[/I]",
+                'fanart': img,
+                'thumb': img,
+                'url': common.PLUGIN.get_url(
+                    action='start_live_tv_stream',
+                    next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path
+                ),
+                'is_playable': True,
+                'info': info
+            })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        )
-    )
+        return listing
+    except Exception:
+        return listing
 
 
 # @common.PLUGIN.mem_cached(common.CACHE_TIME)
