@@ -259,19 +259,29 @@ def replay_entry(params):
 
 @common.PLUGIN.action()
 def build_live_tv_menu(params):
-    listing = []
-
     folder_path = eval(params.item_path)
+
+    # First we sort channels
+    menu = []
     for channel in eval(params.item_skeleton):
         channel_name = channel[0]
-        channel_path = list(folder_path)
-        channel_path.append(skeleton.CHANNELS[channel_name])
+        # If channel isn't disable
+        if common.PLUGIN.get_setting(channel_name):
+            # Get order value in settings file
+            channel_order = common.PLUGIN.get_setting(channel_name + '.order')
+            channel_path = list(folder_path)
+            channel_path.append(skeleton.CHANNELS[channel_name])
 
+            item = (channel_order, channel_name, channel_path)
+            menu.append(item)
+
+    menu = sorted(menu, key=lambda x: x[0])
+
+    listing = []
+    for index, (channel_order, channel_name, channel_path) in enumerate(menu):
         params['module_path'] = str(channel_path)
         params['module_name'] = channel_name
         params['channel_label'] = skeleton.LABELS[channel_name]
-        print "CURRENT CHANNEL : " + channel_name
-
 
         # Legacy fix (il faudrait remplacer channel_name par
         # module_name dans tous les .py des chaines)
