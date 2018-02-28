@@ -31,10 +31,6 @@ from resources.lib import common
 # Token (live) maybe more work todo
 # RSS get more video ?
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 URL_ROOT = 'https://www.telemb.be'
 
@@ -167,7 +163,7 @@ def list_videos(params):
         }
 
         download_video = (
-            _('Download'),
+            common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_url=video_url) + ')'

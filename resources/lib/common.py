@@ -31,6 +31,11 @@ CACHE_TIME = 10
 
 PLUGIN_NAME = 'Catch-up TV & More'
 
+# Initialize GNU gettext emulation in addon
+# This allows to use UI strings from addon’s English
+# strings.po file instead of numeric codes
+GETTEXT = ADDON.initialize_gettext()
+
 FILESYSTEM_CODING = sys.getfilesystemencoding()
 if sys.getfilesystemencoding() is None:
     FILESYSTEM_CODING = "utf-8"

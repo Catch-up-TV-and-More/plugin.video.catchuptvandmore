@@ -34,11 +34,6 @@ from resources.lib import common
 # Add More Buttons for replay Sky News
 # Some video Sky sports required account (add account)
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 URL_LIVE_SKYNEWS = 'http://news.sky.com/watch-live'
 
 URL_IMG_YOUTUBE = 'https://i.ytimg.com/vi/%s/hqdefault.jpg'
@@ -101,7 +96,7 @@ def root(params):
     # Add Live
     if params.channel_name == 'skynews':
         modes.append({
-            'label': _('Live TV'),
+            'label': common.GETTEXT('Live TV'),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 next='live_cat',
@@ -247,7 +242,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_id=video_id) + ')'
@@ -310,7 +305,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_id=video_id) + ')'

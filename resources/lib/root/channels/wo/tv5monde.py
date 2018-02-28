@@ -30,10 +30,6 @@ from resources.lib import common
 # TO DO
 # Download Mode / QUality Mode
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 URL_TV5MAF_ROOT = 'https://afrique.tv5monde.com'
 
@@ -59,12 +55,12 @@ def channel_entry(params):
 
 
 LIST_LIVE_TV5MONDE = {
-    _('Live TV') + ' France Belgique Suisse': 'fbs',
-    _('Live TV') + ' Info Plus': 'infoplus'
+    common.GETTEXT('Live TV') + ' France Belgique Suisse': 'fbs',
+    common.GETTEXT('Live TV') + ' Info Plus': 'infoplus'
 }
 
 LIST_LIVE_TIVI5MONDE = {
-    _('Live TV') + ' TIVI 5Monde': 'tivi5monde'
+    common.GETTEXT('Live TV') + ' TIVI 5Monde': 'tivi5monde'
 }
 
 CATEGORIES_VIDEOS_TV5MONDE = {
@@ -317,7 +313,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=params.category_url) + ')'
@@ -396,7 +392,7 @@ def list_videos(params):
                         }
 
                         download_video = (
-                            _('Download'),
+                            common.GETTEXT('Download'),
                             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                                 action='download_video',
                                 video_url=video_url) + ')'
@@ -456,7 +452,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=video_url) + ')'
@@ -521,7 +517,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=video_url) + ')'
@@ -588,7 +584,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=video_url) + ')'
@@ -653,7 +649,7 @@ def list_videos(params):
                     }
 
                     download_video = (
-                        _('Download'),
+                        common.GETTEXT('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             video_url=video_url) + ')'

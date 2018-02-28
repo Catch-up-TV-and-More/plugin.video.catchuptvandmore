@@ -34,10 +34,6 @@ from resources.lib import common
 # Replay LCI add More Buttons
 # DRM (SAMPLE-AES) for Replay => https://github.com/peak3d/inputstream.adaptive/issues/96
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 URL_ROOT = "http://www.tf1.fr/"
 URL_TIME = 'http://www.wat.tv/servertime2/'
@@ -308,7 +304,7 @@ def list_videos_lci(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         program_id=program_id) + ')'
@@ -486,7 +482,7 @@ def list_videos(params):
                     }
 
                     download_video = (
-                        _('Download'),
+                        common.GETTEXT('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             program_id=program_id) + ')'
@@ -653,7 +649,7 @@ def get_video_url(params):
                     root + '/' + lines[k + 1])
         if DESIRED_QUALITY == "DIALOG":
             seleted_item = common.sp.xbmcgui.Dialog().select(
-                _('Choose video quality'),
+                common.GETTEXT('Choose video quality'),
                 all_datas_videos_quality)
             return all_datas_videos_path[seleted_item].encode(
                 'utf-8')

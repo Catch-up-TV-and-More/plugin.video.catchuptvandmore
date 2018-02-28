@@ -30,10 +30,6 @@ from resources.lib import common
 # Live TV ?
 # Get IMG from each SHOW (How ? Working on the browser not by wget)
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 URL_ROOT = 'https://uktvplay.uktv.co.uk'
 
@@ -267,7 +263,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         data_vidid=data_vidid,
@@ -335,7 +331,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     data_vidid=data_vidid,
@@ -405,7 +401,7 @@ def list_videos(params):
         }
 
         download_video = (
-            _('Download'),
+            common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 data_vidid=data_vidid,

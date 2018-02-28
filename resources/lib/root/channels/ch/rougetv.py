@@ -29,11 +29,6 @@ from resources.lib import common
 # TO DO
 # Add http://www.rougefm.com/rouge-play/
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 
 URL_ROOT = 'http://www.rougefm.com'
 # (www or play), channel_name
@@ -98,7 +93,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'

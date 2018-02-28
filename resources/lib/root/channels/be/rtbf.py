@@ -31,10 +31,6 @@ from resources.lib import common
 # Add geoblock (info in JSON)
 # Add Quality Mode
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 URL_EMISSIONS_AUVIO = 'https://www.rtbf.be/auvio/emissions'
 
@@ -247,7 +243,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     url_video=url_video) + ')'
@@ -308,7 +304,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_id=video_id) + ')'

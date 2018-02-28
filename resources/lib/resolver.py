@@ -32,10 +32,6 @@ from youtube_dl import YoutubeDL
 # Download Mode with Facebook (the video has no audio)
 # Quality Youtube
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 DESIRED_QUALITY = common.PLUGIN.get_setting('quality')
 
@@ -90,7 +86,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
                     all_datas_videos_path.append(datas)
 
                 seleted_item = common.sp.xbmcgui.Dialog().select(
-                    _('Choose video quality'), all_datas_videos_quality)
+                    common.GETTEXT('Choose video quality'), all_datas_videos_quality)
 
                 return all_datas_videos_path[seleted_item].encode('utf-8')
             elif DESIRED_QUALITY == 'BEST':
@@ -132,7 +128,7 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
                         all_datas_videos_path.append(
                             lines[k + 1])
                 seleted_item = common.sp.xbmcgui.Dialog().select(
-                    _('Choose video quality'),
+                    common.GETTEXT('Choose video quality'),
                     all_datas_videos_quality)
                 return all_datas_videos_path[seleted_item].encode(
                     'utf-8')
@@ -189,7 +185,7 @@ def get_stream_facebook(video_id, isDownloadVideo):
                 r'hd_src_no_ratelimit:"(.*?)"').findall(
                 html_facebook)[0])
             seleted_item = common.sp.xbmcgui.Dialog().select(
-                _('Choose video quality'),
+                common.GETTEXT('Choose video quality'),
                 all_datas_videos_quality)
             return all_datas_videos_path[seleted_item].encode(
                 'utf-8')

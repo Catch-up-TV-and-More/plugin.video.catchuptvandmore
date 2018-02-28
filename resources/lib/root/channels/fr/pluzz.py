@@ -34,10 +34,6 @@ from resources.lib import utils
 from resources.lib import resolver
 from resources.lib import common
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 CHANNEL_CATALOG = 'http://pluzz.webservices.francetelevisions.fr/' \
                   'pluzz/liste/type/replay/nb/10000/chaine/%s'
@@ -601,7 +597,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     id_diffusion=id_diffusion) + ')'
@@ -673,7 +669,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     id_diffusion=id_diffusion) + ')'
@@ -748,7 +744,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     id_diffusion=id_diffusion) + ')'
@@ -825,7 +821,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
@@ -983,7 +979,7 @@ def list_videos(params):
                     }
 
                     download_video = (
-                        _('Download'),
+                        common.GETTEXT('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
                             id_diffusion=id_diffusion) + ')'
@@ -1344,7 +1340,7 @@ def get_video_url(params):
                             all_datas_videos_path.append(video['url'])
 
                     seleted_item = common.sp.xbmcgui.Dialog().select(
-                        _('Choose video quality'),
+                        common.GETTEXT('Choose video quality'),
                         all_datas_videos_quality)
 
                     if seleted_item == -1:
@@ -1410,7 +1406,7 @@ def get_video_url(params):
                         all_datas_videos_path.append(video['url'])
 
                 seleted_item = common.sp.xbmcgui.Dialog().select(
-                    _('Choose video quality'),
+                    common.GETTEXT('Choose video quality'),
                     all_datas_videos_quality)
 
                 if seleted_item == -1:

@@ -38,11 +38,6 @@ INFO_VIDEO = 'http://api.cbnews.webtv.flumotion.com/videos/%s'
 INFO_STREAM = 'http://cbnews.ondemand.flumotion.com/video/mp4/%s/%s.mp4'
 # Quality, IdStream
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 
 QUALITIES_STREAM = ['low', 'hd']
 
@@ -190,7 +185,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
@@ -263,7 +258,7 @@ def get_video_url(params):
 
     if desired_quality == "DIALOG":
         seleted_item = common.sp.xbmcgui.Dialog().select(
-            _('Choose video quality'),
+            common.GETTEXT('Choose video quality'),
             all_datas_videos_quality)
         if seleted_item == -1:
             return ''

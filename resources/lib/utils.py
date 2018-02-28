@@ -27,10 +27,6 @@ import requests
 from random import randint
 from resources.lib import common
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 cache_path = common.sp.xbmc.translatePath(
     os.path.join(
@@ -185,15 +181,15 @@ def clear_cache():
                 os.remove(file_path)
         except Exception as e:
             print(e)
-    send_notification(_('Cache cleared'))
+    send_notification(common.GETTEXT('Cache cleared'))
 
 
 def vpn_context_menu_item():
-    vpn_label = _('Connect VPN')
+    vpn_label = common.GETTEXT('Connect VPN')
     storage = common.sp.MemStorage('vpn')
     if 'status' in storage:
         if storage['status'] == "connected":
-            vpn_label = _('Disconnect VPN')
+            vpn_label = common.GETTEXT('Disconnect VPN')
     else:
         storage['status'] = "disconnected"
     vpn = (

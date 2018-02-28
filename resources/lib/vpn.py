@@ -26,12 +26,6 @@ from resources.lib import utils
 from resources.lib import common
 from resources.lib import openvpn as vpnlib
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
-
 ip = "127.0.0.1"
 port = 1337
 
@@ -46,13 +40,13 @@ def disconnect_openvpn():
             vpnlib.disconnect(ip, port)
             if response[1] is not None:
                 utils.send_notification(
-                    _('Stopped VPN connection'), title="OpenVPN", time=3000)
+                    common.GETTEXT('Stopped VPN connection'), title="OpenVPN", time=3000)
         storage['status'] = "disconnected"
         common.PLUGIN.log_debug('Disconnect OpenVPN successful')
     except vpnlib.OpenVPNError as exception:
         common.sp.xbmcgui.Dialog().ok(
             'OpenVPN',
-            _('An error has occurred whilst trying to connect OpenVPN'))
+            common.GETTEXT('An error has occurred whilst trying to connect OpenVPN'))
 
         storage['status'] = "failed"
 
@@ -66,7 +60,7 @@ def connect_openvpn(config, restart=False, sudopassword=None):
 
         keyboard = common.sp.xbmc.Keyboard(
             default='',
-            heading=_('Enter your sudo password'),
+            heading=common.GETTEXT('Enter your sudo password'),
             hidden=True)
         keyboard.doModal()
         if keyboard.isConfirmed():
@@ -88,7 +82,7 @@ def connect_openvpn(config, restart=False, sudopassword=None):
             storage['status'] = "disconnected"
         openvpn.connect()
         utils.send_notification(
-            _('Started VPN connection'), title="OpenVPN", time=3000)
+            common.GETTEXT('Started VPN connection'), title="OpenVPN", time=3000)
 
         storage['status'] = "connected"
     except vpnlib.OpenVPNError as exception:
@@ -97,8 +91,8 @@ def connect_openvpn(config, restart=False, sudopassword=None):
 
             if common.sp.xbmcgui.Dialog().yesno(
                     'OpenVPN',
-                    _('An existing OpenVPN instance appears to be running.'),
-                    _('Disconnect it?')):
+                    common.GETTEXT('An existing OpenVPN instance appears to be running.'),
+                    common.GETTEXT('Disconnect it?')):
 
                 common.PLUGIN.log_debug('User has decided to restart OpenVPN')
                 connect_openvpn(config, True, sudopassword)
@@ -108,14 +102,14 @@ def connect_openvpn(config, restart=False, sudopassword=None):
         else:
             common.sp.xbmcgui.Dialog().ok(
                 'OpenVPN',
-                _('An error has occurred whilst trying to connect OpenVPN'))
+                common.GETTEXT('An error has occurred whilst trying to connect OpenVPN'))
             storage['status'] = "failed"
 
 
 def import_ovpn():
     path = common.sp.xbmcgui.Dialog().browse(
         1,
-        _('Import OpenVPN configuration file'),
+        common.GETTEXT('Import OpenVPN configuration file'),
         'files',
         mask='.ovpn|.conf',
         enableMultiple=False
@@ -126,7 +120,7 @@ def import_ovpn():
 
         keyboard = common.sp.xbmc.Keyboard(
             default='',
-            heading=_('Choose a name for OpenVPN configuration'),
+            heading=common.GETTEXT('Choose a name for OpenVPN configuration'),
             hidden=False)
         keyboard.doModal()
         if keyboard.isConfirmed() and len(keyboard.getText()) > 0:
@@ -138,9 +132,9 @@ def import_ovpn():
 
             if name in ovpnfiles and not common.sp.xbmcgui.Dialog().yesno(
                     'OpenVPN',
-                    _('This OpenVPN configuration '
+                    common.GETTEXT('This OpenVPN configuration '
                         'name already exists. Overwrite?')):
-                common.sp.xbmcgui.Dialog().ok('OpenVPN', _('Import cancelled'))
+                common.sp.xbmcgui.Dialog().ok('OpenVPN', common.GETTEXT('Import cancelled'))
 
             else:
                 ovpnfiles[name] = path
@@ -149,7 +143,7 @@ def import_ovpn():
         else:
             common.sp.xbmcgui.Dialog().ok(
                 'OpenVPN',
-                _('Import failed. You must specify a '
+                common.GETTEXT('Import failed. You must specify a '
                     'name for the OpenVPN configuration'))
 
 
@@ -180,7 +174,7 @@ def select_ovpn():
             ovpnfileslist.append(configfilepath)
 
         idx = common.sp.xbmcgui.Dialog().select(
-            _('Select OpenVPN configuration to run'), configs)
+            common.GETTEXT('Select OpenVPN configuration to run'), configs)
         if idx >= 0:
             common.PLUGIN.log_debug('Select: [%s]' % ovpnfileslist[idx])
             return ovpnfileslist[idx]
@@ -215,7 +209,7 @@ def delete_ovpn():
             ovpnfileslist.append(configfilepath)
 
         idx = common.sp.xbmcgui.Dialog().select(
-            _('Select OpenVPN configuration to delete'), configs)
+            common.GETTEXT('Select OpenVPN configuration to delete'), configs)
         if idx >= 0:
             common.PLUGIN.log_debug('Select: [%s]' % ovpnfileslist[idx])
             new_ovpnfiles = {}

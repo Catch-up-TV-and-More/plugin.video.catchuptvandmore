@@ -70,11 +70,6 @@ URL_VIDEO_HTML_RMCDECOUVERTE = 'http://rmcdecouverte.bfmtv.com/'\
 
 URL_LIVE_RMCDECOUVERTE = 'http://rmcdecouverte.bfmtv.com/mediaplayer-direct/'
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_token(channel_name):
@@ -244,7 +239,7 @@ def list_videos(params):
         }
 
         download_video = (
-            _('Download'),
+            common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_id=params.video_id) + ')'
@@ -318,7 +313,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_id=video_id) + ')'
@@ -488,7 +483,7 @@ def get_video_url(params):
                 all_datas_videos_path.append(datas['video_url'])
 
             seleted_item = common.sp.xbmcgui.Dialog().select(
-                _('Choose video quality'), all_datas_videos_quality)
+                common.GETTEXT('Choose video quality'), all_datas_videos_quality)
 
             return all_datas_videos_path[seleted_item].encode('utf-8')
 

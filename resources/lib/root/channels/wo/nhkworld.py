@@ -29,10 +29,6 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 URL_ROOT = 'http://www3.nhk.or.jp/'
 
@@ -119,7 +115,7 @@ def list_shows(params):
         all_video = common.ADDON.get_localized_string(30101)
 
         shows.append({
-            'label': _('All videos'),
+            'label': common.GETTEXT('All videos'),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 next='list_videos_cat',
@@ -224,7 +220,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_id=video_id) + ')'

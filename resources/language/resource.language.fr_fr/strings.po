@@ -328,11 +328,11 @@ msgstr "Cache vidé"
 # Context menu (from 30500 to 30599)
 msgctxt "#30500"
 msgid "Move down"
-msgstr "Monter"
+msgstr "Descendre"
 
 msgctxt "#30501"
 msgid "Move up"
-msgstr "Descendre"
+msgstr "Monter"
 
 msgctxt "#30502"
 msgid "Hide"

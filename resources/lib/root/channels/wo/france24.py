@@ -34,10 +34,6 @@ from resources.lib import common
 # Add info LIVE TV (title, picture, plot)
 # Find Replay ES ? (API return Access Denied)
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 URL_LIVE_SITE = 'http://www.france24.com/%s/'
 # Language
@@ -209,7 +205,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         url=url) + ')'

@@ -32,10 +32,6 @@ from resources.lib import common
 # Playlists (cas les blagues de TOTO)
 # Get vtt subtitle
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 # Url to get channel's categories
 # e.g. Info, Divertissement, Séries, ...
@@ -314,7 +310,7 @@ def list_videos(params):
         }
 
         download_video = (
-            _('Download'),
+            common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 video_id=video_id) + ')'
@@ -393,7 +389,7 @@ def get_video_url(params):
     else:
         if desired_quality == "DIALOG":
             seleted_item = common.sp.xbmcgui.Dialog().select(
-                _('Choose video quality'),
+                common.GETTEXT('Choose video quality'),
                 all_datas_videos_quality)
             if seleted_item == -1:
                 return ''

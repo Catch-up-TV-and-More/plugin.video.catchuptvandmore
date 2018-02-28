@@ -27,7 +27,6 @@ from resources.lib import skeleton
 from resources.lib import common
 from resources.lib import vpn
 from resources.lib import utils
-import sys
 
 
 # Useful path
@@ -48,11 +47,6 @@ MEDIA_PATH = (
         )
     )
 )
-
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 
 @common.PLUGIN.action()
@@ -82,7 +76,7 @@ def root(params):
             # and check if this title has any translated version in strings.po
             item_title = ''
             try:
-                item_title = _(skeleton.LABELS[item_id])
+                item_title = common.GETTEXT(skeleton.LABELS[item_id])
             except Exception:
                 item_title = skeleton.LABELS[item_id]
 
@@ -139,7 +133,7 @@ def root(params):
             context_menu = []
 
             item_down = (
-                _('Move down'),
+                common.GETTEXT('Move down'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='move',
                     direction='down',
@@ -147,7 +141,7 @@ def root(params):
                     displayed_items=menu) + ')'
             )
             item_up = (
-                _('Move up'),
+                common.GETTEXT('Move up'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='move',
                     direction='up',
@@ -164,7 +158,7 @@ def root(params):
                 context_menu.append(item_down)
 
             hide = (
-                _('Hide'),
+                common.GETTEXT('Hide'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='hide',
                     item_id=item_id) + ')'
@@ -305,7 +299,7 @@ def build_live_tv_menu(params):
         context_menu = []
 
         item_down = (
-            _('Move down'),
+            common.GETTEXT('Move down'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='move',
                 direction='down',
@@ -313,7 +307,7 @@ def build_live_tv_menu(params):
                 displayed_items=menu) + ')'
         )
         item_up = (
-            _('Move up'),
+            common.GETTEXT('Move up'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='move',
                 direction='up',
@@ -330,7 +324,7 @@ def build_live_tv_menu(params):
             context_menu.append(item_down)
 
         hide = (
-            _('Hide'),
+            common.GETTEXT('Hide'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='hide',
                 item_id=channel_name) + ')'
@@ -441,8 +435,9 @@ def move(params):
 def hide(params):
     if common.PLUGIN.get_setting('show_hidden_items_information'):
         common.sp.xbmcgui.Dialog().ok(
-            _('Information'),
-            _('To re-enable hidden items go to the plugin settings'))
+            common.GETTEXT('Information'),
+            common.GETTEXT(
+                'To re-enable hidden items go to the plugin settings'))
         common.PLUGIN.set_setting('show_hidden_items_information', False)
 
     common.PLUGIN.set_setting(params.item_id, False)

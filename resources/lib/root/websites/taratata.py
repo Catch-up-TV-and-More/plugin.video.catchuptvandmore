@@ -43,11 +43,6 @@ SHOW_INFO_FTV = 'http://webservices.francetelevisions.fr/tools/' \
                 'getInfosOeuvre/v2/?idDiffusion=%s'
 # idDiffusion
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 
 def website_entry(params):
     """Entry function of the module"""
@@ -309,7 +304,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
@@ -349,7 +344,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
@@ -451,7 +446,7 @@ def get_video_url(params):
 
     if len(all_datas_videos_quality) > 1:
         seleted_item = common.sp.xbmcgui.Dialog().select(
-            _('Choose video quality'),
+            common.GETTEXT('Choose video quality'),
             all_datas_videos_quality)
         if seleted_item == -1:
             return ''

@@ -31,11 +31,6 @@ from resources.lib import common
 
 URL_ROOT = 'http://www.30millionsdamis.fr'
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 
 def website_entry(params):
     """Entry function of the module"""
@@ -135,7 +130,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'

@@ -30,10 +30,6 @@ from resources.lib import common
 # TO DO
 # Improve Live TV (Title, picture, plot)
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 SECRET_KEY = '19nBVBxv791Xs'
 
@@ -198,7 +194,7 @@ def list_videos(params):
         }
 
         download_video = (
-            _('Download'),
+            common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
                 url_streaming=url_streaming) + ')'

@@ -30,11 +30,6 @@ from resources.lib import common
 # Add More Videos button
 # Add Other Country contents
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 URL_ROOT = 'http://www.mtv.fr'
 # Contents
 
@@ -75,7 +70,7 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
 
-        emission_name = _('All videos')
+        emission_name = common.GETTEXT('All videos')
 
         file_path = utils.get_webcontent(
             URL_JSON_MTV % URL_VIDEOS)
@@ -189,7 +184,7 @@ def list_videos(params):
                 }
 
                 download_video = (
-                    _('Download'),
+                    common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
                         video_url=video_url) + ')'

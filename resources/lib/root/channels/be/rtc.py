@@ -29,10 +29,6 @@ from resources.lib import common
 # TO DO
 # ....
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
 
 URL_ROOT = 'https://www.rtc.be'
 
@@ -64,7 +60,7 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
 
-        category_name = _('All videos')
+        category_name = common.GETTEXT('All videos')
         category_url = URL_VIDEOS
         shows.append({
             'label': category_name,
@@ -149,7 +145,7 @@ def list_videos(params):
             }
 
             download_video = (
-                _('Download'),
+                common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
                     video_url=video_url) + ')'
