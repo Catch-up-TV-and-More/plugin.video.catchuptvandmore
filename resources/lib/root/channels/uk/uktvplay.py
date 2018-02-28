@@ -62,8 +62,6 @@ def channel_entry(params):
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -445,12 +443,6 @@ def list_videos(params):
         content='tvshows',
         category=common.get_window_title()
     )
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

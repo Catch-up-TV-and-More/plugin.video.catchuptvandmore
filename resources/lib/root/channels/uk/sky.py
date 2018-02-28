@@ -68,8 +68,6 @@ def channel_entry(params):
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
 
@@ -356,13 +354,9 @@ def list_videos(params):
         category=common.get_window_title()
     )
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
 
-    title = ''
-    subtitle = ' - '
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def get_live_item(params):
     plot = ''
     duration = 0
     img = ''
@@ -378,38 +372,31 @@ def list_live(params):
     video_id = re.compile(
         r'www.youtube.com/embed/(.*?)\?').findall(live_html)[0]
 
-    title = 'Watch Sky News Live'
     img = URL_IMG_YOUTUBE % video_id
 
     info = {
         'video': {
-            'title': title,
+            'title': params.channel_label,
             'plot': plot,
             'duration': duration
         }
     }
 
-    lives.append({
-        'label': title,
+    return {
+        'label': params.channel_label,
         'fanart': img,
         'thumb': img,
-        'url' : common.PLUGIN.get_url(
-            action='replay_entry',
+        'url': common.PLUGIN.get_url(
+            action='start_live_tv_stream',
             next='play_l',
-            video_id=video_id,
+            module_name=params.module_name,
+            module_path=params.module_path,
+            video_id=video_id
         ),
         'is_playable': True,
         'info': info
-    })
+    }
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):

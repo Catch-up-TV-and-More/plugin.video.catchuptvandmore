@@ -73,6 +73,16 @@ SKELETON = {
 
             ('ca', 'build_live_tv_menu'): {
                 ('telequebec', 'none')
+            },
+
+            ('ch', 'build_live_tv_menu'): {
+                ('rougetv', 'none')
+            },
+
+            ('uk', 'build_live_tv_menu'): {
+                ('blaze', 'none'),
+                ('skynews', 'none'),
+                ('skysports', 'none')
             }
         },
 

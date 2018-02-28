@@ -95,7 +95,7 @@ msgstr "France"
 
 msgctxt "#30051"
 msgid "Switzerland"
-msgstr "Suisses"
+msgstr "Suisse"
 
 msgctxt "#30052"
 msgid "United Kingdom"
