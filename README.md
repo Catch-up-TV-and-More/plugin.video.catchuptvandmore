@@ -51,10 +51,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TF1 *(Replay, Live TV)*
 - France 2 *(Replay, Live TV)*
 - France 3 *(Replay, Live TV)*
-- Canal + *(Replay)*
+- Canal + *(Replay, Live TV)*
 - France 5 *(Replay, Live TV)*
 - M6 *(Replay)*
-- C8 *(Replay)*
+- C8 *(Replay, Live TV)*
 - W9 *(Replay)*
 - TMC *(Replay, Live TV)*
 - NT1 *(Replay, Live TV)*
@@ -62,7 +62,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France 4 *(Replay, Live TV)*
 - BFM TV *(Replay, Live TV)*
 - CNews *(Replay, Live TV)*
-- CStar *(Replay)*
+- CStar *(Replay, Live TV)*
 - Gulli *(Replay, Live TV)*
 - France Ô *(Replay, Live TV)*
 - HD1 *(Replay, Live TV)*
@@ -109,7 +109,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Internationales — *International*
 ##### TV
 - TV5Monde Afrique *(Replay)*
-- Arte *(Replay, Live TV)* *(Contents {FR|DE})*
+- Arte *(Replay, Live TV)* *(Contents {FR|DE|EN|ES|PL})*
 - Euronews *(Live TV)* *(Contents {FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU})*
 - France 24 *(Replay, Live TV)* *(Contents {FR|EN|AR|ES})*
 - NHK World *(Replay, Live TV)*
@@ -119,6 +119,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - ICI Télévision *(Replay, Live TV)*
 - MTV *(Replay)* *(Contents {FR})*
 - Arirang (아리랑) *(Replay, Live TV)*
+- DW *(Live TV)* *(Contents {EN|AR|DE|ES})*
 
 ### Japon — *Japan*
 ##### Web TV

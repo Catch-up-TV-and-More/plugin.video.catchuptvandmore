@@ -185,6 +185,9 @@ msgctxt "#30156"
 msgid "MTV: Choose Channel"
 msgstr "MTV: בחר ערוץ"
 
+msgctxt "#30157"
+msgid "DW: Choose Channel"
+msgstr "DW: בחר ערוץ"
 
 
 # Download (from 30200 to 30239)

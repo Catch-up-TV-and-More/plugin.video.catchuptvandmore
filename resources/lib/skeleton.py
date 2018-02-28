@@ -35,12 +35,15 @@ SKELETON = {
                 ('france2', 'none'),
                 ('france3', 'none'),
                 ('france5', 'none'),
+                ('canalplus', 'none'),
+                ('c8', 'none'),
                 ('tmc', 'none'),
                 ('tfx', 'none'),
                 ('nrj12', 'none'),
                 ('france4', 'none'),
                 ('bfmtv', 'none'),
                 ('cnews', 'none'),
+                ('cstar', 'none'),
                 ('gulli', 'none'),
                 ('franceo', 'none'),
                 ('hd1', 'none'),
@@ -92,7 +95,8 @@ SKELETON = {
                 ('euronews', 'none'),
                 ('france24', 'none'),
                 ('icitelevision', 'none'),
-                ('nhkworld', 'none')
+                ('nhkworld', 'none'),
+                ('dw', 'none')
             }
         },
 
@@ -327,7 +331,8 @@ CHANNELS = {
     'bvn': 'bvn',
     'icitelevision': 'icitelevision',
     'mtv': 'mtv',
-    'arirang': 'arirang'
+    'arirang': 'arirang',
+    'dw': 'dw'
 }
 
 
@@ -455,6 +460,7 @@ LABELS = {
     'icitelevision': 'ICI Télévision',
     'mtv': 'MTV',
     'arirang': 'Arirang (아리랑)',
+    'dw': 'DW',
 
     # Websites
     'allocine': 'Allociné',

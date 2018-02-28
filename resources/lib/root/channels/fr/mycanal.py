@@ -24,6 +24,7 @@ import re
 import json
 from resources.lib import utils
 from resources.lib import common
+from resources.lib import resolver
 
 # Initialize GNU gettext emulation in addon
 # This allows to use UI strings from addon’s English
@@ -31,7 +32,7 @@ from resources.lib import common
 _ = common.ADDON.initialize_gettext()
 
 # TO DO
-# Add Live TV ?
+# Wait Kodi 18 to use live with DRM
 
 # URL :
 URL_ROOT_SITE = 'https://www.mycanal.fr'
@@ -58,6 +59,17 @@ def channel_entry(params):
     elif 'play' in params.next:
         return get_video_url(params)
     return None
+
+
+# Dailymotion Id get from these pages below
+# - http://www.dailymotion.com/cstar
+# - http://www.dailymotion.com/canalplus
+# - http://www.dailymotion.com/C8TV
+LIVE_DAILYMOTION_ID = {
+    'c8': 'x5gv5rr',
+    'cstar': 'x5gv5v0',
+    'canalplus': 'x5gv6be'
+}
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -345,6 +357,41 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
+def get_live_item(params):
+    plot = ''
+    duration = 0
+    img = ''
+    live_dailymotion_id = ''
+
+    for channel_name_value, live_dailymotion_id_value in LIVE_DAILYMOTION_ID.iteritems():
+        if channel_name_value in params.channel_name:
+            live_dailymotion_id = live_dailymotion_id_value
+
+    info = {
+        'video': {
+            'title': params.channel_label,
+            'plot': plot,
+            'duration': duration
+        }
+    }
+
+    return {
+        'label': params.channel_label,
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            action='start_live_tv_stream',
+            next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
+            live_dailymotion_id=live_dailymotion_id,
+        ),
+        'is_playable': True,
+        'info': info
+    }
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -361,3 +408,6 @@ def get_video_url(params):
                 if media['ID'] == params.video_id:
                     stream_url = media['MEDIA']['VIDEOS']['HLS'].encode('utf-8')
         return stream_url
+    elif params.next == 'play_l':
+        return resolver.get_stream_dailymotion(
+            params.live_dailymotion_id, False)

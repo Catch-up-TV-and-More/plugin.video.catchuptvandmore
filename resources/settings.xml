@@ -138,6 +138,9 @@
 
             <setting label="Arirang (아리랑)" type="bool" id="arirang" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="arirang.order" default="11"/>
+
+            <setting label="DW" type="bool" id="dw" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="dw.order" default="12"/>
         <!-- International -->
 
 
@@ -453,10 +456,11 @@
             <setting label="30085" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="" type="bool" id="wo" default="true" visible="false"/>
 
-                <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE"/>
+                <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE|EN|ES|PL"/>
                 <setting label="30155" type="labelenum" id="euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU"/>
                 <setting label="30154" type="labelenum" id="france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES"/>
                 <setting label="30156" type="labelenum" id="mtv.language" visible="eq(-4,true)" values="FR"/>
+                <setting label="30157" type="labelenum" id="dw.language" visible="eq(-5,true)" values="EN|DE|ES|AR"/>
     </category>
     <!-- Quality and Content -->
 
