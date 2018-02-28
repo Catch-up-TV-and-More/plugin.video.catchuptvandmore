@@ -342,8 +342,7 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
+def get_live_item(params):
     lives = []
 
     title = ''
@@ -372,8 +371,9 @@ def list_live(params):
         end_date_value = format_hours(live["end_date"])
         day_value = format_day(live["start_date"])
 
-        title = live_channel + ' : ' + live["title"] + \
-            ' - ' + day_value + ' - ' + start_date_value + '-' + end_date_value
+        title = live_channel + " - [I]" + live["title"] + \
+            ' - ' + day_value + ' - ' + start_date_value + \
+            '-' + end_date_value + "[/I]"
 
         url_live = ''
         if live["url_streaming"]:
@@ -394,22 +394,17 @@ def list_live(params):
             'fanart': img,
             'thumb': img,
             'url': common.PLUGIN.get_url(
-                action='replay_entry',
+                action='start_live_tv_stream',
                 next='play_l',
+                module_name=params.module_name,
+                module_path=params.module_path,
                 url_live=url_live,
             ),
             'is_playable': True,
             'info': info
         })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+    return lives
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

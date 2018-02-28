@@ -65,7 +65,8 @@ SKELETON = {
             ('be', 'build_live_tv_menu'): {
                 ('rtc', 'none'),
                 ('telemb', 'none'),
-                ('vrt', 'none')
+                ('vrt', 'none'),
+                ('auvio', 'none')
             },
 
             ('ca', 'build_live_tv_menu'): {
