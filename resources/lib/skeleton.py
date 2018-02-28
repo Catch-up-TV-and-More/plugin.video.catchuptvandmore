@@ -70,11 +70,16 @@ SKELETON = {
             },
 
             ('ca', 'build_live_tv_menu'): {
-                ('telequebec', 'none')
+                ('telequebec', 'none'),
+                ('yestv', 'none')
             },
 
             ('ch', 'build_live_tv_menu'): {
-                ('rougetv', 'none')
+                ('rougetv', 'none'),
+                ('rts', 'none'),
+                ('rsi', 'none'),
+                ('srf', 'none'),
+                ('rtr', 'none')
             },
 
             ('uk', 'build_live_tv_menu'): {

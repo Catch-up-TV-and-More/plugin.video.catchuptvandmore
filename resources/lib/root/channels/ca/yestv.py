@@ -46,6 +46,8 @@ LIVES_TOWN = {
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
+    lives = []
+
     title = ''
     plot = ''
     duration = 0
@@ -74,7 +76,7 @@ def get_live_item(params):
             }
         }
 
-        return {
+        lives.append({
             'label': title,
             'fanart': img,
             'thumb': img,
@@ -87,7 +89,9 @@ def get_live_item(params):
             ),
             'is_playable': True,
             'info': info
-        }
+        })
+
+    return lives
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

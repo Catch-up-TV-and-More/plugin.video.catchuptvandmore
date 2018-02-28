@@ -331,6 +331,8 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
+    items = []
+
     title = ''
     # subtitle = ' - '
     plot = ''
@@ -355,7 +357,7 @@ def get_live_item(params):
             }
         }
 
-        return {
+        items.append({
             'label': title,
             'thumb': img,
             'url': common.PLUGIN.get_url(
@@ -367,7 +369,9 @@ def get_live_item(params):
             ),
             'is_playable': True,
             'info': info
-        }
+        })
+
+    return items
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
