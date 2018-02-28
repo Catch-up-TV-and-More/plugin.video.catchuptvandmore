@@ -83,6 +83,16 @@ SKELETON = {
                 ('blaze', 'none'),
                 ('skynews', 'none'),
                 ('skysports', 'none')
+            },
+
+            ('wo', 'build_live_tv_menu'): {
+                ('arirang', 'none'),
+                ('arte', 'none'),
+                ('bvn', 'none'),
+                ('euronews', 'none'),
+                ('france24', 'none'),
+                ('icitelevision', 'none'),
+                ('nhkworld', 'none')
             }
         },
 
@@ -198,7 +208,7 @@ SKELETON = {
                 ('bvn', 'replay_entry'),
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
-                ('arirang', 'none')
+                ('arirang', 'replay_entry')
             }
         },
         ('websites', 'root'): {

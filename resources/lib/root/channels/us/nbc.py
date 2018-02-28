@@ -60,46 +60,17 @@ _ = common.ADDON.initialize_gettext()
 
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     if 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     return None
 
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add modes in the listing"""
-    modes = []
-
-    # Add Replay
-    modes.append({
-        'label' : 'Replay',
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
-        ),
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -135,8 +106,8 @@ def list_shows(params):
                     show_url=show_url,
                     show_alias=show['urlAlias'],
                     window_title=show_title
-                    )
-                })
+                )
+            })
 
     elif params.next == 'list_shows_2':
 
@@ -167,8 +138,8 @@ def list_shows(params):
                             show_season_url=show_season_url,
                             show_alias=params.show_alias,
                             window_title=season_title
-                            )
-                        })
+                        )
+                    })
         else:
 
             season_title = 'Season 1'
@@ -295,9 +266,6 @@ def list_videos(params):
         category=common.get_window_title()
     )
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    return None
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
@@ -305,12 +273,12 @@ def get_video_url(params):
     if params.next == 'play_r' or params.next == 'download_video':
 
         value_to_encode = {
-            'policy' : '43674',
-            'player' : 'NBC.com Instance of: rational-player-production',
-            'formats' : 'm3u,mpeg4',
-            'format' : 'SMIL',
-            'embedded' : 'true',
-            'tracking' : 'true'
+            'policy': '43674',
+            'player': 'NBC.com Instance of: rational-player-production',
+            'formats': 'm3u,mpeg4',
+            'format': 'SMIL',
+            'embedded': 'true',
+            'tracking': 'true'
         }
 
         url_to_get_stream = (URL_STREAM % params.video_id) + urllib.urlencode(value_to_encode)

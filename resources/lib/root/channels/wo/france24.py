@@ -59,8 +59,6 @@ def channel_entry(params):
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     elif 'list_nwb' in params.next:
@@ -74,7 +72,7 @@ def root(params):
     modes = []
 
     desired_language = common.PLUGIN.get_setting(
-        params.channel_id + '.language')
+        params.channel_name + '.language')
 
     # Add Replay
     if desired_language != 'ES':
@@ -87,17 +85,6 @@ def root(params):
                 window_title='%s Replay' % params.channel_name
             )
         })
-
-    # Add Live
-    modes.append({
-        'label': _('Live TV'),
-        'url': common.PLUGIN.get_url(
-            action='replay_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name
-        )
-    })
 
     modes.append({
         'label': 'News - Weather - Business',
@@ -127,7 +114,7 @@ def list_shows(params):
     shows = []
 
     desired_language = common.PLUGIN.get_setting(
-        params.channel_id + '.language')
+        params.channel_name + '.language')
 
     if params.next == 'list_shows_1':
         file_path = utils.download_catalog(
@@ -179,7 +166,7 @@ def list_videos(params):
     videos = []
 
     desired_language = common.PLUGIN.get_setting(
-        params.channel_id + '.language')
+        params.channel_name + '.language')
 
     file_path = utils.download_catalog(
         URL_API_VOD % (desired_language.lower(), desired_language.lower()),
@@ -258,18 +245,14 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
-    lives = []
-
-    title = ''
+def get_live_item(params):
     plot = ''
     duration = 0
     img = ''
     url_live = ''
 
     desired_language = common.PLUGIN.get_setting(
-        params.channel_id + '.language')
+        params.channel_name + '.language')
 
     url_live = URL_LIVE_SITE % desired_language.lower()
 
@@ -288,37 +271,28 @@ def list_live(params):
         if datas['source']:
             url_live = datas['source']
 
-    title = 'Live ' + params.channel_name + ' ' + desired_language.lower()
-
     info = {
         'video': {
-            'title': title,
+            'title': params.channel_label,
             'plot': plot,
             'duration': duration
         }
     }
 
-    lives.append({
-        'label': title,
+    return {
+        'label': params.channel_label,
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
-            action='replay_entry',
+            action='start_live_tv_stream',
             next='play_l',
+            module_name=params.module_name,
+            module_path=params.module_path,
             url=url_live,
         ),
         'is_playable': True,
         'info': info
-    })
-
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+    }
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -327,7 +301,7 @@ def list_nwb(params):
     nwb = []
 
     desired_language = common.PLUGIN.get_setting(
-        params.channel_id + '.language')
+        params.channel_name + '.language')
 
     url_news = ''
     url_weather = ''
