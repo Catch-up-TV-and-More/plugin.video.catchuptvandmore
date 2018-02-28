@@ -21,149 +21,455 @@
 """
 
 
-CATEGORIES = {
-    'main_menu.be': 'Belgian channels',
-    'main_menu.ca': 'Canadian channels',
-    'main_menu.fr': 'French channels',
-    'main_menu.jp': 'Japanese channels',
-    'main_menu.sw': 'Switzerland channels',
-    'main_menu.uk': 'United Kingdom channels',
-    # 'main_menu.us': 'United States channels',
-    'main_menu.wo': 'International channels',
-    'main_menu.ws': 'Websites'
+# SKELETON dictionary corresponds to the different level of menus of the addon
+# (elt1, elt2) --> elt1: level label, elt2: next function to call
+
+
+SKELETON = {
+    ('root', 'root'): {
+
+        ('live_tv', 'root'): {
+
+            ('fr', 'build_live_tv_menu'): {
+                ('tf1', 'none'),
+                ('france2', 'none'),
+                ('france3', 'none'),
+                ('france5', 'none'),
+                ('canalplus', 'none'),
+                ('c8', 'none'),
+                ('tmc', 'none'),
+                ('tfx', 'none'),
+                ('nrj12', 'none'),
+                ('france4', 'none'),
+                ('bfmtv', 'none'),
+                ('cnews', 'none'),
+                ('cstar', 'none'),
+                ('gulli', 'none'),
+                ('franceo', 'none'),
+                ('hd1', 'none'),
+                ('lequipe', 'none'),
+                ('numero23', 'none'),
+                ('la_1ere', 'none'),
+                ('franceinfo', 'none'),
+                ('bfmbusiness', 'none'),
+                ('rmc', 'none'),
+                ('01net', 'none'),
+                ('tfou', 'none'),
+                ('xtra', 'none'),
+                ('lci', 'none'),
+                ('lcp', 'none'),
+                ('rmcdecouverte', 'none'),
+                ('publicsenat', 'none'),
+                ('france3regions', 'none'),
+                ('francetvsport', 'none'),
+                ('studio-4', 'none'),
+                ('irl', 'none'),
+                ('francetveducation', 'none'),
+                ('gong', 'none')
+            },
+
+            ('be', 'build_live_tv_menu'): {
+                ('rtc', 'none'),
+                ('telemb', 'none'),
+                ('vrt', 'none')
+            },
+
+            ('ca', 'build_live_tv_menu'): {
+                ('telequebec', 'none')
+            },
+
+            ('ch', 'build_live_tv_menu'): {
+                ('rougetv', 'none')
+            },
+
+            ('uk', 'build_live_tv_menu'): {
+                ('blaze', 'none'),
+                ('skynews', 'none'),
+                ('skysports', 'none')
+            },
+
+            ('wo', 'build_live_tv_menu'): {
+                ('arirang', 'none'),
+                ('arte', 'none'),
+                ('bvn', 'none'),
+                ('euronews', 'none'),
+                ('france24', 'none'),
+                ('icitelevision', 'none'),
+                ('nhkworld', 'none'),
+                ('dw', 'none')
+            }
+        },
+
+        ('replay', 'root'): {
+
+            ('be', 'root'): {
+                ('auvio', 'replay_entry'),
+                ('brf', 'replay_entry'),
+                ('rtltvi', 'replay_entry'),
+                ('plugrtl', 'replay_entry'),
+                ('clubrtl', 'replay_entry'),
+                ('vrt', 'replay_entry'),
+                ('telemb', 'replay_entry'),
+                ('rtc', 'replay_entry')
+            },
+
+            ('ca', 'root'): {
+                ('tv5', 'replay_entry'),
+                ('unis', 'replay_entry'),
+                ('telequebec', 'replay_entry')
+            },
+
+            ('fr', 'root'): {
+                ('tf1', 'replay_entry'),
+                ('france2', 'replay_entry'),
+                ('france3', 'replay_entry'),
+                ('canalplus', 'replay_entry'),
+                ('france5', 'replay_entry'),
+                ('m6', 'replay_entry'),
+                ('c8', 'replay_entry'),
+                ('w9', 'replay_entry'),
+                ('tmc', 'replay_entry'),
+                ('tfx', 'replay_entry'),
+                ('nrj12', 'replay_entry'),
+                ('france4', 'replay_entry'),
+                ('bfmtv', 'replay_entry'),
+                ('cnews', 'replay_entry'),
+                ('cstar', 'replay_entry'),
+                ('gulli', 'replay_entry'),
+                ('franceo', 'replay_entry'),
+                ('hd1', 'replay_entry'),
+                ('lequipe', 'replay_entry'),
+                ('6ter', 'replay_entry'),
+                ('numero23', 'replay_entry'),
+                ('cherie25', 'replay_entry'),
+                ('la_1ere', 'replay_entry'),
+                ('franceinfo', 'replay_entry'),
+                ('bfmbusiness', 'replay_entry'),
+                ('rmc', 'replay_entry'),
+                ('01net', 'replay_entry'),
+                ('tfou', 'replay_entry'),
+                ('xtra', 'replay_entry'),
+                ('lci', 'replay_entry'),
+                ('lcp', 'replay_entry'),
+                ('rmcdecouverte', 'replay_entry'),
+                ('stories', 'replay_entry'),
+                ('bruce', 'replay_entry'),
+                ('crazy_kitchen', 'replay_entry'),
+                ('home', 'replay_entry'),
+                ('styles', 'replay_entry'),
+                ('comedy', 'replay_entry'),
+                ('publicsenat', 'replay_entry'),
+                ('france3regions', 'replay_entry'),
+                ('francetvsport', 'replay_entry'),
+                ('histoire', 'replay_entry'),
+                ('tvbreizh', 'replay_entry'),
+                ('ushuaiatv', 'replay_entry'),
+                ('studio-4', 'replay_entry'),
+                ('irl', 'replay_entry'),
+                ('seasons', 'replay_entry'),
+                ('comedie', 'replay_entry'),
+                ('les-chaines-planete', 'replay_entry'),
+                ('golfplus', 'replay_entry'),
+                ('cineplus', 'replay_entry'),
+                ('infosportplus', 'replay_entry'),
+                ('gameone', 'replay_entry'),
+                ('francetveducation', 'replay_entry'),
+                ('gong', 'replay_entry')
+            },
+
+            ('jp', 'root'): {
+                ('nhknews', 'replay_entry'),
+                ('nhklifestyle', 'replay_entry'),
+                ('tbsnews', 'replay_entry')
+            },
+
+            ('ch', 'root'): {
+                ('rts', 'replay_entry'),
+                ('rsi', 'replay_entry'),
+                ('srf', 'replay_entry'),
+                ('rtr', 'replay_entry'),
+                ('swissinfo', 'replay_entry'),
+                ('rougetv', 'replay_entry')
+            },
+
+            ('uk', 'root'): {
+                ('blaze', 'replay_entry'),
+                ('dave', 'replay_entry'),
+                ('really', 'replay_entry'),
+                ('yesterday', 'replay_entry'),
+                ('drama', 'replay_entry'),
+                ('skynews', 'replay_entry'),
+                ('skysports', 'replay_entry')
+            },
+
+            ('wo', 'root'): {
+                ('tv5mondeafrique', 'replay_entry'),
+                ('arte', 'replay_entry'),
+                ('france24', 'replay_entry'),
+                ('nhkworld', 'replay_entry'),
+                ('tv5monde', 'replay_entry'),
+                ('tivi5monde', 'replay_entry'),
+                ('bvn', 'replay_entry'),
+                ('icitelevision', 'replay_entry'),
+                ('mtv', 'replay_entry'),
+                ('arirang', 'replay_entry')
+            }
+        },
+        ('websites', 'root'): {
+            ('allocine', 'website_entry'),
+            ('tetesaclaques', 'website_entry'),
+            ('taratata', 'website_entry'),
+            ('noob', 'website_entry'),
+            ('culturepub', 'website_entry'),
+            ('autoplus', 'website_entry'),
+            ('notrehistoirech', 'website_entry'),
+            ('30millionsdamis', 'website_entry'),
+            ('elle', 'website_entry')
+        }
+
+    }
 }
 
+
+FOLDERS = {
+    'live_tv': 'channels',
+    'replay': 'channels'
+}
+
+
 CHANNELS = {
+    'auvio': 'rtbf',
+    'brf': 'brf',
+    'rtltvi': 'rtl',
+    'plugrtl': 'rtl',
+    'clubrtl': 'rtl',
+    'vrt': 'vrt',
+    'telemb': 'telemb',
+    'rtc': 'rtc',
+    'tv5': 'tv5',
+    'unis': 'tv5',
+    'yestv': 'yestv',
+    'telequebec': 'telequebec',
+    'rts': 'srgssr',
+    'rsi': 'srgssr',
+    'srf': 'srgssr',
+    'rtr': 'srgssr',
+    'swissinfo': 'srgssr',
+    'rougetv': 'rougetv',
+    'tf1': 'tf1',
+    'france2': 'pluzz',
+    'france3': 'pluzz',
+    'canalplus': 'mycanal',
+    'france5': 'pluzz',
+    'm6': '6play',
+    'c8': 'mycanal',
+    'w9': '6play',
+    'tmc': 'tf1',
+    'tfx': 'tf1',
+    'nrj12': 'nrj',
+    'france4': 'pluzz',
+    'bfmtv': 'bfmtv',
+    'cnews': 'cnews',
+    'cstar': 'mycanal',
+    'gulli': 'gulli',
+    'franceo': 'pluzz',
+    'hd1': 'tf1',
+    'lequipe': 'lequipe',
+    '6ter': '6play',
+    'numero23': 'numero23',
+    'cherie25': 'nrj',
+    'la_1ere': 'pluzz',
+    'franceinfo': 'pluzz',
+    'bfmbusiness': 'bfmtv',
+    'rmc': 'bfmtv',
+    '01net': 'bfmtv',
+    'tfou': 'tf1',
+    'xtra': 'tf1',
+    'lci': 'tf1',
+    'lcp': 'lcp',
+    'rmcdecouverte': 'bfmtv',
+    'stories': '6play',
+    'bruce': '6play',
+    'crazy_kitchen': '6play',
+    'home': '6play',
+    'styles': '6play',
+    'comedy': '6play',
+    'publicsenat': 'publicsenat',
+    'france3regions': 'pluzz',
+    'francetvsport': 'pluzz',
+    'histoire': 'tf1thematiques',
+    'tvbreizh': 'tf1thematiques',
+    'ushuaiatv': 'tf1thematiques',
+    'studio-4': 'pluzz',
+    'irl': 'pluzz',
+    'seasons': 'mycanal',
+    'comedie': 'mycanal',
+    'les-chaines-planete': 'mycanal',
+    'golfplus': 'mycanal',
+    'cineplus': 'mycanal',
+    'infosportplus': 'mycanal',
+    'gameone': 'gameone',
+    'francetveducation': 'pluzz',
+    'gong': 'gong',
+    'nhknews': 'nhk',
+    'nhklifestyle': 'nhk',
+    'tbsnews': 'tbs',
+    'blaze': 'blaze',
+    'dave': 'uktvplay',
+    'really': 'uktvplay',
+    'yesterday': 'uktvplay',
+    'drama': 'uktvplay',
+    'skynews': 'sky',
+    'skysports': 'sky',
+    'tv5mondeafrique': 'tv5monde',
+    'arte': 'arte',
+    'euronews': 'euronews',
+    'france24': 'france24',
+    'nhkworld': 'nhkworld',
+    'tv5monde': 'tv5monde',
+    'tivi5monde': 'tv5monde',
+    'bvn': 'bvn',
+    'icitelevision': 'icitelevision',
+    'mtv': 'mtv',
+    'arirang': 'arirang',
+    'dw': 'dw'
+}
 
-    'main_menu.be': {
-        'channels.be.rtbf.auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
-        'channels.be.brf.brf': 'BRF Mediathek',
-        'channels.be.rtl.rtltvi': 'RTL-TVI',
-        'channels.be.rtl.plugrtl': 'PLUG RTL',
-        'channels.be.rtl.clubrtl': 'CLUB RTL',
-        'channels.be.vrt.vrt': 'VRT NU',
-        'channels.be.telemb.telemb': 'Télé MB',
-        'channels.be.rtc.rtc': 'RTC Télé Liège'
-    },
 
-    'main_menu.ca': {
-        'channels.ca.tv5.tv5': 'TV5',
-        'channels.ca.tv5.unis': 'UNIS',
-        'channels.ca.yestv.yestv': 'YES TV',
-        'channels.ca.telequebec.telequebec': 'Télé-Québec'
-    },
+# LABELS dict is only used to retrieve correct element in english strings.po
+LABELS = {
 
-    'main_menu.sw': {
-        'channels.sw.srgssr.rts': 'RTS',
-        'channels.sw.srgssr.rsi': 'RSI',
-        'channels.sw.srgssr.srf': 'SRF',
-        'channels.sw.srgssr.rtr': 'RTR',
-        'channels.sw.srgssr.swissinfo': 'SWISSINFO',
-        'channels.sw.rougetv.rougetv': 'Rouge TV'
-    },
+    # root
+    'live_tv': 'Live TV',
+    'replay': 'Catch-up TV',
+    'websites': 'Websites',
 
-    'main_menu.fr': {
-        'channels.fr.tf1.tf1': 'TF1',
-        'channels.fr.pluzz.france2': 'France 2',
-        'channels.fr.pluzz.france3': 'France 3',
-        'channels.fr.mycanal.canalplus': 'Canal +',
-        'channels.fr.pluzz.france5': 'France 5',
-        'channels.fr.6play.m6': 'M6',
-        'channels.fr.mycanal.c8': 'C8',
-        'channels.fr.6play.w9': 'W9',
-        'channels.fr.tf1.tmc': 'TMC',
-        'channels.fr.tf1.nt1': 'NT1',
-        'channels.fr.nrj.nrj12': 'NRJ 12',
-        'channels.fr.pluzz.france4': 'France 4',
-        'channels.fr.bfmtv.bfmtv': 'BFM TV',
-        'channels.fr.cnews.cnews': 'CNews',
-        'channels.fr.mycanal.cstar': 'CStar',
-        'channels.fr.gulli.gulli': 'Gulli',
-        'channels.fr.pluzz.franceo': 'France Ô',
-        'channels.fr.tf1.hd1': 'HD1',
-        'channels.fr.lequipe.lequipe': 'L\'Équipe',
-        'channels.fr.6play.6ter': '6ter',
-        'channels.fr.numero23.numero23': 'Numéro 23',
-        'channels.fr.nrj.cherie25': 'Chérie 25',
-        'channels.fr.pluzz.la_1ere': 'La 1ère (Outre-Mer)',
-        'channels.fr.pluzz.franceinfo': 'France Info',
-        'channels.fr.bfmtv.bfmbusiness': 'BFM Business',
-        'channels.fr.bfmtv.rmc': 'RMC',
-        'channels.fr.bfmtv.01net': '01Net TV',
-        'channels.fr.tf1.tfou': 'Tfou (MYTF1)',
-        'channels.fr.tf1.xtra': 'Xtra (MYTF1)',
-        'channels.fr.tf1.lci': 'LCI',
-        'channels.fr.lcp.lcp': 'LCP Assemblée Nationale',
-        'channels.fr.bfmtv.rmcdecouverte': 'RMC Découverte HD24',
-        'channels.fr.6play.stories': 'Stories (6play)',
-        'channels.fr.6play.bruce': 'Bruce (6play)',
-        'channels.fr.6play.crazy_kitchen': 'Crazy Kitchen (6play)',
-        'channels.fr.6play.home': 'Home Time (6play)',
-        'channels.fr.6play.styles': 'Sixième Style (6play)',
-        'channels.fr.6play.comedy': 'Comic (6play)',
-        'channels.fr.publicsenat.publicsenat': 'Public Sénat',
-        'channels.fr.pluzz.france3regions': 'France 3 Régions',
-        'channels.fr.pluzz.francetvsport': 'France TV Sport (francetv)',
-        'channels.fr.tf1thematiques.histoire': 'Histoire',
-        'channels.fr.tf1thematiques.tvbreizh': 'TV Breizh',
-        'channels.fr.tf1thematiques.ushuaiatv': 'Ushuaïa TV',
-        'channels.fr.pluzz.studio-4': 'Studio 4 (francetv)',
-        'channels.fr.pluzz.irl': 'IRL (francetv)',
-        'channels.fr.mycanal.seasons': 'Seasons',
-        'channels.fr.mycanal.comedie': 'Comédie +',
-        'channels.fr.mycanal.les-chaines-planete': 'Les chaînes planètes +',
-        'channels.fr.mycanal.golfplus': 'Golf +',
-        'channels.fr.mycanal.cineplus': 'Ciné +',
-        'channels.fr.mycanal.infosportplus': 'INFOSPORT+',
-        'channels.fr.gameone.gameone': 'Game One',
-        'channels.fr.pluzz.francetveducation': 'France TV Education (francetv)',
-        'channels.fr.gong.gong': 'Gong'
-    },
+    # Countries
+    'be': 'Belgium',
+    'fr': 'France',
+    'jp': 'Japan',
+    'ch': 'Switzerland',
+    'uk': 'United Kingdom',
+    'wo': 'International',
+    'ca': 'Canada',
 
-    'main_menu.jp': {
-        'channels.jp.nhk.nhknews': 'NHK ニュース',
-        'channels.jp.nhk.nhklifestyle': 'NHKらいふ',
-        'channels.jp.tbs.tbsnews': 'TBS ニュース'
-    },
+    # Belgium channels / live TV
+    'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...) ',
+    'brf': 'BRF Mediathek',
+    'rtltvi': 'RTL-TVI',
+    'plugrtl': 'PLUG RTL',
+    'clubrtl': 'CLUB RTL',
+    'vrt': 'VRT NU',
+    'telemb': 'Télé MB',
+    'rtc': 'RTC Télé Liège',
 
-    'main_menu.uk': {
-        'channels.uk.blaze.blaze': 'Blaze',
-        'channels.uk.uktvplay.dave': 'Dave',
-        'channels.uk.uktvplay.really': 'Really',
-        'channels.uk.uktvplay.yesterday': 'Yesterday',
-        'channels.uk.uktvplay.drama': 'Drama',
-        'channels.uk.sky.skynews': 'Sky News',
-        'channels.uk.sky.skysports': 'Sky sports'
-    },
+    # Canadian channels / live TV
+    'tv5': 'TV5',
+    'unis': 'UNIS',
+    'yestv': 'YES TV',
+    'telequebec': 'Télé-Québec',
 
-    'main_menu.us': {
-        # 'channels.us.nbc.nbc': 'NBC'
-    },
+    # Switzerland channels / live TV
+    'rts': 'RTS',
+    'rsi': 'RSI',
+    'srf': 'SRF',
+    'rtr': 'RTR',
+    'swissinfo': 'SWISSINFO',
+    'rougetv': 'Rouge TV',
 
-    'main_menu.wo': {
-        'channels.wo.tv5monde.tv5mondeafrique': 'TV5Monde Afrique',
-        'channels.wo.arte.arte': 'Arte',
-        'channels.wo.euronews.euronews': 'Euronews',
-        'channels.wo.france24.france24': 'France 24',
-        'channels.wo.nhkworld.nhkworld': 'NHK World',
-        'channels.wo.tv5monde.tv5monde': 'TV5Monde',
-        'channels.wo.tv5monde.tivi5monde': 'Tivi 5Monde',
-        'channels.wo.bvn.bvn': 'BVN',
-        'channels.wo.icitelevision.icitelevision': 'ICI Télévision',
-        'channels.wo.mtv.mtv': 'MTV',
-        'channels.wo.arirang.arirang': 'Arirang (아리랑)',
-        'channels.wo.dw.dw': 'DW'
-    },
+    # French channels / live TV
+    'tf1': 'TF1',
+    'france2': 'France 2',
+    'france3': 'France 3',
+    'canalplus': 'Canal +',
+    'france5': 'France 5',
+    'm6': 'M6',
+    'c8': 'C8',
+    'w9': 'W9',
+    'tmc': 'TMC',
+    'tfx': 'TFX',
+    'nrj12': 'NRJ 12',
+    'france4': 'France 4',
+    'bfmtv': 'BFM TV',
+    'cnews': 'CNews',
+    'cstar': 'CStar',
+    'gulli': 'Gulli',
+    'franceo': 'France Ô',
+    'hd1': 'HD1',
+    'lequipe': 'L\'Équipe',
+    '6ter': '6ter',
+    'numero23': 'Numéro 23',
+    'cherie25': 'Chérie 25',
+    'la_1ere': 'La 1ère (Outre-Mer)',
+    'franceinfo': 'France Info',
+    'bfmbusiness': 'BFM Business',
+    'rmc': 'RMC',
+    '01net': '01Net TV',
+    'tfou': 'Tfou (MYTF1)',
+    'xtra': 'Xtra (MYTF1)',
+    'lci': 'LCI',
+    'lcp': 'LCP Assemblée Nationale',
+    'rmcdecouverte': 'RMC Découverte HD24',
+    'stories': 'Stories (6play)',
+    'bruce': 'Bruce (6play)',
+    'crazy_kitchen': 'Crazy Kitchen (6play)',
+    'home': 'Home Time (6play)',
+    'styles': 'Sixième Style (6play)',
+    'comedy': 'Comic (6play)',
+    'publicsenat': 'Public Sénat',
+    'france3regions': 'France 3 Régions',
+    'francetvsport': 'France TV Sport (francetv)',
+    'histoire': 'Histoire',
+    'tvbreizh': 'TV Breizh',
+    'ushuaiatv': 'Ushuaïa TV',
+    'studio-4': 'Studio 4 (francetv)',
+    'irl': 'IRL (francetv)',
+    'seasons': 'Seasons',
+    'comedie': 'Comédie +',
+    'les-chaines-planete': 'Les chaînes planètes +',
+    'golfplus': 'Golf +',
+    'cineplus': 'Ciné +',
+    'infosportplus': 'INFOSPORT+',
+    'gameone': 'Game One',
+    'francetveducation': 'France TV Education (francetv)',
+    'gong': 'Gong',
 
-    'main_menu.ws': {
-        'channels.ws.allocine.allocine': 'Allociné',
-        'channels.ws.tetesaclaques.tetesaclaques': 'Au pays des Têtes à claques',
-        'channels.ws.taratata.taratata': 'Taratata',
-        'channels.ws.noob.noob': 'Noob TV',
-        'channels.ws.culturepub.culturepub': 'Culturepub',
-        'channels.ws.autoplus.autoplus': 'Auto Plus',
-        'channels.ws.notrehistoirech.notrehistoirech': 'Notre Histoire.ch',
-        'channels.ws.30millionsdamis.30millionsdamis': '30 Millions d\'Amis',
-        'channels.ws.elle.elle': 'Elle'
-    }
+    # Japan channels / live TV
+    'nhknews': 'NHK ニュース',
+    'nhklifestyle': 'NHKらいふ',
+    'tbsnews': 'TBS ニュース',
+
+    # United Kingdom channels / live TV
+    'blaze': 'Blaze',
+    'dave': 'Dave',
+    'really': 'Really',
+    'yesterday': 'Yesterday',
+    'drama': 'Drama',
+    'skynews': 'Sky News',
+    'skysports': 'Sky sports',
+
+    # International channels / live TV
+    'tv5mondeafrique': 'TV5Monde Afrique',
+    'arte': 'Arte',
+    'euronews': 'Euronews',
+    'france24': 'France 24',
+    'nhkworld': 'NHK World',
+    'tv5monde': 'TV5Monde',
+    'tivi5monde': 'Tivi 5Monde',
+    'bvn': 'BVN',
+    'icitelevision': 'ICI Télévision',
+    'mtv': 'MTV',
+    'arirang': 'Arirang (아리랑)',
+    'dw': 'DW',
+
+    # Websites
+    'allocine': 'Allociné',
+    'tetesaclaques': 'Au pays des Têtes à claques',
+    'taratata': 'Taratata',
+    'noob': 'Noob TV',
+    'culturepub': 'Culturepub',
+    'autoplus': 'Auto Plus',
+    'notrehistoirech': 'Notre Histoire',
+    '30millionsdamis': '30 Millions d\Amis',
+    'elle': 'Elle'
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.10~beta004"
+       version="0.1.10~beta005"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -35,6 +35,7 @@
 [Fix] Default Quality for Replay group TF1 (Thanks Chris_wafer) (wwark)
 [Readd Live TV] C8, CSTAR, Canalplus (clair) (wwark)
 [Fix] Arte Replay and Add some new contents language (EN|ES|PL)
+[Improvement] New menu layout and new live TV menu presentation (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>
