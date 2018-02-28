@@ -417,7 +417,7 @@ def get_live_item(params):
             data_player,
             data_video_id)
 
-        title = json_parser["name"]
+        title = json_parser["name"].encode('utf-8')
         plot = ''
         if json_parser["long_description"]:
             plot = json_parser["long_description"]
@@ -428,7 +428,6 @@ def get_live_item(params):
 
         if 'poster' in json_parser:
             img = json_parser["poster"].encode('utf-8')
-
         info = {
             'video': {
                 'title': params.channel_label + " - [I]" + title + "[/I]",

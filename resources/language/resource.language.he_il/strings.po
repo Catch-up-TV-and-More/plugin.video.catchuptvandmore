@@ -404,6 +404,6 @@ msgid "Account needed for this video"
 msgstr "נדרש וידאו שמקושר לחשבון"
 
 msgctxt "#30712"
-msgid "Authentication failed"
+msgid "NRJ authentication failed"
 msgstr ""
 

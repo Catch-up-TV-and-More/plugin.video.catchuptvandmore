@@ -405,6 +405,6 @@ msgid "Account needed for this video"
 msgstr ""
 
 msgctxt "#30712"
-msgid "Authentication failed"
+msgid "NRJ authentication failed"
 msgstr ""
 

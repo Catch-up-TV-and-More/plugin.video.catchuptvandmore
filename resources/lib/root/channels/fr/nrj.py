@@ -533,18 +533,19 @@ def get_live_item(params):
     # Build PAYLOAD
     payload = {
         "login_form[email]": common.PLUGIN.get_setting(
-            params.channel_id.rsplit('.', 1)[0] + '.login'),
+            params.channel_name + '.login'),
         "login_form[password]": common.PLUGIN.get_setting(
-            params.channel_id.rsplit('.', 1)[0] + '.password'),
+            params.channel_name + '.password'),
         "login_form[_token]": token_form_login
     }
 
     # LOGIN
     result_2 = session_requests.post(
         URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
-    if 'adresse e-mail ou le mot de passe est invalide.' in result_2.text.encode('utf-8'):
+    if 'adresse e-mail ou le mot de passe est invalide.' \
+            in result_2.text.encode('utf-8'):
         utils.send_notification(
-            common.ADDON.get_localized_string(30113))
+            common.ADDON.get_localized_string(30712))
         return None
 
     # GET page with url_live with the session logged

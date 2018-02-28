@@ -53,18 +53,12 @@ SKELETON = {
                 ('franceinfo', 'none'),
                 ('bfmbusiness', 'none'),
                 ('rmc', 'none'),
-                ('01net', 'none'),
-                ('tfou', 'none'),
-                ('xtra', 'none'),
                 ('lci', 'none'),
                 ('lcp', 'none'),
                 ('rmcdecouverte', 'none'),
                 ('publicsenat', 'none'),
                 ('france3regions', 'none'),
                 ('francetvsport', 'none'),
-                ('studio-4', 'none'),
-                ('irl', 'none'),
-                ('francetveducation', 'none'),
                 ('gong', 'none')
             },
 

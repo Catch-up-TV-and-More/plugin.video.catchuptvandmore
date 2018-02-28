@@ -404,6 +404,6 @@ msgid "Account needed for this video"
 msgstr "Compte requis pour cette vidéo"
 
 msgctxt "#30712"
-msgid "Authentication failed"
-msgstr "Echec de l'authentication"
+msgid "NRJ authentication failed"
+msgstr "Echec de l'authentication NRJ"
 
