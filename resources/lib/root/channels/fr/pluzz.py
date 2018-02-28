@@ -197,16 +197,12 @@ CATEGORIES = {
 
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         return root(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     elif 'search' in params.next:
@@ -224,11 +220,10 @@ def change_to_nicer_name(original_name):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
+    mode = 'replay'
     if params.channel_name == 'francetvsport':
         next_replay = 'list_videos_ftvsport'
+        mode = 'videos'
     elif params.channel_name == 'studio-4' or \
             params.channel_name == 'irl':
         next_replay = 'list_shows_necritures_1'
@@ -237,64 +232,11 @@ def root(params):
     else:
         next_replay = 'list_shows_1'
 
-    if params.next == "replay_entry":
-        params['next'] = next_replay
-        params['page'] = '1'
-        params['mode'] = 'replay'
-        return channel_entry(params)
-
-    # Add Replay
-    if params.channel_name != 'franceinfo' and \
-            params.channel_name != 'france3regions':
-        modes.append({
-            'label': 'Replay',
-            'url': common.PLUGIN.get_url(
-                action='replay_entry',
-                next=next_replay,
-                mode='replay',
-                page='1',
-                category='%s Replay' % params.channel_name.upper(),
-                window_title='%s Replay' % params.channel_name
-            )
-        })
-
-    # Add Live
-    if params.channel_name != 'studio-4' and \
-            params.channel_name != 'irl' and \
-            params.channel_name != 'francetveducation':
-        modes.append({
-            'label': _('Live TV'),
-            'url': common.PLUGIN.get_url(
-                action='replay_entry',
-                next='live_cat',
-                mode='live',
-                category='%s Live TV' % params.channel_name.upper(),
-                window_title='%s Live TV' % params.channel_name
-            )
-        })
-
-    # Add Videos
-    if params.channel_name == 'francetvsport':
-        modes.append({
-            'label': 'Videos',
-            'url': common.PLUGIN.get_url(
-                action='replay_entry',
-                next='list_videos_ftvsport',
-                mode='videos',
-                page='1',
-                category='%s Videos' % params.channel_name.upper(),
-                window_title='%s Videos' % params.channel_name
-            )
-        })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+    params['next'] = next_replay
+    params['page'] = '1'
+    params['mode'] = mode
+    params['channel_name'] = params.channel_name
+    return channel_entry(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -347,40 +289,40 @@ def list_shows(params):
 
         # Last videos
         shows.append({
-            'label': common.ADDON.get_localized_string(30104),
+            'label': common.ADDON.get_localized_string(30704),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 next='list_shows_last',
                 page='0',
-                window_title=common.ADDON.get_localized_string(30104)
+                window_title=common.ADDON.get_localized_string(30704)
             )
         })
 
         # Search
         shows.append({
-            'label': common.ADDON.get_localized_string(30103),
+            'label': common.ADDON.get_localized_string(30703),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 next='search',
                 page='0',
-                window_title=common.ADDON.get_localized_string(30103)
+                window_title=common.ADDON.get_localized_string(30703)
             )
         })
 
         # from A to Z
         shows.append({
-            'label': common.ADDON.get_localized_string(30105),
+            'label': common.ADDON.get_localized_string(30705),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 next='list_shows_from_a_to_z',
-                window_title=common.ADDON.get_localized_string(30105)
+                window_title=common.ADDON.get_localized_string(30705)
             )
         })
 
     # level 1
     elif 'list_shows_from_a_to_z' in params.next:
         shows.append({
-            'label': common.ADDON.get_localized_string(30106),
+            'label': common.ADDON.get_localized_string(30706),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 next='list_shows_2_from_a_to_z_CATEGORIES',
@@ -392,7 +334,7 @@ def list_shows(params):
             )
         })
         shows.append({
-            'label': common.ADDON.get_localized_string(30107),
+            'label': common.ADDON.get_localized_string(30707),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 next='list_shows_2_from_a_to_z_CATEGORIES',
@@ -424,6 +366,7 @@ def list_shows(params):
     # level 1 or 2
     elif 'list_shows_2' in params.next:
         if 'list_shows_2_cat' in params.next:
+            print "TOTO " + real_channel
             url_json = CHANNEL_CATALOG % (real_channel)
             file_path = utils.download_catalog(
                 url_json,
@@ -483,7 +426,7 @@ def list_shows(params):
         if params.next == 'list_shows_2_from_a_to_z_CATEGORIES':
             # More videos...
             shows.append({
-                'label': common.ADDON.get_localized_string(30100),
+                'label': common.ADDON.get_localized_string(30700),
                 'url': common.PLUGIN.get_url(
                     action='replay_entry',
                     next='list_shows_2_from_a_to_z_CATEGORIES',
@@ -600,7 +543,7 @@ def list_shows(params):
 
         # More programs...
         shows.append({
-            'label': common.ADDON.get_localized_string(30108),
+            'label': common.ADDON.get_localized_string(30708),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 next='list_shows_education_2',
@@ -682,7 +625,7 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 mode=params.mode,
@@ -715,7 +658,8 @@ def list_videos(params):
             html_video_data = utils.get_webcontent(
                 URL_VIDEO_DATA_EDUCTATION % data_video_title)
             id_diffusion = re.compile(
-                r'videos.francetv.fr\/video\/(.*?)\@').findall(html_video_data)[0]
+                r'videos.francetv.fr\/video\/(.*?)\@'
+            ).findall(html_video_data)[0]
 
             info = {
                 'video': {
@@ -753,7 +697,7 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 category_url=params.category_url,
@@ -770,7 +714,8 @@ def list_videos(params):
 
         list_videos_html = utils.get_webcontent(
             URL_SERIE_DATA_EDUCTION % (params.show_data_name, params.page))
-        print 'URL_SERIE_DATA_EDUCTION : ' + URL_SERIE_DATA_EDUCTION % (params.show_data_name, params.page)
+        print 'URL_SERIE_DATA_EDUCTION : ' + URL_SERIE_DATA_EDUCTION % (
+            params.show_data_name, params.page)
         list_videos_soup = bs(list_videos_html, 'html.parser')
         list_videos_datas = list_videos_soup.find(
             'div', class_='content-section').find_all(
@@ -788,7 +733,8 @@ def list_videos(params):
             html_video_data = utils.get_webcontent(
                 URL_VIDEO_DATA_EDUCTATION % data_video_title)
             id_diffusion = re.compile(
-                r'videos.francetv.fr\/video\/(.*?)\@').findall(html_video_data)[0]
+                r'videos.francetv.fr\/video\/(.*?)\@').findall(
+                html_video_data)[0]
 
             info = {
                 'video': {
@@ -826,7 +772,7 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
                 action='replay_entry',
                 show_data_name=params.show_data_name,
@@ -853,8 +799,8 @@ def list_videos(params):
             if episode.find('div', class_='description'):
                 video_title = episode.find(
                     'div', class_='title').get_text().strip() + ' - ' + \
-                episode.find(
-                    'div', class_='description').get_text().strip()
+                    episode.find(
+                        'div', class_='description').get_text().strip()
             else:
                 video_title = episode.find(
                     'div', class_='title').get_text().strip()
@@ -1005,7 +951,8 @@ def list_videos(params):
                                         'utf-8'))
                         elif 'Réalisateur' in fonctions:
                             director = personne['nom'].encode(
-                                'utf-8') + ' ' + personne['prenom'].encode('utf-8')
+                                'utf-8') + ' ' + \
+                                personne['prenom'].encode('utf-8')
 
                     year = int(date[6:10])
                     day = date[:2]
@@ -1061,7 +1008,7 @@ def list_videos(params):
         if 'search' in params.next:
             # More videos...
             videos.append({
-                'label': common.ADDON.get_localized_string(30100),
+                'label': common.ADDON.get_localized_string(30700),
                 'url': common.PLUGIN.get_url(
                     action='replay_entry',
                     next='list_videos_search',
@@ -1076,7 +1023,7 @@ def list_videos(params):
         elif 'last' in params.next:
             # More videos...
             videos.append({
-                'label': common.ADDON.get_localized_string(30100),
+                'label': common.ADDON.get_localized_string(30700),
                 'url': common.PLUGIN.get_url(
                     action='replay_entry',
                     url=params.url,

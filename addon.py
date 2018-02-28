@@ -254,11 +254,11 @@ def replay_entry(params):
         params['module_path'] = str(module_path)
         params['next'] = 'replay_entry'
 
+    channel = get_module(params)
+
     # Legacy fix (il faudrait remplacer channel_name par
     # module_name dans tous les .py des chaines)
     params['channel_name'] = params.module_name
-
-    channel = get_module(params)
 
     # Let's go to the channel python file ...
     return channel.channel_entry(params)
@@ -294,11 +294,11 @@ def build_live_tv_menu(params):
         params['module_name'] = channel_name
         params['channel_label'] = skeleton.LABELS[channel_name]
 
+        channel = get_module(params)
+
         # Legacy fix (il faudrait remplacer channel_name par
         # module_name dans tous les .py des chaines)
         params['channel_name'] = params.module_name
-
-        channel = get_module(params)
 
         item = {}
         # Build context menu (Move up, move down, ...)
