@@ -27,6 +27,7 @@ from resources.lib import skeleton
 from resources.lib import common
 from resources.lib import vpn
 from resources.lib import utils
+import sys
 
 
 # Useful path
@@ -78,7 +79,7 @@ def root(params):
             item_order = common.PLUGIN.get_setting(item_id + '.order')
 
             # Get english item title in LABELS dict in skeleton file
-            # and check if this title has any translated version
+            # and check if this title has any translated version in strings.po
             item_title = ''
             try:
                 item_title = _(skeleton.LABELS[item_id])
@@ -208,6 +209,9 @@ def root(params):
 
 
 def get_module(params):
+    """
+    get_module allows us to load the desired python file
+    """
     if 'module_name' in params and \
             'module_path' in params:
         storage = common.sp.MemStorage('last_module')
@@ -236,6 +240,10 @@ def get_module(params):
 
 @common.PLUGIN.action()
 def replay_entry(params):
+    """
+    replay_entry is the bridge between the
+    simpleplegin behavior and each channel files
+    """
     if 'item_id' in params:
         params['module_name'] = params.item_id  # w9
         module_path = eval(params.item_path)
@@ -258,6 +266,10 @@ def replay_entry(params):
 
 @common.PLUGIN.action()
 def build_live_tv_menu(params):
+    """
+    build_live_tv_menu asks each channel for current live TV
+    information and display the concatenation of this to Kodi
+    """
     folder_path = eval(params.item_path)
 
     # First we sort channels
@@ -327,7 +339,6 @@ def build_live_tv_menu(params):
 
         context_menu.append(utils.vpn_context_menu_item())
 
-        '''
         # Uncomment this block in production to prevent
         # error while building Live TV lisitng in case of broken channel
         try:
@@ -342,8 +353,8 @@ def build_live_tv_menu(params):
                         listing.append(subitem)
         except Exception:
             None
-        '''
 
+        '''
         # Uncomment this block in development environment
         # to see any broken channel
         item = channel.get_live_item(params)
@@ -355,6 +366,7 @@ def build_live_tv_menu(params):
                 for subitem in item:
                     subitem['context_menu'] = context_menu
                     listing.append(subitem)
+        '''
 
     return common.PLUGIN.create_listing(
         listing,
@@ -368,6 +380,12 @@ def build_live_tv_menu(params):
 
 @common.PLUGIN.action()
 def start_live_tv_stream(params):
+    """
+    Once the user chooses a Live TV channel
+    start_live_tv_stream does the bridge in the channel file
+    to load the streaming media
+    """
+
     # Legacy fix (il faudrait remplacer channel_name par
     # module_name dans tous les .py des chaines)
     params['channel_name'] = params.module_name
@@ -379,6 +397,10 @@ def start_live_tv_stream(params):
 
 @common.PLUGIN.action()
 def website_entry(params):
+    """
+    website_entry is the bridge between the
+    simpleplegin behavior and each webiste files
+    """
     if 'item_id' in params:
         params['module_name'] = params.item_id
         params['module_path'] = params.item_path
@@ -433,7 +455,22 @@ def download_video(params):
     #  Ici on a seulement le lien de la page web où se trouve la video
     #  Il faut appeller la fonction get_video_url de la chaine concernée
     #  pour avoir l'URL finale de la vidéo
-    channel = get_channel_module(params)
+    if 'item_id' in params:
+        params['module_name'] = params.item_id  # w9
+        module_path = eval(params.item_path)
+        module_path.pop()
+        module_path.append(skeleton.CHANNELS[params.module_name])
+
+        # ['root', 'channels', 'fr', '6play']
+        params['module_path'] = str(module_path)
+        params['next'] = 'replay_entry'
+
+    # Legacy fix (il faudrait remplacer channel_name par
+    # module_name dans tous les .py des chaines)
+    params['channel_name'] = params.module_name
+
+    channel = get_module(params)
+
     params.next = 'download_video'
     url_video = channel.get_video_url(params)
 

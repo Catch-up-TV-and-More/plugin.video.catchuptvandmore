@@ -701,8 +701,7 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
-    """Build live listing"""
+def get_live_item(params):
     lives = []
 
     if params.channel_name == 'tv5monde':
@@ -728,8 +727,10 @@ def list_live(params):
                 'label': live_title,
                 'thumb': live_img,
                 'url': common.PLUGIN.get_url(
-                    action='replay_entry',
+                    action='start_live_tv_stream',
                     next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path,
                     live_url=live_url,
                 ),
                 'is_playable': True,
@@ -742,7 +743,7 @@ def list_live(params):
 
             live_title = live_name
             live_html = utils.get_webcontent(
-                URL_TV5MONDE_LIVE  + '%s.html' % live_id)
+                URL_TV5MONDE_LIVE + '%s.html' % live_id)
             live_json = re.compile(
                 r'data-broadcast=\'(.*?)\'').findall(live_html)[0]
             live_json_parser = json.loads(live_json)
@@ -760,22 +761,17 @@ def list_live(params):
                 'label': live_title,
                 'thumb': live_img,
                 'url': common.PLUGIN.get_url(
-                    action='replay_entry',
+                    action='start_live_tv_stream',
                     next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path,
                     live_url=live_url,
                 ),
                 'is_playable': True,
                 'info': info
             })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+    return lives
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

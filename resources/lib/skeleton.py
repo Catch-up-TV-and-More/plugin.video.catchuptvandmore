@@ -20,11 +20,12 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-
-# SKELETON dictionary corresponds to the different level of menus of the addon
-# (elt1, elt2) --> elt1: level label, elt2: next function to call
-
-
+'''
+SKELETON dictionary corresponds to the architecture of each menu of the addon
+(elt1, elt2) -->
+    elt1: label
+    elt2: next function to call
+'''
 SKELETON = {
     ('root', 'root'): {
 
@@ -96,7 +97,9 @@ SKELETON = {
                 ('france24', 'none'),
                 ('icitelevision', 'none'),
                 ('nhkworld', 'none'),
-                ('dw', 'none')
+                ('dw', 'none'),
+                ('tv5monde', 'none'),
+                ('tivi5monde', 'none')
             }
         },
 
@@ -231,12 +234,20 @@ SKELETON = {
 }
 
 
+'''
+SKELETON dictionary is the bridge between
+the item in Kodi and the real folder location on disk
+'''
 FOLDERS = {
     'live_tv': 'channels',
     'replay': 'channels'
 }
 
 
+'''
+CHANNELS dictionary is the bridge between
+the channel name and his corresponding python file
+'''
 CHANNELS = {
     'auvio': 'rtbf',
     'brf': 'brf',
@@ -335,8 +346,9 @@ CHANNELS = {
     'dw': 'dw'
 }
 
-
-# LABELS dict is only used to retrieve correct element in english strings.po
+'''
+LABELS dict is only used to retrieve correct element in english strings.po
+'''
 LABELS = {
 
     # root
