@@ -1104,6 +1104,8 @@ def get_live_item(params):
     date = ''
     genre = ''
 
+    lives = []
+
     if params.channel_name == 'francetvsport':
 
         list_lives = utils.get_webcontent(
@@ -1135,7 +1137,7 @@ def get_live_item(params):
                     }
                 }
 
-                return {
+                lives.append({
                     'label': title,
                     'fanart': image,
                     'thumb': image,
@@ -1148,7 +1150,7 @@ def get_live_item(params):
                     ),
                     'is_playable': True,
                     'info': info
-                }
+                })
 
         for live in list_lives_parserjson["page"]["upcoming-lives"]:
 
@@ -1174,7 +1176,7 @@ def get_live_item(params):
                 }
             }
 
-            return {
+            lives.append({
                 'label': params.channel_label + " - [I]" + title + "[/I]",
                 'fanart': image,
                 'thumb': image,
@@ -1186,7 +1188,7 @@ def get_live_item(params):
                 ),
                 'is_playable': False,
                 'info': info
-            }
+            })
 
     elif params.channel_name == 'franceinfo':
         info = {
@@ -1198,7 +1200,7 @@ def get_live_item(params):
             }
         }
 
-        return {
+        lives.append({
             'label': params.channel_label,
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
@@ -1208,7 +1210,7 @@ def get_live_item(params):
             ),
             'is_playable': True,
             'info': info
-        }
+        })
 
     elif params.channel_name == 'la_1ere':
 
@@ -1224,7 +1226,7 @@ def get_live_item(params):
                 }
             }
 
-            return {
+            lives.append({
                 'label': params.channel_label + " - [I]" + title + "[/I]",
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
@@ -1235,7 +1237,7 @@ def get_live_item(params):
                 ),
                 'is_playable': True,
                 'info': info
-            }
+            })
 
     elif params.channel_name == 'france3regions':
 
@@ -1251,7 +1253,7 @@ def get_live_item(params):
                 }
             }
 
-            return {
+            lives.append({
                 'label': params.channel_label + " - [I]" + title + "[/I]",
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
@@ -1262,7 +1264,7 @@ def get_live_item(params):
                 ),
                 'is_playable': True,
                 'info': info
-            }
+            })
 
     else:
         url_json_live = CHANNEL_LIVE % (params.channel_name)
@@ -1335,7 +1337,7 @@ def get_live_item(params):
                 }
             }
 
-            return {
+            lives.append({
                 'label': params.channel_label + " - [I]" + title + "[/I]",
                 'fanart': image,
                 'thumb': image,
@@ -1347,7 +1349,8 @@ def get_live_item(params):
                 ),
                 'is_playable': True,
                 'info': info
-            }
+            })
+    return lives
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
