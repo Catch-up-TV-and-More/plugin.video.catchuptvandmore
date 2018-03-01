@@ -329,6 +329,7 @@ def build_live_tv_menu(params):
 
         context_menu.append(utils.vpn_context_menu_item())
 
+        '''
         # Uncomment this block in production to prevent
         # error while building Live TV lisitng in case of broken channel
         try:
@@ -343,8 +344,9 @@ def build_live_tv_menu(params):
                         listing.append(subitem)
         except Exception:
             None
-
         '''
+
+        
         # Uncomment this block in development environment
         # to see any broken channel
         item = channel.get_live_item(params)
@@ -356,7 +358,7 @@ def build_live_tv_menu(params):
                 for subitem in item:
                     subitem['context_menu'] = context_menu
                     listing.append(subitem)
-        '''
+        
 
     return common.PLUGIN.create_listing(
         listing,
@@ -446,15 +448,7 @@ def download_video(params):
     #  Ici on a seulement le lien de la page web où se trouve la video
     #  Il faut appeller la fonction get_video_url de la chaine concernée
     #  pour avoir l'URL finale de la vidéo
-    if 'item_id' in params:
-        params['module_name'] = params.item_id  # w9
-        module_path = eval(params.item_path)
-        module_path.pop()
-        module_path.append(skeleton.CHANNELS[params.module_name])
-
-        # ['root', 'channels', 'fr', '6play']
-        params['module_path'] = str(module_path)
-        params['next'] = 'replay_entry'
+    params['next'] = 'replay_entry'
 
     # Legacy fix (il faudrait remplacer channel_name par
     # module_name dans tous les .py des chaines)

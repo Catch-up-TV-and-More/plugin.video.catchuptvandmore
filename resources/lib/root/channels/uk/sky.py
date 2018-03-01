@@ -145,8 +145,8 @@ def list_shows(params):
         #shows.append({
             #'label': title,
             #'url': common.PLUGIN.get_url(
-    module_path=params.module_path,
-    module_name=params.module_name,
+                #module_path=params.module_path,
+                #module_name=params.module_name,
                 #action='replay_entry',
                 #next='list_videos_youtube',
                 #page='1',
@@ -257,6 +257,8 @@ def list_videos(params):
                 common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     video_id=video_id) + ')'
             )
             context_menu = []
@@ -281,8 +283,8 @@ def list_videos(params):
         # videos.append({
             # 'label': common.ADDON.get_localized_string(30700),
             # 'url': common.PLUGIN.get_url(
-    module_path=params.module_path,
-    module_name=params.module_name,
+                #module_path=params.module_path,
+                #module_name=params.module_name,
                 # action='replay_entry',
                 # next='list_videos_news',
                 # page=str(int(params.page) + 1),
@@ -324,6 +326,8 @@ def list_videos(params):
                 common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     video_id=video_id) + ')'
             )
             context_menu = []

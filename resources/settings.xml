@@ -99,6 +99,12 @@
 
             <setting label="Drama" type="bool" id="drama" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="drama.order" default="5"/>
+
+            <setting label="Sky News" type="bool" id="skynews" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="skynews.order" default="6"/>
+
+            <setting label="Sky Sports" type="bool" id="skysports" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="skysports.order" default="7"/>
         <!-- United Kingdom -->
 
 
@@ -228,8 +234,8 @@
             <setting label="France Ô" type="bool" id="franceo" default="true" visible="eq(-33,true)"/>
             <setting label="" type="number" visible="false" id="franceo.order" default="17"/>
 
-            <setting label="TF1 Séries Films" type="bool" id="tf1_series_films" default="true" visible="eq(-35,true)"/>
-            <setting label="" type="number" visible="false" id="tf1_series_films.order" default="18"/>
+            <setting label="TF1 Séries Films" type="bool" id="tf1-series-films" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="tf1-series-films.order" default="18"/>
 
             <setting label="L'Équipe" type="bool" id="lequipe" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="lequipe.order" default="19"/>

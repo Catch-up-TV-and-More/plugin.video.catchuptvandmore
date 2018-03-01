@@ -628,6 +628,8 @@ def list_videos(params):
                 common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     id_diffusion=id_diffusion) + ')'
             )
             context_menu = []
@@ -704,6 +706,8 @@ def list_videos(params):
                 common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     id_diffusion=id_diffusion) + ')'
             )
             context_menu = []
@@ -783,6 +787,8 @@ def list_videos(params):
                 common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     id_diffusion=id_diffusion) + ')'
             )
             context_menu = []
@@ -864,6 +870,8 @@ def list_videos(params):
                 common.GETTEXT('Download'),
                 'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                     action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     video_url=video_url) + ')'
             )
             context_menu = []
@@ -1024,6 +1032,8 @@ def list_videos(params):
                         common.GETTEXT('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                             id_diffusion=id_diffusion) + ')'
                     )
                     context_menu = []
@@ -1155,7 +1165,10 @@ def get_live_item(params):
         for live in list_lives_parserjson["page"]["upcoming-lives"]:
 
             title = live["title"]
-            image = live["image"]["large_16_9"]
+            try:
+                image = live["image"]["large_16_9"]
+            except KeyError:
+                image = ''
             # id_diffusion = live["sivideo-id"]
 
             try:

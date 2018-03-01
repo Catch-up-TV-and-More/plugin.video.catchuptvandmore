@@ -317,6 +317,8 @@ def list_videos_lci(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                         program_id=program_id) + ')'
                 )
                 context_menu = []
@@ -499,6 +501,8 @@ def list_videos(params):
                         common.GETTEXT('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                             program_id=program_id) + ')'
                     )
                     context_menu = []
