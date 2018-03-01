@@ -61,6 +61,7 @@ def get_live_item(params):
             URL_LIVE % live_id)
         url_live_2 = re.compile(
             'iframe src="(.*?) "').findall(live_html)[0]
+        url_live_2 = url_live_2 + live_id
         live_html_2 = utils.get_webcontent(url_live_2)
         live_json = re.compile(
             'sources\:(.*?)\]\,').findall(live_html_2)[0]
