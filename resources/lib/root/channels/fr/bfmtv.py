@@ -129,6 +129,8 @@ def list_shows(params):
                 'label': video_title,
                 'thumb': video_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_videos_1',
                     video_id=video_id,
@@ -158,6 +160,8 @@ def list_shows(params):
                     'label': title,
                     'thumb': image_url,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         category=category,
                         next='list_videos_1',
@@ -252,6 +256,8 @@ def list_videos(params):
             'thumb': video_img,
             'fanart': video_img,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='play_r',
                 video_url=video_url
@@ -325,6 +331,8 @@ def list_videos(params):
                     'label': title,
                     'thumb': image,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_r',
                         video_id=video_id,
@@ -337,8 +345,10 @@ def list_videos(params):
 
             # More videos...
             videos.append({
-                'label': common.ADDON.get_localized_string(30100),
+                'label': common.ADDON.get_localized_string(30700),
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     category=params.category,
                     next='list_videos_1',
@@ -436,10 +446,10 @@ def get_live_item(params):
             'fanart': img,
             'thumb': img,
             'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
+                module_path=params.module_path,
                 module_name=params.module_name,
-                module_path=params.module_path
+                action='start_live_tv_stream',
+                next='play_l'
             ),
             'is_playable': True,
             'info': info

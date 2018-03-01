@@ -72,6 +72,8 @@ def list_shows(params):
         shows.append({
             'label': category_name,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 category_name=category_name,
                 next='list_shows_2',
@@ -96,6 +98,8 @@ def list_shows(params):
                 shows.append({
                     'label': category_name,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         value_id=value_id,
                         page='1',
@@ -124,6 +128,8 @@ def list_shows(params):
                 shows.append({
                     'label': serie_name,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         value_id=value_id,
                         page='1',
@@ -208,6 +214,8 @@ def list_videos(params):
             'label': video_title,
             'thumb': video_img,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='play_r',
                 video_url=video_url
@@ -219,8 +227,10 @@ def list_videos(params):
 
     # More videos...
     videos.append({
-        'label': '# ' + common.ADDON.get_localized_string(30100),
+        'label': '# ' + common.ADDON.get_localized_string(30700),
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='replay_entry',
             next=params.next,
             page=str(int(params.page) + 1),

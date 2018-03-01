@@ -95,6 +95,8 @@ def list_shows(params):
                 'label': show_title,
                 'thumb': show_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_shows_2',
                     title=show_title,
@@ -127,6 +129,8 @@ def list_shows(params):
                     shows.append({
                         'label': season_title,
                         'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                             action='replay_entry',
                             next='list_videos_1',
                             title=season_title,
@@ -144,6 +148,8 @@ def list_shows(params):
             shows.append({
                 'label': season_title,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_videos_1',
                     title=season_title,
@@ -239,6 +245,8 @@ def list_videos(params):
             'thumb': video_img,
             'fanart': video_img,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='play_r',
                 video_id=video_id

@@ -85,6 +85,8 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='replay_entry',
             next=next_value,
             page='1',
@@ -98,6 +100,8 @@ def root(params):
         modes.append({
             'label': common.GETTEXT('Live TV'),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='live_cat',
                 category='%s Live TV' % params.channel_name.upper(),
@@ -125,6 +129,8 @@ def list_shows(params):
         shows.append({
             'label': title,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_youtube',
                 page='1',
@@ -139,6 +145,8 @@ def list_shows(params):
         #shows.append({
             #'label': title,
             #'url': common.PLUGIN.get_url(
+    module_path=params.module_path,
+    module_name=params.module_name,
                 #action='replay_entry',
                 #next='list_videos_youtube',
                 #page='1',
@@ -152,6 +160,8 @@ def list_shows(params):
         shows.append({
             'label': title,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_youtube',
                 page='1',
@@ -176,6 +186,8 @@ def list_shows(params):
             shows.append({
                 'label': category_title,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_videos_sports',
                     page='1',
@@ -254,6 +266,8 @@ def list_videos(params):
                 'label': title,
                 'thumb': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r_news',
                     video_id=video_id,
@@ -265,8 +279,10 @@ def list_videos(params):
 
         # More videos...
         # videos.append({
-            # 'label': common.ADDON.get_localized_string(30100),
+            # 'label': common.ADDON.get_localized_string(30700),
             # 'url': common.PLUGIN.get_url(
+    module_path=params.module_path,
+    module_name=params.module_name,
                 # action='replay_entry',
                 # next='list_videos_news',
                 # page=str(int(params.page) + 1),
@@ -317,6 +333,8 @@ def list_videos(params):
                 'label': title,
                 'thumb': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r_sports',
                     video_id=video_id,
@@ -328,8 +346,10 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_sports',
                 category_url=params.category_url,
@@ -382,10 +402,10 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
             video_id=video_id
         ),
         'is_playable': True,

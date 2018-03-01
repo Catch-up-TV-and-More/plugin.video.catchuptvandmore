@@ -80,6 +80,8 @@ def list_shows(params):
         shows.append({
             'label': emission_name,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 emission_url=emission_url,
                 category_name=emission_name,
@@ -101,6 +103,8 @@ def list_shows(params):
             shows.append({
                 'label': emissions_letter,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     emissions_letter=emissions_letter,
                     category_name=emissions_letter,
@@ -130,6 +134,8 @@ def list_shows(params):
                     shows.append({
                         'label': emission_name,
                         'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                             action='replay_entry',
                             emission_url=emission_url,
                             category_name=emission_name,
@@ -197,6 +203,8 @@ def list_videos(params):
                     'thumb': video_img,
                     'fanart': video_img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_r',
                         video_url=video_url
@@ -209,8 +217,10 @@ def list_videos(params):
         # More videos...
         if 'nextPageURL' in json_mtv["result"]:
             videos.append({
-                'label': '# ' + common.ADDON.get_localized_string(30100),
+                'label': '# ' + common.ADDON.get_localized_string(30700),
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_videos_1',
                     update_listing=True,

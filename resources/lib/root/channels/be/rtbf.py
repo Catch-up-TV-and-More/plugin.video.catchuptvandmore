@@ -125,6 +125,8 @@ def list_shows(params):
         shows.append({
             'label': emission_title,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 emission_title=emission_title,
                 action='replay_entry',
                 next='list_shows_2',
@@ -145,6 +147,8 @@ def list_shows(params):
                         shows.append({
                             'label': category_name,
                             'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                                 action='replay_entry',
                                 category_url=category_url,
                                 category_name=category_name,
@@ -171,6 +175,8 @@ def list_shows(params):
             shows.append({
                 'label': emission_title,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     emission_title=emission_title,
                     action='replay_entry',
                     emission_id=emission_id,
@@ -256,6 +262,8 @@ def list_videos(params):
                 'thumb': img,
                 'fanart': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
                     url_video=url_video
@@ -317,6 +325,8 @@ def list_videos(params):
                     'thumb': img,
                     'fanart': img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_r_categorie',
                         video_id=video_id

@@ -86,6 +86,8 @@ def root(params):
     modes.append({
         'label': 'Replay',
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='replay_entry',
             next='list_shows_1',
             category='%s Replay' % params.channel_name.upper(),
@@ -97,6 +99,8 @@ def root(params):
     modes.append({
         'label': 'Replay sans categorie',
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='replay_entry',
             next='list_shows_without_categories',
             category='%s Replay' % params.channel_name.upper(),
@@ -108,6 +112,8 @@ def root(params):
     modes.append({
         'label': 'Live TV',
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='replay_entry',
             next='live_cat',
             category='%s Live TV' % params.channel_name.upper(),
@@ -138,6 +144,8 @@ def list_shows(params):
         shows.append({
             'label': state_video,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 state_video=state_video,
                 next='list_videos_1',
@@ -168,6 +176,8 @@ def list_shows(params):
             shows.append({
                 'label': state_video,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     state_video=state_video,
                     next='list_videos_1',
@@ -186,6 +196,8 @@ def list_shows(params):
                     shows.append({
                         'label': category_name,
                         'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                             action='replay_entry',
                             category_name=category_name,
                             next='list_shows_programs',
@@ -213,6 +225,8 @@ def list_shows(params):
                         'label': name_program,
                         'thumb': img_program,
                         'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                             action='replay_entry',
                             next='list_videos_1',
                             state_video=state_video,
@@ -324,6 +338,8 @@ def list_videos(params):
                     'fanart': img,
                     'thumb': img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_r',
                         url_video=url
@@ -411,6 +427,8 @@ def list_videos(params):
                     'fanart': img,
                     'thumb': img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_r',
                         url_video=url
@@ -486,6 +504,8 @@ def list_videos(params):
                     'fanart': img,
                     'thumb': img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_r',
                         url_video=url
@@ -573,10 +593,10 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
             url_live=url_live
         ),
         'is_playable': True,

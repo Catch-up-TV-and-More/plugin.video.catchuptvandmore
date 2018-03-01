@@ -84,6 +84,8 @@ def list_shows(params):
                 shows.append({
                     'label': category_name,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='channel_entry',
                         next='list_shows_2',
                         category_name=category_name,
@@ -113,6 +115,8 @@ def list_shows(params):
                 shows.append({
                     'label': sub_category_name,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='channel_entry',
                         next='list_videos_1',
                         sub_category_name=sub_category_name,
@@ -195,6 +199,8 @@ def list_videos(params):
                         'label': title,
                         'thumb': img,
                         'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                             action='channel_entry',
                             next='play_r',
                             video_id=video_id,

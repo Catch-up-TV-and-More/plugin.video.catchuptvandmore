@@ -95,6 +95,8 @@ def list_shows(params):
                 shows.append({
                     'label': category_name,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         category_url=category_url,
                         category_name=category_name,
@@ -106,6 +108,8 @@ def list_shows(params):
                 shows.append({
                     'label': category_name,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         actualites_url=category_url,
                         actualites_name=category_name,
@@ -118,6 +122,8 @@ def list_shows(params):
                 shows.append({
                     'label': category_name,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         documentaires_url=category_url,
                         documentaires_name=category_name,
@@ -150,6 +156,8 @@ def list_shows(params):
                 'label': emission_name,
                 'thumb': emission_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     emission_url=emission_url,
                     emission_name=emission_name,
@@ -246,6 +254,8 @@ def list_videos(params):
                 'thumb': img,
                 'fanart': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
                     url_video=url_video
@@ -257,8 +267,10 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 documentaires_url=params.documentaires_url,
                 documentaires_name=params.documentaires_name,
@@ -328,6 +340,8 @@ def list_videos(params):
                 'thumb': img,
                 'fanart': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
                     url_video=url_video
@@ -339,8 +353,10 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 actualites_url=params.actualites_url,
                 actualites_name=params.actualites_name,
@@ -438,6 +454,8 @@ def list_videos(params):
                 'thumb': img,
                 'fanart': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
                     url_video=url_video
@@ -449,8 +467,10 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 emission_url=params.emission_url,
                 emission_name=params.emission_name,
@@ -500,10 +520,10 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
             video_id=video_id
         ),
         'is_playable': True,

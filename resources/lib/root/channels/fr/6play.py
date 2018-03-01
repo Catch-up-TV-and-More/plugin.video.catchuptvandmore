@@ -128,6 +128,8 @@ def list_shows(params):
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     category_id=category_id,
                     next='list_shows_2',
@@ -169,6 +171,8 @@ def list_shows(params):
                 'thumb': program_img,
                 'fanart': program_fanart,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_shows_3',
                     program_id=program_id,
@@ -209,6 +213,8 @@ def list_shows(params):
                 'thumb': params.program_img,
                 'fanart': program_fanart,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_videos',
                     program_id=params.program_id,
@@ -230,6 +236,8 @@ def list_shows(params):
             'thumb': params.program_img,
             'fanart': program_fanart,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos',
                 program_id=params.program_id,
@@ -322,6 +330,8 @@ def list_videos(params):
             'label': title,
             'thumb': program_img,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='play',
                 video_id=video_id,

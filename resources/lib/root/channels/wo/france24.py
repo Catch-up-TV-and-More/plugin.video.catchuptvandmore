@@ -75,6 +75,8 @@ def root(params):
         modes.append({
             'label': 'Replay',
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_shows_1',
                 category='%s Replay' % params.channel_name.upper(),
@@ -85,6 +87,8 @@ def root(params):
     modes.append({
         'label': 'News - Weather - Business',
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='replay_entry',
             next='list_nwb_1',
             category='%s News - Weather - Business' % (
@@ -137,6 +141,8 @@ def list_shows(params):
                 'fanart': img,
                 'thumb': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_videos_cat',
                     nid=nid,
@@ -218,6 +224,8 @@ def list_videos(params):
                     'thumb': img,
                     'fanart': img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_r',
                         url=url
@@ -280,10 +288,10 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
             url=url_live,
         ),
         'is_playable': True,
@@ -363,6 +371,8 @@ def list_nwb(params):
             'fanart': img,
             'thumb': img,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='play_r',
                 url=url_nwb_stream,

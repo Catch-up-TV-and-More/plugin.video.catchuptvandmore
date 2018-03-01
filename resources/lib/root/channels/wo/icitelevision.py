@@ -82,6 +82,8 @@ def list_shows(params):
                     'label': emission_name,
                     'thumb': emission_img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         emission_url=emission_url,
                         category_name=emission_name,
@@ -144,6 +146,8 @@ def list_videos(params):
                 'thumb': video_img,
                 'fanart': video_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
                     video_url=video_url
@@ -192,11 +196,11 @@ def get_live_item(params):
         'label': params.channel_label,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
-            url_live=url_live,
+            url_live=url_live
         ),
         'is_playable': True,
         'info': info

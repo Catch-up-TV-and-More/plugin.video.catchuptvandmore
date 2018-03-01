@@ -185,6 +185,8 @@ def root(params):
                 'fanart': fanart,
                 'label': item_title,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action=item_next,
                     item_id=item_id,
                     item_path=str(item_path),
@@ -206,15 +208,7 @@ def get_module(params):
     """
     get_module allows us to load the desired python file
     """
-    if 'module_name' in params and \
-            'module_path' in params:
-        storage = common.sp.MemStorage('last_module')
-        storage['last_module_path'] = params.module_path
-        storage['last_module_name'] = params.module_name
-    else:
-        storage = common.sp.MemStorage('last_module')
-        params['module_path'] = storage['last_module_path']
-        params['module_name'] = storage['last_module_name']
+    module_name = eval(params.module_path)[-1]
 
     module_path = common.sp.xbmc.translatePath(
         common.sp.os.path.join(
@@ -227,7 +221,7 @@ def get_module(params):
         "utf-8").encode(common.FILESYSTEM_CODING)
 
     return imp.load_source(
-        params.module_name,
+        module_name,
         module_filepath
     )
 

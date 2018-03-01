@@ -74,6 +74,7 @@ def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
+        value_next = ''
 
         replay_html = utils.get_webcontent(
             URL_REPLAY % (params.channel_name)
@@ -100,6 +101,8 @@ def list_shows(params):
                 shows.append({
                     'label': title,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next=value_next,
                         url_next=URL_REPLAY % (params.channel_name),
@@ -132,6 +135,8 @@ def list_shows(params):
                                 'label': title,
                                 'thumb': img,
                                 'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                                     action='replay_entry',
                                     next='list_shows_3',
                                     url_next=url_emission,
@@ -152,6 +157,8 @@ def list_shows(params):
                                     'label': title,
                                     'thumb': img,
                                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                                         action='replay_entry',
                                         next='list_shows_3',
                                         url_next=url_emission,
@@ -177,6 +184,8 @@ def list_shows(params):
                 shows.append({
                     'label': title,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='list_videos_1',
                         title=title,
@@ -246,6 +255,8 @@ def list_videos(params):
                                 'label': title,
                                 'thumb': img,
                                 'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                                     action='replay_entry',
                                     next='play_r',
                                     video_id=video_id,
@@ -289,6 +300,8 @@ def list_videos(params):
                                     'label': title,
                                     'thumb': img,
                                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                                         action='replay_entry',
                                         next='play_r',
                                         video_id=video_id,
@@ -333,6 +346,8 @@ def list_videos(params):
                                     'label': title,
                                     'thumb': img,
                                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                                         action='replay_entry',
                                         next='play_r',
                                         video_id=video_id,
@@ -376,10 +391,10 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
             live_dailymotion_id=live_dailymotion_id,
         ),
         'is_playable': True,

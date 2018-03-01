@@ -68,6 +68,8 @@ def root(params):
         modes.append({
             'label': category_title,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='website_entry',
                 next=value_next,
                 title=category_title,
@@ -107,6 +109,8 @@ def list_shows(params):
             'label': show_title,
             'thumb': show_img,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='website_entry',
                 next='list_videos_2',
                 title=show_title,
@@ -177,6 +181,8 @@ def list_videos(params):
                         'label': video_title,
                         'thumb': video_img,
                         'url': common.PLUGIN.get_url(
+                            module_path=params.module_path,
+                            module_name=params.module_name,
                             action='website_entry',
                             next='play_r',
                             video_url=video_url
@@ -220,6 +226,8 @@ def list_videos(params):
                     'label': video_title,
                     'thumb': video_img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='website_entry',
                         next='play_r',
                         video_url=video_url
@@ -231,8 +239,10 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': '# ' + common.ADDON.get_localized_string(30100),
+            'label': '# ' + common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='website_entry',
                 category_url=params.category_url,
                 next='list_videos_1',
@@ -280,6 +290,8 @@ def list_videos(params):
                 'label': video_title,
                 'thumb': video_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='website_entry',
                     next='play_r',
                     video_url=video_url

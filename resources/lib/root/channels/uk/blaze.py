@@ -54,6 +54,7 @@ def channel_entry(params):
     """Entry function of the module"""
     if 'replay_entry' == params.next:
         params.next = "list_shows_1"
+        params["page"] = "0"
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
@@ -90,6 +91,8 @@ def list_shows(params):
                 'label': show_title,
                 'thumb': show_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_shows_2',
                     title=show_title,
@@ -100,8 +103,10 @@ def list_shows(params):
 
         # More programs...
         shows.append({
-            'label': common.ADDON.get_localized_string(30108),
+            'label': common.ADDON.get_localized_string(30708),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_shows_1',
                 page=str(int(params.page) + 1),
@@ -132,6 +137,8 @@ def list_shows(params):
             shows.append({
                 'label': season_title,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_videos_1',
                     title=params.title + '_' + season_title,
@@ -213,6 +220,8 @@ def list_videos(params):
             'thumb': video_img,
             'fanart': video_img,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='play_r',
                 video_url=video_url
@@ -265,10 +274,10 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
             url=url_live
         ),
         'is_playable': True,

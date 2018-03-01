@@ -96,6 +96,8 @@ def root(params):
         modes.append({
             'label': 'ニュース',
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_news',
                 page='1',
@@ -108,6 +110,8 @@ def root(params):
         modes.append({
             'label': '気象',
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_weather',
                 category='NHK ニュース - 気象',
@@ -131,6 +135,8 @@ def root(params):
                 modes.append({
                     'label': category_title,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='list_videos_lifestyle',
                         title=category_title,
@@ -204,6 +210,8 @@ def list_videos(params):
             'thumb': img,
             'fanart': img,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='play_weather_r',
                 video_url=video_url
@@ -282,6 +290,8 @@ def list_videos(params):
                 'thumb': img,
                 'fanart': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_news_r',
                     video_id=video_id,
@@ -294,8 +304,10 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': '# ' + common.ADDON.get_localized_string(30100),
+            'label': '# ' + common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_news',
                 page=str(int(params.page) + 1),
@@ -369,6 +381,8 @@ def list_videos(params):
                     'thumb': img,
                     'fanart': img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_lifestyle_r',
                         video_url=video_url

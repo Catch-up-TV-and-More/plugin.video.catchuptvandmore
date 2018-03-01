@@ -85,6 +85,8 @@ def root(params):
         modes.append({
             'label': category_title,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='website_entry',
                 next=value_next,
                 title=category_title,
@@ -130,6 +132,8 @@ def list_shows(params):
                 'label': show_title,
                 'thumb': show_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='website_entry',
                     next='list_videos_1',
                     title=show_title,
@@ -140,8 +144,10 @@ def list_shows(params):
 
         # More programs...
         shows.append({
-            'label': common.ADDON.get_localized_string(30108),
+            'label': common.ADDON.get_localized_string(30708),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='website_entry',
                 next='list_shows_taratata',
                 page=str(int(params.page) + 1),
@@ -167,6 +173,8 @@ def list_shows(params):
             shows.append({
                 'label': alphabet_title,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='website_entry',
                     next='list_shows_artistes_2',
                     title=alphabet_title,
@@ -193,6 +201,8 @@ def list_shows(params):
                 'label': artiste_title,
                 'thumb': artiste_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='website_entry',
                     next='list_shows_artistes_3',
                     title=artiste_title,
@@ -218,6 +228,8 @@ def list_shows(params):
                 shows.append({
                     'label': videos_title,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='website_entry',
                         next='list_videos_1',
                         title=videos_title,
@@ -242,6 +254,8 @@ def list_shows(params):
             shows.append({
                 'label': bonus_title,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='website_entry',
                     next='list_videos_1',
                     title=bonus_title,
@@ -316,6 +330,8 @@ def list_videos(params):
                 'label': video_title,
                 'thumb': video_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='website_entry',
                     next='play_r',
                     video_url=video_url
@@ -356,6 +372,8 @@ def list_videos(params):
                 'label': video_title,
                 'thumb': video_img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='website_entry',
                     next='play_r',
                     video_url=video_url
@@ -368,8 +386,10 @@ def list_videos(params):
     if params.page is not None:
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='website_entry',
                 category_url=params.category_url,
                 next=params.next,

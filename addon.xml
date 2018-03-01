@@ -37,6 +37,7 @@
 [Fix] Arte Replay and Add some new contents language (EN|ES|PL)
 [Improvement] New menu layout and new live TV menu presentation (SylvainCecchetto)
 [Upgrade] Upgrade SimplePlugin framework to v2.3.2 (SylvainCecchetto)
+[Fix] Broken favorites
     </news>
     <assets>
       <icon>icon.png</icon>

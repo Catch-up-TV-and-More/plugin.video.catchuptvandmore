@@ -89,6 +89,8 @@ def list_shows(params):
             shows.append({
                 'label': category_name,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     category_url=category_url,
                     category_name=category_name,
@@ -300,6 +302,8 @@ def list_videos(params):
                 'thumb': img,
                 'fanart': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
                     url_video=url_video
@@ -311,8 +315,10 @@ def list_videos(params):
 
     # More videos...
     videos.append({
-        'label': common.ADDON.get_localized_string(30100),
+        'label': common.ADDON.get_localized_string(30700),
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='replay_entry',
             category_url=params.category_url,
             category_name=params.category_name,
@@ -362,6 +368,8 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='replay_entry',
             next='play_l',
             video_id=video_id,

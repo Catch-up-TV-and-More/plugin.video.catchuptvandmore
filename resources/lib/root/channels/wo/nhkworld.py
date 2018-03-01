@@ -117,6 +117,8 @@ def list_shows(params):
         shows.append({
             'label': common.GETTEXT('All videos'),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_cat',
                 category_id=0,
@@ -140,6 +142,8 @@ def list_shows(params):
             shows.append({
                 'label': name_category,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='list_videos_cat',
                     category_id=category_id,
@@ -233,6 +237,8 @@ def list_videos(params):
                     'thumb': img,
                     'fanart': img,
                     'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         action='replay_entry',
                         next='play_r',
                         video_id=video_id
@@ -319,11 +325,11 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
-            url=url_live,
+            url=url_live
         ),
         'is_playable': True,
         'info': info

@@ -100,6 +100,8 @@ def list_shows(params):
             shows.append({
                 'label': category_title,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     category_url=category_url % get_api_key(),
                     next='list_shows_cat',
@@ -126,6 +128,8 @@ def list_shows(params):
                 'thumb': fanart,
                 'fanart': fanart,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     program_id=program_id,
                     next='list_videos',
@@ -207,6 +211,8 @@ def list_videos(params):
             'thumb': thumb,
             'fanart': fanart,
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='play_r',
                 url_streaming=url_streaming
@@ -277,11 +283,11 @@ def get_live_item(params):
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            module_name=params.module_name,
-            module_path=params.module_path,
-            url_live=url_live,
+            url_live=url_live
         ),
         'is_playable': True,
         'info': info

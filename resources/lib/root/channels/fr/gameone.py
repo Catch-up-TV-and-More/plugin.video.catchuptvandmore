@@ -108,6 +108,8 @@ def list_videos(params):
                 'label': title,
                 'thumb': img,
                 'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
                     video_url=video_url,
@@ -119,8 +121,10 @@ def list_videos(params):
 
         # More videos...
         videos.append({
-            'label': common.ADDON.get_localized_string(30100),
+            'label': common.ADDON.get_localized_string(30700),
             'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_1',
                 page=str(int(params.page) + 1),
