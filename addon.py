@@ -167,10 +167,12 @@ def root(params):
 
             context_menu.append(utils.vpn_context_menu_item())
 
+            item_path_media = list(current_path)
+            item_path_media.append(item_id)
             media_item_path = common.sp.xbmc.translatePath(
                 common.sp.os.path.join(
                     MEDIA_PATH,
-                    *(item_path)
+                    *(item_path_media)
                 )
             )
 
