@@ -228,8 +228,8 @@
             <setting label="France Ô" type="bool" id="franceo" default="true" visible="eq(-33,true)"/>
             <setting label="" type="number" visible="false" id="franceo.order" default="17"/>
 
-            <setting label="HD1" type="bool" id="hd1" default="true" visible="eq(-35,true)"/>
-            <setting label="" type="number" visible="false" id="hd1.order" default="18"/>
+            <setting label="TF1 Séries Films" type="bool" id="tf1_series_films" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="tf1_series_films.order" default="18"/>
 
             <setting label="L'Équipe" type="bool" id="lequipe" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="lequipe.order" default="19"/>
