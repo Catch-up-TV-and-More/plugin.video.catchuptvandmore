@@ -385,6 +385,8 @@ def get_live_item(params):
 
     list_urls_live = []
 
+    lives = []
+
     if params.channel_name == 'rmcdecouverte':
         list_urls_live.append(URL_LIVE_RMCDECOUVERTE)
     elif params.channel_name == 'bfmtv':
@@ -431,29 +433,31 @@ def get_live_item(params):
         for url in json_parser["sources"]:
             url_live = url["src"].encode('utf-8')
 
-        if 'poster' in json_parser:
-            img = json_parser["poster"].encode('utf-8')
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
+            if 'poster' in json_parser:
+                img = json_parser["poster"].encode('utf-8')
+            info = {
+                'video': {
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
+                    'plot': plot,
+                    'duration': duration
+                }
             }
-        }
 
-        return {
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='start_live_tv_stream',
-                next='play_l'
-            ),
-            'is_playable': True,
-            'info': info
-        }
+            lives.append({
+                'label': params.channel_label + " - [I]" + title + "[/I]",
+                'fanart': img,
+                'thumb': img,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='start_live_tv_stream',
+                    next='play_l',
+                    url_live=url_live
+                ),
+                'is_playable': True,
+                'info': info
+            })
+    return lives
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
