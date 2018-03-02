@@ -297,22 +297,23 @@ def get_live_item(params):
     json_parser = json.loads(live_json)
 
     # Get First Element
-    for info_live in json_parser['channel']['item']:
-        if info_live["subtitle"] != '':
-            subtitle = subtitle + info_live["subtitle"].encode('utf-8')
-        title = params.channel_label + " - [I]" + \
-            info_live["title"].encode('utf-8') + subtitle + "[/I]"
+    if 'item' in json_parser['channel']:
+        for info_live in json_parser['channel']['item']:
+            if info_live["subtitle"] != '':
+                subtitle = subtitle + info_live["subtitle"].encode('utf-8')
+            title = params.channel_label + " - [I]" + \
+                info_live["title"].encode('utf-8') + subtitle + "[/I]"
 
-        start_date = time.strftime(
-            '%H:%M',
-            time.localtime(int(str(info_live["pubDate"])[:-3])))
-        end_date = time.strftime(
-            '%H:%M',
-            time.localtime(int(str(info_live["endDate"])[:-3])))
-        plot = start_date + ' - ' + end_date + '\n ' + \
-            info_live["description"].encode('utf-8')
-        img = URL_ROOT + info_live["thumbnail"].encode('utf-8')
-        break
+            start_date = time.strftime(
+                '%H:%M',
+                time.localtime(int(str(info_live["pubDate"])[:-3])))
+            end_date = time.strftime(
+                '%H:%M',
+                time.localtime(int(str(info_live["endDate"])[:-3])))
+            plot = start_date + ' - ' + end_date + '\n ' + \
+                info_live["description"].encode('utf-8')
+            img = URL_ROOT + info_live["thumbnail"].encode('utf-8')
+            break
 
     info = {
         'video': {
