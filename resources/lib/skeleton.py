@@ -85,8 +85,7 @@ SKELETON = {
 
             ('uk', 'build_live_tv_menu'): {
                 ('blaze', 'none'),
-                ('skynews', 'none'),
-                ('skysports', 'none')
+                ('skynews', 'none')
             },
 
             ('wo', 'build_live_tv_menu'): {

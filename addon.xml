@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.10~beta006"
+       version="0.1.10~beta007"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -37,7 +37,7 @@
 [Fix] Arte Replay and Add some new contents language (EN|ES|PL)
 [Improvement] New menu layout and new live TV menu presentation (SylvainCecchetto)
 [Upgrade] Upgrade SimplePlugin framework to v2.3.2 (SylvainCecchetto)
-[Fix] Broken favorites
+[Fix] Broken favorites (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>
