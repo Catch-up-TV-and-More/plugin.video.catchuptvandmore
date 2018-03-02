@@ -67,7 +67,10 @@ SKELETON = {
                 ('rtc', 'none'),
                 ('telemb', 'none'),
                 ('vrt', 'none'),
-                ('auvio', 'none')
+                ('auvio', 'none'),
+                ('rtltvi', 'none'),
+                ('plugrtl', 'none'),
+                ('clubrtl', 'none')
             },
 
             ('ca', 'build_live_tv_menu'): {
@@ -479,6 +482,6 @@ LABELS = {
     'culturepub': 'Culturepub',
     'autoplus': 'Auto Plus',
     'notrehistoirech': 'Notre Histoire',
-    '30millionsdamis': '30 Millions d\Amis',
+    '30millionsdamis': '30 Millions d\'Amis',
     'elle': 'Elle'
 }
