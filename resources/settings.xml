@@ -33,7 +33,7 @@
         <setting label="" type="number" visible="false" id="ch.order" default="2"/>
 
         <setting label="30052" type="bool" id="uk" default="true"/>
-        <setting label="" type="number" visible="false" id="gb.order" default="3"/>
+        <setting label="" type="number" visible="false" id="uk.order" default="3"/>
 
         <setting label="30053" type="bool" id="wo" default="true"/>
         <setting label="" type="number" visible="false" id="wo.order" default="4"/>
@@ -495,8 +495,8 @@
         <setting label="30084" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="" type="bool" id="uk" default="true" visible="false"/>
 
-            <setting label="30242" type="text" id="gbtvplay.login" visible="eq(-1,true)" defaut=""/>
-            <setting label="30243" type="text" id="gbtvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+            <setting label="30242" type="text" id="uktvplay.login" visible="eq(-1,true)" defaut=""/>
+            <setting label="30243" type="text" id="uktvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
     </category>
     <!-- Accounts -->
