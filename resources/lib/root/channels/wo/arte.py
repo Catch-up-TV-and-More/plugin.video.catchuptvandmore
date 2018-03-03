@@ -275,7 +275,7 @@ def get_live_item(params):
             'info': info
         }
     else:
-        return {}
+        return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
