@@ -50,6 +50,7 @@ SKELETON = {
                 ('tf1-series-films', 'none'),
                 ('lequipe', 'none'),
                 ('numero23', 'none'),
+                ('cherie25', 'none'),
                 ('la_1ere', 'none'),
                 ('franceinfo', 'none'),
                 ('bfmbusiness', 'none'),

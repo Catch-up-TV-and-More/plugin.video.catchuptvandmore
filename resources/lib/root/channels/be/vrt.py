@@ -371,12 +371,14 @@ def get_video_url(params):
 
         session_requests = requests.session()
 
+        module_name = eval(params.module_path)[-1]
+
         # Build PAYLOAD
         payload = {
             'loginID': common.PLUGIN.get_setting(
-                params.channel_name + '.login'),
+                module_name + '.login'),
             'password': common.PLUGIN.get_setting(
-                params.channel_name + '.password'),
+                module_name + '.password'),
             'targetEnv': 'jssdk',
             'APIKey': get_api_key(),
             'includeSSOToken': 'true',

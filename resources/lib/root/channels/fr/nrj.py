@@ -552,12 +552,14 @@ def get_live_item(params):
         r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
     ).findall(result.text)[0]
 
+    module_name = eval(params.module_path)[-1]
+
     # Build PAYLOAD
     payload = {
         "login_form[email]": common.PLUGIN.get_setting(
-            params.channel_name + '.login'),
+            module_name + '.login'),
         "login_form[password]": common.PLUGIN.get_setting(
-            params.channel_name + '.password'),
+            module_name + '.password'),
         "login_form[_token]": token_form_login
     }
 
