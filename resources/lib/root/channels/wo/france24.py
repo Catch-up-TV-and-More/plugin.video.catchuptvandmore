@@ -46,9 +46,7 @@ URL_API_VOD = 'http://api.france24.com/%s/services/json-rpc/' \
 
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
@@ -63,52 +61,6 @@ def channel_entry(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
-    desired_language = common.PLUGIN.get_setting(
-        params.channel_name + '.language')
-
-    # Add Replay
-    if desired_language != 'ES':
-        modes.append({
-            'label': 'Replay',
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_shows_1',
-                category='%s Replay' % params.channel_name.upper(),
-                window_title='%s Replay' % params.channel_name
-            )
-        })
-
-    modes.append({
-        'label': 'News - Weather - Business',
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='list_nwb_1',
-            category='%s News - Weather - Business' % (
-                params.channel_name.upper()),
-            window_title='%s News - Weather - Business' % (
-                params.channel_name)
-        )
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build shows listing"""
     shows = []
@@ -117,6 +69,36 @@ def list_shows(params):
         params.channel_name + '.language')
 
     if params.next == 'list_shows_1':
+
+        # Add Replay
+        if desired_language != 'ES':
+            shows.append({
+                'label': 'Replay',
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='list_shows_2',
+                    category='%s Replay' % params.channel_name.upper(),
+                    window_title='%s Replay' % params.channel_name
+                )
+            })
+
+        shows.append({
+            'label': 'News - Weather - Business',
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='list_nwb_1',
+                category='%s News - Weather - Business' % (
+                    params.channel_name.upper()),
+                window_title='%s News - Weather - Business' % (
+                    params.channel_name)
+            )
+        })
+
+    elif params.next == 'list_shows_2':
         file_path = utils.download_catalog(
             URL_API_VOD % (
                 desired_language.lower(), desired_language.lower()),
