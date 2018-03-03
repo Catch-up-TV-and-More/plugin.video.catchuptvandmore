@@ -175,14 +175,14 @@ def get_live_item(params):
 
     info = {
         'video': {
-            'title': params.channel_label,
+            'title': params.channel_label + ' Live TV',
             'plot': plot,
             'duration': duration
         }
     }
 
     return {
-        'label': params.channel_label,
+        'label': params.channel_label + ' Live TV',
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
