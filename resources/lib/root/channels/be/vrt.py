@@ -403,7 +403,7 @@ def get_video_url(params):
             result_jsonpaser['UIDSignature'],
             result_jsonpaser['signatureTimestamp'],
             common.PLUGIN.get_setting(
-                params.channel_id.rsplit('.', 1)[0] + '.login'))
+                module_name + '.login'))
         result_2 = session_requests.post(
             URL_TOKEN,
             data=data,
