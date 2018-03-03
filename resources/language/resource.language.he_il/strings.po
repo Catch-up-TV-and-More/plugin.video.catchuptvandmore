@@ -209,11 +209,11 @@ msgid "NRJ Password"
 msgstr ""
 
 msgctxt "#30242"
-msgid "UKTVPlay Login"
+msgid "VRT NU Login"
 msgstr ""
 
 msgctxt "#30243"
-msgid "UKTVPlay Password"
+msgid "VRT NU Password"
 msgstr ""
 
 

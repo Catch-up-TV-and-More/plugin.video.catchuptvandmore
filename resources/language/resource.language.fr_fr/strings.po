@@ -209,12 +209,12 @@ msgid "NRJ Password"
 msgstr "Mot de passe NRJ"
 
 msgctxt "#30242"
-msgid "UKTVPlay Login"
-msgstr "Login UKTVPlay"
+msgid "VRT NU Login"
+msgstr "Login VRT NU"
 
 msgctxt "#30243"
-msgid "UKTVPlay Password"
-msgstr "Mot de passe UKTVPlay"
+msgid "VRT NU Password"
+msgstr "Mot de passe VRT NU"
 
 
 # Reserved space for other tab/category in settins (from 30260 to 30339)

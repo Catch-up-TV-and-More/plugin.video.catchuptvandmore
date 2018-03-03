@@ -492,11 +492,11 @@
             <setting label="30240" type="text" id="nrj.login" visible="eq(-1,true)" defaut=""/>
             <setting label="30241" type="text" id="nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
-        <setting label="30084" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="" type="bool" id="uk" default="true" visible="false"/>
+        <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="be" default="true" visible="false"/>
 
-            <setting label="30242" type="text" id="uktvplay.login" visible="eq(-1,true)" defaut=""/>
-            <setting label="30243" type="text" id="uktvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+            <setting label="30242" type="text" id="vrt.login" visible="eq(-1,true)" defaut=""/>
+            <setting label="30243" type="text" id="vrt.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
     </category>
     <!-- Accounts -->
