@@ -39,7 +39,7 @@ URL_XML = 'http://www.rtl.be/videos/player/replays/%s/%s.xml'
 URL_ROOT_LIVE = 'http://www.rtl.be/tv/%s/live'
 # channel
 
-URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/11000/%s.xml'
+URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/12000/%s.xml'
 # live id
 
 
@@ -409,12 +409,12 @@ def get_live_item(params):
         live_xml = open(file_path).read()
 
         # XML not well build (missing header ...)
-        # img = 'http://' + re.compile(
-        #     r'<Thumbnail>(.*?)<').findall(live_xml)[0]
-        # url_live = re.compile(r'<URL_HLS>(.*?)<').findall(live_xml)[0]
-        # title = re.compile(r'<tv><!\[CDATA\[(.*?)\]').findall(live_xml)[0]
-        # plot = re.compile(r'<From>(.*?)<').findall(live_xml)[0] + \
-        #     ' - ' + re.compile(r'<To>(.*?)<').findall(live_xml)[0]
+        img = 'http://' + re.compile(
+            r'<Thumbnail>(.*?)<').findall(live_xml)[0]
+        url_live = re.compile(r'<URL_HLS>(.*?)<').findall(live_xml)[0]
+        title = re.compile(r'<tv><!\[CDATA\[(.*?)\]').findall(live_xml)[0]
+        plot = re.compile(r'<From>(.*?)<').findall(live_xml)[0] + \
+            ' - ' + re.compile(r'<To>(.*?)<').findall(live_xml)[0]
 
         info = {
             'video': {
@@ -441,7 +441,7 @@ def get_live_item(params):
     # No live
     else:
 
-        title = live_soup.find(
+        title = params.channel_name + ' - ' + live_soup.find(
             'div', class_="container").find('h2').get_text().encode('utf-8')
 
         info = {
@@ -467,15 +467,7 @@ def get_live_item(params):
             'info': info
         })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
-
+    return lives
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
