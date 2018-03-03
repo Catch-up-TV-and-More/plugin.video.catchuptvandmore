@@ -400,10 +400,6 @@ msgid "Video stream no longer exists"
 msgstr "הזרמת הווידאו כבר לא קיימת"
 
 msgctxt "#30711"
-msgid "Account needed for this video"
-msgstr "נדרש וידאו שמקושר לחשבון"
-
-msgctxt "#30712"
-msgid "NRJ authentication failed"
+msgid "Authentication failed"
 msgstr ""
 

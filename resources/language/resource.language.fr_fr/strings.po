@@ -400,10 +400,6 @@ msgid "Video stream no longer exists"
 msgstr "Le flux vidéo n'existe plus"
 
 msgctxt "#30711"
-msgid "Account needed for this video"
-msgstr "Compte requis pour cette vidéo"
-
-msgctxt "#30712"
-msgid "NRJ authentication failed"
-msgstr "Echec de l'authentication NRJ"
+msgid "Authentication failed"
+msgstr "Echec de l'authentification"
 

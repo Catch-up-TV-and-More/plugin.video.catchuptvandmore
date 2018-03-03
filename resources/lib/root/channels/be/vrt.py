@@ -374,9 +374,9 @@ def get_video_url(params):
         # Build PAYLOAD
         payload = {
             'loginID': common.PLUGIN.get_setting(
-                params.channel_id.rsplit('.', 1)[0] + '.login'),
+                params.channel_name + '.login'),
             'password': common.PLUGIN.get_setting(
-                params.channel_id.rsplit('.', 1)[0] + '.password'),
+                params.channel_name + '.password'),
             'targetEnv': 'jssdk',
             'APIKey': get_api_key(),
             'includeSSOToken': 'true',
@@ -388,7 +388,7 @@ def get_video_url(params):
         result_jsonpaser = json.loads(result.text)
         if result_jsonpaser['statusCode'] != 200:
             utils.send_notification(
-                common.ADDON.get_localized_string(30113))
+                params.channel_name + ' : ' + common.ADDON.get_localized_string(30711))
             return None
 
         headers = {'Content-Type': 'application/json',
