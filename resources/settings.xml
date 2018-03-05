@@ -368,6 +368,9 @@
 
             <setting label="TBS ニュース" type="bool" id="tbsnews" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="tbsnews.order" default="3"/>
+
+            <setting label="日テレ" type="bool" id="ntv" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="ntv.order" default="4"/>
         <!-- Japan -->
 
 

@@ -184,7 +184,8 @@ SKELETON = {
             ('jp', 'root'): {
                 ('nhknews', 'replay_entry'),
                 ('nhklifestyle', 'replay_entry'),
-                ('tbsnews', 'replay_entry')
+                ('tbsnews', 'replay_entry'),
+                ('ntv', 'replay_entry')
             },
 
             ('ch', 'root'): {
@@ -344,7 +345,8 @@ CHANNELS = {
     'icitelevision': 'icitelevision',
     'mtv': 'mtv',
     'arirang': 'arirang',
-    'dw': 'dw'
+    'dw': 'dw',
+    'ntv': 'tver'
 }
 
 '''
@@ -451,6 +453,7 @@ LABELS = {
     'nhknews': 'NHK ニュース',
     'nhklifestyle': 'NHKらいふ',
     'tbsnews': 'TBS ニュース',
+    'ntv': '日テレ',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',
