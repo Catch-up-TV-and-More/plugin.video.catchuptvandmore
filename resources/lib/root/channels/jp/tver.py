@@ -34,7 +34,9 @@ URL_REPLAY_BY_TV = URL_ROOT + '/%s'
 # channel
 
 list_channels = {
-    'ntv': URL_REPLAY_BY_TV % 'ntv'
+    'ntv': URL_REPLAY_BY_TV % 'ntv',
+    'ex': URL_REPLAY_BY_TV % 'ex',
+    'tbs': URL_REPLAY_BY_TV % 'tbs'
 }
 
 

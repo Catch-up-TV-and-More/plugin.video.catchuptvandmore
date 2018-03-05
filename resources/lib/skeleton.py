@@ -185,7 +185,9 @@ SKELETON = {
                 ('nhknews', 'replay_entry'),
                 ('nhklifestyle', 'replay_entry'),
                 ('tbsnews', 'replay_entry'),
-                ('ntv', 'replay_entry')
+                ('ntv', 'replay_entry'),
+                ('ex', 'replay_entry'),
+                ('tbs', 'replay_entry')
             },
 
             ('ch', 'root'): {
@@ -346,7 +348,9 @@ CHANNELS = {
     'mtv': 'mtv',
     'arirang': 'arirang',
     'dw': 'dw',
-    'ntv': 'tver'
+    'ntv': 'tver',
+    'ex': 'tver',
+    'tbs': 'tver'
 }
 
 '''
@@ -454,6 +458,8 @@ LABELS = {
     'nhklifestyle': 'NHKらいふ',
     'tbsnews': 'TBS ニュース',
     'ntv': '日テレ',
+    'ex': 'テレビ朝日',
+    'tbs': 'TBSテレビ',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',

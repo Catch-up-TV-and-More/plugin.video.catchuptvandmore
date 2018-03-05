@@ -371,6 +371,12 @@
 
             <setting label="日テレ" type="bool" id="ntv" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="ntv.order" default="4"/>
+
+            <setting label="テレビ朝日" type="bool" id="ex" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="ex.order" default="5"/>
+
+            <setting label="TBSテレビ" type="bool" id="tbs" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="tbs.order" default="6"/>
         <!-- Japan -->
 
 

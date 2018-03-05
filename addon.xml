@@ -40,6 +40,8 @@
 [Fix] Broken favorites (SylvainCecchetto)
 [Fix] Live TV for RTL TVI, PlugRTL, ClubRTL (wwark)
 [Add Channel] 日テレ (JP) (wwark)
+[Add Channel] テレビ朝日 (JP) (wwark)
+[Add Channel] TBSテレビ (JP) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
