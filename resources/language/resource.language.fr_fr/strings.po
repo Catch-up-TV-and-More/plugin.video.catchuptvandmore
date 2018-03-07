@@ -62,7 +62,7 @@ msgstr "Masquer des chaînes"
 
 msgctxt "#30012"
 msgid "To configure YTDL go settings of script.module.youtube.dl"
-msgstr "our configurer YTDL aller dans la configuration de script.module.youtube.dl"
+msgstr "Pour configurer YTDL aller dans la configuration de script.module.youtube.dl"
 
 msgctxt "#30013"
 msgid "Hide countries"
