@@ -267,6 +267,9 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
+    """Build live listing"""
+    lives = []
+
     title = ''
     subtitle = ' - '
     plot = ''
@@ -283,7 +286,8 @@ def get_live_item(params):
     )
     live_xml = open(file_path).read()
     xmlElements = ET.XML(live_xml)
-    url_live = xmlElements.find("tv_url").findtext("wstrm").encode('utf-8')
+    url_live_world = xmlElements.find("tv_url").findtext("wstrm").encode('utf-8')
+    url_live_jp = xmlElements.find("tv_url").findtext("jstrm").encode('utf-8')
 
     # GET Info Live (JSON)
     url_json = URL_LIVE_INFO_NHK % (
@@ -297,45 +301,71 @@ def get_live_item(params):
     json_parser = json.loads(live_json)
 
     # Get First Element
-    for info_live in json_parser['channel']['item']:
-        if info_live["subtitle"] != '':
-            subtitle = subtitle + info_live["subtitle"].encode('utf-8')
-        title = params.channel_label + " - [I]" + \
-            info_live["title"].encode('utf-8') + subtitle + "[/I]"
+    if 'item' in json_parser['channel']:
+        for info_live in json_parser['channel']['item']:
+            if info_live["subtitle"] != '':
+                subtitle = subtitle + info_live["subtitle"].encode('utf-8')
+            title = params.channel_label + " - [I]" + \
+                info_live["title"].encode('utf-8') + subtitle + "[/I]"
 
-        start_date = time.strftime(
-            '%H:%M',
-            time.localtime(int(str(info_live["pubDate"])[:-3])))
-        end_date = time.strftime(
-            '%H:%M',
-            time.localtime(int(str(info_live["endDate"])[:-3])))
-        plot = start_date + ' - ' + end_date + '\n ' + \
-            info_live["description"].encode('utf-8')
-        img = URL_ROOT + info_live["thumbnail"].encode('utf-8')
-        break
+            start_date = time.strftime(
+                '%H:%M',
+                time.localtime(int(str(info_live["pubDate"])[:-3])))
+            end_date = time.strftime(
+                '%H:%M',
+                time.localtime(int(str(info_live["endDate"])[:-3])))
+            plot = start_date + ' - ' + end_date + '\n ' + \
+                info_live["description"].encode('utf-8')
+            img = URL_ROOT + info_live["thumbnail"].encode('utf-8')
+            break
 
     info = {
         'video': {
-            'title': title,
+            'title': 'To view in Japan ' + title,
             'plot': plot,
             'duration': duration
         }
     }
 
-    return {
+    lives.append({
         'label': title,
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
             module_path=params.module_path,
             module_name=params.module_name,
-            action='start_live_tv_stream',
+            action='replay_entry',
             next='play_l',
-            url=url_live
+            url_live=url_live_jp,
         ),
         'is_playable': True,
         'info': info
+    })
+
+    info = {
+        'video': {
+            'title': 'To view abroad ' + title,
+            'plot': plot,
+            'duration': duration
+        }
     }
+
+    lives.append({
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
+            action='replay_entry',
+            next='play_l',
+            url_live=url_live_world,
+        ),
+        'is_playable': True,
+        'info': info
+    })
+
+    return lives
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -356,4 +386,4 @@ def get_video_url(params):
         url = base64.standard_b64decode(url_base64)
         return url
     elif params.next == 'play_l':
-        return params.url
+        return params.url_live

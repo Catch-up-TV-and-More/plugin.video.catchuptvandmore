@@ -20,25 +20,27 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import ast
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
-# TO DO
-# ....
+# TO DO 
+# Add FUJITV Replay in Kodi 18 is out (DRM protected)
 
+URL_ROOT = 'https://tver.jp'
 
-URL_ROOT = 'http://www.gameone.net'
-# ChannelName
+URL_REPLAY_BY_TV = URL_ROOT + '/%s'
+# channel
 
-URL_VIDEOS = URL_ROOT + '/dernieres-videos/%s'
-# PageId
-
-URL_STREAM = 'http://intl.mtvnservices.com/mediagen/' \
-             'mgid:arc:video:gameone.net:%s/?device=ipad'
-# videoID
+list_channels = {
+    'ntv': URL_REPLAY_BY_TV % 'ntv',
+    'ex': URL_REPLAY_BY_TV % 'ex',
+    'tbs': URL_REPLAY_BY_TV % 'tbs',
+    'tx': URL_REPLAY_BY_TV % 'tx',
+    'cx': URL_REPLAY_BY_TV % 'cx'
+}
 
 
 def channel_entry(params):
@@ -50,9 +52,10 @@ def channel_entry(params):
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'live' in params.next:
+        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
-    return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -63,6 +66,7 @@ def list_shows(params):
     if params.next == 'list_shows_1':
 
         all_video = common.ADDON.get_localized_string(30101)
+        url_channel_replay = list_channels[params.module_name]
 
         shows.append({
             'label': common.GETTEXT('All videos'),
@@ -71,7 +75,7 @@ def list_shows(params):
                 module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_1',
-                page=1,
+                url_channel_replay=url_channel_replay,
                 all_video=all_video,
                 window_title=all_video
             )
@@ -91,33 +95,39 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
-    if 'previous_listing' in params:
-        videos = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_videos_1':
-        list_videos_html = utils.get_webcontent(
-            URL_VIDEOS % (params.page))
-        list_videos_soup = bs(list_videos_html, 'html.parser')
 
-        videos_data = list_videos_soup.find_all(
-            'div', class_='thumbnail singlebox')
-
-        for video in videos_data:
-
-            title = video.find('h3').find('span').get_text()
+        replays_html = utils.get_webcontent(params.url_channel_replay)
+        replays_soup = bs(replays_html, 'html.parser')
+        if params.module_name == 'cx':
+            list_videos = replays_soup.find(
+                'div', class_='listinner').find_all(
+                    'li')
+        else:
+            list_videos = replays_soup.find_all(
+                'li', class_='resumable')
+        
+        for video_data in list_videos:
+            
+            title = video_data.find('h3').get_text()
+            plot = video_data.find('p', class_='summary').get_text()
             duration = 0
-            img = video.find('img').get('src')
-            video_url = URL_ROOT + \
-                video.find('a').get('href').encode('utf-8')
+            img = re.compile(
+                r'url\((.*?)\);').findall(video_data.find('div' , class_='picinner').get('style'))[0]
+            video_url = URL_ROOT + video_data.find('a').get('href')
 
             info = {
                 'video': {
                     'title': title,
-                    # 'plot': plot,
-                    # 'aired': aired,
-                    # 'date': date,
+                    'plot': plot,
+                    #'episode': episode_number,
+                    #'season': season_number,
+                    #'rating': note,
+                    #'aired': aired,
+                    #'date': date,
                     'duration': duration,
-                    # 'year': year,
+                    #'year': year,
                     'mediatype': 'tvshow'
                 }
             }
@@ -136,31 +146,18 @@ def list_videos(params):
             videos.append({
                 'label': title,
                 'thumb': img,
+                'fanart': img,
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
                     module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
-                    video_url=video_url,
+                    video_url=video_url
                 ),
                 'is_playable': True,
                 'info': info,
                 'context_menu': context_menu
             })
-
-        # More videos...
-        videos.append({
-            'label': common.ADDON.get_localized_string(30700),
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_videos_1',
-                page=str(int(params.page) + 1),
-                update_listing=True,
-                previous_listing=str(videos)
-            )
-        })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -168,20 +165,43 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
-        update_listing='update_listing' in params,
         category=common.get_window_title()
     )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_live(params):
+    return None
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    if params.next == 'play_r' or params.next == 'download_video':
-        video_html = utils.get_webcontent(
-            params.video_url)
-        video_id = re.compile(
-            r'item_longId" \: "(.*?)"').findall(video_html)[0]
-        xml_video_stream = utils.get_webcontent(
-            URL_STREAM % video_id)
-        return re.compile(
-            r'src\>(.*?)\<').findall(xml_video_stream)[0]
+    if params.next == 'download_video':
+        return params.video_url
+    elif params.next == 'play_r':
+        video_html = utils.get_webcontent(params.video_url)
+
+        video_data = video_html.split(
+            'addPlayer(')[1].split(
+                ');')[0].replace(
+                    "\n", "").replace("\r", "").split(',')
+        
+        data_account = video_data[0].strip().replace("'", "")
+        data_player = video_data[1].strip().replace("'", "")
+        if params.module_name == 'tx':
+            data_video_id = video_data[4].strip().replace("'", "")
+        else:
+            data_video_id = 'ref:' + video_data[4].strip().replace("'", "")
+
+        json_parser = resolver.get_brightcove_video_json(
+            data_account,
+            data_player,
+            data_video_id)
+
+        video_url = ''
+        for url in json_parser["sources"]:
+            if 'm3u8' in url["src"]:
+                video_url = url["src"]
+        return video_url
+

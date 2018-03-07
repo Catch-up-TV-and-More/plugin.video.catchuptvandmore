@@ -552,12 +552,14 @@ def get_live_item(params):
         r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
     ).findall(result.text)[0]
 
+    module_name = eval(params.module_path)[-1]
+
     # Build PAYLOAD
     payload = {
         "login_form[email]": common.PLUGIN.get_setting(
-            params.channel_name + '.login'),
+            module_name + '.login'),
         "login_form[password]": common.PLUGIN.get_setting(
-            params.channel_name + '.password'),
+            module_name + '.password'),
         "login_form[_token]": token_form_login
     }
 
@@ -567,7 +569,7 @@ def get_live_item(params):
     if 'adresse e-mail ou le mot de passe est invalide.' \
             in result_2.text.encode('utf-8'):
         utils.send_notification(
-            common.ADDON.get_localized_string(30712))
+            params.channel_name + ' : ' + common.ADDON.get_localized_string(30711))
         return None
 
     # GET page with url_live with the session logged

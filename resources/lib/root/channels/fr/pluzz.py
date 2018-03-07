@@ -218,8 +218,7 @@ def change_to_nicer_name(original_name):
 def root(params):
     mode = 'replay'
     if params.channel_name == 'francetvsport':
-        next_replay = 'list_videos_ftvsport'
-        mode = 'videos'
+        next_replay = 'list_shows_ftvsport'
     elif params.channel_name == 'studio-4' or \
             params.channel_name == 'irl':
         next_replay = 'list_shows_necritures_1'
@@ -577,6 +576,38 @@ def list_shows(params):
                 previous_listing=str(shows)
             )
         })
+    
+    elif 'list_shows_ftvsport' in params.next:
+
+        show_title = 'Videos'
+        shows.append({
+            'label': show_title,
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                page='1',
+                mode='videos',
+                title=show_title,
+                next='list_videos_ftvsport',
+                window_title=show_title
+            )
+        })
+
+        show_title = 'Replay'
+        shows.append({
+            'label': show_title,
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                page='1',
+                mode='replay',
+                title=show_title,
+                next='list_videos_ftvsport',
+                window_title=show_title
+            )
+        })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -607,7 +638,9 @@ def list_videos(params):
 
             title = video["title"]
             image = video["image"]["large_16_9"]
-            duration = int(video["duration"])
+            duration = 0
+            if 'duration' in video:
+                duration = int(video["duration"])
             url_sport = URL_ROOT_SPORT + video["url"]
             html_sport = utils.get_webcontent(url_sport)
             id_diffusion = re.compile(

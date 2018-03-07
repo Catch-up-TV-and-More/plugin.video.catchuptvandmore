@@ -42,7 +42,7 @@ URL_VIDEOS = URL_ROOT + '/videos.php?page=%s'
 def channel_entry(params):
     """Entry function of the module"""
     if 'replay_entry' == params.next:
-        params.next = "list_videos_1"
+        params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
@@ -55,7 +55,34 @@ def channel_entry(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
-    return None
+    """Build shows listing"""
+    shows = []
+
+    if params.next == 'list_shows_1':
+
+        all_video = common.ADDON.get_localized_string(30101)
+
+        shows.append({
+            'label': common.GETTEXT('All videos'),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='list_videos_1',
+                page=1,
+                all_video=all_video,
+                window_title=all_video
+            )
+        })
+    
+    return common.PLUGIN.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

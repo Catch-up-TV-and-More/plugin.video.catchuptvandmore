@@ -39,69 +39,23 @@ URL_XML = 'http://www.rtl.be/videos/player/replays/%s/%s.xml'
 URL_ROOT_LIVE = 'http://www.rtl.be/tv/%s/live'
 # channel
 
-URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/11000/%s.xml'
+URL_XML_LIVE = 'http://www.rtl.be/videos/player/lives/12000/%s.xml'
 # live id
 
 
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
         return None
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
-    # Add Replay
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name.upper()
-        )
-    })
-
-    # Add Live
-    modes.append({
-        'label': 'Live TV',
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name.upper()
-        )
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
-
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -423,7 +377,7 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def list_live(params):
+def get_live_item(params):
     """Build live listing"""
     lives = []
 
@@ -487,7 +441,7 @@ def list_live(params):
     # No live
     else:
 
-        title = live_soup.find(
+        title = params.channel_name + ' - ' + live_soup.find(
             'div', class_="container").find('h2').get_text().encode('utf-8')
 
         info = {
@@ -513,15 +467,7 @@ def list_live(params):
             'info': info
         })
 
-    return common.PLUGIN.create_listing(
-        lives,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
-
+    return lives
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):

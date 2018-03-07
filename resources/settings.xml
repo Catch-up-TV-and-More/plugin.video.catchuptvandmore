@@ -33,7 +33,7 @@
         <setting label="" type="number" visible="false" id="ch.order" default="2"/>
 
         <setting label="30052" type="bool" id="uk" default="true"/>
-        <setting label="" type="number" visible="false" id="gb.order" default="3"/>
+        <setting label="" type="number" visible="false" id="uk.order" default="3"/>
 
         <setting label="30053" type="bool" id="wo" default="true"/>
         <setting label="" type="number" visible="false" id="wo.order" default="4"/>
@@ -368,6 +368,21 @@
 
             <setting label="TBS ニュース" type="bool" id="tbsnews" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="tbsnews.order" default="3"/>
+
+            <setting label="日テレ" type="bool" id="ntv" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="ntv.order" default="4"/>
+
+            <setting label="テレビ朝日" type="bool" id="ex" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="ex.order" default="5"/>
+
+            <setting label="TBSテレビ" type="bool" id="tbs" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="tbs.order" default="6"/>
+
+            <setting label="テレビ東京" type="bool" id="tx" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="tx.order" default="7"/>
+
+            <!--<setting label="フジテレビ" type="bool" id="cx" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="cx.order" default="8"/>-->
         <!-- Japan -->
 
 
@@ -492,11 +507,11 @@
             <setting label="30240" type="text" id="nrj.login" visible="eq(-1,true)" defaut=""/>
             <setting label="30241" type="text" id="nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
-        <setting label="30084" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="" type="bool" id="uk" default="true" visible="false"/>
+        <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="be" default="true" visible="false"/>
 
-            <setting label="30242" type="text" id="gbtvplay.login" visible="eq(-1,true)" defaut=""/>
-            <setting label="30243" type="text" id="gbtvplay.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+            <setting label="30242" type="text" id="vrt.login" visible="eq(-1,true)" defaut=""/>
+            <setting label="30243" type="text" id="vrt.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
     </category>
     <!-- Accounts -->

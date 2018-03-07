@@ -209,12 +209,12 @@ msgid "NRJ Password"
 msgstr "Mot de passe NRJ"
 
 msgctxt "#30242"
-msgid "UKTVPlay Login"
-msgstr "Login UKTVPlay"
+msgid "VRT NU Login"
+msgstr "Login VRT NU"
 
 msgctxt "#30243"
-msgid "UKTVPlay Password"
-msgstr "Mot de passe UKTVPlay"
+msgid "VRT NU Password"
+msgstr "Mot de passe VRT NU"
 
 
 # Reserved space for other tab/category in settins (from 30260 to 30339)
@@ -400,10 +400,6 @@ msgid "Video stream no longer exists"
 msgstr "Le flux vidéo n'existe plus"
 
 msgctxt "#30711"
-msgid "Account needed for this video"
-msgstr "Compte requis pour cette vidéo"
-
-msgctxt "#30712"
-msgid "NRJ authentication failed"
-msgstr "Echec de l'authentication NRJ"
+msgid "Authentication failed"
+msgstr "Echec de l'authentification"
 

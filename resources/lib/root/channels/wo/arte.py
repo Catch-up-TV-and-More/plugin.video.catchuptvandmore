@@ -86,7 +86,7 @@ def list_shows(params):
                     'url': common.PLUGIN.get_url(
                         module_path=params.module_path,
                         module_name=params.module_name,
-                        action='channel_entry',
+                        action='replay_entry',
                         next='list_shows_2',
                         category_name=category_name,
                         category_url=category_url,
@@ -117,7 +117,7 @@ def list_shows(params):
                     'url': common.PLUGIN.get_url(
                         module_path=params.module_path,
                         module_name=params.module_name,
-                        action='channel_entry',
+                        action='replay_entry',
                         next='list_videos_1',
                         sub_category_name=sub_category_name,
                         sub_category_url=sub_category_url,
@@ -203,7 +203,7 @@ def list_videos(params):
                         'url': common.PLUGIN.get_url(
                         module_path=params.module_path,
                         module_name=params.module_name,
-                            action='channel_entry',
+                            action='replay_entry',
                             next='play_r',
                             video_id=video_id,
                         ),
@@ -275,7 +275,7 @@ def get_live_item(params):
             'info': info
         }
     else:
-        return {}
+        return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

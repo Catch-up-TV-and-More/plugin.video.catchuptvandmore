@@ -56,7 +56,7 @@ def get_live_item(params):
 
     for town_name, live_id in LIVES_TOWN.iteritems():
 
-        title = town_name + ' Live TV'
+        title = 'YES TV : ' + town_name + ' Live TV'
         live_html = utils.get_webcontent(
             URL_LIVE % live_id)
         url_live_2 = re.compile(

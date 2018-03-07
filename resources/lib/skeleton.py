@@ -50,6 +50,7 @@ SKELETON = {
                 ('tf1-series-films', 'none'),
                 ('lequipe', 'none'),
                 ('numero23', 'none'),
+                ('cherie25', 'none'),
                 ('la_1ere', 'none'),
                 ('franceinfo', 'none'),
                 ('bfmbusiness', 'none'),
@@ -67,7 +68,10 @@ SKELETON = {
                 ('rtc', 'none'),
                 ('telemb', 'none'),
                 ('vrt', 'none'),
-                ('auvio', 'none')
+                ('auvio', 'none'),
+                ('rtltvi', 'none'),
+                ('plugrtl', 'none'),
+                ('clubrtl', 'none')
             },
 
             ('ca', 'build_live_tv_menu'): {
@@ -85,8 +89,7 @@ SKELETON = {
 
             ('uk', 'build_live_tv_menu'): {
                 ('blaze', 'none'),
-                ('skynews', 'none'),
-                ('skysports', 'none')
+                ('skynews', 'none')
             },
 
             ('wo', 'build_live_tv_menu'): {
@@ -181,7 +184,11 @@ SKELETON = {
             ('jp', 'root'): {
                 ('nhknews', 'replay_entry'),
                 ('nhklifestyle', 'replay_entry'),
-                ('tbsnews', 'replay_entry')
+                ('tbsnews', 'replay_entry'),
+                ('ntv', 'replay_entry'),
+                ('ex', 'replay_entry'),
+                ('tbs', 'replay_entry'),
+                ('tx', 'replay_entry')
             },
 
             ('ch', 'root'): {
@@ -341,7 +348,11 @@ CHANNELS = {
     'icitelevision': 'icitelevision',
     'mtv': 'mtv',
     'arirang': 'arirang',
-    'dw': 'dw'
+    'dw': 'dw',
+    'ntv': 'tver',
+    'ex': 'tver',
+    'tbs': 'tver',
+    'tx': 'tver'
 }
 
 '''
@@ -448,6 +459,11 @@ LABELS = {
     'nhknews': 'NHK ニュース',
     'nhklifestyle': 'NHKらいふ',
     'tbsnews': 'TBS ニュース',
+    'ntv': '日テレ',
+    'ex': 'テレビ朝日',
+    'tbs': 'TBSテレビ',
+    'tx': 'テレビ東京',
+    # 'cx': 'フジテレビ', (Protected by DRM)
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',
@@ -480,6 +496,6 @@ LABELS = {
     'culturepub': 'Culturepub',
     'autoplus': 'Auto Plus',
     'notrehistoirech': 'Notre Histoire',
-    '30millionsdamis': '30 Millions d\Amis',
+    '30millionsdamis': '30 Millions d\'Amis',
     'elle': 'Elle'
 }
