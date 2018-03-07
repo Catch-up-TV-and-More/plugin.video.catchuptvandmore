@@ -36,7 +36,8 @@ URL_REPLAY_BY_TV = URL_ROOT + '/%s'
 list_channels = {
     'ntv': URL_REPLAY_BY_TV % 'ntv',
     'ex': URL_REPLAY_BY_TV % 'ex',
-    'tbs': URL_REPLAY_BY_TV % 'tbs'
+    'tbs': URL_REPLAY_BY_TV % 'tbs',
+    'tx': URL_REPLAY_BY_TV % 'tx'
 }
 
 
@@ -181,7 +182,10 @@ def get_video_url(params):
         
         data_account = video_data[0].strip().replace("'", "")
         data_player = video_data[1].strip().replace("'", "")
-        data_video_id = 'ref:' + video_data[4].strip().replace("'", "")
+        if params.module_name == 'tx':
+            data_video_id = video_data[4].strip().replace("'", "")
+        else:
+            data_video_id = 'ref:' + video_data[4].strip().replace("'", "")
 
         json_parser = resolver.get_brightcove_video_json(
             data_account,

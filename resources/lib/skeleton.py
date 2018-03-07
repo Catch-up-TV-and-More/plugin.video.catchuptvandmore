@@ -187,7 +187,8 @@ SKELETON = {
                 ('tbsnews', 'replay_entry'),
                 ('ntv', 'replay_entry'),
                 ('ex', 'replay_entry'),
-                ('tbs', 'replay_entry')
+                ('tbs', 'replay_entry'),
+                ('tx', 'replay_entry')
             },
 
             ('ch', 'root'): {
@@ -350,7 +351,8 @@ CHANNELS = {
     'dw': 'dw',
     'ntv': 'tver',
     'ex': 'tver',
-    'tbs': 'tver'
+    'tbs': 'tver',
+    'tx': 'tver'
 }
 
 '''
@@ -460,6 +462,7 @@ LABELS = {
     'ntv': '日テレ',
     'ex': 'テレビ朝日',
     'tbs': 'TBSテレビ',
+    'tx': 'テレビ東京',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',

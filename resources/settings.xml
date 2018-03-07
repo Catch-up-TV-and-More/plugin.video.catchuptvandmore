@@ -377,6 +377,9 @@
 
             <setting label="TBSテレビ" type="bool" id="tbs" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="tbs.order" default="6"/>
+
+            <setting label="テレビ東京" type="bool" id="tx" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="tx.order" default="7"/>
         <!-- Japan -->
 
 

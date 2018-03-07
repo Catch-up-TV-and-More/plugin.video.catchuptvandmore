@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.10~beta010"
+       version="0.1.10~beta011"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -42,6 +42,7 @@
 [Add Channel] 日テレ (JP) (wwark)
 [Add Channel] テレビ朝日 (JP) (wwark)
 [Add Channel] TBSテレビ (JP) (wwark)
+[Add Channel] テレビ東京 (JP) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
