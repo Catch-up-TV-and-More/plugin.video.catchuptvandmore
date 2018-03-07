@@ -463,6 +463,7 @@ LABELS = {
     'ex': 'テレビ朝日',
     'tbs': 'TBSテレビ',
     'tx': 'テレビ東京',
+    # 'cx': 'フジテレビ', (Protected by DRM)
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',

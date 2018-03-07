@@ -26,7 +26,8 @@ from resources.lib import utils
 from resources.lib import resolver
 from resources.lib import common
 
-
+# TO DO 
+# Add FUJITV Replay in Kodi 18 is out (DRM protected)
 
 URL_ROOT = 'https://tver.jp'
 
@@ -37,7 +38,8 @@ list_channels = {
     'ntv': URL_REPLAY_BY_TV % 'ntv',
     'ex': URL_REPLAY_BY_TV % 'ex',
     'tbs': URL_REPLAY_BY_TV % 'tbs',
-    'tx': URL_REPLAY_BY_TV % 'tx'
+    'tx': URL_REPLAY_BY_TV % 'tx',
+    'cx': URL_REPLAY_BY_TV % 'cx'
 }
 
 
@@ -98,8 +100,13 @@ def list_videos(params):
 
         replays_html = utils.get_webcontent(params.url_channel_replay)
         replays_soup = bs(replays_html, 'html.parser')
-        list_videos = replays_soup.find_all(
-            'li', class_='resumable')
+        if params.module_name == 'cx':
+            list_videos = replays_soup.find(
+                'div', class_='listinner').find_all(
+                    'li')
+        else:
+            list_videos = replays_soup.find_all(
+                'li', class_='resumable')
         
         for video_data in list_videos:
             

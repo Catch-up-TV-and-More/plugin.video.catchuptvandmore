@@ -380,6 +380,9 @@
 
             <setting label="テレビ東京" type="bool" id="tx" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="tx.order" default="7"/>
+
+            <!--<setting label="フジテレビ" type="bool" id="cx" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="cx.order" default="8"/>-->
         <!-- Japan -->
 
 
