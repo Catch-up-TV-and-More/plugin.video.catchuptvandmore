@@ -27,6 +27,7 @@ from resources.lib import skeleton
 from resources.lib import common
 from resources.lib import vpn
 from resources.lib import utils
+from resources.lib.root.channels.fr import live_tv_fr
 
 
 # Useful path
@@ -51,6 +52,12 @@ MEDIA_PATH = (
 
 @common.PLUGIN.action()
 def root(params):
+    live_tv_fr.download_xmltv()  # Download xmltv_fr.xml file in background
+    return root_bis(params)
+
+
+@common.PLUGIN.action()
+def root_bis(params):
     """
     Build a generic addon menu
     with all not hidden items
@@ -182,6 +189,10 @@ def root(params):
             icon = media_item_path + '.png'
             fanart = media_item_path + '_fanart.jpg'
 
+            # TEMPO
+            if item_next == 'root':
+                item_next = 'root_bis'
+            # TEMPO END
             listing.append({
                 'icon': icon,
                 'fanart': fanart,
@@ -262,77 +273,100 @@ def build_live_tv_menu(params):
     """
     folder_path = eval(params.item_path)
 
-    # First we sort channels
-    menu = []
-    for channel in eval(params.item_skeleton):
-        channel_name = channel[0]
-        # If channel isn't disable
-        if common.PLUGIN.get_setting(channel_name):
-            # Get order value in settings file
-            channel_order = common.PLUGIN.get_setting(channel_name + '.order')
-            channel_path = list(folder_path)
-            channel_path.append(skeleton.CHANNELS[channel_name])
+    country = folder_path[-1]
+    if country == "fr":
+        print "Je veux le Live TV fr"
+        return live_tv_fr.build_live_tv_menu(params)
 
-            item = (channel_order, channel_name, channel_path)
-            menu.append(item)
+    else:
 
-    menu = sorted(menu, key=lambda x: x[0])
+        # First we sort channels
+        menu = []
+        for channel in eval(params.item_skeleton):
+            channel_name = channel[0]
+            # If channel isn't disable
+            if common.PLUGIN.get_setting(channel_name):
+                # Get order value in settings file
+                channel_order = common.PLUGIN.get_setting(channel_name + '.order')
+                channel_path = list(folder_path)
+                channel_path.append(skeleton.CHANNELS[channel_name])
 
-    listing = []
-    for index, (channel_order, channel_name, channel_path) in enumerate(menu):
-        params['module_path'] = str(channel_path)
-        params['module_name'] = channel_name
-        params['channel_label'] = skeleton.LABELS[channel_name]
+                item = (channel_order, channel_name, channel_path)
+                menu.append(item)
 
-        channel = get_module(params)
+        menu = sorted(menu, key=lambda x: x[0])
 
-        # Legacy fix (il faudrait remplacer channel_name par
-        # module_name dans tous les .py des chaines)
-        params['channel_name'] = params.module_name
+        listing = []
+        for index, (channel_order, channel_name, channel_path) in enumerate(menu):
+            params['module_path'] = str(channel_path)
+            params['module_name'] = channel_name
+            params['channel_label'] = skeleton.LABELS[channel_name]
 
-        item = {}
-        # Build context menu (Move up, move down, ...)
-        context_menu = []
+            channel = get_module(params)
 
-        item_down = (
-            common.GETTEXT('Move down'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='move',
-                direction='down',
-                item_id_order=channel_name + '.order',
-                displayed_items=menu) + ')'
-        )
-        item_up = (
-            common.GETTEXT('Move up'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='move',
-                direction='up',
-                item_id_order=channel_name + '.order',
-                displayed_items=menu) + ')'
-        )
+            # Legacy fix (il faudrait remplacer channel_name par
+            # module_name dans tous les .py des chaines)
+            params['channel_name'] = params.module_name
 
-        if index == 0:
-            context_menu.append(item_down)
-        elif index == len(menu) - 1:
-            context_menu.append(item_up)
-        else:
-            context_menu.append(item_up)
-            context_menu.append(item_down)
+            item = {}
+            # Build context menu (Move up, move down, ...)
+            context_menu = []
 
-        hide = (
-            common.GETTEXT('Hide'),
-            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                action='hide',
-                item_id=channel_name) + ')'
-        )
-        context_menu.append(hide)
+            item_down = (
+                common.GETTEXT('Move down'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='move',
+                    direction='down',
+                    item_id_order=channel_name + '.order',
+                    displayed_items=menu) + ')'
+            )
+            item_up = (
+                common.GETTEXT('Move up'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='move',
+                    direction='up',
+                    item_id_order=channel_name + '.order',
+                    displayed_items=menu) + ')'
+            )
 
-        context_menu.append(utils.vpn_context_menu_item())
+            if index == 0:
+                context_menu.append(item_down)
+            elif index == len(menu) - 1:
+                context_menu.append(item_up)
+            else:
+                context_menu.append(item_up)
+                context_menu.append(item_down)
 
-        '''
-        # Uncomment this block in production to prevent
-        # error while building Live TV lisitng in case of broken channel
-        try:
+            hide = (
+                common.GETTEXT('Hide'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='hide',
+                    item_id=channel_name) + ')'
+            )
+            context_menu.append(hide)
+
+            context_menu.append(utils.vpn_context_menu_item())
+
+            '''
+            # Uncomment this block in production to prevent
+            # error while building Live TV lisitng in case of broken channel
+            try:
+                item = channel.get_live_item(params)
+                if item is not None:
+                    if type(item) is dict:
+                        item['context_menu'] = context_menu
+                        listing.append(item)
+                    elif type(item) is list:
+                        for subitem in item:
+                            subitem['context_menu'] = context_menu
+                            listing.append(subitem)
+            except Exception:
+                None
+            '''
+
+            
+            # Uncomment this block in development environment
+            # to see any broken channel
             item = channel.get_live_item(params)
             if item is not None:
                 if type(item) is dict:
@@ -342,32 +376,16 @@ def build_live_tv_menu(params):
                     for subitem in item:
                         subitem['context_menu'] = context_menu
                         listing.append(subitem)
-        except Exception:
-            None
-        '''
+            
 
-        
-        # Uncomment this block in development environment
-        # to see any broken channel
-        item = channel.get_live_item(params)
-        if item is not None:
-            if type(item) is dict:
-                item['context_menu'] = context_menu
-                listing.append(item)
-            elif type(item) is list:
-                for subitem in item:
-                    subitem['context_menu'] = context_menu
-                    listing.append(subitem)
-        
-
-    return common.PLUGIN.create_listing(
-        listing,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title()
-    )
+        return common.PLUGIN.create_listing(
+            listing,
+            sort_methods=(
+                common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+                common.sp.xbmcplugin.SORT_METHOD_LABEL
+            ),
+            category=common.get_window_title()
+        )
 
 
 @common.PLUGIN.action()

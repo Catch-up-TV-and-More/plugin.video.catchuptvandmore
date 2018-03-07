@@ -1,0 +1,222 @@
+# -*- coding: utf-8 -*-
+"""
+    Catch-up TV & More
+    Copyright (C) 2016  SylvainCecchetto
+
+    This file is part of Catch-up TV & More.
+
+    Catch-up TV & More is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Catch-up TV & More is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with Catch-up TV & More; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+"""
+
+import os
+import time
+import requests
+import threading
+import xml.etree.ElementTree as ET
+from resources.lib import skeleton
+from resources.lib import common
+from resources.lib import vpn
+from resources.lib import utils
+
+
+ADDON_DATA = common.sp.xbmc.translatePath(
+    os.path.join(
+        'special://profile/addon_data',
+        common.ADDON.id
+    )
+)
+
+XMLTV_FILEPATH = os.path.join(ADDON_DATA, 'xmltv_fr.xml')
+
+XMLTV_CHANNEL_ID = {
+    'tf1': 'C192.api.telerama.fr',
+}
+
+
+def download_xmltv_in_background():
+    # TEMPO
+    force_dl = True
+    # TEMPO FIN
+    if os.path.exists(XMLTV_FILEPATH):
+        mtime = os.stat(XMLTV_FILEPATH).st_mtime
+        dl_file = (time.time() - mtime > 60)
+    else:
+        dl_file = True
+    if dl_file or force_dl:
+        r = requests.get("https://repo.cecchettosylvain.fr/xmltv/xmltv_fr.xml")
+        with open(XMLTV_FILEPATH, 'wb') as f:
+            f.write(r.content)
+
+
+def download_xmltv():
+    download_thread = threading.Thread(target=download_xmltv_in_background)
+    download_thread.start()
+    print "LA"
+    return
+
+
+def build_live_tv_menu(params):
+    channels_xmltv = {}
+    programmes_xmltv = {}
+    current_time = int(time.strftime('%Y%m%d%H%M%S')) + \
+        int(time.strftime('%z'))
+    if os.path.exists(XMLTV_FILEPATH):
+        print "Fichier xmltv trouvé"
+        tree = ET.parse(XMLTV_FILEPATH)
+        root = tree.getroot()
+        for channel in root.findall('channel'):
+            channels_xmltv[channel.get('id')] = channel
+        for programme in root.findall('programme'):
+            programme_start_s = programme.get('start')
+            programme_start = int(programme_start_s.split()[0]) + \
+                int(programme_start_s.split()[1])
+            programme_stop_s = programme.get('stop')
+            programme_stop = int(programme_stop_s.split()[0]) + \
+                int(programme_stop_s.split()[1])
+            if current_time >= programme_start and \
+                    current_time <= programme_stop:
+                programmes_xmltv[programme.get('channel')] = programme
+
+    # First we sort channels
+    menu = []
+    folder_path = eval(params.item_path)
+    for channel in eval(params.item_skeleton):
+        channel_name = channel[0]
+        # If channel isn't disable
+        if common.PLUGIN.get_setting(channel_name):
+            # Get order value in settings file
+            channel_order = common.PLUGIN.get_setting(channel_name + '.order')
+            channel_path = list(folder_path)
+            channel_path.append(skeleton.CHANNELS[channel_name])
+
+            item = (channel_order, channel_name, channel_path)
+            menu.append(item)
+
+    menu = sorted(menu, key=lambda x: x[0])
+
+    listing = []
+    for index, (channel_order, channel_name, channel_path) in enumerate(menu):
+        params['module_path'] = str(channel_path)
+        params['module_name'] = channel_name
+        params['channel_label'] = skeleton.LABELS[channel_name]
+
+        # channel = get_module(params)
+
+        # Legacy fix (il faudrait remplacer channel_name par
+        # module_name dans tous les .py des chaines)
+        params['channel_name'] = params.module_name
+
+        item = {}
+        # Build context menu (Move up, move down, ...)
+        context_menu = []
+
+        item_down = (
+            common.GETTEXT('Move down'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='move',
+                direction='down',
+                item_id_order=channel_name + '.order',
+                displayed_items=menu) + ')'
+        )
+        item_up = (
+            common.GETTEXT('Move up'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='move',
+                direction='up',
+                item_id_order=channel_name + '.order',
+                displayed_items=menu) + ')'
+        )
+
+        if index == 0:
+            context_menu.append(item_down)
+        elif index == len(menu) - 1:
+            context_menu.append(item_up)
+        else:
+            context_menu.append(item_up)
+            context_menu.append(item_down)
+
+        hide = (
+            common.GETTEXT('Hide'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='hide',
+                item_id=channel_name) + ')'
+        )
+        context_menu.append(hide)
+
+        context_menu.append(utils.vpn_context_menu_item())
+
+        title = ''
+        icon = ''
+        if channels_xmltv and params.module_name in XMLTV_CHANNEL_ID:
+            current_channel_xmltv_id = XMLTV_CHANNEL_ID[params.module_name]
+            title_channel = channels_xmltv[current_channel_xmltv_id].find(
+                'display-name').text
+            icon = channels_xmltv[current_channel_xmltv_id].find(
+                'icon').get('src')
+            programme_channel = programmes_xmltv[current_channel_xmltv_id]
+            pogramme_name = programme_channel.find('title').text
+            title = title_channel + " - [I]" + pogramme_name + "[/I]"
+            plot = programme_channel.find('desc').text
+            image = programme_channel.find('icon').get('src')
+
+        else:
+            try:
+                title = common.GETTEXT(skeleton.LABELS[params.module_name])
+            except Exception:
+                title = skeleton.LABELS[params.module_name]
+            plot = ''
+            image = ''
+
+        info = {
+            'video': {
+                'title': title,
+                'plot': plot,
+                # 'aired': aired,
+                # 'date': date,
+                'duration': 'duration',
+                # 'year': year,
+            }
+        }
+
+        listing.append({
+            'label': title,
+            'fanart': image,
+            'thumb': icon,
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='start_live_tv_stream',
+                next='play_l'
+            ),
+            'is_playable': True,
+            'context_menu': context_menu,
+            'info': info
+        })
+
+    return common.PLUGIN.create_listing(
+        listing,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title()
+    )
+
+
+
+
+
+
+
