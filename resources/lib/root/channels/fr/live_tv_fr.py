@@ -27,7 +27,6 @@ import threading
 import xml.etree.ElementTree as ET
 from resources.lib import skeleton
 from resources.lib import common
-from resources.lib import vpn
 from resources.lib import utils
 
 
@@ -42,52 +41,76 @@ XMLTV_FILEPATH = os.path.join(ADDON_DATA, 'xmltv_fr.xml')
 
 XMLTV_CHANNEL_ID = {
     'tf1': 'C192.api.telerama.fr',
+    'france2': 'C4.api.telerama.fr',
+    'france3': 'C80.api.telerama.fr',
+    'france5': 'C47.api.telerama.fr',
+    'canalplus': 'C34.api.telerama.fr',
+    'c8': 'C445.api.telerama.fr',
+    'tmc': 'C195.api.telerama.fr',
+    'tfx': 'C446.api.telerama.fr',
+    'nrj12': 'C444.api.telerama.fr',
+    'france4': 'C78.api.telerama.fr',
+    'bfmtv': 'C481.api.telerama.fr',
+    'cnews': 'C226.api.telerama.fr',
+    'cstar': 'C458.api.telerama.fr',
+    'gulli': 'C482.api.telerama.fr',
+    'franceo': 'C160.api.telerama.fr',
+    'tf1-series-films': 'C1404.api.telerama.fr',
+    'lequipe': 'C1401.api.telerama.fr',
+    'numero23': 'C1402.api.telerama.fr',
+    'cherie25': 'C1399.api.telerama.fr',
+    #'la_1ere', '',
+    'franceinfo': 'C2111.api.telerama.fr',
+    'bfmbusiness': 'C1073.api.telerama.fr',
+    #'rmc',
+    'lci': 'C112.api.telerama.fr',
+    'lcp': 'C234.api.telerama.fr',
+    'rmcdecouverte': 'C1400.api.telerama.fr'
+    #'publicsenat',
+    #'francetvsport'
+    #'gong',
 }
 
 
-def download_xmltv_in_background():
-    # TEMPO
-    force_dl = True
-    # TEMPO FIN
+def download_xmltv():
     if os.path.exists(XMLTV_FILEPATH):
         mtime = os.stat(XMLTV_FILEPATH).st_mtime
-        dl_file = (time.time() - mtime > 60)
+        dl_file = (time.time() - mtime > 3600)
     else:
         dl_file = True
-    if dl_file or force_dl:
+    if dl_file:
         r = requests.get("https://repo.cecchettosylvain.fr/xmltv/xmltv_fr.xml")
         with open(XMLTV_FILEPATH, 'wb') as f:
             f.write(r.content)
 
 
-def download_xmltv():
-    download_thread = threading.Thread(target=download_xmltv_in_background)
+def download_xmltv_in_background():
+    download_thread = threading.Thread(target=download_xmltv)
     download_thread.start()
-    print "LA"
     return
 
 
+@common.PLUGIN.mem_cached(2)
 def build_live_tv_menu(params):
     channels_xmltv = {}
-    programmes_xmltv = {}
+    pgrms_xmltv = {}
     current_time = int(time.strftime('%Y%m%d%H%M%S')) + \
         int(time.strftime('%z'))
     if os.path.exists(XMLTV_FILEPATH):
-        print "Fichier xmltv trouvé"
         tree = ET.parse(XMLTV_FILEPATH)
         root = tree.getroot()
         for channel in root.findall('channel'):
             channels_xmltv[channel.get('id')] = channel
-        for programme in root.findall('programme'):
-            programme_start_s = programme.get('start')
-            programme_start = int(programme_start_s.split()[0]) + \
-                int(programme_start_s.split()[1])
-            programme_stop_s = programme.get('stop')
-            programme_stop = int(programme_stop_s.split()[0]) + \
-                int(programme_stop_s.split()[1])
-            if current_time >= programme_start and \
-                    current_time <= programme_stop:
-                programmes_xmltv[programme.get('channel')] = programme
+        for pgrm in root.findall('programme'):
+            pgrm_start_s = pgrm.get('start')
+            pgrm_start = int(pgrm_start_s.split()[0]) + \
+                int(pgrm_start_s.split()[1])
+            pgrm_stop_s = pgrm.get('stop')
+            pgrm_stop = int(pgrm_stop_s.split()[0]) + \
+                int(pgrm_stop_s.split()[1])
+            if current_time >= pgrm_start and \
+                    current_time <= pgrm_stop:
+                pgrms_xmltv[pgrm.get('channel')] = pgrm
 
     # First we sort channels
     menu = []
@@ -157,27 +180,30 @@ def build_live_tv_menu(params):
 
         context_menu.append(utils.vpn_context_menu_item())
 
-        title = ''
-        icon = ''
-        if channels_xmltv and params.module_name in XMLTV_CHANNEL_ID:
-            current_channel_xmltv_id = XMLTV_CHANNEL_ID[params.module_name]
-            title_channel = channels_xmltv[current_channel_xmltv_id].find(
+        image = ''
+        plot = ''
+        if params.module_name in XMLTV_CHANNEL_ID and \
+                XMLTV_CHANNEL_ID[params.module_name] in pgrms_xmltv:
+            channel_xmltv_id = XMLTV_CHANNEL_ID[params.module_name]
+            title_channel = channels_xmltv[channel_xmltv_id].find(
                 'display-name').text
-            icon = channels_xmltv[current_channel_xmltv_id].find(
+            icon = channels_xmltv[channel_xmltv_id].find(
                 'icon').get('src')
-            programme_channel = programmes_xmltv[current_channel_xmltv_id]
-            pogramme_name = programme_channel.find('title').text
-            title = title_channel + " - [I]" + pogramme_name + "[/I]"
-            plot = programme_channel.find('desc').text
-            image = programme_channel.find('icon').get('src')
+            pgrm = pgrms_xmltv[channel_xmltv_id]
+            pgrm_name = pgrm.find('title').text
+            title = title_channel + " - [I]" + pgrm_name + "[/I]"
+            plot_object = pgrm.find('desc')
+            if plot_object is not None:
+                plot = plot_object.text
+            image_object = pgrm.find('icon')
+            if image_object is not None:
+                image = image_object.get('src')
 
         else:
             try:
                 title = common.GETTEXT(skeleton.LABELS[params.module_name])
             except Exception:
                 title = skeleton.LABELS[params.module_name]
-            plot = ''
-            image = ''
 
         info = {
             'video': {
@@ -197,8 +223,7 @@ def build_live_tv_menu(params):
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
-                action='start_live_tv_stream',
-                next='play_l'
+                action='start_live_tv_stream'
             ),
             'is_playable': True,
             'context_menu': context_menu,

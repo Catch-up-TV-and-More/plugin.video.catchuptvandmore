@@ -20,7 +20,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import imp
 import YDStreamUtils
 import YDStreamExtractor
 from resources.lib import skeleton
@@ -28,16 +27,6 @@ from resources.lib import common
 from resources.lib import vpn
 from resources.lib import utils
 from resources.lib.root.channels.fr import live_tv_fr
-
-
-# Useful path
-LIB_PATH = common.sp.xbmc.translatePath(
-    common.sp.os.path.join(
-        common.ADDON.path,
-        "resources",
-        "lib"
-    )
-)
 
 MEDIA_PATH = (
     common.sp.xbmc.translatePath(
@@ -52,12 +41,14 @@ MEDIA_PATH = (
 
 @common.PLUGIN.action()
 def root(params):
-    live_tv_fr.download_xmltv()  # Download xmltv_fr.xml file in background
-    return root_bis(params)
+    # Download xmltv_fr.xml file in background
+    live_tv_fr.download_xmltv_in_background()
+    return generic_menu(params)
 
 
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 @common.PLUGIN.action()
-def root_bis(params):
+def generic_menu(params):
     """
     Build a generic addon menu
     with all not hidden items
@@ -191,7 +182,7 @@ def root_bis(params):
 
             # TEMPO
             if item_next == 'root':
-                item_next = 'root_bis'
+                item_next = 'generic_menu'
             # TEMPO END
             listing.append({
                 'icon': icon,
@@ -217,28 +208,6 @@ def root_bis(params):
         )
 
 
-def get_module(params):
-    """
-    get_module allows us to load the desired python file
-    """
-    module_name = eval(params.module_path)[-1]
-
-    module_path = common.sp.xbmc.translatePath(
-        common.sp.os.path.join(
-            LIB_PATH,
-            *(eval(params.module_path))
-        )
-    )
-    module_filepath = module_path + ".py"
-    module_filepath = module_filepath.decode(
-        "utf-8").encode(common.FILESYSTEM_CODING)
-
-    return imp.load_source(
-        module_name,
-        module_filepath
-    )
-
-
 @common.PLUGIN.action()
 def replay_entry(params):
     """
@@ -255,7 +224,7 @@ def replay_entry(params):
         params['module_path'] = str(module_path)
         params['next'] = 'replay_entry'
 
-    channel = get_module(params)
+    channel = utils.get_module(params)
 
     # Legacy fix (il faudrait remplacer channel_name par
     # module_name dans tous les .py des chaines)
@@ -275,7 +244,6 @@ def build_live_tv_menu(params):
 
     country = folder_path[-1]
     if country == "fr":
-        print "Je veux le Live TV fr"
         return live_tv_fr.build_live_tv_menu(params)
 
     else:
@@ -287,7 +255,8 @@ def build_live_tv_menu(params):
             # If channel isn't disable
             if common.PLUGIN.get_setting(channel_name):
                 # Get order value in settings file
-                channel_order = common.PLUGIN.get_setting(channel_name + '.order')
+                channel_order = common.PLUGIN.get_setting(
+                    channel_name + '.order')
                 channel_path = list(folder_path)
                 channel_path.append(skeleton.CHANNELS[channel_name])
 
@@ -297,12 +266,13 @@ def build_live_tv_menu(params):
         menu = sorted(menu, key=lambda x: x[0])
 
         listing = []
-        for index, (channel_order, channel_name, channel_path) in enumerate(menu):
+        for index, (channel_order, channel_name, channel_path) in \
+                enumerate(menu):
             params['module_path'] = str(channel_path)
             params['module_name'] = channel_name
             params['channel_label'] = skeleton.LABELS[channel_name]
 
-            channel = get_module(params)
+            channel = utils.get_module(params)
 
             # Legacy fix (il faudrait remplacer channel_name par
             # module_name dans tous les .py des chaines)
@@ -364,7 +334,6 @@ def build_live_tv_menu(params):
                 None
             '''
 
-            
             # Uncomment this block in development environment
             # to see any broken channel
             item = channel.get_live_item(params)
@@ -376,7 +345,6 @@ def build_live_tv_menu(params):
                     for subitem in item:
                         subitem['context_menu'] = context_menu
                         listing.append(subitem)
-            
 
         return common.PLUGIN.create_listing(
             listing,
@@ -400,9 +368,9 @@ def start_live_tv_stream(params):
     # module_name dans tous les .py des chaines)
     params['channel_name'] = params.module_name
 
-    channel = get_module(params)
+    channel = utils.get_module(params)
 
-    return channel.get_video_url(params)
+    return channel.start_live_tv_stream(params)
 
 
 @common.PLUGIN.action()
@@ -416,7 +384,7 @@ def website_entry(params):
         params['module_path'] = params.item_path
         params['next'] = 'root'
 
-    website = get_module(params)
+    website = utils.get_module(params)
 
     # Let's go to the website python file ...
     return website.website_entry(params)
@@ -472,7 +440,7 @@ def download_video(params):
     # module_name dans tous les .py des chaines)
     params['channel_name'] = params.module_name
 
-    channel = get_module(params)
+    channel = utils.get_module(params)
 
     params.next = 'download_video'
     url_video = channel.get_video_url(params)

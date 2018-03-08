@@ -13,10 +13,9 @@ if os.path.exists('./xmltv.xml'):
 
 print "ROOT :" + root.tag
 
-current_time_string = time.strftime('%Y%m%d%H%M%S')
 current_time_utc = int(time.strftime('%Y%m%d%H%M%S'))
 current_time_utc_offset = int(time.strftime('%z'))
-current_time = current_time_utc + current_time_utc_offset
+current_time = int(time.strftime('%Y%m%d%H%M%S')) + int(time.strftime('%z'))
 
 print "Current time " + str(current_time_utc)
 print "Current utc offset string " + time.strftime('%z')

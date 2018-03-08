@@ -556,7 +556,8 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
+def start_live_tv_stream(params):
+    '''
     file_path = utils.download_catalog(
         URL_LIVE_INFO % params.channel_name,
         '%s_info_live.json' % (params.channel_name)
@@ -615,6 +616,9 @@ def get_live_item(params):
         'is_playable': True,
         'info': info
     }
+    '''
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
