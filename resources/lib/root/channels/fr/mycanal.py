@@ -373,39 +373,11 @@ def list_videos(params):
     )
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    plot = ''
-    duration = 0
-    img = ''
-    live_dailymotion_id = ''
-
-    for channel_name_value, live_dailymotion_id_value in LIVE_DAILYMOTION_ID.iteritems():
-        if channel_name_value in params.channel_name:
-            live_dailymotion_id = live_dailymotion_id_value
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            live_dailymotion_id=live_dailymotion_id,
-        ),
-        'is_playable': True,
-        'info': info
-    }
+#@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    params['live_dailymotion_id'] = LIVE_DAILYMOTION_ID[params.channel_name]
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

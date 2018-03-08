@@ -90,7 +90,7 @@ def download_xmltv_in_background():
     return
 
 
-@common.PLUGIN.mem_cached(2)
+#@common.PLUGIN.mem_cached(2)
 def build_live_tv_menu(params):
     channels_xmltv = {}
     pgrms_xmltv = {}
@@ -180,8 +180,19 @@ def build_live_tv_menu(params):
 
         context_menu.append(utils.vpn_context_menu_item())
 
-        image = ''
-        plot = ''
+        image = None
+        plot = None
+        aspect = None
+        year = None
+        rating = None
+        duration = None
+        cast = []
+        director = None
+        writer = None
+        plotoutline = None
+        episode = None
+        season = None
+
         if params.module_name in XMLTV_CHANNEL_ID and \
                 XMLTV_CHANNEL_ID[params.module_name] in pgrms_xmltv:
             channel_xmltv_id = XMLTV_CHANNEL_ID[params.module_name]
@@ -192,12 +203,79 @@ def build_live_tv_menu(params):
             pgrm = pgrms_xmltv[channel_xmltv_id]
             pgrm_name = pgrm.find('title').text
             title = title_channel + " - [I]" + pgrm_name + "[/I]"
+
             plot_object = pgrm.find('desc')
             if plot_object is not None:
                 plot = plot_object.text
+
+            sub_title_object = pgrm.find('sub-title')
+            if sub_title_object is not None:
+                if plot is None:
+                    plot = sub_title_object.text
+                else:
+                    plot = sub_title_object.text + "[CR]" + plot
+
+            if plot is not None:
+                plot = plot.replace('<P>', '[CR]')
+                plot = plot.replace('</P>;', '[CR]')
+                plot = plot.replace('</I>;', '[/I]')
+                plot = plot.replace('<I>', '[I]')
+
             image_object = pgrm.find('icon')
             if image_object is not None:
                 image = image_object.get('src')
+
+            aspect_object = pgrm.find('video').find('aspect')
+            if aspect_object is not None:
+                num = float(aspect_object.text.split(':')[0])
+                den = float(aspect_object.text.split(':')[1])
+                aspect = num / den
+
+            year_object = pgrm.find('date')
+            if year_object is not None:
+                year = int(year_object.text)
+
+            rating_object = pgrm.find('star-rating')
+            if rating_object is not None:
+                rating_object = rating_object.find('value')
+                if rating_object is not None:
+                    rating = float(rating_object.text.split(
+                        '/')[0]) * 2.0
+
+            length_object = pgrm.find('length')
+            if length_object is not None:
+                if length_object.get('units') == 'minutes':
+                    duration = int(length_object.text) * 60
+                elif length_object.get('units') == 'hours':
+                    duration = int(length_object.text) * 3600
+
+            credits_object = pgrm.find('credits')
+            if credits_object is not None:
+                for credit in credits_object.findall('actor'):
+                    cast.append(credit.text)
+                for credit in credits_object.findall('writer'):
+                    if writer is not None:
+                        writer = writer + ' - ' + credit.text
+                    else:
+                        writer = credit.text
+                for credit in credits_object.findall('presenter'):
+                    cast.append(credit.text)
+                for credit in credits_object.findall('director'):
+                    if director is not None:
+                        director = director + ' - ' + credit.text
+                    else:
+                        director = credit.text
+                for credit in credits_object.findall('composer'):
+                    cast.append(credit.text)
+
+            episode_num_object = pgrm.find('episode-num')
+            if episode_num_object is not None:
+                season_s = episode_num_object.text.split('.')[0]
+                if season_s != '':
+                    season = int(season_s) + 1
+                episode_s = episode_num_object.text.split('.')[1]
+                if episode_s != '':
+                    episode = int(episode_s) + 1
 
         else:
             try:
@@ -211,8 +289,21 @@ def build_live_tv_menu(params):
                 'plot': plot,
                 # 'aired': aired,
                 # 'date': date,
-                'duration': 'duration',
-                # 'year': year,
+                'duration': duration,
+                'year': year,
+                'rating': rating,
+                'cast': cast,
+                'director': director,
+                'writer': writer,
+                'plotoutline': plotoutline,
+                'episode': episode,
+                'season': season
+            }
+        }
+
+        stream_info = {
+            'video': {
+                'aspect': aspect
             }
         }
 
@@ -227,7 +318,8 @@ def build_live_tv_menu(params):
             ),
             'is_playable': True,
             'context_menu': context_menu,
-            'info': info
+            'info': info,
+            'stream_info': stream_info,
         })
 
     return common.PLUGIN.create_listing(
@@ -236,7 +328,8 @@ def build_live_tv_menu(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title()
+        category=common.get_window_title(),
+        content='tvshows'
     )
 
 
