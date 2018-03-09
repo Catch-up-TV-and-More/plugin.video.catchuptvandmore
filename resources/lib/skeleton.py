@@ -60,7 +60,6 @@ SKELETON = {
                 ('rmcdecouverte', 'none'),
                 ('publicsenat', 'none'),
                 ('france3regions', 'none'),
-                ('francetvsport', 'none'),
                 ('gong', 'none')
             },
 
