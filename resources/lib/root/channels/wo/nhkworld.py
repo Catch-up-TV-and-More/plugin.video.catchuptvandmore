@@ -344,7 +344,7 @@ def get_live_item(params):
 
     info = {
         'video': {
-            'title': 'To view abroad ' + title,
+            'title': 'To view outside Japan ' + title,
             'plot': plot,
             'duration': duration
         }
