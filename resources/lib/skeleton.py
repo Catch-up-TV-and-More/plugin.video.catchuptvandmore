@@ -187,7 +187,11 @@ SKELETON = {
                 ('ntv', 'replay_entry'),
                 ('ex', 'replay_entry'),
                 ('tbs', 'replay_entry'),
-                ('tx', 'replay_entry')
+                ('tx', 'replay_entry'),
+                # ('cx': 'replay_entry'), (Protected by DRM)
+                ('mbs', 'replay_entry'),
+                ('abc', 'replay_entry'),
+                ('ytv', 'replay_entry')
             },
 
             ('ch', 'root'): {
@@ -351,7 +355,11 @@ CHANNELS = {
     'ntv': 'tver',
     'ex': 'tver',
     'tbs': 'tver',
-    'tx': 'tver'
+    'tx': 'tver',
+    # 'cx': 'tver', (Protected by DRM)
+    'mbs': 'tver',
+    'abc': 'tver',
+    'ytv': 'tver'
 }
 
 '''
@@ -463,6 +471,9 @@ LABELS = {
     'tbs': 'TBSテレビ',
     'tx': 'テレビ東京',
     # 'cx': 'フジテレビ', (Protected by DRM)
+    'mbs': 'MBSテレビ',
+    'abc': '朝日放送株式会社',
+    'ytv': '読売テレビ',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',

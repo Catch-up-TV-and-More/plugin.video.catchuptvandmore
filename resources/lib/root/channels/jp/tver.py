@@ -27,7 +27,7 @@ from resources.lib import resolver
 from resources.lib import common
 
 # TO DO 
-# Add FUJITV Replay in Kodi 18 is out (DRM protected)
+# Add FUJITV Replay in Kodi 18 is out (DRM protected) 'cx' channel
 
 URL_ROOT = 'https://tver.jp'
 
@@ -39,7 +39,10 @@ list_channels = {
     'ex': URL_REPLAY_BY_TV % 'ex',
     'tbs': URL_REPLAY_BY_TV % 'tbs',
     'tx': URL_REPLAY_BY_TV % 'tx',
-    'cx': URL_REPLAY_BY_TV % 'cx'
+    # 'cx': URL_REPLAY_BY_TV % 'cx', (protectd by DRM)
+    'mbs': URL_REPLAY_BY_TV % 'mbs',
+    'abc': URL_REPLAY_BY_TV % 'abc',
+    'ytv': URL_REPLAY_BY_TV % 'ytv'
 }
 
 
