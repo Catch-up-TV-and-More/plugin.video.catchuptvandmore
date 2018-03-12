@@ -61,7 +61,8 @@ SKELETON = {
                 ('publicsenat', 'none'),
                 ('france3regions', 'none'),
                 ('francetvsport', 'none'),
-                ('gong', 'none')
+                ('gong', 'none'),
+                ('bfmparis', 'none')
             },
 
             ('be', 'build_live_tv_menu'): {
@@ -285,6 +286,7 @@ CHANNELS = {
     'nrj12': 'nrj',
     'france4': 'pluzz',
     'bfmtv': 'bfmtv',
+    'bfmparis': 'bfmtv',
     'cnews': 'cnews',
     'cstar': 'mycanal',
     'gulli': 'gulli',
@@ -412,6 +414,7 @@ LABELS = {
     'nrj12': 'NRJ 12',
     'france4': 'France 4',
     'bfmtv': 'BFM TV',
+    'bfmparis': 'BFM Paris',
     'cnews': 'CNews',
     'cstar': 'CStar',
     'gulli': 'Gulli',

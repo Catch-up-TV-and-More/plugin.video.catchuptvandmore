@@ -288,13 +288,7 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    title = ''
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
+def start_live_tv_stream(params):
     file_path_html = utils.download_catalog(
         URL_LIVE_CNEWS,
         '%s_live.html' % (params.channel_name)
@@ -307,33 +301,10 @@ def get_live_item(params):
         URL_INFO_CONTENT % (video_id_re[0]))
     json_parser = json.loads(file_live_json)
 
-    title = json_parser[0]["INFOS"]["TITRAGE"]["TITRE"].encode('utf-8')
-    plot = json_parser[0]["INFOS"]["DESCRIPTION"].encode('utf-8')
-    img = json_parser[0]["MEDIA"]["IMAGES"]["GRAND"].encode('utf-8')
     url_live = json_parser[0]["MEDIA"]["VIDEOS"]["IPAD"].encode('utf-8')
-
-    info = {
-        'video': {
-            'title': params.channel_label + " - [I]" + title + "[/I]",
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label + " - [I]" + title + "[/I]",
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url=url_live
-        ),
-        'is_playable': True,
-        'info': info
-    }
+    params['next'] = 'play_l'
+    params['url'] = url_live
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

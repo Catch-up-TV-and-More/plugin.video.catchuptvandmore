@@ -111,7 +111,8 @@ XMLTV_CHANNEL_ID = {
     'francetvsport': 'internet_channel',
     'gong': '',
     'france3regions': LIVE_FR3_REGIONS[common.PLUGIN.get_setting(
-        'france3.region')]
+        'france3.region')],
+    'bfmparis': ''
 }
 
 
