@@ -241,13 +241,7 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-
-    title = ''
-    plot = ''
-    duration = 0
-    img = ''
-
+def start_live_tv_stream(params):
     file_path = utils.download_catalog(
         URL_INFO_LIVE_JSON,
         '%s_info_live.json' % (params.channel_name)
@@ -255,34 +249,13 @@ def get_live_item(params):
     file_info_live = open(file_path).read()
     json_parser = json.loads(file_info_live)
 
-    title = json_parser["titre"].encode('utf-8')
-
     video_id = json_parser["video"].encode('utf-8')
 
     # url_live = url_dailymotion_embed % video_id
 
-    info = {
-        'video': {
-            'title': params.channel_label + " - [I]" + title + "[/I]",
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label + " - [I]" + title + "[/I]",
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            video_id=video_id
-        ),
-        'is_playable': True,
-        'info': info
-    }
+    params['next'] = 'play_l'
+    params['video_id'] = video_id
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

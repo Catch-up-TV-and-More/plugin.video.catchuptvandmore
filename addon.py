@@ -28,16 +28,6 @@ from resources.lib import vpn
 from resources.lib import utils
 from resources.lib.root.channels.fr import live_tv_fr
 
-MEDIA_PATH = (
-    common.sp.xbmc.translatePath(
-        common.sp.os.path.join(
-            common.ADDON.path,
-            "resources",
-            "media"
-        )
-    )
-)
-
 
 @common.PLUGIN.action()
 def root(params):
@@ -53,7 +43,7 @@ def generic_menu(params):
     Build a generic addon menu
     with all not hidden items
     """
-    current_skeleton = skeleton.SKELETON[('root', 'root')]
+    current_skeleton = skeleton.SKELETON[('root', 'generic_menu')]
     current_path = ['root']
 
     if 'item_skeleton' in params:
@@ -169,7 +159,7 @@ def generic_menu(params):
             item_path_media.append(item_id)
             media_item_path = common.sp.xbmc.translatePath(
                 common.sp.os.path.join(
-                    MEDIA_PATH,
+                    common.MEDIA_PATH,
                     *(item_path_media)
                 )
             )
@@ -180,10 +170,6 @@ def generic_menu(params):
             icon = media_item_path + '.png'
             fanart = media_item_path + '_fanart.jpg'
 
-            # TEMPO
-            if item_next == 'root':
-                item_next = 'generic_menu'
-            # TEMPO END
             listing.append({
                 'icon': icon,
                 'fanart': fanart,

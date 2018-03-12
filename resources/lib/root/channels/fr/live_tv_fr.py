@@ -29,15 +29,7 @@ from resources.lib import skeleton
 from resources.lib import common
 from resources.lib import utils
 
-
-ADDON_DATA = common.sp.xbmc.translatePath(
-    os.path.join(
-        'special://profile/addon_data',
-        common.ADDON.id
-    )
-)
-
-XMLTV_FILEPATH = os.path.join(ADDON_DATA, 'xmltv_fr.xml')
+XMLTV_FILEPATH = os.path.join(common.ADDON_DATA, 'xmltv_fr.xml')
 
 
 LIVE_FR3_REGIONS = {
@@ -103,12 +95,12 @@ XMLTV_CHANNEL_ID = {
         'la_1ere.region')],
     'franceinfo': 'C2111.api.telerama.fr',
     'bfmbusiness': 'C1073.api.telerama.fr',
-    'rmc': '',
+    'rmc': 'C546.api.telerama.fr',
     'lci': 'C112.api.telerama.fr',
     'lcp': 'C234.api.telerama.fr',
     'rmcdecouverte': 'C1400.api.telerama.fr',
     'publicsenat': '',
-    'francetvsport': 'internet_channel',
+    'francetvsport': 'multiple_streams',
     'gong': '',
     'france3regions': LIVE_FR3_REGIONS[common.PLUGIN.get_setting(
         'france3.region')],
@@ -134,8 +126,9 @@ def download_xmltv_in_background():
     return
 
 
-#@common.PLUGIN.mem_cached(2)
+@common.PLUGIN.mem_cached(2)
 def build_live_tv_menu(params):
+    # First we parse the xmltv guide
     channels_xmltv = {}
     pgrms_xmltv = {}
     current_time = int(time.strftime('%Y%m%d%H%M%S')) + \
@@ -146,6 +139,9 @@ def build_live_tv_menu(params):
         for channel in root.findall('channel'):
             channels_xmltv[channel.get('id')] = channel
         for pgrm in root.findall('programme'):
+            pgrm_channel = pgrm.get('channel')
+            if pgrm_channel in pgrms_xmltv:
+                continue
             pgrm_start_s = pgrm.get('start')
             pgrm_start = int(pgrm_start_s.split()[0]) + \
                 int(pgrm_start_s.split()[1])
@@ -154,10 +150,9 @@ def build_live_tv_menu(params):
                 int(pgrm_stop_s.split()[1])
             if current_time >= pgrm_start and \
                     current_time <= pgrm_stop:
-                pgrms_xmltv[pgrm.get('channel')] = pgrm
+                pgrms_xmltv[pgrm_channel] = pgrm
 
-
-    # First we sort channels
+    # We sort not hidden channels
     menu = []
     folder_path = eval(params.item_path)
     for channel in eval(params.item_skeleton):
@@ -179,8 +174,6 @@ def build_live_tv_menu(params):
         params['module_path'] = str(channel_path)
         params['module_name'] = channel_name
         params['channel_label'] = skeleton.LABELS[channel_name]
-
-        # channel = get_module(params)
 
         # Legacy fix (il faudrait remplacer channel_name par
         # module_name dans tous les .py des chaines)
@@ -237,10 +230,12 @@ def build_live_tv_menu(params):
         plotoutline = None
         episode = None
         season = None
+        icon = None
 
-        if params.module_name in XMLTV_CHANNEL_ID and \
-                XMLTV_CHANNEL_ID[params.module_name] in pgrms_xmltv:
-            channel_xmltv_id = XMLTV_CHANNEL_ID[params.module_name]
+        # Is this channel exists in XMLTV grab infos
+        channel_xmltv_id = XMLTV_CHANNEL_ID[params.module_name]
+        if 'api.telerama.fr' in channel_xmltv_id and \
+                channel_xmltv_id in pgrms_xmltv:
             title_channel = channels_xmltv[channel_xmltv_id].find(
                 'display-name').text
             icon = channels_xmltv[channel_xmltv_id].find(
@@ -322,6 +317,7 @@ def build_live_tv_menu(params):
                 if episode_s != '':
                     episode = int(episode_s) + 1
 
+        # Else, just get the title form skeleton.py
         else:
             try:
                 title = common.GETTEXT(skeleton.LABELS[params.module_name])
@@ -352,15 +348,26 @@ def build_live_tv_menu(params):
             }
         }
 
+        # If the channel has multiples streams like France TV Sport
         is_playable = True
-        if XMLTV_CHANNEL_ID[params.module_name] == 'internet_channel':
+        if XMLTV_CHANNEL_ID[params.module_name] == 'multiple_streams':
             is_playable = False
 
-        module_label = params.module_name
-        try:
-            module_label = common.GETTEXT(skeleton.LABELS[params.module_name])
-        except Exception:
-            module_label = skeleton.LABELS[params.module_name]
+        if icon is None or \
+                icon == 'http://television.telerama.fr/':
+            item_path_media = list(channel_path)
+            item_path_media.pop()
+            item_path_media.append(channel_name)
+            media_item_path = common.sp.xbmc.translatePath(
+                common.sp.os.path.join(
+                    common.MEDIA_PATH,
+                    *(item_path_media)
+                )
+            )
+
+            media_item_path = media_item_path.decode(
+                "utf-8").encode(common.FILESYSTEM_CODING)
+            icon = media_item_path + '.png'
 
         listing.append({
             'label': title,
@@ -369,7 +376,6 @@ def build_live_tv_menu(params):
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
-                module_label=module_label,
                 action='start_live_tv_stream'
             ),
             'is_playable': is_playable,

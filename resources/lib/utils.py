@@ -29,14 +29,6 @@ from random import randint
 from resources.lib import common
 
 # Useful path
-LIB_PATH = common.sp.xbmc.translatePath(
-    common.sp.os.path.join(
-        common.ADDON.path,
-        "resources",
-        "lib"
-    )
-)
-
 cache_path = common.sp.xbmc.translatePath(
     os.path.join(
         'special://profile/addon_data',
@@ -217,7 +209,7 @@ def get_module(params):
 
     module_path = common.sp.xbmc.translatePath(
         common.sp.os.path.join(
-            LIB_PATH,
+            common.LIB_PATH,
             *(eval(params.module_path))
         )
     )

@@ -40,6 +40,29 @@ FILESYSTEM_CODING = sys.getfilesystemencoding()
 if sys.getfilesystemencoding() is None:
     FILESYSTEM_CODING = "utf-8"
 
+ADDON_DATA = sp.xbmc.translatePath(
+    os.path.join(
+        'special://profile/addon_data',
+        ADDON.id
+    )
+)
+
+MEDIA_PATH = sp.xbmc.translatePath(
+    os.path.join(
+        ADDON.path,
+        "resources",
+        "media"
+    )
+)
+
+LIB_PATH = sp.xbmc.translatePath(
+    os.path.join(
+        ADDON.path,
+        "resources",
+        "lib"
+    )
+)
+
 
 def get_window_title():
     query = sp.sys.argv[2][1:]

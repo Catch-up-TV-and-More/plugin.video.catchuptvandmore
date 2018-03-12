@@ -43,6 +43,7 @@
 [Add Channel] テレビ朝日 (JP) (wwark)
 [Add Channel] TBSテレビ (JP) (wwark)
 [Add Channel] テレビ東京 (JP) (wwark)
+[Improvement] Use XMLTV Telerama for Live FR TV guide (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -27,9 +27,9 @@ SKELETON dictionary corresponds to the architecture of each menu of the addon
     elt2: next function to call
 '''
 SKELETON = {
-    ('root', 'root'): {
+    ('root', 'generic_menu'): {
 
-        ('live_tv', 'root'): {
+        ('live_tv', 'generic_menu'): {
 
             ('fr', 'build_live_tv_menu'): {
                 ('tf1', 'none'),
@@ -107,9 +107,9 @@ SKELETON = {
             }
         },
 
-        ('replay', 'root'): {
+        ('replay', 'generic_menu'): {
 
-            ('be', 'root'): {
+            ('be', 'generic_menu'): {
                 ('auvio', 'replay_entry'),
                 ('brf', 'replay_entry'),
                 ('rtltvi', 'replay_entry'),
@@ -120,13 +120,13 @@ SKELETON = {
                 ('rtc', 'replay_entry')
             },
 
-            ('ca', 'root'): {
+            ('ca', 'generic_menu'): {
                 ('tv5', 'replay_entry'),
                 ('unis', 'replay_entry'),
                 ('telequebec', 'replay_entry')
             },
 
-            ('fr', 'root'): {
+            ('fr', 'generic_menu'): {
                 ('tf1', 'replay_entry'),
                 ('france2', 'replay_entry'),
                 ('france3', 'replay_entry'),
@@ -182,7 +182,7 @@ SKELETON = {
                 ('gong', 'replay_entry')
             },
 
-            ('jp', 'root'): {
+            ('jp', 'generic_menu'): {
                 ('nhknews', 'replay_entry'),
                 ('nhklifestyle', 'replay_entry'),
                 ('tbsnews', 'replay_entry'),
@@ -192,7 +192,7 @@ SKELETON = {
                 ('tx', 'replay_entry')
             },
 
-            ('ch', 'root'): {
+            ('ch', 'generic_menu'): {
                 ('rts', 'replay_entry'),
                 ('rsi', 'replay_entry'),
                 ('srf', 'replay_entry'),
@@ -201,7 +201,7 @@ SKELETON = {
                 ('rougetv', 'replay_entry')
             },
 
-            ('uk', 'root'): {
+            ('uk', 'generic_menu'): {
                 ('blaze', 'replay_entry'),
                 ('dave', 'replay_entry'),
                 ('really', 'replay_entry'),
@@ -211,7 +211,7 @@ SKELETON = {
                 ('skysports', 'replay_entry')
             },
 
-            ('wo', 'root'): {
+            ('wo', 'generic_menu'): {
                 ('tv5mondeafrique', 'replay_entry'),
                 ('arte', 'replay_entry'),
                 ('france24', 'replay_entry'),
@@ -224,7 +224,7 @@ SKELETON = {
                 ('arirang', 'replay_entry')
             }
         },
-        ('websites', 'root'): {
+        ('websites', 'generic_menu'): {
             ('allocine', 'website_entry'),
             ('tetesaclaques', 'website_entry'),
             ('taratata', 'website_entry'),
