@@ -1142,15 +1142,12 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
-    title = ''
-    plot = ''
-    duration = 0
-    date = ''
-    genre = ''
-
     lives = []
 
     if params.channel_name == 'francetvsport':
+        title = ''
+        plot = ''
+        duration = 0
 
         list_lives = utils.get_webcontent(
             URL_FRANCETV_SPORT % 'directs')
@@ -1168,7 +1165,7 @@ def start_live_tv_stream(params):
                         '%d/%m/%Y %H:%M', time.localtime(live["start"]))
                 except Exception:
                     value_date = ''
-                plot = 'Live start at ' + value_date
+                plot = 'Live starts at ' + value_date
 
                 info = {
                     'video': {
@@ -1210,11 +1207,11 @@ def start_live_tv_stream(params):
                     '%d/%m/%Y %H:%M', time.localtime(live["start"]))
             except Exception:
                 value_date = ''
-            plot = 'Live start at ' + value_date
+            plot = 'Live starts at ' + value_date
 
             info = {
                 'video': {
-                    'title': params.channel_label + " - [I]" + title + "[/I]",
+                    'title': title,
                     'plot': plot,
                     # 'aired': aired,
                     # 'date': date,
@@ -1224,7 +1221,7 @@ def start_live_tv_stream(params):
             }
 
             lives.append({
-                'label': params.channel_label + " - [I]" + title + "[/I]",
+                'label': title,
                 'fanart': image,
                 'thumb': image,
                 'url': common.PLUGIN.get_url(

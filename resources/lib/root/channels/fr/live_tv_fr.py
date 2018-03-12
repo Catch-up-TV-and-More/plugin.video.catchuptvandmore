@@ -103,13 +103,13 @@ XMLTV_CHANNEL_ID = {
         'la_1ere.region')],
     'franceinfo': 'C2111.api.telerama.fr',
     'bfmbusiness': 'C1073.api.telerama.fr',
-    #'rmc',
+    'rmc': '',
     'lci': 'C112.api.telerama.fr',
     'lcp': 'C234.api.telerama.fr',
     'rmcdecouverte': 'C1400.api.telerama.fr',
-    #'publicsenat',
-    #'francetvsport'
-    #'gong',
+    'publicsenat': '',
+    'francetvsport': 'internet_channel',
+    'gong': '',
     'france3regions': LIVE_FR3_REGIONS[common.PLUGIN.get_setting(
         'france3.region')]
 }
@@ -351,6 +351,16 @@ def build_live_tv_menu(params):
             }
         }
 
+        is_playable = True
+        if XMLTV_CHANNEL_ID[params.module_name] == 'internet_channel':
+            is_playable = False
+
+        module_label = params.module_name
+        try:
+            module_label = common.GETTEXT(skeleton.LABELS[params.module_name])
+        except Exception:
+            module_label = skeleton.LABELS[params.module_name]
+
         listing.append({
             'label': title,
             'fanart': image,
@@ -358,9 +368,10 @@ def build_live_tv_menu(params):
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
+                module_label=module_label,
                 action='start_live_tv_stream'
             ),
-            'is_playable': True,
+            'is_playable': is_playable,
             'context_menu': context_menu,
             'info': info,
             'stream_info': stream_info,
