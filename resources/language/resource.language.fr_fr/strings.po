@@ -189,6 +189,14 @@ msgctxt "#30157"
 msgid "DW: Choose Channel"
 msgstr "DW : Choix de la chaîne"
 
+msgctxt "#30158"
+msgid "France 3 Régions: Choose region"
+msgstr "France 3 Régions : Choix de la région"
+
+msgctxt "#30159"
+msgid "La 1ère: Choose region"
+msgstr "La 1ère : Choix de la région"
+
 
 # Download (from 30200 to 30239)
 

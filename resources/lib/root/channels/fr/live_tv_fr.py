@@ -39,6 +39,46 @@ ADDON_DATA = common.sp.xbmc.translatePath(
 
 XMLTV_FILEPATH = os.path.join(ADDON_DATA, 'xmltv_fr.xml')
 
+
+LIVE_FR3_REGIONS = {
+    "Alpes": "C1921.api.telerama.fr",
+    "Alsace": "C1922.api.telerama.fr",
+    "Aquitaine": "C1923.api.telerama.fr",
+    "Auvergne": "C1924.api.telerama.fr",
+    "Basse-Normandie": "C1925.api.telerama.fr",
+    "Bourgogne": "C1926.api.telerama.fr",
+    "Bretagne": "C1927.api.telerama.fr",
+    "Centre-Val de Loire": "C1928.api.telerama.fr",
+    "Chapagne-Ardenne": "C1929.api.telerama.fr",
+    "Corse": "C308.api.telerama.fr",
+    "Côte d'Azur": "C1931.api.telerama.fr",
+    "Franche-Compté": "C1932.api.telerama.fr",
+    "Haute-Normandie": "C1933.api.telerama.fr",
+    "Languedoc-Roussillon": "C1934.api.telerama.fr",
+    "Limousin": "C1935.api.telerama.fr",
+    "Lorraine": "C1936.api.telerama.fr",
+    "Midi-Pyrénées": "C1937.api.telerama.fr",
+    "Nord-Pas-de-Calais": "C1938.api.telerama.fr",
+    "Paris Île-de-France": "C1939.api.telerama.fr",
+    "Pays de la Loire": "C1940.api.telerama.fr",
+    "Picardie": "C1941.api.telerama.fr",
+    "Poitou-Charentes": "C1942.api.telerama.fr",
+    "Provence-Alpes": "C1943.api.telerama.fr",
+    "Rhône-Alpes": "C1944.api.telerama.fr"
+}
+
+LIVE_LA_1ERE = {
+    "Guadeloupe 1ère": "C329.api.telerama.fr",
+    "Guyane 1ère": "C260.api.telerama.fr",
+    "Martinique 1ère": "C328.api.telerama.fr",
+    "Mayotte 1ère": '',
+    "Nouvelle Calédonie 1ère": "C240.api.telerama.fr",
+    "Polynésie 1ère": "C459.api.telerama.fr",
+    "Réunion 1ère": "C245.api.telerama.fr",
+    "St-Pierre et Miquelon 1ère": '',
+    "Wallis et Futuna 1ère": ''
+}
+
 XMLTV_CHANNEL_ID = {
     'tf1': 'C192.api.telerama.fr',
     'france2': 'C4.api.telerama.fr',
@@ -59,16 +99,19 @@ XMLTV_CHANNEL_ID = {
     'lequipe': 'C1401.api.telerama.fr',
     'numero23': 'C1402.api.telerama.fr',
     'cherie25': 'C1399.api.telerama.fr',
-    #'la_1ere', '',
+    'la_1ere': LIVE_LA_1ERE[common.PLUGIN.get_setting(
+        'la_1ere.region')],
     'franceinfo': 'C2111.api.telerama.fr',
     'bfmbusiness': 'C1073.api.telerama.fr',
     #'rmc',
     'lci': 'C112.api.telerama.fr',
     'lcp': 'C234.api.telerama.fr',
-    'rmcdecouverte': 'C1400.api.telerama.fr'
+    'rmcdecouverte': 'C1400.api.telerama.fr',
     #'publicsenat',
     #'francetvsport'
     #'gong',
+    'france3regions': LIVE_FR3_REGIONS[common.PLUGIN.get_setting(
+        'france3.region')]
 }
 
 
@@ -111,6 +154,7 @@ def build_live_tv_menu(params):
             if current_time >= pgrm_start and \
                     current_time <= pgrm_stop:
                 pgrms_xmltv[pgrm.get('channel')] = pgrm
+
 
     # First we sort channels
     menu = []

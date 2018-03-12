@@ -482,6 +482,14 @@
                 <setting label="30154" type="labelenum" id="france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES" default="FR"/>
                 <setting label="30156" type="labelenum" id="mtv.language" visible="eq(-4,true)" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" visible="eq(-5,true)" values="EN|DE|ES|AR" default="EN"/>
+
+            <!-- French channels -->
+            <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
+            <setting label="" type="bool" id="fr" default="true" visible="false"/>
+                
+                <setting label="30158" type="labelenum" id="france3.region" visible="eq(-1,true)" values="Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes" default="Alpes"/>
+                <setting label="30159" type="labelenum" id="la_1ere.region" visible="eq(-2,true)" values="Guadeloupe 1ère|Guyane 1ère|Martinique 1ère|Mayotte 1ère|Nouvelle Calédonie 1ère|Polynésie 1ère|Réunion 1ère|St-Pierre et Miquelon 1ère|Wallis et Futuna 1ère" default="Guadeloupe 1ère"/>
+
     </category>
     <!-- Quality and Content -->
 
