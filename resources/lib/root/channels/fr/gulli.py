@@ -235,12 +235,7 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-
-    title = ''
-    plot = ''
-    duration = 0
-    img = ''
+def start_live_tv_stream(params):
     url_live = ''
 
     file_path = utils.download_catalog(
@@ -270,28 +265,9 @@ def get_live_item(params):
         if url_video.count('m3u8') > 0:
             url_live = url_video
 
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url_live=url_live
-        ),
-        'is_playable': True,
-        'info': info
-    }
+    params['next'] = 'play_l'
+    params['url_live'] = url_live
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

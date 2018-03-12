@@ -556,65 +556,9 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    file_path = utils.download_catalog(
-        URL_LIVE_INFO % params.channel_name,
-        '%s_info_live.json' % (params.channel_name)
-    )
-    file_info_live = open(file_path).read()
-    json_parser = json.loads(file_info_live)
-
-    if "episode" in json_parser["current"]:
-        title = json_parser["current"]["title"].encode('utf-8')
-        episode = json_parser["current"]["episode"].encode('utf-8')
-        if title != episode:
-            title = title + ' - ' + episode
-    else:
-        title = json_parser["current"]["title"].encode('utf-8')
-    if "description" in json_parser["current"]:
-        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + \
-            ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8') \
-            + '\n ' + json_parser["current"]["description"].encode('utf-8')
-    else:
-        plot = json_parser["current"]["humanStartDate"].encode('utf-8') + \
-            ' - ' + json_parser["current"]["humanEndDate"].encode('utf-8')
-
-    duration = 0
-    # duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
-
-    # Get Image (Code java found in a Forum)
-    id_image = json_parser["current"]["image"].encode('utf-8')
-    value_md5 = common.sp.md5(
-        str(IMG_WIDTH) + str(IMG_HEIGHT) + id_image + 'elk45sz6ers68'
-    ).hexdigest()
-    value_md5 = value_md5[:6]
-    try:
-        img = URL_API_IMAGE + '/' + str(IMG_WIDTH) + '/' + \
-            str(IMG_HEIGHT) + '/' + id_image + '/' + str(value_md5)
-    except Exception:
-        img = ''
-
-    info = {
-        'video': {
-            'title': params.channel_label + " - [I]" + title + "[/I]",
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label + " - [I]" + title + "[/I]",
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l'
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

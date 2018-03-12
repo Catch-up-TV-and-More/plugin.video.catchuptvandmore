@@ -347,38 +347,15 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    plot = ''
-    duration = 0
-    img = ''
-
+def start_live_tv_stream(params):
     html_live = utils.get_webcontent(URL_LIVE_SITE)
     video_id = re.compile(
         r'www.dailymotion.com/embed/video/(.*?)\?').findall(
         html_live)[0]
 
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='play_l',
-            video_id=video_id,
-        ),
-        'is_playable': True,
-        'info': info
-    }
+    params['next'] = 'play_l'
+    params['video_id'] = video_id
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)

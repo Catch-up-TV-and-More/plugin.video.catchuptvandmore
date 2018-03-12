@@ -22,12 +22,13 @@
 """
 
 import os
+import imp
 import time
 import requests
 from random import randint
 from resources.lib import common
 
-
+# Useful path
 cache_path = common.sp.xbmc.translatePath(
     os.path.join(
         'special://profile/addon_data',
@@ -198,3 +199,25 @@ def vpn_context_menu_item():
             action='vpn_entry') + ')'
     )
     return vpn
+
+
+def get_module(params):
+    """
+    get_module allows us to load the desired python file
+    """
+    module_name = eval(params.module_path)[-1]
+
+    module_path = common.sp.xbmc.translatePath(
+        common.sp.os.path.join(
+            common.LIB_PATH,
+            *(eval(params.module_path))
+        )
+    )
+    module_filepath = module_path + ".py"
+    module_filepath = module_filepath.decode(
+        "utf-8").encode(common.FILESYSTEM_CODING)
+
+    return imp.load_source(
+        module_name,
+        module_filepath
+    )

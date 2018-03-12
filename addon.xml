@@ -43,10 +43,10 @@
 [Add Channel] テレビ朝日 (JP) (wwark)
 [Add Channel] TBSテレビ (JP) (wwark)
 [Add Channel] テレビ東京 (JP) (wwark)
-[Move] Move France TV Sport (Pseudo Directs to THe section of the Replay) (wwark)
 [Add Channel] MBSテレビ (JP) (wwark)
 [Add Channel] 朝日放送株式会社 (JP) (wwark)
 [Add Channel] 読売テレビ (JP) (wwark)
+[Improvement] Use XMLTV Telerama for Live FR TV guide (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>
