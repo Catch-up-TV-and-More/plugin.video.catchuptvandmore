@@ -212,7 +212,7 @@ def get_stream_youtube(video_id, isDownloadVideo):
         return url_youtube
 
     YoutubeDL = importlib.import_module('youtube_dl.YoutubeDL')
-    ydl = YoutubeDL()
+    ydl = YoutubeDL.YoutubeDL()
     ydl.add_default_info_extractors()
     with ydl:
         result = ydl.extract_info(

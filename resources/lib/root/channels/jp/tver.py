@@ -68,7 +68,7 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
 
-        all_video = common.ADDON.get_localized_string(30101)
+        all_video = common.ADDON.get_localized_string(30701)
         url_channel_replay = list_channels[params.module_name]
 
         shows.append({

@@ -68,7 +68,7 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
 
-        all_video = common.ADDON.get_localized_string(30101)
+        all_video = common.ADDON.get_localized_string(30701)
 
         shows.append({
             'label': common.GETTEXT('All videos'),
@@ -209,7 +209,7 @@ def get_video_url(params):
             json_parser["hls"],
             random_ua=True)
         if 'drm' in manifest:
-            utils.send_notification(common.ADDON.get_localized_string(30102))
+            utils.send_notification(common.ADDON.get_localized_string(30702))
             return ''
 
         root = os.path.dirname(json_parser["hls"])

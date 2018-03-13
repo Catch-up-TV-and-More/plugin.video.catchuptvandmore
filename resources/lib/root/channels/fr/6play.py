@@ -226,13 +226,13 @@ def list_shows(params):
 
         info = {
             'video': {
-                'title': common.ADDON.get_localized_string(30101),
+                'title': common.ADDON.get_localized_string(30701),
                 'plot': params.program_desc
             }
         }
 
         shows.append({
-            'label': common.ADDON.get_localized_string(30101),
+            'label': common.ADDON.get_localized_string(30701),
             'thumb': params.program_img,
             'fanart': program_fanart,
             'url': common.PLUGIN.get_url(
@@ -356,7 +356,7 @@ def list_videos(params):
     )
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
+#@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     video_json = utils.get_webcontent(
@@ -364,9 +364,12 @@ def get_video_url(params):
         random_ua=True)
     json_parser = json.loads(video_json)
 
+    print 'COUCOU'
+    print '\n\n' + video_json + '\n\n'
+
     video_assets = json_parser['clips'][0]['assets']
     if video_assets is None:
-        utils.send_notification(common.ADDON.get_localized_string(30112))
+        utils.send_notification(common.ADDON.get_localized_string(30712))
         return ''
 
     # "type":"primetime_phls_h264" => Video protected by DRM (m3u8)
@@ -394,7 +397,7 @@ def get_video_url(params):
                     asset['full_physical_path'].encode('utf-8'))
 
     if len(all_datas_videos_quality) == 0:
-        utils.send_notification(common.ADDON.get_localized_string(30102))
+        utils.send_notification(common.ADDON.get_localized_string(30702))
         return ''
     elif len(all_datas_videos_quality) == 1:
         return all_datas_videos_path[0]

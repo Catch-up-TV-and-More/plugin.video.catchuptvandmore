@@ -684,7 +684,7 @@ def get_video_url(params):
                 url = media["href"]
         if requests.get(url, stream=True).status_code == 404:
             utils.send_notification(
-                common.ADDON.get_localized_string(30111))
+                common.ADDON.get_localized_string(30710))
             return ''
         return url
     else:

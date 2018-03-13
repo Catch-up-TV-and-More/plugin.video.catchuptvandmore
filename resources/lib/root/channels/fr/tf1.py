@@ -597,7 +597,7 @@ def get_video_url(params):
             json_parser["hls"],
             random_ua=True)
         if 'drm' in manifest:
-            utils.send_notification(common.ADDON.get_localized_string(30102))
+            utils.send_notification(common.ADDON.get_localized_string(30702))
             return ''
 
         root = os.path.dirname(json_parser["hls"])

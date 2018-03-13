@@ -62,7 +62,7 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
 
-        all_video = common.ADDON.get_localized_string(30101)
+        all_video = common.ADDON.get_localized_string(30701)
 
         shows.append({
             'label': common.GETTEXT('All videos'),

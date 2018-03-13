@@ -411,3 +411,7 @@ msgctxt "#30711"
 msgid "Authentication failed"
 msgstr "Echec de l'authentification"
 
+msgctxt "#30712"
+msgid "Video with an account needed"
+msgstr "Vidéo avec un compte requis"
+

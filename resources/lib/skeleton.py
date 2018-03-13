@@ -186,7 +186,8 @@ SKELETON = {
                 ('infosportplus', 'replay_entry'),
                 ('gameone', 'replay_entry'),
                 ('francetveducation', 'replay_entry'),
-                ('gong', 'replay_entry')
+                ('gong', 'replay_entry'),
+                ('francetvsport', 'replay_entry')
             },
 
             ('jp', 'generic_menu'): {
