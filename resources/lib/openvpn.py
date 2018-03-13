@@ -1,4 +1,4 @@
-#/*
+# /*
 # *
 # * OpenVPN for Kodi.
 # *
@@ -21,7 +21,6 @@
 
 
 import os
-import sys
 import subprocess
 import time
 import socket

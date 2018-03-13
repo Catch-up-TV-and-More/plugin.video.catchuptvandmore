@@ -134,8 +134,8 @@ def list_shows(params):
                     shows.append({
                         'label': emission_name,
                         'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
+                            module_path=params.module_path,
+                            module_name=params.module_name,
                             action='replay_entry',
                             emission_url=emission_url,
                             category_name=emission_name,
@@ -193,8 +193,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         video_url=video_url) + ')'
                 )
                 context_menu = []
@@ -244,6 +244,7 @@ def list_videos(params):
         update_listing='update_listing' in params,
         category=common.get_window_title()
     )
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_live(params):

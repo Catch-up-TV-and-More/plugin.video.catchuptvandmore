@@ -69,8 +69,6 @@ def channel_entry(params):
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
     else:
@@ -196,8 +194,8 @@ def list_shows(params):
                     shows.append({
                         'label': category_name,
                         'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
+                            module_path=params.module_path,
+                            module_name=params.module_name,
                             action='replay_entry',
                             category_name=category_name,
                             next='list_shows_programs',
@@ -225,8 +223,8 @@ def list_shows(params):
                         'label': name_program,
                         'thumb': img_program,
                         'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
+                            module_path=params.module_path,
+                            module_name=params.module_name,
                             action='replay_entry',
                             next='list_videos_1',
                             state_video=state_video,
@@ -328,8 +326,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         url_video=url_site) + ')'
                 )
                 context_menu = []
@@ -419,8 +417,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         url_video=url) + ')'
                 )
                 context_menu = []
@@ -498,8 +496,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         url_video=url) + ')'
                 )
                 context_menu = []

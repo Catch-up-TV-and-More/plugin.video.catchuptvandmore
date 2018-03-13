@@ -139,7 +139,8 @@ def list_shows(params):
                 )
             })
 
-            for category_title, category_type in CATEGORIES_VIDEOS_TV5MONDE.iteritems():
+            for category_title, category_type in \
+                    CATEGORIES_VIDEOS_TV5MONDE.iteritems():
 
                 shows.append({
                     'label': category_title,
@@ -157,7 +158,8 @@ def list_shows(params):
 
         elif params.channel_name == 'tivi5monde':
 
-            for category_context, category_title in CATEGORIES_VIDEOS_TIVI5MONDE.iteritems():
+            for category_context, category_title in \
+                    CATEGORIES_VIDEOS_TIVI5MONDE.iteritems():
 
                 category_url = URL_TIVI5MONDE_ROOT + category_context
 
@@ -191,8 +193,7 @@ def list_shows(params):
 
             for show in list_shows:
 
-                show_title = show.find('h2').get_text(
-                    ).strip().encode('utf-8')
+                show_title = show.find('h2').get_text().strip().encode('utf-8')
                 show_url = URL_TV5MAF_ROOT + show.find(
                     'a').get('href').encode('utf-8')
                 if 'http' in show.find('img').get('src'):
@@ -299,20 +300,22 @@ def list_videos(params):
             replay_videos_html = utils.get_webcontent(
                 params.category_url)
             replay_videos_soup = bs(replay_videos_html, 'html.parser')
-            if replay_videos_soup.find('div',
-                class_='u-bg--concrete u-pad-t--xl u-pad-b--l') is None:
+            if replay_videos_soup.find(
+                    'div', class_='u-bg--concrete u-pad-t--xl u-pad-b--l') \
+                    is None:
 
                 data_video = replay_videos_soup.find(
                     'div', class_='tv5-player')
 
-                video_title = data_video.find('h1').get_text(
-                    ).strip().encode('utf-8')
+                video_title = data_video.find(
+                    'h1').get_text().strip().encode('utf-8')
                 video_img = re.compile(
                     r'image\" content=\"(.*?)\"').findall(
                     replay_videos_html)[0]
-                video_plot = data_video.find('div',
-                    class_='tv5-desc to-expand u-mg-t--m u-mg-b--s').get_text(
-                    ).strip().encode('utf-8')
+                video_plot = data_video.find(
+                    'div',
+                    class_='tv5-desc to-expand u-mg-t--m u-mg-b--s'
+                ).get_text().strip().encode('utf-8')
 
                 info = {
                     'video': {
@@ -330,8 +333,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         video_url=params.category_url) + ')'
                 )
                 context_menu = []
@@ -374,8 +377,8 @@ def list_videos(params):
                         videos.append({
                             'label': video_title,
                             'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
+                                module_path=params.module_path,
+                                module_name=params.module_name,
                                 action='replay_entry',
                                 next='list_videos_2',
                                 category_url=video_url
@@ -393,8 +396,8 @@ def list_videos(params):
 
                     for video in all_videos:
 
-                        video_title = video.find('h2').get_text(
-                            ).strip().encode('utf-8')
+                        video_title = video.find(
+                            'h2').get_text().strip().encode('utf-8')
                         video_img = video.find('img').get('src')
                         video_url = URL_TV5MAF_ROOT + video.find(
                             'a').get('href').encode('utf-8')
@@ -415,8 +418,8 @@ def list_videos(params):
                             common.GETTEXT('Download'),
                             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                                 action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                                module_path=params.module_path,
+                                module_name=params.module_name,
                                 video_url=video_url) + ')'
                         )
                         context_menu = []
@@ -426,8 +429,8 @@ def list_videos(params):
                             'label': video_title,
                             'thumb': video_img,
                             'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
+                                module_path=params.module_path,
+                                module_name=params.module_name,
                                 action='replay_entry',
                                 next='play_r',
                                 video_url=video_url
@@ -450,7 +453,8 @@ def list_videos(params):
                 if video.find('p', class_='video-item__subtitle'):
                     video_title = video.find('h3').get_text(
                     ).strip() + ' - ' + video.find(
-                    'p', class_='video-item__subtitle').get_text(
+                        'p',
+                        class_='video-item__subtitle').get_text(
                     ).strip()
                 else:
                     video_title = video.find('h3').get_text(
@@ -479,8 +483,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         video_url=video_url) + ')'
                 )
                 context_menu = []
@@ -550,8 +554,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         video_url=video_url) + ')'
                 )
                 context_menu = []
@@ -595,14 +599,15 @@ def list_videos(params):
                 params.category_url)
             replay_videos_soup = bs(replay_videos_html, 'html.parser')
 
-            all_videos = replay_videos_soup.find('div',
+            all_videos = replay_videos_soup.find(
+                'div',
                 class_='u-bg--concrete u-pad-t--xl u-pad-b--l').find_all(
                 'div', 'grid-col-12 grid-col-m-4')
 
             for video in all_videos:
 
-                video_title = video.find('h2').get_text(
-                    ).strip().encode('utf-8')
+                video_title = video.find(
+                    'h2').get_text().strip().encode('utf-8')
                 video_img = video.find('img').get('src')
                 video_url = URL_TV5MAF_ROOT + video.find(
                     'a').get('href').encode('utf-8')
@@ -623,8 +628,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         video_url=video_url) + ')'
                 )
                 context_menu = []
@@ -648,8 +653,10 @@ def list_videos(params):
         elif params.channel_name == 'tv5monde':
 
             replay_videos_html = utils.get_webcontent(
-                URL_TV5MONDE_ROOT + '/toutes-les-videos?order=1&type=%s&page=%s' % (
-                params.category_type, params.page))
+                URL_TV5MONDE_ROOT +
+                '/toutes-les-videos?order=1&type=%s&page=%s' % (
+                    params.category_type, params.page)
+            )
             replay_videos_soup = bs(replay_videos_html, 'html.parser')
 
             all_videos = replay_videos_soup.find_all('article')
@@ -657,13 +664,16 @@ def list_videos(params):
             for video in all_videos:
 
                 if video.find(
-                    'a', class_='video-item__link').get(
-                    'href') != '':
+                    'a',
+                    class_='video-item__link'
+                ).get('href') != '':
 
                     if video.find('p', class_='video-item__subtitle'):
                         video_title = video.find('h3').get_text(
                         ).strip() + ' - ' + video.find(
-                        'p', class_='video-item__subtitle').get_text(
+                            'p',
+                            class_='video-item__subtitle'
+                        ).get_text(
                         ).strip()
                     else:
                         video_title = video.find('h3').get_text(
@@ -692,8 +702,8 @@ def list_videos(params):
                         common.GETTEXT('Download'),
                         'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                             action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                            module_path=params.module_path,
+                            module_name=params.module_name,
                             video_url=video_url) + ')'
                     )
                     context_menu = []
@@ -703,8 +713,8 @@ def list_videos(params):
                         'label': video_title,
                         'thumb': video_img,
                         'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
+                            module_path=params.module_path,
+                            module_name=params.module_name,
                             action='replay_entry',
                             next='play_r',
                             video_url=video_url

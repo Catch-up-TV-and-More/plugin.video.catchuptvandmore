@@ -21,11 +21,8 @@
 """
 
 import ast
-import base64
 import json
-import time
 import re
-import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
@@ -200,6 +197,8 @@ def list_videos(params):
             common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
+                module_path=params.module_path,
+                module_name=params.module_name,
                 video_url=video_url) + ')'
         )
         context_menu = []
@@ -373,8 +372,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         video_url=video_url) + ')'
                 )
                 context_menu = []

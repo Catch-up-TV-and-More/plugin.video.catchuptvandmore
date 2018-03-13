@@ -129,8 +129,8 @@ def list_shows(params):
                     shows.append({
                         'label': season_title,
                         'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
+                            module_path=params.module_path,
+                            module_name=params.module_name,
                             action='replay_entry',
                             next='list_videos_1',
                             title=season_title,
@@ -235,6 +235,8 @@ def list_videos(params):
             common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
+                module_path=params.module_path,
+                module_name=params.module_name,
                 video_id=video_id) + ')'
         )
         context_menu = []

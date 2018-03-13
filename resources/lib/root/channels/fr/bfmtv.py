@@ -246,6 +246,8 @@ def list_videos(params):
             common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
+                module_path=params.module_path,
+                module_name=params.module_name,
                 video_id=params.video_id) + ')'
         )
         context_menu = []
@@ -322,8 +324,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         video_id=video_id) + ')'
                 )
                 context_menu = []
@@ -377,7 +379,7 @@ def list_videos(params):
     )
 
 
-#@common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
     url_live_data = ''
 
@@ -466,7 +468,8 @@ def get_video_url(params):
                 all_datas_videos_path.append(datas['video_url'])
 
             seleted_item = common.sp.xbmcgui.Dialog().select(
-                common.GETTEXT('Choose video quality'), all_datas_videos_quality)
+                common.GETTEXT('Choose video quality'),
+                all_datas_videos_quality)
 
             return all_datas_videos_path[seleted_item].encode('utf-8')
 

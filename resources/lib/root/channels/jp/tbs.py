@@ -24,8 +24,6 @@ from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
-
-
 URL_ROOT = 'http://news.tbs.co.jp'
 
 URL_CONTENT = URL_ROOT + '/digest/%s.html'
@@ -137,6 +135,8 @@ def list_videos(params):
             common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
+                module_path=params.module_path,
+                module_name=params.module_name,
                 video_url=video_url) + ')'
         )
         context_menu = []

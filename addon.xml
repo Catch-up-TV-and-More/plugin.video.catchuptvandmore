@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.10~beta014"
+       version="0.1.10~beta015"
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -47,6 +47,7 @@
 [Add Channel] 朝日放送株式会社 (JP) (wwark)
 [Add Channel] 読売テレビ (JP) (wwark)
 [Improvement] Use XMLTV Telerama for Live FR TV guide (SylvainCecchetto)
+[Improvement] Faster navigation in plugin (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -72,7 +72,7 @@ def root(params):
         URL_ROOT + '/search?types=video')
     categories_soup = bs(categories_html, 'html.parser')
     categories = categories_soup.find(
-            'div', class_='facet-group facet-group--tags open').find_all(
+        'div', class_='facet-group facet-group--tags open').find_all(
             'label')
 
     for category in categories:

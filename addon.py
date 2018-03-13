@@ -20,8 +20,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import YDStreamUtils
-import YDStreamExtractor
+import importlib
 from resources.lib import skeleton
 from resources.lib import common
 from resources.lib import vpn
@@ -438,6 +437,9 @@ def download_video(params):
 
     print 'URL_VIDEO to download ' + url_video
 
+    YDStreamUtils = importlib.import_module('YDStreamUtils')
+    YDStreamExtractor = importlib.import_module('YDStreamExtractor')
+
     vid = YDStreamExtractor.getVideoInfo(url_video, quality=3)
     path = common.PLUGIN.get_setting('dlFolder')
     path = path.decode(
@@ -455,7 +457,6 @@ def download_video(params):
                 error_message = result.message
         finally:
             YDStreamExtractor.setOutputCallback(None)
-
     return None
 
 

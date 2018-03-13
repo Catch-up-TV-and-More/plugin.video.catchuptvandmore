@@ -434,7 +434,7 @@ def get_video_url(params):
             # Find a better solution to strip
             all_datas_videos_quality.append(video.get_text().strip())
             # Get link
-            value_jwplayer_id=video.get('data-jwplayer-id')
+            value_jwplayer_id = video.get('data-jwplayer-id')
             # Case mp4
             if value_jwplayer_id != '':
                 list_streams = videos_soup.find_all(

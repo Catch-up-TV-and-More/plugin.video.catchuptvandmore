@@ -25,7 +25,6 @@ import json
 import time
 import re
 import xml.etree.ElementTree as ET
-from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
@@ -168,7 +167,7 @@ def list_videos(params):
     videos = []
 
     if params.next == 'list_videos_cat':
-        category_id = params.category_id
+        # category_id = params.category_id
 
         file_path = utils.download_catalog(
             URL_ALL_VOD_NHK % (params.channel_name, get_api_key(params)),
@@ -227,8 +226,8 @@ def list_videos(params):
                     common.GETTEXT('Download'),
                     'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                         action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
+                        module_path=params.module_path,
+                        module_name=params.module_name,
                         video_id=video_id) + ')'
                 )
                 context_menu = []
@@ -275,7 +274,7 @@ def get_live_item(params):
     plot = ''
     duration = 0
     img = ''
-    url_live = ''
+    # url_live = ''
 
     title = params.channel_label
 
@@ -381,7 +380,8 @@ def get_video_url(params):
         json_parser = json.loads(video_vod)
 
         # Get Value url encodebase64
-        for stream in json_parser["authorization_data"][params.video_id]["streams"]:
+        for stream in json_parser[
+                "authorization_data"][params.video_id]["streams"]:
             url_base64 = stream["url"]["data"]
         url = base64.standard_b64decode(url_base64)
         return url

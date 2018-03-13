@@ -78,7 +78,8 @@ def list_shows(params):
         replay_categories_soup = bs(replay_categories_html, 'html.parser')
         categories = replay_categories_soup.find(
             'ul', class_='nav nav-pills pull-right').find_all(
-                'li', class_='menu-item menu-item-type-post_type menu-item-object-page')
+                'li',
+                class_='menu-item menu-item-type-post_type menu-item-object-page')
 
         for category in categories:
             if 'meteo' in category.find('a').get('href') or \
@@ -115,8 +116,8 @@ def list_shows(params):
                     shows.append({
                         'label': category_name,
                         'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
+                            module_path=params.module_path,
+                            module_name=params.module_name,
                             action='replay_entry',
                             category_id=category_id,
                             category_name=category_name,
@@ -170,6 +171,8 @@ def list_videos(params):
             common.GETTEXT('Download'),
             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
                 action='download_video',
+                module_path=params.module_path,
+                module_name=params.module_name,
                 video_url=video_url) + ')'
         )
         context_menu = []

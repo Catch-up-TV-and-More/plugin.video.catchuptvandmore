@@ -22,9 +22,9 @@
 
 import json
 import re
+import importlib
 from resources.lib import utils
 from resources.lib import common
-from youtube_dl import YoutubeDL
 
 # TO DO
 # Dailymotion on JARVIS
@@ -202,22 +202,26 @@ def get_stream_facebook(video_id, isDownloadVideo):
             r'sd_src_no_ratelimit:"(.*?)"').findall(
             html_facebook)[0]
 
+
 # Youtube Part
 def get_stream_youtube(video_id, isDownloadVideo):
 
     url_youtube = URL_YOUTUBE % video_id
 
-    if isDownloadVideo == True:
+    if isDownloadVideo is True:
         return url_youtube
 
+    YoutubeDL = importlib.import_module('youtube_dl.YoutubeDL')
     ydl = YoutubeDL()
     ydl.add_default_info_extractors()
     with ydl:
-        result = ydl.extract_info(url_youtube,
+        result = ydl.extract_info(
+            url_youtube,
             download=False)
         for format_video in result['formats']:
             url_live = format_video['url']
     return url_live
+
 
 # BRIGHTCOVE Part
 def get_brightcove_policy_key(data_account, data_player):
@@ -225,6 +229,7 @@ def get_brightcove_policy_key(data_account, data_player):
     file_js = utils.get_webcontent(
         URL_BRIGHTCOVE_POLICY_KEY % (data_account, data_player))
     return re.compile('policyKey:"(.+?)"').findall(file_js)[0]
+
 
 def get_brightcove_video_json(data_account, data_player, data_video_id):
 
