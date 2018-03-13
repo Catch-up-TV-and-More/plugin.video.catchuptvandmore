@@ -302,7 +302,6 @@ def build_live_tv_menu(params):
 
             context_menu.append(utils.vpn_context_menu_item())
 
-            '''
             # Uncomment this block in production to prevent
             # error while building Live TV lisitng in case of broken channel
             try:
@@ -317,8 +316,8 @@ def build_live_tv_menu(params):
                             listing.append(subitem)
             except Exception:
                 None
-            '''
 
+            '''
             # Uncomment this block in development environment
             # to see any broken channel
             item = channel.get_live_item(params)
@@ -330,6 +329,7 @@ def build_live_tv_menu(params):
                     for subitem in item:
                         subitem['context_menu'] = context_menu
                         listing.append(subitem)
+            '''
 
         return common.PLUGIN.create_listing(
             listing,

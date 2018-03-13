@@ -69,7 +69,11 @@ SKELETON = {
                 ('rtc', 'none'),
                 ('telemb', 'none'),
                 ('vrt', 'none'),
-                ('auvio', 'none'),
+                ('la_une', 'none'),
+                ('la_deux', 'none'),
+                ('la_trois', 'none'),
+                ('tarmac', 'none'),
+                ('purevision', 'none'),
                 ('rtltvi', 'none'),
                 ('plugrtl', 'none'),
                 ('clubrtl', 'none')
@@ -110,7 +114,11 @@ SKELETON = {
         ('replay', 'generic_menu'): {
 
             ('be', 'generic_menu'): {
-                ('auvio', 'replay_entry'),
+                ('la_une', 'replay_entry'),
+                ('la_deux', 'replay_entry'),
+                ('la_trois', 'replay_entry'),
+                ('tarmac', 'replay_entry'),
+                ('purevision', 'replay_entry'),
                 ('brf', 'replay_entry'),
                 ('rtltvi', 'replay_entry'),
                 ('plugrtl', 'replay_entry'),
@@ -258,7 +266,11 @@ CHANNELS dictionary is the bridge between
 the channel name and his corresponding python file
 '''
 CHANNELS = {
-    'auvio': 'rtbf',
+    'la_une': 'rtbf',
+    'la_deux': 'rtbf',
+    'la_trois': 'rtbf',
+    'tarmac': 'rtbf',
+    'purevision': 'rtbf',
     'brf': 'brf',
     'rtltvi': 'rtl',
     'plugrtl': 'rtl',
@@ -384,7 +396,11 @@ LABELS = {
     'ca': 'Canada',
 
     # Belgium channels / live TV
-    'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...) ',
+    'la_une': 'La Une',
+    'la_deux': 'La Deux',
+    'la_trois': 'La Trois',
+    'tarmac': 'Tarmac',
+    'purevision': 'PureVision',
     'brf': 'BRF Mediathek',
     'rtltvi': 'RTL-TVI',
     'plugrtl': 'PLUG RTL',

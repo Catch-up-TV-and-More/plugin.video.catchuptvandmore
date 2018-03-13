@@ -284,7 +284,6 @@ def list_videos(params):
         for episode in list_episodes:
 
             if episode.get('data-type') == 'media':
-
                 if episode.find('h4'):
                     title = episode.find('h3').find(
                         'a').get('title') + ' - ' + \
