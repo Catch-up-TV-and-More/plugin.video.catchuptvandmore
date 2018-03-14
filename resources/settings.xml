@@ -175,20 +175,9 @@
             <setting label="RTC Télé Liège" type="bool" id="rtc" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="rtc.order" default="7"/>
 
-            <setting label="La Une" type="bool" id="la_une" default="true" visible="eq(-15,true)"/>
-            <setting label="" type="number" visible="false" id="la_une.order" default="8"/>
+            <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="auvio" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="auvio.order" default="8"/>
 
-            <setting label="La Deux" type="bool" id="la_deux" default="true" visible="eq(-17,true)"/>
-            <setting label="" type="number" visible="false" id="la_deux.order" default="9"/>
-
-            <setting label="La Trois" type="bool" id="la_trois" default="true" visible="eq(-19,true)"/>
-            <setting label="" type="number" visible="false" id="la_trois.order" default="10"/>
-
-            <setting label="PureVision" type="bool" id="purevision" default="true" visible="eq(-21,true)"/>
-            <setting label="" type="number" visible="false" id="purevision.order" default="11"/>
-
-            <setting label="Tarmac" type="bool" id="tarmac" default="true" visible="eq(-23,true)"/>
-            <setting label="" type="number" visible="false" id="tarmac.order" default="12"/>
         <!-- Belgium -->
 
 

@@ -165,7 +165,7 @@ def list_shows(params):
         emissions_html = open(file_path).read()
         emissions_soup = bs(emissions_html, 'html.parser')
         list_emissions = emissions_soup.find_all(
-            'article', class_="rtbf-media-item col-xxs-12 ")
+            'article', class_="rtbf-media-item col-xxs-12 col-xs-6 col-md-4 col-lg-3 ")
 
         for emission in list_emissions:
 
