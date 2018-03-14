@@ -23,10 +23,11 @@
 import time
 import re
 import json
-import importlib
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
+from resources.lib import resolver
+import HTMLParser
 
 # TO DO
 # Replay (emission) | (just 5 first episodes)
@@ -322,26 +323,29 @@ def list_nwb(params):
     url_nwb_list.append(url_weather)
     url_nwb_list.append(url_business)
 
-    YoutubeDL = importlib.import_module('youtube_dl.YoutubeDL')
-    ydl = YoutubeDL.YoutubeDL()
-
     for url_nwb in url_nwb_list:
         url_nwb_html = utils.get_webcontent(url_nwb)
         root_soup = bs(url_nwb_html, 'html.parser')
         url_nwb_yt_html = utils.get_webcontent(
             root_soup.find(
                 'div', class_='yt-vod-container').find('iframe').get('src'))
+
         url_yt = re.compile(
             '<link rel="canonical" href="(.*?)"').findall(url_nwb_yt_html)[0]
-        ydl.add_default_info_extractors()
-        with ydl:
-            result = ydl.extract_info(url_yt, download=False)
-            for format_video in result['formats']:
-                url_nwb_stream = format_video['url']
-        title = result['title']
+
+        video_id = re.compile(
+            'v=(.*)').findall(url_yt)
+
+        title = re.compile(
+            '<title>(.*?)</title>').findall(url_nwb_yt_html)[0]
+        h = HTMLParser.HTMLParser()
+        title = h.unescape(title.decode('utf-8')).encode('utf-8')
+        if ' - YouTube' in title:
+            title = title.replace(' - YouTube', '')
+
         plot = ''
         duration = 0
-        img = result['thumbnail']
+        img = ''
 
         info = {
             'video': {
@@ -352,15 +356,15 @@ def list_nwb(params):
         }
 
         nwb.append({
-            'label': title,
+            'label': 'dee',
             'fanart': img,
             'thumb': img,
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                next='play_r',
-                url=url_nwb_stream,
+                next='play_r_youtube',
+                video_id=video_id,
             ),
             'is_playable': True,
             'info': info
@@ -383,3 +387,5 @@ def get_video_url(params):
         return params.url
     elif params.next == 'play_r' or params.next == 'download_video':
         return params.url
+    elif params.next == 'play_r_youtube':
+        return resolver.get_stream_youtube(params.video_id, False)

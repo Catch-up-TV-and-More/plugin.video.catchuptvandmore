@@ -205,22 +205,38 @@ def get_stream_facebook(video_id, isDownloadVideo):
 
 # Youtube Part
 def get_stream_youtube(video_id, isDownloadVideo):
-
     url_youtube = URL_YOUTUBE % video_id
 
     if isDownloadVideo is True:
         return url_youtube
 
-    YoutubeDL = importlib.import_module('youtube_dl.YoutubeDL')
-    ydl = YoutubeDL.YoutubeDL()
-    ydl.add_default_info_extractors()
-    with ydl:
-        result = ydl.extract_info(
-            url_youtube,
-            download=False)
-        for format_video in result['formats']:
-            url_live = format_video['url']
-    return url_live
+    YDStreamExtractor = importlib.import_module('YDStreamExtractor')
+
+    quality = 3
+    desired_quality = common.PLUGIN.get_setting('quality')
+    if desired_quality == "DIALOG":
+        all_quality = ['SD', '720p', '1080p', 'Highest available']
+        seleted_item = common.sp.xbmcgui.Dialog().select(
+            common.GETTEXT('Choose video quality'),
+            all_quality)
+
+        if seleted_item == -1:
+            quality = 3
+        selected_quality_string = all_quality[seleted_item]
+        quality_string = {
+            'SD': 0,
+            '720p': 1,
+            '1080p': 2,
+            'Highest available': 3
+        }
+        quality = quality_string[selected_quality_string]
+
+    vid = YDStreamExtractor.getVideoInfo(
+        url_youtube,
+        quality=quality,
+        resolve_redirects=True
+    )
+    return vid.streamURL()
 
 
 # BRIGHTCOVE Part

@@ -1320,7 +1320,7 @@ def get_video_url(params):
                 if 'youtube' in url_video_resolver:
                     video_id = url_video_resolver.split(
                         'youtube.com/embed/')[1]
-                    print 'video_id youtube: ' + video_id
+                    # print 'video_id youtube: ' + video_id
                     if params.next == 'download_video':
                         return resolver.get_stream_youtube(
                             video_id, True)
@@ -1331,7 +1331,7 @@ def get_video_url(params):
                 elif 'dailymotion' in url_video_resolver:
                     video_id = url_video_resolver.split(
                         'dailymotion.com/embed/video/')[1]
-                    print 'video_id dailymotion: ' + video_id
+                    # print 'video_id dailymotion: ' + video_id
                     if params.next == 'download_video':
                         return resolver.get_stream_dailymotion(
                             video_id, True)
