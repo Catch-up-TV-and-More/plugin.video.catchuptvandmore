@@ -333,33 +333,35 @@ def get_live_item(params):
     lives_jsonparser = json.loads(lives_json)
 
     for lives_value in lives_jsonparser.iteritems():
+        
+        if 'backup' not in lives_value[0] and \
+             'geo' not in lives_value[0]:
+            title = str(lives_value[0]).replace(
+                'vualto_', '').replace('_', ' ')
+            url_live = lives_jsonparser[lives_value[0]]["hls"]
 
-        title = str(lives_value[0]).replace(
-            'vualto_', '').replace('_', ' ')
-        url_live = lives_jsonparser[lives_value[0]]["hls"]
-
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
+            info = {
+                'video': {
+                    'title': params.channel_label + " - [I]" + title + "[/I]",
+                    'plot': plot,
+                    'duration': duration
+                }
             }
-        }
 
-        lives.append({
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                url_live=url_live,
-            ),
-            'is_playable': True,
-            'info': info
-        })
+            lives.append({
+                'label': params.channel_label + " - [I]" + title + "[/I]",
+                'fanart': img,
+                'thumb': img,
+                'url': common.PLUGIN.get_url(
+                    action='start_live_tv_stream',
+                    next='play_l',
+                    module_name=params.module_name,
+                    module_path=params.module_path,
+                    url_live=url_live,
+                ),
+                'is_playable': True,
+                'info': info
+            })
     return lives
 
 
