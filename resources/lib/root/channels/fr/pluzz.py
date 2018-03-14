@@ -610,21 +610,6 @@ def list_shows(params):
             )
         })
 
-        show_title = 'Directs'
-        shows.append({
-            'label': show_title,
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                page='1',
-                mode='directs',
-                title=show_title,
-                next='list_videos_ftvsport',
-                window_title=show_title
-            )
-        })
-
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
@@ -645,150 +630,60 @@ def list_videos(params):
 
     if params.next == 'list_videos_ftvsport':
         
-        if params.mode == 'directs':
-            
-            list_lives = utils.get_webcontent(
-                URL_FRANCETV_SPORT % 'directs')
-            list_lives_parserjson = json.loads(list_lives)
+        list_videos_html = utils.get_webcontent(
+            URL_FRANCETV_SPORT % (params.mode) + \
+                '?page=%s' % (params.page))
+        list_videos_parserjson = json.loads(list_videos_html)
 
+        for video in list_videos_parserjson["page"]["flux"]:
+
+            title = video["title"]
+            image = video["image"]["large_16_9"]
             duration = 0
+            if 'duration' in video:
+                duration = int(video["duration"])
+            url_sport = URL_ROOT_SPORT + video["url"]
+            html_sport = utils.get_webcontent(url_sport)
+            id_diffusion = re.compile(
+                r'data-video="(.*?)"').findall(html_sport)[0]
 
-            if 'lives' in list_lives_parserjson["page"]:
-
-                for live in list_lives_parserjson["page"]["lives"]:
-                    title = live["title"]
-                    image = live["image"]["large_16_9"]
-                    id_diffusion = live["sivideo-id"]
-
-                    try:
-                        value_date = time.strftime(
-                            '%d/%m/%Y %H:%M', time.localtime(live["start"]))
-                    except Exception:
-                        value_date = ''
-                    plot = 'Live start at ' + value_date
-
-                    info = {
-                        'video': {
-                            'title': title,
-                            'plot': plot,
-                            # 'aired': aired,
-                            # 'date': date,
-                            'duration': duration,
-                            # 'year': year,
-                        }
-                    }
-
-                    videos.append({
-                        'label': title,
-                        'fanart': image,
-                        'thumb': image,
-                        'url': common.PLUGIN.get_url(
-                            module_path=params.module_path,
-                            module_name=params.module_name,
-                            action='replay_entry',
-                            next='play_l',
-                            id_diffusion=id_diffusion
-                        ),
-                        'is_playable': True,
-                        'info': info
-                    })
-
-            for live in list_lives_parserjson["page"]["upcoming-lives"]:
-
-                title = live["title"]
-                try:
-                    image = live["image"]["large_16_9"]
-                except KeyError:
-                    image = ''
-                # id_diffusion = live["sivideo-id"]
-
-                try:
-                    value_date = time.strftime(
-                        '%d/%m/%Y %H:%M', time.localtime(live["start"]))
-                except Exception:
-                    value_date = ''
-                plot = 'Live start at ' + value_date
-
-                info = {
-                    'video': {
-                        'title': title,
-                        'plot': plot,
-                        # 'aired': aired,
-                        # 'date': date,
-                        'duration': duration,
-                        # 'year': year,
-                    }
+            info = {
+                'video': {
+                    'title': title,
+                    # 'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
                 }
+            }
 
-                videos.append({
-                    'label': title,
-                    'fanart': image,
-                    'thumb': image,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        next='play_l'
-                    ),
-                    'is_playable': False,
-                    'info': info
-                })
+            download_video = (
+                common.GETTEXT('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    id_diffusion=id_diffusion) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
 
-        else:
-            list_videos_html = utils.get_webcontent(
-                URL_FRANCETV_SPORT % (params.mode) + \
-                    '?page=%s' % (params.page))
-            list_videos_parserjson = json.loads(list_videos_html)
-
-            for video in list_videos_parserjson["page"]["flux"]:
-
-                title = video["title"]
-                image = video["image"]["large_16_9"]
-                duration = 0
-                if 'duration' in video:
-                    duration = int(video["duration"])
-                url_sport = URL_ROOT_SPORT + video["url"]
-                html_sport = utils.get_webcontent(url_sport)
-                id_diffusion = re.compile(
-                    r'data-video="(.*?)"').findall(html_sport)[0]
-
-                info = {
-                    'video': {
-                        'title': title,
-                        # 'plot': plot,
-                        # 'aired': aired,
-                        # 'date': date,
-                        'duration': duration,
-                        # 'year': year,
-                    }
-                }
-
-                download_video = (
-                    common.GETTEXT('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        id_diffusion=id_diffusion) + ')'
-                )
-                context_menu = []
-                context_menu.append(download_video)
-
-                videos.append({
-                    'label': title,
-                    'fanart': image,
-                    'thumb': image,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        next='play_r',
-                        id_diffusion=id_diffusion
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu
-                })
+            videos.append({
+                'label': title,
+                'fanart': image,
+                'thumb': image,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='play_r',
+                    id_diffusion=id_diffusion
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
 
         # More videos...
         videos.append({
