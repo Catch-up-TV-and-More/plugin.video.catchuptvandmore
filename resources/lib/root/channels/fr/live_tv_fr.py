@@ -22,6 +22,7 @@
 
 import os
 import time
+import datetime
 import requests
 import threading
 import xml.etree.ElementTree as ET
@@ -131,7 +132,8 @@ def build_live_tv_menu(params):
     # First we parse the xmltv guide
     channels_xmltv = {}
     pgrms_xmltv = {}
-    current_time = int(time.strftime('%Y%m%d%H%M%S'))
+    # current_time = int(time.strftime('%Y%m%d%H%M%S'))
+    current_time = int(datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S'))
     if os.path.exists(XMLTV_FILEPATH):
         tree = ET.parse(XMLTV_FILEPATH)
         root = tree.getroot()
