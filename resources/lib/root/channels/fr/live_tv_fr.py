@@ -131,8 +131,7 @@ def build_live_tv_menu(params):
     # First we parse the xmltv guide
     channels_xmltv = {}
     pgrms_xmltv = {}
-    current_time = int(time.strftime('%Y%m%d%H%M%S')) + \
-        int(time.strftime('%z'))
+    current_time = int(time.strftime('%Y%m%d%H%M%S'))
     if os.path.exists(XMLTV_FILEPATH):
         tree = ET.parse(XMLTV_FILEPATH)
         root = tree.getroot()
@@ -143,11 +142,9 @@ def build_live_tv_menu(params):
             if pgrm_channel in pgrms_xmltv:
                 continue
             pgrm_start_s = pgrm.get('start')
-            pgrm_start = int(pgrm_start_s.split()[0]) + \
-                int(pgrm_start_s.split()[1])
+            pgrm_start = int(pgrm_start_s.split()[0])
             pgrm_stop_s = pgrm.get('stop')
-            pgrm_stop = int(pgrm_stop_s.split()[0]) + \
-                int(pgrm_stop_s.split()[1])
+            pgrm_stop = int(pgrm_stop_s.split()[0])
             if current_time >= pgrm_start and \
                     current_time <= pgrm_stop:
                 pgrms_xmltv[pgrm_channel] = pgrm
