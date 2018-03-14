@@ -629,7 +629,7 @@ def list_videos(params):
         videos = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_videos_ftvsport':
-        
+
         list_videos_html = utils.get_webcontent(
             URL_FRANCETV_SPORT % (params.mode) + \
                 '?page=%s' % (params.page))
@@ -1342,6 +1342,7 @@ def get_video_url(params):
                     # TO DO add new video hosting ?
                     return None
         else:
+
             file_prgm = utils.get_webcontent(SHOW_INFO % (params.id_diffusion))
             json_parser = json.loads(file_prgm)
 

@@ -302,8 +302,6 @@ def build_live_tv_menu(params):
 
             context_menu.append(utils.vpn_context_menu_item())
 
-            # Uncomment this block in production to prevent
-            # error while building Live TV lisitng in case of broken channel
             try:
                 item = channel.get_live_item(params)
                 if item is not None:
@@ -318,20 +316,6 @@ def build_live_tv_menu(params):
                 title = params['channel_label'] + ' broken'
                 utils.send_notification(
                     '', title=title, time=2000)
-
-            '''
-            # Uncomment this block in development environment
-            # to see any broken channel
-            item = channel.get_live_item(params)
-            if item is not None:
-                if type(item) is dict:
-                    item['context_menu'] = context_menu
-                    listing.append(item)
-                elif type(item) is list:
-                    for subitem in item:
-                        subitem['context_menu'] = context_menu
-                        listing.append(subitem)
-            '''
 
         return common.PLUGIN.create_listing(
             listing,
