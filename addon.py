@@ -419,9 +419,9 @@ def hide(params):
 
 @common.PLUGIN.action()
 def download_video(params):
-    #  Ici on a seulement le lien de la page web où se trouve la video
-    #  Il faut appeller la fonction get_video_url de la chaine concernée
-    #  pour avoir l'URL finale de la vidéo
+    # Here we only have the webpage link of the video
+    # We have to call get_video_url function from the module
+    # to get the final video URL
     params['next'] = 'replay_entry'
 
     # Legacy fix (il faudrait remplacer channel_name par
@@ -430,31 +430,38 @@ def download_video(params):
 
     channel = utils.get_module(params)
 
-    params.next = 'download_video'
+    params['next'] = 'download_video'
     url_video = channel.get_video_url(params)
 
-    #  Maintenant on peut télécharger la vidéo
-
-    print 'URL_VIDEO to download ' + url_video
-
+    #  Now that we have video URL we can try to download this one
     YDStreamUtils = importlib.import_module('YDStreamUtils')
     YDStreamExtractor = importlib.import_module('YDStreamExtractor')
 
-    vid = YDStreamExtractor.getVideoInfo(url_video, quality=3)
-    path = common.PLUGIN.get_setting('dlFolder')
+    quality_string = {
+        'SD': 0,
+        '720p': 1,
+        '1080p': 2,
+        'Highest available': 3
+    }
+
+    vid = YDStreamExtractor.getVideoInfo(
+        url_video,
+        quality=quality_string[common.PLUGIN.get_setting('dl_quality')],
+        resolve_redirects=True
+    )
+
+    path = common.PLUGIN.get_setting('dl_folder')
     path = path.decode(
         "utf-8").encode(common.FILESYSTEM_CODING)
 
     with YDStreamUtils.DownloadProgress() as prog:
         try:
             YDStreamExtractor.setOutputCallback(prog)
-            result = YDStreamExtractor.downloadVideo(vid, path)
-            if result:
-                # success
-                full_path_to_file = result.filepath
-            elif result.status != 'canceled':
-                # download failed
-                error_message = result.message
+            YDStreamExtractor.handleDownload(
+                vid,
+                bg=common.PLUGIN.get_setting('dl_background'),
+                path=path
+            )
         finally:
             YDStreamExtractor.setOutputCallback(None)
     return None

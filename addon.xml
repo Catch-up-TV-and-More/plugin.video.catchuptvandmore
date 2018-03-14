@@ -5,9 +5,9 @@
        provider-name="SylvainCecchetto">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="script.module.beautifulsoup4" version="4.3.1"/>
-    <import addon="script.module.requests" version="2.9.1"/>
-    <import addon="script.module.youtube.dl" version="17.518.2"/>
+    <import addon="script.module.beautifulsoup4" version="4.3.2"/>
+    <import addon="script.module.requests" version="2.14.4"/>
+    <import addon="script.module.youtube.dl" version="18.225.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -49,6 +49,7 @@
 [Improvement] Use XMLTV Telerama for Live FR TV guide (SylvainCecchetto)
 [Improvement] Faster navigation in plugin (SylvainCecchetto)
 [Fix] RTBF Auvio - Replay Emissions (BE) (wwark) 
+[Improvement] Customizable parameters to download video (SylvainCecchetto)
     </news>
     <assets>
       <icon>icon.png</icon>

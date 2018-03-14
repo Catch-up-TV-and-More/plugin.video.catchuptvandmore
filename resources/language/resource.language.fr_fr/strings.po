@@ -204,6 +204,14 @@ msgctxt "#30200"
 msgid "Folder to Download"
 msgstr "Répertoire de téléchargement"
 
+msgctxt "#30201"
+msgid "Quality of the video to download"
+msgstr "Qualité de la vidéo à télécharger"
+
+msgctxt "#30202"
+msgid "Download in background"
+msgstr "Télécharger en arrière plan"
+
 
 
 # Accounts (from 30240 to 30259)
