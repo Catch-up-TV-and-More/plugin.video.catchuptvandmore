@@ -315,7 +315,9 @@ def build_live_tv_menu(params):
                             subitem['context_menu'] = context_menu
                             listing.append(subitem)
             except Exception:
-                None
+                title = params['channel_label'] + ' broken'
+                utils.send_notification(
+                    '', title=title, time=2000)
 
             '''
             # Uncomment this block in development environment
