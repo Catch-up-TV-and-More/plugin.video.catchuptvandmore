@@ -23,8 +23,8 @@
 import time
 import re
 import json
+import importlib
 from bs4 import BeautifulSoup as bs
-from youtube_dl import YoutubeDL
 from resources.lib import utils
 from resources.lib import common
 
@@ -322,7 +322,8 @@ def list_nwb(params):
     url_nwb_list.append(url_weather)
     url_nwb_list.append(url_business)
 
-    ydl = YoutubeDL()
+    YoutubeDL = importlib.import_module('youtube_dl.YoutubeDL')
+    ydl = YoutubeDL.YoutubeDL()
 
     for url_nwb in url_nwb_list:
         url_nwb_html = utils.get_webcontent(url_nwb)
