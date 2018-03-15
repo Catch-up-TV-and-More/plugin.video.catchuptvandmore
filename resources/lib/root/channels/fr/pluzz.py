@@ -1359,7 +1359,8 @@ def get_video_url(params):
                             all_datas_videos_quality.append("HD")
                         else:
                             all_datas_videos_quality.append("SD")
-                        all_datas_videos_path.append(video['url'])
+                        all_datas_videos_path.append(
+                            (video['url'], video['drm']))
 
                 seleted_item = common.sp.xbmcgui.Dialog().select(
                     common.GETTEXT('Choose video quality'),
@@ -1368,18 +1369,26 @@ def get_video_url(params):
                 if seleted_item == -1:
                     return None
 
-                url_selected = all_datas_videos_path[seleted_item]
+                url_selected = all_datas_videos_path[seleted_item][0]
+                drm = all_datas_videos_path[seleted_item][1]
 
             elif desired_quality == "BEST":
                 for video in json_parser['videos']:
                     if video['format'] == 'hls_v5_os':
                         url_selected = video['url']
+                        drm = video['drm']
             else:
                 for video in json_parser['videos']:
                     if video['format'] == 'm3u8-download':
                         url_selected = video['url']
+                        drm = video['drm']
 
-            return url_selected
+            if drm:
+                utils.send_notification(
+                    common.ADDON.get_localized_string(30702))
+                return None
+            else:
+                return url_selected
 
     elif params.next == 'play_l':
 
@@ -1412,6 +1421,7 @@ def get_video_url(params):
                     url_hls = video['url']
 
         final_url = ''
+
         # Case France 3 Région
         if url_hls_v1 == '' and url_hls_v5 == '':
             final_url = url_hls
