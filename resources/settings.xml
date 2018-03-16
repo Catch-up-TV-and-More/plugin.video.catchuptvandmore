@@ -512,7 +512,7 @@
     <!-- Download -->
     <category label="30003">
         <setting label="30012" type="lsep"/>
-        <setting label="30200" type="folder" id="dl_folder" source="auto" option="writeable"/>
+        <setting label="30200" type="folder" id="dl_folder" source="" option="writeable"/>
         <setting label="30201" type="labelenum" id="dl_quality" visible="true" values="SD|720p|1080p|Highest available" default="Highest available"/>
         <setting label="30202" type="bool" id="dl_background" default="false" visible="true"/>
     </category>
