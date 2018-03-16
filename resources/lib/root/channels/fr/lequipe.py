@@ -54,6 +54,16 @@ def channel_entry(params):
     else:
         return None
 
+CATEGORIES = {
+    'tout': URL_ROOT_VIDEO_LEQUIPE,
+    'L\'Équipe du Soir': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/1',
+    'L\'Équipe d\'Estelle': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/98',
+    'Événements': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/66',
+    'L\'Équipe du week-end': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/64',
+    'La Grande Soirée': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/93',
+    'Les Grands Docs': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/28',
+    'Émission spéciale': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/42'
+}
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -61,21 +71,7 @@ def list_shows(params):
     shows = []
 
     # Get categories :
-    file_path = utils.download_catalog(
-        URL_ROOT_VIDEO_LEQUIPE,
-        '%s_video.html' % (
-            params.channel_name))
-    root_html = open(file_path).read()
-    root_soup = bs(root_html, 'html.parser')
-
-    categories_soup = root_soup.find_all(
-        'a', class_="navtab__item js-tabs-item")
-
-    for category in categories_soup:
-
-        category_name = category.get_text().encode('utf-8')
-        category_url = URL_REPLAY_VIDEO_LEQUIPE % \
-            category.get('data-program-id')
+    for category_name, category_url in CATEGORIES.iteritems():
 
         shows.append({
             'label': category_name,
@@ -128,7 +124,7 @@ def list_videos(params):
         url = URL_ROOT + program['href'].encode('utf-8')
         html_video_equipe = utils.get_webcontent(url)
         video_id = re.compile(
-            r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?',
+            r'www.dailymotion.com/embed/video/(.*?)\?',
             re.DOTALL).findall(html_video_equipe)[0]
 
         title = program.find(
