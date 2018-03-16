@@ -273,8 +273,8 @@ def list_videos(params):
                     'utf-8')[:-3]) * 60
 
             url_video = URL_ROOT + video.find(
-                'div', class_="content").find(
-                'a').get('href').encode('utf-8')
+                'div', class_="content").find_all(
+                'a')[1].get('href').encode('utf-8')
 
             info = {
                 'video': {
@@ -350,7 +350,7 @@ def list_videos(params):
 def start_live_tv_stream(params):
     html_live = utils.get_webcontent(URL_LIVE_SITE)
     video_id = re.compile(
-        r'www.dailymotion.com/embed/video/(.*?)\?').findall(
+        r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(
         html_live)[0]
 
     params['next'] = 'play_l'
