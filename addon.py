@@ -340,10 +340,11 @@ def start_live_tv_stream(params):
 
     channel = utils.get_module(params)
 
-    if 'fr' not in params.module_path:
+    # Fix tempo pour le XMLTV de France
+    if "'fr'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    else:
         return channel.get_video_url(params)
-
-    return channel.start_live_tv_stream(params)
 
 
 @common.PLUGIN.action()
