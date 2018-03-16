@@ -20,7 +20,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import importlib
 from resources.lib import skeleton
 from resources.lib import common
 from resources.lib import vpn
@@ -420,8 +419,8 @@ def download_video(params):
     url_video = channel.get_video_url(params)
 
     #  Now that we have video URL we can try to download this one
-    YDStreamUtils = importlib.import_module('YDStreamUtils')
-    YDStreamExtractor = importlib.import_module('YDStreamExtractor')
+    YDStreamUtils = __import__('YDStreamUtils')
+    YDStreamExtractor = __import__('YDStreamExtractor')
 
     quality_string = {
         'SD': 0,

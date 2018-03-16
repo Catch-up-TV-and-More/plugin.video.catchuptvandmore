@@ -22,7 +22,6 @@
 
 import json
 import re
-import importlib
 from resources.lib import utils
 from resources.lib import common
 
@@ -210,7 +209,7 @@ def get_stream_youtube(video_id, isDownloadVideo):
     if isDownloadVideo is True:
         return url_youtube
 
-    YDStreamExtractor = importlib.import_module('YDStreamExtractor')
+    YDStreamExtractor = __import__('YDStreamExtractor')
 
     quality = 3
     desired_quality = common.PLUGIN.get_setting('quality')

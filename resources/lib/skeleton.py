@@ -31,7 +31,7 @@ SKELETON = {
 
         ('live_tv', 'generic_menu'): {
 
-            ('fr', 'build_live_tv_menu'): {
+            ('fr', 'build_live_tv_menu'): [
                 ('tf1', 'none'),
                 ('france2', 'none'),
                 ('france3', 'none'),
@@ -63,9 +63,9 @@ SKELETON = {
                 ('francetvsport', 'none'),
                 ('gong', 'none'),
                 ('bfmparis', 'none')
-            },
+            ],
 
-            ('be', 'build_live_tv_menu'): {
+            ('be', 'build_live_tv_menu'): [
                 ('rtc', 'none'),
                 ('telemb', 'none'),
                 ('vrt', 'none'),
@@ -73,27 +73,27 @@ SKELETON = {
                 ('rtltvi', 'none'),
                 ('plugrtl', 'none'),
                 ('clubrtl', 'none')
-            },
+            ],
 
-            ('ca', 'build_live_tv_menu'): {
+            ('ca', 'build_live_tv_menu'): [
                 ('telequebec', 'none'),
                 ('yestv', 'none')
-            },
+            ],
 
-            ('ch', 'build_live_tv_menu'): {
+            ('ch', 'build_live_tv_menu'): [
                 ('rougetv', 'none'),
                 ('rts', 'none'),
                 ('rsi', 'none'),
                 ('srf', 'none'),
                 ('rtr', 'none')
-            },
+            ],
 
-            ('uk', 'build_live_tv_menu'): {
+            ('uk', 'build_live_tv_menu'): [
                 ('blaze', 'none'),
                 ('skynews', 'none')
-            },
+            ],
 
-            ('wo', 'build_live_tv_menu'): {
+            ('wo', 'build_live_tv_menu'): [
                 ('arirang', 'none'),
                 ('arte', 'none'),
                 ('bvn', 'none'),
@@ -104,12 +104,12 @@ SKELETON = {
                 ('dw', 'none'),
                 ('tv5monde', 'none'),
                 ('tivi5monde', 'none')
-            }
+            ]
         },
 
         ('replay', 'generic_menu'): {
 
-            ('be', 'generic_menu'): {
+            ('be', 'generic_menu'): [
                 ('auvio', 'replay_entry'),
                 ('brf', 'replay_entry'),
                 ('rtltvi', 'replay_entry'),
@@ -118,15 +118,15 @@ SKELETON = {
                 ('vrt', 'replay_entry'),
                 ('telemb', 'replay_entry'),
                 ('rtc', 'replay_entry')
-            },
+            ],
 
-            ('ca', 'generic_menu'): {
+            ('ca', 'generic_menu'): [
                 ('tv5', 'replay_entry'),
                 ('unis', 'replay_entry'),
                 ('telequebec', 'replay_entry')
-            },
+            ],
 
-            ('fr', 'generic_menu'): {
+            ('fr', 'generic_menu'): [
                 ('tf1', 'replay_entry'),
                 ('france2', 'replay_entry'),
                 ('france3', 'replay_entry'),
@@ -180,9 +180,9 @@ SKELETON = {
                 ('francetveducation', 'replay_entry'),
                 ('gong', 'replay_entry'),
                 ('francetvsport', 'replay_entry')
-            },
+            ],
 
-            ('jp', 'generic_menu'): {
+            ('jp', 'generic_menu'): [
                 ('nhknews', 'replay_entry'),
                 ('nhklifestyle', 'replay_entry'),
                 ('tbsnews', 'replay_entry'),
@@ -194,18 +194,18 @@ SKELETON = {
                 ('mbs', 'replay_entry'),
                 ('abc', 'replay_entry'),
                 ('ytv', 'replay_entry')
-            },
+            ],
 
-            ('ch', 'generic_menu'): {
+            ('ch', 'generic_menu'): [
                 ('rts', 'replay_entry'),
                 ('rsi', 'replay_entry'),
                 ('srf', 'replay_entry'),
                 ('rtr', 'replay_entry'),
                 ('swissinfo', 'replay_entry'),
                 ('rougetv', 'replay_entry')
-            },
+            ],
 
-            ('uk', 'generic_menu'): {
+            ('uk', 'generic_menu'): [
                 ('blaze', 'replay_entry'),
                 ('dave', 'replay_entry'),
                 ('really', 'replay_entry'),
@@ -213,9 +213,9 @@ SKELETON = {
                 ('drama', 'replay_entry'),
                 ('skynews', 'replay_entry'),
                 ('skysports', 'replay_entry')
-            },
+            ],
 
-            ('wo', 'generic_menu'): {
+            ('wo', 'generic_menu'): [
                 ('tv5mondeafrique', 'replay_entry'),
                 ('arte', 'replay_entry'),
                 ('france24', 'replay_entry'),
@@ -226,9 +226,9 @@ SKELETON = {
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry')
-            }
+            ]
         },
-        ('websites', 'generic_menu'): {
+        ('websites', 'generic_menu'): [
             ('allocine', 'website_entry'),
             ('tetesaclaques', 'website_entry'),
             ('taratata', 'website_entry'),
@@ -238,7 +238,7 @@ SKELETON = {
             ('notrehistoirech', 'website_entry'),
             ('30millionsdamis', 'website_entry'),
             ('elle', 'website_entry')
-        }
+        ]
 
     }
 }
