@@ -249,7 +249,8 @@ def get_video_url(params):
             r'file: "(.*?)"').findall(video_html)
         stream_url = ''
         for stream in streams_url:
-            if 'm3u8' in stream:
+            if 'm3u8' in stream or \
+                'mp4' in stream:
                 stream_url = stream
         return stream_url
     elif params.next == 'play_l':
