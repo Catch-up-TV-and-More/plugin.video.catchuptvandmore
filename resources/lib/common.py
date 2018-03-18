@@ -64,9 +64,7 @@ LIB_PATH = sp.xbmc.translatePath(
 )
 
 
-def get_window_title():
-    query = sp.sys.argv[2][1:]
-    params = PLUGIN.get_params(query)
+def get_window_title(params):
     if 'window_title' in params:
         return params.window_title
     else:

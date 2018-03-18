@@ -389,7 +389,7 @@ def build_live_tv_menu(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title(),
+        category=common.get_window_title(params),
         content='tvshows'
     )
 

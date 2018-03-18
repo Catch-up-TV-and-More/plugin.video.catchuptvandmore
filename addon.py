@@ -173,8 +173,6 @@ def generic_menu(params):
                 'fanart': fanart,
                 'label': item_title,
                 'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
                     action=item_next,
                     item_id=item_id,
                     item_path=str(item_path),
@@ -188,7 +186,7 @@ def generic_menu(params):
             listing,
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,),
-            category=common.get_window_title()
+            category=common.get_window_title(params)
         )
 
 
@@ -322,7 +320,7 @@ def build_live_tv_menu(params):
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                 common.sp.xbmcplugin.SORT_METHOD_LABEL
             ),
-            category=common.get_window_title()
+            category=common.get_window_title(params)
         )
 
 
