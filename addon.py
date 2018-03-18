@@ -29,12 +29,12 @@ from resources.lib.root.channels.fr import live_tv_fr
 
 @common.PLUGIN.action()
 def root(params):
-    # Download xmltv_fr.xml file in background
-    live_tv_fr.download_xmltv_in_background()
+    # Download xmltv files in background
+    if common.PLUGIN.get_setting('fr'):
+        live_tv_fr.download_xmltv_in_background()
     return generic_menu(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 @common.PLUGIN.action()
 def generic_menu(params):
     """
@@ -101,8 +101,8 @@ def generic_menu(params):
         params['item_skeleton'] = str(item_skeleton)
         params['window_title'] = item_title
 
-        if item_next == 'root':
-            return root(params)
+        if item_next == 'generic_menu':
+            return generic_menu(params)
         elif item_next == 'replay_entry':
             return replay_entry(params)
         elif item_next == 'build_live_tv_menu':
