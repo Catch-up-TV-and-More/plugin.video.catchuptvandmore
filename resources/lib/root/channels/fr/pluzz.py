@@ -577,7 +577,7 @@ def list_shows(params):
                 previous_listing=str(shows)
             )
         })
-    
+
     elif 'list_shows_ftvsport' in params.next:
 
         show_title = 'Videos'
@@ -631,8 +631,8 @@ def list_videos(params):
     if params.next == 'list_videos_ftvsport':
 
         list_videos_html = utils.get_webcontent(
-            URL_FRANCETV_SPORT % (params.mode) + \
-                '?page=%s' % (params.page))
+            URL_FRANCETV_SPORT % (params.mode) +
+            '?page=%s' % (params.page))
         list_videos_parserjson = json.loads(list_videos_html)
 
         for video in list_videos_parserjson["page"]["flux"]:
@@ -1010,6 +1010,14 @@ def list_videos(params):
                         genre = \
                             json_parser_show['genre'].encode('utf-8')
 
+                    subtitles = []
+                    if json_parser_show['subtitles']:
+                        subtitles_list = json_parser_show['subtitles']
+                        for subtitle in subtitles_list:
+                            if subtitle['format'] == 'vtt':
+                                subtitles.append(
+                                    subtitle['url'].encode('utf-8'))
+
                     episode = 0
                     if 'episode' in json_parser_show:
                         episode = json_parser_show['episode']
@@ -1086,7 +1094,8 @@ def list_videos(params):
                         ),
                         'is_playable': True,
                         'info': info,
-                        'context_menu': context_menu
+                        'context_menu': context_menu,
+                        'subtitles': subtitles
                     })
 
         if 'search' in params.next:
