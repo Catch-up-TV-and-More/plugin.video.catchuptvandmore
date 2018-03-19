@@ -202,7 +202,8 @@ SKELETON = {
                 ('srf', 'replay_entry'),
                 ('rtr', 'replay_entry'),
                 ('swissinfo', 'replay_entry'),
-                ('rougetv', 'replay_entry')
+                ('rougetv', 'replay_entry'),
+                ('tvm3', 'replay_entry')
             ],
 
             ('uk', 'generic_menu'): [
@@ -362,7 +363,8 @@ CHANNELS = {
     # 'cx': 'tver', (Protected by DRM)
     'mbs': 'tver',
     'abc': 'tver',
-    'ytv': 'tver'
+    'ytv': 'tver',
+    'tvm3': 'tvm3'
 }
 
 '''
@@ -407,6 +409,7 @@ LABELS = {
     'rtr': 'RTR',
     'swissinfo': 'SWISSINFO',
     'rougetv': 'Rouge TV',
+    'tvm3': 'TVM3',
 
     # French channels / live TV
     'tf1': 'TF1',
