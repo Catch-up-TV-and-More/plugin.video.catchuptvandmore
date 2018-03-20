@@ -149,7 +149,9 @@ def list_videos(params):
                 if 'description' in videos_data['items'][str(video)]["content"]["attributes"]:
                     plot = videos_data['items'][str(video)]["content"]["attributes"]["description"]
                 duration = 0
-                img = videos_data['items'][str(video)]["content"]["attributes"]["image-landscape-medium"].encode('utf-8')
+                img = ''
+                if 'image-landscape-medium' in videos_data['items'][str(video)]["content"]["attributes"]:
+                    img = videos_data['items'][str(video)]["content"]["attributes"]["image-landscape-medium"].encode('utf-8')
                 data_video_id = videos_data['items'][str(video)]["content"]["attributes"]["assetId"]
 
                 info = {
