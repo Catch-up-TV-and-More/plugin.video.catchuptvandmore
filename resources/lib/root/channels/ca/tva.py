@@ -20,14 +20,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import json
 import re
-from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# Add info LIVE TV, Replay
+# Add info LIVE TV
+# Get geoblocked video info
 
 
 URL_ROOT = 'https://videos.tva.ca'
@@ -37,7 +38,6 @@ URL_LIVE = URL_ROOT + '/page/direct'
 URL_EMISSIONS = URL_ROOT + '/page/touslescontenus'
 
 URL_VIDEOS = URL_ROOT + '/page/rattrapage'
-# VideoId
 
 
 def channel_entry(params):
@@ -77,14 +77,12 @@ def list_shows(params):
         })
 
         category_name = 'Tous les contenus'
-        category_url = URL_EMISSIONS
         shows.append({
             'label': category_name,
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                category_url=category_url,
                 category_name=category_name,
                 next='list_shows_2',
                 window_title=category_name
@@ -92,21 +90,20 @@ def list_shows(params):
         })
 
     elif params.next == 'list_shows_2':
-        
-        return None
 
         replay_categories_html = utils.get_webcontent(URL_EMISSIONS)
-        replay_categories_soup = bs(replay_categories_html, 'html.parser')
-        categories = replay_categories_soup.find(
-            'div', class_='list').find_all('li')
+        categories = json.loads(
+            re.compile(
+                r'__INITIAL_STATE__ = (.*?)\}\;').findall(replay_categories_html)[0] + '}')
 
-        for category in categories:
-
-            category_name = category.find('a').get_text()
-            category_url = URL_ROOT + category.find(
-                "a").get("href")
+        for category in categories['items']:
+            
+            category_name = categories['items'][str(category)]["content"]["attributes"]["title"]
+            category_url = URL_ROOT + '/page/' + categories['items'][str(category)]["content"]["attributes"]["pageId"]
+            category_img = categories['items'][str(category)]["content"]["attributes"]["image-landscape-medium"].encode('utf-8')
             shows.append({
                 'label': category_name,
+                'thumb': category_img,
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
                     module_name=params.module_name,
@@ -131,71 +128,80 @@ def list_shows(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
-    return None
-    # videos = []
+    videos = []
 
-    # if params.next == 'list_videos_1':
-    #     list_videos_html = utils.get_webcontent(
-    #         params.category_url)
-    #     list_videos_soup = bs(list_videos_html, 'html.parser')
+    if params.next == 'list_videos_1':
+        list_videos_html = utils.get_webcontent(
+            params.category_url)
 
-    #     videos_data = list_videos_soup.find_all(
-    #         'div', class_='item')
+        videos_data = json.loads(
+            re.compile(
+                r'__INITIAL_STATE__ = (.*?)\}\;').findall(list_videos_html)[0] + '}')
+        
+        data_account = videos_data["configurations"]["accountId"]
+        data_player = videos_data["configurations"]["playerId"]
 
-    #     for video in videos_data:
+        for video in videos_data['items']:
 
-    #         title = video.find('h4').get_text()
-    #         plot = video.find('p').get_text()
-    #         duration = 0
-    #         img = video.find('img').get('src')
-    #         video_id = video.get('data-mediaid')
+            if '_' in video:
+                title = videos_data['items'][str(video)]["content"]["attributes"]["title"]
+                plot = ''
+                if 'description' in videos_data['items'][str(video)]["content"]["attributes"]:
+                    plot = videos_data['items'][str(video)]["content"]["attributes"]["description"]
+                duration = 0
+                img = videos_data['items'][str(video)]["content"]["attributes"]["image-landscape-medium"].encode('utf-8')
+                data_video_id = videos_data['items'][str(video)]["content"]["attributes"]["assetId"]
 
-    #         info = {
-    #             'video': {
-    #                 'title': title,
-    #                 'plot': plot,
-    #                 # 'aired': aired,
-    #                 # 'date': date,
-    #                 'duration': duration,
-    #                 # 'year': year,
-    #                 'mediatype': 'tvshow'
-    #             }
-    #         }
+                info = {
+                    'video': {
+                        'title': title,
+                        'plot': plot,
+                        # 'aired': aired,
+                        # 'date': date,
+                        'duration': duration,
+                        # 'year': year,
+                        'mediatype': 'tvshow'
+                    }
+                }
 
-    #         download_video = (
-    #             common.GETTEXT('Download'),
-    #             'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-    #                 action='download_video',
-    #                 module_path=params.module_path,
-    #                 module_name=params.module_name,
-    #                 video_id=video_id) + ')'
-    #         )
-    #         context_menu = []
-    #         context_menu.append(download_video)
+                download_video = (
+                    common.GETTEXT('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        data_account=data_account,
+                        data_player=data_player,
+                        data_video_id=data_video_id) + ')'
+                )
+                context_menu = []
+                context_menu.append(download_video)
 
-    #         videos.append({
-    #             'label': title,
-    #             'thumb': img,
-    #             'url': common.PLUGIN.get_url(
-    #                 module_path=params.module_path,
-    #                 module_name=params.module_name,
-    #                 action='replay_entry',
-    #                 next='play_r',
-    #                 video_id=video_id,
-    #             ),
-    #             'is_playable': True,
-    #             'info': info,
-    #             'context_menu': context_menu
-    #         })
+                videos.append({
+                    'label': title,
+                    'thumb': img,
+                    'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        action='replay_entry',
+                        next='play_r',
+                        data_account=data_account,
+                        data_player=data_player,
+                        data_video_id=data_video_id,
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
 
-    # return common.PLUGIN.create_listing(
-    #     videos,
-    #     sort_methods=(
-    #         common.sp.xbmcplugin.SORT_METHOD_UNSORTED
-    #     ),
-    #     content='tvshows',
-    #     category=common.get_window_title(params)
-    # )
+    return common.PLUGIN.create_listing(
+        videos,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
+        ),
+        content='tvshows',
+        category=common.get_window_title(params)
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -243,9 +249,18 @@ def get_live_item(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        return None
-    elif params.next == 'play_l':
+        json_parser = resolver.get_brightcove_video_json(
+            params.data_account,
+            params.data_player,
+            params.data_video_id)
 
+        video_url = ''
+        for url in json_parser["sources"]:
+            if 'm3u8' in url["src"]:
+                video_url = url["src"]
+        return video_url
+
+    elif params.next == 'play_l':
         json_parser = resolver.get_brightcove_video_json(
             params.data_account,
             params.data_player,

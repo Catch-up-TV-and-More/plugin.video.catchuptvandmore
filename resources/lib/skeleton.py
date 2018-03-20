@@ -125,7 +125,7 @@ SKELETON = {
                 ('tv5', 'replay_entry'),
                 ('unis', 'replay_entry'),
                 ('telequebec', 'replay_entry'),
-                # ('tva', 'replay_entry')
+                ('tva', 'replay_entry')
             ],
 
             ('fr', 'generic_menu'): [
