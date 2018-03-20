@@ -77,7 +77,8 @@ SKELETON = {
 
             ('ca', 'build_live_tv_menu'): [
                 ('telequebec', 'none'),
-                ('yestv', 'none')
+                ('yestv', 'none'),
+                ('tva', 'none')
             ],
 
             ('ch', 'build_live_tv_menu'): [
@@ -123,7 +124,8 @@ SKELETON = {
             ('ca', 'generic_menu'): [
                 ('tv5', 'replay_entry'),
                 ('unis', 'replay_entry'),
-                ('telequebec', 'replay_entry')
+                ('telequebec', 'replay_entry'),
+                # ('tva', 'replay_entry')
             ],
 
             ('fr', 'generic_menu'): [
@@ -364,7 +366,8 @@ CHANNELS = {
     'mbs': 'tver',
     'abc': 'tver',
     'ytv': 'tver',
-    'tvm3': 'tvm3'
+    'tvm3': 'tvm3',
+    'tva': 'tva'
 }
 
 '''
@@ -401,6 +404,7 @@ LABELS = {
     'unis': 'UNIS',
     'yestv': 'YES TV',
     'telequebec': 'Télé-Québec',
+    'tva': 'TVA',
 
     # Switzerland channels / live TV
     'rts': 'RTS',

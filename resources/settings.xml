@@ -417,6 +417,9 @@
 
             <setting label="Télé-Québec" type="bool" id="telequebec" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="telequebec.order" default="4"/>
+
+            <setting label="TVA" type="bool" id="tva" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="tva.order" default="5"/>
         <!-- Canada -->
 
 
