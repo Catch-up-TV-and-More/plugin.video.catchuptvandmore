@@ -72,7 +72,8 @@ SKELETON = {
                 ('auvio', 'none'),
                 ('rtltvi', 'none'),
                 ('plugrtl', 'none'),
-                ('clubrtl', 'none')
+                ('clubrtl', 'none'),
+                ('tvlux', 'none')
             ],
 
             ('ca', 'build_live_tv_menu'): [
@@ -118,7 +119,8 @@ SKELETON = {
                 ('clubrtl', 'replay_entry'),
                 ('vrt', 'replay_entry'),
                 ('telemb', 'replay_entry'),
-                ('rtc', 'replay_entry')
+                ('rtc', 'replay_entry'),
+                ('tvlux', 'replay_entry')
             ],
 
             ('ca', 'generic_menu'): [
@@ -367,7 +369,8 @@ CHANNELS = {
     'abc': 'tver',
     'ytv': 'tver',
     'tvm3': 'tvm3',
-    'tva': 'tva'
+    'tva': 'tva',
+    # 'tvlux': 'tvlux' (TODO)
 }
 
 '''
@@ -398,6 +401,7 @@ LABELS = {
     'vrt': 'VRT NU',
     'telemb': 'Télé MB',
     'rtc': 'RTC Télé Liège',
+    'tvlux': 'TV Lux',
 
     # Canadian channels / live TV
     'tv5': 'TV5',

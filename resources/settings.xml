@@ -181,6 +181,9 @@
             <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="auvio" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="auvio.order" default="8"/>
 
+            <setting label="TV Lux" type="bool" id="tvlux" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="tvlux.order" default="9"/>
+
         <!-- Belgium -->
 
 
