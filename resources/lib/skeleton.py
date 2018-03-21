@@ -120,7 +120,7 @@ SKELETON = {
                 ('vrt', 'replay_entry'),
                 ('telemb', 'replay_entry'),
                 ('rtc', 'replay_entry'),
-                # ('tvlux', 'replay_entry')
+                ('tvlux', 'replay_entry')
             ],
 
             ('ca', 'generic_menu'): [

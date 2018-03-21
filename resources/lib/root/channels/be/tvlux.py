@@ -77,14 +77,16 @@ def list_shows(params):
         })
 
         replay_categories_html = utils.get_webcontent(URL_EMISSIONS)
+        print 'replay_categories_html value : ' + replay_categories_html
         replay_categories_soup = bs(replay_categories_html, 'html.parser')
         categories = replay_categories_soup.find_all(
-            'div', class_='col-sm-4')
+            'article', class_=re.compile("emmissionsboxtop"))
 
         for category in categories:
 
-            category_name = category.find('h3').get_text()
-            category_img = URL_ROOT + '/' + category.find(
+            category_name = category.find(
+                'img').get('alt')
+            category_img = category.find(
                 'img').get('src')
             category_url = URL_ROOT + '/' + category.find(
                 "a").get("href")
@@ -126,7 +128,7 @@ def list_videos(params):
         list_videos_soup = bs(list_videos_html, 'html.parser')
 
         videos_data = list_videos_soup.find_all(
-            'div', class_='col-sm-4')
+            'article', class_=re.compile("emmissionsboxtop"))
 
         for video in videos_data:
 
