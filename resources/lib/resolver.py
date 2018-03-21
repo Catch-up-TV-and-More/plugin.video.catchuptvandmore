@@ -261,4 +261,9 @@ def get_brightcove_video_json(data_account, data_player, data_video_id):
         params={})
     video_json = open(file_json).read()
     json_parser = json.loads(video_json)
-    return json_parser
+
+    video_url = ''
+    for url in json_parser["sources"]:
+        if 'm3u8' in url["src"]:
+            video_url = url["src"]
+    return video_url

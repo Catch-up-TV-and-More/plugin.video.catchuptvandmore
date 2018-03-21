@@ -250,26 +250,7 @@ def get_live_item(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    if params.next == 'play_r' or params.next == 'download_video':
-        json_parser = resolver.get_brightcove_video_json(
-            params.data_account,
-            params.data_player,
-            params.data_video_id)
-
-        video_url = ''
-        for url in json_parser["sources"]:
-            if 'm3u8' in url["src"]:
-                video_url = url["src"]
-        return video_url
-
-    elif params.next == 'play_l':
-        json_parser = resolver.get_brightcove_video_json(
-            params.data_account,
-            params.data_player,
-            params.data_video_id)
-
-        video_url = ''
-        for url in json_parser["sources"]:
-            if 'm3u8' in url["src"]:
-                video_url = url["src"]
-        return video_url
+    return resolver.get_brightcove_video_json(
+        params.data_account,
+        params.data_player,
+        params.data_video_id)
