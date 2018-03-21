@@ -120,7 +120,7 @@ SKELETON = {
                 ('vrt', 'replay_entry'),
                 ('telemb', 'replay_entry'),
                 ('rtc', 'replay_entry'),
-                ('tvlux', 'replay_entry')
+                # ('tvlux', 'replay_entry')
             ],
 
             ('ca', 'generic_menu'): [
@@ -370,7 +370,7 @@ CHANNELS = {
     'ytv': 'tver',
     'tvm3': 'tvm3',
     'tva': 'tva',
-    # 'tvlux': 'tvlux' (TODO)
+    'tvlux': 'tvlux'
 }
 
 '''
