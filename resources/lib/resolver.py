@@ -153,7 +153,8 @@ def get_stream_vimeo(video_id, isDownloadVideo):
         return url_vimeo
 
     html_vimeo = utils.get_webcontent(url_vimeo)
-    json_vimeo = json.loads(re.compile('var t=(.*?);').findall(
+    # TODO Find a better way to get JSON of VIMEO
+    json_vimeo = json.loads(re.compile('var a=(.*?);').findall(
         html_vimeo)[0])
     hls_json = json_vimeo["request"]["files"]["hls"]
     default_cdn = hls_json["default_cdn"]

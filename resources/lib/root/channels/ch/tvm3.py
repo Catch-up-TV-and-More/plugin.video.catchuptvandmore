@@ -20,6 +20,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import resolver
@@ -104,14 +105,26 @@ def list_videos(params):
         replay_episodes_soup = bs(file_path, 'html.parser')
         episodes = replay_episodes_soup.find_all(
             'div', class_='uk-panel uk-panel-hover uk-invisible')
+        episodes += replay_episodes_soup.find_all(
+            'div', class_='uk-panel uk-panel-space uk-invisible')
+
+        isyoutube = False
 
         for episode in episodes:
 
             video_title = episode.find(
                 'h3').find('a').get_text().strip()
             video_duration = 0
-            video_id = episode.find(
-                'div', class_='youtube-player').get('data-id')
+            video_id = ''
+            if episode.find('div', class_='youtube-player'):
+                video_id = episode.find(
+                    'div', class_='youtube-player').get('data-id')
+                isyoutube = True
+            elif episode.find('iframe'):
+                video_id = re.compile(
+                    r'player.vimeo.com/video/(.*?)\?').findall(episode.find(
+                        'iframe').get('src'))[0]
+                
             # TO DO Get IMG
             video_img = ''
             # video_img = 'http:' + episode.find(
@@ -135,6 +148,7 @@ def list_videos(params):
                     action='download_video',
                     module_path=params.module_path,
                     module_name=params.module_name,
+                    isyoutube = isyoutube,
                     video_id=video_id) + ')'
             )
             context_menu = []
@@ -149,7 +163,8 @@ def list_videos(params):
                     module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
-                    video_id=video_id
+                    video_id=video_id,
+                    isyoutube = isyoutube
                 ),
                 'is_playable': True,
                 'info': info,
@@ -179,9 +194,17 @@ def get_live_item(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        if params.next == 'download_video':
-            return resolver.get_stream_youtube(
-                params.video_id, True)
+        if params.isyoutube == True:
+            if params.next == 'download_video':
+                return resolver.get_stream_youtube(
+                    params.video_id, True)
+            else:
+                return resolver.get_stream_youtube(
+                    params.video_id, False)
         else:
-            return resolver.get_stream_youtube(
-                params.video_id, False)
+            if params.next == 'download_video':
+                return resolver.get_stream_vimeo(
+                    params.video_id, True)
+            else:
+                return resolver.get_stream_vimeo(
+                    params.video_id, False)
