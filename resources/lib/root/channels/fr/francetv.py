@@ -64,6 +64,12 @@ URL_ALPHA = 'https://pluzz.webservices.francetelevisions.fr/' \
 # sens: asc or desc
 # page inc: 100
 
+URL_SEARCH_VIDEOS = 'https://vwdlashufe-dsn.algolia.net/1/indexes/' \
+                    'yatta_prod_contents/query'
+
+URL_SEARCH_PROGRAMS = 'https://vwdlashufe-dsn.algolia.net/1/indexes/' \
+                      'yatta_prod_taxonomies/query'
+
 
 CATEGORIES_DISPLAY = {
     "france2": "France 2",
@@ -207,46 +213,59 @@ def list_shows(params):
 
         # Last videos
         shows.append({
-            'label': common.ADDON.get_localized_string(30704),
+            'label': common.GETTEXT('Last videos'),
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
                 next='list_shows_last',
                 page='0',
-                window_title=common.ADDON.get_localized_string(30704)
+                window_title=common.GETTEXT('Last videos')
             )
         })
 
-        # Search
+        # Search videos
         shows.append({
-            'label': common.ADDON.get_localized_string(30703),
+            'label': common.GETTEXT('Search videos'),
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                next='search',
+                next='search_videos',
                 page='0',
-                window_title=common.ADDON.get_localized_string(30703)
+                window_title=common.GETTEXT('Search videos')
+            )
+        })
+
+        # Search programs
+        shows.append({
+            'label': common.GETTEXT('Search programs'),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='search_programs',
+                page='0',
+                window_title=common.GETTEXT('Search programs')
             )
         })
 
         # from A to Z
         shows.append({
-            'label': common.ADDON.get_localized_string(30705),
+            'label': common.GETTEXT('From A to Z'),
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
                 next='list_shows_from_a_to_z',
-                window_title=common.ADDON.get_localized_string(30705)
+                window_title=common.GETTEXT('From A to Z')
             )
         })
 
     # level 1
     elif 'list_shows_from_a_to_z' in params.next:
         shows.append({
-            'label': common.ADDON.get_localized_string(30706),
+            'label': common.GETTEXT('Ascending'),
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
@@ -260,7 +279,7 @@ def list_shows(params):
             )
         })
         shows.append({
-            'label': common.ADDON.get_localized_string(30707),
+            'label': common.GETTEXT('Descending'),
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
@@ -295,12 +314,14 @@ def list_shows(params):
 
     # level 1 or 2
     elif 'list_shows_2' in params.next:
+
         if 'list_shows_2_cat' in params.next:
             url_json = CHANNEL_CATALOG % (real_channel)
             file_path = utils.download_catalog(
                 url_json,
                 '%s.json' % (
                     params.channel_name))
+
         elif 'list_shows_2_from_a_to_z_CATEGORIES' in params.next:
             url_json = URL_ALPHA % (params.sens, params.page)
             file_path = utils.download_catalog(
@@ -383,7 +404,7 @@ def list_shows(params):
     )
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
+# @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -391,11 +412,98 @@ def list_videos(params):
         videos = ast.literal_eval(params['previous_listing'])
 
     if 'search' in params.next:
-        file_path = utils.download_catalog(
-            URL_SEARCH % (params.query, params.page),
-            '%s_%s_search.json' % (params.channel_name, params.query),
-            force_dl=True
+        headers = {
+            'X-Algolia-API-Key': '80d9c91958fc448dd20042d399ebdf16',
+            'X-Algolia-Application-Id': 'VWDLASHUFE'
+        }
+        url_search = URL_SEARCH_VIDEOS
+        body = "{\"params\": \"filters=class:video&page=%s&query=%s\"}" % (
+            params.page, params.query)
+        # elif 'programs' in params.next:
+        #     url_search = URL_SEARCH_PROGRAMS 
+        #     body = '{"params": "filters=class:' \
+        #            'program%20AND%20NOT%20' \
+        #            'type:saison&page=%s&query=%s"' \
+        #            '}' % (params.page, params.query)
+        result = utils.get_webcontent(
+            url_search,
+            request_type='post',
+            specific_headers=headers,
+            post_dic=body
         )
+
+        json_d = json.loads(result)
+        for hit in json_d['hits']:
+            title = hit['title']
+            headline = hit['headline_title']
+            desc = hit['description']
+            duration = hit['duration']
+            season = hit['season_number']
+            episode = hit['episode_number']
+            id_diffusion = hit['id']
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': desc,
+                    # 'aired': 'aired',
+                    # 'date': 'date',
+                    'duration': duration,
+                    # 'year': 'year',
+                    # 'genre': 'genre',
+                    'mediatype': 'tvshow',
+                    'season': season,
+                    'episode': episode
+                    # 'cast': 'cast',
+                    # 'director': 'director'
+                }
+            }
+
+            download_video = (
+                common.GETTEXT('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    id_diffusion=id_diffusion) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'fanart': 'image',
+                'thumb': 'image',
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='play_r',
+                    id_diffusion=id_diffusion
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu,
+                # 'subtitles': 'subtitles'
+            })
+
+        # More videos...
+        videos.append({
+            'label': common.ADDON.get_localized_string(30700),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='list_videos_search',
+                query=params.query,
+                page=str(int(params.page) + 20),
+                window_title=params.window_title,
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
+
+        return videos
 
     elif 'last' in params.next:
         file_path = utils.download_catalog(
@@ -560,24 +668,7 @@ def list_videos(params):
                     'subtitles': subtitles
                 })
 
-    if 'search' in params.next:
-        # More videos...
-        videos.append({
-            'label': common.ADDON.get_localized_string(30700),
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_videos_search',
-                query=params.query,
-                page=str(int(params.page) + 20),
-                window_title=params.window_title,
-                update_listing=True,
-                previous_listing=str(videos)
-            )
-        })
-
-    elif 'last' in params.next:
+    if 'last' in params.next:
         # More videos...
         videos.append({
             'label': common.ADDON.get_localized_string(30700),
@@ -723,9 +814,10 @@ def search(params):
     keyboard.doModal()
     if keyboard.isConfirmed():
         query = keyboard.getText()
-        params['next'] = 'list_videos_search'
+        params['next'] = 'list_videos_' + params.next
         params['page'] = '0'
         params['query'] = query
+        print 'TOTO ' + query
         return list_videos(params)
 
     else:

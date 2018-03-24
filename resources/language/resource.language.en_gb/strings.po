@@ -428,3 +428,11 @@ msgstr ""
 msgctxt "#30713"
 msgid "Geo-blocked video"
 msgstr ""
+
+msgctxt "#30714"
+msgid "Search videos"
+msgstr ""
+
+msgctxt "#30715"
+msgid "Search programs"
+msgstr ""
