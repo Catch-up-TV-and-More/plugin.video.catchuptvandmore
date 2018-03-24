@@ -125,7 +125,7 @@
             <setting label="" type="number" visible="false" id="arte.order" default="3"/>
 
             <setting label="France 24" type="bool" id="france24" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="france24.france24.order" default="4"/>
+            <setting label="" type="number" visible="false" id="france24.order" default="4"/>
 
             <setting label="NHK World" type="bool" id="nhkworld" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="nhkworld.order" default="5"/>
@@ -479,6 +479,9 @@
 
             <setting label="Elle" type="bool" id="elle" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="elle.order" default="9"/>
+
+            <setting label="New York Times" type="bool" id="nytimes" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="nytimes.order" default="10"/>
 
     </category>
     <!-- Websites -->  

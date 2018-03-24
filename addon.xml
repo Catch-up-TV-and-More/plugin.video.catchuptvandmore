@@ -35,6 +35,8 @@
 [Add Channel - Live TV] TVA (CA) (wwark)
 [Add Channel - Live TV] TV Lux (BE) (wwark)
 [Add Channel] Bein Sports (Contents AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY) (wwark)
+[Improvement] Add Geo-blocked message for brightcove Video (wwark)
+[Add Website] NY Times (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

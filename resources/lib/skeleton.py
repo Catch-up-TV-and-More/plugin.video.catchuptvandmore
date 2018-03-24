@@ -243,7 +243,8 @@ SKELETON = {
             ('autoplus', 'website_entry'),
             ('notrehistoirech', 'website_entry'),
             ('30millionsdamis', 'website_entry'),
-            ('elle', 'website_entry')
+            ('elle', 'website_entry'),
+            ('nytimes', 'website_entry')
         ]
 
     }
@@ -525,5 +526,6 @@ LABELS = {
     'autoplus': 'Auto Plus',
     'notrehistoirech': 'Notre Histoire',
     '30millionsdamis': '30 Millions d\'Amis',
-    'elle': 'Elle'
+    'elle': 'Elle',
+    'nytimes': 'New York Times'
 }
