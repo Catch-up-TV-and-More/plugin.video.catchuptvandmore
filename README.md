@@ -175,7 +175,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Elle <http://videos.elle.fr>
 
 ### Suisse — *Switzerland*
-##### TV Communauté française — *French Community TV*
+##### Communauté française — *French Community*
 - Notre Histoire.ch <http://www.notrehistoire.ch>
 
 ## Bugs et améliorations — *Bugs and improvements*
