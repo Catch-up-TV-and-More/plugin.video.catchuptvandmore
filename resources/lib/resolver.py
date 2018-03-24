@@ -264,7 +264,13 @@ def get_brightcove_video_json(data_account, data_player, data_video_id):
     json_parser = json.loads(video_json)
 
     video_url = ''
-    for url in json_parser["sources"]:
-        if 'm3u8' in url["src"]:
-            video_url = url["src"]
+    if 'sources' in json_parser:
+        for url in json_parser["sources"]:
+            if 'm3u8' in url["src"]:
+                video_url = url["src"]
+    else:
+        if json_parser[0]['error_code'] == "ACCESS_DENIED":
+            utils.send_notification(
+                common.ADDON.get_localized_string(30713))
+            return None
     return video_url

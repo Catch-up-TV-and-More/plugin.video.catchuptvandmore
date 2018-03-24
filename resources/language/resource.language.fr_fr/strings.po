@@ -426,3 +426,6 @@ msgctxt "#30712"
 msgid "Video with an account needed"
 msgstr "Vidéo avec un compte requis"
 
+msgctxt "#30713"
+msgid "Geo-blocked video"
+msgstr "Vidéo géo-bloquée"
