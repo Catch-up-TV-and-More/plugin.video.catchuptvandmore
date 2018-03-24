@@ -230,7 +230,8 @@ SKELETON = {
                 ('bvn', 'replay_entry'),
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
-                ('arirang', 'replay_entry')
+                ('arirang', 'replay_entry'),
+                ('beinsports', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
@@ -370,7 +371,8 @@ CHANNELS = {
     'ytv': 'tver',
     'tvm3': 'tvm3',
     'tva': 'tva',
-    'tvlux': 'tvlux'
+    'tvlux': 'tvlux',
+    'beinsports': 'beinsports'
 }
 
 '''
@@ -512,6 +514,7 @@ LABELS = {
     'mtv': 'MTV',
     'arirang': 'Arirang (아리랑)',
     'dw': 'DW',
+    'beinsports': 'Bein Sports',
 
     # Websites
     'allocine': 'Allociné',

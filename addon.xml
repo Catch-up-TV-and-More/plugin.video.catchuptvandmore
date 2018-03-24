@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.11~beta004"
+       version="0.1.11~beta005"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -34,6 +34,7 @@
 [Add Channel] TVM3 (CH) (wwark)
 [Add Channel - Live TV] TVA (CA) (wwark)
 [Add Channel - Live TV] TV Lux (BE) (wwark)
+[Add Channel] Bein Sports (Contents AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

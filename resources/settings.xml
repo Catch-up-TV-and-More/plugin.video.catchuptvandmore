@@ -150,6 +150,9 @@
 
             <setting label="DW" type="bool" id="dw" default="true" visible="eq(-23,true)"/>
             <setting label="" type="number" visible="false" id="dw.order" default="12"/>
+
+            <setting label="Bein Sports" type="bool" id="beinsports" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="beinsports.order" default="13"/>
         <!-- International -->
 
 
@@ -504,6 +507,7 @@
                 <setting label="30154" type="labelenum" id="france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES" default="FR"/>
                 <setting label="30156" type="labelenum" id="mtv.language" visible="eq(-4,true)" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" visible="eq(-5,true)" values="EN|DE|ES|AR" default="EN"/>
+                <setting label="30160" type="labelenum" id="beinsports.language" visible="eq(-6,true)" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
