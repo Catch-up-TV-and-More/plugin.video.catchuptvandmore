@@ -18,6 +18,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Really *(Replay)*
 - Yesterday *(Replay)*
 - Sky News *(Replay, Live TV)*
+- STV *(Live TV)*
+- STV 2 *(Live TV)*
 
 ##### Web TV
 - Sky Sports — Sky *(Replay)*
@@ -175,7 +177,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Elle <http://videos.elle.fr>
 
 ### Suisse — *Switzerland*
-##### TV Communauté française — *French Community TV*
+##### Communauté française — *French Community*
 - Notre Histoire.ch <http://www.notrehistoire.ch>
 
 ## Bugs et améliorations — *Bugs and improvements*

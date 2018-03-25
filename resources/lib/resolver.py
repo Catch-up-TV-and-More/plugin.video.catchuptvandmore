@@ -236,7 +236,11 @@ def get_stream_youtube(video_id, isDownloadVideo):
         quality=quality,
         resolve_redirects=True
     )
-    return vid.streamURL()
+    if vid is None:
+        # TODO catch the error (geo-blocked, deleted, etc ...)
+        return None
+    else:
+        return vid.streamURL()
 
 
 # BRIGHTCOVE Part
