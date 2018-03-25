@@ -194,7 +194,7 @@ def get_live_item(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        if params.isyoutube == True:
+        if params.isyoutube == 'True':
             if params.next == 'download_video':
                 return resolver.get_stream_youtube(
                     params.video_id, True)
