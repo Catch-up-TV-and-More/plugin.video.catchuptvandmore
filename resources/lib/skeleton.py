@@ -156,6 +156,7 @@ SKELETON = {
                 ('numero23', 'replay_entry'),
                 ('cherie25', 'replay_entry'),
                 ('la_1ere', 'replay_entry'),
+                ('franceinfo', 'replay_entry'),
                 ('bfmbusiness', 'replay_entry'),
                 ('rmc', 'replay_entry'),
                 ('01net', 'replay_entry'),
