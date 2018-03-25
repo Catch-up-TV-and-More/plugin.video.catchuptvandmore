@@ -108,6 +108,12 @@
 
             <setting label="Sky Sports" type="bool" id="skysports" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="skysports.order" default="7"/>
+
+            <setting label="STV" type="bool" id="stv" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="stv.order" default="8"/>
+
+            <setting label="STV 2" type="bool" id="stv2" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="stv2.order" default="9"/>
         <!-- United Kingdom -->
 
 

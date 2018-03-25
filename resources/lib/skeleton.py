@@ -92,7 +92,9 @@ SKELETON = {
 
             ('uk', 'build_live_tv_menu'): [
                 ('blaze', 'none'),
-                ('skynews', 'none')
+                ('skynews', 'none'),
+                ('stv', 'none'),
+                ('stv2', 'none')
             ],
 
             ('wo', 'build_live_tv_menu'): [
@@ -373,7 +375,9 @@ CHANNELS = {
     'tvm3': 'tvm3',
     'tva': 'tva',
     'tvlux': 'tvlux',
-    'beinsports': 'beinsports'
+    'beinsports': 'beinsports',
+    'stv': 'stv',
+    'stv2': 'stv'
 }
 
 '''
@@ -501,6 +505,8 @@ LABELS = {
     'drama': 'Drama',
     'skynews': 'Sky News',
     'skysports': 'Sky Sports',
+    'stv': 'STV',
+    'stv2': 'STV 2',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',
