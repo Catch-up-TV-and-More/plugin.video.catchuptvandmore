@@ -158,6 +158,8 @@ def channel_entry(params):
         return list_videos(params)
     elif 'play' in params.next:
         return get_video_url(params)
+    elif 'search' in params.next:
+        return search(params)
     return None
 
 
@@ -247,8 +249,9 @@ def list_shows(params):
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                next='list_videos_search',
-                window_title=common.GETTEXT('Search videos')
+                next='search',
+                window_title=common.GETTEXT('Search videos'),
+                is_folder=False
             )
         })
 
@@ -402,7 +405,7 @@ def list_shows(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
     """Build videos listing"""
     videos = []
@@ -410,20 +413,6 @@ def list_videos(params):
         videos = ast.literal_eval(params['previous_listing'])
 
     if 'search' in params.next:
-
-        if 'query' not in params:
-            keyboard = common.sp.xbmc.Keyboard(
-                default='',
-                title='',
-                hidden=False)
-            keyboard.doModal()
-            if keyboard.isConfirmed():
-                query = keyboard.getText()
-                params['page'] = '0'
-                params['query'] = query
-            else:
-                return None
-
         url_search = URL_SEARCH_VIDEOS
         body = "{\"params\": \"filters=class:video&page=%s&query=%s\"}" % (
             params.page, params.query)
@@ -505,7 +494,7 @@ def list_videos(params):
                     module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
-                    id_yatta=id_yatta,
+                    id_yatta=id_yatta
                 ),
                 'is_playable': True,
                 'info': info,
@@ -744,13 +733,13 @@ def list_videos(params):
     )
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
     params['next'] = 'play_l'
     return get_video_url(params)
 
 
-# @common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 
@@ -851,3 +840,19 @@ def get_video_url(params):
             utils.get_webcontent(HDFAUTH_URL % (final_url)))
 
         return json_parser2['url']
+
+
+def search(params):
+    keyboard = common.sp.xbmc.Keyboard(
+        default='',
+        title='',
+        hidden=False)
+    keyboard.doModal()
+    if keyboard.isConfirmed():
+        query = keyboard.getText()
+        params['page'] = '0'
+        params['query'] = query
+        params['next'] = 'list_videos_search'
+        return list_videos(params)
+    else:
+        return None
