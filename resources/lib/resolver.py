@@ -212,9 +212,8 @@ def get_stream_youtube(video_id, isDownloadVideo):
 
     YDStreamExtractor = __import__('YDStreamExtractor')
 
-    quality = 3
-    desired_quality = common.PLUGIN.get_setting('quality')
-    if desired_quality == "DIALOG":
+    quality = 0
+    if DESIRED_QUALITY == "DIALOG":
         all_quality = ['SD', '720p', '1080p', 'Highest available']
         seleted_item = common.sp.xbmcgui.Dialog().select(
             common.GETTEXT('Choose video quality'),
@@ -230,6 +229,8 @@ def get_stream_youtube(video_id, isDownloadVideo):
             'Highest available': 3
         }
         quality = quality_string[selected_quality_string]
+    elif DESIRED_QUALITY == "BEST":
+        quality = 3
 
     vid = YDStreamExtractor.getVideoInfo(
         url_youtube,
