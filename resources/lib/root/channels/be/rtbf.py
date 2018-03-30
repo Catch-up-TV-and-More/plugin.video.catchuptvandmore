@@ -428,6 +428,12 @@ def get_video_url(params):
             file_path)[0]
         data_stream = data_stream.replace('&quot;', '"')
         data_stream_json = json.loads(data_stream)
+        if 'drm' in data_stream_json["urlHls"]:
+            utils.send_notification(common.ADDON.get_localized_string(30702))
+            return ''
         return data_stream_json["urlHls"]
     elif params.next == 'play_r':
+        if 'drm' in params.url_video:
+            utils.send_notification(common.ADDON.get_localized_string(30702))
+            return ''
         return params.url_video
