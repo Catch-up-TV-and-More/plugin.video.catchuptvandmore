@@ -31,7 +31,6 @@ from resources.lib import common
 
 
 URL_ROOT = 'http://www.onzeo.fr/'
-# ChannelName
 
 
 def channel_entry(params):

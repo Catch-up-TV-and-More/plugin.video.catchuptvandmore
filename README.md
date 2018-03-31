@@ -114,6 +114,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Studio 4 — francetv *(Replay)*
 - IRL — francetv *(Replay)*
 - France TV Education — francetv *(Replay)*
+- Fun Radio *(Replay)*
 
 ### Internationales — *International*
 ##### TV

@@ -187,7 +187,8 @@ SKELETON = {
                 ('francetveducation', 'replay_entry'),
                 ('gong', 'replay_entry'),
                 ('francetvsport', 'replay_entry'),
-                ('onzeo', 'replay_entry')
+                ('onzeo', 'replay_entry'),
+                ('fun_radio', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -330,6 +331,7 @@ CHANNELS = {
     'home': '6play',
     'styles': '6play',
     'comedy': '6play',
+    'fun_radio': '6play',
     'publicsenat': 'publicsenat',
     'france3regions': 'france3regions',
     'francetvsport': 'francetvsport',
@@ -475,6 +477,7 @@ LABELS = {
     'home': 'Home Time (6play)',
     'styles': 'Sixième Style (6play)',
     'comedy': 'Comic (6play)',
+    'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
     'france3regions': 'France 3 Régions',
     'francetvsport': 'France TV Sport (francetv)',
