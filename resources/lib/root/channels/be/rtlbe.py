@@ -27,7 +27,10 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Live TV
+# Live TV protected by DRM
+# https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/rtlbe_rtl_play/live?channel=rtlbe_%s&with=service_display_images,nextdiffusion,extra_data
+# Channel Name
+# specific_headers={'x-customer-name': 'rtlbe'} To Download the JSON
 
 
 # Url to get channel's categories
