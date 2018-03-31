@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.11~beta010"
+       version="0.1.11~beta011"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -42,6 +42,7 @@
 [Fix] Search videos France TV (SylvainCecchetto)
 [Add Replay] Franceinfo (SylvainCecchetto)
 [Update] Add drm notification for some videos - Replay RTBF Auvio (wwark) 
+[Fix/Add Channels] RTLBE - website changes - Add RTL INFO, BEL RTL and Contact (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

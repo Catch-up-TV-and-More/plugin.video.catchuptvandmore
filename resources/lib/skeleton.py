@@ -70,9 +70,6 @@ SKELETON = {
                 ('telemb', 'none'),
                 ('vrt', 'none'),
                 ('auvio', 'none'),
-                ('rtltvi', 'none'),
-                ('plugrtl', 'none'),
-                ('clubrtl', 'none'),
                 ('tvlux', 'none')
             ],
 
@@ -116,13 +113,16 @@ SKELETON = {
             ('be', 'generic_menu'): [
                 ('auvio', 'replay_entry'),
                 ('brf', 'replay_entry'),
-                ('rtltvi', 'replay_entry'),
-                ('plugrtl', 'replay_entry'),
-                ('clubrtl', 'replay_entry'),
+                ('rtl_tvi', 'replay_entry'),
+                ('plug_rtl', 'replay_entry'),
+                ('club_rtl', 'replay_entry'),
                 ('vrt', 'replay_entry'),
                 ('telemb', 'replay_entry'),
                 ('rtc', 'replay_entry'),
-                ('tvlux', 'replay_entry')
+                ('tvlux', 'replay_entry'),
+                ('rtl_info', 'replay_entry'),
+                ('bel_rtl', 'replay_entry'),
+                ('contact', 'replay_entry')
             ],
 
             ('ca', 'generic_menu'): [
@@ -271,9 +271,12 @@ the channel name and his corresponding python file
 CHANNELS = {
     'auvio': 'rtbf',
     'brf': 'brf',
-    'rtltvi': 'rtl',
-    'plugrtl': 'rtl',
-    'clubrtl': 'rtl',
+    'rtl_tvi': 'rtlbe',
+    'plug_rtl': 'rtlbe',
+    'club_rtl': 'rtlbe',
+    'rtl_info': 'rtlbe',
+    'bel_rtl': 'rtlbe',
+    'contact': 'rtlbe',
     'vrt': 'vrt',
     'telemb': 'telemb',
     'rtc': 'rtc',
@@ -403,13 +406,16 @@ LABELS = {
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
     'brf': 'BRF Mediathek',
-    'rtltvi': 'RTL-TVI',
-    'plugrtl': 'PLUG RTL',
-    'clubrtl': 'CLUB RTL',
+    'rtl_tvi': 'RTL-TVI',
+    'plug_rtl': 'PLUG RTL',
+    'club_rtl': 'CLUB RTL',
     'vrt': 'VRT NU',
     'telemb': 'Télé MB',
     'rtc': 'RTC Télé Liège',
     'tvlux': 'TV Lux',
+    'contact': 'Contact',
+    'bel_rtl': 'BEL RTL',
+    'rtl_info': 'RTL INFO',
 
     # Canadian channels / live TV
     'tv5': 'TV5',

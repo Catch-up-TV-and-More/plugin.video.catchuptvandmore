@@ -169,14 +169,14 @@
             <setting label="BRF Mediathek" type="bool" id="brf" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="brf.order" default="1"/>
 
-            <setting label="RTL-TVI" type="bool" id="rtltvi" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="rtltvi.order" default="2"/>
+            <setting label="RTL-TVI" type="bool" id="rtl_tvi" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="rtl_tvi.order" default="2"/>
 
-            <setting label="PLUG RTL" type="bool" id="plugrtl" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="plugrtl.order" default="3"/>
+            <setting label="PLUG RTL" type="bool" id="plug_rtl" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="plug_rtl.order" default="3"/>
 
-            <setting label="CLUB RTL" type="bool" id="clubrtl" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="clubrtl.order" default="4"/>
+            <setting label="CLUB RTL" type="bool" id="club_rtl" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="club_rtl.order" default="4"/>
 
             <setting label="VRT NU" type="bool" id="vrt" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="vrt.order" default="5"/>
@@ -193,6 +193,14 @@
             <setting label="TV Lux" type="bool" id="tvlux" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="tvlux.order" default="9"/>
 
+            <setting label="RTL INFO" type="bool" id="rtl_info" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="rtl_info.order" default="10"/>
+
+            <setting label="BEL RTL" type="bool" id="bel_rtl" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="bel_rtl.order" default="11"/>
+
+            <setting label="Contact" type="bool" id="contact" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="contact.order" default="12"/>
         <!-- Belgium -->
 
 
