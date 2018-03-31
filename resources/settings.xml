@@ -375,11 +375,14 @@
             <setting label="BFM Paris" type="bool" id="bfmparis" default="true" visible="eq(-111,true)"/>
             <setting label="" type="number" visible="false" id="bfmparis.order" default="56"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-113,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="57"/>
+            <setting label="Onzéo" type="bool" id="onzeo" default="true" visible="eq(-113,true)"/>
+            <setting label="" type="number" visible="false" id="onzeo.order" default="57"/>
 
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-115,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="58"/>-->
+            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-115,true)"/>
+            <setting label="" type="number" visible="false" id="teva.order" default="58"/>
+
+            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-117,true)"/>
+            <setting label="" type="number" visible="false" id="parispremiere.order" default="59"/>-->
         <!-- France -->
 
 

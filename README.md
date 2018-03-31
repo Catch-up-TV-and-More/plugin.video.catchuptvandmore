@@ -98,6 +98,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Game One *(Replay)*
 - Gong *(Replay, Live TV)*
 - BFM Paris *(Live TV)*
+- Onzéo *(Replay)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*

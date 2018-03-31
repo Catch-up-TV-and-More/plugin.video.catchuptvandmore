@@ -186,7 +186,8 @@ SKELETON = {
                 ('gameone', 'replay_entry'),
                 ('francetveducation', 'replay_entry'),
                 ('gong', 'replay_entry'),
-                ('francetvsport', 'replay_entry')
+                ('francetvsport', 'replay_entry'),
+                ('onzeo', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -381,7 +382,8 @@ CHANNELS = {
     'tvlux': 'tvlux',
     'beinsports': 'beinsports',
     'stv': 'stv',
-    'stv2': 'stv'
+    'stv2': 'stv',
+    'onzeo': 'onzeo'
 }
 
 '''
@@ -490,6 +492,7 @@ LABELS = {
     'gameone': 'Game One',
     'francetveducation': 'France TV Education (francetv)',
     'gong': 'Gong',
+    'onzeo': 'Onzéo',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
