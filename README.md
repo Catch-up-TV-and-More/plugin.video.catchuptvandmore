@@ -78,14 +78,14 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Numéro 23 *(Replay, Live TV)*
 - Chérie 25 *(Replay, Live TV with NRJ account)*
 - LCI *(Replay, Live TV)*
-- La 1ère — Outre-Mer *(Replay, Live TV)*
+- La 1ère — Outre-Mer *(Replay, Live TV)* *(Contents Live TV {Guadeloupe 1ère|Guyane 1ère|Martinique 1ère|Mayotte 1ère|Nouvelle Calédonie 1ère|Polynésie 1ère|Réunion 1ère|St-Pierre et Miquelon 1ère|Wallis et Futuna 1ère})*
 - France Info *(Replay, Live TV)*
 - BFM Business *(Replay, Live TV)*
 - RMC *(Replay, Live TV)*
 - RMC Découverte *(Replay, Live TV)*
 - LCP Assemblée Nationale *(Replay, Live TV)*
 - Public Sénat *(Replay, Live TV)*
-- France 3 Régions *(Live TV)*
+- France 3 Régions *(Live TV)* *(Contents Live TV {Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes})*
 - Histoire *(Replay)*
 - TV Breizh *(Replay)*
 - Ushuaïa TV *(Replay)*
@@ -97,6 +97,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - INFOSPORT+ *(Replay)*
 - Game One *(Replay)*
 - Gong *(Replay, Live TV)*
+- BFM Paris *(Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
