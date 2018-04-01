@@ -104,7 +104,8 @@ SKELETON = {
                 ('nhkworld', 'none'),
                 ('dw', 'none'),
                 ('tv5monde', 'none'),
-                ('tivi5monde', 'none')
+                ('tivi5monde', 'none'),
+                ('souvenirsfromearth', 'none')
             ]
         },
 
@@ -385,7 +386,8 @@ CHANNELS = {
     'beinsports': 'beinsports',
     'stv': 'stv',
     'stv2': 'stv',
-    'onzeo': 'onzeo'
+    'onzeo': 'onzeo',
+    'souvenirsfromearth': 'souvenirsfromearth'
 }
 
 '''
@@ -535,6 +537,7 @@ LABELS = {
     'arirang': 'Arirang (아리랑)',
     'dw': 'DW',
     'beinsports': 'Bein Sports',
+    'souvenirsfromearth': 'Souvenirs From Earth',
 
     # Websites
     'allocine': 'Allociné',
