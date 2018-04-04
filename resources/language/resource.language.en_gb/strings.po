@@ -201,6 +201,10 @@ msgctxt "#30160"
 msgid "Bein Sports: Choose Channel"
 msgstr ""
 
+msgctxt "#30161"
+msgid "QVC: Choose Channel"
+msgstr ""
+
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"

@@ -105,7 +105,8 @@ SKELETON = {
                 ('dw', 'none'),
                 ('tv5monde', 'none'),
                 ('tivi5monde', 'none'),
-                ('souvenirsfromearth', 'none')
+                ('souvenirsfromearth', 'none'),
+                ('qvc', 'none')
             ]
         },
 
@@ -387,7 +388,8 @@ CHANNELS = {
     'stv': 'stv',
     'stv2': 'stv',
     'onzeo': 'onzeo',
-    'souvenirsfromearth': 'souvenirsfromearth'
+    'souvenirsfromearth': 'souvenirsfromearth',
+    'qvc': 'qvc'
 }
 
 '''
@@ -538,6 +540,7 @@ LABELS = {
     'dw': 'DW',
     'beinsports': 'Bein Sports',
     'souvenirsfromearth': 'Souvenirs From Earth',
+    'qvc': 'QVC',
 
     # Websites
     'allocine': 'Allociné',

@@ -162,6 +162,9 @@
 
             <setting label="Souvenirs From Earth" type="bool" id="souvenirsfromearth" default="true" visible="eq(-27,true)"/>
             <setting label="" type="number" visible="false" id="souvenirsfromearth.order" default="14"/>
+
+            <setting label="QVC" type="bool" id="qvc" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="qvc.order" default="15"/>
         <!-- International -->
 
 
@@ -534,6 +537,7 @@
                 <setting label="30156" type="labelenum" id="mtv.language" visible="eq(-4,true)" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" visible="eq(-5,true)" values="EN|DE|ES|AR" default="EN"/>
                 <setting label="30160" type="labelenum" id="beinsports.language" visible="eq(-6,true)" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
+                <setting label="30161" type="labelenum" id="qvc.language" visible="eq(-7,true)" values="FR" default="FR"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
