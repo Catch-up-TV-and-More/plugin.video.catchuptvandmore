@@ -117,6 +117,9 @@ msgctxt "#30056"
 msgid "Canada"
 msgstr ""
 
+msgctxt "#30057"
+msgid "United States of America"
+msgstr ""
 
 # Channels (from 30080 to 30129)
 msgctxt "#30080"

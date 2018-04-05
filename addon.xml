@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.11~beta013"
+       version="0.1.11~beta014"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -47,6 +47,7 @@
 [Add WebTV] Fun Radio (wwark)
 [Add Live TV] Souvenirs From Earth (wwark)
 [Add Live TV] QVC (Contents FR) (wwark)
+[Add Live TV] CBS News (USA) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

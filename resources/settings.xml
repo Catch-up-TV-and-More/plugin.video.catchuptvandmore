@@ -46,6 +46,9 @@
 
         <setting label="30056" type="bool" id="ca" default="true"/>
         <setting label="" type="number" visible="false" id="ca.order" default="7"/>
+
+        <setting label="30057" type="bool" id="us" default="true"/>
+        <setting label="" type="number" visible="false" id="ca.order" default="8"/>
     </category>
     <!-- Countries-->
 
@@ -456,15 +459,11 @@
 
 
         <!-- United States -->
-        <!--
-        
         <setting label="30087" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="" type="bool" id="us" default="true" visible="false"/>
 
-            <setting label="NBC" type="bool" id="nbc" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="nbc.order" default="1"/>
-
-        -->
+            <setting label="CBS News" type="bool" id="cbsnews" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="cbsnews.order" default="1"/>
         <!-- United States -->
 
     </category>

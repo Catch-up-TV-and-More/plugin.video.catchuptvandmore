@@ -107,6 +107,10 @@ SKELETON = {
                 ('tivi5monde', 'none'),
                 ('souvenirsfromearth', 'none'),
                 ('qvc', 'none')
+            ],
+
+            ('us', 'build_live_tv_menu'): [
+                ('cbsnews', 'none')
             ]
         },
 
@@ -389,7 +393,8 @@ CHANNELS = {
     'stv2': 'stv',
     'onzeo': 'onzeo',
     'souvenirsfromearth': 'souvenirsfromearth',
-    'qvc': 'qvc'
+    'qvc': 'qvc',
+    'cbsnews': 'cbsnews'
 }
 
 '''
@@ -410,6 +415,7 @@ LABELS = {
     'uk': 'United Kingdom',
     'wo': 'International',
     'ca': 'Canada',
+    'us': 'United State of America',
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
@@ -541,6 +547,9 @@ LABELS = {
     'beinsports': 'Bein Sports',
     'souvenirsfromearth': 'Souvenirs From Earth',
     'qvc': 'QVC',
+
+    # United State of America channels / live TV
+    'cbsnews': 'CBS News',
 
     # Websites
     'allocine': 'Allociné',
