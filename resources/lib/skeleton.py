@@ -62,7 +62,8 @@ SKELETON = {
                 ('france3regions', 'none'),
                 ('francetvsport', 'none'),
                 ('gong', 'none'),
-                ('bfmparis', 'none')
+                ('bfmparis', 'none'),
+                ('melodytv', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -394,7 +395,8 @@ CHANNELS = {
     'onzeo': 'onzeo',
     'souvenirsfromearth': 'souvenirsfromearth',
     'qvc': 'qvc',
-    'cbsnews': 'cbsnews'
+    'cbsnews': 'cbsnews',
+    'melodytv': 'melodytv'
 }
 
 '''
@@ -506,6 +508,7 @@ LABELS = {
     'francetveducation': 'France TV Education (francetv)',
     'gong': 'Gong',
     'onzeo': 'Onzéo',
+    'melodytv': 'Melody TV',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

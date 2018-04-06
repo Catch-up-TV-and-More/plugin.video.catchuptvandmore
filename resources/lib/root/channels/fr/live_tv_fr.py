@@ -105,7 +105,8 @@ XMLTV_CHANNEL_ID = {
     'gong': '',
     'france3regions': LIVE_FR3_REGIONS[common.PLUGIN.get_setting(
         'france3.region')],
-    'bfmparis': ''
+    'bfmparis': '',
+    'melodytv': ''
 }
 
 
