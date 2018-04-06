@@ -127,7 +127,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Arte *(Replay, Live TV)* *(Contents {FR|DE|EN|ES|PL})*
 - Euronews *(Live TV)* *(Contents {FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU})*
 - France 24 *(Replay, Live TV)* *(Contents {FR|EN|AR|ES})*
-- NHK World *(Replay, Live TV)*
+- NHK World *(Replay, Live TV)* *(Contents {Outside Japan|In Japan})*
 - TV5Monde *(Replay, Live TV)*
 - Tivi 5Monde *(Replay, Live TV)*
 - BVN *(Replay, Live TV)*

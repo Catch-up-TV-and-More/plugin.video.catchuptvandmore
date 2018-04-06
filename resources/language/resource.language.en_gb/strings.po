@@ -209,6 +209,10 @@ msgctxt "#30161"
 msgid "QVC: Choose Channel"
 msgstr ""
 
+msgctxt "#30162"
+msgid "NHK World: Choose Country"
+msgstr ""
+
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"
