@@ -103,6 +103,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Gong *(Replay, Live TV)*
 - BFM Paris *(Live TV)*
 - Onzéo *(Replay)*
+- Melody TV *(Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
@@ -119,7 +120,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - IRL — francetv *(Replay)*
 - France TV Education — francetv *(Replay)*
 - Fun Radio *(Replay)*
-- Melody TV *(Live TV)*
 
 ### Internationales — *International*
 ##### TV
