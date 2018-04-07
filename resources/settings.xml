@@ -210,6 +210,9 @@
 
             <setting label="Contact" type="bool" id="contact" default="true" visible="eq(-23,true)"/>
             <setting label="" type="number" visible="false" id="contact.order" default="12"/>
+
+            <setting label="BX1" type="bool" id="bx1" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="bx1.order" default="13"/>
         <!-- Belgium -->
 
 

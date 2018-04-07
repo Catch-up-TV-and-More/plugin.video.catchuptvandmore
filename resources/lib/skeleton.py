@@ -71,7 +71,8 @@ SKELETON = {
                 ('telemb', 'none'),
                 ('vrt', 'none'),
                 ('auvio', 'none'),
-                ('tvlux', 'none')
+                ('tvlux', 'none'),
+                ('bx1', 'none')
             ],
 
             ('ca', 'build_live_tv_menu'): [
@@ -396,7 +397,8 @@ CHANNELS = {
     'souvenirsfromearth': 'souvenirsfromearth',
     'qvc': 'qvc',
     'cbsnews': 'cbsnews',
-    'melodytv': 'melodytv'
+    'melodytv': 'melodytv',
+    'bx1': 'bx1'
 }
 
 '''
@@ -432,6 +434,7 @@ LABELS = {
     'contact': 'Contact',
     'bel_rtl': 'BEL RTL',
     'rtl_info': 'RTL INFO',
+    'bx1': 'BX1',
 
     # Canadian channels / live TV
     'tv5': 'TV5',
