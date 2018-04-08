@@ -48,7 +48,10 @@
         <setting label="" type="number" visible="false" id="ca.order" default="7"/>
 
         <setting label="30057" type="bool" id="us" default="true"/>
-        <setting label="" type="number" visible="false" id="ca.order" default="8"/>
+        <setting label="" type="number" visible="false" id="us.order" default="8"/>
+
+        <setting label="30058" type="bool" id="pl" default="true"/>
+        <setting label="" type="number" visible="false" id="pl.order" default="9"/>
     </category>
     <!-- Countries-->
 
@@ -471,6 +474,14 @@
             <setting label="CBS News" type="bool" id="cbsnews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="cbsnews.order" default="1"/>
         <!-- United States -->
+
+        <!-- Poland -->
+        <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="pl" default="true" visible="false"/>
+
+            <setting label="TVP" type="bool" id="tvp" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="tvp.order" default="1"/>
+        <!-- Poland -->
 
     </category>
     <!-- Channels --> 

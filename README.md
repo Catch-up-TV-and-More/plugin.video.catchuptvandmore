@@ -155,6 +155,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - NHKらいふ *(Replay)*
 - TBS ニュース *(Replay)*
 
+### Pologne — *Poland*
+##### TV
+- TVP *(Live TV)*
+
 ### Suisse — *Switzerland*
 ##### TV Communauté française — *French Community TV*
 - RTS *(Replay, Live TV)*

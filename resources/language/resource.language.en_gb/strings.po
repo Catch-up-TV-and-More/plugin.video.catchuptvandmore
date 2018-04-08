@@ -121,6 +121,9 @@ msgctxt "#30057"
 msgid "United States of America"
 msgstr ""
 
+msgctxt "#30058"
+msgid "Poland"
+msgstr ""
 
 # Channels (from 30080 to 30129)
 msgctxt "#30080"
@@ -155,6 +158,9 @@ msgctxt "#30087"
 msgid "United States channels"
 msgstr ""
 
+msgctxt "#30088"
+msgid "Poland channels"
+msgstr ""
 
 # Websites (from 30130 to 30149)
 

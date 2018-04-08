@@ -113,6 +113,10 @@ SKELETON = {
 
             ('us', 'build_live_tv_menu'): [
                 ('cbsnews', 'none')
+            ],
+
+            ('pl', 'build_live_tv_menu'): [
+                ('tvp', 'none')
             ]
         },
 
@@ -399,7 +403,8 @@ CHANNELS = {
     'qvc': 'qvc',
     'cbsnews': 'cbsnews',
     'melodytv': 'melodytv',
-    'bx1': 'bx1'
+    'bx1': 'bx1',
+    'tvp': 'tvp'
 }
 
 '''
@@ -421,6 +426,7 @@ LABELS = {
     'wo': 'International',
     'ca': 'Canada',
     'us': 'United State of America',
+    'pl': 'Poland',
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
@@ -557,6 +563,9 @@ LABELS = {
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
+
+    # Poland channels / live TV
+    'tvp': 'TVP',
 
     # Websites
     'allocine': 'Allociné',
