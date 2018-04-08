@@ -77,7 +77,6 @@ def list_shows(params):
         })
 
         replay_categories_html = utils.get_webcontent(URL_EMISSIONS)
-        print 'replay_categories_html value : ' + replay_categories_html
         replay_categories_soup = bs(replay_categories_html, 'html.parser')
         categories = replay_categories_soup.find_all(
             'article', class_=re.compile("emmissionsboxtop"))

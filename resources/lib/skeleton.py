@@ -130,7 +130,8 @@ SKELETON = {
                 ('tvlux', 'replay_entry'),
                 ('rtl_info', 'replay_entry'),
                 ('bel_rtl', 'replay_entry'),
-                ('contact', 'replay_entry')
+                ('contact', 'replay_entry'),
+                ('bx1', 'replay_entry')
             ],
 
             ('ca', 'generic_menu'): [

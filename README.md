@@ -36,7 +36,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RTL INFO *(Replay)*
 - BEL RTL *(Replay)*
 - Contact *(Replay)*
-- BX1 *(Live TV)*
+- BX1 *(Replay, Live TV)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
 - VRT NU (Eén, Canvas, ...) *(Replay with VRT NU account, Live TV)*
