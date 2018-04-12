@@ -178,6 +178,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - SWISSINFO *(Replay)*
 
 ## Sites internet disponibles — *Available Websites*
+### Belgique — *Belgium*
+- Fosdem <https://fosdem.org>
+
 ### Canada
 ##### Communauté française — *French Community*
 - Au pays des Têtes à claques <https://www.tetesaclaques.tv/>

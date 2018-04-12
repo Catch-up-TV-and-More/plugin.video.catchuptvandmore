@@ -262,7 +262,8 @@ SKELETON = {
             ('notrehistoirech', 'website_entry'),
             ('30millionsdamis', 'website_entry'),
             ('elle', 'website_entry'),
-            ('nytimes', 'website_entry')
+            ('nytimes', 'website_entry'),
+            ('fosdem', 'website_entry')
         ]
 
     }
@@ -577,5 +578,6 @@ LABELS = {
     'notrehistoirech': 'Notre Histoire',
     '30millionsdamis': '30 Millions d\'Amis',
     'elle': 'Elle',
-    'nytimes': 'New York Times'
+    'nytimes': 'New York Times',
+    'fosdem': 'Fosdem'
 }

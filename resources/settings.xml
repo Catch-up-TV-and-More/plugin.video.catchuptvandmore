@@ -525,6 +525,9 @@
             <setting label="New York Times" type="bool" id="nytimes" default="true" visible="eq(-19,true)"/>
             <setting label="" type="number" visible="false" id="nytimes.order" default="10"/>
 
+            <setting label="Fosdem" type="bool" id="fosdem" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="fosdem.order" default="11"/>
+
     </category>
     <!-- Websites -->  
 
