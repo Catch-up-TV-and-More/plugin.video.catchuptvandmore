@@ -29,6 +29,7 @@ from resources.lib import common
 '''
 Channels:
     * Franceinfo
+    * La 1ère (TODO)
 '''
 
 LIVE_INFO = 'http://webservices.francetelevisions.fr/tools/' \

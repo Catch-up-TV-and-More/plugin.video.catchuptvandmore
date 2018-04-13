@@ -35,116 +35,39 @@ Channels:
     * France 4
     * France Ô
     * France 5
-    * La 1ère
 '''
 
+URL_API = 'http://api-front.yatta.francetv.fr'
 
-CHANNEL_CATALOG = 'http://pluzz.webservices.francetelevisions.fr/' \
-                  'pluzz/liste/type/replay/nb/10000/chaine/%s'
+URL_LIVE_JSON = URL_API + '/standard/edito/directs'
 
-# CHANNEL_CATALOG = 'https://pluzz.webservices.francetelevisions.fr/' \
-#                   'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s'
-# page inc: 20
+URL_LAST_VIDEOS = URL_API + '/standard/publish/channels/%s/contents'
+# channel_name
 
-SHOW_INFO = 'http://webservices.francetelevisions.fr/tools/' \
-            'getInfosOeuvre/v2/?idDiffusion=%s'
+SHOW_INFO = 'http://sivideo.webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/?idDiffusion=%s'
+# VideoId
 
-LIVE_INFO = 'http://webservices.francetelevisions.fr/tools/' \
-            'getInfosOeuvre/v2/?idDiffusion=SIM_%s'
+URL_CATEGORIES = URL_API + '/standard/publish/channels/%s/categories'
+# channel_name
+
+URL_PROGRAMS = URL_API + '/standard/publish/categories/%s/programs/%s'
+# category, channel_name
 
 HDFAUTH_URL = 'http://hdfauth.francetv.fr/esi/TA?format=json&url=%s'
 
-URL_IMG = 'http://refonte.webservices.francetelevisions.fr%s'
-
-URL_SEARCH = 'https://pluzz.webservices.francetelevisions.fr/' \
-             'mobile/recherche/nb/20/tri/date/requete/%s/debut/%s'
-
-URL_ALPHA = 'https://pluzz.webservices.francetelevisions.fr/' \
-            'mobile/liste/type/replay/tri/alpha/sens/%s/nb/100/' \
-            'debut/%s/lastof/1'
-# sens: asc or desc
-# page inc: 100
 
 URL_SEARCH_VIDEOS = 'https://vwdlashufe-dsn.algolia.net/1/indexes/' \
                     'yatta_prod_contents/query'
 
-URL_SEARCH_PROGRAMS = 'https://vwdlashufe-dsn.algolia.net/1/indexes/' \
-                      'yatta_prod_taxonomies/query'
-
-URL_YATTA_VIDEO = 'http://api-front.yatta.francetv.fr/' \
-                  'standard/publish/contents/%s'
+URL_YATTA_VIDEO = URL_API + '/standard/publish/contents/%s'
 # Param : id_yatta
+
+URL_VIDEOS = URL_API + '/standard/publish/taxonomies/%s/contents'
+# program
 
 HEADERS_YATTA = {
     'X-Algolia-API-Key': '80d9c91958fc448dd20042d399ebdf16',
     'X-Algolia-Application-Id': 'VWDLASHUFE'
-}
-
-
-CATEGORIES_DISPLAY = {
-    "france2": "France 2",
-    "france3": "France 3",
-    "france4": "France 4",
-    "france5": "France 5",
-    "franceo": "France Ô",
-    "guadeloupe": "Guadeloupe 1ère",
-    "guyane": "Guyane 1ère",
-    "martinique": "Martinique 1ère",
-    "mayotte": "Mayotte 1ère",
-    "nouvellecaledonie": "Nouvelle Calédonie 1ère",
-    "polynesie": "Polynésie 1ère",
-    "reunion": "Réunion 1ère",
-    "saintpierremiquelon": "St-Pierre et Miquelon 1ère",
-    "wallisfutuna": "Wallis et Futuna 1ère",
-    "sport": "Sport",
-    "info": "Info",
-    "documentaire": "Documentaire",
-    "seriefiction": "Série & fiction",
-    "magazine": "Magazine",
-    "jeunesse": "Jeunesse",
-    "divertissement": "Divertissement",
-    "jeu": "Jeu",
-    "culture": "Culture"
-}
-
-
-CATEGORIES = {
-    'Toutes catégories': 'https://pluzz.webservices.francetelevisions.fr/'
-                         'mobile/liste/type/replay/chaine/%s/nb/20/debut/%s',
-    'Info': 'https://pluzz.webservices.francetelevisions.fr/'
-            'mobile/liste/type/replay/rubrique/info/nb/20/debut/%s',
-    'Documentaire': 'https://pluzz.webservices.francetelevisions.fr/'
-                    'mobile/liste/type/replay/rubrique/documentaire/'
-                    'nb/20/debut/%s',
-    'Série & Fiction': 'https://pluzz.webservices.francetelevisions.fr/'
-                       'mobile/liste/type/replay/rubrique/seriefiction/nb/'
-                       '20/debut/%s',
-    'Magazine': 'https://pluzz.webservices.francetelevisions.fr/'
-                'mobile/liste/type/replay/rubrique/magazine/nb/20/debut/%s',
-    'Culture': 'https://pluzz.webservices.francetelevisions.fr/'
-               'mobile/liste/type/replay/rubrique/culture/nb/20/debut/%s',
-    'Jeunesse': 'https://pluzz.webservices.francetelevisions.fr/'
-                'mobile/liste/type/replay/rubrique/jeunesse/nb/20/debut/%s',
-    'Divertissement': 'https://pluzz.webservices.francetelevisions.fr/'
-                      'mobile/liste/type/replay/rubrique/divertissement/nb/'
-                      '20/debut/%s',
-    'Sport': 'https://pluzz.webservices.francetelevisions.fr/'
-             'mobile/liste/type/replay/rubrique/sport/nb/20/debut/%s',
-    'Jeu': 'https://pluzz.webservices.francetelevisions.fr/'
-           'mobile/liste/type/replay/rubrique/jeu/nb/20/debut/%s',
-    'Version multilingue (VM)': 'https://pluzz.webservices.'
-                                'francetelevisions.fr/'
-                                'mobile/liste/filtre/multilingue/type/'
-                                'replay/nb/20/debut/%s',
-    'Sous-titrés': 'https://pluzz.webservices.francetelevisions.fr/'
-                   'mobile/liste/filtre/soustitrage/type/replay/nb/'
-                   '20/debut/%s',
-    'Audiodescription (AD)': 'https://pluzz.webservices.francetelevisions.fr/'
-                             'mobile/liste/filtre/audiodescription/type/replay'
-                             '/nb/20/debut/%s',
-    'Tous publics': 'https://pluzz.webservices.francetelevisions.fr/'
-                    'mobile/liste/type/replay/filtre/touspublics'
-                    '/nb/20/debut/%s'
 }
 
 
@@ -164,14 +87,6 @@ def channel_entry(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def change_to_nicer_name(original_name):
-    """Convert id name to label name"""
-    if original_name in CATEGORIES_DISPLAY:
-        return CATEGORIES_DISPLAY[original_name]
-    return original_name
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def root(params):
     params['next'] = 'list_shows_root'
     params['module_name'] = params.module_name
@@ -183,51 +98,31 @@ def root(params):
 def list_shows(params):
     """Build categories listing"""
     shows = []
-    if 'previous_listing' in params:
-        shows = ast.literal_eval(params['previous_listing'])
 
-    unique_item = dict()
-
-    real_channel = params.channel_name
-    if params.channel_name == 'la_1ere':
-        real_channel = 'la_1ere_reunion%2C' \
-                       'la_1ere_guyane%2C' \
-                       'la_1ere_polynesie%2C' \
-                       'la_1ere_martinique%2C' \
-                       'la_1ere_mayotte%2C' \
-                       'la_1ere_nouvellecaledonie%2C' \
-                       'la_1ere_guadeloupe%2C' \
-                       'la_1ere_wallisetfutuna%2C' \
-                       'la_1ere_saintpierreetmiquelon'
-
-    # Level 0
     if params.next == 'list_shows_root':
 
         json_filepath = utils.download_catalog(
-            CHANNEL_CATALOG % (real_channel),
+            URL_CATEGORIES % (params.channel_name),
             '%s.json' % (params.channel_name)
         )
         with open(json_filepath) as json_file:
             json_parser = json.load(json_file)
 
-        emissions = json_parser['reponse']['emissions']
-        for emission in emissions:
-            rubrique = emission['rubrique'].encode('utf-8')
-            if rubrique not in unique_item:
-                unique_item[rubrique] = rubrique
-                rubrique_title = change_to_nicer_name(rubrique)
+        for categories in json_parser["result"]:
 
-                shows.append({
-                    'label': rubrique_title,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        rubrique=rubrique,
-                        next='list_shows_2_cat',
-                        window_title=rubrique_title
-                    )
-                })
+            categories_name = categories["label"].encode('UTF-8')
+            categories_part_url = categories["url"]
+            shows.append({
+                'label': categories_name,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    categories_part_url=categories_part_url,
+                    next='list_shows_2_cat',
+                    window_title=categories_name
+                )
+            })
 
         # Last videos
         shows.append({
@@ -236,7 +131,7 @@ def list_shows(params):
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                next='list_shows_last',
+                next='list_videos_2',
                 page='0',
                 window_title=common.GETTEXT('Last videos')
             )
@@ -255,150 +150,45 @@ def list_shows(params):
             )
         })
 
-        # from A to Z
-        shows.append({
-            'label': common.GETTEXT('From A to Z'),
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_shows_from_a_to_z',
-                window_title=common.GETTEXT('From A to Z')
-            )
-        })
-
-    # level 1
-    elif 'list_shows_from_a_to_z' in params.next:
-        shows.append({
-            'label': common.GETTEXT('Ascending'),
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_shows_2_from_a_to_z_CATEGORIES',
-                page='0',
-                url=URL_ALPHA % ('asc', '%s'),
-                sens='asc',
-                window_title=params.window_title
-            )
-        })
-        shows.append({
-            'label': common.GETTEXT('Descending'),
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_shows_2_from_a_to_z_CATEGORIES',
-                page='0',
-                url=URL_ALPHA % ('desc', '%s'),
-                sens='desc',
-                window_title=params.window_title
-            )
-        })
-
-    # level 1
-    elif 'list_shows_last' in params.next:
-        for title, url in CATEGORIES.iteritems():
-            if 'Toutes catégories' in title:
-                url = url % (params.channel_name, '%s')
-            shows.append({
-                'label': title,
-                'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    action='replay_entry',
-                    next='list_videos_last',
-                    page='0',
-                    url=url,
-                    title=title,
-                    window_title=title
-                )
-            })
-
-    # level 1 or 2
-    elif 'list_shows_2' in params.next:
-
-        if 'list_shows_2_cat' in params.next:
-            json_filepath = utils.download_catalog(
-                CHANNEL_CATALOG % (real_channel),
-                '%s.json' % (params.channel_name)
-            )
-
-        elif 'list_shows_2_from_a_to_z_CATEGORIES' in params.next:
-            json_filepath = utils.download_catalog(
-                URL_ALPHA % (params.sens, params.page),
-                '%s_%s_%s_alpha.json' % (
-                    params.channel_name,
-                    params.sens,
-                    params.page
-                )
-            )
-
+    elif params.next == 'list_shows_2_cat':
+        
+        json_filepath = utils.download_catalog(
+            URL_PROGRAMS % (params.categories_part_url, params.channel_name),
+            '%s_%s.json' % (params.categories_part_url, params.channel_name),
+            params={'filter': 'with-no-vod,only-visible'}
+        )
         with open(json_filepath) as json_file:
             json_parser = json.load(json_file)
-        emissions = json_parser['reponse']['emissions']
-        for emission in emissions:
-            rubrique = emission['rubrique'].encode('utf-8')
-            chaine_id = emission['chaine_id'].encode('utf-8')
-            if ('from_a_to_z' in params.next and
-                    chaine_id == params.channel_name) or \
-                    rubrique == params.rubrique:
-                titre_programme = emission['titre_programme'].encode('utf-8')
-                if titre_programme != '':
-                    id_programme = emission['id_programme'].encode('utf-8')
-                    if id_programme == '':
-                        id_programme = emission['id_emission'].encode('utf-8')
-                    if id_programme not in unique_item:
-                        unique_item[id_programme] = id_programme
-                        icon = URL_IMG % (emission['image_large'])
-                        genre = emission['genre']
-                        accroche_programme = emission['accroche_programme']
 
-                        info = {
-                            'video': {
-                                'title': titre_programme,
-                                'plot': accroche_programme,
-                                'genre': genre
-                            }
-                        }
-                        shows.append({
-                            'label': titre_programme,
-                            'thumb': icon,
-                            'fanart': icon,
-                            'url': common.PLUGIN.get_url(
-                                module_path=params.module_path,
-                                module_name=params.module_name,
-                                action='replay_entry',
-                                next='list_videos_1',
-                                id_programme=id_programme,
-                                page='0',
-                                window_title=titre_programme,
-                                fanart=icon
-                            ),
-                            'info': info
-                        })
-        if params.next == 'list_shows_2_from_a_to_z_CATEGORIES':
-            # More videos...
+        for program in json_parser["result"]:
+
+            program_name = program["label"].encode('UTF-8')
+            program_img = ''
+
+            if 'media_image' in program:
+                if program["media_image"] is not None:
+                    for image_datas in program["media_image"]["patterns"]:
+                        if "vignette_16x9" in image_datas["type"]:
+                            program_img = URL_API + image_datas["urls"]["w:1024"]
+            program_part_url = program["url_complete"].replace('/', '_')
             shows.append({
-                'label': common.ADDON.get_localized_string(30700),
+                'label': program_name,
+                'thumb': program_img,
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
                     module_name=params.module_name,
                     action='replay_entry',
-                    next='list_shows_2_from_a_to_z_CATEGORIES',
-                    sens=params.sens,
-                    page=str(int(params.page) + 100),
-                    window_title=params.window_title,
-                    update_listing=True,
-                    previous_listing=str(shows)
+                    program_part_url=program_part_url,
+                    next='list_videos_1',
+                    page='0',
+                    window_title=program_name
                 )
             })
 
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         update_listing='update_listing' in params,
         category=common.get_window_title(params)
@@ -430,7 +220,7 @@ def list_videos(params):
             label = hit['program']['label']
             title = hit['title']
             headline = hit['headline_title']
-            desc = hit['description']
+            desc = hit['text']
             duration = hit['duration']
             season = hit['season_number']
             episode = hit['episode_number']
@@ -441,12 +231,14 @@ def list_videos(params):
             casting = hit['casting']
             # characters = hit['characters']
             last_publication_date = hit['dates']['last_publication_date']
-            image_400 = hit['image']['formats']['vignette_16x9']['urls']['w:400']
-            image_1024 = hit['image']['formats']['vignette_16x9']['urls']['w:1024']
+            image_400 = ''
+            image_1024 = ''
+            if 'image' in hit: 
+                image_400 = hit['image']['formats']['vignette_16x9']['urls']['w:400']
+                image_1024 = hit['image']['formats']['vignette_16x9']['urls']['w:1024']
 
-            url_root = 'http://api-front.yatta.francetv.fr'
-            image_400 = url_root + image_400
-            image_1024 = url_root + image_1024
+            image_400 = URL_API + image_400
+            image_1024 = URL_API + image_1024
 
             title = label + ' - ' + title
             if headline and headline != '':
@@ -534,188 +326,106 @@ def list_videos(params):
             category=common.get_window_title(params)
         )
 
-    elif 'last' in params.next:
-        json_filepath = utils.download_catalog(
-            params.url % params.page,
-            '%s_%s_%s_last.json' % (
-                params.channel_name,
-                params.page,
-                params.title
-            )
-        )
-
-    elif 'from_a_to_z' in params.next:
-        json_filepath = utils.download_catalog(
-            params.url % params.page,
-            '%s_%s_%s_last.json' % (
-                params.channel_name,
-                params.page,
-                params.sens
-            )
-        )
-
     else:
-        json_filepath = utils.download_catalog(
-            CHANNEL_CATALOG % params.channel_name,
-            '%s.json' % params.channel_name
-        )
-    with open(json_filepath) as json_file:
-        json_parser = json.load(json_file)
-
-    emissions = json_parser['reponse']['emissions']
-    for emission in emissions:
-        id_programme = emission['id_programme'].encode('utf-8')
-        if id_programme == '':
-            id_programme = emission['id_emission'].encode('utf-8')
-        if 'search' in params.next \
-                or 'last' in params.next \
-                or 'from_a_to_z' in params.next \
-                or id_programme == params.id_programme:
-            title = ''
-            plot = ''
-            duration = 0
-            date = ''
-            genre = ''
-            id_diffusion = emission['id_diffusion']
-            chaine_id = emission['chaine_id'].encode('utf-8')
-
-            # If we are in search or alpha or last videos cases,
-            # only add channel's shows
-            if 'search' in params.next or\
-                    'from_a_to_z' in params.next or\
-                    'last' in params.next:
-                if chaine_id != params.channel_name:
-                    continue
-
-            file_prgm = utils.get_webcontent(
-                SHOW_INFO % (emission['id_diffusion']))
-            if(file_prgm != ''):
-                json_parser_show = json.loads(file_prgm)
-                if json_parser_show['synopsis']:
-                    plot = json_parser_show['synopsis'].encode('utf-8')
-                if json_parser_show['diffusion']['date_debut']:
-                    date = json_parser_show['diffusion']['date_debut']
-                    date = date.encode('utf-8')
-                if json_parser_show['real_duration']:
-                    duration = int(json_parser_show['real_duration'])
-                if json_parser_show['titre']:
-                    title = json_parser_show['titre'].encode('utf-8')
-                if json_parser_show['sous_titre']:
-                    title = ' '.join((
-                        title,
-                        '- [I]',
-                        json_parser_show['sous_titre'].encode('utf-8'),
-                        '[/I]'))
-
-                if json_parser_show['genre'] != '':
-                    genre = \
-                        json_parser_show['genre'].encode('utf-8')
-
-                subtitles = []
-                if json_parser_show['subtitles']:
-                    subtitles_list = json_parser_show['subtitles']
-                    for subtitle in subtitles_list:
-                        if subtitle['format'] == 'vtt':
-                            subtitles.append(
-                                subtitle['url'].encode('utf-8'))
-
-                episode = 0
-                if 'episode' in json_parser_show:
-                    episode = json_parser_show['episode']
-
-                season = 0
-                if 'saison' in json_parser_show:
-                    season = json_parser_show['saison']
-
-                cast = []
-                director = ''
-                personnes = json_parser_show['personnes']
-                for personne in personnes:
-                    fonctions = ' '.join(
-                        x.encode('utf-8') for x in personne['fonctions'])
-                    if 'Acteur' in fonctions:
-                        cast.append(
-                            personne['nom'].encode(
-                                'utf-8') + ' ' + personne['prenom'].encode(
-                                    'utf-8'))
-                    elif 'Réalisateur' in fonctions:
-                        director = personne['nom'].encode(
-                            'utf-8') + ' ' + \
-                            personne['prenom'].encode('utf-8')
-
-                year = int(date[6:10])
-                day = date[:2]
-                month = date[3:5]
-                date = '.'.join((day, month, str(year)))
-                aired = '-'.join((str(year), month, day))
-                # date: string (%d.%m.%Y / 01.01.2009)
-                # aired: string (2008-12-07)
-
-                # image = URL_IMG % (json_parserShow['image'])
-                image = json_parser_show['image_secure']
-
-                info = {
-                    'video': {
-                        'title': title,
-                        'plot': plot,
-                        'aired': aired,
-                        'date': date,
-                        'duration': duration,
-                        'year': year,
-                        'genre': genre,
-                        'mediatype': 'tvshow',
-                        'season': season,
-                        'episode': episode,
-                        'cast': cast,
-                        'director': director
-                    }
-                }
-
-                download_video = (
-                    common.GETTEXT('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        id_diffusion=id_diffusion) + ')'
-                )
-                context_menu = []
-                context_menu.append(download_video)
-
-                videos.append({
-                    'label': title,
-                    'fanart': image,
-                    'thumb': image,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        next='play_r',
-                        id_diffusion=id_diffusion
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu,
-                    'subtitles': subtitles
-                })
-
-    if 'last' in params.next:
-        # More videos...
-        videos.append({
-            'label': common.ADDON.get_localized_string(30700),
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                url=params.url,
-                next=params.next,
-                page=str(int(params.page) + 20),
-                title=params.title,
-                window_title=params.window_title,
-                update_listing=True,
-                previous_listing=str(videos)
+        
+        if params.next == 'list_videos_1':
+            json_filepath = utils.download_catalog(
+                URL_VIDEOS % params.program_part_url,
+                '%s_%s.json' % (params.program_part_url, params.page),
+                params={'page': params.page, 'filter': 'with-no-vod,only-visible'}
             )
-        })
+            with open(json_filepath) as json_file:
+                json_parser = json.load(json_file)
+        elif params.next == 'list_videos_2':
+            json_filepath = utils.download_catalog(
+                URL_LAST_VIDEOS % params.channel_name,
+                '%s_%s.json' % (params.channel_name, params.page),
+                params={'page': params.page, 'filter': 'with-no-vod,only-visible'}
+            )
+            with open(json_filepath) as json_file:
+                json_parser = json.load(json_file)
+
+        for video_datas in json_parser["result"]:
+    
+            title = video_datas["title"].encode('UTF-8')
+
+            id_diffusion = ''
+            duration = 0
+            image = ''
+            for video_media in video_datas["content_has_medias"]:
+                if "main" in video_media["type"]:
+                    id_diffusion = video_media["media"]["si_id"]
+                    duration = int(video_media["media"]["duration"])
+                elif "image" in video_media["type"]:
+                    for image_datas in video_media["media"]["patterns"]:
+                        if "vignette_16x9" in image_datas["type"]:
+                            image = URL_API + image_datas["urls"]["w:1024"]
+            
+            date_value = video_datas["creation_date"].split('T')[0].split('-')
+            year = int(date_value[0])
+            day = date_value[2]
+            month = date_value[1]
+            date = '.'.join((day, month, str(year)))
+            aired = '-'.join((str(year), month, day))
+
+            plot = ''
+            if "text" in video_datas:
+                plot = video_datas["text"]
+
+            info = {
+                'video': {
+                    'title': title,
+                    'duration': duration,
+                    'plot': plot,
+                    'aired': aired,
+                    'date': date,
+                    'year': year
+                }
+            }
+
+            download_video = (
+            common.GETTEXT('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    id_diffusion=id_diffusion) + ')'
+                )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'fanart': image,
+                'thumb': image,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='play_r',
+                    id_diffusion=id_diffusion
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+        if json_parser["cursor"]["next"] is not None:
+            # More videos...
+            videos.append({
+                'label': common.ADDON.get_localized_string(30700),
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next=params.next,
+                    program_part_url=params.program_part_url,
+                    page=str(json_parser["cursor"]["next"]),
+                    window_title=params.window_title,
+                    update_listing=True,
+                    previous_listing=str(videos)
+                )
+            })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -756,6 +466,14 @@ def get_video_url(params):
 
         json_parser = json.loads(
             utils.get_webcontent(SHOW_INFO % (params.id_diffusion)))
+        
+        subtitles = []
+        if json_parser['subtitles']:
+            subtitles_list = json_parser['subtitles']
+            for subtitle in subtitles_list:
+                if subtitle['format'] == 'vtt':
+                    subtitles.append(
+                        subtitle['url'].encode('utf-8'))
 
         url_selected = ''
 
@@ -804,42 +522,50 @@ def get_video_url(params):
     elif params.next == 'play_l':
 
         json_parser = json.loads(utils.get_webcontent(
-            LIVE_INFO % (params.channel_name)))
+            URL_LIVE_JSON))
+        for live in json_parser["result"]:
+            if live["channel"] == params.channel_name:
+                live_datas = live["collection"][0]["content_has_medias"]
+                liveId = ''
+                for live_data in live_datas:
+                    if "si_direct_id" in live_data["media"]:
+                        liveId = live_data["media"]["si_direct_id"]
+                json_parser_liveId = json.loads(utils.get_webcontent(
+                    SHOW_INFO % liveId))
+                url_hls_v1 = ''
+                url_hls_v5 = ''
+                url_hls = ''
 
-        url_hls_v1 = ''
-        url_hls_v5 = ''
-        url_hls = ''
+                for video in json_parser_liveId['videos']:
+                    if 'format' in video:
+                        if 'hls_v1_os' in video['format'] and \
+                                video['geoblocage'] is not None:
+                            url_hls_v1 = video['url']
+                        if 'hls_v5_os' in video['format'] and \
+                                video['geoblocage'] is not None:
+                            url_hls_v5 = video['url']
+                        if 'hls' in video['format']:
+                            url_hls = video['url']
 
-        for video in json_parser['videos']:
-            if 'format' in video:
-                if 'hls_v1_os' in video['format'] and \
-                        video['geoblocage'] is not None:
-                    url_hls_v1 = video['url']
-                if 'hls_v5_os' in video['format'] and \
-                        video['geoblocage'] is not None:
-                    url_hls_v5 = video['url']
-                if 'hls' in video['format']:
-                    url_hls = video['url']
+                final_url = ''
 
-        final_url = ''
+                # Case France 3 Région
+                if url_hls_v1 == '' and url_hls_v5 == '':
+                    final_url = url_hls
+                # Case Jarvis
+                if common.sp.xbmc.__version__ == '2.24.0' \
+                        and url_hls_v1 != '':
+                    final_url = url_hls_v1
+                # Case Krypton, Leia, ...
+                if final_url == '' and url_hls_v5 != '':
+                    final_url = url_hls_v5
+                elif final_url == '':
+                    final_url = url_hls_v1
 
-        # Case France 3 Région
-        if url_hls_v1 == '' and url_hls_v5 == '':
-            final_url = url_hls
-        # Case Jarvis
-        if common.sp.xbmc.__version__ == '2.24.0' \
-                and url_hls_v1 != '':
-            final_url = url_hls_v1
-        # Case Krypton, Leia, ...
-        if final_url == '' and url_hls_v5 != '':
-            final_url = url_hls_v5
-        elif final_url == '':
-            final_url = url_hls_v1
+                json_parser2 = json.loads(
+                    utils.get_webcontent(HDFAUTH_URL % (final_url)))
 
-        json_parser2 = json.loads(
-            utils.get_webcontent(HDFAUTH_URL % (final_url)))
-
-        return json_parser2['url']
+                return json_parser2['url']
 
 
 def search(params):

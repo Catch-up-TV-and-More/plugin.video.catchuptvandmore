@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.11~beta018"
+       version="0.1.11~beta019"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -53,6 +53,8 @@
 [Add Live TV] TVP (PL) (wwark)
 [Update] Update simpleplugin Library
 [Add Website] Fosdem (wwark)
+[Update] Change API for France TV (wwark)
+[Add Web TV] France TV Slash (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

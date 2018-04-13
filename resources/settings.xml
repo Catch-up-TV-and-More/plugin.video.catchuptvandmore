@@ -225,17 +225,17 @@
             <setting label="TF1" type="bool" id="tf1" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="tf1.order" default="1"/>
 
-            <setting label="France 2" type="bool" id="france2" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="france2.order" default="2"/>
+            <setting label="France 2" type="bool" id="france-2" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="france-2.order" default="2"/>
 
-            <setting label="France 3" type="bool" id="france3" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="france3.order" default="3"/>
+            <setting label="France 3" type="bool" id="france-3" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="france-3.order" default="3"/>
 
             <setting label="Canal +" type="bool" id="canalplus" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="canalplus.order" default="4"/>
 
-            <setting label="France 5" type="bool" id="france5" default="true" visible="eq(-9,true)"/>
-            <setting label="" type="number" visible="false" id="france5.order" default="5"/>
+            <setting label="France 5" type="bool" id="france-5" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="france-5.order" default="5"/>
 
             <setting label="M6" type="bool" id="m6" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="m6.order" default="6"/>
@@ -255,8 +255,8 @@
             <setting label="NRJ 12" type="bool" id="nrj12" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="nrj12.order" default="11"/>
 
-            <setting label="France 4" type="bool" id="france4" default="true" visible="eq(-23,true)"/>
-            <setting label="" type="number" visible="false" id="france4.order" default="12"/>
+            <setting label="France 4" type="bool" id="france-4" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="france-4.order" default="12"/>
 
             <setting label="BFM TV" type="bool" id="bfmtv" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="bfmtv.order" default="13"/>
@@ -270,8 +270,8 @@
             <setting label="Gulli" type="bool" id="gulli" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="gulli.order" default="16"/>
 
-            <setting label="France Ô" type="bool" id="franceo" default="true" visible="eq(-33,true)"/>
-            <setting label="" type="number" visible="false" id="franceo.order" default="17"/>
+            <setting label="France Ô" type="bool" id="france-o" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="france-o.order" default="17"/>
 
             <setting label="TF1 Séries Films" type="bool" id="tf1-series-films" default="true" visible="eq(-35,true)"/>
             <setting label="" type="number" visible="false" id="tf1-series-films.order" default="18"/>
@@ -399,11 +399,14 @@
             <setting label="Melody TV" type="bool" id="melodytv" default="true" visible="eq(-117,true)"/>
             <setting label="" type="number" visible="false" id="melodytv.order" default="59"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-119,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="60"/>
+            <setting label="France tv slash" type="bool" id="slash" default="true" visible="eq(-119,true)"/>
+            <setting label="" type="number" visible="false" id="slash.order" default="60"/>
 
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-121,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="61"/>-->
+            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-121,true)"/>
+            <setting label="" type="number" visible="false" id="teva.order" default="61"/>
+
+            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-123,true)"/>
+            <setting label="" type="number" visible="false" id="parispremiere.order" default="62"/>-->
         <!-- France -->
 
 
