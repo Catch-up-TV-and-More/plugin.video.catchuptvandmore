@@ -113,7 +113,6 @@ def list_shows(params):
         for category in json_parser['pages']['list'][value_code]['zones']:
 
             sub_category_name = ''
-            sub_category_url = ''
             if category['type'] == 'category':
                 sub_category_name = category['title']
                 next_value = 'list_videos_1'
@@ -170,7 +169,7 @@ def list_videos(params):
         file_path = utils.download_catalog(
             URL_VIDEOS % (params.datas, params.page),
             '%s_%s_%s_%s.json' % (
-                params.channel_name, DESIRED_LANGUAGE, params.code, params.page)
+                params.channel_name, DESIRED_LANGUAGE, params.datas, params.page)
         )
         file_replay = open(file_path).read()
         json_parser = json.loads(file_replay)
@@ -241,6 +240,7 @@ def list_videos(params):
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED
             ),
             content='tvshows',
+            update_listing='update_listing' in params,
             category=common.get_window_title(params)
         )
 
