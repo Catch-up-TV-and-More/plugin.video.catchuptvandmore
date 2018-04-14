@@ -41,8 +41,8 @@ URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v1/livestream/%s'
 # Langue, ...
 
-URL_VIDEOS = 'https://www.arte.tv/guide/api/api/zones/fr/web/videos_subcategory_%s/?page=%s&limit=10'
-# Code, Page
+URL_VIDEOS = 'https://www.arte.tv/guide/api/api/zones/%s/web/%s/?page=%s&limit=10'
+# language, VideosCode, Page
 
 DESIRED_LANGUAGE = common.PLUGIN.get_setting(
     'arte.language')
@@ -115,20 +115,24 @@ def list_shows(params):
             sub_category_name = ''
             if category['type'] == 'category':
                 sub_category_name = category['title']
+                sub_category_type = category['type']
                 next_value = 'list_videos_1'
-                datas = category['link']['page']
+                datas = 'videos_subcategory_' + category['link']['page']
             if category['type'] == 'playlist':
                 sub_category_name = category['title']
+                sub_category_type = category['type']
                 next_value = 'list_shows_3'
-                datas = ''
+                datas = params.category_url
             if category['type'] == 'collection':
                 sub_category_name = category['title']
+                sub_category_type = category['type']
                 next_value = 'list_shows_3'
-                datas = ''
+                datas = params.category_url
             if category['type'] == 'magazine':
                 sub_category_name = category['title']
+                sub_category_type = category['type']
                 next_value = 'list_shows_3'
-                datas = ''
+                datas = params.category_url
 
             if sub_category_name != '':
                 shows.append({
@@ -140,13 +144,49 @@ def list_shows(params):
                         next=next_value,
                         sub_category_name=sub_category_name,
                         datas=datas,
+                        sub_category_type=sub_category_type,
                         page='1',
                         window_title=sub_category_name
                     )
                 })
 
     elif params.next == 'list_shows_3':
-        return None
+
+        file_path = utils.download_catalog(
+            params.datas,
+            '%s_%s_%s.json' % (
+                params.channel_name, DESIRED_LANGUAGE, params.category_name)
+        )
+        file_replay = open(file_path).read()
+        file_replay = re.compile(
+            r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
+        json_parser = json.loads(file_replay)
+
+        value_code = json_parser['pages']['currentCode']
+
+        for category in json_parser['pages']['list'][value_code]['zones']:
+
+            if category['type'] == params.sub_category_type:
+                for program_datas in category['data']:
+                    program_title = program_datas['title'].encode('utf-8')
+                    datas = 'listing_' + program_datas['programId']
+                    program_img = ''
+                    for images in program_datas['images']['landscape']['resolutions']:
+                        program_img = images['url']
+
+                    shows.append({
+                        'label': program_title,
+                        'thumb': program_img,
+                        'url': common.PLUGIN.get_url(
+                            module_path=params.module_path,
+                            module_name=params.module_name,
+                            action='replay_entry',
+                            next='list_videos_1',
+                            datas=datas,
+                            page='1',
+                            window_title=program_title
+                        )
+                    })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -167,7 +207,7 @@ def list_videos(params):
 
     if params.next == 'list_videos_1':
         file_path = utils.download_catalog(
-            URL_VIDEOS % (params.datas, params.page),
+            URL_VIDEOS % (DESIRED_LANGUAGE.lower(), params.datas, params.page),
             '%s_%s_%s_%s.json' % (
                 params.channel_name, DESIRED_LANGUAGE, params.datas, params.page)
         )
@@ -175,7 +215,11 @@ def list_videos(params):
         json_parser = json.loads(file_replay)
 
         for video_datas in json_parser['data']:
-            title = video_datas['title']
+            
+            if video_datas['subtitle'] is not None:
+                title = video_datas['title'] + ' - ' + video_datas['subtitle']
+            else:
+                title = video_datas['title']
             video_id = video_datas['programId']
             img = ''
             for images in video_datas['images']['landscape']['resolutions']:
