@@ -80,40 +80,43 @@ def list_shows(params):
 
         programs_soup = bs(programs_html, 'html.parser')
         list_js = programs_soup.find_all("script")
-        # 7ème script contient la liste des categories au format json
-        json_categories = list_js[6].prettify().replace(
-            '</script>', ''
-        ).replace(
-            '<script>', ''
-        ).replace(
-            'var programList = ', ''
-        ).replace(
-            '\n', ''
-        ).replace(
-            '\r', ''
-        ).replace(
-            ',]', ']')
-        json_categories_jsonparser = json.loads(json_categories)
 
-        for category in json_categories_jsonparser["programmings"]:
-            category_name = category["title"]
-            category_img = URL_ROOT + category["image"]
-            category_url = URL_ROOT + '/programma/' + category["description"]
+        for js in list_js:
+            js_value = js.prettify()
+            if 'programList' in js_value:
+                json_categories = js_value.replace(
+                    '</script>', ''
+                ).replace(
+                    '<script>', ''
+                ).replace(
+                    'var programList = ', ''
+                ).replace(
+                    '\n', ''
+                ).replace(
+                    '\r', ''
+                ).replace(
+                    ',]', ']')
+                json_categories_jsonparser = json.loads(json_categories)
 
-            shows.append({
-                'label': category_name,
-                'thumb': category_img,
-                'fanart': category_img,
-                'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    action='replay_entry',
-                    next='list_videos_cat',
-                    category_url=category_url,
-                    window_title=category_name,
-                    category_name=category_name,
-                )
-            })
+                for category in json_categories_jsonparser["programmings"]:
+                    category_name = category["title"]
+                    category_img = URL_ROOT + category["image"]
+                    category_url = URL_ROOT + '/programma/' + category["description"]
+
+                    shows.append({
+                        'label': category_name,
+                        'thumb': category_img,
+                        'fanart': category_img,
+                        'url': common.PLUGIN.get_url(
+                            module_path=params.module_path,
+                            module_name=params.module_name,
+                            action='replay_entry',
+                            next='list_videos_cat',
+                            category_url=category_url,
+                            window_title=category_name,
+                            category_name=category_name,
+                        )
+                    })
 
     return common.PLUGIN.create_listing(
         shows,
