@@ -46,6 +46,12 @@
 
         <setting label="30056" type="bool" id="ca" default="true"/>
         <setting label="" type="number" visible="false" id="ca.order" default="7"/>
+
+        <setting label="30057" type="bool" id="us" default="true"/>
+        <setting label="" type="number" visible="false" id="us.order" default="8"/>
+
+        <setting label="30058" type="bool" id="pl" default="true"/>
+        <setting label="" type="number" visible="false" id="pl.order" default="9"/>
     </category>
     <!-- Countries-->
 
@@ -78,6 +84,9 @@
 
             <setting label="Rouge TV" type="bool" id="rougetv" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="rougetv.order" default="6"/>
+
+            <setting label="TVM3" type="bool" id="tvm3" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="tvm3.order" default="7"/>
         <!-- Switzerland -->
 
 
@@ -105,6 +114,12 @@
 
             <setting label="Sky Sports" type="bool" id="skysports" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="skysports.order" default="7"/>
+
+            <setting label="STV" type="bool" id="stv" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="stv.order" default="8"/>
+
+            <setting label="STV 2" type="bool" id="stv2" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="stv2.order" default="9"/>
         <!-- United Kingdom -->
 
 
@@ -122,7 +137,7 @@
             <setting label="" type="number" visible="false" id="arte.order" default="3"/>
 
             <setting label="France 24" type="bool" id="france24" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="france24.france24.order" default="4"/>
+            <setting label="" type="number" visible="false" id="france24.order" default="4"/>
 
             <setting label="NHK World" type="bool" id="nhkworld" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="nhkworld.order" default="5"/>
@@ -147,6 +162,15 @@
 
             <setting label="DW" type="bool" id="dw" default="true" visible="eq(-23,true)"/>
             <setting label="" type="number" visible="false" id="dw.order" default="12"/>
+
+            <setting label="Bein Sports" type="bool" id="beinsports" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="beinsports.order" default="13"/>
+
+            <setting label="Souvenirs From Earth" type="bool" id="souvenirsfromearth" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="souvenirsfromearth.order" default="14"/>
+
+            <setting label="QVC" type="bool" id="qvc" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="qvc.order" default="15"/>
         <!-- International -->
 
 
@@ -157,14 +181,14 @@
             <setting label="BRF Mediathek" type="bool" id="brf" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="brf.order" default="1"/>
 
-            <setting label="RTL-TVI" type="bool" id="rtltvi" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="rtltvi.order" default="2"/>
+            <setting label="RTL-TVI" type="bool" id="rtl_tvi" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="rtl_tvi.order" default="2"/>
 
-            <setting label="PLUG RTL" type="bool" id="plugrtl" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="plugrtl.order" default="3"/>
+            <setting label="PLUG RTL" type="bool" id="plug_rtl" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="plug_rtl.order" default="3"/>
 
-            <setting label="CLUB RTL" type="bool" id="clubrtl" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="clubrtl.order" default="4"/>
+            <setting label="CLUB RTL" type="bool" id="club_rtl" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="club_rtl.order" default="4"/>
 
             <setting label="VRT NU" type="bool" id="vrt" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="vrt.order" default="5"/>
@@ -178,6 +202,20 @@
             <setting label="RTBF Auvio (La Une, La deux, La Trois, ...)" type="bool" id="auvio" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="auvio.order" default="8"/>
 
+            <setting label="TV Lux" type="bool" id="tvlux" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="tvlux.order" default="9"/>
+
+            <setting label="RTL INFO" type="bool" id="rtl_info" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="rtl_info.order" default="10"/>
+
+            <setting label="BEL RTL" type="bool" id="bel_rtl" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="bel_rtl.order" default="11"/>
+
+            <setting label="Contact" type="bool" id="contact" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="contact.order" default="12"/>
+
+            <setting label="BX1" type="bool" id="bx1" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="bx1.order" default="13"/>
         <!-- Belgium -->
 
 
@@ -187,17 +225,17 @@
             <setting label="TF1" type="bool" id="tf1" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="tf1.order" default="1"/>
 
-            <setting label="France 2" type="bool" id="france2" default="true" visible="eq(-3,true)"/>
-            <setting label="" type="number" visible="false" id="france2.order" default="2"/>
+            <setting label="France 2" type="bool" id="france-2" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="france-2.order" default="2"/>
 
-            <setting label="France 3" type="bool" id="france3" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="france3.order" default="3"/>
+            <setting label="France 3" type="bool" id="france-3" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="france-3.order" default="3"/>
 
             <setting label="Canal +" type="bool" id="canalplus" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="canalplus.order" default="4"/>
 
-            <setting label="France 5" type="bool" id="france5" default="true" visible="eq(-9,true)"/>
-            <setting label="" type="number" visible="false" id="france5.order" default="5"/>
+            <setting label="France 5" type="bool" id="france-5" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="france-5.order" default="5"/>
 
             <setting label="M6" type="bool" id="m6" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="m6.order" default="6"/>
@@ -217,8 +255,8 @@
             <setting label="NRJ 12" type="bool" id="nrj12" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="nrj12.order" default="11"/>
 
-            <setting label="France 4" type="bool" id="france4" default="true" visible="eq(-23,true)"/>
-            <setting label="" type="number" visible="false" id="france4.order" default="12"/>
+            <setting label="France 4" type="bool" id="france-4" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="france-4.order" default="12"/>
 
             <setting label="BFM TV" type="bool" id="bfmtv" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="bfmtv.order" default="13"/>
@@ -232,8 +270,8 @@
             <setting label="Gulli" type="bool" id="gulli" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="gulli.order" default="16"/>
 
-            <setting label="France Ô" type="bool" id="franceo" default="true" visible="eq(-33,true)"/>
-            <setting label="" type="number" visible="false" id="franceo.order" default="17"/>
+            <setting label="France Ô" type="bool" id="france-o" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="france-o.order" default="17"/>
 
             <setting label="TF1 Séries Films" type="bool" id="tf1-series-films" default="true" visible="eq(-35,true)"/>
             <setting label="" type="number" visible="false" id="tf1-series-films.order" default="18"/>
@@ -352,11 +390,23 @@
             <setting label="BFM Paris" type="bool" id="bfmparis" default="true" visible="eq(-111,true)"/>
             <setting label="" type="number" visible="false" id="bfmparis.order" default="56"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-113,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="57"/>
+            <setting label="Onzéo" type="bool" id="onzeo" default="true" visible="eq(-113,true)"/>
+            <setting label="" type="number" visible="false" id="onzeo.order" default="57"/>
 
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-115,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="58"/>-->
+            <setting label="Fun Radio" type="bool" id="fun_radio" default="true" visible="eq(-115,true)"/>
+            <setting label="" type="number" visible="false" id="fun_radio.order" default="58"/>
+
+            <setting label="Melody TV" type="bool" id="melodytv" default="true" visible="eq(-117,true)"/>
+            <setting label="" type="number" visible="false" id="melodytv.order" default="59"/>
+
+            <setting label="France tv slash" type="bool" id="slash" default="true" visible="eq(-119,true)"/>
+            <setting label="" type="number" visible="false" id="slash.order" default="60"/>
+
+            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-121,true)"/>
+            <setting label="" type="number" visible="false" id="teva.order" default="61"/>
+
+            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-123,true)"/>
+            <setting label="" type="number" visible="false" id="parispremiere.order" default="62"/>-->
         <!-- France -->
 
 
@@ -414,20 +464,27 @@
 
             <setting label="Télé-Québec" type="bool" id="telequebec" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="telequebec.order" default="4"/>
+
+            <setting label="TVA" type="bool" id="tva" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="tva.order" default="5"/>
         <!-- Canada -->
 
 
         <!-- United States -->
-        <!--
-        
         <setting label="30087" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="" type="bool" id="us" default="true" visible="false"/>
 
-            <setting label="NBC" type="bool" id="nbc" default="true" visible="eq(-1,true)"/>
-            <setting label="" type="number" visible="false" id="nbc.order" default="1"/>
-
-        -->
+            <setting label="CBS News" type="bool" id="cbsnews" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="cbsnews.order" default="1"/>
         <!-- United States -->
+
+        <!-- Poland -->
+        <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="pl" default="true" visible="false"/>
+
+            <setting label="TVP" type="bool" id="tvp" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="tvp.order" default="1"/>
+        <!-- Poland -->
 
     </category>
     <!-- Channels --> 
@@ -468,6 +525,12 @@
             <setting label="Elle" type="bool" id="elle" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="elle.order" default="9"/>
 
+            <setting label="New York Times" type="bool" id="nytimes" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="nytimes.order" default="10"/>
+
+            <setting label="Fosdem" type="bool" id="fosdem" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="fosdem.order" default="11"/>
+
     </category>
     <!-- Websites -->  
 
@@ -495,6 +558,9 @@
                 <setting label="30154" type="labelenum" id="france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES" default="FR"/>
                 <setting label="30156" type="labelenum" id="mtv.language" visible="eq(-4,true)" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" visible="eq(-5,true)" values="EN|DE|ES|AR" default="EN"/>
+                <setting label="30160" type="labelenum" id="beinsports.language" visible="eq(-6,true)" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
+                <setting label="30161" type="labelenum" id="qvc.language" visible="eq(-7,true)" values="FR" default="FR"/>
+                <setting label="30162" type="labelenum" id="nhkworld.country" visible="eq(-8,true)" values="Outside Japan|In Japan" default="Outside Japan"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>

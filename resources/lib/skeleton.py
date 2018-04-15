@@ -33,20 +33,20 @@ SKELETON = {
 
             ('fr', 'build_live_tv_menu'): [
                 ('tf1', 'none'),
-                ('france2', 'none'),
-                ('france3', 'none'),
-                ('france5', 'none'),
+                ('france-2', 'none'),
+                ('france-3', 'none'),
+                ('france-5', 'none'),
                 ('canalplus', 'none'),
                 ('c8', 'none'),
                 ('tmc', 'none'),
                 ('tfx', 'none'),
                 ('nrj12', 'none'),
-                ('france4', 'none'),
+                ('france-4', 'none'),
                 ('bfmtv', 'none'),
                 ('cnews', 'none'),
                 ('cstar', 'none'),
                 ('gulli', 'none'),
-                ('franceo', 'none'),
+                ('france-o', 'none'),
                 ('tf1-series-films', 'none'),
                 ('lequipe', 'none'),
                 ('numero23', 'none'),
@@ -62,7 +62,8 @@ SKELETON = {
                 ('france3regions', 'none'),
                 ('francetvsport', 'none'),
                 ('gong', 'none'),
-                ('bfmparis', 'none')
+                ('bfmparis', 'none'),
+                ('melodytv', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -70,14 +71,14 @@ SKELETON = {
                 ('telemb', 'none'),
                 ('vrt', 'none'),
                 ('auvio', 'none'),
-                ('rtltvi', 'none'),
-                ('plugrtl', 'none'),
-                ('clubrtl', 'none')
+                ('tvlux', 'none'),
+                ('bx1', 'none')
             ],
 
             ('ca', 'build_live_tv_menu'): [
                 ('telequebec', 'none'),
-                ('yestv', 'none')
+                ('yestv', 'none'),
+                ('tva', 'none')
             ],
 
             ('ch', 'build_live_tv_menu'): [
@@ -90,7 +91,9 @@ SKELETON = {
 
             ('uk', 'build_live_tv_menu'): [
                 ('blaze', 'none'),
-                ('skynews', 'none')
+                ('skynews', 'none'),
+                ('stv', 'none'),
+                ('stv2', 'none')
             ],
 
             ('wo', 'build_live_tv_menu'): [
@@ -103,7 +106,17 @@ SKELETON = {
                 ('nhkworld', 'none'),
                 ('dw', 'none'),
                 ('tv5monde', 'none'),
-                ('tivi5monde', 'none')
+                ('tivi5monde', 'none'),
+                ('souvenirsfromearth', 'none'),
+                ('qvc', 'none')
+            ],
+
+            ('us', 'build_live_tv_menu'): [
+                ('cbsnews', 'none')
+            ],
+
+            ('pl', 'build_live_tv_menu'): [
+                ('tvp', 'none')
             ]
         },
 
@@ -112,44 +125,51 @@ SKELETON = {
             ('be', 'generic_menu'): [
                 ('auvio', 'replay_entry'),
                 ('brf', 'replay_entry'),
-                ('rtltvi', 'replay_entry'),
-                ('plugrtl', 'replay_entry'),
-                ('clubrtl', 'replay_entry'),
+                ('rtl_tvi', 'replay_entry'),
+                ('plug_rtl', 'replay_entry'),
+                ('club_rtl', 'replay_entry'),
                 ('vrt', 'replay_entry'),
                 ('telemb', 'replay_entry'),
-                ('rtc', 'replay_entry')
+                ('rtc', 'replay_entry'),
+                ('tvlux', 'replay_entry'),
+                ('rtl_info', 'replay_entry'),
+                ('bel_rtl', 'replay_entry'),
+                ('contact', 'replay_entry'),
+                ('bx1', 'replay_entry')
             ],
 
             ('ca', 'generic_menu'): [
                 ('tv5', 'replay_entry'),
                 ('unis', 'replay_entry'),
-                ('telequebec', 'replay_entry')
+                ('telequebec', 'replay_entry'),
+                ('tva', 'replay_entry')
             ],
 
             ('fr', 'generic_menu'): [
                 ('tf1', 'replay_entry'),
-                ('france2', 'replay_entry'),
-                ('france3', 'replay_entry'),
+                ('france-2', 'replay_entry'),
+                ('france-3', 'replay_entry'),
                 ('canalplus', 'replay_entry'),
-                ('france5', 'replay_entry'),
+                ('france-5', 'replay_entry'),
                 ('m6', 'replay_entry'),
                 ('c8', 'replay_entry'),
                 ('w9', 'replay_entry'),
                 ('tmc', 'replay_entry'),
                 ('tfx', 'replay_entry'),
                 ('nrj12', 'replay_entry'),
-                ('france4', 'replay_entry'),
+                ('france-4', 'replay_entry'),
                 ('bfmtv', 'replay_entry'),
                 ('cnews', 'replay_entry'),
                 ('cstar', 'replay_entry'),
                 ('gulli', 'replay_entry'),
-                ('franceo', 'replay_entry'),
+                ('france-o', 'replay_entry'),
                 ('tf1-series-films', 'replay_entry'),
                 ('lequipe', 'replay_entry'),
                 ('6ter', 'replay_entry'),
                 ('numero23', 'replay_entry'),
                 ('cherie25', 'replay_entry'),
                 ('la_1ere', 'replay_entry'),
+                ('franceinfo', 'replay_entry'),
                 ('bfmbusiness', 'replay_entry'),
                 ('rmc', 'replay_entry'),
                 ('01net', 'replay_entry'),
@@ -179,7 +199,10 @@ SKELETON = {
                 ('gameone', 'replay_entry'),
                 ('francetveducation', 'replay_entry'),
                 ('gong', 'replay_entry'),
-                ('francetvsport', 'replay_entry')
+                ('francetvsport', 'replay_entry'),
+                ('onzeo', 'replay_entry'),
+                ('fun_radio', 'replay_entry'),
+                ('slash', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -202,7 +225,8 @@ SKELETON = {
                 ('srf', 'replay_entry'),
                 ('rtr', 'replay_entry'),
                 ('swissinfo', 'replay_entry'),
-                ('rougetv', 'replay_entry')
+                ('rougetv', 'replay_entry'),
+                ('tvm3', 'replay_entry')
             ],
 
             ('uk', 'generic_menu'): [
@@ -225,7 +249,8 @@ SKELETON = {
                 ('bvn', 'replay_entry'),
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
-                ('arirang', 'replay_entry')
+                ('arirang', 'replay_entry'),
+                ('beinsports', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
@@ -237,7 +262,9 @@ SKELETON = {
             ('autoplus', 'website_entry'),
             ('notrehistoirech', 'website_entry'),
             ('30millionsdamis', 'website_entry'),
-            ('elle', 'website_entry')
+            ('elle', 'website_entry'),
+            ('nytimes', 'website_entry'),
+            ('fosdem', 'website_entry')
         ]
 
     }
@@ -261,9 +288,12 @@ the channel name and his corresponding python file
 CHANNELS = {
     'auvio': 'rtbf',
     'brf': 'brf',
-    'rtltvi': 'rtl',
-    'plugrtl': 'rtl',
-    'clubrtl': 'rtl',
+    'rtl_tvi': 'rtlbe',
+    'plug_rtl': 'rtlbe',
+    'club_rtl': 'rtlbe',
+    'rtl_info': 'rtlbe',
+    'bel_rtl': 'rtlbe',
+    'contact': 'rtlbe',
     'vrt': 'vrt',
     'telemb': 'telemb',
     'rtc': 'rtc',
@@ -278,30 +308,30 @@ CHANNELS = {
     'swissinfo': 'srgssr',
     'rougetv': 'rougetv',
     'tf1': 'tf1',
-    'france2': 'pluzz',
-    'france3': 'pluzz',
+    'france-2': 'francetv',
+    'france-3': 'francetv',
     'canalplus': 'mycanal',
-    'france5': 'pluzz',
+    'france-5': 'francetv',
     'm6': '6play',
     'c8': 'mycanal',
     'w9': '6play',
     'tmc': 'tf1',
     'tfx': 'tf1',
     'nrj12': 'nrj',
-    'france4': 'pluzz',
+    'france-4': 'francetv',
     'bfmtv': 'bfmtv',
     'bfmparis': 'bfmtv',
     'cnews': 'cnews',
     'cstar': 'mycanal',
     'gulli': 'gulli',
-    'franceo': 'pluzz',
+    'france-o': 'francetv',
     'tf1-series-films': 'tf1',
     'lequipe': 'lequipe',
     '6ter': '6play',
     'numero23': 'numero23',
     'cherie25': 'nrj',
-    'la_1ere': 'pluzz',
-    'franceinfo': 'pluzz',
+    'la_1ere': 'la_1ere',
+    'franceinfo': 'franceinfo',
     'bfmbusiness': 'bfmtv',
     'rmc': 'bfmtv',
     '01net': 'bfmtv',
@@ -316,14 +346,15 @@ CHANNELS = {
     'home': '6play',
     'styles': '6play',
     'comedy': '6play',
+    'fun_radio': '6play',
     'publicsenat': 'publicsenat',
-    'france3regions': 'pluzz',
-    'francetvsport': 'pluzz',
+    'france3regions': 'france3regions',
+    'francetvsport': 'francetvsport',
     'histoire': 'tf1thematiques',
     'tvbreizh': 'tf1thematiques',
     'ushuaiatv': 'tf1thematiques',
-    'studio-4': 'pluzz',
-    'irl': 'pluzz',
+    'studio-4': 'nouvellesecritures',
+    'irl': 'nouvellesecritures',
     'seasons': 'mycanal',
     'comedie': 'mycanal',
     'les-chaines-planete': 'mycanal',
@@ -331,7 +362,7 @@ CHANNELS = {
     'cineplus': 'mycanal',
     'infosportplus': 'mycanal',
     'gameone': 'gameone',
-    'francetveducation': 'pluzz',
+    'francetveducation': 'francetveducation',
     'gong': 'gong',
     'nhknews': 'nhk',
     'nhklifestyle': 'nhk',
@@ -362,7 +393,21 @@ CHANNELS = {
     # 'cx': 'tver', (Protected by DRM)
     'mbs': 'tver',
     'abc': 'tver',
-    'ytv': 'tver'
+    'ytv': 'tver',
+    'tvm3': 'tvm3',
+    'tva': 'tva',
+    'tvlux': 'tvlux',
+    'beinsports': 'beinsports',
+    'stv': 'stv',
+    'stv2': 'stv',
+    'onzeo': 'onzeo',
+    'souvenirsfromearth': 'souvenirsfromearth',
+    'qvc': 'qvc',
+    'cbsnews': 'cbsnews',
+    'melodytv': 'melodytv',
+    'bx1': 'bx1',
+    'tvp': 'tvp',
+    'slash': 'francetv'
 }
 
 '''
@@ -383,22 +428,30 @@ LABELS = {
     'uk': 'United Kingdom',
     'wo': 'International',
     'ca': 'Canada',
+    'us': 'United State of America',
+    'pl': 'Poland',
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
     'brf': 'BRF Mediathek',
-    'rtltvi': 'RTL-TVI',
-    'plugrtl': 'PLUG RTL',
-    'clubrtl': 'CLUB RTL',
+    'rtl_tvi': 'RTL-TVI',
+    'plug_rtl': 'PLUG RTL',
+    'club_rtl': 'CLUB RTL',
     'vrt': 'VRT NU',
     'telemb': 'Télé MB',
     'rtc': 'RTC Télé Liège',
+    'tvlux': 'TV Lux',
+    'contact': 'Contact',
+    'bel_rtl': 'BEL RTL',
+    'rtl_info': 'RTL INFO',
+    'bx1': 'BX1',
 
     # Canadian channels / live TV
     'tv5': 'TV5',
     'unis': 'UNIS',
     'yestv': 'YES TV',
     'telequebec': 'Télé-Québec',
+    'tva': 'TVA',
 
     # Switzerland channels / live TV
     'rts': 'RTS',
@@ -407,26 +460,27 @@ LABELS = {
     'rtr': 'RTR',
     'swissinfo': 'SWISSINFO',
     'rougetv': 'Rouge TV',
+    'tvm3': 'TVM3',
 
     # French channels / live TV
     'tf1': 'TF1',
-    'france2': 'France 2',
-    'france3': 'France 3',
+    'france-2': 'France 2',
+    'france-3': 'France 3',
     'canalplus': 'Canal +',
-    'france5': 'France 5',
+    'france-5': 'France 5',
     'm6': 'M6',
     'c8': 'C8',
     'w9': 'W9',
     'tmc': 'TMC',
     'tfx': 'TFX',
     'nrj12': 'NRJ 12',
-    'france4': 'France 4',
+    'france-4': 'France 4',
     'bfmtv': 'BFM TV',
     'bfmparis': 'BFM Paris',
     'cnews': 'CNews',
     'cstar': 'CStar',
     'gulli': 'Gulli',
-    'franceo': 'France Ô',
+    'france-o': 'France Ô',
     'tf1-series-films': 'TF1 Séries Films',
     'lequipe': 'L\'Équipe',
     '6ter': '6ter',
@@ -448,6 +502,7 @@ LABELS = {
     'home': 'Home Time (6play)',
     'styles': 'Sixième Style (6play)',
     'comedy': 'Comic (6play)',
+    'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
     'france3regions': 'France 3 Régions',
     'francetvsport': 'France TV Sport (francetv)',
@@ -465,6 +520,9 @@ LABELS = {
     'gameone': 'Game One',
     'francetveducation': 'France TV Education (francetv)',
     'gong': 'Gong',
+    'onzeo': 'Onzéo',
+    'melodytv': 'Melody TV',
+    'slash': 'France tv slash',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -487,6 +545,8 @@ LABELS = {
     'drama': 'Drama',
     'skynews': 'Sky News',
     'skysports': 'Sky Sports',
+    'stv': 'STV',
+    'stv2': 'STV 2',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',
@@ -501,6 +561,15 @@ LABELS = {
     'mtv': 'MTV',
     'arirang': 'Arirang (아리랑)',
     'dw': 'DW',
+    'beinsports': 'Bein Sports',
+    'souvenirsfromearth': 'Souvenirs From Earth',
+    'qvc': 'QVC',
+
+    # United State of America channels / live TV
+    'cbsnews': 'CBS News',
+
+    # Poland channels / live TV
+    'tvp': 'TVP',
 
     # Websites
     'allocine': 'Allociné',
@@ -511,5 +580,7 @@ LABELS = {
     'autoplus': 'Auto Plus',
     'notrehistoirech': 'Notre Histoire',
     '30millionsdamis': '30 Millions d\'Amis',
-    'elle': 'Elle'
+    'elle': 'Elle',
+    'nytimes': 'New York Times',
+    'fosdem': 'Fosdem'
 }

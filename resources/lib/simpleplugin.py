@@ -21,9 +21,10 @@ from collections import MutableMapping, namedtuple
 from copy import deepcopy
 from types import GeneratorType
 from hashlib import md5
-from shutil import move
+from shutil import copyfile
 from contextlib import contextmanager
 from pprint import pformat
+from platform import uname
 import xbmcaddon
 import xbmc
 import xbmcplugin
@@ -42,6 +43,10 @@ Route = namedtuple('Route', ['pattern', 'func'])
 
 class SimplePluginError(Exception):
     """Custom exception"""
+    pass
+
+
+class TimeoutError(SimplePluginError):
     pass
 
 
@@ -71,6 +76,8 @@ def debug_exception(logger=None):
     diagnostic info to the Kodi log if an unhandled exception
     happens within the context. The info includes the following items:
 
+    - System info
+    - Kodi version
     - Module path.
     - Code fragment where the exception has happened.
     - Global variables.
@@ -93,16 +100,22 @@ def debug_exception(logger=None):
     except:
         if logger is None:
             logger = lambda msg: xbmc.log(msg, xbmc.LOGERROR)
+        frame_info = inspect.trace(5)[-1]
         logger('Unhandled exception detected!')
         logger('*** Start diagnostic info ***')
-        frame_info = inspect.trace(5)[-1]
+        logger('System info: {0}'.format(uname()))
+        logger('OS info: {0}'.format(xbmc.getInfoLabel('System.OSVersionInfo')))
+        logger('Kodi version: {0}'.format(
+            xbmc.getInfoLabel('System.BuildVersion'))
+        )
         logger('File: {0}'.format(frame_info[1]))
         context = ''
-        for i, line in enumerate(frame_info[4], frame_info[2] - frame_info[5]):
-            if i == frame_info[2]:
-                context += '{0}:>{1}'.format(str(i).rjust(5), line)
-            else:
-                context += '{0}: {1}'.format(str(i).rjust(5), line)
+        if frame_info[4] is not None:
+            for i, line in enumerate(frame_info[4], frame_info[2] - frame_info[5]):
+                if i == frame_info[2]:
+                    context += '{0}:>{1}'.format(str(i).rjust(5), line)
+                else:
+                    context += '{0}: {1}'.format(str(i).rjust(5), line)
         logger('Code context:\n' + context)
         logger('Global variables:\n' + _format_vars(frame_info[0].f_globals))
         logger('Local variables:\n' + _format_vars(frame_info[0].f_locals))
@@ -216,16 +229,22 @@ class Storage(MutableMapping):
         and invalidates the Storage instance. Unchanged Storage is not saved
         but simply invalidated.
         """
-        contents = pickle.dumps(self._storage)
+        contents = pickle.dumps(self._storage, protocol=2)
         if self._hash is None or md5(contents).hexdigest() != self._hash:
             tmp = self._filename + '.tmp'
+            start = time.time()
+            while os.path.exists(tmp):
+                if time.time() - start > 2.0:
+                    raise TimeoutError(
+                        'Exceeded timeout for saving {0} contents!'.format(self)
+                    )
+                xbmc.sleep(100)
             try:
                 with open(tmp, 'wb') as fo:
                     fo.write(contents)
-            except:
+                copyfile(tmp, self._filename)
+            finally:
                 os.remove(tmp)
-                raise
-            move(tmp, self._filename)  # Atomic save
         del self._storage
 
     def copy(self):
@@ -1054,18 +1073,19 @@ class Plugin(Addon):
         self._handle = int(sys.argv[1])
         self._params = self.get_params(sys.argv[2][1:])
         self.log_debug(str(self))
-        result = self._resolve_function()
-        self.log_debug('Action return value: {0}'.format(str(result)))
-        if isinstance(result, (list, GeneratorType)):
-            self._add_directory_items(self.create_listing(result))
-        elif isinstance(result, basestring):
-            self._set_resolved_url(self.resolve_url(result))
-        elif isinstance(result, ListContext):
-            self._add_directory_items(result)
-        elif isinstance(result, PlayContext):
-            self._set_resolved_url(result)
-        else:
-            self.log_debug('The action/route has not returned any valid data to process.')
+        with debug_exception(self.log_error):
+            result = self._resolve_function()
+            self.log_debug('Action return value: {0}'.format(str(result)))
+            if isinstance(result, (list, GeneratorType)):
+                self._add_directory_items(self.create_listing(result))
+            elif isinstance(result, basestring):
+                self._set_resolved_url(self.resolve_url(result))
+            elif isinstance(result, ListContext):
+                self._add_directory_items(result)
+            elif isinstance(result, PlayContext):
+                self._set_resolved_url(result)
+            else:
+                self.log_debug('The action/route has not returned any valid data to process.')
 
     def _resolve_function(self):
         """
@@ -1081,11 +1101,12 @@ class Plugin(Addon):
         except KeyError:
             raise SimplePluginError('Invalid action: "{0}"!'.format(action))
         else:
-            # inspect.isfunction is needed for tests
-            if inspect.isfunction(action_callable) and not inspect.getargspec(action_callable).args:
-                return action_callable()
-            else:
-                return action_callable(self._params)
+            with debug_exception(self.log_error):
+                # inspect.isfunction is needed for tests
+                if inspect.isfunction(action_callable) and not inspect.getargspec(action_callable).args:
+                    return action_callable()
+                else:
+                    return action_callable(self._params)
 
     @staticmethod
     def create_listing(listing, succeeded=True, update_listing=False, cache_to_disk=False, sort_methods=None,

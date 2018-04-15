@@ -74,20 +74,20 @@ LIVE_LA_1ERE = {
 
 XMLTV_CHANNEL_ID = {
     'tf1': 'C192.api.telerama.fr',
-    'france2': 'C4.api.telerama.fr',
-    'france3': 'C80.api.telerama.fr',
-    'france5': 'C47.api.telerama.fr',
+    'france-2': 'C4.api.telerama.fr',
+    'france-3': 'C80.api.telerama.fr',
+    'france-5': 'C47.api.telerama.fr',
     'canalplus': 'C34.api.telerama.fr',
     'c8': 'C445.api.telerama.fr',
     'tmc': 'C195.api.telerama.fr',
     'tfx': 'C446.api.telerama.fr',
     'nrj12': 'C444.api.telerama.fr',
-    'france4': 'C78.api.telerama.fr',
+    'france-4': 'C78.api.telerama.fr',
     'bfmtv': 'C481.api.telerama.fr',
     'cnews': 'C226.api.telerama.fr',
     'cstar': 'C458.api.telerama.fr',
     'gulli': 'C482.api.telerama.fr',
-    'franceo': 'C160.api.telerama.fr',
+    'france-o': 'C160.api.telerama.fr',
     'tf1-series-films': 'C1404.api.telerama.fr',
     'lequipe': 'C1401.api.telerama.fr',
     'numero23': 'C1402.api.telerama.fr',
@@ -105,7 +105,8 @@ XMLTV_CHANNEL_ID = {
     'gong': '',
     'france3regions': LIVE_FR3_REGIONS[common.PLUGIN.get_setting(
         'france3.region')],
-    'bfmparis': ''
+    'bfmparis': '',
+    'melodytv': ''
 }
 
 
@@ -389,7 +390,7 @@ def build_live_tv_menu(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title(),
+        category=common.get_window_title(params),
         content='tvshows'
     )
 

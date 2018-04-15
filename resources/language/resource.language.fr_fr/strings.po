@@ -117,6 +117,13 @@ msgctxt "#30056"
 msgid "Canada"
 msgstr "Canada"
 
+msgctxt "#30057"
+msgid "United States of America"
+msgstr "Etat Unis d'Amérique"
+
+msgctxt "#30058"
+msgid "Poland"
+msgstr "Pologne"
 
 # Channels (from 30080 to 30129)
 msgctxt "#30080"
@@ -151,6 +158,9 @@ msgctxt "#30087"
 msgid "United States channels"
 msgstr "Chaînes américaines"
 
+msgctxt "#30088"
+msgid "Poland channels"
+msgstr "Chaînes polonaises"
 
 # Websites (from 30130 to 30149)
 
@@ -197,6 +207,17 @@ msgctxt "#30159"
 msgid "La 1ère: Choose region"
 msgstr "La 1ère : Choix de la région"
 
+msgctxt "#30160"
+msgid "Bein Sports: Choose Channel"
+msgstr "Bein Sports : Choix de la chaîne"
+
+msgctxt "#30161"
+msgid "QVC: Choose Channel"
+msgstr "QVC : Choix de la chaîne"
+
+msgctxt "#30162"
+msgid "NHK World: Choose Country"
+msgstr "NHK World : Choix du pays"
 
 # Download (from 30200 to 30239)
 
@@ -423,3 +444,14 @@ msgctxt "#30712"
 msgid "Video with an account needed"
 msgstr "Vidéo avec un compte requis"
 
+msgctxt "#30713"
+msgid "Geo-blocked video"
+msgstr "Vidéo géo-bloquée"
+
+msgctxt "#30714"
+msgid "Search videos"
+msgstr "Rechercher vidéos"
+
+msgctxt "#30715"
+msgid "Search programs"
+msgstr "Rechercher programmes"

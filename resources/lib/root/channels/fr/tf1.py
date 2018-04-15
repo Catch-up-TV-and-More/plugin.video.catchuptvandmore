@@ -205,7 +205,7 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -267,7 +267,7 @@ def list_videos_categories(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -285,59 +285,61 @@ def list_videos_lci(params):
             class_='medium-3col-article-block-article-link')
 
         for replay in list_replay:
+            
+            if replay.find(
+                    'span', class_='emission-infos-type'):
+                if 'Replay' in replay.find(
+                        'span', class_='emission-infos-type').get_text():
+                    title = replay.find_all(
+                        'img')[0].get('alt').encode('utf-8')
+                    duration = 0
+                    img = replay.find_all('source')[0]
+                    try:
+                        img = img['data-srcset'].encode('utf-8')
+                    except Exception:
+                        img = img['srcset'].encode('utf-8')
 
-            if 'Replay' in replay.find(
-                    'span', class_='emission-infos-type').get_text():
-                title = replay.find_all(
-                    'img')[0].get('alt').encode('utf-8')
-                duration = 0
-                img = replay.find_all('source')[0]
-                try:
-                    img = img['data-srcset'].encode('utf-8')
-                except Exception:
-                    img = img['srcset'].encode('utf-8')
+                    img = img.split(',')[0].split(' ')[0]
+                    program_id = URL_LCI_ROOT + replay.get(
+                        'href').encode('utf-8')
 
-                img = img.split(',')[0].split(' ')[0]
-                program_id = URL_LCI_ROOT + replay.get(
-                    'href').encode('utf-8')
-
-                info = {
-                    'video': {
-                        'title': title,
-                        # 'plot': stitle,
-                        # 'aired': aired,
-                        # 'date': date,
-                        'duration': duration,
-                        # 'year': int(aired[:4]),
-                        'mediatype': 'tvshow'
+                    info = {
+                        'video': {
+                            'title': title,
+                            # 'plot': stitle,
+                            # 'aired': aired,
+                            # 'date': date,
+                            'duration': duration,
+                            # 'year': int(aired[:4]),
+                            'mediatype': 'tvshow'
+                        }
                     }
-                }
 
-                download_video = (
-                    common.GETTEXT('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        program_id=program_id) + ')'
-                )
-                context_menu = []
-                context_menu.append(download_video)
+                    download_video = (
+                        common.GETTEXT('Download'),
+                        'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                            action='download_video',
+                            module_path=params.module_path,
+                            module_name=params.module_name,
+                            program_id=program_id) + ')'
+                    )
+                    context_menu = []
+                    context_menu.append(download_video)
 
-                videos.append({
-                    'label': title,
-                    'thumb': img,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        next='play_r',
-                        program_id=program_id,
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu
-                })
+                    videos.append({
+                        'label': title,
+                        'thumb': img,
+                        'url': common.PLUGIN.get_url(
+                            module_path=params.module_path,
+                            module_name=params.module_name,
+                            action='replay_entry',
+                            next='play_r',
+                            program_id=program_id,
+                        ),
+                        'is_playable': True,
+                        'info': info,
+                        'context_menu': context_menu
+                    })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -345,7 +347,7 @@ def list_videos_lci(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -553,7 +555,7 @@ def list_videos(params):
         ),
         content='tvshows',
         update_listing='update_listing' in params,
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 

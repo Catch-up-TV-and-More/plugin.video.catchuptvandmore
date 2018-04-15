@@ -153,7 +153,8 @@ def get_stream_vimeo(video_id, isDownloadVideo):
         return url_vimeo
 
     html_vimeo = utils.get_webcontent(url_vimeo)
-    json_vimeo = json.loads(re.compile('var t=(.*?);').findall(
+    # TODO Find a better way to get JSON of VIMEO
+    json_vimeo = json.loads(re.compile('var a=(.*?);').findall(
         html_vimeo)[0])
     hls_json = json_vimeo["request"]["files"]["hls"]
     default_cdn = hls_json["default_cdn"]
@@ -211,9 +212,8 @@ def get_stream_youtube(video_id, isDownloadVideo):
 
     YDStreamExtractor = __import__('YDStreamExtractor')
 
-    quality = 3
-    desired_quality = common.PLUGIN.get_setting('quality')
-    if desired_quality == "DIALOG":
+    quality = 0
+    if DESIRED_QUALITY == "DIALOG":
         all_quality = ['SD', '720p', '1080p', 'Highest available']
         seleted_item = common.sp.xbmcgui.Dialog().select(
             common.GETTEXT('Choose video quality'),
@@ -229,13 +229,19 @@ def get_stream_youtube(video_id, isDownloadVideo):
             'Highest available': 3
         }
         quality = quality_string[selected_quality_string]
+    elif DESIRED_QUALITY == "BEST":
+        quality = 3
 
     vid = YDStreamExtractor.getVideoInfo(
         url_youtube,
         quality=quality,
         resolve_redirects=True
     )
-    return vid.streamURL()
+    if vid is None:
+        # TODO catch the error (geo-blocked, deleted, etc ...)
+        return None
+    else:
+        return vid.streamURL()
 
 
 # BRIGHTCOVE Part
@@ -261,4 +267,15 @@ def get_brightcove_video_json(data_account, data_player, data_video_id):
         params={})
     video_json = open(file_json).read()
     json_parser = json.loads(video_json)
-    return json_parser
+
+    video_url = ''
+    if 'sources' in json_parser:
+        for url in json_parser["sources"]:
+            if 'm3u8' in url["src"]:
+                video_url = url["src"]
+    else:
+        if json_parser[0]['error_code'] == "ACCESS_DENIED":
+            utils.send_notification(
+                common.ADDON.get_localized_string(30713))
+            return None
+    return video_url

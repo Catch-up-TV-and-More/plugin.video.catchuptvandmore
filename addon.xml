@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.10"
+       version="0.1.11"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,29 +30,32 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.10]
-[Add Live TV] DW (Contents EN, DE, ES, AR) (wwark)
-[Fix] Default Quality for Replay group TF1 (Thanks Chris_wafer) (wwark)
-[Readd Live TV] C8, CSTAR, Canalplus (clair) (wwark)
-[Fix] Arte Replay and Add some new contents language (EN|ES|PL)
-[Improvement] New menu layout and new live TV menu presentation (SylvainCecchetto)
-[Upgrade] Upgrade SimplePlugin framework to v2.3.2 (SylvainCecchetto)
-[Fix] Broken favorites (SylvainCecchetto)
-[Fix] Live TV for RTL TVI, PlugRTL, ClubRTL (wwark)
-[Add Channel] 日テレ (JP) (wwark)
-[Add Channel] テレビ朝日 (JP) (wwark)
-[Add Channel] TBSテレビ (JP) (wwark)
-[Add Channel] テレビ東京 (JP) (wwark)
-[Add Channel] MBSテレビ (JP) (wwark)
-[Add Channel] 朝日放送株式会社 (JP) (wwark)
-[Add Channel] 読売テレビ (JP) (wwark)
-[Improvement] Use XMLTV Telerama for Live FR TV guide (SylvainCecchetto)
-[Improvement] Faster navigation in plugin (SylvainCecchetto)
-[Fix] RTBF Auvio - Replay Emissions (BE) (wwark) 
-[Improvement] Customizable parameters to download video (SylvainCecchetto)
-[Fix] PublicSenat Replay (wwark)
-[Fix] L'équipeTV Replay (wwark)
-[Fix] RTC (BE) (wwark)
+[Version 0.1.11]
+[Add Channel] TVM3 (CH) (wwark)
+[Add Channel - Live TV] TVA (CA) (wwark)
+[Add Channel - Live TV] TV Lux (BE) (wwark)
+[Add Channel] Bein Sports (Contents AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY) (wwark)
+[Improvement] Add Geo-blocked message for brightcove Video (wwark)
+[Add Website] NY Times (wwark)
+[Add Live TV] STV (UK) (wwark)
+[Add Live TV] STV 2 (UK) (wwark)
+[Fix] Search videos France TV (SylvainCecchetto)
+[Add Replay] Franceinfo (SylvainCecchetto)
+[Update] Add drm notification for some videos - Replay RTBF Auvio (wwark) 
+[Fix/Add Channels] RTLBE - website changes - Add RTL INFO, BEL RTL and Contact (wwark)
+[Add Channel] Onzéo (wwark)
+[Add WebTV] Fun Radio (wwark)
+[Add Live TV] Souvenirs From Earth (wwark)
+[Add Live TV] QVC (Contents FR) (wwark)
+[Add Live TV] CBS News (US) (wwark)
+[Add Live TV] Melody TV (wwark)
+[Add Channel - Live TV] BX1 (BE) (wwark)
+[Add Live TV] TVP (PL) (wwark)
+[Update] Update simpleplugin Library
+[Add Website] Fosdem (wwark)
+[Update] Change API for France TV (wwark)
+[Add Web TV] France TV Slash (wwark)
+[Improvement] Replay Arte (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

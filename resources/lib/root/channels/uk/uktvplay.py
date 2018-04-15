@@ -21,9 +21,9 @@
 """
 
 import re
-import requests
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
@@ -35,16 +35,6 @@ URL_ROOT = 'https://uktvplay.uktv.co.uk'
 
 URL_SHOWS = 'https://uktvplay.uktv.co.uk/shows/channel/%s/'
 # channel_name
-
-URL_AUTHENTICATE = 'https://live.mppglobal.com/api/accounts/authenticate'
-# POST Payload {email: "********@*******", password: "*********"}
-
-URL_BRIGHTCOVE_API = 'https://edge.api.brightcove.com/playback/v1/' \
-                     'accounts/%s/videos/%s'
-# data-account, data-vidid
-
-URL_JS_POLICY_KEY = 'https://players.brightcove.net/%s/%s_default/index.min.js'
-# data-account, data-player
 
 
 def channel_entry(params):
@@ -110,7 +100,7 @@ def root(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -203,7 +193,7 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -457,7 +447,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -466,12 +456,7 @@ def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
 
-        session_requests = requests.session()
-
-        result_2 = session_requests.get(
-            URL_BRIGHTCOVE_API % (params.data_account, params.data_vidid),
-            headers={'Accept': 'application/json;pk=%s' % get_policy_key(
-                params.data_account, params.data_player)}
-        )
-        return re.compile(
-            '"application/x-mpegURL","src":"(.+?)"').findall(result_2.text)[0]
+        return resolver.get_brightcove_video_json(
+            params.data_account,
+            params.data_player,
+            params.data_vidid)

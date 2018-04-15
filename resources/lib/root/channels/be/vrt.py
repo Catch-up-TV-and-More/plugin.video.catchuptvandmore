@@ -176,7 +176,7 @@ def list_shows(params):
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -311,7 +311,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_DATE
         ),
         content='tvshows',
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 

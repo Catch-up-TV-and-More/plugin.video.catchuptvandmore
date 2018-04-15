@@ -90,7 +90,7 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -168,7 +168,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -197,14 +197,7 @@ def get_video_url(params):
         else:
             data_video_id = 'ref:' + video_data[4].strip().replace("'", "")
 
-        json_parser = resolver.get_brightcove_video_json(
+        return resolver.get_brightcove_video_json(
             data_account,
             data_player,
             data_video_id)
-
-        video_url = ''
-        for url in json_parser["sources"]:
-            if 'm3u8' in url["src"]:
-                video_url = url["src"]
-        return video_url
-

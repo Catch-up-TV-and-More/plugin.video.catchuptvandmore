@@ -29,12 +29,12 @@ from resources.lib.root.channels.fr import live_tv_fr
 
 @common.PLUGIN.action()
 def root(params):
-    # Download xmltv_fr.xml file in background
-    live_tv_fr.download_xmltv_in_background()
+    # Download xmltv files in background
+    if common.PLUGIN.get_setting('fr'):
+        live_tv_fr.download_xmltv_in_background()
     return generic_menu(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 @common.PLUGIN.action()
 def generic_menu(params):
     """
@@ -101,8 +101,8 @@ def generic_menu(params):
         params['item_skeleton'] = str(item_skeleton)
         params['window_title'] = item_title
 
-        if item_next == 'root':
-            return root(params)
+        if item_next == 'generic_menu':
+            return generic_menu(params)
         elif item_next == 'replay_entry':
             return replay_entry(params)
         elif item_next == 'build_live_tv_menu':
@@ -173,8 +173,6 @@ def generic_menu(params):
                 'fanart': fanart,
                 'label': item_title,
                 'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
                     action=item_next,
                     item_id=item_id,
                     item_path=str(item_path),
@@ -188,7 +186,7 @@ def generic_menu(params):
             listing,
             sort_methods=(
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,),
-            category=common.get_window_title()
+            category=common.get_window_title(params)
         )
 
 
@@ -322,7 +320,7 @@ def build_live_tv_menu(params):
                 common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
                 common.sp.xbmcplugin.SORT_METHOD_LABEL
             ),
-            category=common.get_window_title()
+            category=common.get_window_title(params)
         )
 
 

@@ -157,7 +157,7 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -260,7 +260,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
-        category=common.get_window_title()
+        category=common.get_window_title(params)
     )
 
 
@@ -285,8 +285,13 @@ def get_live_item(params):
     )
     live_xml = open(file_path).read()
     xmlElements = ET.XML(live_xml)
-    url_live_world = xmlElements.find("tv_url").findtext("wstrm").encode('utf-8')
-    url_live_jp = xmlElements.find("tv_url").findtext("jstrm").encode('utf-8')
+
+    desired_country = common.PLUGIN.get_setting(
+        params.channel_name + '.country')
+    if desired_country == 'Outside Japan':
+        url_live = xmlElements.find("tv_url").findtext("wstrm").encode('utf-8')
+    else:
+        url_live = xmlElements.find("tv_url").findtext("jstrm").encode('utf-8')
 
     # GET Info Live (JSON)
     url_json = URL_LIVE_INFO_NHK % (
@@ -320,7 +325,7 @@ def get_live_item(params):
 
     info = {
         'video': {
-            'title': 'To view in Japan ' + title,
+            'title': title,
             'plot': plot,
             'duration': duration
         }
@@ -335,30 +340,7 @@ def get_live_item(params):
             module_name=params.module_name,
             action='replay_entry',
             next='play_l',
-            url_live=url_live_jp,
-        ),
-        'is_playable': True,
-        'info': info
-    })
-
-    info = {
-        'video': {
-            'title': 'To view outside Japan ' + title,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    lives.append({
-        'label': title,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='play_l',
-            url_live=url_live_world,
+            url_live=url_live,
         ),
         'is_playable': True,
         'info': info
