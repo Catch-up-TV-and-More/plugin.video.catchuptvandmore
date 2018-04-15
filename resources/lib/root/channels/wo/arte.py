@@ -28,7 +28,6 @@ from resources.lib import common
 
 
 # TO DO
-#   List emissions
 #   Most recent
 #   Most viewed
 
@@ -68,11 +67,8 @@ def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
-        file_path = utils.download_catalog(
-            URL_ROOT % DESIRED_LANGUAGE.lower(),
-            '%s_%s.json' % (params.channel_name, DESIRED_LANGUAGE)
-        )
-        file_replay = open(file_path).read()
+        file_replay = utils.get_webcontent(
+            URL_ROOT % DESIRED_LANGUAGE.lower())
         file_replay = re.compile(
             r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
         json_parser = json.loads(file_replay)
@@ -98,12 +94,8 @@ def list_shows(params):
                     )
                 })
     elif params.next == 'list_shows_2':
-        file_path = utils.download_catalog(
-            params.category_url,
-            '%s_%s_%s.json' % (
-                params.channel_name, DESIRED_LANGUAGE, params.category_name)
-        )
-        file_replay = open(file_path).read()
+        file_replay = utils.get_webcontent(
+            params.category_url)
         file_replay = re.compile(
             r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
         json_parser = json.loads(file_replay)
@@ -152,12 +144,8 @@ def list_shows(params):
 
     elif params.next == 'list_shows_3':
 
-        file_path = utils.download_catalog(
-            params.datas,
-            '%s_%s_%s.json' % (
-                params.channel_name, DESIRED_LANGUAGE, params.category_name)
-        )
-        file_replay = open(file_path).read()
+        file_replay = utils.get_webcontent(
+            params.datas)
         file_replay = re.compile(
             r'_INITIAL_STATE__ = (.*?);').findall(file_replay)[0]
         json_parser = json.loads(file_replay)
@@ -206,12 +194,8 @@ def list_videos(params):
         videos = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_videos_1':
-        file_path = utils.download_catalog(
-            URL_VIDEOS % (DESIRED_LANGUAGE.lower(), params.datas, params.page),
-            '%s_%s_%s_%s.json' % (
-                params.channel_name, DESIRED_LANGUAGE, params.datas, params.page)
-        )
-        file_replay = open(file_path).read()
+        file_replay = utils.get_webcontent(
+            URL_VIDEOS % (DESIRED_LANGUAGE.lower(), params.datas, params.page))
         json_parser = json.loads(file_replay)
 
         for video_datas in json_parser['data']:
@@ -296,11 +280,8 @@ def get_live_item(params):
 
         url_live = ''
 
-        file_path = utils.download_catalog(
-            URL_LIVE_ARTE % DESIRED_LANGUAGE.lower(),
-            '%s_%s_live.json' % (params.channel_name, DESIRED_LANGUAGE)
-        )
-        file_live = open(file_path).read()
+        file_live = utils.get_webcontent(
+            URL_LIVE_ARTE % DESIRED_LANGUAGE.lower())
         json_parser = json.loads(file_live)
 
         title = json_parser["videoJsonPlayer"]["VTI"].encode('utf-8')
