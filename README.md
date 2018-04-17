@@ -54,6 +54,16 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV Communauté anglaise — *English Community TV*
 - YES TV *(Live TV)*
 
+### Espagne — *Spain*
+##### TV
+- Telecinco *(Live TV)*
+- Cuatro *(Live TV)*
+- Factoria de Ficcion *(Live TV)*
+- Boing *(Live TV)*
+- Energy TV *(Live TV)*
+- Divinity *(Live TV)*
+- Be Mad *(Live TV)*
+
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV
 - CBS News *(Live TV)*

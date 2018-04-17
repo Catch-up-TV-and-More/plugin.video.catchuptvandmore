@@ -117,6 +117,16 @@ SKELETON = {
 
             ('pl', 'build_live_tv_menu'): [
                 ('tvp', 'none')
+            ],
+
+            ('es', 'build_live_tv_menu'): [
+                ('telecinco', 'none'),
+                ('cuatro', 'none'),
+                ('fdf', 'none'),
+                ('boing', 'none'),
+                ('energy', 'none'),
+                ('divinity', 'none'),
+                ('bemad', 'none')
             ]
         },
 
@@ -407,7 +417,14 @@ CHANNELS = {
     'melodytv': 'melodytv',
     'bx1': 'bx1',
     'tvp': 'tvp',
-    'slash': 'francetv'
+    'slash': 'francetv',
+    'telecinco': 'mitele',
+    'cuatro': 'mitele',
+    'fdf': 'mitele',
+    'boing': 'mitele',
+    'energy': 'mitele',
+    'divinity': 'mitele',
+    'bemad': 'mitele'
 }
 
 '''
@@ -430,6 +447,7 @@ LABELS = {
     'ca': 'Canada',
     'us': 'United State of America',
     'pl': 'Poland',
+    'es': 'Spain',
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
@@ -570,6 +588,15 @@ LABELS = {
 
     # Poland channels / live TV
     'tvp': 'TVP',
+
+    # Spanish channels / live TV
+    'telecinco': 'Telecinco',
+    'cuatro': 'Cuatro',
+    'fdf': 'Factoria de Ficcion',
+    'boing': 'Boing',
+    'energy': 'Energy TV',
+    'divinity': 'Divinity',
+    'bemad': 'Be Mad',
 
     # Websites
     'allocine': 'Allociné',

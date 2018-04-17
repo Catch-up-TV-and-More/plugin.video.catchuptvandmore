@@ -52,6 +52,9 @@
 
         <setting label="30058" type="bool" id="pl" default="true"/>
         <setting label="" type="number" visible="false" id="pl.order" default="9"/>
+
+        <setting label="30059" type="bool" id="es" default="true"/>
+        <setting label="" type="number" visible="false" id="es.order" default="10"/>
     </category>
     <!-- Countries-->
 
@@ -485,6 +488,32 @@
             <setting label="TVP" type="bool" id="tvp" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="tvp.order" default="1"/>
         <!-- Poland -->
+
+        <!-- Spain -->
+        <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="es" default="true" visible="false"/>
+
+            <setting label="Telecinco" type="bool" id="telecinco" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="telecinco.order" default="1"/>
+
+            <setting label="Cuatro" type="bool" id="cuatro" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="cuatro.order" default="2"/>
+
+            <setting label="Factoria de Ficcion" type="bool" id="fdf" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="fdf.order" default="3"/>
+
+            <setting label="Boing" type="bool" id="boing" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="boing.order" default="4"/>
+
+            <setting label="Energy TV" type="bool" id="energy" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="energy.order" default="5"/>
+
+            <setting label="Divinity" type="bool" id="divinity" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="divinity.order" default="6"/>
+
+            <setting label="Be Mad" type="bool" id="bemad" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="bemad.order" default="7"/>
+        <!-- Spain -->
 
     </category>
     <!-- Channels --> 
