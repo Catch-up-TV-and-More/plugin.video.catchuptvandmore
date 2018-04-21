@@ -108,7 +108,8 @@ SKELETON = {
                 ('tv5monde', 'none'),
                 ('tivi5monde', 'none'),
                 ('souvenirsfromearth', 'none'),
-                ('qvc', 'none')
+                ('qvc', 'none'),
+                ('icirdi', 'none')
             ],
 
             ('us', 'build_live_tv_menu'): [
@@ -260,7 +261,8 @@ SKELETON = {
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
-                ('beinsports', 'replay_entry')
+                ('beinsports', 'replay_entry'),
+                ('icirdi', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
@@ -424,7 +426,8 @@ CHANNELS = {
     'boing': 'mitele',
     'energy': 'mitele',
     'divinity': 'mitele',
-    'bemad': 'mitele'
+    'bemad': 'mitele',
+    'icirdi': 'icirdi'
 }
 
 '''
@@ -582,6 +585,7 @@ LABELS = {
     'beinsports': 'Bein Sports',
     'souvenirsfromearth': 'Souvenirs From Earth',
     'qvc': 'QVC',
+    'icirdi': 'ICI RDI',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',

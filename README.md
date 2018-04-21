@@ -150,6 +150,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Bein Sports *(Replay)* *(Contents {AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY})*
 - Souvenirs From Earth *(Live TV)*
 - QVC *(Live TV)* *(Contents {FR})*
+- ICI RDI *(Live TV)*
 
 ### Japon — *Japan*
 ##### TV
