@@ -78,7 +78,8 @@ SKELETON = {
             ('ca', 'build_live_tv_menu'): [
                 ('telequebec', 'none'),
                 ('yestv', 'none'),
-                ('tva', 'none')
+                ('tva', 'none'),
+                ('icitele', 'none')
             ],
 
             ('ch', 'build_live_tv_menu'): [
@@ -427,7 +428,8 @@ CHANNELS = {
     'energy': 'mitele',
     'divinity': 'mitele',
     'bemad': 'mitele',
-    'icirdi': 'icirdi'
+    'icirdi': 'icirdi',
+    'icitele': 'icitele'
 }
 
 '''
@@ -473,6 +475,7 @@ LABELS = {
     'yestv': 'YES TV',
     'telequebec': 'Télé-Québec',
     'tva': 'TVA',
+    'icitele': 'ICI Télé',
 
     # Switzerland channels / live TV
     'rts': 'RTS',
