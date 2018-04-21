@@ -262,7 +262,7 @@ SKELETON = {
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
                 ('beinsports', 'replay_entry'),
-                ('icirdi', 'replay_entry')
+                # ('icirdi', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
