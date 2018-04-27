@@ -37,7 +37,7 @@ from resources.lib import common
 URL_ROOT_SITE = 'http://www.cnews.fr'
 
 # Live :
-URL_LIVE_CNEWS = URL_ROOT_SITE + '/direct'
+URL_LIVE_CNEWS = URL_ROOT_SITE + '/le-direct'
 
 # Replay CNews
 URL_REPLAY_CNEWS = URL_ROOT_SITE + '/replay'
@@ -202,21 +202,8 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
-    file_path_html = utils.download_catalog(
-        URL_LIVE_CNEWS,
-        '%s_live.html' % (params.channel_name)
-    )
-    html_live = open(file_path_html).read()
-
-    video_id_re = re.compile(r'content: \'(.*?)\'').findall(html_live)
-
-    file_live_json = utils.get_webcontent(
-        URL_INFO_CONTENT % (video_id_re[0]))
-    json_parser = json.loads(file_live_json)
-
-    url_live = json_parser[0]["MEDIA"]["VIDEOS"]["IPAD"].encode('utf-8')
     params['next'] = 'play_l'
-    params['url'] = url_live
+    params['url'] = URL_LIVE_CNEWS
     return get_video_url(params)
 
 
@@ -235,4 +222,9 @@ def get_video_url(params):
             return resolver.get_stream_dailymotion(
                 video_id, False)
     elif params.next == 'play_l':
-        return params.url
+        file_video = utils.get_webcontent(params.url)
+        video_id = re.compile(
+            r'dailymotion.com/embed/video/(.*?)[\"\?]').findall(
+                file_video)[0]
+        return resolver.get_stream_dailymotion(
+            video_id, False)
