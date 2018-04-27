@@ -408,11 +408,14 @@
             <setting label="France tv slash" type="bool" id="slash" default="true" visible="eq(-119,true)"/>
             <setting label="" type="number" visible="false" id="slash.order" default="60"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-121,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="61"/>
+            <setting label="Polar+" type="bool" id="polar-plus" default="true" visible="eq(-121,true)"/>
+            <setting label="" type="number" visible="false" id="polar-plus.order" default="61"/>
 
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-123,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="62"/>-->
+            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-123,true)"/>
+            <setting label="" type="number" visible="false" id="teva.order" default="62"/>
+
+            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-125,true)"/>
+            <setting label="" type="number" visible="false" id="parispremiere.order" default="63"/>-->
         <!-- France -->
 
 

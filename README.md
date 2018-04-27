@@ -116,6 +116,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - BFM Paris *(Live TV)*
 - Onzéo *(Replay)*
 - Melody TV *(Live TV)*
+- Polar+ *(Replay)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*

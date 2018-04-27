@@ -214,7 +214,8 @@ SKELETON = {
                 ('francetvsport', 'replay_entry'),
                 ('onzeo', 'replay_entry'),
                 ('fun_radio', 'replay_entry'),
-                ('slash', 'replay_entry')
+                ('slash', 'replay_entry'),
+                ('polar-plus', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -429,7 +430,8 @@ CHANNELS = {
     'divinity': 'mitele',
     'bemad': 'mitele',
     'icirdi': 'icirdi',
-    'icitele': 'icitele'
+    'icitele': 'icitele',
+    'polar-plus': 'mycanal',
 }
 
 '''
@@ -547,6 +549,7 @@ LABELS = {
     'onzeo': 'Onzéo',
     'melodytv': 'Melody TV',
     'slash': 'France tv slash',
+    'polar-plus': 'Polar+',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
