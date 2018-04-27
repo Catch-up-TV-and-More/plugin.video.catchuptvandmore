@@ -31,8 +31,7 @@ from resources.lib import common
 
 
 # TO DO
-# Mettre le bouton More
-# Fix image of vidéos
+# Fix some encodage (HTML not well formated)
 
 # URL :
 URL_ROOT_SITE = 'http://www.cnews.fr'
@@ -42,8 +41,10 @@ URL_LIVE_CNEWS = URL_ROOT_SITE + '/direct'
 
 # Replay CNews
 URL_REPLAY_CNEWS = URL_ROOT_SITE + '/replay'
-URL_EMISSIONS_CNEWS = URL_REPLAY_CNEWS + '/emissions'
-URL_VIDEOS_CNEWS = URL_REPLAY_CNEWS + '/videos'
+URL_EMISSIONS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_emissions/%s/10/0'
+# num Page
+URL_VIDEOS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_sujets/%s/15/0'
+# num Page
 
 # Replay/Live => VideoId
 URL_INFO_CONTENT = 'https://secure-service.canal-plus.com/' \
@@ -94,6 +95,7 @@ def list_shows(params):
                         category_url=category_url,
                         category_name=category_name,
                         next='list_videos_1',
+                        page='0',
                         window_title=category_name
                     )
                 })
@@ -112,18 +114,22 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
+    if 'previous_listing' in params:
+        videos = ast.literal_eval(params['previous_listing'])
 
     if params.channel_name == 'cnews':
 
-        root_html = utils.get_webcontent(params.category_url)
+        root_html = utils.get_webcontent(
+            params.category_url % params.page)
+        root_html = root_html.replace('\n\r','').replace(
+            '\\"','"').replace('\\/','/')
         root_soup = bs(root_html, 'html.parser')
-
         programs = root_soup.find_all('a', class_='video-item-wrapper')
         programs += root_soup.find_all('a', class_='emission-item-wrapper')
 
         for program in programs:
             title = program.find('img').get('alt').encode('utf-8')
-            thumb = program.find('img').get('src')
+            thumb = program.find('img').get('data-src').encode('utf-8')
             video_url = URL_ROOT_SITE + program.get('href')
             duration = 0
 
@@ -168,20 +174,20 @@ def list_videos(params):
             })
 
         # More videos...
-        # videos.append({
-        #     'label': common.ADDON.get_localized_string(30700),
-        #     'url': common.PLUGIN.get_url(
-        #         module_path=params.module_path,
-        #         module_name=params.module_name,
-        #         action='replay_entry',
-        #         category_url=params.category_url,
-        #         category_name=params.category_name,
-        #         next='list_videos',
-        #         page=str(int(params.page) + 1),
-        #         update_listing=True,
-        #         previous_listing=str(videos)
-        #     )
-        # })
+        videos.append({
+            'label': common.ADDON.get_localized_string(30700),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                category_url=params.category_url,
+                category_name=params.category_name,
+                next='list_videos',
+                page=str(int(params.page) + 1),
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -189,7 +195,7 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
-        # update_listing='update_listing' in params,
+        update_listing='update_listing' in params,
         category=common.get_window_title(params)
     )
 
