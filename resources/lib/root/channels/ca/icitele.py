@@ -21,15 +21,26 @@
 """
 
 import json
+import re
+from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Add Replay
+# Add Region
+# Check different cases of getting videos
 
 URL_API = 'https://api.radio-canada.ca/validationMedia/v1/Validation.html'
 
 URL_LIVE = URL_API + '?connectionType=broadband&output=json&multibitrate=true&deviceType=ipad&appCode=medianetlive&idMedia=cbuft'
+
+URL_ROOT = 'https://ici.radio-canada.ca'
+
+URL_EMISSION = URL_ROOT + '/tele/emissions' 
+
+URL_STREAM_REPLAY = URL_API + '?connectionType=broadband&output=json&multibitrate=true&deviceType=ipad&appCode=medianet&idMedia=%s'
+# VideoId
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -50,6 +61,74 @@ def list_shows(params):
     """Build categories listing"""
     shows = []
 
+    if params.next == 'list_shows_1':
+        
+        category_name = 'Emissions'
+
+        shows.append({
+            'label': category_name,
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='list_shows_2',
+                category_name=category_name,
+                window_title=category_name
+            )
+        })
+
+        file_replay = utils.get_webcontent(
+            URL_EMISSION)
+        file_replay = re.compile(
+            r'/\*bns\*/ (.*?) /\*bne\*/').findall(file_replay)[0]
+        json_parser = json.loads(file_replay)
+
+        category_name = 'Emissions - ' + json_parser["teleShowsList"]["pageModel"]["data"]["regionName"]
+
+        shows.append({
+            'label': category_name,
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='list_shows_2',
+                category_name=category_name,
+                window_title=category_name
+            )
+        })
+    
+    elif params.next == 'list_shows_2':
+        file_replay = utils.get_webcontent(
+            URL_EMISSION)
+        file_replay = re.compile(
+            r'/\*bns\*/ (.*?) /\*bne\*/').findall(file_replay)[0]
+        json_parser = json.loads(file_replay)
+
+        if params.category_name == 'Emissions':
+            list_emissions = json_parser["teleShowsList"]["pageModel"]["data"]["listeEmissions"]
+        else:
+            list_emissions = json_parser["teleShowsList"]["pageModel"]["data"]["listeEmissionsRegionaliser"]
+        
+        for emission in list_emissions:
+            
+            emission_name = emission["title"] 
+            emission_url = URL_ROOT + emission["link"] + '/site/episodes'
+            emission_image = emission["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
+
+            shows.append({
+                'label': emission_name,
+                'thumb': emission_image,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='list_videos_1',
+                    emission_url=emission_url,
+                    emission_name=emission_name,
+                    window_title=emission_name
+                )
+            })
+
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
@@ -64,6 +143,63 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
+
+    if params.next == 'list_videos_1':
+        list_videos_html = utils.get_webcontent(
+            params.emission_url)
+        list_videos_soup = bs(list_videos_html, 'html.parser')
+
+        videos_data = list_videos_soup.find(
+            'ul', class_='episodes-container').find_all('li')
+
+        for video in videos_data:
+
+            title = video.find('img').get('title')
+            plot = ''
+            duration = 0
+            if 'http' in video.find('img').get('src'):
+                img = video.find('img').get('src')
+            else:
+                img = URL_ROOT + video.find('img').get('src')
+            video_url = URL_ROOT + video.find('a').get('href')
+
+            info = {
+                'video': {
+                    'title': title,
+                    'plot': plot,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': duration,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                common.GETTEXT('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    video_url=video_url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'thumb': img,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='play_r',
+                    video_url=video_url,
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
 
 
     return common.PLUGIN.create_listing(
@@ -112,3 +248,13 @@ def get_video_url(params):
         live_json = utils.get_webcontent(URL_LIVE)        
         live_jsonparser = json.loads(live_json)
         return live_jsonparser["url"]
+    elif params.next == 'play_r' or params.next == 'download':
+        video_html = utils.get_webcontent(
+            params.video_url)
+        video_soup = bs(video_html, 'html.parser')
+        video_id = video_soup.find(
+            'div', class_='Main-Player-Console').get('id').split('-')[0]
+        stream_json = utils.get_webcontent(
+            URL_STREAM_REPLAY % video_id)
+        stream_jsonparser = json.loads(stream_json)
+        return stream_jsonparser["url"]
