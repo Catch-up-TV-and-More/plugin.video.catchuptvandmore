@@ -111,8 +111,12 @@ def list_shows(params):
         
         for emission in list_emissions:
             
-            emission_name = emission["title"] 
-            emission_url = URL_ROOT + emission["link"] + '/site/episodes'
+            emission_name = emission["title"]
+            if 'telejournal-22h' in emission["link"] or \
+               'telejournal-18h' in emission["link"]:
+                emission_url = URL_ROOT + emission["link"] + '/2016-2017/episodes'
+            else: 
+                emission_url = URL_ROOT + emission["link"] + '/site/episodes'
             emission_image = emission["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
 
             shows.append({
@@ -149,57 +153,62 @@ def list_videos(params):
             params.emission_url)
         list_videos_soup = bs(list_videos_html, 'html.parser')
 
-        videos_data = list_videos_soup.find(
-            'ul', class_='episodes-container').find_all('li')
+        if list_videos_soup.find('ul', class_='episodes-container'):
+            videos_data = list_videos_soup.find(
+                'ul', class_='episodes-container').find_all('li')
 
-        for video in videos_data:
+            for video in videos_data:
+                
+                if 'icon-play' in video.find('a').get('class') or \
+                    video.find('div', class_='play medium'):
+                    title = video.find('a').get('title')
+                    plot = ''
+                    duration = 0
+                    img = ''
+                    if video.find('img'):
+                        if 'http' in video.find('img').get('src'):
+                            img = video.find('img').get('src')
+                        else:
+                            img = URL_ROOT + video.find('img').get('src')
+                    video_url = URL_ROOT + video.find('a').get('href')
 
-            title = video.find('img').get('title')
-            plot = ''
-            duration = 0
-            if 'http' in video.find('img').get('src'):
-                img = video.find('img').get('src')
-            else:
-                img = URL_ROOT + video.find('img').get('src')
-            video_url = URL_ROOT + video.find('a').get('href')
+                    info = {
+                        'video': {
+                            'title': title,
+                            'plot': plot,
+                            # 'aired': aired,
+                            # 'date': date,
+                            'duration': duration,
+                            # 'year': year,
+                            'mediatype': 'tvshow'
+                        }
+                    }
 
-            info = {
-                'video': {
-                    'title': title,
-                    'plot': plot,
-                    # 'aired': aired,
-                    # 'date': date,
-                    'duration': duration,
-                    # 'year': year,
-                    'mediatype': 'tvshow'
-                }
-            }
+                    download_video = (
+                        common.GETTEXT('Download'),
+                        'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                            action='download_video',
+                            module_path=params.module_path,
+                            module_name=params.module_name,
+                            video_url=video_url) + ')'
+                    )
+                    context_menu = []
+                    context_menu.append(download_video)
 
-            download_video = (
-                common.GETTEXT('Download'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    video_url=video_url) + ')'
-            )
-            context_menu = []
-            context_menu.append(download_video)
-
-            videos.append({
-                'label': title,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    action='replay_entry',
-                    next='play_r',
-                    video_url=video_url,
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
-            })
+                    videos.append({
+                        'label': title,
+                        'thumb': img,
+                        'url': common.PLUGIN.get_url(
+                            module_path=params.module_path,
+                            module_name=params.module_name,
+                            action='replay_entry',
+                            next='play_r',
+                            video_url=video_url,
+                        ),
+                        'is_playable': True,
+                        'info': info,
+                        'context_menu': context_menu
+                    })
 
 
     return common.PLUGIN.create_listing(
