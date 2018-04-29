@@ -111,27 +111,28 @@ def list_shows(params):
         
         for emission in list_emissions:
             
-            emission_name = emission["title"]
-            if 'telejournal-22h' in emission["link"] or \
-               'telejournal-18h' in emission["link"]:
-                emission_url = URL_ROOT + emission["link"] + '/2016-2017/episodes'
-            else: 
-                emission_url = URL_ROOT + emission["link"] + '/site/episodes'
-            emission_image = emission["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
+            if '/tele/' in emission["link"]:
+                emission_name = emission["title"]
+                if 'telejournal-22h' in emission["link"] or \
+                'telejournal-18h' in emission["link"]:
+                    emission_url = URL_ROOT + emission["link"] + '/2016-2017/episodes'
+                else: 
+                    emission_url = URL_ROOT + emission["link"] + '/site/episodes'
+                emission_image = emission["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
 
-            shows.append({
-                'label': emission_name,
-                'thumb': emission_image,
-                'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    action='replay_entry',
-                    next='list_videos_1',
-                    emission_url=emission_url,
-                    emission_name=emission_name,
-                    window_title=emission_name
-                )
-            })
+                shows.append({
+                    'label': emission_name,
+                    'thumb': emission_image,
+                    'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        action='replay_entry',
+                        next='list_videos_1',
+                        emission_url=emission_url,
+                        emission_name=emission_name,
+                        window_title=emission_name
+                    )
+                })
 
     return common.PLUGIN.create_listing(
         shows,
