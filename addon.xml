@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.12~beta008"
+       version="0.1.12~beta009"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -35,9 +35,10 @@
 [Add Live TV] ICI RDI (World) (wwark)
 [Add Channel - Live TV] ICI Télé (CA) (wwark)
 [Add Channel] Polar+ (wwark)
-[Fix] the Replay and Live TV of CNews (wwark)
-[Fix] The Replay of GameOne (wwark)
+[Fix] Replay and Live TV - CNews (wwark)
+[Fix] Replay - GameOne (wwark)
 [Add Live TV] Virgin Radio TV (wwark)
+[Fix] Replay - RMC Decouverte (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
