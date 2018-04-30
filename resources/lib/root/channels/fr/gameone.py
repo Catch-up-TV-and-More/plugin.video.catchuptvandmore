@@ -21,6 +21,7 @@
 """
 
 import ast
+import json
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
@@ -36,9 +37,9 @@ URL_ROOT = 'http://www.gameone.net'
 URL_VIDEOS = URL_ROOT + '/dernieres-videos/%s'
 # PageId
 
-URL_STREAM = 'http://media.mtvnservices.com/player/html5/cdp/' + \
-             '?url=http://intl.mtvnservices.com/mediagen/mgid:' + \
-             'arc:video:gameone.net:%s/?device=ipad'
+URL_STREAM = 'https://media-utils.mtvnservices.com/services/' \
+             'MediaGenerator/mgid:arc:video:gameone.net:%s?' \
+             '&format=json&acceptMethods=hls'
 # videoID
 
 
@@ -183,7 +184,7 @@ def get_video_url(params):
         video_html = utils.get_webcontent(true_url)
         video_id = re.compile(
             r'item_longId" \: "(.*?)"').findall(video_html)[0]
-        xml_video_stream = utils.get_webcontent(
+        json_video_stream = utils.get_webcontent(
             URL_STREAM % video_id)
-        return re.compile(
-            r'src\>(.*?)\<').findall(xml_video_stream)[0]
+        json_video_stream_parser = json.loads(json_video_stream)
+        return json_video_stream_parser["package"]["video"]["item"][0]["rendition"][0]["src"]
