@@ -36,8 +36,9 @@ URL_ROOT = 'http://www.gameone.net'
 URL_VIDEOS = URL_ROOT + '/dernieres-videos/%s'
 # PageId
 
-URL_STREAM = 'http://intl.mtvnservices.com/mediagen/' \
-             'mgid:arc:video:gameone.net:%s/?device=ipad'
+URL_STREAM = 'http://media.mtvnservices.com/player/html5/cdp/' + \
+             '?url=http://intl.mtvnservices.com/mediagen/mgid:' + \
+             'arc:video:gameone.net:%s/?device=ipad'
 # videoID
 
 
@@ -177,8 +178,9 @@ def list_videos(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        video_html = utils.get_webcontent(
+        true_url = utils.get_redirected_url(
             params.video_url)
+        video_html = utils.get_webcontent(true_url)
         video_id = re.compile(
             r'item_longId" \: "(.*?)"').findall(video_html)[0]
         xml_video_stream = utils.get_webcontent(
