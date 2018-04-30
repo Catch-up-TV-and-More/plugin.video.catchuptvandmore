@@ -106,7 +106,8 @@ XMLTV_CHANNEL_ID = {
     'france3regions': LIVE_FR3_REGIONS[common.PLUGIN.get_setting(
         'france3.region')],
     'bfmparis': '',
-    'melodytv': ''
+    'melodytv': '',
+    'virginradiotv': ''
 }
 
 

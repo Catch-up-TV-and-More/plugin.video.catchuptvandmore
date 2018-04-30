@@ -63,7 +63,8 @@ SKELETON = {
                 ('francetvsport', 'none'),
                 ('gong', 'none'),
                 ('bfmparis', 'none'),
-                ('melodytv', 'none')
+                ('melodytv', 'none'),
+                ('virginradiotv', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -433,6 +434,7 @@ CHANNELS = {
     'icirdi': 'icirdi',
     'icitele': 'icitele',
     'polar-plus': 'mycanal',
+    'virginradiotv': 'virginradiotv'
 }
 
 '''
@@ -551,6 +553,7 @@ LABELS = {
     'melodytv': 'Melody TV',
     'slash': 'France tv slash',
     'polar-plus': 'Polar+',
+    'virginradiotv': 'Virgin Radio TV',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

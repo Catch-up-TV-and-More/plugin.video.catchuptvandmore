@@ -411,11 +411,14 @@
             <setting label="Polar+" type="bool" id="polar-plus" default="true" visible="eq(-121,true)"/>
             <setting label="" type="number" visible="false" id="polar-plus.order" default="61"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-123,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="62"/>
+            <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
+            <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
 
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-125,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="63"/>-->
+            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-125,true)"/>
+            <setting label="" type="number" visible="false" id="teva.order" default="63"/>
+
+            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-127,true)"/>
+            <setting label="" type="number" visible="false" id="parispremiere.order" default="64"/>-->
         <!-- France -->
 
 
