@@ -55,14 +55,14 @@ def channel_entry(params):
         return None
 
 CATEGORIES = {
-    'tout': URL_ROOT_VIDEO_LEQUIPE,
-    'L\'Équipe du Soir': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/1',
-    'L\'Équipe d\'Estelle': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/98',
-    'Événements': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/66',
-    'L\'Équipe du week-end': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/64',
-    'La Grande Soirée': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/93',
-    'Les Grands Docs': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/28',
-    'Émission spéciale': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/42'
+    'tout': URL_REPLAY_VIDEO_LEQUIPE % '0',
+    'L\'Équipe du Soir': URL_REPLAY_VIDEO_LEQUIPE % '1',
+    'L\'Équipe d\'Estelle': URL_REPLAY_VIDEO_LEQUIPE % '98',
+    'Événements': URL_REPLAY_VIDEO_LEQUIPE % '66',
+    'Magazine': URL_REPLAY_VIDEO_LEQUIPE % '47',
+    'La Grande Soirée': URL_REPLAY_VIDEO_LEQUIPE % '93',
+    'Émission spéciale': URL_REPLAY_VIDEO_LEQUIPE % '42',
+    'L\'Équipe Enquête': URL_REPLAY_VIDEO_LEQUIPE % '88'
 }
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
