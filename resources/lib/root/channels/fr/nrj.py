@@ -22,47 +22,30 @@
 
 import json
 import re
-import xml.etree.ElementTree as ET
 import requests
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Get Info Live
-# Get CATEGORIES
 
 
 URL_ROOT = 'http://www.nrj-play.fr'
 
-URL_REPLAY = 'http://www.nrj-play.fr/%s/replay'
+URL_REPLAY = URL_ROOT + '/%s/replay'
 # channel_name (nrj12, ...)
 
-URL_COLLECTION_API = 'http://www.nrj-play.fr/%s/api/getreplaytvcollection'
-# channel_name (nrj12, ...)
-
-URL_REPLAY_API = 'http://www.nrj-play.fr/%s/api/getreplaytvlist'
-# channel_name (nrj12, ...) - HTTP 500 non stable
-
-URL_ALL_VIDEO = 'http://www.nrj-play.fr/sitemap-videos.xml'
-# Meilleur stabilité mais perte des collections
-
-URL_GET_API_LIVE = 'http://www.nrj-play.fr/sitemap.xml'
-# NOT_USED in this script (link api, live and more)
-
-URL_COMPTE_LOGIN = 'https://www.nrj-play.fr/compte/login'
+URL_COMPTE_LOGIN = URL_ROOT + '/compte/login'
 # TO DO add account for using Live Direct
 
-URL_LIVE_WITH_TOKEN = 'http://www.nrj-play.fr/compte/live?channel=%s'
+URL_LIVE_WITH_TOKEN = URL_ROOT + '/compte/live?channel=%s'
 # channel (nrj12, ...) -
 # call this url after get session (url live with token inside this page)
 
 
 def channel_entry(params):
     """Entry function of the module"""
-    if 'root' in params.next:
-        return root(params)
-    elif 'replay_entry' == params.next:
+    if 'replay_entry' == params.next:
         params.next = "list_shows_1"
         return list_shows(params)
     elif 'list_shows' in params.next:
@@ -76,169 +59,71 @@ def channel_entry(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def root(params):
-    """Add Replay and Live in the listing"""
-    modes = []
-
-    # Add Replay with Categories
-    modes.append({
-        'label': 'Replay',
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='list_shows_1',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name
-        )
-    })
-
-    # Add Replay
-    modes.append({
-        'label': 'Replay sans categorie',
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='list_shows_without_categories',
-            category='%s Replay' % params.channel_name.upper(),
-            window_title='%s Replay' % params.channel_name
-        )
-    })
-
-    # Add Live
-    modes.append({
-        'label': 'Live TV',
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='live_cat',
-            category='%s Live TV' % params.channel_name.upper(),
-            window_title='%s Live TV' % params.channel_name
-        )
-    })
-
-    return common.PLUGIN.create_listing(
-        modes,
-        sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL
-        ),
-        category=common.get_window_title(params)
-    )
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build shows listing"""
     shows = []
 
-    if 'list_shows_without_categories' in params.next:
+    if params.next == 'list_shows_1':
+        categories_html = utils.get_webcontent(
+            URL_REPLAY % params.channel_name)
+        categories_soup = bs(categories_html, 'html.parser')
+        categories = categories_soup.find(
+            'ul', class_='subNav-menu hidden-xs').find_all('a')
 
-        # Pour avoir toutes les videos
-        state_video = 'Toutes les videos (sans les categories)'
+        for category in categories:
 
-        shows.append({
-            'label': state_video,
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                state_video=state_video,
-                next='list_videos_1',
-                # title_category=category_name,
-                window_title=state_video
-            )
-        })
-
-    else:
-        unique_item = dict()
-
-        file_path = utils.download_catalog(
-            URL_COLLECTION_API % params.channel_name,
-            '%s_collection.xml' % params.channel_name,
-        )
-        collection_xml = open(file_path).read()
-
-        xml_elements = ET.XML(collection_xml)
-
-        if 'list_shows_1' in params.next:
-            # Build categories list (Tous les programmes, Séries, ...)
-            collections = xml_elements.findall("collection")
-
-            # Pour avoir toutes les videos, certaines videos ont des
-            # categories non presentes dans cette URL 'url_collection_api'
-            state_video = 'Toutes les videos'
+            category_title = category.get_text().strip()
+            category_url = URL_ROOT + category.get('href')
 
             shows.append({
-                'label': state_video,
+                'label': category_title,
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
                     module_name=params.module_name,
                     action='replay_entry',
-                    state_video=state_video,
-                    next='list_videos_1',
-                    # title_category=category_name,
-                    window_title=state_video
+                    category_url=category_url,
+                    title=category_title,
+                    next='list_shows_2',
+                    window_title=category_title
                 )
             })
+    elif params.next == 'list_shows_2':
+        emissions_html = utils.get_webcontent(
+            params.category_url)
+        emissions_soup = bs(emissions_html, 'html.parser')
+        list_emissions_datas = emissions_soup.find_all(
+            'div', class_='linkProgram-visual')
+        
+        for emission_datas in list_emissions_datas:
+    
+            emission_title = emission_datas.find(
+                'img').get('alt')
+            emission_url = URL_ROOT + emission_datas.find(
+                'a').get('href')
+            emission_img = ''
+            if emission_datas.find('source').get('data-srcset'):
+                emission_img = emission_datas.find('source').get('data-srcset')
+            else:
+                emission_img = emission_datas.find('source').get('srcset')
 
-            for collection in collections:
-
-                category_name = collection.findtext("category").encode('utf-8')
-                if category_name not in unique_item:
-                    if category_name == '':
-                        category_name = 'NO_CATEGORY'
-                    unique_item[category_name] = category_name
-                    shows.append({
-                        'label': category_name,
-                        'url': common.PLUGIN.get_url(
-                            module_path=params.module_path,
-                            module_name=params.module_name,
-                            action='replay_entry',
-                            category_name=category_name,
-                            next='list_shows_programs',
-                            # title_category=category_name,
-                            window_title=category_name
-                        )
-                    })
-
-        elif 'list_shows_programs' in params.next:
-            # Build programm list (Tous les programmes, Séries, ...)
-            collections = xml_elements.findall("collection")
-
-            state_video = 'VIDEOS_BY_CATEGORY'
-
-            for collection in collections:
-                if params.category_name == collection.findtext(
-                        "category").encode('utf-8') \
-                        or (params.category_name == 'NO_CATEGORY' and
-                            collection.findtext("category").encode('utf-8') == ''):
-                    name_program = collection.findtext("name").encode('utf-8')
-                    img_program = collection.findtext("picture")
-                    id_program = collection.get("id")
-
-                    shows.append({
-                        'label': name_program,
-                        'thumb': img_program,
-                        'url': common.PLUGIN.get_url(
-                            module_path=params.module_path,
-                            module_name=params.module_name,
-                            action='replay_entry',
-                            next='list_videos_1',
-                            state_video=state_video,
-                            id_program=id_program,
-                            # title_program=name_program,
-                            window_title=name_program
-                        )
-                    })
+            shows.append({
+                'label': emission_title,
+                'thumb': emission_img,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    emission_url=emission_url,
+                    title=emission_title,
+                    next='list_videos_1',
+                    window_title=emission_title
+                )
+            })
 
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         category=common.get_window_title(params)
     )
@@ -249,284 +134,113 @@ def list_videos(params):
     """Build videos listing"""
     videos = []
 
-    if params.state_video == 'Toutes les videos (sans les categories)':
+    videos_html = utils.get_webcontent(
+        params.emission_url)
+    videos_soup = bs(videos_html, 'html.parser')
+    list_videos_datas = videos_soup.find_all(
+        'figure', class_='thumbnailReplay-visual')
 
-        file_path = utils.download_catalog(
-            URL_ALL_VIDEO,
-            '%s_all_video.xml' % params.channel_name,
-        )
-        replay_xml = open(file_path).read()
-
-        xml_elements = ET.XML(replay_xml)
-
-        programs = xml_elements.findall(
-            "{http://www.sitemaps.org/schemas/sitemap/0.9}url")
-
-        for program in programs:
-
-            url_site = program.findtext(
-                "{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
-            ).encode('utf-8')
-            check_string = '%s/replay/' % params.channel_name
-            if url_site.count(check_string) > 0:
-
-                # Title
-                title = url_site.rsplit('/', 1)[1].replace("-", " ").upper()
-
-                video_node = program.findall(
-                    "{http://www.google.com/schemas/sitemap-video/1.1}video")[0]
-
-                # Duration
-                duration = 0
-
-                # Image
-                img = ''
-                img_node = video_node.find(
-                    "{http://www.google.com/schemas/sitemap-video/1.1}thumbnail_loc")
-                img = img_node.text.encode('utf-8')
-
-                # Url Video
-                url = ''
-                url_node = video_node.find(
-                    "{http://www.google.com/schemas/sitemap-video/1.1}content_loc")
-                url = url_node.text.encode('utf-8')
-
-                # Plot
-                plot = ''
-                plot_node = video_node.find(
-                    "{http://www.google.com/schemas/sitemap-video/1.1}description")
-                if plot_node.text:
-                    plot = plot_node.text.encode('utf-8')
-
-                # Date
-                value_date = ''
-                value_date_node = video_node.find(
-                    "{http://www.google.com/schemas/sitemap-video/1.1}publication_date")
-                value_date = value_date_node.text.encode('utf-8')
-                date = value_date.split('T')[0].split('-')
-                day = date[2]
-                mounth = date[1]
-                year = date[0]
-                date = '.'.join((day, mounth, year))
-                aired = '-'.join((year, mounth, day))
-
-                info = {
-                    'video': {
-                        'title': title,
-                        'plot': plot,
-                        'duration': duration,
-                        'aired': aired,
-                        'date': date,
-                        'year': year,
-                        'mediatype': 'tvshow'
-                    }
+    if len(list_videos_datas) > 0:
+        
+        for video_datas in list_videos_datas:
+    
+            video_title = params.title + ' - ' + video_datas.find(
+                'img').get('alt')
+            video_duration = 0
+            video_url = URL_ROOT + video_datas.find('a').get('href')
+            video_img = ''
+            if video_datas.find('source').get('data-srcset'):
+                video_img = video_datas.find('source').get('data-srcset')
+            else:
+                video_img = video_datas.find('source').get('srcset')
+            
+            info = {
+                'video': {
+                    'title': video_title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    'duration': video_duration,
+                    # 'plot': video_plot,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
                 }
+            }
 
-                download_video = (
-                    common.GETTEXT('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        url_video=url_site) + ')'
-                )
-                context_menu = []
-                context_menu.append(download_video)
+            download_video = (
+                common.GETTEXT('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    video_url=video_url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
 
-                videos.append({
-                    'label': title,
-                    'fanart': img,
-                    'thumb': img,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        next='play_r',
-                        url_video=url
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu
-                })
-
+            videos.append({
+                'label': video_title,
+                'thumb': video_img,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='play_r',
+                    video_url=video_url
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
     else:
-        file_path = utils.download_catalog(
-            URL_REPLAY_API % params.channel_name,
-            '%s_replay.xml' % params.channel_name,
+
+        video_title = videos_soup.find(
+            'div', class_='nrjVideo-player').find('meta').get('alt')
+        video_duration = 0
+        video_url = params.emission_url
+        video_img = videos_soup.find(
+            'div', class_='nrjVideo-player').find('meta').get('content')
+        
+        info = {
+            'video': {
+                'title': video_title,
+                # 'aired': aired,
+                # 'date': date,
+                'duration': video_duration,
+                # 'plot': video_plot,
+                # 'year': year,
+                'mediatype': 'tvshow'
+            }
+        }
+
+        download_video = (
+            common.GETTEXT('Download'),
+            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                action='download_video',
+                module_path=params.module_path,
+                module_name=params.module_name,
+                video_url=video_url) + ')'
         )
-        replay_xml = open(file_path).read()
+        context_menu = []
+        context_menu.append(download_video)
 
-        xml_elements = ET.XML(replay_xml)
-
-        programs = xml_elements.findall("program")
-
-        for program in programs:
-            if params.state_video == 'Toutes les videos':
-
-                # Title
-                title = program.findtext("title").encode('utf-8') + " - " + \
-                    program.findtext("subtitle").encode('utf-8')
-
-                # Duration
-                duration = 0
-                if program.findtext("duration"):
-                    try:
-                        duration = int(program.findtext("duration")) * 60
-                    except ValueError:
-                        pass      # or whatever
-
-                # Image
-                img = program.find("photos").findtext("photo")
-
-                # Url Video
-                url = ''
-                # program.find("offres").find("offre").find("videos").findtext("video)
-                for i in program.find("offres").findall("offre"):
-
-                    date_value = i.get("startdate")
-                    date_value_list = date_value.split(' ')[0].split('-')
-                    day = date_value_list[2]
-                    mounth = date_value_list[1]
-                    year = date_value_list[0]
-
-                    date = '.'.join((day, mounth, year))
-                    aired = '-'.join((year, mounth, day))
-
-                    for j in i.find("videos").findall("video"):
-                        url = j.text.encode('utf-8')
-
-                # Plot
-                plot = ''
-                for i in program.find("stories").findall("story"):
-                    if int(i.get("maxlength")) == 680:
-                        plot = i.text.encode('utf-8')
-
-                info = {
-                    'video': {
-                        'title': title,
-                        'plot': plot,
-                        'duration': duration,
-                        'aired': aired,
-                        'date': date,
-                        'year': year,
-                        'mediatype': 'tvshow'
-                    }
-                }
-
-                download_video = (
-                    common.GETTEXT('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        url_video=url) + ')'
-                )
-                context_menu = []
-                context_menu.append(download_video)
-
-                videos.append({
-                    'label': title,
-                    'fanart': img,
-                    'thumb': img,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        next='play_r',
-                        url_video=url
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu
-                })
-
-            elif params.id_program == program.get("IDSERIE"):
-
-                # Title
-                title = program.findtext("title").encode('utf-8') + " - " + \
-                    program.findtext("subtitle").encode('utf-8')
-
-                # Duration
-                duration = 0
-                if program.findtext("duration"):
-                    try:
-                        duration = int(program.findtext("duration")) * 60
-                    except ValueError:
-                        pass      # or whatever
-
-                # Image
-                img = program.find("photos").findtext("photo")
-
-                # Url Video
-                url = ''
-                # program.find("offres").find("offre").find("videos").findtext("video)
-                for i in program.find("offres").findall("offre"):
-
-                    date_value = i.get("startdate")
-                    date_value_list = date_value.split(' ')[0].split('-')
-                    day = date_value_list[2]
-                    mounth = date_value_list[1]
-                    year = date_value_list[0]
-
-                    date = '.'.join((day, mounth, year))
-                    aired = '-'.join((year, mounth, day))
-
-                    for j in i.find("videos").findall("video"):
-                        url = j.text.encode('utf-8')
-
-                # Plot
-                plot = ''
-                for i in program.find("stories").findall("story"):
-                    if int(i.get("maxlength")) == 680:
-                        plot = i.text.encode('utf-8')
-
-                info = {
-                    'video': {
-                        'title': title,
-                        'plot': plot,
-                        'duration': duration,
-                        'aired': aired,
-                        'date': date,
-                        'year': year,
-                        'mediatype': 'tvshow'
-                    }
-                }
-
-                download_video = (
-                    common.GETTEXT('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        url_video=url) + ')'
-                )
-                context_menu = []
-                context_menu.append(download_video)
-
-                videos.append({
-                    'label': title,
-                    'fanart': img,
-                    'thumb': img,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        next='play_r',
-                        url_video=url
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu
-                })
+        videos.append({
+            'label': video_title,
+            'thumb': video_img,
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='play_r',
+                video_url=video_url
+            ),
+            'is_playable': True,
+            'info': info,
+            'context_menu': context_menu
+        })
 
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_DATE,
-            common.sp.xbmcplugin.SORT_METHOD_DURATION,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
-            common.sp.xbmcplugin.SORT_METHOD_GENRE,
-            common.sp.xbmcplugin.SORT_METHOD_PLAYCOUNT,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
@@ -589,6 +303,15 @@ def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
         # Just One format of each video (no need of QUALITY)
-        return params.url_video
+        stream_html = utils.get_webcontent(
+            params.video_url)
+        stream_soup = bs(stream_html, 'html.parser')
+        stream_datas = stream_soup.find(
+            'div', class_='nrjVideo-player').find_all('meta')
+        stream_url = ''
+        for stream in stream_datas:
+            if 'mp4' in stream.get('content'):
+                stream_url = stream.get('content')
+        return stream_url
     elif params.next == 'play_l':
         return params.url_live
