@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.12~beta010"
+       version="0.1.12~beta011"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -40,6 +40,7 @@
 [Add Live TV] Virgin Radio TV (wwark)
 [Fix] Replay - RMC Decouverte - Thanks Alexis (wwark)
 [Fix] Replay - NRJ 12/Cherie 25 (wwark)
+[Update] Replay - Numero 23 (Year) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
