@@ -61,15 +61,16 @@ LIVE_FR3_REGIONS = {
 }
 
 LIVE_LA_1ERE = {
-    "Guadeloupe 1ère": "C329.api.telerama.fr",
-    "Guyane 1ère": "C260.api.telerama.fr",
-    "Martinique 1ère": "C328.api.telerama.fr",
-    "Mayotte 1ère": '',
-    "Nouvelle Calédonie 1ère": "C240.api.telerama.fr",
-    "Polynésie 1ère": "C459.api.telerama.fr",
-    "Réunion 1ère": "C245.api.telerama.fr",
-    "St-Pierre et Miquelon 1ère": '',
-    "Wallis et Futuna 1ère": ''
+    "Guadeloupe": "C329.api.telerama.fr",
+    "Guyane": "C260.api.telerama.fr",
+    "Martinique": "C328.api.telerama.fr",
+    "Mayotte": '',
+    "Nouvelle Calédonie": "C240.api.telerama.fr",
+    "Polynésie": "C459.api.telerama.fr",
+    "Réunion": "C245.api.telerama.fr",
+    "St-Pierre et Miquelon": '',
+    "Wallis et Futuna": '',
+    "Outre-mer": ''
 }
 
 XMLTV_CHANNEL_ID = {

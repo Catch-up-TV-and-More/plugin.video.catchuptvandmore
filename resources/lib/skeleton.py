@@ -20,6 +20,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+from resources.lib import common
+
 '''
 SKELETON dictionary corresponds to the architecture of each menu of the addon
 (elt1, elt2) -->
@@ -516,7 +518,7 @@ LABELS = {
     '6ter': '6ter',
     'numero23': 'Numéro 23',
     'cherie25': 'Chérie 25',
-    'la_1ere': 'La 1ère (Outre-Mer)',
+    'la_1ere': 'La 1ère (' + common.PLUGIN.get_setting('la_1ere.region') + ')',
     'franceinfo': 'France Info',
     'bfmbusiness': 'BFM Business',
     'rmc': 'RMC',
@@ -534,7 +536,7 @@ LABELS = {
     'comedy': 'Comic (6play)',
     'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
-    'france3regions': 'France 3 Régions',
+    'france3regions': 'France 3 Régions (' + common.PLUGIN.get_setting('france3.region') + ')',
     'francetvsport': 'France TV Sport (francetv)',
     'histoire': 'Histoire',
     'tvbreizh': 'TV Breizh',
