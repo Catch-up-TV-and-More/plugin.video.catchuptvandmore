@@ -584,20 +584,20 @@ LABELS = {
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',
-    'arte': 'Arte',
-    'euronews': 'Euronews',
-    'france24': 'France 24',
-    'nhkworld': 'NHK World',
+    'arte': 'Arte (' + common.PLUGIN.get_setting('arte.language') + ')',
+    'euronews': 'Euronews (' + common.PLUGIN.get_setting('euronews.language') + ')',
+    'france24': 'France 24 (' + common.PLUGIN.get_setting('france24.language') + ')',
+    'nhkworld': 'NHK World (' + common.PLUGIN.get_setting('nhkworld.country') + ')',
     'tv5monde': 'TV5Monde',
     'tivi5monde': 'Tivi 5Monde',
     'bvn': 'BVN',
     'icitelevision': 'ICI Télévision',
-    'mtv': 'MTV',
+    'mtv': 'MTV (' + common.PLUGIN.get_setting('mtv.language') + ')',
     'arirang': 'Arirang (아리랑)',
-    'dw': 'DW',
-    'beinsports': 'Bein Sports',
+    'dw': 'DW (' + common.PLUGIN.get_setting('dw.language') + ')',
+    'beinsports': 'Bein Sports (' + common.PLUGIN.get_setting('beinsports.language') + ')',
     'souvenirsfromearth': 'Souvenirs From Earth',
-    'qvc': 'QVC',
+    'qvc': 'QVC (' + common.PLUGIN.get_setting('qvc.language') + ')',
     'icirdi': 'ICI RDI',
 
     # United State of America channels / live TV
