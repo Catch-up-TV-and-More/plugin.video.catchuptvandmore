@@ -216,6 +216,11 @@ def get_video_url(params):
 
         url_selected = ''
 
+        if 'videos' not in json_parser:
+            utils.send_notification(
+                common.ADDON.get_localized_string(30710))
+            return ''
+
         if desired_quality == "DIALOG":
             all_datas_videos_quality = []
             all_datas_videos_path = []
