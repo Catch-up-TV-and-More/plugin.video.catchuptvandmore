@@ -491,6 +491,9 @@
 
             <setting label="CBS News" type="bool" id="cbsnews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="cbsnews.order" default="1"/>
+
+            <setting label="TBD" type="bool" id="tbd" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="tbd.order" default="2"/>
         <!-- United States -->
 
         <!-- Poland -->

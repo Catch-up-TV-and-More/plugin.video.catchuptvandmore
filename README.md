@@ -68,6 +68,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV
 - CBS News *(Live TV)*
+- TBD *(Replay, Live TV)*
 
 ### France
 ##### TV

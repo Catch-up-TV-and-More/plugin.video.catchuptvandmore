@@ -117,7 +117,8 @@ SKELETON = {
             ],
 
             ('us', 'build_live_tv_menu'): [
-                ('cbsnews', 'none')
+                ('cbsnews', 'none'),
+                ('tbd', 'none')
             ],
 
             ('pl', 'build_live_tv_menu'): [
@@ -268,8 +269,12 @@ SKELETON = {
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
-                ('beinsports', 'replay_entry'),
-                # ('icirdi', 'replay_entry')
+                ('beinsports', 'replay_entry')
+            ],
+
+            ('us', 'generic_menu'): [
+                ('cbsnews', 'replay_entry'),
+                ('tbd', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
@@ -437,7 +442,8 @@ CHANNELS = {
     'icirdi': 'icirdi',
     'icitele': 'icitele',
     'polar-plus': 'mycanal',
-    'virginradiotv': 'virginradiotv'
+    'virginradiotv': 'virginradiotv',
+    'tbd': 'tbd'
 }
 
 '''
@@ -602,6 +608,7 @@ LABELS = {
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
+    'tbd': 'TBD',
 
     # Poland channels / live TV
     'tvp': 'TVP',
