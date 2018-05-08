@@ -47,6 +47,7 @@ HDFAUTH_URL = 'http://hdfauth.francetv.fr/esi/TA?format=json&url=%s'
 # url stream
 
 LIVE_LA1ERE_REGIONS = {
+    # New values
     "Guadeloupe": "guadeloupe",
     "Guyane": "guyane",
     "Martinique": "martinique",
@@ -56,7 +57,17 @@ LIVE_LA1ERE_REGIONS = {
     "Réunion": "reunion",
     "St-Pierre et Miquelon": "saintpierremiquelon",
     "Wallis et Futuna": "wallisfutuna",
-    "Outre-mer": "1ere"
+    "Outre-mer": "1ere",
+    # Fix possible bug after names changed (not used anymore)
+    "Guadeloupe 1ère": "guadeloupe",
+    "Guyane 1ère": "guyane",
+    "Martinique 1ère": "martinique",
+    "Mayotte 1ère": "mayotte",
+    "Nouvelle Calédonie 1ère": "nouvellecaledonie",
+    "Polynésie 1ère": "polynesie",
+    "Réunion 1ère": "reunion",
+    "St-Pierre et Miquelon 1ère": "saintpierremiquelon",
+    "Wallis et Futuna 1ère": "wallisfutuna"
 }
 
 def channel_entry(params):
