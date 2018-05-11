@@ -217,8 +217,8 @@ def start_live_tv_stream(params):
 
     html_live_equipe = utils.get_webcontent(URL_LIVE)
     video_id = re.compile(
-        r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?',
-        re.DOTALL).findall(html_live_equipe)[0]
+        r'dailymotion.com/embed/video/(.*?)[\"\?]',
+            re.DOTALL).findall(html_live_equipe)[0]
 
     params['next'] = 'play_l'
     params['video_id'] = video_id

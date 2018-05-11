@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.12~beta016"
+       version="0.1.12~beta017"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -46,6 +46,7 @@
 [Add Channel - Live TV] TBD (US) (wwark)
 [Update] Replay - RTBF Auvio (BE) - Add image for shows (wwark)
 [Add Channel] NYC Media (US) (wwark)
+[Fix] Live TV - L'équipte TV (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
