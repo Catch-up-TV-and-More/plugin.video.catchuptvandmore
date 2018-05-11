@@ -495,8 +495,8 @@
             <setting label="TBD" type="bool" id="tbd" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="tbd.order" default="2"/>
 
-            <setting label="NYC TV" type="bool" id="nyctv" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="nyctv.order" default="3"/>
+            <setting label="NYC Media" type="bool" id="nycmedia" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="nycmedia.order" default="3"/>
         <!-- United States -->
 
         <!-- Poland -->

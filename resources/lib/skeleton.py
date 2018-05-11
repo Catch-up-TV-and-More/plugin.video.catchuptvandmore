@@ -274,7 +274,7 @@ SKELETON = {
 
             ('us', 'generic_menu'): [
                 ('tbd', 'replay_entry'),
-                ('nyctv', 'replay_entry')
+                ('nycmedia', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
@@ -444,7 +444,7 @@ CHANNELS = {
     'polar-plus': 'mycanal',
     'virginradiotv': 'virginradiotv',
     'tbd': 'tbd',
-    'nyctv': 'nyctv'
+    'nycmedia': 'nycmedia'
 }
 
 '''
@@ -610,7 +610,7 @@ LABELS = {
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
     'tbd': 'TBD',
-    'nyctv': 'NYC TV',
+    'nycmedia': 'NYC Media',
 
     # Poland channels / live TV
     'tvp': 'TVP',
