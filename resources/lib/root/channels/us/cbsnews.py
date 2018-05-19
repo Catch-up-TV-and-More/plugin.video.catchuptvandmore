@@ -68,7 +68,7 @@ def get_live_item(params):
 
     live_html = utils.get_webcontent(URL_LIVE)
     title = ''
-    url_live = URL_ROOT + re.compile(
+    url_live = re.compile(
         r'data-src="(.*?)"').findall(live_html)[0]
 
     info = {
