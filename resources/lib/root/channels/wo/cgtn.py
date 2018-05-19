@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2018  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -20,26 +20,46 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import json
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Replay add emissions
-# Add info LIVE TV
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
+# Live
+# https://www.cgtn.com/public/bundle/js/live.js
+URL_LIVE_CGTN = 'https://news.cgtn.com/resource/live/%s/cgtn-%s.m3u8'
+# Channel (FR|ES|AR|EN|RU|DO(documentary))
 
-URL_LIVE_API = 'http://%s.euronews.com/api/watchlive.json'
-# Language
+
+def channel_entry(params):
+    """Entry function of the module"""
+    if 'replay_entry' == params.next:
+        params.next = "list_shows_1"
+        params["page"] = "0"
+        return list_shows(params)
+    elif 'list_shows' in params.next:
+        return list_shows(params)
+    elif 'list_videos' in params.next:
+        return list_videos(params)
+    elif 'play' in params.next:
+        return get_video_url(params)
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_shows(params):
+    """Build categories listing"""
+    return None
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_videos(params):
+    """Build videos listing"""
+    return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
-    title = params.channel_label
+    title = ''
+    # subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
@@ -48,42 +68,30 @@ def get_live_item(params):
     desired_language = common.PLUGIN.get_setting(
         params.channel_name + '.language')
 
-    if desired_language == 'EN':
-        url_live_json = URL_LIVE_API % 'www'
-    elif desired_language == 'AR':
-        url_live_json = URL_LIVE_API % 'arabic'
+    if params.channel_name == 'cgtndocumentary':
+        url_live = URL_LIVE_CGTN % ('document', 'doc')
     else:
-        url_live_json = URL_LIVE_API % desired_language.lower()
-
-    file_path = utils.download_catalog(
-        url_live_json,
-        '%s_%s_live.json' % (
-            params.channel_name, desired_language.lower())
-    )
-    json_live = open(file_path).read()
-    json_parser = json.loads(json_live)
-    url_2nd_json = json_parser["url"]
-
-    file_path_2 = utils.download_catalog(
-        url_2nd_json,
-        '%s_%s_live_2.json' % (
-            params.channel_name, desired_language.lower())
-    )
-    json_live_2 = open(file_path_2).read()
-    json_parser_2 = json.loads(json_live_2)
-
-    url_live = json_parser_2["primary"]
+        if desired_language == 'FR':
+            url_live = URL_LIVE_CGTN % ('french', 'f')
+        elif desired_language == 'EN':
+            url_live = URL_LIVE_CGTN % ('english', 'news')
+        elif desired_language == 'AR':
+            url_live = URL_LIVE_CGTN % ('arabic', 'r')
+        elif desired_language == 'ES':
+            url_live = URL_LIVE_CGTN % ('espanol', 'e')
+        elif desired_language == 'RU':
+            url_live = URL_LIVE_CGTN % ('russian', 'r')
 
     info = {
         'video': {
-            'title': title,
+            'title': params.channel_label,
             'plot': plot,
             'duration': duration
         }
     }
 
     return {
-        'label': title,
+        'label': params.channel_label,
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
@@ -91,7 +99,7 @@ def get_live_item(params):
             module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            url=url_live,
+            url=url_live
         ),
         'is_playable': True,
         'info': info

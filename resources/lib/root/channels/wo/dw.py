@@ -59,7 +59,7 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
-    title = ''
+    title = params.channel_label
     plot = ''
     duration = 0
     img = ''
@@ -67,15 +67,6 @@ def get_live_item(params):
 
     desired_language = common.PLUGIN.get_setting(
         params.channel_name + '.language')
-
-    if desired_language == 'EN':
-        title = '%s English Live' % (params.channel_label)
-    elif desired_language == 'AR':
-        title = '%s عربية Live' % (params.channel_label)
-    elif desired_language == 'DE':
-        title = '%s Deutsch Live' % (params.channel_label)
-    elif desired_language == 'ES':
-        title = '%s Español Live' % (params.channel_label)
 
     file_path = utils.get_webcontent(
         URL_ROOT + '/%s' % desired_language.lower())

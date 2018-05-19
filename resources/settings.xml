@@ -177,6 +177,12 @@
 
             <setting label="ICI RDI" type="bool" id="icirdi" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="icirdi.order" default="16"/>
+
+            <setting label="CGTN" type="bool" id="cgtn" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="cgtn.order" default="17"/>
+
+            <setting label="CGTN Documentary" type="bool" id="cgtndocumentary" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="cgtndocumentary.order" default="18"/>
         <!-- International -->
 
 
@@ -608,6 +614,7 @@
                 <setting label="30160" type="labelenum" id="beinsports.language" visible="eq(-6,true)" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
                 <setting label="30161" type="labelenum" id="qvc.language" visible="eq(-7,true)" values="FR" default="FR"/>
                 <setting label="30162" type="labelenum" id="nhkworld.country" visible="eq(-8,true)" values="Outside Japan|In Japan" default="Outside Japan"/>
+                <setting label="30163" type="labelenum" id="cgtn.language" visible="eq(-9,true)" values="FR|EN|AR|ES|RU" default="FR"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>

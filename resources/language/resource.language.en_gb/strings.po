@@ -227,6 +227,10 @@ msgctxt "#30162"
 msgid "NHK World: Choose Country"
 msgstr ""
 
+msgctxt "#30163"
+msgid "CGTN: Choose Channel"
+msgstr ""
+
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"

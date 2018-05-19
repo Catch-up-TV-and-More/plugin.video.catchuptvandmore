@@ -156,6 +156,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Souvenirs From Earth *(Live TV)*
 - QVC *(Live TV)* *(Contents {FR})*
 - ICI RDI *(Live TV)*
+- CGTN *(Live TV)* *(Contents {FR|EN|AR|ES|RU})*
+- CGTN Documentary *(Live TV)*
 
 ### Japon — *Japan*
 ##### TV

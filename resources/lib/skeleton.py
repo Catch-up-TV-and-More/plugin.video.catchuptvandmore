@@ -113,7 +113,9 @@ SKELETON = {
                 ('tivi5monde', 'none'),
                 ('souvenirsfromearth', 'none'),
                 ('qvc', 'none'),
-                ('icirdi', 'none')
+                ('icirdi', 'none'),
+                ('cgtn', 'none'),
+                ('cgtndocumentary', 'none')
             ],
 
             ('us', 'build_live_tv_menu'): [
@@ -444,7 +446,9 @@ CHANNELS = {
     'polar-plus': 'mycanal',
     'virginradiotv': 'virginradiotv',
     'tbd': 'tbd',
-    'nycmedia': 'nycmedia'
+    'nycmedia': 'nycmedia',
+    'cgtn': 'cgtn',
+    'cgtndocumentary': 'cgtn'
 }
 
 '''
@@ -606,6 +610,8 @@ LABELS = {
     'souvenirsfromearth': 'Souvenirs From Earth',
     'qvc': 'QVC (' + common.PLUGIN.get_setting('qvc.language') + ')',
     'icirdi': 'ICI RDI',
+    'cgtn': 'CGTN (' + common.PLUGIN.get_setting('cgtn.language') + ')',
+    'cgtndocumentary': 'CGTN Documentary',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
