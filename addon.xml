@@ -31,8 +31,9 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.1.13]
-[Add Live TV] CGTN *(Contents {FR|EN|AR|ES|RU})*
-[Add Live TV] CGTN Documentary
+[Add Live TV] CGTN *(Contents {FR|EN|AR|ES|RU})* (wwark)
+[Add Live TV] CGTN Documentary (wwark)
+[Fix] SKY News (UK) - Live TV (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
