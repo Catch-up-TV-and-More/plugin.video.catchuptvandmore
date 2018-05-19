@@ -30,6 +30,8 @@ from resources.lib import common
 # Live
 URL_LIVE_QVC_FR = 'https://www.qvc.fr/tv/live.html'
 
+URL_LIVE_QVC_JP = 'http://qvc.jp/cont/live/Main'
+
 URL_STREAM_LIMELIGHT = 'http://production-ps.lvp.llnw.net/r/PlaylistService/media/%s/getMobilePlaylistByMediaId'
 # MediaId
 
@@ -67,11 +69,22 @@ def get_live_item(params):
     duration = 0
     img = ''
     live_id = ''
+    live_url = ''
+    next_value = ''
 
-    live_html = utils.get_webcontent(URL_LIVE_QVC_FR)
-    title = ''
-    live_id = re.compile(
-        r'data-media="(.*?)"').findall(live_html)[0]
+    desired_language = common.PLUGIN.get_setting(
+        params.channel_name + '.language')
+    
+    if desired_language == 'FR':
+        live_html = utils.get_webcontent(URL_LIVE_QVC_FR)
+        live_id = re.compile(
+            r'data-media="(.*?)"').findall(live_html)[0]
+        next_value = 'play_l_fr'
+    elif desired_language == 'JP':
+        live_html = utils.get_webcontent(URL_LIVE_QVC_JP)
+        live_url = 'http:' + re.compile(
+            r'src\', \'(.*?)\'').findall(live_html)[0]
+        next_value = 'play_l_jp'
 
     info = {
         'video': {
@@ -89,8 +102,9 @@ def get_live_item(params):
             module_path=params.module_path,
             module_name=params.module_name,
             action='start_live_tv_stream',
-            next='play_l',
-            live_id=live_id
+            next=next_value,
+            live_id=live_id,
+            live_url=live_url,
         ),
         'is_playable': True,
         'info': info
@@ -100,7 +114,7 @@ def get_live_item(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    if params.next == 'play_l':
+    if params.next == 'play_l_fr':
         live_json = utils.get_webcontent(URL_STREAM_LIMELIGHT % params.live_id)
         live_jsonparser = json.loads(live_json)
 
@@ -109,3 +123,5 @@ def get_video_url(params):
             if live_url["targetMediaPlatform"] == "HttpLiveStreaming":
                 url = live_url["mobileUrl"] 
         return url
+    elif params.next == 'play_l_jp':
+        return params.live_url
