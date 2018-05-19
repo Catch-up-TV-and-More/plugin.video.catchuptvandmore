@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.12"
+       version="0.1.13~beta0"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,23 +30,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.12]
-[Add Live TV] Telecinco, Cuatro, Factoria de Ficcion, Boing, ... (ES) (wwark)
-[Add Live TV] ICI RDI (World) (wwark)
-[Add Channel - Live TV] ICI Télé (CA) (wwark)
-[Add Channel] Polar+ (wwark)
-[Fix] Replay and Live TV - CNews (wwark)
-[Fix] Replay - GameOne (wwark)
-[Add Live TV] Virgin Radio TV (wwark)
-[Fix] Replay - RMC Decouverte - Thanks Alexis (wwark)
-[Fix] Replay - NRJ 12/Cherie 25 (wwark)
-[Update] Replay - Numero 23 (Year) (wwark)
-[Add Channel] France3 Region JT/Météo (wwark)
-[Update] Replay - FranceTV - Add info 'extrait' (wwark)
-[Add Channel - Live TV] TBD (US) (wwark)
-[Update] Replay - RTBF Auvio (BE) - Add image for shows (wwark)
-[Add Channel] NYC Media (US) (wwark)
-[Fix] Live TV - L'équipte TV (wwark)
+[Version 0.1.13]
     </news>
     <assets>
       <icon>icon.png</icon>
