@@ -171,9 +171,18 @@ def list_shows(params):
 
             emission_id = emission.get('data-id')
             emission_title = emission.find('h4').get_text().encode('utf-8')
+            list_emission_image = emission.find('img').get('data-srcset').split(' ')
+            emission_image = ''
+            for image_datas in list_emission_image:
+                if 'jpg' in image_datas:
+                    if ',' in image_datas:
+                        emission_image = image_datas.split(',')[1]
+                    else:
+                        emission_image = image_datas
 
             shows.append({
                 'label': emission_title,
+                'thumb': emission_image,
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
                     module_name=params.module_name,
@@ -420,6 +429,9 @@ def get_live_item(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
+        if 'drm' in params.url_live:
+            utils.send_notification(common.ADDON.get_localized_string(30702))
+            return ''
         return params.url_live
     elif params.next == 'play_r_categorie':
         file_path = utils.get_webcontent(

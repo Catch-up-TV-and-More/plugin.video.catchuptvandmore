@@ -52,6 +52,9 @@
 
         <setting label="30058" type="bool" id="pl" default="true"/>
         <setting label="" type="number" visible="false" id="pl.order" default="9"/>
+
+        <setting label="30059" type="bool" id="es" default="true"/>
+        <setting label="" type="number" visible="false" id="es.order" default="10"/>
     </category>
     <!-- Countries-->
 
@@ -171,6 +174,9 @@
 
             <setting label="QVC" type="bool" id="qvc" default="true" visible="eq(-29,true)"/>
             <setting label="" type="number" visible="false" id="qvc.order" default="15"/>
+
+            <setting label="ICI RDI" type="bool" id="icirdi" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="icirdi.order" default="16"/>
         <!-- International -->
 
 
@@ -402,11 +408,17 @@
             <setting label="France tv slash" type="bool" id="slash" default="true" visible="eq(-119,true)"/>
             <setting label="" type="number" visible="false" id="slash.order" default="60"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-121,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="61"/>
+            <setting label="Polar+" type="bool" id="polar-plus" default="true" visible="eq(-121,true)"/>
+            <setting label="" type="number" visible="false" id="polar-plus.order" default="61"/>
 
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-123,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="62"/>-->
+            <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
+            <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
+
+            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-125,true)"/>
+            <setting label="" type="number" visible="false" id="teva.order" default="63"/>
+
+            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-127,true)"/>
+            <setting label="" type="number" visible="false" id="parispremiere.order" default="64"/>-->
         <!-- France -->
 
 
@@ -467,6 +479,9 @@
 
             <setting label="TVA" type="bool" id="tva" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="tva.order" default="5"/>
+
+            <setting label="ICI Télé" type="bool" id="icitele" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="icitele.order" default="6"/>
         <!-- Canada -->
 
 
@@ -476,6 +491,12 @@
 
             <setting label="CBS News" type="bool" id="cbsnews" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="cbsnews.order" default="1"/>
+
+            <setting label="TBD" type="bool" id="tbd" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="tbd.order" default="2"/>
+
+            <setting label="NYC Media" type="bool" id="nycmedia" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="nycmedia.order" default="3"/>
         <!-- United States -->
 
         <!-- Poland -->
@@ -485,6 +506,32 @@
             <setting label="TVP" type="bool" id="tvp" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="tvp.order" default="1"/>
         <!-- Poland -->
+
+        <!-- Spain -->
+        <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="es" default="true" visible="false"/>
+
+            <setting label="Telecinco" type="bool" id="telecinco" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="telecinco.order" default="1"/>
+
+            <setting label="Cuatro" type="bool" id="cuatro" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="cuatro.order" default="2"/>
+
+            <setting label="Factoria de Ficcion" type="bool" id="fdf" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="fdf.order" default="3"/>
+
+            <setting label="Boing" type="bool" id="boing" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="boing.order" default="4"/>
+
+            <setting label="Energy TV" type="bool" id="energy" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="energy.order" default="5"/>
+
+            <setting label="Divinity" type="bool" id="divinity" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="divinity.order" default="6"/>
+
+            <setting label="Be Mad" type="bool" id="bemad" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="bemad.order" default="7"/>
+        <!-- Spain -->
 
     </category>
     <!-- Channels --> 
@@ -567,7 +614,7 @@
             <setting label="" type="bool" id="fr" default="true" visible="false"/>
                 
                 <setting label="30158" type="labelenum" id="france3.region" visible="eq(-1,true)" values="Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes" default="Alpes"/>
-                <setting label="30159" type="labelenum" id="la_1ere.region" visible="eq(-2,true)" values="Guadeloupe 1ère|Guyane 1ère|Martinique 1ère|Mayotte 1ère|Nouvelle Calédonie 1ère|Polynésie 1ère|Réunion 1ère|St-Pierre et Miquelon 1ère|Wallis et Futuna 1ère" default="Guadeloupe 1ère"/>
+                <setting label="30159" type="labelenum" id="la_1ere.region" visible="eq(-2,true)" values="Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer" default="Guadeloupe"/>
 
     </category>
     <!-- Quality and Content -->

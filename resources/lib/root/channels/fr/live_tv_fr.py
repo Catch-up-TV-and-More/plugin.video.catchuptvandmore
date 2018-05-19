@@ -61,6 +61,18 @@ LIVE_FR3_REGIONS = {
 }
 
 LIVE_LA_1ERE = {
+    # New Values
+    "Guadeloupe": "C329.api.telerama.fr",
+    "Guyane": "C260.api.telerama.fr",
+    "Martinique": "C328.api.telerama.fr",
+    "Mayotte": '',
+    "Nouvelle Calédonie": "C240.api.telerama.fr",
+    "Polynésie": "C459.api.telerama.fr",
+    "Réunion": "C245.api.telerama.fr",
+    "St-Pierre et Miquelon": '',
+    "Wallis et Futuna": '',
+    "Outre-mer": '',
+    # Fix possible bug after names changed (not used anymore)
     "Guadeloupe 1ère": "C329.api.telerama.fr",
     "Guyane 1ère": "C260.api.telerama.fr",
     "Martinique 1ère": "C328.api.telerama.fr",
@@ -106,7 +118,8 @@ XMLTV_CHANNEL_ID = {
     'france3regions': LIVE_FR3_REGIONS[common.PLUGIN.get_setting(
         'france3.region')],
     'bfmparis': '',
-    'melodytv': ''
+    'melodytv': '',
+    'virginradiotv': ''
 }
 
 

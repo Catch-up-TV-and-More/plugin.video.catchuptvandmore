@@ -20,9 +20,9 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import re
 import ast
-from bs4 import BeautifulSoup as bs
+import json
+import re
 from resources.lib import utils
 from resources.lib import resolver
 from resources.lib import common
@@ -33,11 +33,9 @@ from resources.lib import common
 
 URL_ROOT = 'https://www.lequipe.fr'
 
-URL_ROOT_VIDEO_LEQUIPE = 'https://www.lequipe.fr/lachainelequipe/'
+URL_LIVE = URL_ROOT + '/lachainelequipe/'
 
-URL_REPLAY_VIDEO_LEQUIPE = 'https://www.lequipe.fr/' \
-                           'lachainelequipe/morevideos/%s'
-# Category_id
+URL_API_LEQUIPE = URL_ROOT + '/equipehd/applis/filtres/videosfiltres.json'
 
 
 def channel_entry(params):
@@ -54,15 +52,19 @@ def channel_entry(params):
     else:
         return None
 
-CATEGORIES = {
-    'tout': URL_ROOT_VIDEO_LEQUIPE,
-    'L\'Équipe du Soir': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/1',
-    'L\'Équipe d\'Estelle': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/98',
-    'Événements': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/66',
-    'L\'Équipe du week-end': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/64',
-    'La Grande Soirée': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/93',
-    'Les Grands Docs': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/28',
-    'Émission spéciale': URL_ROOT_VIDEO_LEQUIPE + 'morevideos/42'
+CORRECT_MONTH = {
+    'janvier.': '01',
+    'février.': '02',
+    'mars.': '03',
+    'avril.': '04',
+    'mai.': '05',
+    'juin.': '06',
+    'juillet.': '07',
+    'août.': '08',
+    'septembre.': '09',
+    'octobre.': '10',
+    'novembre.': '11',
+    'décembre.': '12'
 }
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -70,22 +72,30 @@ def list_shows(params):
     """Build shows listing"""
     shows = []
 
-    # Get categories :
-    for category_name, category_url in CATEGORIES.iteritems():
+    equipe_categories_json = utils.get_webcontent(URL_API_LEQUIPE)
+    equipe_categories_jsonparser = json.loads(equipe_categories_json)
 
-        shows.append({
-            'label': category_name,
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                category_url=category_url,
-                page='1',
-                category_name=category_name,
-                next='list_videos',
-                window_title=category_name
-            )
-        })
+    for categories in equipe_categories_jsonparser['filtres_vod']:
+        
+        if 'missions' in categories['titre']:
+            for category in categories['filters']:
+        
+                category_name = category['titre']
+                category_url = category['filters'].replace('1.json', '%s.json')
+
+                shows.append({
+                    'label': category_name,
+                    'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        action='replay_entry',
+                        category_url=category_url,
+                        page='1',
+                        category_name=category_name,
+                        next='list_videos',
+                        window_title=category_name
+                    )
+                })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -104,55 +114,32 @@ def list_videos(params):
     if 'previous_listing' in params:
         videos = ast.literal_eval(params['previous_listing'])
 
-    url = params.category_url + '/' + params.page
-    file_path = utils.download_catalog(
-        url,
-        '%s_%s_%s.html' % (
-            params.channel_name,
-            params.category_name,
-            params.page))
-    root_html = open(file_path).read()
-    root_soup = bs(root_html, 'html.parser')
+    equipe_videos_json = utils.get_webcontent(
+        params.category_url % params.page)
+    equipe_videos_jsonparser = json.loads(equipe_videos_json)
 
-    category_soup = root_soup.find_all(
-        'a',
-        class_='colead')
+    for video_datas in equipe_videos_jsonparser['videos']:
 
-    for program in category_soup:
+        title = video_datas['titre']
+        img = video_datas['src_tablette_retina']
+        duration = video_datas['duree']
+        video_id = video_datas['lien_dm'].split('//')[1]
+        
+        date_list = video_datas['date'].split(' ')
 
-        # Get Video_ID
-        url = URL_ROOT + program['href'].encode('utf-8')
-        html_video_equipe = utils.get_webcontent(url)
-        video_id = re.compile(
-            r'www.dailymotion.com/embed/video/(.*?)\?',
-            re.DOTALL).findall(html_video_equipe)[0]
-
-        title = program.find(
-            'h2').get_text().encode('utf-8')
-        colead__image = program.find(
-            'div',
-            class_='colead__image')
-        img = colead__image.find(
-            'img')['data-src'].encode('utf-8')
-
-        date = colead__image.find(
-            'span',
-            class_='colead__layerText colead__layerText--bottomleft'
-        ).get_text().strip().encode('utf-8')  # 07/09/17 | 01 min
-        date = date.split('/')
-        day = date[0]
-        mounth = date[1]
-        year = '20' + date[2].split(' ')[0]
+        day = '00'
+        mounth = '00'
+        year = '2018'
+        if len(date_list) > 3:
+            day = date_list[0]
+            try:
+                mounth = CORRECT_MONTH[date_list[1]]
+            except Exception:
+                mounth = '00'
+            year = date_list[2]
 
         date = '.'.join((day, mounth, year))
         aired = '-'.join((year, mounth, day))
-
-        duration_string = colead__image.find(
-            'span',
-            class_='colead__layerText colead__layerText--bottomleft'
-        ).get_text().strip().encode('utf-8')
-        duration_list = duration_string.split(' ')
-        duration = int(duration_list[2]) * 60
 
         info = {
             'video': {
@@ -193,20 +180,21 @@ def list_videos(params):
         })
 
     # More videos...
-    videos.append({
-        'label': common.ADDON.get_localized_string(30700),
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            category_url=params.category_url,
-            category_name=params.category_name,
-            next='list_videos',
-            page=str(int(params.page) + 1),
-            update_listing=True,
-            previous_listing=str(videos)
-        )
-    })
+    if int(params.page) < int(equipe_videos_jsonparser['nb_total_pages']):
+        videos.append({
+            'label': common.ADDON.get_localized_string(30700),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                category_url=params.category_url,
+                category_name=params.category_name,
+                next='list_videos',
+                page=str(int(params.page) + 1),
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -227,10 +215,10 @@ def list_videos(params):
 def start_live_tv_stream(params):
     video_id = ''
 
-    html_live_equipe = utils.get_webcontent(URL_ROOT_VIDEO_LEQUIPE)
+    html_live_equipe = utils.get_webcontent(URL_LIVE)
     video_id = re.compile(
-        r'<iframe src="//www.dailymotion.com/embed/video/(.*?)\?',
-        re.DOTALL).findall(html_live_equipe)[0]
+        r'dailymotion.com/embed/video/(.*?)[\"\?]',
+            re.DOTALL).findall(html_live_equipe)[0]
 
     params['next'] = 'play_l'
     params['video_id'] = video_id

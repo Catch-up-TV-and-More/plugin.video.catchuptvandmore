@@ -346,8 +346,11 @@ def list_videos(params):
                 json_parser = json.load(json_file)
 
         for video_datas in json_parser["result"]:
-    
-            title = video_datas["title"].encode('UTF-8')
+            
+            if video_datas["type"] == 'extrait':
+                title = video_datas["type"].encode('UTF-8') + ' - ' + video_datas["title"].encode('UTF-8')
+            else:
+                title = video_datas["title"].encode('UTF-8')
 
             id_diffusion = ''
             duration = 0
@@ -355,7 +358,8 @@ def list_videos(params):
             for video_media in video_datas["content_has_medias"]:
                 if "main" in video_media["type"]:
                     id_diffusion = video_media["media"]["si_id"]
-                    duration = int(video_media["media"]["duration"])
+                    if video_datas["type"] != 'extrait':
+                        duration = int(video_media["media"]["duration"])
                 elif "image" in video_media["type"]:
                     for image_datas in video_media["media"]["patterns"]:
                         if "vignette_16x9" in image_datas["type"]:

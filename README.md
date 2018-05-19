@@ -50,13 +50,26 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - UNIS *(Replay)*
 - Télé-Québec *(Replay, Live TV)*
 - TVA *(Replay, Live TV)*
+- ICI Télé *(Replay, Live TV)*
 
 ##### TV Communauté anglaise — *English Community TV*
 - YES TV *(Live TV)*
 
+### Espagne — *Spain*
+##### TV
+- Telecinco *(Live TV)*
+- Cuatro *(Live TV)*
+- Factoria de Ficcion *(Live TV)*
+- Boing *(Live TV)*
+- Energy TV *(Live TV)*
+- Divinity *(Live TV)*
+- Be Mad *(Live TV)*
+
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV
 - CBS News *(Live TV)*
+- TBD *(Replay, Live TV)*
+- NYC Media *(Replay)*
 
 ### France
 ##### TV
@@ -83,14 +96,14 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Numéro 23 *(Replay, Live TV)*
 - Chérie 25 *(Replay, Live TV with NRJ account)*
 - LCI *(Replay, Live TV)*
-- La 1ère — Outre-Mer *(Replay, Live TV)* *(Contents Live TV {Guadeloupe 1ère|Guyane 1ère|Martinique 1ère|Mayotte 1ère|Nouvelle Calédonie 1ère|Polynésie 1ère|Réunion 1ère|St-Pierre et Miquelon 1ère|Wallis et Futuna 1ère})*
+- La 1ère *(Replay, Live TV)* *(Contents {Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer})*
 - France Info *(Replay, Live TV)*
 - BFM Business *(Replay, Live TV)*
 - RMC *(Replay, Live TV)*
 - RMC Découverte *(Replay, Live TV)*
 - LCP Assemblée Nationale *(Replay, Live TV)*
 - Public Sénat *(Replay, Live TV)*
-- France 3 Régions *(Live TV)* *(Contents Live TV {Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes})*
+- France 3 Régions *(Replay, Live TV)* *(Contents {Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes})*
 - Histoire *(Replay)*
 - TV Breizh *(Replay)*
 - Ushuaïa TV *(Replay)*
@@ -105,6 +118,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - BFM Paris *(Live TV)*
 - Onzéo *(Replay)*
 - Melody TV *(Live TV)*
+- Polar+ *(Replay)*
+- Virgin Radio TV *(Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
@@ -140,6 +155,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Bein Sports *(Replay)* *(Contents {AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY})*
 - Souvenirs From Earth *(Live TV)*
 - QVC *(Live TV)* *(Contents {FR})*
+- ICI RDI *(Live TV)*
 
 ### Japon — *Japan*
 ##### TV

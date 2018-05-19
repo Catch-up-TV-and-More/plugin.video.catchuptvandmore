@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.11"
+       version="0.1.12"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,32 +30,23 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.11]
-[Add Channel] TVM3 (CH) (wwark)
-[Add Channel - Live TV] TVA (CA) (wwark)
-[Add Channel - Live TV] TV Lux (BE) (wwark)
-[Add Channel] Bein Sports (Contents AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY) (wwark)
-[Improvement] Add Geo-blocked message for brightcove Video (wwark)
-[Add Website] NY Times (wwark)
-[Add Live TV] STV (UK) (wwark)
-[Add Live TV] STV 2 (UK) (wwark)
-[Fix] Search videos France TV (SylvainCecchetto)
-[Add Replay] Franceinfo (SylvainCecchetto)
-[Update] Add drm notification for some videos - Replay RTBF Auvio (wwark) 
-[Fix/Add Channels] RTLBE - website changes - Add RTL INFO, BEL RTL and Contact (wwark)
-[Add Channel] Onzéo (wwark)
-[Add WebTV] Fun Radio (wwark)
-[Add Live TV] Souvenirs From Earth (wwark)
-[Add Live TV] QVC (Contents FR) (wwark)
-[Add Live TV] CBS News (US) (wwark)
-[Add Live TV] Melody TV (wwark)
-[Add Channel - Live TV] BX1 (BE) (wwark)
-[Add Live TV] TVP (PL) (wwark)
-[Update] Update simpleplugin Library
-[Add Website] Fosdem (wwark)
-[Update] Change API for France TV (wwark)
-[Add Web TV] France TV Slash (wwark)
-[Improvement] Replay Arte (wwark)
+[Version 0.1.12]
+[Add Live TV] Telecinco, Cuatro, Factoria de Ficcion, Boing, ... (ES) (wwark)
+[Add Live TV] ICI RDI (World) (wwark)
+[Add Channel - Live TV] ICI Télé (CA) (wwark)
+[Add Channel] Polar+ (wwark)
+[Fix] Replay and Live TV - CNews (wwark)
+[Fix] Replay - GameOne (wwark)
+[Add Live TV] Virgin Radio TV (wwark)
+[Fix] Replay - RMC Decouverte - Thanks Alexis (wwark)
+[Fix] Replay - NRJ 12/Cherie 25 (wwark)
+[Update] Replay - Numero 23 (Year) (wwark)
+[Add Channel] France3 Region JT/Météo (wwark)
+[Update] Replay - FranceTV - Add info 'extrait' (wwark)
+[Add Channel - Live TV] TBD (US) (wwark)
+[Update] Replay - RTBF Auvio (BE) - Add image for shows (wwark)
+[Add Channel] NYC Media (US) (wwark)
+[Fix] Live TV - L'équipte TV (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

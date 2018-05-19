@@ -20,6 +20,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+from resources.lib import common
+
 '''
 SKELETON dictionary corresponds to the architecture of each menu of the addon
 (elt1, elt2) -->
@@ -63,7 +65,8 @@ SKELETON = {
                 ('francetvsport', 'none'),
                 ('gong', 'none'),
                 ('bfmparis', 'none'),
-                ('melodytv', 'none')
+                ('melodytv', 'none'),
+                ('virginradiotv', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -78,7 +81,8 @@ SKELETON = {
             ('ca', 'build_live_tv_menu'): [
                 ('telequebec', 'none'),
                 ('yestv', 'none'),
-                ('tva', 'none')
+                ('tva', 'none'),
+                ('icitele', 'none')
             ],
 
             ('ch', 'build_live_tv_menu'): [
@@ -108,15 +112,27 @@ SKELETON = {
                 ('tv5monde', 'none'),
                 ('tivi5monde', 'none'),
                 ('souvenirsfromearth', 'none'),
-                ('qvc', 'none')
+                ('qvc', 'none'),
+                ('icirdi', 'none')
             ],
 
             ('us', 'build_live_tv_menu'): [
-                ('cbsnews', 'none')
+                ('cbsnews', 'none'),
+                ('tbd', 'none')
             ],
 
             ('pl', 'build_live_tv_menu'): [
                 ('tvp', 'none')
+            ],
+
+            ('es', 'build_live_tv_menu'): [
+                ('telecinco', 'none'),
+                ('cuatro', 'none'),
+                ('fdf', 'none'),
+                ('boing', 'none'),
+                ('energy', 'none'),
+                ('divinity', 'none'),
+                ('bemad', 'none')
             ]
         },
 
@@ -142,7 +158,8 @@ SKELETON = {
                 ('tv5', 'replay_entry'),
                 ('unis', 'replay_entry'),
                 ('telequebec', 'replay_entry'),
-                ('tva', 'replay_entry')
+                ('tva', 'replay_entry'),
+                ('icitele', 'replay_entry')
             ],
 
             ('fr', 'generic_menu'): [
@@ -202,7 +219,9 @@ SKELETON = {
                 ('francetvsport', 'replay_entry'),
                 ('onzeo', 'replay_entry'),
                 ('fun_radio', 'replay_entry'),
-                ('slash', 'replay_entry')
+                ('slash', 'replay_entry'),
+                ('polar-plus', 'replay_entry'),
+                ('france3regions', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -251,6 +270,11 @@ SKELETON = {
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
                 ('beinsports', 'replay_entry')
+            ],
+
+            ('us', 'generic_menu'): [
+                ('tbd', 'replay_entry'),
+                ('nycmedia', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
@@ -407,7 +431,20 @@ CHANNELS = {
     'melodytv': 'melodytv',
     'bx1': 'bx1',
     'tvp': 'tvp',
-    'slash': 'francetv'
+    'slash': 'francetv',
+    'telecinco': 'mitele',
+    'cuatro': 'mitele',
+    'fdf': 'mitele',
+    'boing': 'mitele',
+    'energy': 'mitele',
+    'divinity': 'mitele',
+    'bemad': 'mitele',
+    'icirdi': 'icirdi',
+    'icitele': 'icitele',
+    'polar-plus': 'mycanal',
+    'virginradiotv': 'virginradiotv',
+    'tbd': 'tbd',
+    'nycmedia': 'nycmedia'
 }
 
 '''
@@ -430,6 +467,7 @@ LABELS = {
     'ca': 'Canada',
     'us': 'United State of America',
     'pl': 'Poland',
+    'es': 'Spain',
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
@@ -452,6 +490,7 @@ LABELS = {
     'yestv': 'YES TV',
     'telequebec': 'Télé-Québec',
     'tva': 'TVA',
+    'icitele': 'ICI Télé',
 
     # Switzerland channels / live TV
     'rts': 'RTS',
@@ -486,7 +525,7 @@ LABELS = {
     '6ter': '6ter',
     'numero23': 'Numéro 23',
     'cherie25': 'Chérie 25',
-    'la_1ere': 'La 1ère (Outre-Mer)',
+    'la_1ere': 'La 1ère (' + common.PLUGIN.get_setting('la_1ere.region') + ')',
     'franceinfo': 'France Info',
     'bfmbusiness': 'BFM Business',
     'rmc': 'RMC',
@@ -504,7 +543,7 @@ LABELS = {
     'comedy': 'Comic (6play)',
     'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
-    'france3regions': 'France 3 Régions',
+    'france3regions': 'France 3 Régions (' + common.PLUGIN.get_setting('france3.region') + ')',
     'francetvsport': 'France TV Sport (francetv)',
     'histoire': 'Histoire',
     'tvbreizh': 'TV Breizh',
@@ -523,6 +562,8 @@ LABELS = {
     'onzeo': 'Onzéo',
     'melodytv': 'Melody TV',
     'slash': 'France tv slash',
+    'polar-plus': 'Polar+',
+    'virginradiotv': 'Virgin Radio TV',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -550,26 +591,38 @@ LABELS = {
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',
-    'arte': 'Arte',
-    'euronews': 'Euronews',
-    'france24': 'France 24',
-    'nhkworld': 'NHK World',
+    'arte': 'Arte (' + common.PLUGIN.get_setting('arte.language') + ')',
+    'euronews': 'Euronews (' + common.PLUGIN.get_setting('euronews.language') + ')',
+    'france24': 'France 24 (' + common.PLUGIN.get_setting('france24.language') + ')',
+    'nhkworld': 'NHK World (' + common.PLUGIN.get_setting('nhkworld.country') + ')',
     'tv5monde': 'TV5Monde',
     'tivi5monde': 'Tivi 5Monde',
     'bvn': 'BVN',
     'icitelevision': 'ICI Télévision',
-    'mtv': 'MTV',
+    'mtv': 'MTV (' + common.PLUGIN.get_setting('mtv.language') + ')',
     'arirang': 'Arirang (아리랑)',
-    'dw': 'DW',
-    'beinsports': 'Bein Sports',
+    'dw': 'DW (' + common.PLUGIN.get_setting('dw.language') + ')',
+    'beinsports': 'Bein Sports (' + common.PLUGIN.get_setting('beinsports.language') + ')',
     'souvenirsfromearth': 'Souvenirs From Earth',
-    'qvc': 'QVC',
+    'qvc': 'QVC (' + common.PLUGIN.get_setting('qvc.language') + ')',
+    'icirdi': 'ICI RDI',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
+    'tbd': 'TBD',
+    'nycmedia': 'NYC Media',
 
     # Poland channels / live TV
     'tvp': 'TVP',
+
+    # Spanish channels / live TV
+    'telecinco': 'Telecinco',
+    'cuatro': 'Cuatro',
+    'fdf': 'Factoria de Ficcion',
+    'boing': 'Boing',
+    'energy': 'Energy TV',
+    'divinity': 'Divinity',
+    'bemad': 'Be Mad',
 
     # Websites
     'allocine': 'Allociné',
