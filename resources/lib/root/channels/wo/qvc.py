@@ -28,9 +28,13 @@ from resources.lib import common
 # TO DO
 
 # Live
-URL_LIVE_QVC_FR = 'https://www.qvc.fr/tv/live.html'
+URL_LIVE_QVC_FR_IT = 'https://www.qvc.%s/tv/live.html'
+# language
 
 URL_LIVE_QVC_JP = 'http://qvc.jp/cont/live/Main'
+
+URL_LIVE_QVC_DE_UK_US = 'http://www.qvc%s/content/shop-live-tv.qvc.html'
+# language
 
 URL_STREAM_LIMELIGHT = 'http://production-ps.lvp.llnw.net/r/PlaylistService/media/%s/getMobilePlaylistByMediaId'
 # MediaId
@@ -63,28 +67,13 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
+    lives = []
+
     title = ''
     # subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
-    live_id = ''
-    live_url = ''
-    next_value = ''
-
-    desired_language = common.PLUGIN.get_setting(
-        params.channel_name + '.language')
-    
-    if desired_language == 'FR':
-        live_html = utils.get_webcontent(URL_LIVE_QVC_FR)
-        live_id = re.compile(
-            r'data-media="(.*?)"').findall(live_html)[0]
-        next_value = 'play_l_fr'
-    elif desired_language == 'JP':
-        live_html = utils.get_webcontent(URL_LIVE_QVC_JP)
-        live_url = 'http:' + re.compile(
-            r'src\', \'(.*?)\'').findall(live_html)[0]
-        next_value = 'play_l_jp'
 
     info = {
         'video': {
@@ -102,26 +91,48 @@ def get_live_item(params):
             module_path=params.module_path,
             module_name=params.module_name,
             action='start_live_tv_stream',
-            next=next_value,
-            live_id=live_id,
-            live_url=live_url,
+            next='play_l'
         ),
         'is_playable': True,
         'info': info
     }
 
-
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    if params.next == 'play_l_fr':
-        live_json = utils.get_webcontent(URL_STREAM_LIMELIGHT % params.live_id)
-        live_jsonparser = json.loads(live_json)
 
-        url = ''
-        for live_url in live_jsonparser["mediaList"][0]["mobileUrls"]:
-            if live_url["targetMediaPlatform"] == "HttpLiveStreaming":
-                url = live_url["mobileUrl"] 
-        return url
-    elif params.next == 'play_l_jp':
-        return params.live_url
+    desired_language = common.PLUGIN.get_setting(
+        params.channel_name + '.language')
+    
+    if params.next == 'play_l':
+        if desired_language == 'FR' or desired_language == 'IT':
+            live_html = utils.get_webcontent(
+                URL_LIVE_QVC_FR_IT % desired_language.lower())
+            live_id = re.compile(
+                r'data-media="(.*?)"').findall(live_html)[0]
+            live_json = utils.get_webcontent(
+                URL_STREAM_LIMELIGHT % live_id)
+            live_jsonparser = json.loads(live_json)
+
+            url = ''
+            for live_url in live_jsonparser["mediaList"][0]["mobileUrls"]:
+                if live_url["targetMediaPlatform"] == "HttpLiveStreaming":
+                    url = live_url["mobileUrl"] 
+            return url
+        elif desired_language == 'JP':
+            live_html = utils.get_webcontent(URL_LIVE_QVC_JP)
+            return 'http:' + re.compile(
+                r'src\', \'(.*?)\'').findall(live_html)[0]           
+        elif desired_language == 'DE' or\
+            desired_language == 'UK' or\
+            desired_language == 'US':
+            if desired_language == 'DE':
+                live_html = utils.get_webcontent(URL_LIVE_QVC_DE_UK_US % '.de')
+            elif desired_language == 'UK':
+                live_html = utils.get_webcontent(URL_LIVE_QVC_DE_UK_US % 'uk.com')
+            elif desired_language == 'US':
+                live_html = utils.get_webcontent(URL_LIVE_QVC_DE_UK_US % '.com')
+            live_json = re.compile(
+                r'oLiveStreams=(.*?)}},').findall(live_html)[0] + '}}'
+            live_jsonparser = json.loads(live_json)
+            return 'http:' + live_jsonparser["QVC"]["url"]

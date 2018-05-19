@@ -154,7 +154,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - DW *(Live TV)* *(Contents {EN|AR|DE|ES})*
 - Bein Sports *(Replay)* *(Contents {AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY})*
 - Souvenirs From Earth *(Live TV)*
-- QVC *(Live TV)* *(Contents {FR|JP})*
+- QVC *(Live TV)* *(Contents {FR|JP|DE|IT|UK|US})*
 - ICI RDI *(Live TV)*
 - CGTN *(Live TV)* *(Contents {FR|EN|AR|ES|RU})*
 - CGTN Documentary *(Live TV)*
