@@ -170,7 +170,7 @@ def get_live_item(params):
     url_live = ''
 
     live_html = utils.get_webcontent(URL_LIVE)
-    url_live = re.compile(
+    url_live = 'http:' + re.compile(
         r'm3U8Url:"(.*?)"').findall(live_html)[0]
 
     info = {
