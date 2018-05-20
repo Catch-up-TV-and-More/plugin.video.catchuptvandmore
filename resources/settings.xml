@@ -420,11 +420,14 @@
             <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
             <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-125,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="63"/>
+            <!--<setting label="Culturebox (francetv)" type="bool" id="culturebox" default="true" visible="eq(-125,true)"/>
+            <setting label="" type="number" visible="false" id="culturebox.order" default="63"/>-->
 
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-127,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="64"/>-->
+            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-127,true)"/>
+            <setting label="" type="number" visible="false" id="teva.order" default="64"/>
+
+            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-129,true)"/>
+            <setting label="" type="number" visible="false" id="parispremiere.order" default="65"/>-->
         <!-- France -->
 
 
@@ -461,6 +464,9 @@
 
             <setting label="読売テレビ" type="bool" id="ytv" default="true" visible="eq(-19,true)"/>
             <setting label="" type="number" visible="false" id="ytv.order" default="10"/>
+
+            <setting label="日テレ News24" type="bool" id="ntvnews24" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="ntvnews24.order" default="11"/>
 
             <!--<setting label="フジテレビ" type="bool" id="cx" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="cx.order" default="8"/>-->

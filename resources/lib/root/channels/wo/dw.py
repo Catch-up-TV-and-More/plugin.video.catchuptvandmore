@@ -28,11 +28,6 @@ from resources.lib import common
 # Replay add emissions
 # Add info LIVE TV
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 URL_ROOT = 'http://www.dw.com'
 
 

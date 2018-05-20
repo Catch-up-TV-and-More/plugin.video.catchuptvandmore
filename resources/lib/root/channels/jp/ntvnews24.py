@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2018  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -20,16 +20,38 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import json
+import re
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# Replay add emissions
-# Add info LIVE TV
+# Add Videos, Replays ?
 
-URL_LIVE_API = 'http://%s.euronews.com/api/watchlive.json'
-# Language
+URL_ROOT = 'http://www.news24.jp'
+
+URL_LIVE = URL_ROOT + '/livestream/'
+
+
+def channel_entry(params):
+    """Entry function of the module"""
+    if 'list_shows' in params.next:
+        return list_shows(params)
+    elif 'list_videos' in params.next:
+        return list_videos(params)
+    elif 'play' in params.next:
+        return get_video_url(params)
+    return None
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_shows(params):
+    return None
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_videos(params):
+    return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -39,35 +61,6 @@ def get_live_item(params):
     duration = 0
     img = ''
     url_live = ''
-
-    desired_language = common.PLUGIN.get_setting(
-        params.channel_name + '.language')
-
-    if desired_language == 'EN':
-        url_live_json = URL_LIVE_API % 'www'
-    elif desired_language == 'AR':
-        url_live_json = URL_LIVE_API % 'arabic'
-    else:
-        url_live_json = URL_LIVE_API % desired_language.lower()
-
-    file_path = utils.download_catalog(
-        url_live_json,
-        '%s_%s_live.json' % (
-            params.channel_name, desired_language.lower())
-    )
-    json_live = open(file_path).read()
-    json_parser = json.loads(json_live)
-    url_2nd_json = json_parser["url"]
-
-    file_path_2 = utils.download_catalog(
-        url_2nd_json,
-        '%s_%s_live_2.json' % (
-            params.channel_name, desired_language.lower())
-    )
-    json_live_2 = open(file_path_2).read()
-    json_parser_2 = json.loads(json_live_2)
-
-    url_live = json_parser_2["primary"]
 
     info = {
         'video': {
@@ -97,4 +90,15 @@ def get_live_item(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url
+        file_path = utils.get_webcontent(
+            URL_LIVE)
+        data_account = re.compile(
+            r'data-account="(.*?)"').findall(file_path)[0]
+        data_player = re.compile(
+            r'data-player="(.*?)"').findall(file_path)[0]
+        data_video_id = re.compile(
+            r'data-video-id="(.*?)"').findall(file_path)[0]
+        return resolver.get_brightcove_video_json(
+            data_account,
+            data_player,
+            data_video_id)

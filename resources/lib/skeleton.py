@@ -135,6 +135,10 @@ SKELETON = {
                 ('energy', 'none'),
                 ('divinity', 'none'),
                 ('bemad', 'none')
+            ],
+
+            ('jp', 'build_live_tv_menu'): [
+                ('ntvnews24', 'none')
             ]
         },
 
@@ -223,7 +227,8 @@ SKELETON = {
                 ('fun_radio', 'replay_entry'),
                 ('slash', 'replay_entry'),
                 ('polar-plus', 'replay_entry'),
-                ('france3regions', 'replay_entry')
+                ('france3regions', 'replay_entry'),
+                # ('culturebox', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -448,7 +453,9 @@ CHANNELS = {
     'tbd': 'tbd',
     'nycmedia': 'nycmedia',
     'cgtn': 'cgtn',
-    'cgtndocumentary': 'cgtn'
+    'cgtndocumentary': 'cgtn',
+    # 'culturebox': 'culturebox',
+    'ntvnews24': 'ntvnews24'
 }
 
 '''
@@ -568,6 +575,7 @@ LABELS = {
     'slash': 'France tv slash',
     'polar-plus': 'Polar+',
     'virginradiotv': 'Virgin Radio TV',
+    # 'culturebox': 'Culturebox (francetv)',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -581,6 +589,7 @@ LABELS = {
     'mbs': 'MBSテレビ',
     'abc': '朝日放送株式会社',
     'ytv': '読売テレビ',
+    'ntvnews24': '日テレ News24',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',
