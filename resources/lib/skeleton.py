@@ -228,7 +228,7 @@ SKELETON = {
                 ('slash', 'replay_entry'),
                 ('polar-plus', 'replay_entry'),
                 ('france3regions', 'replay_entry'),
-                # ('culturebox', 'replay_entry')
+                ('culturebox', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -454,7 +454,7 @@ CHANNELS = {
     'nycmedia': 'nycmedia',
     'cgtn': 'cgtn',
     'cgtndocumentary': 'cgtn',
-    # 'culturebox': 'culturebox',
+    'culturebox': 'culturebox',
     'ntvnews24': 'ntvnews24'
 }
 
@@ -575,7 +575,7 @@ LABELS = {
     'slash': 'France tv slash',
     'polar-plus': 'Polar+',
     'virginradiotv': 'Virgin Radio TV',
-    # 'culturebox': 'Culturebox (francetv)',
+    'culturebox': 'Culturebox (francetv)',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
