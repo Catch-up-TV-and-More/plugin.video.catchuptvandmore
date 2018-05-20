@@ -122,7 +122,7 @@ def root(params):
         list_categories_html = utils.get_webcontent(URL_NHK_LIFESTYLE)
         list_categories_soup = bs(list_categories_html, 'html.parser')
         list_categories = list_categories_soup.find_all(
-            'a', class_="header__menu__head")
+            'a', class_=re.compile("text-color-"))
 
         for category in list_categories:
             if '#' not in category.get('href'):
@@ -339,7 +339,10 @@ def list_videos(params):
             if 'video' in video["href"]:
                 title = video["title"]
                 plot = video["desc"]
-                img = URL_ROOT_2 + video["image_src"]
+                if 'www.nhk.or.jp' in video["image_src"]:
+                    img = 'http:' + video["image_src"]
+                else:
+                    img = URL_ROOT_2 + video["image_src"]
                 duration = 60 * int(video["videoInfo"]["duration"].split(':')[0]) + \
                     int(video["videoInfo"]["duration"].split(':')[1])
                 video_url = URL_NHK_LIFESTYLE + \
@@ -432,7 +435,10 @@ def get_video_url(params):
         return json_parser["mediaResource"]["url"]
     elif params.next == 'play_lifestyle_r':
         video_id_html = utils.get_webcontent(params.video_url)
-        video_id = re.compile('player.php\?v=(.*?)&').findall(video_id_html)[0]
+        if re.compile('player.php\?v=(.*?)&').findall(video_id_html):
+            video_id = re.compile('player.php\?v=(.*?)&').findall(video_id_html)[0]
+        else:
+            video_id = re.compile('movie-s.nhk.or.jp/v/(.*?)\?').findall(video_id_html)[0]
         api_key_html = utils.get_webcontent(URL_API_KEY_LIFE_STYLE % video_id)
         api_key = re.compile(
             'data-de-api-key="(.*?)"').findall(api_key_html)[0]
