@@ -115,7 +115,8 @@ SKELETON = {
                 ('qvc', 'none'),
                 ('icirdi', 'none'),
                 ('cgtn', 'none'),
-                ('cgtndocumentary', 'none')
+                ('cgtndocumentary', 'none'),
+                ('paramountchannel', 'none')
             ],
 
             ('us', 'build_live_tv_menu'): [
@@ -276,7 +277,8 @@ SKELETON = {
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
-                ('beinsports', 'replay_entry')
+                ('beinsports', 'replay_entry'),
+                # ('paramountchannel', 'replay_entry')
             ],
 
             ('us', 'generic_menu'): [
@@ -455,7 +457,8 @@ CHANNELS = {
     'cgtn': 'cgtn',
     'cgtndocumentary': 'cgtn',
     'culturebox': 'culturebox',
-    'ntvnews24': 'ntvnews24'
+    'ntvnews24': 'ntvnews24',
+    'paramountchannel': 'paramountchannel'
 }
 
 '''
@@ -621,6 +624,7 @@ LABELS = {
     'icirdi': 'ICI RDI',
     'cgtn': 'CGTN (' + common.PLUGIN.get_setting('cgtn.language') + ')',
     'cgtndocumentary': 'CGTN Documentary',
+    'paramountchannel': 'Paramount Channel (' + common.PLUGIN.get_setting('paramountchannel.language') + ')',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',

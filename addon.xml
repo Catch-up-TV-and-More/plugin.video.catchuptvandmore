@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.13~beta003"
+       version="0.1.13~beta004"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -41,6 +41,7 @@
 [Fix] NHKらいふ - Replay (wwark)
 [Add Live TV] 日テレ News24 (JP) (wwark)
 [Add WebTV] Culturebox (francetv) (wwark)
+[Add Live TV] Paramount Channel *(Contents {ES|IT})* (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

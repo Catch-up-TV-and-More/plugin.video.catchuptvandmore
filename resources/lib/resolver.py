@@ -53,6 +53,10 @@ URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/'\
                             'playback/v1/accounts/%s/videos/%s'
 # AccountId, VideoId
 
+URL_MTVNSERVICES_STREAM = 'https://media-utils.mtvnservices.com/services/' \
+                          'MediaGenerator/%s?&format=json&acceptMethods=hls'
+# videoURI
+
 # DailyMotion Part
 def get_stream_dailymotion(video_id, isDownloadVideo):
 
@@ -280,3 +284,9 @@ def get_brightcove_video_json(data_account, data_player, data_video_id):
                 common.ADDON.get_localized_string(30713))
             return None
     return video_url
+
+def get_mtvnservices_stream(video_uri):
+    json_video_stream = utils.get_webcontent(
+        URL_MTVNSERVICES_STREAM % video_uri)
+    json_video_stream_parser = json.loads(json_video_stream)
+    return json_video_stream_parser["package"]["video"]["item"][0]["rendition"][0]["src"]

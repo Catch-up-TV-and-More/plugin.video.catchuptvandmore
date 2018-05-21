@@ -183,6 +183,9 @@
 
             <setting label="CGTN Documentary" type="bool" id="cgtndocumentary" default="true" visible="eq(-35,true)"/>
             <setting label="" type="number" visible="false" id="cgtndocumentary.order" default="18"/>
+
+            <setting label="Paramount Channel" type="bool" id="paramountchannel" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="paramountchannel.order" default="19"/>
         <!-- International -->
 
 
@@ -621,6 +624,7 @@
                 <setting label="30161" type="labelenum" id="qvc.language" visible="eq(-7,true)" values="FR|JP|DE|IT|UK|US" default="FR"/>
                 <setting label="30162" type="labelenum" id="nhkworld.country" visible="eq(-8,true)" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" visible="eq(-9,true)" values="FR|EN|AR|ES|RU" default="FR"/>
+                <setting label="30164" type="labelenum" id="paramountchannel.language" visible="eq(-10,true)" values="ES|IT" default="ES"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>

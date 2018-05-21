@@ -25,6 +25,7 @@ import json
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
@@ -36,11 +37,6 @@ URL_ROOT = 'http://www.gameone.net'
 
 URL_VIDEOS = URL_ROOT + '/dernieres-videos/%s'
 # PageId
-
-URL_STREAM = 'https://media-utils.mtvnservices.com/services/' \
-             'MediaGenerator/mgid:arc:video:gameone.net:%s?' \
-             '&format=json&acceptMethods=hls'
-# videoID
 
 
 def channel_entry(params):
@@ -182,9 +178,6 @@ def get_video_url(params):
         true_url = utils.get_redirected_url(
             params.video_url)
         video_html = utils.get_webcontent(true_url)
-        video_id = re.compile(
-            r'item_longId" \: "(.*?)"').findall(video_html)[0]
-        json_video_stream = utils.get_webcontent(
-            URL_STREAM % video_id)
-        json_video_stream_parser = json.loads(json_video_stream)
-        return json_video_stream_parser["package"]["video"]["item"][0]["rendition"][0]["src"]
+        video_uri = re.compile(
+            r'data-mtv-uri="(.*?)"').findall(video_html)[0]
+        return resolver.get_mtvnservices_stream(video_uri)

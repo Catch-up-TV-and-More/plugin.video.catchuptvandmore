@@ -231,6 +231,10 @@ msgctxt "#30163"
 msgid "CGTN: Choose Channel"
 msgstr "CGTN : בחר ערוץ"
 
+msgctxt "#30164"
+msgid "Paramount Channel: Choose Channel"
+msgstr "Paramount Channel : בחר ערוץ"
+
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"
