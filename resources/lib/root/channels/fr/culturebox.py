@@ -30,13 +30,10 @@ from resources.lib import common
 
 '''
 Channels:
-    * France TV Education
+    * France TV CultureBox
 '''
 
 URL_ROOT = 'https://culturebox.francetvinfo.fr'
-
-URL_VIDEO_DATA = URL_ROOT + '/video/%s/sisters'
-# TitleVideo
 
 URL_VIDEOS = URL_ROOT + '/videos/'
 
