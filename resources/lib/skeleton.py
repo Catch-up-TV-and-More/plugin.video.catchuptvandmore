@@ -263,7 +263,8 @@ SKELETON = {
                 ('yesterday', 'replay_entry'),
                 ('drama', 'replay_entry'),
                 ('skynews', 'replay_entry'),
-                ('skysports', 'replay_entry')
+                ('skysports', 'replay_entry'),
+                ('questtv', 'replay_entry')
             ],
 
             ('wo', 'generic_menu'): [
@@ -458,7 +459,8 @@ CHANNELS = {
     'cgtndocumentary': 'cgtn',
     'culturebox': 'culturebox',
     'ntvnews24': 'ntvnews24',
-    'paramountchannel': 'paramountchannel'
+    'paramountchannel': 'paramountchannel',
+    'questtv': 'questtv'
 }
 
 '''
@@ -604,6 +606,7 @@ LABELS = {
     'skysports': 'Sky Sports',
     'stv': 'STV',
     'stv2': 'STV 2',
+    'questtv': 'Quest TV',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',

@@ -123,6 +123,9 @@
 
             <setting label="STV 2" type="bool" id="stv2" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="stv2.order" default="9"/>
+
+            <setting label="Quest TV" type="bool" id="questtv" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="questtv.order" default="10"/>
         <!-- United Kingdom -->
 
 
