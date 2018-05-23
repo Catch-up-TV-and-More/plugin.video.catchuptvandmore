@@ -34,7 +34,7 @@ from resources.lib import common
 # Add More Buttons for replay Sky News
 # Some video Sky sports required account (add account)
 
-YT_ID_LIVE_SKYNEWS = 'XOacA3RYrXk'
+URL_LIVE_SKYNEWS = 'https://news.sky.com/watch-live'
 
 URL_IMG_YOUTUBE = 'https://i.ytimg.com/vi/%s/hqdefault.jpg'
 # video_id
@@ -381,7 +381,15 @@ def get_live_item(params):
     img = ''
     video_id = ''
 
-    video_id = YT_ID_LIVE_SKYNEWS
+    # Get URL Live
+    file_path = utils.download_catalog(
+        URL_LIVE_SKYNEWS,
+        '%s_live.html' % params.channel_name,
+    )
+    live_html = open(file_path).read()
+
+    video_id = re.compile(
+        r'www.youtube.com/embed/(.*?)\?').findall(live_html)[0]
 
     img = URL_IMG_YOUTUBE % video_id
 

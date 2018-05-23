@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.13~beta004"
+       version="0.1.13~beta005"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -33,7 +33,6 @@
 [Version 0.1.13]
 [Add Live TV] CGTN *(Contents {FR|EN|AR|ES|RU})* (wwark)
 [Add Live TV] CGTN Documentary (wwark)
-[Fix] SKY News (UK) - Live TV (wwark)
 [Fix] CBS News (US) - Live TV (wwark)
 [Fix] Télé Quebec (CA) - Live TV (wwark)
 [Add Live TV] QVC *(Contents {JP|DE|IT|UK|US})* (wwark)
