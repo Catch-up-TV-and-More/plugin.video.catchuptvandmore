@@ -38,7 +38,7 @@ URL_ROOT = 'http://www.ina.fr'
 URL_PROGRAMS = URL_ROOT + '/blocs/rubrique_sommaire/196?order=asc&page=%s&nbResults=48&mode=%s&range=Toutes'
 # Page, Mode
 
-URL_VIDEOS = URL_ROOT + '/layout/set/ajax/recherche/result?q=%s&autopromote=&s=date_diffusion&sa=0&b=%s&type=Video&r=&hf=48&c=ina_emission'
+URL_VIDEOS = URL_ROOT + '/layout/set/ajax/recherche/result?q=\"%s\"&autopromote=0&typeBlock=ina_resultat_exalead&s=date_diffusion&sa=0&b=%s&type=Video&r=&hf=48&c=ina_emission'
 # Name Program, Nb Video (+ 48)
 
 URL_STREAM = 'https://player.ina.fr/notices/%s'
