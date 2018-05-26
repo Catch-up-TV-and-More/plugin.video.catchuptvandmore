@@ -38,7 +38,7 @@ URL_ROOT = 'http://www.ina.fr'
 URL_PROGRAMS = URL_ROOT + '/blocs/rubrique_sommaire/196?order=asc&page=%s&nbResults=48&mode=%s&range=Toutes'
 # Page, Mode
 
-URL_VIDEOS = URL_ROOT + '/layout/set/ajax/recherche/result?q=\"%s\"&autopromote=0&typeBlock=ina_resultat_exalead&s=date_diffusion&sa=0&b=%s&type=Video&r=&hf=48&c=ina_emission'
+URL_VIDEOS = URL_ROOT + '/layout/set/ajax/recherche/result?q=%s&autopromote=0&typeBlock=ina_resultat_exalead&s=date_diffusion&sa=0&b=%s&type=Video&r=&hf=48&c=ina_emission'
 # Name Program, Nb Video (+ 48)
 
 URL_STREAM = 'https://player.ina.fr/notices/%s'
@@ -110,6 +110,7 @@ def list_shows(params):
 
             program_title = program_datas.find('img').get('alt').encode('utf-8')
             program_image = URL_ROOT + program_datas.find('img').get('src')
+            program_url = URL_ROOT + program_datas.find('a').get('href')
 
             shows.append({
                 'label': program_title,
@@ -120,7 +121,7 @@ def list_shows(params):
                     action='website_entry',
                     next='list_videos_1',
                     nb_videos='0',
-                    program_title=program_title,
+                    program_url=program_url,
                     title=program_title,
                     window_title=program_title
                 )
@@ -160,8 +161,11 @@ def list_videos(params):
 
     if params.next == 'list_videos_1':
 
+        replay_episodes_html = utils.get_webcontent(params.program_url)
+        program_title = re.compile(
+            r'&q=(.*?)&auto').findall(replay_episodes_html)[0]
         replay_episodes_json = utils.get_webcontent(
-            URL_VIDEOS % (params.program_title, params.nb_videos))
+            URL_VIDEOS % (program_title, params.nb_videos))
         list_episodes_jsonparser = json.loads(replay_episodes_json)
         list_episodes_soup = bs(list_episodes_jsonparser["content"], 'html.parser')
         list_episodes = list_episodes_soup.find_all(
@@ -250,7 +254,7 @@ def list_videos(params):
                 module_name=params.module_name,
                 action='website_entry',
                 next='list_videos_1',
-                program_title=params.program_title,
+                program_url=params.program_url,
                 nb_videos=str(int(params.nb_videos) + 48),
                 update_listing=True,
                 previous_listing=str(videos)
