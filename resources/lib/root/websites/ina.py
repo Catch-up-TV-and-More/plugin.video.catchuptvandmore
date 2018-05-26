@@ -178,16 +178,40 @@ def list_videos(params):
             video_id = episode.find('a').get('href').split('/')[2]
             video_img = episode.find(
                 'img').get('src')
+            video_duration_text_datas = episode.find('span', class_='duration').get_text().split(' ')
             video_duration = 0
+            for video_duration_datas in video_duration_text_datas:
+                if 's' in video_duration_datas:
+                    video_duration_datas = video_duration_datas.replace('s', '')
+                    video_duration = video_duration + int(video_duration_datas)
+                elif 'm' in video_duration_datas:
+                    video_duration_datas = video_duration_datas.replace('m', '')
+                    video_duration = video_duration + (int(video_duration_datas) * 60)
+                elif 'h' in video_duration_datas:
+                    video_duration_datas = video_duration_datas.replace('h', '')
+                    video_duration = video_duration + (int(video_duration_datas) * 3600)
+
+            
+            if episode.find('span', class_='broadcast'):
+                video_date = episode.find('span', class_='broadcast').get_text().split('/')
+                day = video_date[0]
+                mounth = video_date[1]
+                year = video_date[2]
+            else:
+                day = '00'
+                mounth = '00'
+                year = '0000'
+            date = '.'.join((day, mounth, year))
+            aired = '-'.join((year, mounth, day))
 
             info = {
                 'video': {
                     'title': video_title,
-                    # 'aired': aired,
-                    # 'date': date,
+                    'aired': aired,
+                    'date': date,
                     'duration': video_duration,
                     # 'plot': video_plot,
-                    # 'year': year,
+                    'year': year,
                     'mediatype': 'tvshow'
                 }
             }
