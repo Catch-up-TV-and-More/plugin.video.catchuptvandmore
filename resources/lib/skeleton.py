@@ -298,7 +298,8 @@ SKELETON = {
             ('30millionsdamis', 'website_entry'),
             ('elle', 'website_entry'),
             ('nytimes', 'website_entry'),
-            ('fosdem', 'website_entry')
+            ('fosdem', 'website_entry'),
+            ('ina', 'website_entry')
         ]
 
     }
@@ -657,5 +658,6 @@ LABELS = {
     '30millionsdamis': '30 Millions d\'Amis',
     'elle': 'Elle',
     'nytimes': 'New York Times',
-    'fosdem': 'Fosdem'
+    'fosdem': 'Fosdem',
+    'ina': 'Ina'
 }

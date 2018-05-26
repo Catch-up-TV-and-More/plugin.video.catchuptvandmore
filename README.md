@@ -219,6 +219,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Auto Plus <https://video.autoplus.fr>
 - 30 Millions d'Amis <http://www.30millionsdamis.fr>
 - Elle <http://videos.elle.fr>
+- Ina <http://www.ina.fr/>
 
 ### Suisse — *Switzerland*
 ##### Communauté française — *French Community*
