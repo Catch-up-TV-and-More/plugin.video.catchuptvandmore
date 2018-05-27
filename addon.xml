@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.13~beta006"
+       version="0.1.13~beta007"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -43,6 +43,7 @@
 [Add Live TV] Paramount Channel *(Contents {ES|IT})* (wwark)
 [Add Channel] Quest TV (UK) (wwark)
 [Add Website] Ina (wwark)
+[Fix] FranceTV Sport - Live TV (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
