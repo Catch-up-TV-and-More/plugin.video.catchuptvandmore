@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.13~beta008"
+       version="0.1.13~beta009"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -45,6 +45,7 @@
 [Add Website] Ina (wwark)
 [Fix] FranceTV Sport - Live TV (wwark)
 [Update] RTBF Auvio - Change flux DRM to playable (darodi)
+[Add Content/Fix] Arte - Replay *(Contents {IT})* - change API (more work todo) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

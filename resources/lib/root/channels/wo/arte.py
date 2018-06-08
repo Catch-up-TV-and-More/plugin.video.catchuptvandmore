@@ -40,7 +40,7 @@ URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v1/livestream/%s'
 # Langue, ...
 
-URL_VIDEOS = 'https://www.arte.tv/guide/api/api/zones/%s/web/%s/?page=%s&limit=10'
+URL_VIDEOS = 'http://www.arte.tv/hbbtvv2/services/web/index.php/OPA/v3/videos/subcategory/%s/page/%s/limit/100/%s'
 # language, VideosCode, Page
 
 DESIRED_LANGUAGE = common.PLUGIN.get_setting(
@@ -109,7 +109,7 @@ def list_shows(params):
                 sub_category_name = category['title']
                 sub_category_type = category['type']
                 next_value = 'list_videos_1'
-                datas = 'videos_subcategory_' + category['link']['page']
+                datas = category['link']['page']
             if category['type'] == 'playlist':
                 sub_category_name = category['title']
                 sub_category_type = category['type']
@@ -195,21 +195,19 @@ def list_videos(params):
 
     if params.next == 'list_videos_1':
         file_replay = utils.get_webcontent(
-            URL_VIDEOS % (DESIRED_LANGUAGE.lower(), params.datas, params.page))
+            URL_VIDEOS % (params.datas, params.page, DESIRED_LANGUAGE.lower()))
         json_parser = json.loads(file_replay)
 
-        for video_datas in json_parser['data']:
+        for video_datas in json_parser['videos']:
             
             if video_datas['subtitle'] is not None:
                 title = video_datas['title'] + ' - ' + video_datas['subtitle']
             else:
                 title = video_datas['title']
             video_id = video_datas['programId']
-            img = ''
-            for images in video_datas['images']['landscape']['resolutions']:
-                img = images['url']
-            duration = video_datas["duration"]
-            plot = video_datas["description"]
+            img = video_datas['imageUrl']
+            duration = video_datas["durationSeconds"]
+            plot = video_datas["shortDescription"]
             info = {
                 'video': {
                     'title': title,
@@ -245,7 +243,7 @@ def list_videos(params):
                 'context_menu': context_menu
             })
 
-        if json_parser['nextPage'] is not None:
+        if json_parser['meta']['totalCount'] > int(params.page):
             # More videos...
             videos.append({
                 'label': common.ADDON.get_localized_string(30700),

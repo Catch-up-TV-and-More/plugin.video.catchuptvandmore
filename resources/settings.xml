@@ -621,7 +621,7 @@
             <setting label="30085" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="" type="bool" id="wo" default="true" visible="false"/>
 
-                <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE|EN|ES|PL" default="FR"/>
+                <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE|EN|ES|PL|IT" default="FR"/>
                 <setting label="30155" type="labelenum" id="euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU" default="FR"/>
                 <setting label="30154" type="labelenum" id="france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES" default="FR"/>
                 <setting label="30156" type="labelenum" id="mtv.language" visible="eq(-4,true)" values="FR" default="FR"/>
