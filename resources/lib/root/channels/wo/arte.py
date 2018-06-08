@@ -41,7 +41,10 @@ URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v1/livestream/%s'
 # Langue, ...
 
 URL_VIDEOS = 'http://www.arte.tv/hbbtvv2/services/web/index.php/OPA/v3/videos/subcategory/%s/page/%s/limit/100/%s'
-# language, VideosCode, Page
+# VideosCode, Page, language
+
+URL_VIDEOS_2 = 'http://www.arte.tv/hbbtvv2/services/web/index.php/OPA/v3/videos/collection/%s/%s/%s'
+# VideosCode, Page, language
 
 DESIRED_LANGUAGE = common.PLUGIN.get_setting(
     'arte.language')
@@ -136,6 +139,7 @@ def list_shows(params):
                         next=next_value,
                         sub_category_name=sub_category_name,
                         datas=datas,
+                        type=category['type'],
                         sub_category_type=sub_category_type,
                         page='1',
                         window_title=sub_category_name
@@ -157,7 +161,7 @@ def list_shows(params):
             if category['type'] == params.sub_category_type:
                 for program_datas in category['data']:
                     program_title = program_datas['title'].encode('utf-8')
-                    datas = 'listing_' + program_datas['programId']
+                    datas = program_datas['programId']
                     program_img = ''
                     for images in program_datas['images']['landscape']['resolutions']:
                         program_img = images['url']
@@ -171,6 +175,7 @@ def list_shows(params):
                             action='replay_entry',
                             next='list_videos_1',
                             datas=datas,
+                            type=params.type,
                             page='1',
                             window_title=program_title
                         )
@@ -194,8 +199,13 @@ def list_videos(params):
         videos = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_videos_1':
-        file_replay = utils.get_webcontent(
-            URL_VIDEOS % (params.datas, params.page, DESIRED_LANGUAGE.lower()))
+        
+        if params.type == 'category':
+            file_replay = utils.get_webcontent(
+                URL_VIDEOS % (params.datas, params.page, DESIRED_LANGUAGE.lower()))
+        else:
+            file_replay = utils.get_webcontent(
+                URL_VIDEOS_2 % (params.type.upper(), params.datas, DESIRED_LANGUAGE.lower()))
         json_parser = json.loads(file_replay)
 
         for video_datas in json_parser['videos']:
@@ -243,7 +253,7 @@ def list_videos(params):
                 'context_menu': context_menu
             })
 
-        if json_parser['meta']['totalCount'] > int(params.page):
+        if int(json_parser['meta']['totalCount']) > int(params.page):
             # More videos...
             videos.append({
                 'label': common.ADDON.get_localized_string(30700),
