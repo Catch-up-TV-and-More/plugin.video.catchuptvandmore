@@ -62,52 +62,14 @@ def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
-        
-        category_name = 'Emissions'
-
-        shows.append({
-            'label': category_name,
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_shows_2',
-                category_name=category_name,
-                window_title=category_name
-            )
-        })
-
         file_replay = utils.get_webcontent(
             URL_EMISSION)
         file_replay = re.compile(
             r'/\*bns\*/ (.*?) /\*bne\*/').findall(file_replay)[0]
         json_parser = json.loads(file_replay)
 
-        category_name = 'Emissions - ' + json_parser["teleShowsList"]["pageModel"]["data"]["regionName"]
-
-        shows.append({
-            'label': category_name,
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_shows_2',
-                category_name=category_name,
-                window_title=category_name
-            )
-        })
-    
-    elif params.next == 'list_shows_2':
-        file_replay = utils.get_webcontent(
-            URL_EMISSION)
-        file_replay = re.compile(
-            r'/\*bns\*/ (.*?) /\*bne\*/').findall(file_replay)[0]
-        json_parser = json.loads(file_replay)
-
-        if params.category_name == 'Emissions':
-            list_emissions = json_parser["teleShowsList"]["pageModel"]["data"]["listeEmissions"]
-        else:
-            list_emissions = json_parser["teleShowsList"]["pageModel"]["data"]["listeEmissionsRegionaliser"]
+        list_emissions = json_parser["teleShowsList"]["pageModel"]["data"]["programmes"]
+        list_emissions_regions = json_parser["teleShowsList"]["pageModel"]["data"]["programmesForRegion"]
         
         for emission in list_emissions:
             
@@ -115,9 +77,34 @@ def list_shows(params):
                 emission_name = emission["title"]
                 if 'telejournal-22h' in emission["link"] or \
                 'telejournal-18h' in emission["link"]:
-                    emission_url = URL_ROOT + emission["link"] + '/2016-2017/episodes'
+                    emission_url = emission["link"] + '/2016-2017/episodes'
                 else: 
-                    emission_url = URL_ROOT + emission["link"] + '/site/episodes'
+                    emission_url = emission["link"] + '/site/episodes'
+                emission_image = emission["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
+
+                shows.append({
+                    'label': emission_name,
+                    'thumb': emission_image,
+                    'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        action='replay_entry',
+                        next='list_videos_1',
+                        emission_url=emission_url,
+                        emission_name=emission_name,
+                        window_title=emission_name
+                    )
+                })
+        
+        for emission in list_emissions_regions:
+            
+            if '/tele/' in emission["link"]:
+                emission_name = emission["title"]
+                if 'telejournal-22h' in emission["link"] or \
+                'telejournal-18h' in emission["link"]:
+                    emission_url = emission["link"] + '/2016-2017/episodes'
+                else: 
+                    emission_url = emission["link"] + '/site/episodes'
                 emission_image = emission["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
 
                 shows.append({
