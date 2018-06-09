@@ -28,7 +28,7 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-
+# Find a way to get APIKey ?
 
 URL_JSON_LIVES = 'https://services.vrt.be/videoplayer/r/live.json'
 # All lives in this JSON
@@ -69,8 +69,9 @@ def channel_entry(params):
 def get_api_key():
     api_key_html = utils.get_webcontent(
         URL_ROOT + '/vrtnu/')
-    return re.compile(
-        'apiKey=(.*?)\&').findall(api_key_html)[0]
+    #return re.compile(
+    #    'apiKey=(.*?)\&').findall(api_key_html)[0]
+    return '3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG'
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -254,11 +255,8 @@ def list_videos(params):
                     'span', class_='content__shortdescription').get_text(
                     ).strip()
                 duration = 0
-                video_url_json = episode.find(
-                    'div', class_='vrtvideo videoplayer').get(
-                    'data-analytics')
-                video_url_jsonparser = json.loads(video_url_json)
-                video_url = 'https:' + video_url_jsonparser['playlist']
+                video_url = re.compile(
+                    r'page_url":"(.*?)"').findall(file_path)[0]
                 img = 'https:' + episode.find(
                     'img').get('srcset').strip()
 
