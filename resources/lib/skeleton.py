@@ -135,7 +135,8 @@ SKELETON = {
                 ('boing', 'none'),
                 ('energy', 'none'),
                 ('divinity', 'none'),
-                ('bemad', 'none')
+                ('bemad', 'none'),
+                ('realmadridtv', 'none')
             ],
 
             ('jp', 'build_live_tv_menu'): [
@@ -461,7 +462,8 @@ CHANNELS = {
     'culturebox': 'culturebox',
     'ntvnews24': 'ntvnews24',
     'paramountchannel': 'paramountchannel',
-    'questtv': 'questtv'
+    'questtv': 'questtv',
+    'realmadridtv': 'realmadridtv'
 }
 
 '''
@@ -646,6 +648,7 @@ LABELS = {
     'energy': 'Energy TV',
     'divinity': 'Divinity',
     'bemad': 'Be Mad',
+    'realmadridtv': 'Realmadrid TV (' + common.PLUGIN.get_setting('realmadridtv.language') + ')',
 
     # Websites
     'allocine': 'Allociné',

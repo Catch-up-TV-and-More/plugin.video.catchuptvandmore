@@ -65,6 +65,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Energy TV *(Live TV)*
 - Divinity *(Live TV)*
 - Be Mad *(Live TV)*
+- Realmadrid TV *(Live TV)* *(Contents {ES|EN})*
 
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV

@@ -549,6 +549,9 @@
 
             <setting label="Be Mad" type="bool" id="bemad" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="bemad.order" default="7"/>
+
+            <setting label="Realmadrid TV" type="bool" id="realmadridtv" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="realmadridtv.order" default="8"/>
         <!-- Spain -->
 
     </category>
@@ -638,6 +641,12 @@
                 
                 <setting label="30158" type="labelenum" id="france3.region" visible="eq(-1,true)" values="Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes" default="Alpes"/>
                 <setting label="30159" type="labelenum" id="la_1ere.region" visible="eq(-2,true)" values="Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer" default="Guadeloupe"/>
+
+            <!-- Spain channels -->
+            <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
+            <setting label="" type="bool" id="es" default="true" visible="false"/>
+                
+                <setting label="30165" type="labelenum" id="realmadridtv.language" visible="eq(-1,true)" values="ES|EN" default="ES"/>
 
     </category>
     <!-- Quality and Content -->

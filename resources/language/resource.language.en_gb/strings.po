@@ -235,6 +235,10 @@ msgctxt "#30164"
 msgid "Paramount Channel: Choose Channel"
 msgstr ""
 
+msgctxt "#30165"
+msgid "Realmadrid TV: Choose Channel"
+msgstr ""
+
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"
