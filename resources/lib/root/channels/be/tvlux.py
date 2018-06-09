@@ -242,7 +242,7 @@ def get_video_url(params):
     if params.next == 'play_r' or params.next == 'download_video':
         video_html = utils.get_webcontent(params.video_url)
         streams_url = re.compile(
-            r'file: "(.*?)"').findall(video_html)
+            r'source src="(.*?)"').findall(video_html)
         stream_url = ''
         for stream in streams_url:
             if 'm3u8' in stream or \
