@@ -43,15 +43,45 @@ LIVES_TOWN = {
 def get_live_item(params):
     lives = []
 
-    title = ''
+    title = params.channel_label
     plot = ''
     duration = 0
     img = ''
     url_live = ''
 
-    for town_name, live_id in LIVES_TOWN.iteritems():
+    info = {
+        'video': {
+            'title': params.channel_label,
+            'plot': plot,
+            'duration': duration
+        }
+    }
 
-        title = 'YES TV : ' + town_name + ' Live TV'
+    return {
+        'label': title,
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
+            action='start_live_tv_stream',
+            next='play_l',
+            url=url_live,
+        ),
+        'is_playable': True,
+        'info': info
+    }
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def get_video_url(params):
+    """Get video URL and start video player"""
+    if params.next == 'play_l':
+        desired_region = common.PLUGIN.get_setting(
+            params.channel_name + '.region')
+        
+        live_id = LIVES_TOWN[desired_region]
+
         live_html = utils.get_webcontent(
             URL_LIVE % live_id)
         url_live_2 = re.compile(
@@ -62,36 +92,6 @@ def get_live_item(params):
             'sources\:(.*?)\]\,').findall(live_html_2)[0]
         live_jsonpaser = json.loads(live_json + ']')
 
-        url_live = 'http:' + live_jsonpaser[0]["file"]
+        url_live = 'http:' + live_jsonpaser[0]["file"]    
 
-        info = {
-            'video': {
-                'title': title,
-                'plot': plot,
-                'duration': duration
-            }
-        }
-
-        lives.append({
-            'label': title,
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                url=url_live,
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-    return lives
-
-
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_video_url(params):
-    """Get video URL and start video player"""
-    if params.next == 'play_l':
-        return params.url
+        return url_live

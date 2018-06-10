@@ -506,7 +506,7 @@ LABELS = {
     # Canadian channels / live TV
     'tv5': 'TV5',
     'unis': 'UNIS',
-    'yestv': 'YES TV',
+    'yestv': 'YES TV (' + common.PLUGIN.get_setting('yestv.region') + ')',
     'telequebec': 'Télé-Québec',
     'tva': 'TVA',
     'icitele': 'ICI Télé',

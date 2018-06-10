@@ -239,6 +239,10 @@ msgctxt "#30165"
 msgid "Realmadrid TV: Choose Channel"
 msgstr "Realmadrid TV : בחר ערוץ"
 
+msgctxt "#30166"
+msgid "Yes TV: Choose region"
+msgstr ""
+
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"
