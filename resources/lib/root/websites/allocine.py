@@ -39,9 +39,10 @@ URL_ROOT = 'http://www.allocine.fr'
 URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
                 'media?code=%s&partner=%s&format=json'
 # videoId, PARTENER
-
 PARTNER = 'YW5kcm9pZC12Mg'
 
+URL_SEARCH_VIDEOS = URL_ROOT + '/recherche/18/?p=%s&q=%s'
+# Page, Query
 
 def website_entry(params):
     """Entry function of the module"""
@@ -53,6 +54,8 @@ def website_entry(params):
         return list_videos(params)
     elif 'play' in params.next:
         return get_video_url(params)
+    elif 'search' in params.next:
+        return search(params)
     return None
 
 
@@ -94,6 +97,19 @@ def root(params):
                 window_title=category_name
             )
         })
+
+    # Search videos
+    modes.append({
+        'label': common.GETTEXT('Search videos'),
+        'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
+            action='website_entry',
+            next='search',
+            window_title=common.GETTEXT('Search videos'),
+            is_folder=False
+        )
+    })
 
     return common.PLUGIN.create_listing(
         modes,
@@ -632,7 +648,88 @@ def list_videos(params):
                 action='website_entry',
                 show_url=params.show_url,
                 # last_page=params.last_page,
-                next='list_videos_1',
+                next='list_videos_emissions_1',
+                page=str(int(params.page) + 1),
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
+    
+    elif params.next == 'list_videos_search':
+        
+        replay_episodes_html = utils.get_webcontent(
+            URL_SEARCH_VIDEOS % (params.page, params.query))
+        replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
+
+        episodes = replay_episodes_soup.find(
+            'table', class_='totalwidth noborder purehtml').find_all(
+                'tr')
+        
+        for episode in episodes:
+            
+            if episode.find('img'):
+                video_title = episode.find('img').get('alt').encode('utf-8')
+                video_id = ''
+                if '_cmedia=' in episode.find('a').get('href'):
+                    video_id = re.compile(
+                        r'cmedia=(.*?)\&').findall(
+                            episode.find('a').get('href'))[0]
+                elif '?cmedia=' in episode.find('a').get('href'):
+                    video_id = episode.find('a').get('href').split('?cmedia=')[1]
+                elif 'video-' in episode.find('a').get('href'):
+                    video_id = episode.find(
+                        'a').get('href').split('-')[1].replace('/', '')
+                video_plot = ''
+                video_img = episode.find('img').get('src').encode('utf-8')
+                video_duration = 0
+
+                info = {
+                    'video': {
+                        'title': video_title,
+                        # 'aired': aired,
+                        # 'date': date,
+                        'duration': video_duration,
+                        'plot': video_plot,
+                        # 'year': year,
+                        'mediatype': 'tvshow'
+                    }
+                }
+
+                download_video = (
+                    common.GETTEXT('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        video_id=video_id) + ')'
+                )
+                context_menu = []
+                context_menu.append(download_video)
+
+                videos.append({
+                    'label': video_title,
+                    'thumb': video_img,
+                    'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        action='website_entry',
+                        next='play_r',
+                        video_id=video_id
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
+        
+        # More videos...
+        videos.append({
+            'label': '# ' + common.ADDON.get_localized_string(30700),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='website_entry',
+                query=params.query,
+                next='list_videos_search',
                 page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
@@ -642,7 +739,6 @@ def list_videos(params):
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
@@ -762,3 +858,18 @@ def get_video_url(params):
             # TO DO ? (return an error)
             else:
                 return ''
+
+def search(params):
+    keyboard = common.sp.xbmc.Keyboard(
+        default='',
+        title='',
+        hidden=False)
+    keyboard.doModal()
+    if keyboard.isConfirmed():
+        query = keyboard.getText()
+        params['page'] = '1'
+        params['query'] = query
+        params['next'] = 'list_videos_search'
+        return list_videos(params)
+    else:
+        return None

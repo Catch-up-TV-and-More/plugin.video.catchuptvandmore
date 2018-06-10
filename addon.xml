@@ -51,7 +51,8 @@
 [Fix] RTC (BE) - Replay (wwark)
 [Fix] TVLux (BE) - Replay (wwark)
 [Add Live TV] Realmadrid TV *(Contents {ES|EN})* (wwark)
-[Change] YesTV - Add option contents *(Contents {Ontario|Alberta})* (wwark)
+[Change] Yes TV (CA) - Add option contents *(Contents {Ontario|Alberta})* (wwark)
+[Update] Allocine - Add Search Videos (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
