@@ -116,7 +116,8 @@ SKELETON = {
                 ('icirdi', 'none'),
                 ('cgtn', 'none'),
                 ('cgtndocumentary', 'none'),
-                ('paramountchannel', 'none')
+                ('paramountchannel', 'none'),
+                ('afriquemedia', 'none')
             ],
 
             ('us', 'build_live_tv_menu'): [
@@ -280,7 +281,8 @@ SKELETON = {
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
                 ('beinsports', 'replay_entry'),
-                # ('paramountchannel', 'replay_entry')
+                # ('paramountchannel', 'replay_entry'),
+                # ('afriquemedia', 'replay_entry')
             ],
 
             ('us', 'generic_menu'): [
@@ -463,7 +465,8 @@ CHANNELS = {
     'ntvnews24': 'ntvnews24',
     'paramountchannel': 'paramountchannel',
     'questtv': 'questtv',
-    'realmadridtv': 'realmadridtv'
+    'realmadridtv': 'realmadridtv',
+    'afriquemedia': 'afriquemedia'
 }
 
 '''
@@ -631,6 +634,7 @@ LABELS = {
     'cgtn': 'CGTN (' + common.PLUGIN.get_setting('cgtn.language') + ')',
     'cgtndocumentary': 'CGTN Documentary',
     'paramountchannel': 'Paramount Channel (' + common.PLUGIN.get_setting('paramountchannel.language') + ')',
+    'afriquemedia': 'Afrique Media',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',

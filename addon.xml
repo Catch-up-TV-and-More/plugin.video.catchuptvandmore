@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.13~beta011"
+       version="0.1.13~beta012"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -54,6 +54,7 @@
 [Change] Yes TV (CA) - Add option contents *(Contents {Ontario|Alberta})* (wwark)
 [Update] Allocine - Add Search Videos (wwark)
 [Update] RTBF Auvio - First work for sub categories (wwark)
+[Add Live TV] Afrique Media (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

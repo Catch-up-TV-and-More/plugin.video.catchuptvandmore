@@ -189,6 +189,9 @@
 
             <setting label="Paramount Channel" type="bool" id="paramountchannel" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="paramountchannel.order" default="19"/>
+
+            <setting label="Afrique Media" type="bool" id="afriquemedia" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="afriquemedia.order" default="20"/>
         <!-- International -->
 
 
