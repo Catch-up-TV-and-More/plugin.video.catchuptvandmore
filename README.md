@@ -162,7 +162,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - CGTN *(Live TV)* *(Contents {FR|EN|AR|ES|RU})*
 - CGTN Documentary *(Live TV)*
 - Paramount Channel *(Live TV)* *(Contents {ES|IT})*
-- Afrique Media *(Live TV)*
+- Afrique Media *(Replay, Live TV)*
 
 ### Japon — *Japan*
 ##### TV

@@ -282,7 +282,7 @@ SKELETON = {
                 ('arirang', 'replay_entry'),
                 ('beinsports', 'replay_entry'),
                 # ('paramountchannel', 'replay_entry'),
-                # ('afriquemedia', 'replay_entry')
+                ('afriquemedia', 'replay_entry')
             ],
 
             ('us', 'generic_menu'): [
