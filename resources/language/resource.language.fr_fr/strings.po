@@ -479,3 +479,7 @@ msgstr "Rechercher vidéos"
 msgctxt "#30715"
 msgid "Search programs"
 msgstr "Rechercher programmes"
+
+msgctxt "#30716"
+msgid "Video stream no available"
+msgstr "Le flux vidéo n'est pas disponible"

@@ -103,13 +103,25 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
         else:
             url_video_auto = re.compile(
                 r'{"type":"application/x-mpegURL","url":"(.*?)"'
-                ).findall(html_video)[0]
-            return url_video_auto
+                ).findall(html_video)
+            if len(url_video_auto) > 0:
+                return url_video_auto[0]
+            else:
+                utils.send_notification(
+                    common.ADDON.get_localized_string(30716))
+                return None
     # Case Krypton and newer version
     else:
-        url_video_auto = re.compile(
+        url_video_auto_list = re.compile(
             r'{"type":"application/x-mpegURL","url":"(.*?)"'
-            ).findall(html_video)[0]
+            ).findall(html_video)
+        if len(url_video_auto_list) > 0:
+            url_video_auto = url_video_auto_list[0]
+        else:
+            utils.send_notification(
+                common.ADDON.get_localized_string(30716))
+            return None
+        
         m3u8_video_auto = utils.get_webcontent(url_video_auto)
         # Case no absolute path in the m3u8
         # (TO DO how to build the absolute path ?) add quality after

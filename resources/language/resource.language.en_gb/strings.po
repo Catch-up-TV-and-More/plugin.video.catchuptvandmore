@@ -478,3 +478,7 @@ msgstr ""
 msgctxt "#30715"
 msgid "Search programs"
 msgstr ""
+
+msgctxt "#30716"
+msgid "Video stream is not available"
+msgstr ""
