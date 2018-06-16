@@ -367,6 +367,11 @@ def get_video_url(params):
             URL_LIVE % (params.channel_name, token_jsonparser["vrtPlayerToken"]))
         url_stream_jsonparser = json.loads(url_stream_json)
         url_live = ''
+        if "code" in url_stream_jsonparser:
+            if url_stream_jsonparser["code"] == "INVALID_LOCATION":
+                utils.send_notification(
+                    common.ADDON.get_localized_string(30713))
+            return None
         for url_stream_datas in url_stream_jsonparser["targetUrls"]:
             if url_stream_datas["type"] == "hls_aes":
                 url_live = url_stream_datas["url"]
