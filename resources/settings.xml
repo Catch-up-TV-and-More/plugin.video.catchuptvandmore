@@ -240,6 +240,15 @@
 
             <setting label="BX1" type="bool" id="bx1" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="bx1.order" default="13"/>
+
+            <setting label="Eén" type="bool" id="een" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="een.order" default="14"/>
+
+            <setting label="Canvas" type="bool" id="canvas" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="canvas.order" default="15"/>
+
+            <setting label="Ketnet" type="bool" id="ketnet" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="ketnet.order" default="16"/>
         <!-- Belgium -->
 
 

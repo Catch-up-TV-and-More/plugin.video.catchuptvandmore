@@ -72,7 +72,9 @@ SKELETON = {
             ('be', 'build_live_tv_menu'): [
                 ('rtc', 'none'),
                 ('telemb', 'none'),
-                ('vrt', 'none'),
+                ('een', 'none'),
+                ('canvas', 'none'),
+                ('ketnet', 'none'),
                 ('auvio', 'none'),
                 ('tvlux', 'none'),
                 ('bx1', 'none')
@@ -468,7 +470,10 @@ CHANNELS = {
     'questtv': 'questtv',
     'realmadridtv': 'realmadridtv',
     'afriquemedia': 'afriquemedia',
-    'becurioustv': 'becurioustv'
+    'becurioustv': 'becurioustv',
+    'een': 'vrt',
+    'canvas': 'vrt',
+    'ketnet': 'vrt'
 }
 
 '''
@@ -507,6 +512,9 @@ LABELS = {
     'bel_rtl': 'BEL RTL',
     'rtl_info': 'RTL INFO',
     'bx1': 'BX1',
+    'een': 'Eén',
+    'canvas': 'Canvas',
+    'ketnet': 'Ketnet',
 
     # Canadian channels / live TV
     'tv5': 'TV5',
