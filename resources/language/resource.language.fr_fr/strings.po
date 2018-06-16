@@ -481,5 +481,5 @@ msgid "Search programs"
 msgstr "Rechercher programmes"
 
 msgctxt "#30716"
-msgid "Video stream no available"
+msgid "Video stream is not available"
 msgstr "Le flux vidéo n'est pas disponible"

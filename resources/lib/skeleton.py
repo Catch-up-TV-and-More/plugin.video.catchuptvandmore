@@ -255,7 +255,8 @@ SKELETON = {
                 ('rtr', 'replay_entry'),
                 ('swissinfo', 'replay_entry'),
                 ('rougetv', 'replay_entry'),
-                ('tvm3', 'replay_entry')
+                ('tvm3', 'replay_entry'),
+                ('becurioustv', 'replay_entry')
             ],
 
             ('uk', 'generic_menu'): [
@@ -466,7 +467,8 @@ CHANNELS = {
     'paramountchannel': 'paramountchannel',
     'questtv': 'questtv',
     'realmadridtv': 'realmadridtv',
-    'afriquemedia': 'afriquemedia'
+    'afriquemedia': 'afriquemedia',
+    'becurioustv': 'becurioustv'
 }
 
 '''
@@ -522,6 +524,7 @@ LABELS = {
     'swissinfo': 'SWISSINFO',
     'rougetv': 'Rouge TV',
     'tvm3': 'TVM3',
+    'becurioustv': 'BeCurious TV',
 
     # French channels / live TV
     'tf1': 'TF1',

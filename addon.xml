@@ -56,7 +56,8 @@
 [Update] RTBF Auvio - First work for sub categories (wwark)
 [Add Channel - Live TV] Afrique Media (wwark)
 [Fix] Desactivate new feature (reuselanguageinvoker) in Kodi 18 (wwark)
-[Improvement] Dailymotion - add notification when video is not available (wwark)
+[Improvement] Dailymotion - send notification when video is not available (wwark)
+[Add Channel] BeCurious TV (CH) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

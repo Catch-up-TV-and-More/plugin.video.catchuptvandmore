@@ -90,6 +90,9 @@
 
             <setting label="TVM3" type="bool" id="tvm3" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="tvm3.order" default="7"/>
+
+            <setting label="BeCurious TV" type="bool" id="becurioustv" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="becurioustv.order" default="8"/>
         <!-- Switzerland -->
 
 
