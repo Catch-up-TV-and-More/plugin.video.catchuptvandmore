@@ -153,7 +153,7 @@ def list_videos(params):
 
         for episode in episodes:
             video_title = episode.find('img').get('alt')
-            video_url = episode.find('a').get('href')
+            video_url = URL_ROOT + episode.find('a').get('href')
             video_img = episode.find(
                 'img').get('src').replace('|','%7C')
             video_duration = 0
