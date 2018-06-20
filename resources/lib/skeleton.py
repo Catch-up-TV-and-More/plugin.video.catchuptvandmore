@@ -77,7 +77,7 @@ SKELETON = {
                 ('ketnet', 'none'),
                 ('auvio', 'none'),
                 ('tvlux', 'none'),
-                ('bx1', 'none')
+                # ('bx1', 'none')
             ],
 
             ('ca', 'build_live_tv_menu'): [
