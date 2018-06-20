@@ -30,14 +30,14 @@ from resources.lib import common
 # Add http://www.rougefm.com/rouge-play/
 
 
-URL_ROOT = 'http://www.rougefm.com'
+URL_ROOT = 'http://www.rouge.com'
 # (www or play), channel_name
 
 # Replay
 URL_REPLAY = URL_ROOT + '/rouge-tv/'
 
 # Live
-URL_LIVE = URL_ROOT + '/rouge-tv/'
+URL_LIVE = URL_ROOT + '/rouge-tv-live'
 # channel_name
 
 URL_LIVE_JSON = 'http://livevideo.infomaniak.com/player_config/%s.json'
@@ -143,25 +143,19 @@ def get_live_item(params):
     url_live = ''
 
     live_html = utils.get_webcontent(URL_LIVE)
-    live_id = re.compile(
-        'name=rougetv_2015\&player=(.*?)[\"\']').findall(live_html)[0]
-    live_json = utils.get_webcontent(URL_LIVE_JSON % live_id)
-    lives_json_parser = json.loads(live_json)
-
-    url_live = 'http://' + lives_json_parser["sPlaylist"]
-    img = lives_json_parser["preloadimg"]
-    title = lives_json_parser["streamname"]
+    url_live = re.compile(
+        'streaming_url = \'(.*?)\'').findall(live_html)[0]
 
     info = {
         'video': {
-            'title': params.channel_label + " - [I]" + title + "[/I]",
+            'title': params.channel_label,
             'plot': plot,
             'duration': duration
         }
     }
 
     return {
-        'label': params.channel_label + " - [I]" + title + "[/I]",
+        'label': params.channel_label,
         'thumb': img,
         'url': common.PLUGIN.get_url(
             module_path=params.module_path,

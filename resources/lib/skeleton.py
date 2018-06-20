@@ -256,7 +256,7 @@ SKELETON = {
                 ('srf', 'replay_entry'),
                 ('rtr', 'replay_entry'),
                 ('swissinfo', 'replay_entry'),
-                ('rougetv', 'replay_entry'),
+                # ('rougetv', 'replay_entry'),
                 ('tvm3', 'replay_entry'),
                 ('becurioustv', 'replay_entry')
             ],
