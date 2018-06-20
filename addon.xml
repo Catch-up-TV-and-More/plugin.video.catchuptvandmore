@@ -59,6 +59,9 @@
 [Improvement] Dailymotion - send notification when video is not available (wwark)
 [Add Channel] BeCurious TV (CH) (wwark)
 [Fix] Auto Plus - Replay (wwark)
+[Fix] Rouge TV (CH) - Live TV (remove Replay) (wwark)
+[Remove] BX1 (BE) - Live TV (not available) (wwark)
+[Add Live TV] ABC News (US) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

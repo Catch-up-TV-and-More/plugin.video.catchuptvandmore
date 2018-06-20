@@ -530,6 +530,9 @@
 
             <setting label="NYC Media" type="bool" id="nycmedia" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="nycmedia.order" default="3"/>
+
+            <setting label="ABC News" type="bool" id="abcnews" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="abcnews.order" default="4"/>
         <!-- United States -->
 
         <!-- Poland -->

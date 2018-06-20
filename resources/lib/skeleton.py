@@ -124,7 +124,8 @@ SKELETON = {
 
             ('us', 'build_live_tv_menu'): [
                 ('cbsnews', 'none'),
-                ('tbd', 'none')
+                ('tbd', 'none'),
+                ('abcnews', 'none')
             ],
 
             ('pl', 'build_live_tv_menu'): [
@@ -473,7 +474,8 @@ CHANNELS = {
     'becurioustv': 'becurioustv',
     'een': 'vrt',
     'canvas': 'vrt',
-    'ketnet': 'vrt'
+    'ketnet': 'vrt',
+    'abcnews': 'abcnews'
 }
 
 '''
@@ -651,6 +653,7 @@ LABELS = {
     'cbsnews': 'CBS News',
     'tbd': 'TBD',
     'nycmedia': 'NYC Media',
+    'abcnews': 'ABC News',
 
     # Poland channels / live TV
     'tvp': 'TVP',
