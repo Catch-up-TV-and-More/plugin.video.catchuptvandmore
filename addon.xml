@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.13~beta015"
+       version="0.1.13~beta016"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -60,7 +60,6 @@
 [Add Channel] BeCurious TV (CH) (wwark)
 [Fix] Auto Plus - Replay (wwark)
 [Fix] Rouge TV (CH) - Live TV (remove Replay) (wwark)
-[Remove] BX1 (BE) - Live TV (not available) (wwark)
 [Add Live TV] ABC News (US) (wwark)
     </news>
     <assets>
