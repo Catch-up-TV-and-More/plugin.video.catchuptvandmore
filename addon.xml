@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.13"
+       version="0.1.14~beta0"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,37 +30,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.13]
-[Add Live TV] CGTN *(Contents {FR|EN|AR|ES|RU})* (wwark)
-[Add Live TV] CGTN Documentary (wwark)
-[Fix] CBS News (US) - Live TV (wwark)
-[Fix] Télé Quebec (CA) - Live TV (wwark)
-[Add Live TV] QVC *(Contents {JP|DE|IT|UK|US})* (wwark)
-[Fix] FranceTV Education - Replay (wwark)
-[Fix] NHKらいふ - Replay (wwark)
-[Add Live TV] 日テレ News24 (JP) (wwark)
-[Add WebTV] Culturebox (francetv) (wwark)
-[Add Live TV] Paramount Channel *(Contents {ES|IT})* (wwark)
-[Add Channel] Quest TV (UK) (wwark)
-[Add Website] Ina (wwark)
-[Fix] FranceTV Sport - Live TV (wwark)
-[Update] RTBF Auvio - Change flux DRM to playable (darodi)
-[Add Content/Fix] Arte - Replay *(Contents {IT})* - change API (wwark)
-[Fix] ITele (CA) - Replay (wwark)
-[Fix] VRT Nu (BE) - Replay and Live TV (wwark)
-[Fix] RTC (BE) - Replay (wwark)
-[Fix] TVLux (BE) - Replay (wwark)
-[Add Live TV] Realmadrid TV *(Contents {ES|EN})* (wwark)
-[Change] Yes TV (CA) - Add option contents *(Contents {Ontario|Alberta})* (wwark)
-[Update] Allocine - Add Search Videos (wwark)
-[Update] RTBF Auvio - First work for sub categories (wwark)
-[Add Channel - Live TV] Afrique Media (wwark)
-[Fix] Desactivate new feature (reuselanguageinvoker) in Kodi 18 (wwark)
-[Improvement] Dailymotion - send notification when video is not available (wwark)
-[Add Channel] BeCurious TV (CH) (wwark)
-[Fix] Auto Plus - Replay (wwark)
-[Fix] Rouge TV (CH) - Live TV (remove Replay) (wwark)
-[Add Live TV] ABC News (US) (wwark)
+[Version 0.1.14]
     </news>
     <assets>
       <icon>icon.png</icon>
