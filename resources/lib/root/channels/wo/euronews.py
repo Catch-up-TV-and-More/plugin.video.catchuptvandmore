@@ -28,18 +28,13 @@ from resources.lib import common
 # Replay add emissions
 # Add info LIVE TV
 
-# Initialize GNU gettext emulation in addon
-# This allows to use UI strings from addon’s English
-# strings.po file instead of numeric codes
-_ = common.ADDON.initialize_gettext()
-
 URL_LIVE_API = 'http://%s.euronews.com/api/watchlive.json'
 # Language
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
-    title = ''
+    title = params.channel_label
     plot = ''
     duration = 0
     img = ''
@@ -47,31 +42,6 @@ def get_live_item(params):
 
     desired_language = common.PLUGIN.get_setting(
         params.channel_name + '.language')
-
-    if desired_language == 'FR':
-        title = '%s Français Live' % (params.channel_label)
-    elif desired_language == 'EN':
-        title = '%s English Live' % (params.channel_label)
-    elif desired_language == 'AR':
-        title = '%s عربية Live' % (params.channel_label)
-    elif desired_language == 'DE':
-        title = '%s Deutsch Live' % (params.channel_label)
-    elif desired_language == 'IT':
-        title = '%s Italiano Live' % (params.channel_label)
-    elif desired_language == 'ES':
-        title = '%s Español Live' % (params.channel_label)
-    elif desired_language == 'PT':
-        title = '%s Português Live' % (params.channel_label)
-    elif desired_language == 'RU':
-        title = '%s Русский Live' % (params.channel_label)
-    elif desired_language == 'TR':
-        title = '%s Türkçe Live' % (params.channel_label)
-    elif desired_language == 'FA':
-        title = '%s فارسی Live' % (params.channel_label)
-    elif desired_language == 'GR':
-        title = '%s Ελληνικά Live' % (params.channel_label)
-    elif desired_language == 'HU':
-        title = '%s Magyar Nyelv Live' % (params.channel_label)
 
     if desired_language == 'EN':
         url_live_json = URL_LIVE_API % 'www'

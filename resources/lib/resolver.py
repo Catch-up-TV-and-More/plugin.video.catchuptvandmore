@@ -26,10 +26,8 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Dailymotion on JARVIS
 # Quality VIMEO
 # Download Mode with Facebook (the video has no audio)
-# Quality Youtube
 
 
 DESIRED_QUALITY = common.PLUGIN.get_setting('quality')
@@ -53,96 +51,56 @@ URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/'\
                             'playback/v1/accounts/%s/videos/%s'
 # AccountId, VideoId
 
+URL_MTVNSERVICES_STREAM = 'https://media-utils.mtvnservices.com/services/' \
+                          'MediaGenerator/%s?&format=json&acceptMethods=hls'
+# videoURI
+
+def ytdl_resolver(url_stream):
+    
+    YDStreamExtractor = __import__('YDStreamExtractor')
+
+    quality = 0
+    if DESIRED_QUALITY == "DIALOG":
+        all_quality = ['SD', '720p', '1080p', 'Highest available']
+        seleted_item = common.sp.xbmcgui.Dialog().select(
+            common.GETTEXT('Choose video quality'),
+            all_quality)
+
+        if seleted_item == -1:
+            quality = 3
+        selected_quality_string = all_quality[seleted_item]
+        quality_string = {
+            'SD': 0,
+            '720p': 1,
+            '1080p': 2,
+            'Highest available': 3
+        }
+        quality = quality_string[selected_quality_string]
+    elif DESIRED_QUALITY == "BEST":
+        quality = 3
+
+    vid = YDStreamExtractor.getVideoInfo(
+        url_stream,
+        quality=quality,
+        resolve_redirects=True
+    )
+    if vid is None:
+        # TODO catch the error (geo-blocked, deleted, etc ...)
+        utils.send_notification(
+            common.ADDON.get_localized_string(30716))
+        return None
+    else:
+        return vid.streamURL()
+    
+
 # DailyMotion Part
 def get_stream_dailymotion(video_id, isDownloadVideo):
-
-    # Sous Jarvis nous avons ces éléments qui ne fonctionnent pas :
-    # * KO for playing m3u8 but MP4 work
-    # * Les vidéos au format dailymotion proposé par Allociné
-    # * Les directs TV  de PublicSenat, LCP, L"Equipe TV et Numero 23 herbergés par dailymotion.
 
     url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
 
     if isDownloadVideo == True:
         return url_dmotion
-
-    html_video = utils.get_webcontent(url_dmotion)
-    html_video = html_video.replace('\\', '')
-
-    # Case Jarvis
-    if common.sp.xbmc.__version__ == '2.24.0':
-        all_url_video = re.compile(
-            r'{"type":"video/mp4","url":"(.*?)"').findall(html_video)
-        if len(all_url_video) > 0:
-            if DESIRED_QUALITY == "DIALOG":
-                all_datas_videos_quality = []
-                all_datas_videos_path = []
-                for datas in all_url_video:
-                    datas_quality = re.search(
-                        'H264-(.+?)/', datas).group(1)
-                    all_datas_videos_quality.append(
-                        'H264-' + datas_quality)
-                    all_datas_videos_path.append(datas)
-
-                seleted_item = common.sp.xbmcgui.Dialog().select(
-                    common.GETTEXT('Choose video quality'), all_datas_videos_quality)
-
-                return all_datas_videos_path[seleted_item].encode('utf-8')
-            elif DESIRED_QUALITY == 'BEST':
-                # Last video in the Best
-                for datas in all_url_video:
-                    url = datas
-                return url
-            else:
-                return all_url_video[0]
-        # In case some M3U8 work in Jarvis
-        else:
-            url_video_auto = re.compile(
-                r'{"type":"application/x-mpegURL","url":"(.*?)"'
-                ).findall(html_video)[0]
-            return url_video_auto
-    # Case Krypton and newer version
-    else:
-        url_video_auto = re.compile(
-            r'{"type":"application/x-mpegURL","url":"(.*?)"'
-            ).findall(html_video)[0]
-        m3u8_video_auto = utils.get_webcontent(url_video_auto)
-        # Case no absolute path in the m3u8
-        # (TO DO how to build the absolute path ?) add quality after
-        if 'http' not in  m3u8_video_auto:
-            return url_video_auto
-        # Case absolute path in the m3u8
-        else:
-            url = ''
-            lines = m3u8_video_auto.splitlines()
-            if DESIRED_QUALITY == "DIALOG":
-                all_datas_videos_quality = []
-                all_datas_videos_path = []
-                for k in range(0, len(lines) - 1):
-                    if 'RESOLUTION=' in lines[k]:
-                        all_datas_videos_quality.append(
-                            re.compile(
-                            r'RESOLUTION=(.*?),').findall(
-                            lines[k])[0])
-                        all_datas_videos_path.append(
-                            lines[k + 1])
-                seleted_item = common.sp.xbmcgui.Dialog().select(
-                    common.GETTEXT('Choose video quality'),
-                    all_datas_videos_quality)
-                return all_datas_videos_path[seleted_item].encode(
-                    'utf-8')
-            elif DESIRED_QUALITY == 'BEST':
-                # Last video in the Best
-                for k in range(0, len(lines) - 1):
-                    if 'RESOLUTION=' in lines[k]:
-                        url = lines[k + 1]
-                return url
-            else:
-                for k in range(0, len(lines) - 1):
-                    if 'RESOLUTION=' in lines[k]:
-                        url = lines[k + 1]
-                    break
-                return url
+    return ytdl_resolver(url_dmotion)
 
 # Vimeo Part
 def get_stream_vimeo(video_id, isDownloadVideo):
@@ -210,38 +168,7 @@ def get_stream_youtube(video_id, isDownloadVideo):
     if isDownloadVideo is True:
         return url_youtube
 
-    YDStreamExtractor = __import__('YDStreamExtractor')
-
-    quality = 0
-    if DESIRED_QUALITY == "DIALOG":
-        all_quality = ['SD', '720p', '1080p', 'Highest available']
-        seleted_item = common.sp.xbmcgui.Dialog().select(
-            common.GETTEXT('Choose video quality'),
-            all_quality)
-
-        if seleted_item == -1:
-            quality = 3
-        selected_quality_string = all_quality[seleted_item]
-        quality_string = {
-            'SD': 0,
-            '720p': 1,
-            '1080p': 2,
-            'Highest available': 3
-        }
-        quality = quality_string[selected_quality_string]
-    elif DESIRED_QUALITY == "BEST":
-        quality = 3
-
-    vid = YDStreamExtractor.getVideoInfo(
-        url_youtube,
-        quality=quality,
-        resolve_redirects=True
-    )
-    if vid is None:
-        # TODO catch the error (geo-blocked, deleted, etc ...)
-        return None
-    else:
-        return vid.streamURL()
+    return ytdl_resolver(url_youtube)
 
 
 # BRIGHTCOVE Part
@@ -280,3 +207,9 @@ def get_brightcove_video_json(data_account, data_player, data_video_id):
                 common.ADDON.get_localized_string(30713))
             return None
     return video_url
+
+def get_mtvnservices_stream(video_uri):
+    json_video_stream = utils.get_webcontent(
+        URL_MTVNSERVICES_STREAM % video_uri)
+    json_video_stream_parser = json.loads(json_video_stream)
+    return json_video_stream_parser["package"]["video"]["item"][0]["rendition"][0]["src"]

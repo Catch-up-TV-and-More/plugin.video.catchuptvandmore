@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2018  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -20,34 +20,67 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import json
-import re
 from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Replay add emissions
-# Add info LIVE TV
 
-URL_LIVE = 'http://www.yestv.com/watch-live/?stream=%s'
-# Town
+# Live
+# https://www.cgtn.com/public/bundle/js/live.js
+URL_LIVE_CGTN = 'https://news.cgtn.com/resource/live/%s/cgtn-%s.m3u8'
+# Channel (FR|ES|AR|EN|RU|DO(documentary))
 
 
-LIVES_TOWN = {
-    'Ontario': 'YESTV-ONT',
-    'Alberta': 'YESTV-AB-C'
-}
+def channel_entry(params):
+    """Entry function of the module"""
+    if 'replay_entry' == params.next:
+        params.next = "list_shows_1"
+        params["page"] = "0"
+        return list_shows(params)
+    elif 'list_shows' in params.next:
+        return list_shows(params)
+    elif 'list_videos' in params.next:
+        return list_videos(params)
+    elif 'play' in params.next:
+        return get_video_url(params)
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_shows(params):
+    """Build categories listing"""
+    return None
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_videos(params):
+    """Build videos listing"""
+    return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
-    lives = []
-
-    title = params.channel_label
+    title = ''
+    # subtitle = ' - '
     plot = ''
     duration = 0
     img = ''
     url_live = ''
+
+    desired_language = common.PLUGIN.get_setting(
+        params.channel_name + '.language')
+
+    if params.channel_name == 'cgtndocumentary':
+        url_live = URL_LIVE_CGTN % ('document', 'doc')
+    else:
+        if desired_language == 'FR':
+            url_live = URL_LIVE_CGTN % ('french', 'f')
+        elif desired_language == 'EN':
+            url_live = URL_LIVE_CGTN % ('english', 'news')
+        elif desired_language == 'AR':
+            url_live = URL_LIVE_CGTN % ('arabic', 'r')
+        elif desired_language == 'ES':
+            url_live = URL_LIVE_CGTN % ('espanol', 'e')
+        elif desired_language == 'RU':
+            url_live = URL_LIVE_CGTN % ('russian', 'r')
 
     info = {
         'video': {
@@ -58,7 +91,7 @@ def get_live_item(params):
     }
 
     return {
-        'label': title,
+        'label': params.channel_label,
         'fanart': img,
         'thumb': img,
         'url': common.PLUGIN.get_url(
@@ -66,7 +99,7 @@ def get_live_item(params):
             module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            url=url_live,
+            url=url_live
         ),
         'is_playable': True,
         'info': info
@@ -77,21 +110,4 @@ def get_live_item(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        desired_region = common.PLUGIN.get_setting(
-            params.channel_name + '.region')
-        
-        live_id = LIVES_TOWN[desired_region]
-
-        live_html = utils.get_webcontent(
-            URL_LIVE % live_id)
-        url_live_2 = re.compile(
-            'iframe src="(.*?) "').findall(live_html)[0]
-        url_live_2 = url_live_2 + live_id
-        live_html_2 = utils.get_webcontent(url_live_2)
-        live_json = re.compile(
-            'sources\:(.*?)\]\,').findall(live_html_2)[0]
-        live_jsonpaser = json.loads(live_json + ']')
-
-        url_live = 'http:' + live_jsonpaser[0]["file"]    
-
-        return url_live
+        return params.url

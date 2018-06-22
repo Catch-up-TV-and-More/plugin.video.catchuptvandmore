@@ -28,12 +28,14 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
+# Find a way to get APIKey ?
 
-
-URL_JSON_LIVES = 'https://services.vrt.be/videoplayer/r/live.json'
+# URL_JSON_LIVES = 'https://services.vrt.be/videoplayer/r/live.json'
 # All lives in this JSON
 
 URL_ROOT = 'https://www.vrt.be'
+
+# Replay
 
 URL_CATEGORIES_JSON = 'https://search.vrt.be/suggest?facets[categories]=%s'
 # Category Name
@@ -44,6 +46,15 @@ URL_TOKEN = 'https://token.vrt.be'
 
 URL_STREAM_JSON = 'https://mediazone.vrt.be/api/v1/vrtvideo/assets/%s'
 # VideoID
+
+# Live
+
+URL_API = 'https://media-services-public.vrt.be/vualto-video-aggregator-web/rest/external/v1'
+
+URL_TOKEN_LIVE = URL_API + '/tokens'
+
+URL_LIVE = URL_API + '/videos/vualto_%s_geo?vrtPlayerToken=%s&client=vrtvideo'
+# ChannelName
 
 CATEGORIES_VRT = {
     '/vrtnu/a-z/': 'A-Z',
@@ -69,8 +80,9 @@ def channel_entry(params):
 def get_api_key():
     api_key_html = utils.get_webcontent(
         URL_ROOT + '/vrtnu/')
-    return re.compile(
-        'apiKey=(.*?)\&').findall(api_key_html)[0]
+    #return re.compile(
+    #    'apiKey=(.*?)\&').findall(api_key_html)[0]
+    return '3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG'
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -254,11 +266,8 @@ def list_videos(params):
                     'span', class_='content__shortdescription').get_text(
                     ).strip()
                 duration = 0
-                video_url_json = episode.find(
-                    'div', class_='vrtvideo videoplayer').get(
-                    'data-analytics')
-                video_url_jsonparser = json.loads(video_url_json)
-                video_url = 'https:' + video_url_jsonparser['playlist']
+                video_url = re.compile(
+                    r'page_url":"(.*?)"').findall(file_path)[0]
                 img = 'https:' + episode.find(
                     'img').get('srcset').strip()
 
@@ -324,52 +333,49 @@ def get_live_item(params):
     img = ''
     url_live = ''
 
-    file_path = utils.download_catalog(
-        URL_JSON_LIVES,
-        '%s_live.json' % (params.channel_name))
-    lives_json = open(file_path).read()
-    lives_json = lives_json.replace(
-        ')', '').replace('parseLiveJson(', '')
-    lives_jsonparser = json.loads(lives_json)
+    info = {
+        'video': {
+            'title': params.channel_label,
+            'plot': plot,
+            'duration': duration
+        }
+    }
 
-    for lives_value in lives_jsonparser.iteritems():
-        
-        if 'backup' not in lives_value[0] and \
-             'geo' not in lives_value[0]:
-            title = str(lives_value[0]).replace(
-                'vualto_', '').replace('_', ' ')
-            url_live = lives_jsonparser[lives_value[0]]["hls"]
-
-            info = {
-                'video': {
-                    'title': params.channel_label + " - [I]" + title + "[/I]",
-                    'plot': plot,
-                    'duration': duration
-                }
-            }
-
-            lives.append({
-                'label': params.channel_label + " - [I]" + title + "[/I]",
-                'fanart': img,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    action='start_live_tv_stream',
-                    next='play_l',
-                    module_name=params.module_name,
-                    module_path=params.module_path,
-                    url_live=url_live,
-                ),
-                'is_playable': True,
-                'info': info
-            })
-    return lives
+    return {
+        'label': params.channel_label,
+        'fanart': img,
+        'thumb': img,
+        'url': common.PLUGIN.get_url(
+            module_path=params.module_path,
+            module_name=params.module_name,
+            action='start_live_tv_stream',
+            next='play_l'
+        ),
+        'is_playable': True,
+        'info': info
+    }
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url_live
+        token_json = utils.get_webcontent(
+            URL_TOKEN_LIVE, request_type='post')
+        token_jsonparser = json.loads(token_json)
+        url_stream_json = utils.get_webcontent(
+            URL_LIVE % (params.channel_name, token_jsonparser["vrtPlayerToken"]))
+        url_stream_jsonparser = json.loads(url_stream_json)
+        url_live = ''
+        if "code" in url_stream_jsonparser:
+            if url_stream_jsonparser["code"] == "INVALID_LOCATION":
+                utils.send_notification(
+                    common.ADDON.get_localized_string(30713))
+            return None
+        for url_stream_datas in url_stream_jsonparser["targetUrls"]:
+            if url_stream_datas["type"] == "hls_aes":
+                url_live = url_stream_datas["url"]
+        return url_live
     elif params.next == 'play_r' or params.next == 'download_video':
 
         session_requests = requests.session()

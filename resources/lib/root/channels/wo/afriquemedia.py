@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2018  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -24,19 +24,19 @@ import ast
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# ....
+# Add Replay
 
 
-URL_ROOT = 'https://www.tvlux.be'
+URL_ROOT = 'http://www.afriquemedia.tv'
 
 URL_LIVE = URL_ROOT + '/live'
 
-URL_VIDEOS = URL_ROOT + '/videos'
-
-URL_EMISSIONS = URL_ROOT + '/emissions'
+URL_REPLAY = URL_ROOT + '/replay?jut1=%s'
+# page
 
 
 def channel_entry(params):
@@ -59,51 +59,22 @@ def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
+    
+        all_video = common.ADDON.get_localized_string(30701)
 
-        category_name = common.GETTEXT('All videos')
-        category_url = URL_VIDEOS
         shows.append({
-            'label': category_name,
+            'label': common.GETTEXT('All videos'),
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                category_url=category_url,
-                category_name=category_name,
                 next='list_videos_1',
-                page='0',
-                window_title=category_name
+                page=1,
+                all_video=all_video,
+                window_title=all_video
             )
         })
-
-        replay_categories_html = utils.get_webcontent(URL_EMISSIONS)
-        replay_categories_soup = bs(replay_categories_html, 'html.parser')
-        categories = replay_categories_soup.find_all(
-            'article', class_=re.compile("emmissionsboxtop"))
-
-        for category in categories:
-
-            category_name = category.find(
-                'img').get('alt')
-            category_img = category.find(
-                'img').get('src')
-            category_url = URL_ROOT + '/' + category.find(
-                "a").get("href")
-            shows.append({
-                'label': category_name,
-                'thumb': category_img,
-                'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    action='replay_entry',
-                    category_url=category_url,
-                    category_name=category_name,
-                    next='list_videos_1',
-                    page='0',
-                    window_title=category_name
-                )
-            })
-
+    
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
@@ -118,29 +89,29 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
+
     if 'previous_listing' in params:
         videos = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_videos_1':
         list_videos_html = utils.get_webcontent(
-            params.category_url + '?lim_un=%s' % params.page)
+            URL_REPLAY % (params.page))
         list_videos_soup = bs(list_videos_html, 'html.parser')
 
         videos_data = list_videos_soup.find_all(
-            'article', class_=re.compile("emmissionsboxtop"))
+            'div', class_='yt-fp-outer outerwidthlarge3 outerwidthsmall1 rounding7')
 
         for video in videos_data:
 
-            title = video.find('h3').get_text()
-            plot = ''
+            title = video.find('img').get('alt')
             duration = 0
             img = video.find('img').get('src')
-            video_url = video.find('a').get('href')
+            video_id = video.find('a').get('href').split('?v=')[1]
 
             info = {
                 'video': {
                     'title': title,
-                    'plot': plot,
+                    # 'plot': plot,
                     # 'aired': aired,
                     # 'date': date,
                     'duration': duration,
@@ -155,7 +126,7 @@ def list_videos(params):
                     action='download_video',
                     module_path=params.module_path,
                     module_name=params.module_name,
-                    video_url=video_url) + ')'
+                    video_id=video_id) + ')'
             )
             context_menu = []
             context_menu.append(download_video)
@@ -168,7 +139,7 @@ def list_videos(params):
                     module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
-                    video_url=video_url,
+                    video_id=video_id,
                 ),
                 'is_playable': True,
                 'info': info,
@@ -183,8 +154,7 @@ def list_videos(params):
                 module_name=params.module_name,
                 action='replay_entry',
                 next='list_videos_1',
-                category_url = params.category_url,
-                page=str(int(params.page) + 12),
+                page=str(int(params.page) + 1),
                 update_listing=True,
                 previous_listing=str(videos)
             )
@@ -205,12 +175,8 @@ def list_videos(params):
 def get_live_item(params):
     plot = ''
     duration = 0
-    img = 'https://www.tvlux.be/images/direct.png'
-    url_live = ''
-
-    live_html = utils.get_webcontent(URL_LIVE)
-    url_live = re.compile(
-        r'"sourceURL":"(.*?)"').findall(live_html)[0]
+    img = ''
+    live_url = ''
 
     info = {
         'video': {
@@ -229,7 +195,7 @@ def get_live_item(params):
             module_name=params.module_name,
             action='start_live_tv_stream',
             next='play_l',
-            url=url_live,
+            live_url=live_url
         ),
         'is_playable': True,
         'info': info
@@ -240,14 +206,12 @@ def get_live_item(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        video_html = utils.get_webcontent(params.video_url)
-        streams_url = re.compile(
-            r'source src="(.*?)"').findall(video_html)
-        stream_url = ''
-        for stream in streams_url:
-            if 'm3u8' in stream or \
-                'mp4' in stream:
-                stream_url = stream
-        return stream_url
+        if params.next == 'download_video':
+            return resolver.get_stream_youtube(params.video_id, True)
+        else:
+            return resolver.get_stream_youtube(params.video_id, False)
     elif params.next == 'play_l':
-        return params.url
+        live_html = utils.get_webcontent(URL_LIVE)
+        video_id = re.compile(
+            r'dailymotion.com/embed/video/(.*?)\"').findall(live_html)[0]
+        return resolver.get_stream_dailymotion(video_id, False)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2018  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -20,42 +20,63 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import json
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# Add http://www.rougefm.com/rouge-play/
+# 
 
+URL_ROOT = 'https://www.questtv.co.uk'
 
-URL_ROOT = 'http://www.rouge.com'
-# (www or play), channel_name
-
-# Replay
-URL_REPLAY = URL_ROOT + '/rouge-tv/'
-
-# Live
-URL_LIVE = URL_ROOT + '/rouge-tv-live'
-# channel_name
-
-URL_LIVE_JSON = 'http://livevideo.infomaniak.com/player_config/%s.json'
-# IdLive
-
+URL_VIDEOS = URL_ROOT + '/content/discovery/neur/uk/questtv/video/jcr:content/root/columns_container_1/column1/brightcove_video_lis.content'
 
 def channel_entry(params):
     """Entry function of the module"""
     if 'replay_entry' == params.next:
-        params.next = "list_videos_1"
-        return list_videos(params)
+        params.next = "list_shows_1"
+        params["page"] = "0"
+        return list_shows(params)
+    elif 'list_shows' in params.next:
+        return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
-    elif 'live' in params.next:
-        return list_live(params)
     elif 'play' in params.next:
         return get_video_url(params)
-    return None
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_shows(params):
+    """Build shows listing"""
+    shows = []
+
+    if params.next == 'list_shows_1':
+
+        all_video = common.ADDON.get_localized_string(30701)
+
+        shows.append({
+            'label': common.GETTEXT('All videos'),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='list_videos_1',
+                page=1,
+                all_video=all_video,
+                window_title=all_video
+            )
+        })
+    
+    return common.PLUGIN.create_listing(
+        shows,
+        sort_methods=(
+            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
+            common.sp.xbmcplugin.SORT_METHOD_LABEL
+        ),
+        category=common.get_window_title(params)
+    )
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -64,21 +85,26 @@ def list_videos(params):
     videos = []
 
     if params.next == 'list_videos_1':
-        file_path = utils.get_webcontent(URL_REPLAY)
-        replay_episodes_soup = bs(file_path, 'html.parser')
-        episodes = replay_episodes_soup.find_all(
-            'div', class_='modal fade replaytv_modal')
+        list_videos_html = utils.get_webcontent(
+            URL_VIDEOS)
+        list_videos_soup = bs(list_videos_html, 'html.parser')
 
-        for episode in episodes:
+        data_account = list_videos_soup.find(
+            'video').get('data-account')
+        data_player = list_videos_soup.find(
+            'video').get('data-player')
 
-            video_title = episode.find(
-                'h4', class_='m-t-30').get_text().strip()
+        videos_datas = list_videos_soup.find_all(
+            'div', class_=re.compile("dni-video-playlist-thumb-box"))
+
+        for video_datas in videos_datas:
+
+            video_title = video_datas.find('h3', class_="descHidden").get_text()
+
             video_duration = 0
-            video_plot = episode.find('p').get_text().strip()
-            video_url = episode.find(
-                'div', class_='replaytv_video').get('video-src')
-            # TO DO Get IMG
-            video_img = ''
+            video_plot = video_datas.find('p', class_="descHidden").get_text()
+            video_img = video_datas.find('img').get('src')
+            data_video_id = video_datas.find('a').get('href').replace('#', '')
 
             info = {
                 'video': {
@@ -98,7 +124,9 @@ def list_videos(params):
                     action='download_video',
                     module_path=params.module_path,
                     module_name=params.module_name,
-                    video_url=video_url) + ')'
+                    data_account=data_account,
+                    data_player=data_player,
+                    data_video_id=data_video_id) + ')'
             )
             context_menu = []
             context_menu.append(download_video)
@@ -112,7 +140,9 @@ def list_videos(params):
                     module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
-                    video_url=video_url
+                    data_account=data_account,
+                    data_player=data_player,
+                    data_video_id=data_video_id
                 ),
                 'is_playable': True,
                 'info': info,
@@ -122,10 +152,6 @@ def list_videos(params):
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
-            common.sp.xbmcplugin.SORT_METHOD_DURATION,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
-            common.sp.xbmcplugin.SORT_METHOD_GENRE,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
@@ -135,47 +161,14 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_live_item(params):
-    title = ''
-    # subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    live_html = utils.get_webcontent(URL_LIVE)
-    url_live = re.compile(
-        'streaming_url = \'(.*?)\'').findall(live_html)[0]
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url_live=url_live,
-        ),
-        'is_playable': True,
-        'info': info
-    }
+    return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        file_path = utils.get_webcontent(params.video_url)
-        url_video = re.compile(
-            'source src=\"(.*?)\"').findall(file_path)[0]
-        return url_video
-    elif params.next == 'play_l':
-        return params.url_live
+        return resolver.get_brightcove_video_json(
+            params.data_account,
+            params.data_player,
+            params.data_video_id)

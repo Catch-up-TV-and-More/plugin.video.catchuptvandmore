@@ -20,6 +20,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Sky News *(Replay, Live TV)*
 - STV *(Live TV)*
 - STV 2 *(Live TV)*
+- Quest TV *(Replay)*
 
 ##### Web TV
 - Sky Sports — Sky *(Replay)*
@@ -39,7 +40,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - BX1 *(Replay, Live TV)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
-- VRT NU (Eén, Canvas, ...) *(Replay with VRT NU account, Live TV)*
+- VRT NU (Eén, Canvas, ...) *(Replay with VRT NU account)*
+- Eén *(Live TV)*
+- Canvas *(Live TV)*
+- Ketnet *(Live TV)*
 
 ##### TV Communauté allemande — *German Community TV*
 - BRF *(Replay)*
@@ -53,7 +57,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - ICI Télé *(Replay, Live TV)*
 
 ##### TV Communauté anglaise — *English Community TV*
-- YES TV *(Live TV)*
+- YES TV *(Live TV)* *(Contents {Ontario|Alberta})*
 
 ### Espagne — *Spain*
 ##### TV
@@ -64,12 +68,14 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Energy TV *(Live TV)*
 - Divinity *(Live TV)*
 - Be Mad *(Live TV)*
+- Realmadrid TV *(Live TV)* *(Contents {ES|EN})*
 
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV
 - CBS News *(Live TV)*
 - TBD *(Replay, Live TV)*
 - NYC Media *(Replay)*
+- ABC News *(Live TV)*
 
 ### France
 ##### TV
@@ -137,11 +143,12 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France TV Education — francetv *(Replay)*
 - Fun Radio *(Replay)*
 - France TV Slash — francetv *(Replay)*
+- Culturebox — francetv *(Replay)*
 
 ### Internationales — *International*
 ##### TV
 - TV5Monde Afrique *(Replay)*
-- Arte *(Replay, Live TV)* *(Contents {FR|DE|EN|ES|PL})*
+- Arte *(Replay)* *(Contents {FR|DE|EN|ES|PL|IT})* *(Live TV)* *(Contents {FR|DE})*
 - Euronews *(Live TV)* *(Contents {FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU})*
 - France 24 *(Replay, Live TV)* *(Contents {FR|EN|AR|ES})*
 - NHK World *(Replay, Live TV)* *(Contents {Outside Japan|In Japan})*
@@ -154,8 +161,12 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - DW *(Live TV)* *(Contents {EN|AR|DE|ES})*
 - Bein Sports *(Replay)* *(Contents {AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY})*
 - Souvenirs From Earth *(Live TV)*
-- QVC *(Live TV)* *(Contents {FR})*
+- QVC *(Live TV)* *(Contents {FR|JP|DE|IT|UK|US})*
 - ICI RDI *(Live TV)*
+- CGTN *(Live TV)* *(Contents {FR|EN|AR|ES|RU})*
+- CGTN Documentary *(Live TV)*
+- Paramount Channel *(Live TV)* *(Contents {ES|IT})*
+- Afrique Media *(Replay, Live TV)*
 
 ### Japon — *Japan*
 ##### TV
@@ -166,6 +177,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - MBSテレビ *(Replay)*
 - 朝日放送株式会社 *(Replay)*
 - 読売テレビ *(Replay)*
+- 日テレ News24 *(Live TV)*
 
 ##### Web TV
 - NHK ニュース *(Replay)*
@@ -179,8 +191,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Suisse — *Switzerland*
 ##### TV Communauté française — *French Community TV*
 - RTS *(Replay, Live TV)*
-- Rouge TV *(Replay, Live TV)*
+- Rouge TV *(Live TV)*
 - TVM3 *(Replay)*
+- BeCurious TV *(Replay)*
 
 ##### TV Communauté italienne — *Italian Community TV*
 - RSI *(Replay, Live TV)*
@@ -213,6 +226,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Auto Plus <https://video.autoplus.fr>
 - 30 Millions d'Amis <http://www.30millionsdamis.fr>
 - Elle <http://videos.elle.fr>
+- Ina <http://www.ina.fr/>
 
 ### Suisse — *Switzerland*
 ##### Communauté française — *French Community*

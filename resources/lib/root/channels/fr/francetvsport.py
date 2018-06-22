@@ -252,7 +252,7 @@ def start_live_tv_stream(params):
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
                     module_name=params.module_name,
-                    action='start_live_tv_stream',
+                    action='replay_entry',
                     next='play_l',
                     id_diffusion=id_diffusion
                 ),
@@ -294,7 +294,7 @@ def start_live_tv_stream(params):
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
-                action='start_live_tv_stream',
+                action='replay_entry',
                 next='play_l'
             ),
             'is_playable': False,

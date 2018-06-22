@@ -72,7 +72,9 @@ SKELETON = {
             ('be', 'build_live_tv_menu'): [
                 ('rtc', 'none'),
                 ('telemb', 'none'),
-                ('vrt', 'none'),
+                ('een', 'none'),
+                ('canvas', 'none'),
+                ('ketnet', 'none'),
                 ('auvio', 'none'),
                 ('tvlux', 'none'),
                 ('bx1', 'none')
@@ -113,12 +115,17 @@ SKELETON = {
                 ('tivi5monde', 'none'),
                 ('souvenirsfromearth', 'none'),
                 ('qvc', 'none'),
-                ('icirdi', 'none')
+                ('icirdi', 'none'),
+                ('cgtn', 'none'),
+                ('cgtndocumentary', 'none'),
+                ('paramountchannel', 'none'),
+                ('afriquemedia', 'none')
             ],
 
             ('us', 'build_live_tv_menu'): [
                 ('cbsnews', 'none'),
-                ('tbd', 'none')
+                ('tbd', 'none'),
+                ('abcnews', 'none')
             ],
 
             ('pl', 'build_live_tv_menu'): [
@@ -132,7 +139,12 @@ SKELETON = {
                 ('boing', 'none'),
                 ('energy', 'none'),
                 ('divinity', 'none'),
-                ('bemad', 'none')
+                ('bemad', 'none'),
+                ('realmadridtv', 'none')
+            ],
+
+            ('jp', 'build_live_tv_menu'): [
+                ('ntvnews24', 'none')
             ]
         },
 
@@ -221,7 +233,8 @@ SKELETON = {
                 ('fun_radio', 'replay_entry'),
                 ('slash', 'replay_entry'),
                 ('polar-plus', 'replay_entry'),
-                ('france3regions', 'replay_entry')
+                ('france3regions', 'replay_entry'),
+                ('culturebox', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -244,8 +257,9 @@ SKELETON = {
                 ('srf', 'replay_entry'),
                 ('rtr', 'replay_entry'),
                 ('swissinfo', 'replay_entry'),
-                ('rougetv', 'replay_entry'),
-                ('tvm3', 'replay_entry')
+                # ('rougetv', 'replay_entry'),
+                ('tvm3', 'replay_entry'),
+                ('becurioustv', 'replay_entry')
             ],
 
             ('uk', 'generic_menu'): [
@@ -255,7 +269,8 @@ SKELETON = {
                 ('yesterday', 'replay_entry'),
                 ('drama', 'replay_entry'),
                 ('skynews', 'replay_entry'),
-                ('skysports', 'replay_entry')
+                ('skysports', 'replay_entry'),
+                ('questtv', 'replay_entry')
             ],
 
             ('wo', 'generic_menu'): [
@@ -269,7 +284,9 @@ SKELETON = {
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
-                ('beinsports', 'replay_entry')
+                ('beinsports', 'replay_entry'),
+                # ('paramountchannel', 'replay_entry'),
+                ('afriquemedia', 'replay_entry')
             ],
 
             ('us', 'generic_menu'): [
@@ -288,7 +305,8 @@ SKELETON = {
             ('30millionsdamis', 'website_entry'),
             ('elle', 'website_entry'),
             ('nytimes', 'website_entry'),
-            ('fosdem', 'website_entry')
+            ('fosdem', 'website_entry'),
+            ('ina', 'website_entry')
         ]
 
     }
@@ -444,7 +462,20 @@ CHANNELS = {
     'polar-plus': 'mycanal',
     'virginradiotv': 'virginradiotv',
     'tbd': 'tbd',
-    'nycmedia': 'nycmedia'
+    'nycmedia': 'nycmedia',
+    'cgtn': 'cgtn',
+    'cgtndocumentary': 'cgtn',
+    'culturebox': 'culturebox',
+    'ntvnews24': 'ntvnews24',
+    'paramountchannel': 'paramountchannel',
+    'questtv': 'questtv',
+    'realmadridtv': 'realmadridtv',
+    'afriquemedia': 'afriquemedia',
+    'becurioustv': 'becurioustv',
+    'een': 'vrt',
+    'canvas': 'vrt',
+    'ketnet': 'vrt',
+    'abcnews': 'abcnews'
 }
 
 '''
@@ -483,11 +514,14 @@ LABELS = {
     'bel_rtl': 'BEL RTL',
     'rtl_info': 'RTL INFO',
     'bx1': 'BX1',
+    'een': 'Eén',
+    'canvas': 'Canvas',
+    'ketnet': 'Ketnet',
 
     # Canadian channels / live TV
     'tv5': 'TV5',
     'unis': 'UNIS',
-    'yestv': 'YES TV',
+    'yestv': 'YES TV (' + common.PLUGIN.get_setting('yestv.region') + ')',
     'telequebec': 'Télé-Québec',
     'tva': 'TVA',
     'icitele': 'ICI Télé',
@@ -500,6 +534,7 @@ LABELS = {
     'swissinfo': 'SWISSINFO',
     'rougetv': 'Rouge TV',
     'tvm3': 'TVM3',
+    'becurioustv': 'BeCurious TV',
 
     # French channels / live TV
     'tf1': 'TF1',
@@ -564,6 +599,7 @@ LABELS = {
     'slash': 'France tv slash',
     'polar-plus': 'Polar+',
     'virginradiotv': 'Virgin Radio TV',
+    'culturebox': 'Culturebox (francetv)',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -577,6 +613,7 @@ LABELS = {
     'mbs': 'MBSテレビ',
     'abc': '朝日放送株式会社',
     'ytv': '読売テレビ',
+    'ntvnews24': '日テレ News24',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',
@@ -588,6 +625,7 @@ LABELS = {
     'skysports': 'Sky Sports',
     'stv': 'STV',
     'stv2': 'STV 2',
+    'questtv': 'Quest TV',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',
@@ -606,11 +644,16 @@ LABELS = {
     'souvenirsfromearth': 'Souvenirs From Earth',
     'qvc': 'QVC (' + common.PLUGIN.get_setting('qvc.language') + ')',
     'icirdi': 'ICI RDI',
+    'cgtn': 'CGTN (' + common.PLUGIN.get_setting('cgtn.language') + ')',
+    'cgtndocumentary': 'CGTN Documentary',
+    'paramountchannel': 'Paramount Channel (' + common.PLUGIN.get_setting('paramountchannel.language') + ')',
+    'afriquemedia': 'Afrique Media',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
     'tbd': 'TBD',
     'nycmedia': 'NYC Media',
+    'abcnews': 'ABC News',
 
     # Poland channels / live TV
     'tvp': 'TVP',
@@ -623,6 +666,7 @@ LABELS = {
     'energy': 'Energy TV',
     'divinity': 'Divinity',
     'bemad': 'Be Mad',
+    'realmadridtv': 'Realmadrid TV (' + common.PLUGIN.get_setting('realmadridtv.language') + ')',
 
     # Websites
     'allocine': 'Allociné',
@@ -635,5 +679,6 @@ LABELS = {
     '30millionsdamis': '30 Millions d\'Amis',
     'elle': 'Elle',
     'nytimes': 'New York Times',
-    'fosdem': 'Fosdem'
+    'fosdem': 'Fosdem',
+    'ina': 'Ina'
 }

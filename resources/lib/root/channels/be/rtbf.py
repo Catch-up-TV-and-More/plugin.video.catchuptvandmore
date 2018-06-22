@@ -129,7 +129,7 @@ def list_shows(params):
                 module_name=params.module_name,
                 emission_title=emission_title,
                 action='replay_entry',
-                next='list_shows_2',
+                next='list_shows_emissions_1',
                 window_title=emission_title
             )
         })
@@ -152,12 +152,12 @@ def list_shows(params):
                                 action='replay_entry',
                                 category_url=category_url,
                                 category_name=category_name,
-                                next='list_videos_categorie',
+                                next='list_shows_categories_1',
                                 window_title=category_name
                             )
                         })
 
-    elif params.next == 'list_shows_2':
+    elif params.next == 'list_shows_emissions_1':
 
         file_path = utils.download_catalog(
             URL_EMISSIONS_AUVIO,
@@ -194,6 +194,33 @@ def list_shows(params):
                 )
             })
 
+    elif params.next == 'list_shows_categories_1':
+    
+        sub_categories_html = utils.get_webcontent(
+            params.category_url)
+        sub_categories_soup = bs(sub_categories_html, 'html.parser')
+        list_sub_categories = sub_categories_soup.find_all(
+            'section', class_="js-item-container")
+
+        for sub_category in list_sub_categories:
+
+            sub_category_title = " ".join(sub_category.find('h2').get_text().encode('utf-8').split())
+            sub_category_id = sub_category.get('id')
+
+            shows.append({
+                'label': sub_category_title,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    sub_category_title=sub_category_title,
+                    action='replay_entry',
+                    sub_category_id=sub_category_id ,
+                    category_url=params.category_url,
+                    next='list_videos_categorie',
+                    window_title=sub_category_title
+                )
+            })
+
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
@@ -226,6 +253,9 @@ def list_videos(params):
                 title = video["title"].encode('utf-8')
             img = URL_ROOT_IMAGE_RTBF + video["thumbnail"]["full_medium"]
             url_video = video["urlHls"]
+            if 'drm' in url_video:
+                # the following url is not drm protected
+                url_video = video["urlHlsAes128"]
             plot = ''
             if video["description"]:
                 plot = video["description"].encode('utf-8')
@@ -288,65 +318,70 @@ def list_videos(params):
 
         file_path = utils.get_webcontent(params.category_url)
         episodes_soup = bs(file_path, 'html.parser')
-        list_episodes = episodes_soup.find_all('article')
+        list_categories = episodes_soup.find_all('section', class_="js-item-container")
 
-        for episode in list_episodes:
+        for select_category_value in list_categories:
+            if select_category_value.get('id') == params.sub_category_id:
 
-            if episode.get('data-type') == 'media':
-                if episode.find('h4'):
-                    title = episode.find('h3').find(
-                        'a').get('title') + ' - ' + \
-                        episode.find('h4').get_text()
-                else:
-                    title = episode.find('h3').find('a').get('title')
-                duration = 0
-                video_id = episode.get('data-id')
-                all_images = episode.find('img').get(
-                    'data-srcset').split(',')
-                for image in all_images:
-                    img = image.split(' ')[0]
+                list_episodes = select_category_value.find_all('article')
 
-                info = {
-                    'video': {
-                        'title': title,
-                        # 'plot': plot,
-                        # 'episode': episode_number,
-                        # 'season': season_number,
-                        # 'rating': note,
-                        # 'aired': aired,
-                        # 'date': date,
-                        'duration': duration,
-                        # 'year': year,
-                        'mediatype': 'tvshow'
-                    }
-                }
+                for episode in list_episodes:
 
-                download_video = (
-                    common.GETTEXT('Download'),
-                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                        action='download_video',
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        video_id=video_id) + ')'
-                )
-                context_menu = []
-                context_menu.append(download_video)
+                    if episode.get('data-type') == 'media':
+                        if episode.find('h4'):
+                            title = episode.find('h3').find(
+                                'a').get('title') + ' - ' + \
+                                episode.find('h4').get_text()
+                        else:
+                            title = episode.find('h3').find('a').get('title')
+                        duration = 0
+                        video_id = episode.get('data-id')
+                        all_images = episode.find('img').get(
+                            'data-srcset').split(',')
+                        for image in all_images:
+                            img = image.split(' ')[0]
 
-                videos.append({
-                    'label': title,
-                    'thumb': img,
-                    'fanart': img,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        action='replay_entry',
-                        next='play_r_categorie',
-                        video_id=video_id
-                    ),
-                    'is_playable': True,
-                    'info': info,
-                    'context_menu': context_menu
-                })
+                        info = {
+                            'video': {
+                                'title': title,
+                                # 'plot': plot,
+                                # 'episode': episode_number,
+                                # 'season': season_number,
+                                # 'rating': note,
+                                # 'aired': aired,
+                                # 'date': date,
+                                'duration': duration,
+                                # 'year': year,
+                                'mediatype': 'tvshow'
+                            }
+                        }
+
+                        download_video = (
+                            common.GETTEXT('Download'),
+                            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                                action='download_video',
+                                module_path=params.module_path,
+                                module_name=params.module_name,
+                                video_id=video_id) + ')'
+                        )
+                        context_menu = []
+                        context_menu.append(download_video)
+
+                        videos.append({
+                            'label': title,
+                            'thumb': img,
+                            'fanart': img,
+                            'url': common.PLUGIN.get_url(
+                                module_path=params.module_path,
+                                module_name=params.module_name,
+                                action='replay_entry',
+                                next='play_r_categorie',
+                                video_id=video_id
+                            ),
+                            'is_playable': True,
+                            'info': info,
+                            'context_menu': context_menu
+                        })
 
     return common.PLUGIN.create_listing(
         videos,
@@ -440,12 +475,10 @@ def get_video_url(params):
             file_path)[0]
         data_stream = data_stream.replace('&quot;', '"')
         data_stream_json = json.loads(data_stream)
-        if 'drm' in data_stream_json["urlHls"]:
-            utils.send_notification(common.ADDON.get_localized_string(30702))
-            return ''
-        return data_stream_json["urlHls"]
+        url_video = data_stream_json["urlHls"]
+        if 'drm' in url_video:
+            # the following url is not drm protected
+            url_video = data_stream_json["urlHlsAes128"]
+        return url_video
     elif params.next == 'play_r':
-        if 'drm' in params.url_video:
-            utils.send_notification(common.ADDON.get_localized_string(30702))
-            return ''
         return params.url_video

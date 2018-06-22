@@ -34,7 +34,7 @@ from resources.lib import common
 # Add More Buttons for replay Sky News
 # Some video Sky sports required account (add account)
 
-URL_LIVE_SKYNEWS = 'http://news.sky.com/watch-live'
+URL_LIVE_SKYNEWS = 'https://news.sky.com/watch-live'
 
 URL_IMG_YOUTUBE = 'https://i.ytimg.com/vi/%s/hqdefault.jpg'
 # video_id

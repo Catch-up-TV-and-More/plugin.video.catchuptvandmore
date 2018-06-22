@@ -90,6 +90,9 @@
 
             <setting label="TVM3" type="bool" id="tvm3" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="tvm3.order" default="7"/>
+
+            <setting label="BeCurious TV" type="bool" id="becurioustv" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="becurioustv.order" default="8"/>
         <!-- Switzerland -->
 
 
@@ -123,6 +126,9 @@
 
             <setting label="STV 2" type="bool" id="stv2" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="stv2.order" default="9"/>
+
+            <setting label="Quest TV" type="bool" id="questtv" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="questtv.order" default="10"/>
         <!-- United Kingdom -->
 
 
@@ -177,6 +183,18 @@
 
             <setting label="ICI RDI" type="bool" id="icirdi" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="icirdi.order" default="16"/>
+
+            <setting label="CGTN" type="bool" id="cgtn" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="cgtn.order" default="17"/>
+
+            <setting label="CGTN Documentary" type="bool" id="cgtndocumentary" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="cgtndocumentary.order" default="18"/>
+
+            <setting label="Paramount Channel" type="bool" id="paramountchannel" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="paramountchannel.order" default="19"/>
+
+            <setting label="Afrique Media" type="bool" id="afriquemedia" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="afriquemedia.order" default="20"/>
         <!-- International -->
 
 
@@ -222,6 +240,15 @@
 
             <setting label="BX1" type="bool" id="bx1" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="bx1.order" default="13"/>
+
+            <setting label="Eén" type="bool" id="een" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="een.order" default="14"/>
+
+            <setting label="Canvas" type="bool" id="canvas" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="canvas.order" default="15"/>
+
+            <setting label="Ketnet" type="bool" id="ketnet" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="ketnet.order" default="16"/>
         <!-- Belgium -->
 
 
@@ -414,11 +441,14 @@
             <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
             <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-125,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="63"/>
+            <setting label="Culturebox (francetv)" type="bool" id="culturebox" default="true" visible="eq(-125,true)"/>
+            <setting label="" type="number" visible="false" id="culturebox.order" default="63"/>
 
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-127,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="64"/>-->
+            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-127,true)"/>
+            <setting label="" type="number" visible="false" id="teva.order" default="64"/>
+
+            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-129,true)"/>
+            <setting label="" type="number" visible="false" id="parispremiere.order" default="65"/>-->
         <!-- France -->
 
 
@@ -455,6 +485,9 @@
 
             <setting label="読売テレビ" type="bool" id="ytv" default="true" visible="eq(-19,true)"/>
             <setting label="" type="number" visible="false" id="ytv.order" default="10"/>
+
+            <setting label="日テレ News24" type="bool" id="ntvnews24" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="ntvnews24.order" default="11"/>
 
             <!--<setting label="フジテレビ" type="bool" id="cx" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="cx.order" default="8"/>-->
@@ -497,6 +530,9 @@
 
             <setting label="NYC Media" type="bool" id="nycmedia" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="nycmedia.order" default="3"/>
+
+            <setting label="ABC News" type="bool" id="abcnews" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="abcnews.order" default="4"/>
         <!-- United States -->
 
         <!-- Poland -->
@@ -531,6 +567,9 @@
 
             <setting label="Be Mad" type="bool" id="bemad" default="true" visible="eq(-13,true)"/>
             <setting label="" type="number" visible="false" id="bemad.order" default="7"/>
+
+            <setting label="Realmadrid TV" type="bool" id="realmadridtv" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="realmadridtv.order" default="8"/>
         <!-- Spain -->
 
     </category>
@@ -578,6 +617,9 @@
             <setting label="Fosdem" type="bool" id="fosdem" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="fosdem.order" default="11"/>
 
+            <setting label="Ina" type="bool" id="ina" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="ina.order" default="12"/>
+
     </category>
     <!-- Websites -->  
 
@@ -600,14 +642,16 @@
             <setting label="30085" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="" type="bool" id="wo" default="true" visible="false"/>
 
-                <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE|EN|ES|PL" default="FR"/>
+                <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE|EN|ES|PL|IT" default="FR"/>
                 <setting label="30155" type="labelenum" id="euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU" default="FR"/>
                 <setting label="30154" type="labelenum" id="france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES" default="FR"/>
                 <setting label="30156" type="labelenum" id="mtv.language" visible="eq(-4,true)" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" visible="eq(-5,true)" values="EN|DE|ES|AR" default="EN"/>
                 <setting label="30160" type="labelenum" id="beinsports.language" visible="eq(-6,true)" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
-                <setting label="30161" type="labelenum" id="qvc.language" visible="eq(-7,true)" values="FR" default="FR"/>
+                <setting label="30161" type="labelenum" id="qvc.language" visible="eq(-7,true)" values="FR|JP|DE|IT|UK|US" default="FR"/>
                 <setting label="30162" type="labelenum" id="nhkworld.country" visible="eq(-8,true)" values="Outside Japan|In Japan" default="Outside Japan"/>
+                <setting label="30163" type="labelenum" id="cgtn.language" visible="eq(-9,true)" values="FR|EN|AR|ES|RU" default="FR"/>
+                <setting label="30164" type="labelenum" id="paramountchannel.language" visible="eq(-10,true)" values="ES|IT" default="ES"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -615,6 +659,18 @@
                 
                 <setting label="30158" type="labelenum" id="france3.region" visible="eq(-1,true)" values="Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes" default="Alpes"/>
                 <setting label="30159" type="labelenum" id="la_1ere.region" visible="eq(-2,true)" values="Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer" default="Guadeloupe"/>
+
+            <!-- Spain channels -->
+            <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
+            <setting label="" type="bool" id="es" default="true" visible="false"/>
+                
+                <setting label="30165" type="labelenum" id="realmadridtv.language" visible="eq(-1,true)" values="ES|EN" default="ES"/>
+
+            <!-- Canada channels -->
+            <setting label="30086" type="lsep" subsetting="true" visible="eq(1,true)"/>
+            <setting label="" type="bool" id="ca" default="true" visible="false"/>
+                
+                <setting label="30166" type="labelenum" id="yestv.region" visible="eq(-1,true)" values="Ontario|Alberta" default="Ontario"/>
 
     </category>
     <!-- Quality and Content -->

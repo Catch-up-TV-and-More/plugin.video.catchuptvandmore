@@ -35,10 +35,10 @@ Channels:
 
 URL_ROOT_EDUCATION = 'http://education.francetv.fr'
 
-URL_VIDEO_DATA_EDUCTATION = URL_ROOT_EDUCATION + '/video/%s/sisters'
+URL_VIDEO_DATA_EDUCATION = URL_ROOT_EDUCATION + '/video/%s/sisters'
 # TitleVideo
 
-URL_SERIE_DATA_EDUCTION = URL_ROOT_EDUCATION + '/programme/%s/section?page=%s'
+URL_SERIE_DATA_EDUCATION = URL_ROOT_EDUCATION + '/recherche?q=%s&type=video&xtmc=%s'
 # TitleSerie, page
 
 CATEGORIES_EDUCATION = {
@@ -106,8 +106,9 @@ def list_shows(params):
         shows_html = utils.get_webcontent(
             params.category_url % params.page)
         shows_soup = bs(shows_html, 'html.parser')
-        list_shows_education = shows_soup.find_all(
-            'div', class_='col-xs-3 ')
+        list_shows_education = shows_soup.find(
+            'div', class_='center-block bloc-thumbnails').find_all(
+                'div', class_=re.compile("col-xs-3"))
 
         for show_data in list_shows_education:
 
@@ -117,6 +118,7 @@ def list_shows(params):
                 'a').get('title')
             show_image = show_data.find(
                 'div', class_='thumbnail-img lazy').get('data-original')
+            category_url_videos = URL_SERIE_DATA_EDUCATION % (show_data_name, show_data_name) + '&page=%s'
 
             shows.append({
                 'label': show_title,
@@ -125,7 +127,7 @@ def list_shows(params):
                     module_path=params.module_path,
                     module_name=params.module_name,
                     action='replay_entry',
-                    show_data_name=show_data_name,
+                    category_url_videos=category_url_videos,
                     page='1',
                     title=show_title,
                     next='list_videos_education_2',
@@ -171,8 +173,9 @@ def list_videos(params):
         list_videos_html = utils.get_webcontent(
             params.category_url % (params.page))
         list_videos_soup = bs(list_videos_html, 'html.parser')
-        list_videos_datas = list_videos_soup.find_all(
-            "div", class_="col-xs-3 ")
+        list_videos_datas = list_videos_soup.find(
+            'div', class_='center-block bloc-thumbnails').find_all(
+                "div", class_=re.compile("col-xs-3"))
 
         for video_data in list_videos_datas:
 
@@ -184,7 +187,7 @@ def list_videos(params):
             data_video_title = video_data.find(
                 'div', class_='ftve-thumbnail ').get('data-contenu')
             html_video_data = utils.get_webcontent(
-                URL_VIDEO_DATA_EDUCTATION % data_video_title)
+                URL_VIDEO_DATA_EDUCATION % data_video_title)
             id_diffusion = re.compile(
                 r'videos.francetv.fr\/video\/(.*?)\@'
             ).findall(html_video_data)[0]
@@ -243,17 +246,15 @@ def list_videos(params):
                 previous_listing=str(videos)
             )
         })
-
+    
     elif params.next == 'list_videos_education_2':
-
+    
         list_videos_html = utils.get_webcontent(
-            URL_SERIE_DATA_EDUCTION % (params.show_data_name, params.page))
-        print 'URL_SERIE_DATA_EDUCTION: ' + URL_SERIE_DATA_EDUCTION % (
-            params.show_data_name, params.page)
+            params.category_url_videos % (params.page))
         list_videos_soup = bs(list_videos_html, 'html.parser')
         list_videos_datas = list_videos_soup.find(
-            'div', class_='content-section').find_all(
-                'div', class_='col-xs-3 ')
+            'div', class_='center-block bloc-thumbnails').find_all(
+                "div", class_=re.compile("col-xs-3"))
 
         for video_data in list_videos_datas:
 
@@ -265,10 +266,10 @@ def list_videos(params):
             data_video_title = video_data.find(
                 'div', class_='ftve-thumbnail ').get('data-contenu')
             html_video_data = utils.get_webcontent(
-                URL_VIDEO_DATA_EDUCTATION % data_video_title)
+                URL_VIDEO_DATA_EDUCATION % data_video_title)
             id_diffusion = re.compile(
-                r'videos.francetv.fr\/video\/(.*?)\@').findall(
-                html_video_data)[0]
+                r'videos.francetv.fr\/video\/(.*?)\@'
+            ).findall(html_video_data)[0]
 
             info = {
                 'video': {
@@ -315,8 +316,8 @@ def list_videos(params):
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                show_data_name=params.show_data_name,
-                next='list_videos_education_2',
+                category_url_videos=params.category_url_videos,
+                next=params.next,
                 page=str(int(params.page) + 1),
                 title=params.title,
                 window_title=params.window_title,

@@ -227,6 +227,22 @@ msgctxt "#30162"
 msgid "NHK World: Choose Country"
 msgstr ""
 
+msgctxt "#30163"
+msgid "CGTN: Choose Channel"
+msgstr ""
+
+msgctxt "#30164"
+msgid "Paramount Channel: Choose Channel"
+msgstr ""
+
+msgctxt "#30165"
+msgid "Realmadrid TV: Choose Channel"
+msgstr ""
+
+msgctxt "#30166"
+msgid "Yes TV: Choose region"
+msgstr ""
+
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"
@@ -461,4 +477,8 @@ msgstr ""
 
 msgctxt "#30715"
 msgid "Search programs"
+msgstr ""
+
+msgctxt "#30716"
+msgid "Video stream is not available"
 msgstr ""
