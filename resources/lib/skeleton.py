@@ -291,7 +291,8 @@ SKELETON = {
 
             ('us', 'generic_menu'): [
                 ('tbd', 'replay_entry'),
-                ('nycmedia', 'replay_entry')
+                ('nycmedia', 'replay_entry'),
+                ('abcnews', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
