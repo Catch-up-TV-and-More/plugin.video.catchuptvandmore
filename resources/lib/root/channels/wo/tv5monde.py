@@ -54,16 +54,10 @@ def channel_entry(params):
     return None
 
 
-LIST_LIVE_TV5MONDE_FBS = {
-    common.GETTEXT('Live TV') + ' France Belgique Suisse': 'fbs'
-}
-
-LIST_LIVE_TV5MONDE_INFO = {
-    common.GETTEXT('Live TV') + ' Info Plus': 'infoplus'
-}
-
-LIST_LIVE_TIVI5MONDE = {
-    common.GETTEXT('Live TV') + ' TIVI 5Monde': 'tivi5monde'
+LIST_LIVE_TV5MONDE = {
+    'tv5mondefbs': 'fbs',
+    'tv5mondeinfo': 'infoplus',
+    'tivi5monde': 'tivi5monde'
 }
 
 CATEGORIES_VIDEOS_TV5MONDE = {
@@ -756,110 +750,9 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    lives = []
-
-    if params.channel_name == 'tv5mondefbs':
-        for live_name, live_id in LIST_LIVE_TV5MONDE_FBS.iteritems():
-
-            live_title = live_name
-            live_html = utils.get_webcontent(
-                URL_TV5MONDE_LIVE + '%s.html' % live_id)
-            live_json = re.compile(
-                r'data-broadcast=\'(.*?)\'').findall(live_html)[0]
-            live_json_parser = json.loads(live_json)
-            live_url = live_json_parser["files"][0]["url"]
-            live_img = URL_TV5MONDE_LIVE + re.compile(
-                r'data-image=\"(.*?)\"').findall(live_html)[0]
-
-            info = {
-                'video': {
-                    'title': live_title
-                }
-            }
-
-            lives.append({
-                'label': live_title,
-                'thumb': live_img,
-                'url': common.PLUGIN.get_url(
-                    action='start_live_tv_stream',
-                    next='play_l',
-                    module_name=params.module_name,
-                    module_path=params.module_path,
-                    live_url=live_url,
-                ),
-                'is_playable': True,
-                'info': info
-            })
-    
-    elif params.channel_name == 'tv5mondeinfo':
-        for live_name, live_id in LIST_LIVE_TV5MONDE_INFO.iteritems():
-
-            live_title = live_name
-            live_html = utils.get_webcontent(
-                URL_TV5MONDE_LIVE + '%s.html' % live_id)
-            live_json = re.compile(
-                r'data-broadcast=\'(.*?)\'').findall(live_html)[0]
-            live_json_parser = json.loads(live_json)
-            live_url = live_json_parser["files"][0]["url"]
-            live_img = URL_TV5MONDE_LIVE + re.compile(
-                r'data-image=\"(.*?)\"').findall(live_html)[0]
-
-            info = {
-                'video': {
-                    'title': live_title
-                }
-            }
-
-            lives.append({
-                'label': live_title,
-                'thumb': live_img,
-                'url': common.PLUGIN.get_url(
-                    action='start_live_tv_stream',
-                    next='play_l',
-                    module_name=params.module_name,
-                    module_path=params.module_path,
-                    live_url=live_url,
-                ),
-                'is_playable': True,
-                'info': info
-            })
-
-    elif params.channel_name == 'tivi5monde':
-
-        for live_name, live_id in LIST_LIVE_TIVI5MONDE.iteritems():
-
-            live_title = live_name
-            live_html = utils.get_webcontent(
-                URL_TV5MONDE_LIVE + '%s.html' % live_id)
-            live_json = re.compile(
-                r'data-broadcast=\'(.*?)\'').findall(live_html)[0]
-            live_json_parser = json.loads(live_json)
-            live_url = live_json_parser["files"][0]["url"]
-            live_img = URL_TV5MONDE_LIVE + re.compile(
-                r'data-image=\"(.*?)\"').findall(live_html)[0]
-
-            info = {
-                'video': {
-                    'title': live_title
-                }
-            }
-
-            lives.append({
-                'label': live_title,
-                'thumb': live_img,
-                'url': common.PLUGIN.get_url(
-                    action='start_live_tv_stream',
-                    next='play_l',
-                    module_name=params.module_name,
-                    module_path=params.module_path,
-                    live_url=live_url,
-                ),
-                'is_playable': True,
-                'info': info
-            })
-
-    return lives
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -879,4 +772,13 @@ def get_video_url(params):
             info_video_html)[0]
         return video_url
     elif params.next == 'play_l':
-        return params.live_url
+        live_id = ''
+        for channel_name, live_id_value in LIST_LIVE_TV5MONDE.iteritems():
+            if params.channel_name == channel_name:
+                live_id = live_id_value
+        live_html = utils.get_webcontent(
+            URL_TV5MONDE_LIVE + '%s.html' % live_id)
+        live_json = re.compile(
+            r'data-broadcast=\'(.*?)\'').findall(live_html)[0]
+        live_json_parser = json.loads(live_json)
+        return live_json_parser["files"][0]["url"]

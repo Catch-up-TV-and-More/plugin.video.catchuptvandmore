@@ -174,46 +174,18 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    live_html = utils.get_webcontent(URL_LIVE)
-    url_live = re.compile(
-        'source src=\"(.*?)\"').findall(live_html)[0]
-    img = re.compile(
-        'poster=\"(.*?)\"').findall(live_html)[0]
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url_live=url_live
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url_live
+        live_html = utils.get_webcontent(URL_LIVE)
+        return re.compile(
+            'source src=\"(.*?)\"').findall(live_html)[0]
     elif params.next == 'play_r' or params.next == 'download_video':
         # Case Youtube
         if 'youtube' in params.video_url:

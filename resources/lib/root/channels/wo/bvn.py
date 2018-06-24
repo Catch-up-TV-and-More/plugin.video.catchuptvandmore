@@ -268,64 +268,37 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    file_path = utils.download_catalog(
-        URL_LIVE_SITE,
-        '%s_live.html' % (params.channel_name))
-    live_html = open(file_path).read()
-    id_value = re.compile(
-        r'<script id="(.*?)"').findall(live_html)[0].split('_')
-
-    # json with hls
-    file_path_json = utils.download_catalog(
-        JSON_LIVE % (id_value[0], id_value[1], id_value[2]),
-        '%s_live.json' % (params.channel_name))
-    live_json = open(file_path_json).read()
-    live_jsonparser = json.loads(live_json)
-
-    # json with token
-    file_path_json_token = utils.download_catalog(
-        JSON_LIVE_TOKEN % (id_value[0], id_value[1], id_value[2]),
-        '%s_live_token.json' % (params.channel_name))
-    live_json_token = open(file_path_json_token).read()
-    live_jsonparser_token = json.loads(live_json_token)
-
-    url_live = 'http:' + live_jsonparser["hls"].encode('utf-8') + \
-        live_jsonparser_token["token"].encode('utf-8')
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url_live=url_live
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url_live
+        file_path = utils.download_catalog(
+            URL_LIVE_SITE,
+            '%s_live.html' % (params.channel_name))
+        live_html = open(file_path).read()
+        id_value = re.compile(
+            r'<script id="(.*?)"').findall(live_html)[0].split('_')
+
+        # json with hls
+        file_path_json = utils.download_catalog(
+            JSON_LIVE % (id_value[0], id_value[1], id_value[2]),
+            '%s_live.json' % (params.channel_name))
+        live_json = open(file_path_json).read()
+        live_jsonparser = json.loads(live_json)
+
+        # json with token
+        file_path_json_token = utils.download_catalog(
+            JSON_LIVE_TOKEN % (id_value[0], id_value[1], id_value[2]),
+            '%s_live_token.json' % (params.channel_name))
+        live_json_token = open(file_path_json_token).read()
+        live_jsonparser_token = json.loads(live_json_token)
+
+        return 'http:' + live_jsonparser["hls"].encode('utf-8') + \
+            live_jsonparser_token["token"].encode('utf-8')
     elif params.next == 'play_r' or params.next == 'download_video':
         return params.url_hls
