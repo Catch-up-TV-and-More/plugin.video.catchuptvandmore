@@ -23,12 +23,14 @@
 import json
 import ast
 import time
+import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
+# More button (bfmparis) ?
 
 # BFMTV, RMC, ONENET, etc ...
 URL_TOKEN = 'http://api.nextradiotv.com/%s-applications/'
@@ -54,6 +56,8 @@ URL_VIDEO = 'http://api.nextradiotv.com/%s-applications/%s/' \
 URL_LIVE_BFMTV = 'http://www.bfmtv.com/mediaplayer/live-video/'
 
 URL_LIVE_BFM_PARIS = 'http://www.bfmtv.com/mediaplayer/live-bfm-paris/'
+
+URL_REPLAY_BFMPARIS = 'https://www.bfmtv.com/mediaplayer/videos-bfm-paris/'
 
 # Channel BFM Business
 URL_LIVE_BFMBUSINESS = 'http://bfmbusiness.bfmtv.com/mediaplayer/live-video/'
@@ -99,6 +103,22 @@ def list_shows(params):
     shows = []
 
     if params.channel_name == 'rmcdecouverte':
+        
+        all_video = common.ADDON.get_localized_string(30701)
+
+        shows.append({
+            'label': common.GETTEXT('All videos'),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='list_videos_1',
+                all_video=all_video,
+                window_title=all_video
+            )
+        })
+
+    elif params.channel_name == 'bfmparis':
         
         all_video = common.ADDON.get_localized_string(30701)
 
@@ -220,6 +240,64 @@ def list_videos(params):
                     action='replay_entry',
                     next='play_r',
                     video_id=video_id
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+    elif params.channel_name == 'bfmparis':
+        
+        file_path = utils.download_catalog(
+            URL_REPLAY_BFMPARIS,
+            '%s_replay.html' % (params.channel_name))
+        program_html = open(file_path).read()
+
+        program_soup = bs(program_html, 'html.parser')
+        videos_soup = program_soup.find_all(
+            'article',
+            class_='art-c modulx3 bg-color-4 relative')
+        for video in videos_soup:
+            if 'https' not in video.find('a')['href']:
+                video_url = 'https:' + video.find('a')['href']
+            else:
+                video_url = video.find('a')['href']
+            video_img = video.find('img')['data-original']
+            video_title = video.find('img')['alt']
+
+            info = {
+                'video': {
+                    'title': video_title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    # 'duration': video_duration,
+                    # 'plot': video_plot,
+                    # 'year': year,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                common.GETTEXT('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    video_url=video_url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': video_title,
+                'thumb': video_img,
+                'fanart': video_img,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='play_r',
+                    video_url=video_url
                 ),
                 'is_playable': True,
                 'info': info,
@@ -403,6 +481,24 @@ def get_video_url(params):
     elif params.channel_name == 'rmcdecouverte' and \
             params.next == 'download_video':
         return URL_VIDEO_HTML_RMCDECOUVERTE % (params.video_id)
+    elif params.channel_name == 'bfmparis' and params.next == 'play_r':
+        url_video_datas = utils.get_webcontent(
+            params.video_url)
+
+        data_account = re.compile(
+            r'data-account="(.*?)"').findall(url_video_datas)[0]
+        data_video_id = re.compile(
+            r'data-video-id="(.*?)"').findall(url_video_datas)[0]
+        data_player = re.compile(
+            r'data-player="(.*?)"').findall(url_video_datas)[0]
+
+        return resolver.get_brightcove_video_json(
+            data_account,
+            data_player,
+            data_video_id)
+    elif params.channel_name == 'bfmparis' and \
+            params.next == 'download_video':
+        return params.video_url
     elif params.channel_name != 'rmcdecouverte' and \
             (params.next == 'play_r' or params.next == 'download_video'):
         file_medias = utils.get_webcontent(

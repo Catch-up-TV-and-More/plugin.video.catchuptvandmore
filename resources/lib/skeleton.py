@@ -235,7 +235,8 @@ SKELETON = {
                 ('slash', 'replay_entry'),
                 ('polar-plus', 'replay_entry'),
                 ('france3regions', 'replay_entry'),
-                ('culturebox', 'replay_entry')
+                ('culturebox', 'replay_entry'),
+                ('bfmparis', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
