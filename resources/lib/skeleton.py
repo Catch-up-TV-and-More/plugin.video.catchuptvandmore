@@ -66,7 +66,8 @@ SKELETON = {
                 ('gong', 'none'),
                 ('bfmparis', 'none'),
                 ('melodytv', 'none'),
-                ('virginradiotv', 'none')
+                ('virginradiotv', 'none'),
+                ('kto', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -476,7 +477,8 @@ CHANNELS = {
     'een': 'vrt',
     'canvas': 'vrt',
     'ketnet': 'vrt',
-    'abcnews': 'abcnews'
+    'abcnews': 'abcnews',
+    'kto': 'kto'
 }
 
 '''
@@ -601,6 +603,7 @@ LABELS = {
     'polar-plus': 'Polar+',
     'virginradiotv': 'Virgin Radio TV',
     'culturebox': 'Culturebox (francetv)',
+    'kto': 'KTO',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

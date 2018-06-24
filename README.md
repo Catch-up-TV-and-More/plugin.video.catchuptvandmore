@@ -126,6 +126,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Melody TV *(Live TV)*
 - Polar+ *(Replay)*
 - Virgin Radio TV *(Live TV)*
+- KTO *(Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
