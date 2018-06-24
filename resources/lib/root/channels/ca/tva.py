@@ -207,50 +207,28 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    live_html = utils.get_webcontent(URL_LIVE)
-    data_account = re.compile(
-        r'accountId":"(.*?)"').findall(live_html)[0]
-    data_player = re.compile(
-        r'playerId":"(.*?)"').findall(live_html)[0]
-    data_video_id = re.compile(
-        r'assetId":"(.*?)"').findall(live_html)[0]
-
-    info = {
-        'video': {
-            'title': params.channel_label + ' Live TV',
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label + ' Live TV',
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            data_account=data_account,
-            data_player=data_player,
-            data_video_id=data_video_id
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
-    return resolver.get_brightcove_video_json(
-        params.data_account,
-        params.data_player,
-        params.data_video_id)
+    if params.next == 'play_r' or params.next == 'download_video':
+        return resolver.get_brightcove_video_json(
+            params.data_account,
+            params.data_player,
+            params.data_video_id)
+    elif params.next == 'play_l':
+        live_html = utils.get_webcontent(URL_LIVE)
+        data_account = re.compile(
+            r'accountId":"(.*?)"').findall(live_html)[0]
+        data_player = re.compile(
+            r'playerId":"(.*?)"').findall(live_html)[0]
+        data_video_id = re.compile(
+            r'assetId":"(.*?)"').findall(live_html)[0]
+        return resolver.get_brightcove_video_json(
+            data_account,
+            data_player,
+            data_video_id)

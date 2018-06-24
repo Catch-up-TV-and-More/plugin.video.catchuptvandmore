@@ -28,6 +28,8 @@ from resources.lib.root.channels.fr import live_tv_fr
 from resources.lib.root.channels.es import live_tv_es
 from resources.lib.root.channels.jp import live_tv_jp
 from resources.lib.root.channels.us import live_tv_us
+from resources.lib.root.channels.ca import live_tv_ca
+from resources.lib.root.channels.uk import live_tv_uk
 
 
 @common.PLUGIN.action()
@@ -236,6 +238,10 @@ def build_live_tv_menu(params):
         return live_tv_jp.build_live_tv_menu(params)
     elif country == "us":
         return live_tv_us.build_live_tv_menu(params)
+    elif country == "ca":
+        return live_tv_ca.build_live_tv_menu(params)
+    elif country == "uk":
+        return live_tv_uk.build_live_tv_menu(params)
 
     else:
 
@@ -355,6 +361,10 @@ def start_live_tv_stream(params):
     elif "'jp'," in params.module_path:
         return channel.start_live_tv_stream(params)
     elif "'us'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'ca'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'uk'," in params.module_path:
         return channel.start_live_tv_stream(params)
     else:
         return channel.get_video_url(params)

@@ -34,8 +34,6 @@ from resources.lib import common
 URL_LIVE_JSON = 'http://dbxm993i42r09.cloudfront.net/' \
                 'configs/blaze.json?callback=blaze'
 
-URL_NOW_PLAYING = 'http://www.blaze.tv/home/index/now-playing'
-
 # Replay
 URL_SHOWS = 'http://www.blaze.tv/series?page=%s'
 # pageId
@@ -249,49 +247,17 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    title = ''
-    # subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    video_html = utils.get_webcontent(URL_NOW_PLAYING)
-    title_live = bs(video_html, 'html.parser')
-    title = title_live.get_text()
-    url_live_html = utils.get_webcontent(URL_LIVE_JSON)
-    url_live = re.compile('"url": "(.*?)"').findall(url_live_html)[0]
-
-    info = {
-        'video': {
-            'title': params.channel_label + " - [I]" + title + "[/I]",
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label + " - [I]" + title + "[/I]",
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url=url_live
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url
+        url_live_html = utils.get_webcontent(URL_LIVE_JSON)
+        return re.compile('"url": "(.*?)"').findall(url_live_html)[0]
     elif params.next == 'play_r' or params.next == 'download_video':
         video_html = utils.get_webcontent(params.video_url)
         videoId = re.compile('data-uvid="(.*?)"').findall(video_html)[0]
