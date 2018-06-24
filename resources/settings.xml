@@ -195,6 +195,12 @@
 
             <setting label="Afrique Media" type="bool" id="afriquemedia" default="true" visible="eq(-39,true)"/>
             <setting label="" type="number" visible="false" id="afriquemedia.order" default="20"/>
+
+            <setting label="TV5Monde France Belgique Suisse" type="bool" id="tv5mondefbs" default="true" visible="eq(-41,true)"/>
+            <setting label="" type="number" visible="false" id="tv5mondefbs.order" default="21"/>
+
+            <setting label="TV5Monde Info" type="bool" id="tv5mondeinfo" default="true" visible="eq(-43,true)"/>
+            <setting label="" type="number" visible="false" id="tv5mondeinfo.order" default="22"/>
         <!-- International -->
 
 

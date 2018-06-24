@@ -112,7 +112,8 @@ SKELETON = {
                 ('icitelevision', 'none'),
                 ('nhkworld', 'none'),
                 ('dw', 'none'),
-                ('tv5monde', 'none'),
+                ('tv5mondefbs', 'none'),
+                ('tv5mondeinfo', 'none'),
                 ('tivi5monde', 'none'),
                 ('souvenirsfromearth', 'none'),
                 ('qvc', 'none'),
@@ -479,7 +480,9 @@ CHANNELS = {
     'canvas': 'vrt',
     'ketnet': 'vrt',
     'abcnews': 'abcnews',
-    'kto': 'kto'
+    'kto': 'kto',
+    'tv5mondefbs': 'tv5monde',
+    'tv5mondeinfo': 'tv5monde'
 }
 
 '''
@@ -653,6 +656,8 @@ LABELS = {
     'cgtndocumentary': 'CGTN Documentary',
     'paramountchannel': 'Paramount Channel (' + common.PLUGIN.get_setting('paramountchannel.language') + ')',
     'afriquemedia': 'Afrique Media',
+    'tv5mondefbs': 'TV5Monde France Belgique Suisse',
+    'tv5mondeinfo': 'TV5Monde Info',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
