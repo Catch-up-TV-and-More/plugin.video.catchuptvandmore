@@ -25,6 +25,9 @@ from resources.lib import common
 from resources.lib import vpn
 from resources.lib import utils
 from resources.lib.root.channels.fr import live_tv_fr
+from resources.lib.root.channels.es import live_tv_es
+from resources.lib.root.channels.jp import live_tv_jp
+from resources.lib.root.channels.us import live_tv_us
 
 
 @common.PLUGIN.action()
@@ -227,6 +230,12 @@ def build_live_tv_menu(params):
     country = folder_path[-1]
     if country == "fr":
         return live_tv_fr.build_live_tv_menu(params)
+    elif country == "es":
+        return live_tv_es.build_live_tv_menu(params)
+    elif country == "jp":
+        return live_tv_jp.build_live_tv_menu(params)
+    elif country == "us":
+        return live_tv_us.build_live_tv_menu(params)
 
     else:
 
@@ -340,6 +349,12 @@ def start_live_tv_stream(params):
 
     # Fix tempo pour le XMLTV de France
     if "'fr'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'es'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'jp'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'us'," in params.module_path:
         return channel.start_live_tv_stream(params)
     else:
         return channel.get_video_url(params)
