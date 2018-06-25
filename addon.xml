@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.14~beta002"
+       version="0.1.14~beta003"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -34,6 +34,8 @@
 [Add Channel] ABC News (US) (wwark)
 [Add Live TV] KTO (wwark)
 [Add Channel] BFMParis (wwark)
+[Rework] TVP Live TV (wwark)
+[improvements] Add better view and faster loading for Live TV (ES, UK, US, WO, CA, PL, BE, JP)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -32,6 +32,7 @@ from resources.lib.root.channels.ca import live_tv_ca
 from resources.lib.root.channels.uk import live_tv_uk
 from resources.lib.root.channels.be import live_tv_be
 from resources.lib.root.channels.wo import live_tv_wo
+from resources.lib.root.channels.pl import live_tv_pl
 
 
 @common.PLUGIN.action()
@@ -248,7 +249,8 @@ def build_live_tv_menu(params):
         return live_tv_be.build_live_tv_menu(params)
     elif country == "wo":
         return live_tv_wo.build_live_tv_menu(params)
-
+    elif country == "pl":
+        return live_tv_pl.build_live_tv_menu(params)
     else:
 
         # First we sort channels
@@ -375,6 +377,8 @@ def start_live_tv_stream(params):
     elif "'be'," in params.module_path:
         return channel.start_live_tv_stream(params)
     elif "'wo'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'pl'," in params.module_path:
         return channel.start_live_tv_stream(params)
     else:
         return channel.get_video_url(params)

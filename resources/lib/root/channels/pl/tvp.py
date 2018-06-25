@@ -62,58 +62,69 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
+# def get_live_item(params):
     
-    lives = []
+#     lives = []
 
-    title = ''
-    # subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-    live_id = ''
+#     title = ''
+#     # subtitle = ' - '
+#     plot = ''
+#     duration = 0
+#     img = ''
+#     live_id = ''
 
-    lives_html = utils.get_webcontent(URL_LIVE)
-    lives_soup = bs(lives_html, 'html.parser')
-    lives_datas = lives_soup.find_all(
-        'div', class_=re.compile("button"))
+#     lives_html = utils.get_webcontent(URL_LIVE)
+#     lives_soup = bs(lives_html, 'html.parser')
+#     lives_datas = lives_soup.find_all(
+#         'div', class_=re.compile("button"))
     
-    for live_datas in lives_datas:
+#     for live_datas in lives_datas:
 
-        title = live_datas.get('data-stationname')
-        img = live_datas.find('img').get('src')
-        live_id = live_datas.get('data-video-id')
+#         title = live_datas.get('data-stationname')
+#         img = live_datas.find('img').get('src')
+#         live_id = live_datas.get('data-video-id')
 
-        info = {
-            'video': {
-                'title': title,
-                'plot': plot,
-                'duration': duration
-            }
-        }
+#         info = {
+#             'video': {
+#                 'title': title,
+#                 'plot': plot,
+#                 'duration': duration
+#             }
+#         }
 
-        lives.append({
-            'label': title,
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='start_live_tv_stream',
-                next='play_l',
-                live_id=live_id
-            ),
-            'is_playable': True,
-            'info': info
-        })
+#         lives.append({
+#             'label': title,
+#             'fanart': img,
+#             'thumb': img,
+#             'url': common.PLUGIN.get_url(
+#                 module_path=params.module_path,
+#                 module_name=params.module_name,
+#                 action='start_live_tv_stream',
+#                 next='play_l',
+#                 live_id=live_id
+#             ),
+#             'is_playable': True,
+#             'info': info
+#         })
     
-    return lives
+#     return lives
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        lives_html = utils.get_webcontent(URL_STREAM % params.live_id)
+        lives_html = utils.get_webcontent(URL_LIVE)
+        lives_soup = bs(lives_html, 'html.parser')
+        lives_datas = lives_soup.find_all(
+            'div', class_=re.compile("button"))
+        live_id = ''
+        # TODO
+        for live_datas in lives_datas:
+            live_id = live_datas.get('data-video-id')
+        lives_html = utils.get_webcontent(URL_STREAM % live_id)
         return re.compile(
             r'src:\'(.*?)\'').findall(lives_html)[0]

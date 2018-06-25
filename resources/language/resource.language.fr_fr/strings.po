@@ -243,6 +243,10 @@ msgctxt "#30166"
 msgid "Yes TV: Choose region"
 msgstr "Yes TV : Choix de la région"
 
+msgctxt "#30167"
+msgid "TVP 3: Choose region"
+msgstr "TVP 3 : Choix de la région"
+
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"

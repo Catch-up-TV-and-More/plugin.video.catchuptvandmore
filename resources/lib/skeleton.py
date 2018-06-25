@@ -131,7 +131,9 @@ SKELETON = {
             ],
 
             ('pl', 'build_live_tv_menu'): [
-                ('tvp', 'none')
+                ('tvp3', 'none'),
+                ('tvpinfo', 'none'),
+                ('tvppolonia', 'none')
             ],
 
             ('es', 'build_live_tv_menu'): [
@@ -482,7 +484,10 @@ CHANNELS = {
     'abcnews': 'abcnews',
     'kto': 'kto',
     'tv5mondefbs': 'tv5monde',
-    'tv5mondeinfo': 'tv5monde'
+    'tv5mondeinfo': 'tv5monde',
+    'tvp3': 'tvp',
+    'tvpinfo': 'tvp',
+    'tvppolonia': 'tvp'
 }
 
 '''
@@ -667,6 +672,9 @@ LABELS = {
 
     # Poland channels / live TV
     'tvp': 'TVP',
+    'tvp3': 'TVP 3 (' + common.PLUGIN.get_setting('tvp3.region') + ')',
+    'tvpinfo': 'TVP Info',
+    'tvppolonia': 'TVP Polonia',
 
     # Spanish channels / live TV
     'telecinco': 'Telecinco',
