@@ -50,6 +50,25 @@ def channel_entry(params):
         return get_video_url(params)
 
 
+LIVE_TVP3_REGIONS = {
+    "Białystok": "tvp3-bialystok",
+    "Bydgoszcz": "tvp3-bydgoszcz",
+    "Gdańsk": "tvp3-gdansk",
+    "Gorzów Wielkopolski": "tvp3-gorzow-wielkopolski",
+    "Katowice": "tvp3-katowice",
+    "Kielce": "tvp3-kielce",
+    "Kraków": "tvp3-krakow",
+    "Lublin": "tvp3-lublin",
+    "Łódź": "tvp3-lodz",
+    "Olsztyn": "tvp3-olsztyn",
+    "Opole": "tvp3-opole",
+    "Poznań": "tvp3-poznan",
+    "Rzeszów": "tvp3-rzeszow",
+    "Szczecin": "tvp3-szczecin",
+    "Warszawa": "tvp3-warszawa",
+    "Wrocław": "tvp3-wroclaw"
+}
+
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
     """Build categories listing"""
@@ -65,52 +84,6 @@ def list_videos(params):
 def start_live_tv_stream(params):
     params['next'] = 'play_l'
     return get_video_url(params)
-# def get_live_item(params):
-    
-#     lives = []
-
-#     title = ''
-#     # subtitle = ' - '
-#     plot = ''
-#     duration = 0
-#     img = ''
-#     live_id = ''
-
-#     lives_html = utils.get_webcontent(URL_LIVE)
-#     lives_soup = bs(lives_html, 'html.parser')
-#     lives_datas = lives_soup.find_all(
-#         'div', class_=re.compile("button"))
-    
-#     for live_datas in lives_datas:
-
-#         title = live_datas.get('data-stationname')
-#         img = live_datas.find('img').get('src')
-#         live_id = live_datas.get('data-video-id')
-
-#         info = {
-#             'video': {
-#                 'title': title,
-#                 'plot': plot,
-#                 'duration': duration
-#             }
-#         }
-
-#         lives.append({
-#             'label': title,
-#             'fanart': img,
-#             'thumb': img,
-#             'url': common.PLUGIN.get_url(
-#                 module_path=params.module_path,
-#                 module_name=params.module_name,
-#                 action='start_live_tv_stream',
-#                 next='play_l',
-#                 live_id=live_id
-#             ),
-#             'is_playable': True,
-#             'info': info
-#         })
-    
-#     return lives
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -122,9 +95,18 @@ def get_video_url(params):
         lives_datas = lives_soup.find_all(
             'div', class_=re.compile("button"))
         live_id = ''
-        # TODO
         for live_datas in lives_datas:
-            live_id = live_datas.get('data-video-id')
+            if params.module_name == 'tvpinfo':
+                if 'info' in live_datas.find('img').get('alt'):
+                    live_id = live_datas.get('data-video-id')
+            elif params.module_name == 'tvppolonia':
+                if 'Polonia' in live_datas.get('data-title'):
+                    live_id = live_datas.get('data-video-id')
+            elif params.module_name == 'tvp3':
+                if LIVE_TVP3_REGIONS[common.PLUGIN.get_setting('tvp3.region')] in live_datas.find('img').get('alt'):
+                    live_id = live_datas.get('data-video-id')
+        if live_id == '':
+            return None
         lives_html = utils.get_webcontent(URL_STREAM % live_id)
         return re.compile(
             r'src:\'(.*?)\'').findall(lives_html)[0]
