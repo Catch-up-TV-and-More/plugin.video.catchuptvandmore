@@ -67,11 +67,11 @@ def get_video_url(params):
         file_path = utils.get_webcontent(
             URL_LIVE)
         data_account = re.compile(
-            r'data-account="(.*?)"').findall(file_path)[0]
+            r'accountId\: "(.*?)"').findall(file_path)[0]
         data_player = re.compile(
-            r'data-player="(.*?)"').findall(file_path)[0]
+            r'player\: "(.*?)"').findall(file_path)[0]
         data_video_id = re.compile(
-            r'data-video-id="(.*?)"').findall(file_path)[0]
+            r'videoId\: "(.*?)"').findall(file_path)[0]
         return resolver.get_brightcove_video_json(
             data_account,
             data_player,

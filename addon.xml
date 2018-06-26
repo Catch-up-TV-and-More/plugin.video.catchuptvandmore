@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.14~beta004"
+       version="0.1.14~beta005"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -35,7 +35,8 @@
 [Add Live TV] KTO (wwark)
 [Add Channel] BFMParis (wwark)
 [Rework] TVP Live TV (wwark)
-[improvements] Add better view and faster loading for Live TV (ES, UK, US, WO, CA, PL, BE, JP, CH)
+[improvements] Add better view and faster loading for Live TV (ES, UK, US, WO, CA, PL, BE, JP, CH) (wwark)
+[Fix] 日テレ News24 - Live TV (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
