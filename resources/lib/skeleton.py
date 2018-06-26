@@ -90,10 +90,18 @@ SKELETON = {
 
             ('ch', 'build_live_tv_menu'): [
                 ('rougetv', 'none'),
-                ('rts', 'none'),
-                ('rsi', 'none'),
-                ('srf', 'none'),
-                ('rtr', 'none')
+                ('rtsun', 'none'),
+                ('rtsdeux', 'none'),
+                ('rtsinfo', 'none'),
+                ('rtscouleur3', 'none'),
+                ('rsila1', 'none'),
+                ('rsila2', 'none'),
+                ('srf1', 'none'),
+                ('srfinfo', 'none'),
+                ('srfzwei', 'none'),
+                ('rtraufsrf1', 'none'),
+                ('rtraufsrf2', 'none'),
+                ('rtraufsrfinfo', 'none')
             ],
 
             ('uk', 'build_live_tv_menu'): [
@@ -487,7 +495,19 @@ CHANNELS = {
     'tv5mondeinfo': 'tv5monde',
     'tvp3': 'tvp',
     'tvpinfo': 'tvp',
-    'tvppolonia': 'tvp'
+    'tvppolonia': 'tvp',
+    'rtsun': 'srgssr',
+    'rtsdeux': 'srgssr',
+    'rtsinfo': 'srgssr',
+    'rtscouleur3': 'srgssr',
+    'rsila1': 'srgssr',
+    'rsila2': 'srgssr',
+    'srf1': 'srgssr',
+    'srfinfo': 'srgssr',
+    'srfzwei': 'srgssr',
+    'rtraufsrf1': 'srgssr',
+    'rtraufsrf2': 'srgssr',
+    'rtraufsrfinfo': 'srgssr'
 }
 
 '''
@@ -547,6 +567,18 @@ LABELS = {
     'rougetv': 'Rouge TV',
     'tvm3': 'TVM3',
     'becurioustv': 'BeCurious TV',
+    'rtsun': 'RTS Un',
+    'rtsdeux': 'RTS Deux',
+    'rtsinfo': 'RTS Info',
+    'rtscouleur3': 'RTS Couleur 3',
+    'rsila1': 'RSI La 1',
+    'rsila2': 'RSI La 2',
+    'srf1': 'SRF 1',
+    'srfinfo': 'SRF Info',
+    'srfzwei': 'SRF Zwei',
+    'rtraufsrf1': 'RTR auf SRF 1',
+    'rtraufsrf2': 'RTR auf SRF 2',
+    'rtraufsrfinfo': 'RTR auf SRF Info',
 
     # French channels / live TV
     'tf1': 'TF1',

@@ -93,6 +93,42 @@
 
             <setting label="BeCurious TV" type="bool" id="becurioustv" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="becurioustv.order" default="8"/>
+
+            <setting label="RTS Un" type="bool" id="rtsun" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="rtsun.order" default="9"/>
+
+            <setting label="RTS Deux" type="bool" id="rtsdeux" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="rtsdeux.order" default="10"/>
+
+            <setting label="RTS Info" type="bool" id="rtsinfo" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="rtsinfo.order" default="11"/>
+
+            <setting label="RTS Couleur 3" type="bool" id="rtscouleur3" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="rtscouleur3.order" default="12"/>
+
+            <setting label="RSI La 1" type="bool" id="rsila1" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="rsila1.order" default="13"/>
+
+            <setting label="RSI La 2" type="bool" id="rsila2" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="rsila2.order" default="14"/>
+
+            <setting label="SRF 1" type="bool" id="srf1" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="srf1.order" default="15"/>
+
+            <setting label="SRF Info" type="bool" id="srfinfo" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="srfinfo.order" default="16"/>
+
+            <setting label="SRF Zwei" type="bool" id="srfzwei" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="srfzwei.order" default="17"/>
+
+            <setting label="RTR auf SRF 1" type="bool" id="rtraufsrf1" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="rtraufsrf1.order" default="18"/>
+
+            <setting label="RTR auf SRF Info" type="bool" id="rtraufsrfinfo" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="rtraufsrfinfo.order" default="19"/>
+
+            <setting label="RTR auf SRF 2" type="bool" id="rtraufsrf2" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="rtraufsrf2.order" default="20"/>
         <!-- Switzerland -->
 
 

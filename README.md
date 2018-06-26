@@ -195,19 +195,31 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ### Suisse — *Switzerland*
 ##### TV Communauté française — *French Community TV*
-- RTS *(Replay, Live TV)*
+- RTS *(Replay)*
+- RTS Un *(Live TV)*
+- RTS Deux *(Live TV)*
+- RTS Info *(Live TV)*
+- RTS Couleur 3 *(Live TV)*
 - Rouge TV *(Live TV)*
 - TVM3 *(Replay)*
 - BeCurious TV *(Replay)*
 
 ##### TV Communauté italienne — *Italian Community TV*
-- RSI *(Replay, Live TV)*
+- RSI *(Replay)*
+- RSI La 1 *(Live TV)*
+- RSI La 2 *(Live TV)*
 
 ##### TV Communauté allemande — *German Community TV*
-- SRF *(Replay, Live TV)*
+- SRF *(Replay)*
+- SRF 1 *(Live TV)*
+- SRF Zwei *(Live TV)*
+- SRF Info *(Live TV)*
 
 ##### TV Communauté romanche — *Romansh Community TV*
-- RTR *(Replay, Live TV)*
+- RTR *(Replay)*
+- RTR auf SRF 1 *(Live TV)*
+- RTR auf SRF 2 *(Live TV)*
+- RTR auf Info *(Live TV)*
 
 ##### Web TV
 - SWISSINFO *(Replay)*
