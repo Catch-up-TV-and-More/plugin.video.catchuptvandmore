@@ -134,39 +134,9 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    title = ''
-    # subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    live_html = utils.get_webcontent(URL_LIVE)
-    url_live = re.compile(
-        'streaming_url = \'(.*?)\'').findall(live_html)[0]
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url_live=url_live,
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -178,4 +148,6 @@ def get_video_url(params):
             'source src=\"(.*?)\"').findall(file_path)[0]
         return url_video
     elif params.next == 'play_l':
-        return params.url_live
+        live_html = utils.get_webcontent(URL_LIVE)
+        return re.compile(
+            'streaming_url = \'(.*?)\'').findall(live_html)[0]
