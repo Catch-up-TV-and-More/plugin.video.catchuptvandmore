@@ -291,7 +291,6 @@ def start_live_tv_stream(params):
         return None
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -319,9 +318,11 @@ def get_video_url(params):
 
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 "Choose Stream", all_datas_videos_quality)
-
-            url_selected = all_datas_videos_path[seleted_item].encode(
-                'utf-8')
+            if seleted_item > -1:
+                url_selected = all_datas_videos_path[seleted_item].encode(
+                    'utf-8')
+            else:
+                return None
 
         elif desired_quality == "BEST":
             url_selected = video_streams['HTTPS_SQ_1']['url']
