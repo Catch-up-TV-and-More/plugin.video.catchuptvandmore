@@ -126,7 +126,8 @@ def list_videos(params):
                 '\\u00e9','é').replace('\\u00ea','ê').replace(
                     '&#039;','\'').replace('\\u00e8','è').replace(
                         '\\u00e7','ç').replace('\\u00ab','\"').replace(
-                            '\\u00bb','\"').replace('\\u00e0','à').replace('\\u00c9','É')
+                            '\\u00bb','\"').replace('\\u00e0','à').replace(
+                                '\\u00c9','É').replace('\\u00ef','ï')
         root_soup = bs(root_html, 'html.parser')
         programs = root_soup.find_all('a', class_='video-item-wrapper')
         programs += root_soup.find_all('a', class_='emission-item-wrapper')
