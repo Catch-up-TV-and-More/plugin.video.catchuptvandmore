@@ -416,54 +416,50 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
-    url_live_data = ''
-
-    if params.channel_name == 'rmcdecouverte':
-        url_live_data = URL_LIVE_RMCDECOUVERTE
-    elif params.channel_name == 'bfmtv':
-        url_live_data = URL_LIVE_BFMTV
-    elif params.channel_name == 'bfmparis':
-        url_live_data = URL_LIVE_BFM_PARIS
-    elif params.channel_name == 'bfmbusiness':
-        url_live_data = URL_LIVE_BFMBUSINESS
-    elif params.channel_name == 'rmc':
-        url_live_data = URL_LIVE_BFM_SPORT
-
-    live_html = utils.get_webcontent(
-        url_live_data)
-
-    live_soup = bs(live_html, 'html.parser')
-    if params.channel_name == 'rmcdecouverte':
-        data_live_soup = live_soup.find(
-            'div', class_='next-player')
-        data_account = data_live_soup['data-account']
-        data_video_id = data_live_soup['data-video-id']
-        data_player = data_live_soup['data-player']
-    else:
-        data_live_soup = live_soup.find(
-            'div', class_='BCLvideoWrapper')
-        data_account = data_live_soup.find(
-            'script')['data-account']
-        data_video_id = data_live_soup.find(
-            'script')['data-video-id']
-        data_player = data_live_soup.find(
-            'script')['data-player']
-
-    url_live = resolver.get_brightcove_video_json(
-        data_account,
-        data_player,
-        data_video_id)
-
     params['next'] = 'play_l'
-    params['url_live'] = url_live
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url_live
+        url_live_data = ''
+
+        if params.channel_name == 'rmcdecouverte':
+            url_live_data = URL_LIVE_RMCDECOUVERTE
+        elif params.channel_name == 'bfmtv':
+            url_live_data = URL_LIVE_BFMTV
+        elif params.channel_name == 'bfmparis':
+            url_live_data = URL_LIVE_BFM_PARIS
+        elif params.channel_name == 'bfmbusiness':
+            url_live_data = URL_LIVE_BFMBUSINESS
+        elif params.channel_name == 'rmc':
+            url_live_data = URL_LIVE_BFM_SPORT
+
+        live_html = utils.get_webcontent(
+            url_live_data)
+
+        live_soup = bs(live_html, 'html.parser')
+        if params.channel_name == 'rmcdecouverte':
+            data_live_soup = live_soup.find(
+                'div', class_='next-player')
+            data_account = data_live_soup['data-account']
+            data_video_id = data_live_soup['data-video-id']
+            data_player = data_live_soup['data-player']
+        else:
+            data_live_soup = live_soup.find(
+                'div', class_='BCLvideoWrapper')
+            data_account = data_live_soup.find(
+                'script')['data-account']
+            data_video_id = data_live_soup.find(
+                'script')['data-video-id']
+            data_player = data_live_soup.find(
+                'script')['data-player']
+
+        return resolver.get_brightcove_video_json(
+            data_account,
+            data_player,
+            data_video_id)
     elif params.channel_name == 'rmcdecouverte' and params.next == 'play_r':
         url_video_datas = utils.get_webcontent(
             URL_VIDEO_HTML_RMCDECOUVERTE % (params.video_id))
@@ -528,8 +524,11 @@ def get_video_url(params):
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 common.GETTEXT('Choose video quality'),
                 all_datas_videos_quality)
-
-            return all_datas_videos_path[seleted_item].encode('utf-8')
+            
+            if seleted_item > -1:
+                return all_datas_videos_path[seleted_item].encode('utf-8')
+            else:
+                return None
 
         elif desired_quality == 'BEST':
             # GET LAST NODE (VIDEO BEST QUALITY)

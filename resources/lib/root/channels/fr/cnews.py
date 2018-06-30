@@ -127,7 +127,8 @@ def list_videos(params):
                     '&#039;','\'').replace('\\u00e8','è').replace(
                         '\\u00e7','ç').replace('\\u00ab','\"').replace(
                             '\\u00bb','\"').replace('\\u00e0','à').replace(
-                                '\\u00c9','É').replace('\\u00ef','ï').replace('\\u00f9','ù')
+                                '\\u00c9','É').replace('\\u00ef','ï').replace(
+                                    '\\u00f9','ù').replace('\\u00c0','À')
         root_soup = bs(root_html, 'html.parser')
         programs = root_soup.find_all('a', class_='video-item-wrapper')
         programs += root_soup.find_all('a', class_='emission-item-wrapper')
@@ -222,7 +223,6 @@ def start_live_tv_stream(params):
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':

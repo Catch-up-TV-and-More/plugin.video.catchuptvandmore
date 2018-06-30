@@ -60,18 +60,29 @@ def start_live_tv_stream(params):
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
         file_path = utils.get_webcontent(
             URL_LIVE)
-        data_account = re.compile(
-            r'accountId\: "(.*?)"').findall(file_path)[0]
-        data_player = re.compile(
-            r'player\: "(.*?)"').findall(file_path)[0]
-        data_video_id = re.compile(
-            r'videoId\: "(.*?)"').findall(file_path)[0]
+        data_account = ''
+        data_player = ''
+        data_video_id = ''
+        if re.compile(
+            r'data-account="(.*?)"').findall(file_path) > 0:
+            data_account = re.compile(
+                r'data-account="(.*?)"').findall(file_path)[0]
+            data_player = re.compile(
+                r'data-player="(.*?)"').findall(file_path)[0]
+            data_video_id = re.compile(
+                r'data-video-id="(.*?)"').findall(file_path)[0]
+        else:
+            data_account = re.compile(
+                r'accountId\: "(.*?)"').findall(file_path)[0]
+            data_player = re.compile(
+                r'player\: "(.*?)"').findall(file_path)[0]
+            data_video_id = re.compile(
+                r'videoId\: "(.*?)"').findall(file_path)[0]
         return resolver.get_brightcove_video_json(
             data_account,
             data_player,

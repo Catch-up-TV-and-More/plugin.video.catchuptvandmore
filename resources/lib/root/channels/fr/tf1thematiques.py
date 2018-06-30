@@ -187,7 +187,6 @@ def list_videos(params):
 def list_live(params):
     return None
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
 
@@ -237,8 +236,11 @@ def get_video_url(params):
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 common.GETTEXT('Choose video quality'),
                 all_datas_videos_quality)
-            return all_datas_videos_path[seleted_item].encode(
-                'utf-8')
+            if seleted_item > -1:
+                return all_datas_videos_path[seleted_item].encode(
+                    'utf-8')
+            else:
+                return None
         elif DESIRED_QUALITY == 'BEST':
             # Last video in the Best
             for k in range(0, len(lines) - 1):

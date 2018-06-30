@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.14~beta007"
+       version="0.1.14~beta008"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -38,6 +38,8 @@
 [Improvements] Add better view and faster loading for Live TV (ES, UK, US, WO, CA, PL, BE, JP, CH) (wwark)
 [Fix] 日テレ News24 - Live TV (wwark)
 [Fix] CNews - Replay - Encoding text (wwark)
+[Change] Remove cache for get_video_url (wwark)
+[Change] Return None if cancel is choosen in DialogBox (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

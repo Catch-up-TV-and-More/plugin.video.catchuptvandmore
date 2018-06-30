@@ -352,7 +352,6 @@ def list_videos(params):
     )
 
 
-#@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     video_json = utils.get_webcontent(
@@ -360,9 +359,6 @@ def get_video_url(params):
         random_ua=True,
         specific_headers={'x-customer-name': 'rtlbe'})
     json_parser = json.loads(video_json)
-
-    print 'COUCOU'
-    print '\n\n' + video_json + '\n\n'
 
     video_assets = json_parser['clips'][0]['assets']
     if video_assets is None:

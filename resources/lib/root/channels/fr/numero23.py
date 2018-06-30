@@ -242,28 +242,23 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
-    file_path = utils.download_catalog(
-        URL_INFO_LIVE_JSON,
-        '%s_info_live.json' % (params.channel_name)
-    )
-    file_info_live = open(file_path).read()
-    json_parser = json.loads(file_info_live)
-
-    video_id = json_parser["video"].encode('utf-8')
-
-    # url_live = url_dailymotion_embed % video_id
-
     params['next'] = 'play_l'
-    params['video_id'] = video_id
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r':
         return resolver.get_stream_dailymotion(params.video_id, False)
     elif params.next == 'play_l':
-        return resolver.get_stream_dailymotion(params.video_id, False)
+        file_path = utils.download_catalog(
+            URL_INFO_LIVE_JSON,
+            '%s_info_live.json' % (params.channel_name)
+        )
+        file_info_live = open(file_path).read()
+        json_parser = json.loads(file_info_live)
+
+        video_id = json_parser["video"].encode('utf-8')
+        return resolver.get_stream_dailymotion(video_id, False)
     elif params.next == 'download_video':
         return resolver.get_stream_dailymotion(params.video_id, True)

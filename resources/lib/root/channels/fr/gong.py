@@ -173,17 +173,10 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
-    file_path = utils.get_webcontent(URL_LIVE)
-
-    url_live = re.compile(
-        r'x-mpegurl" src="(.*?)"').findall(file_path)[0]
-
     params['next'] = 'play_l'
-    params['url_live'] = url_live
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -195,4 +188,6 @@ def get_video_url(params):
         else:
             return resolver.get_stream_youtube(video_id, False)
     elif params.next == 'play_l':
-        return params.url_live
+        file_path = utils.get_webcontent(URL_LIVE)
+        return re.compile(
+            r'x-mpegurl" src="(.*?)"').findall(file_path)[0]

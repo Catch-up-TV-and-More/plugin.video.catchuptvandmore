@@ -460,7 +460,6 @@ def start_live_tv_stream(params):
     return lives
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':

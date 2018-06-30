@@ -348,17 +348,10 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
-    html_live = utils.get_webcontent(URL_LIVE_SITE)
-    video_id = re.compile(
-        r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(
-        html_live)[0]
-
     params['next'] = 'play_l'
-    params['video_id'] = video_id
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -371,4 +364,8 @@ def get_video_url(params):
         else:
             return resolver.get_stream_dailymotion(video_id, False)
     elif params.next == 'play_l':
-        return resolver.get_stream_dailymotion(params.video_id, False)
+        html_live = utils.get_webcontent(URL_LIVE_SITE)
+        video_id = re.compile(
+            r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(
+            html_live)[0]
+        return resolver.get_stream_dailymotion(video_id, False)
