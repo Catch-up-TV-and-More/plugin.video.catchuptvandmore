@@ -40,7 +40,13 @@ XMLTV_CHANNEL_ID = {
     'boing': '',
     'energy': '',
     'divinity': '',
-    'bemad': ''
+    'bemad': '',
+    'antena3': '',
+    'lasexta': '',
+    'neox': '',
+    'nova': '',
+    'mega': '',
+    'atreseries': ''
 }
 
 

@@ -69,6 +69,12 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Divinity *(Live TV)*
 - Be Mad *(Live TV)*
 - Realmadrid TV *(Live TV)* *(Contents {ES|EN})*
+- Antena 3 *(Live TV)*
+- La Sexta *(Live TV)*
+- Neox *(Live TV)*
+- Nova *(Live TV)*
+- Mega *(Live TV)*
+- Atreseries *(Live TV)*
 
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV

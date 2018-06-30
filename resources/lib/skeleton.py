@@ -152,7 +152,13 @@ SKELETON = {
                 ('energy', 'none'),
                 ('divinity', 'none'),
                 ('bemad', 'none'),
-                ('realmadridtv', 'none')
+                ('realmadridtv', 'none'),
+                ('antena3', 'none'),
+                ('lasexta', 'none'),
+                ('neox', 'none'),
+                ('nova', 'none'),
+                ('mega', 'none'),
+                ('atreseries', 'none')
             ],
 
             ('jp', 'build_live_tv_menu'): [
@@ -507,7 +513,13 @@ CHANNELS = {
     'srfzwei': 'srgssr',
     'rtraufsrf1': 'srgssr',
     'rtraufsrf2': 'srgssr',
-    'rtraufsrfinfo': 'srgssr'
+    'rtraufsrfinfo': 'srgssr',
+    'antena3': 'atresplayer',
+    'lasexta': 'atresplayer',
+    'neox': 'atresplayer',
+    'nova': 'atresplayer',
+    'mega': 'atresplayer',
+    'atreseries': 'atresplayer'
 }
 
 '''
@@ -717,6 +729,12 @@ LABELS = {
     'divinity': 'Divinity',
     'bemad': 'Be Mad',
     'realmadridtv': 'Realmadrid TV (' + common.PLUGIN.get_setting('realmadridtv.language') + ')',
+    'antena3': 'Antena 3',
+    'lasexta': 'La Sexta',
+    'neox': 'Neox',
+    'nova': 'Nova',
+    'mega': 'Mega',
+    'atreseries': 'Atreseries',
 
     # Websites
     'allocine': 'Allociné',

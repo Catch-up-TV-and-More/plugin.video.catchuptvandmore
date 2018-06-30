@@ -624,6 +624,24 @@
 
             <setting label="Realmadrid TV" type="bool" id="realmadridtv" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="realmadridtv.order" default="8"/>
+
+            <setting label="Antena 3" type="bool" id="antena3" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="antena3.order" default="9"/>
+
+            <setting label="La Sexta" type="bool" id="lasexta" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="lasexta.order" default="10"/>
+
+            <setting label="Neox" type="bool" id="neox" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="neox.order" default="11"/>
+
+            <setting label="Nova" type="bool" id="nova" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="nova.order" default="12"/>
+
+            <setting label="Mega" type="bool" id="mega" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="mega.order" default="13"/>
+
+            <setting label="Atreseries" type="bool" id="atreseries" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="atreseries.order" default="14"/>
         <!-- Spain -->
 
     </category>

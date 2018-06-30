@@ -40,6 +40,7 @@
 [Fix] CNews - Replay - Encoding text (wwark)
 [Change] Remove cache for get_video_url (wwark)
 [Change] Return None if cancel is choosen in DialogBox (wwark)
+[Add Live TV] Antena 3, La Sexta, Neox, Nova, Mega and Atreseries (ES) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
