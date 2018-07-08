@@ -237,6 +237,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Canada
 ##### Communauté française — *French Community*
 - Au pays des Têtes à claques <https://www.tetesaclaques.tv/>
+- Office National du Film du Canada <https://www.onf.ca/>
+
+##### Communauté anglaise — *English Community*
+- National Film Board Of Canada <https://www.nfb.ca/>
 
 ### Etat Unis d'Amérique — *United State of America*
 - New York Times <https://www.nytimes.com/video>

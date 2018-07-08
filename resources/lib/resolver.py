@@ -94,6 +94,13 @@ def ytdl_resolver(url_stream):
         return vid.streamURL()
     
 
+# Kaltura Part
+def get_stream_kaltura(video_url, isDownloadVideo):
+
+    if isDownloadVideo == True:
+        return video_url
+    return ytdl_resolver(video_url)
+
 # DailyMotion Part
 def get_stream_dailymotion(video_id, isDownloadVideo):
 

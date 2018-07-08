@@ -326,7 +326,9 @@ SKELETON = {
             ('elle', 'website_entry'),
             ('nytimes', 'website_entry'),
             ('fosdem', 'website_entry'),
-            ('ina', 'website_entry')
+            ('ina', 'website_entry'),
+            ('onf', 'website_entry'),
+            ('nfb', 'website_entry')
         ]
 
     }
@@ -748,5 +750,7 @@ LABELS = {
     'elle': 'Elle',
     'nytimes': 'New York Times',
     'fosdem': 'Fosdem',
-    'ina': 'Ina'
+    'ina': 'Ina',
+    'onf': 'Office National du Film du Canada',
+    'nfb': 'National Film Board Of Canada'
 }

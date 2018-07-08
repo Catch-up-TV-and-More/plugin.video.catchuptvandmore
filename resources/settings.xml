@@ -692,6 +692,11 @@
             <setting label="Ina" type="bool" id="ina" default="true" visible="eq(-23,true)"/>
             <setting label="" type="number" visible="false" id="ina.order" default="12"/>
 
+            <setting label="Office National du Film du Canada" type="bool" id="onf" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="inonfa.order" default="13"/>
+
+            <setting label="National Film Board Of Canada" type="bool" id="nfb" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="nfb.order" default="14"/>
     </category>
     <!-- Websites -->  
 
