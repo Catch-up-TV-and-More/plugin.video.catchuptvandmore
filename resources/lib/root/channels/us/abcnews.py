@@ -107,8 +107,11 @@ def list_videos(params):
 
     for episode_datas in list_episodes_datas:
     
-        video_title = episode_datas.find(
-            'img').get('alt').replace('VIDEO: ', '')
+        video_title = ''
+        if episode_datas.find(
+            'img').get('alt'):
+            video_title = episode_datas.find(
+                'img').get('alt').replace('VIDEO: ', '')
         video_duration = 0
         video_id = episode_datas.find('figure').get('data-id')
         video_img = episode_datas.find('img').get('data-src')
