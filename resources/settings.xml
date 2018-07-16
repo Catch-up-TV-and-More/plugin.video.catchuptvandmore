@@ -237,6 +237,9 @@
 
             <setting label="TV5Monde Info" type="bool" id="tv5mondeinfo" default="true" visible="eq(-43,true)"/>
             <setting label="" type="number" visible="false" id="tv5mondeinfo.order" default="22"/>
+
+            <setting label="Channel News Asia" type="bool" id="channelnewsasia" default="true" visible="eq(-45,true)"/>
+            <setting label="" type="number" visible="false" id="channelnewsasia.order" default="23"/>
         <!-- International -->
 
 

@@ -129,7 +129,8 @@ SKELETON = {
                 ('cgtn', 'none'),
                 ('cgtndocumentary', 'none'),
                 ('paramountchannel', 'none'),
-                ('afriquemedia', 'none')
+                ('afriquemedia', 'none'),
+                ('channelnewsasia', 'none')
             ],
 
             ('us', 'build_live_tv_menu'): [
@@ -521,7 +522,8 @@ CHANNELS = {
     'neox': 'atresplayer',
     'nova': 'atresplayer',
     'mega': 'atresplayer',
-    'atreseries': 'atresplayer'
+    'atreseries': 'atresplayer',
+    'channelnewsasia': 'channelnewsasia'
 }
 
 '''
@@ -709,6 +711,7 @@ LABELS = {
     'afriquemedia': 'Afrique Media',
     'tv5mondefbs': 'TV5Monde France Belgique Suisse',
     'tv5mondeinfo': 'TV5Monde Info',
+    'channelnewsasia': 'Channel News Asia',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',

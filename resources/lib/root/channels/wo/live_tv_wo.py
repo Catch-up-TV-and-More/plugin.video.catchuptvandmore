@@ -50,7 +50,8 @@ XMLTV_CHANNEL_ID = {
     'cgtn': '',
     'cgtndocumentary': '',
     'paramountchannel': '',
-    'afriquemedia': ''
+    'afriquemedia': '',
+    'channelnewsasia': ''
 }
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.14~beta010"
+       version="0.1.14~beta011"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -43,6 +43,7 @@
 [Add Live TV] Antena 3, La Sexta, Neox, Nova, Mega and Atreseries (ES) (wwark)
 [Add Website] ONF / NFB (CA) (wwark)
 [Improvements] NYC Media Replay (US) (wwark)
+[Add Live TV] Channel News Asia (WO) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
