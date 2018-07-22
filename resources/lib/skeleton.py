@@ -67,7 +67,8 @@ SKELETON = {
                 ('bfmparis', 'none'),
                 ('melodytv', 'none'),
                 ('virginradiotv', 'none'),
-                ('kto', 'none')
+                ('kto', 'none'),
+                ('antennereunion', '')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -525,7 +526,8 @@ CHANNELS = {
     'mega': 'atresplayer',
     'atreseries': 'atresplayer',
     'channelnewsasia': 'channelnewsasia',
-    'japanetshoppingdx': 'japanetshoppingdx'
+    'japanetshoppingdx': 'japanetshoppingdx',
+    'antennereunion': 'antennereunion'
 }
 
 '''
@@ -663,6 +665,7 @@ LABELS = {
     'virginradiotv': 'Virgin Radio TV',
     'culturebox': 'Culturebox (francetv)',
     'kto': 'KTO',
+    'antennereunion': 'Antenne Réunion',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

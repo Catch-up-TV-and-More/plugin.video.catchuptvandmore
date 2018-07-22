@@ -120,7 +120,8 @@ XMLTV_CHANNEL_ID = {
     'bfmparis': '',
     'melodytv': '',
     'virginradiotv': '',
-    'kto': ''
+    'kto': '',
+    'antennereunion': ''
 }
 
 

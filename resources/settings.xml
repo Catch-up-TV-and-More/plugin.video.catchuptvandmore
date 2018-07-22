@@ -492,11 +492,8 @@
             <setting label="KTO" type="bool" id="kto" default="true" visible="eq(-127,true)"/>
             <setting label="" type="number" visible="false" id="kto.order" default="64"/>
 
-            <!--<setting label="Teva" type="bool" id="teva" default="true" visible="eq(-129,true)"/>
-            <setting label="" type="number" visible="false" id="teva.order" default="65"/>
-
-            <setting label="Paris Première" type="bool" id="parispremiere" default="true" visible="eq(-131,true)"/>
-            <setting label="" type="number" visible="false" id="parispremiere.order" default="66"/>-->
+            <setting label="Antenne Réunion" type="bool" id="antennereunion" default="true" visible="eq(-129,true)"/>
+            <setting label="" type="number" visible="false" id="antennereunionkto.order" default="65"/>
         <!-- France -->
 
 
