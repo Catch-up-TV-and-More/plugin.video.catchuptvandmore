@@ -302,7 +302,7 @@ SKELETON = {
                 ('nhkworld', 'replay_entry'),
                 ('tv5monde', 'replay_entry'),
                 ('tivi5monde', 'replay_entry'),
-                ('bvn', 'replay_entry'),
+                # ('bvn', 'replay_entry'),
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),

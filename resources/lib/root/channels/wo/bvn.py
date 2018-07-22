@@ -28,15 +28,12 @@ from resources.lib import common
 from bs4 import BeautifulSoup as bs
 
 # TO DO
-# Info live (title, picture, plot)
-# Find JS with categories with text, ... ? more reliable
-# Fix errors, show error, etc ...
-
+# ReAdd (fix) Replay
 
 URL_ROOT = 'https://www.bvn.tv'
 
 # LIVE :
-URL_LIVE_SITE = 'https://www.bvn.tv/bvnlive'
+URL_LIVE_DATAS = URL_ROOT + '/wp-content/themes/bvn/assets/js/app.js'
 # Get Id
 JSON_LIVE = 'https://json.dacast.com/b/%s/%s/%s'
 # Id in 3 part
@@ -277,11 +274,11 @@ def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
         file_path = utils.download_catalog(
-            URL_LIVE_SITE,
+            URL_LIVE_DATAS,
             '%s_live.html' % (params.channel_name))
         live_html = open(file_path).read()
         id_value = re.compile(
-            r'<script id="(.*?)"').findall(live_html)[0].split('_')
+            r'dacast\(\'(.*?)\'\,').findall(live_html)[0].split('_')
 
         # json with hls
         file_path_json = utils.download_catalog(
