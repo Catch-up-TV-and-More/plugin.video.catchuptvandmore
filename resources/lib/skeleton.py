@@ -163,7 +163,8 @@ SKELETON = {
             ],
 
             ('jp', 'build_live_tv_menu'): [
-                ('ntvnews24', 'none')
+                ('ntvnews24', 'none'),
+                ('japanetshoppingdx', 'none')
             ]
         },
 
@@ -523,7 +524,8 @@ CHANNELS = {
     'nova': 'atresplayer',
     'mega': 'atresplayer',
     'atreseries': 'atresplayer',
-    'channelnewsasia': 'channelnewsasia'
+    'channelnewsasia': 'channelnewsasia',
+    'japanetshoppingdx': 'japanetshoppingdx'
 }
 
 '''
@@ -675,6 +677,7 @@ LABELS = {
     'abc': '朝日放送株式会社',
     'ytv': '読売テレビ',
     'ntvnews24': '日テレ News24',
+    'japanetshoppingdx': 'ジャパネットチャンネルDX',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',

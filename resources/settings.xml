@@ -537,6 +537,9 @@
             <setting label="日テレ News24" type="bool" id="ntvnews24" default="true" visible="eq(-21,true)"/>
             <setting label="" type="number" visible="false" id="ntvnews24.order" default="11"/>
 
+            <setting label="ジャパネットチャンネルDX" type="bool" id="japanetshoppingdx" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="japanetshoppingdx.order" default="12"/>
+
             <!--<setting label="フジテレビ" type="bool" id="cx" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="cx.order" default="8"/>-->
         <!-- Japan -->
