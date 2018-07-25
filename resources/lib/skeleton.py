@@ -302,7 +302,7 @@ SKELETON = {
                 ('nhkworld', 'replay_entry'),
                 ('tv5monde', 'replay_entry'),
                 ('tivi5monde', 'replay_entry'),
-                # ('bvn', 'replay_entry'),
+                ('bvn', 'replay_entry'),
                 ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
@@ -717,7 +717,7 @@ LABELS = {
     'afriquemedia': 'Afrique Media',
     'tv5mondefbs': 'TV5Monde France Belgique Suisse',
     'tv5mondeinfo': 'TV5Monde Info',
-    'channelnewsasia': 'Channel News Asia',
+    'channelnewsasia': 'Channel NewsAsia',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',

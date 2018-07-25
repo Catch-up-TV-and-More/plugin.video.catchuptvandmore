@@ -164,7 +164,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TV5Monde Info *(Live TV)*
 - TV5Monde France Belgique Suisse *(Live TV)*
 - Tivi 5Monde *(Replay, Live TV)*
-- BVN *(Live TV)*
+- BVN *(Replay, Live TV)*
 - ICI Télévision *(Replay, Live TV)*
 - MTV *(Replay)* *(Contents {FR})*
 - Arirang (아리랑) *(Replay, Live TV)*
@@ -177,7 +177,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - CGTN Documentary *(Live TV)*
 - Paramount Channel *(Live TV)* *(Contents {ES|IT})*
 - Afrique Media *(Replay, Live TV)*
-- Channel News Asia *(Live TV)*
+- Channel NewsAsia *(Live TV)*
 
 ### Japon — *Japan*
 ##### TV

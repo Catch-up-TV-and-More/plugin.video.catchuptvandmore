@@ -42,8 +42,8 @@ JSON_LIVE_TOKEN = 'https://services.dacast.com/token/i/b/%s/%s/%s'
 
 # REPLAY :
 URL_TOKEN = 'https://ida.omroep.nl/app.php/auth'
-URL_PROGRAMS = 'https://www.bvn.tv/programmas'
-URL_INFO_REPLAY = 'https://e.omroep.nl/metadata/%s?callback=jsonpCallback%s5910'
+URL_DAYS = URL_ROOT + '/uitzendinggemist/'
+URL_INFO_REPLAY = 'https://e.omroep.nl/metadata/%s'
 # Id Video, time
 URL_VIDEO_REPLAY = 'https://ida.omroep.nl/app.php/%s?adaptive=yes&token=%s'
 # Id Video, Token
@@ -70,50 +70,28 @@ def list_shows(params):
     shows = []
 
     if params.next == 'list_shows_1':
-        file_path = utils.download_catalog(
-            URL_PROGRAMS,
-            '%s_programs.html' % params.channel_name)
-        programs_html = open(file_path).read()
-
+        programs_html = utils.get_webcontent(URL_DAYS)
         programs_soup = bs(programs_html, 'html.parser')
-        list_js = programs_soup.find_all("script")
+        list_days_datas = programs_soup.find_all(
+            "h3", class_=re.compile("m-section__title"))
+        day_id = 0
 
-        for js in list_js:
-            js_value = js.prettify()
-            if 'programList' in js_value:
-                json_categories = js_value.replace(
-                    '</script>', ''
-                ).replace(
-                    '<script>', ''
-                ).replace(
-                    'var programList = ', ''
-                ).replace(
-                    '\n', ''
-                ).replace(
-                    '\r', ''
-                ).replace(
-                    ',]', ']')
-                json_categories_jsonparser = json.loads(json_categories)
+        for day_datas in list_days_datas:
+            day_name = day_datas.text
+            day_id = day_id + 1
 
-                for category in json_categories_jsonparser["programmings"]:
-                    category_name = category["title"]
-                    category_img = URL_ROOT + category["image"]
-                    category_url = URL_ROOT + '/programma/' + category["description"]
-
-                    shows.append({
-                        'label': category_name,
-                        'thumb': category_img,
-                        'fanart': category_img,
-                        'url': common.PLUGIN.get_url(
-                            module_path=params.module_path,
-                            module_name=params.module_name,
-                            action='replay_entry',
-                            next='list_videos_cat',
-                            category_url=category_url,
-                            window_title=category_name,
-                            category_name=category_name,
-                        )
-                    })
+            shows.append({
+                'label': day_name,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='list_videos_cat',
+                    day_id=day_id,
+                    window_title=day_name,
+                    day_name=day_name,
+                )
+            })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -130,16 +108,10 @@ def list_videos(params):
     """Build videos listing"""
     videos = []
 
-    file_path_2 = utils.download_catalog(
-        params.category_url,
-        '%s_%s_list_episodes.html' % (params.channel_name, params.category_url))
-    episodes_html = open(file_path_2).read()
-
+    episodes_html = utils.get_webcontent(URL_DAYS)
     episodes_soup = bs(episodes_html, 'html.parser')
-    shows_soup = episodes_soup.find(
-        'div',
-        class_='active item'
-    )
+    value_id = 'slick-missed-day-%s' % (params.day_id)
+    shows_soup = episodes_soup.find_all(id=value_id)[0]
 
     for episode in shows_soup.find_all('a'):
         id_episode_list = episode.get('href').encode('utf-8').rsplit('/')
@@ -156,7 +128,7 @@ def list_videos(params):
 
         # get info replay
         file_path_info_replay = utils.download_catalog(
-            URL_INFO_REPLAY % (id_episode, str(time.time()).replace('.', '')),
+            URL_INFO_REPLAY % id_episode,
             '%s_%s_info_replay.js' % (params.channel_name, id_episode))
         info_replay_js = open(file_path_info_replay).read()
 

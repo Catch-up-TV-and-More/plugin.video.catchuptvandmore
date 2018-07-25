@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.14~beta012"
+       version="0.1.14~beta013"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -46,7 +46,7 @@
 [Add Live TV] Channel News Asia (WO) (wwark)
 [Add Live TV] ジャパネットチャンネルDX (JP) (wwark)
 [Add Live TV] Antenne Réunion (wwark)
-[Fix] BVN - Live TV (wwark)
+[Fix] BVN - Live TV / Replay (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
