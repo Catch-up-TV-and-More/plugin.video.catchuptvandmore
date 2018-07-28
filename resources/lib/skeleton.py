@@ -109,7 +109,8 @@ SKELETON = {
                 ('blaze', 'none'),
                 ('skynews', 'none'),
                 ('stv', 'none'),
-                ('stv2', 'none')
+                ('stv2', 'none'),
+                ('hearttv', 'none')
             ],
 
             ('wo', 'build_live_tv_menu'): [
@@ -527,7 +528,8 @@ CHANNELS = {
     'atreseries': 'atresplayer',
     'channelnewsasia': 'channelnewsasia',
     'japanetshoppingdx': 'japanetshoppingdx',
-    'antennereunion': 'antennereunion'
+    'antennereunion': 'antennereunion',
+    'hearttv': 'hearttv'
 }
 
 '''
@@ -693,6 +695,7 @@ LABELS = {
     'stv': 'STV',
     'stv2': 'STV 2',
     'questtv': 'Quest TV',
+    'hearttv': 'Heart TV',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',

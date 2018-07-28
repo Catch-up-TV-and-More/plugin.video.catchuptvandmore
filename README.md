@@ -21,6 +21,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - STV *(Live TV)*
 - STV 2 *(Live TV)*
 - Quest TV *(Replay)*
+- Heart TV *(Live TV)*
 
 ##### Web TV
 - Sky Sports — Sky *(Replay)*

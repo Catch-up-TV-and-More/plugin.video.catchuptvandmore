@@ -36,7 +36,8 @@ XMLTV_CHANNEL_ID = {
     'blaze': '',
     'skynews': '',
     'stv': '',
-    'stv2': ''
+    'stv2': '',
+    'hearttv': ''
 }
 
 
