@@ -28,7 +28,7 @@ from resources.lib import common
 from bs4 import BeautifulSoup as bs
 
 # TO DO
-# ReAdd (fix) Replay
+# Info DATE
 
 URL_ROOT = 'https://www.bvn.tv'
 
@@ -113,82 +113,31 @@ def list_videos(params):
     value_id = 'slick-missed-day-%s' % (params.day_id)
     shows_soup = episodes_soup.find_all(id=value_id)[0]
 
-    for episode in shows_soup.find_all('a'):
-        id_episode_list = episode.get('href').encode('utf-8').rsplit('/')
+    for episode in shows_soup.find_all('li'):
+        id_episode_list = episode.find('a').get('href').encode('utf-8').rsplit('/')
         id_episode = id_episode_list[len(id_episode_list)-1]
 
-        # get token
-        file_path_json_token = utils.download_catalog(
-            URL_TOKEN,
-            '%s_replay_token.json' % (params.channel_name))
-        replay_json_token = open(file_path_json_token).read()
+        title = ''
+        if episode.find('span', class_="m-section__scroll__item__bottom__title--sub").text != '':
+            title = episode.find('span', class_="m-section__scroll__item__bottom__title").text + \
+                ' - ' + episode.find('span', class_="m-section__scroll__item__bottom__title--sub").text
+        else:
+            title = episode.find('span', class_="m-section__scroll__item__bottom__title").text
+        img = URL_ROOT + episode.find('img').get('data-src')
 
-        replay_jsonparser_token = json.loads(replay_json_token)
-        token = replay_jsonparser_token["token"]
-
-        # get info replay
-        file_path_info_replay = utils.download_catalog(
-            URL_INFO_REPLAY % id_episode,
-            '%s_%s_info_replay.js' % (params.channel_name, id_episode))
-        info_replay_js = open(file_path_info_replay).read()
-
-        info_replay_json = re.compile(r'\((.*?)\)\n').findall(info_replay_js)[0]
-        info_replay_jsonparser = json.loads(info_replay_json)
-        title = info_replay_jsonparser["titel"].encode('utf-8') + ' ' + \
-            info_replay_jsonparser["aflevering_titel"].encode('utf-8')
-        img = ''
-        if 'images' in info_replay_jsonparser:
-            img = info_replay_jsonparser["images"][0]["url"].encode('utf-8')
-
-        plot = info_replay_jsonparser["info"].encode('utf-8')
-        duration = 0
-        duration = int(info_replay_jsonparser["tijdsduur"].split(':')[0]) * 3600 + \
-            int(info_replay_jsonparser["tijdsduur"].split(':')[1]) * 60 \
-            + int(info_replay_jsonparser["tijdsduur"].split(':')[2])
-
-        value_date = info_replay_jsonparser["gidsdatum"].split('-')
-        day = value_date[2]
-        mounth = value_date[1]
-        year = value_date[0]
-
-        date = '.'.join((day, mounth, year))
-        aired = '-'.join((year, mounth, day))
-
-        # Get HLS link
-        file_path_video_replay = utils.download_catalog(
-            URL_VIDEO_REPLAY % (id_episode, token),
-            '%s_%s_video_replay.js' % (params.channel_name, id_episode))
-        video_replay_json = open(file_path_video_replay).read()
-
-        video_replay_jsonparser = json.loads(video_replay_json)
-        url_hls = ''
-        if 'items' in video_replay_jsonparser:
-            for video in video_replay_jsonparser["items"][0]:
-                url_json_url_hls = video["url"].encode('utf-8')
-                break
-
-            file_path_hls_replay = utils.download_catalog(
-                url_json_url_hls + \
-                'jsonpCallback%s5910' % (str(time.time()).replace('.', '')),
-                '%s_%s_hls_replay.js' % (params.channel_name, id_episode))
-            hls_replay_js = open(file_path_hls_replay).read()
-            hls_replay_json = re.compile(r'\((.*?)\)').findall(hls_replay_js)[0]
-            hls_replay_jsonparser = json.loads(hls_replay_json)
-
-            if 'url' in hls_replay_jsonparser:
-                url_hls = hls_replay_jsonparser["url"].encode('utf-8')
+        # TODO Get DATE
 
         info = {
             'video': {
                 'title': title,
-                'plot': plot,
+                # 'plot': plot,
                 # 'episode': episode_number,
                 # 'season': season_number,
                 # 'rating': note,
-                'aired': aired,
-                'date': date,
-                'duration': duration,
-                'year': year,
+                # 'aired': aired,
+                # 'date': date,
+                # 'duration': duration,
+                # 'year': year,
                 'mediatype': 'tvshow'
             }
         }
@@ -199,36 +148,30 @@ def list_videos(params):
                 action='download_video',
                 module_path=params.module_path,
                 module_name=params.module_name,
-                url_hls=url_hls) + ')'
+                id_episode=id_episode) + ')'
         )
         context_menu = []
         context_menu.append(download_video)
 
-        if url_hls != '':
-            videos.append({
-                'label': title,
-                'thumb': img,
-                'fanart': img,
-                'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    action='replay_entry',
-                    next='play_r',
-                    url_hls=url_hls
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
-            })
+        videos.append({
+            'label': title,
+            'thumb': img,
+            'fanart': img,
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next='play_r',
+                id_episode=id_episode
+            ),
+            'is_playable': True,
+            'info': info,
+            'context_menu': context_menu
+        })
 
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
-            common.sp.xbmcplugin.SORT_METHOD_DATE,
-            common.sp.xbmcplugin.SORT_METHOD_DURATION,
-            common.sp.xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
-            common.sp.xbmcplugin.SORT_METHOD_GENRE,
-            common.sp.xbmcplugin.SORT_METHOD_PLAYCOUNT,
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
@@ -269,4 +212,36 @@ def get_video_url(params):
         return 'http:' + live_jsonparser["hls"].encode('utf-8') + \
             live_jsonparser_token["token"].encode('utf-8')
     elif params.next == 'play_r' or params.next == 'download_video':
-        return params.url_hls
+        # get token
+        file_path_json_token = utils.download_catalog(
+            URL_TOKEN,
+            '%s_replay_token.json' % (params.channel_name))
+        replay_json_token = open(file_path_json_token).read()
+
+        replay_jsonparser_token = json.loads(replay_json_token)
+        token = replay_jsonparser_token["token"]
+
+        # Get HLS link
+        file_path_video_replay = utils.download_catalog(
+            URL_VIDEO_REPLAY % (params.id_episode, token),
+            '%s_%s_video_replay.js' % (params.channel_name, params.id_episode))
+        video_replay_json = open(file_path_video_replay).read()
+
+        video_replay_jsonparser = json.loads(video_replay_json)
+        url_hls = ''
+        if 'items' in video_replay_jsonparser:
+            for video in video_replay_jsonparser["items"][0]:
+                url_json_url_hls = video["url"].encode('utf-8')
+                break
+
+            file_path_hls_replay = utils.download_catalog(
+                url_json_url_hls + \
+                'jsonpCallback%s5910' % (str(time.time()).replace('.', '')),
+                '%s_%s_hls_replay.js' % (params.channel_name, params.id_episode))
+            hls_replay_js = open(file_path_hls_replay).read()
+            hls_replay_json = re.compile(r'\((.*?)\)').findall(hls_replay_js)[0]
+            hls_replay_jsonparser = json.loads(hls_replay_json)
+
+            if 'url' in hls_replay_jsonparser:
+                url_hls = hls_replay_jsonparser["url"].encode('utf-8')
+        return url_hls
