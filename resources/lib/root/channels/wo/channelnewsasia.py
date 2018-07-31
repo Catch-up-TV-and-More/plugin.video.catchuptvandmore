@@ -29,7 +29,7 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Video on demand
+# Add info Video (duration, ...)
 
 URL_ROOT = 'https://www.channelnewsasia.com'
 
@@ -98,6 +98,7 @@ def list_shows(params):
                 module_name=params.module_name,
                 action='replay_entry',
                 title=show_title,
+                page='1',
                 next='list_shows_video_on_demand_1',
                 window_title=show_title
             )
@@ -135,9 +136,30 @@ def list_shows(params):
             URL_SHOWS_DATAS)
         context_id = re.compile(
             'contextId\" value=\"(.*?)\"').findall(shows_datas_html)[0]
-        # page='1',
-        return None
+        shows_datas_json = utils.get_webcontent(
+            URL_SHOWS % (context_id, params.page))
+        shows_datas_jsonparser = json.loads(shows_datas_json)
+        for show_data in shows_datas_jsonparser["items"]:
+            show_title = show_data["title"]
+            show_img = ''
+            for img_datas in show_data["image"]["items"][0]["srcset"]:  
+                show_img = URL_ROOT + img_datas["src"]
+            show_url = URL_ROOT + show_data["url"]
 
+            shows.append({
+                'label': show_title,
+                'thumb': show_img,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    title=show_title,
+                    show_url=show_url,
+                    page='1',
+                    next='list_videos_on_demand_videos_1',
+                    window_title=show_title
+                )
+            })  
 
         # More programs...
         shows.append({
@@ -232,6 +254,77 @@ def list_videos(params):
                 page=str(int(params.page) + 1),
                 show_id=params.show_id,
                 context_id=params.context_id,
+                title=params.title,
+                window_title=params.window_title,
+                update_listing=True,
+                previous_listing=str(videos)
+            )
+        })
+    
+    elif params.next == 'list_videos_on_demand_videos_1':
+        
+        shows_datas_html = utils.get_webcontent(
+            params.show_url)
+        context_id = re.compile(
+            'contextId\" value=\"(.*?)\"').findall(shows_datas_html)[0]
+        videos_datas_json = utils.get_webcontent(
+            URL_SHOWS % (context_id, params.page))
+        videos_datas_jsonparser = json.loads(videos_datas_json)
+
+        for video_datas in videos_datas_jsonparser['items']:
+            title = video_datas["title"] 
+            img = video_datas["image"]["src"]
+            url = URL_ROOT + video_datas["url"]
+
+            info = {
+                'video': {
+                    'title': title,
+                    # 'aired': aired,
+                    # 'date': date,
+                    # 'duration': video_duration,
+                    # 'year': year,
+                    # 'plot': plot,
+                    'mediatype': 'tvshow'
+                }
+            }
+
+            download_video = (
+                common.GETTEXT('Download'),
+                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                    action='download_video',
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    url=url) + ')'
+            )
+            context_menu = []
+            context_menu.append(download_video)
+
+            videos.append({
+                'label': title,
+                'thumb': img,
+                'fanart': img,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                     module_name=params.module_name,
+                    action='replay_entry',
+                    next='play_r',
+                    url=url
+                ),
+                'is_playable': True,
+                'info': info,
+                'context_menu': context_menu
+            })
+
+        # More videos...
+        videos.append({
+            'label': common.ADDON.get_localized_string(30700),
+            'url': common.PLUGIN.get_url(
+                module_path=params.module_path,
+                module_name=params.module_name,
+                action='replay_entry',
+                next=params.next,
+                page=str(int(params.page) + 1),
+                show_url=params.show_url,
                 title=params.title,
                 window_title=params.window_title,
                 update_listing=True,
