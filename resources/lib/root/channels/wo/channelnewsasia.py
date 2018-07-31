@@ -272,8 +272,13 @@ def list_videos(params):
         videos_datas_jsonparser = json.loads(videos_datas_json)
 
         for video_datas in videos_datas_jsonparser['items']:
-            title = video_datas["title"] 
-            img = video_datas["image"]["src"]
+            title = video_datas["title"]
+            img = ''
+            if 'src' in  video_datas["image"]:
+                img = video_datas["image"]["src"]
+            else:
+                for img_datas in video_datas["image"]["items"][0]["srcset"]:
+                    img = URL_ROOT + img_datas["src"]
             url = URL_ROOT + video_datas["url"]
 
             info = {
@@ -359,17 +364,19 @@ def get_video_url(params):
     elif params.next == 'play_r' or params.next == 'download':
         stream_html = utils.get_webcontent(
             params.url)
-    stream_id = re.compile(
-        'video-asset-id="(.*?)"').findall(stream_html)[0]
-    stream_pcode = utils.get_webcontent(
-        URL_GET_JS_PCODE)
-    pcode = re.compile(
-        'ooyalaPCode\:"(.*?)"').findall(stream_pcode)[0]
-    stream_json = utils.get_webcontent(
-        URL_VIDEO_VOD % (pcode, stream_id))
-    stream_jsonparser = json.loads(stream_json)
-    # Get Value url encodebase64
-    for stream in stream_jsonparser["authorization_data"][stream_id]["streams"]:
-        if stream["delivery_type"] == 'hls':
-            url_base64 = stream["url"]["data"]
-    return base64.standard_b64decode(url_base64)
+    stream_id_list = re.compile(
+        'video-asset-id="(.*?)"').findall(stream_html)
+    if len(stream_id_list) > 0:
+        stream_pcode = utils.get_webcontent(
+            URL_GET_JS_PCODE)
+        pcode = re.compile(
+            'ooyalaPCode\:"(.*?)"').findall(stream_pcode)[0]
+        stream_json = utils.get_webcontent(
+            URL_VIDEO_VOD % (pcode, stream_id_list[0]))
+        stream_jsonparser = json.loads(stream_json)
+        # Get Value url encodebase64
+        for stream in stream_jsonparser["authorization_data"][stream_id_list[0]]["streams"]:
+            if stream["delivery_type"] == 'hls':
+                url_base64 = stream["url"]["data"]
+        return base64.standard_b64decode(url_base64)
+    return None
