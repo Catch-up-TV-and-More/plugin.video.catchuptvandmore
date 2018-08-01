@@ -257,7 +257,8 @@ SKELETON = {
                 ('polar-plus', 'replay_entry'),
                 ('france3regions', 'replay_entry'),
                 ('culturebox', 'replay_entry'),
-                ('bfmparis', 'replay_entry')
+                ('bfmparis', 'replay_entry'),
+                ('kto', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
