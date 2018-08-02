@@ -79,7 +79,8 @@ SKELETON = {
                 ('ketnet', 'none'),
                 ('auvio', 'none'),
                 ('tvlux', 'none'),
-                ('bx1', 'none')
+                ('bx1', 'none'),
+                ('nrjhitstvbe', 'none')
             ],
 
             ('ca', 'build_live_tv_menu'): [
@@ -531,7 +532,8 @@ CHANNELS = {
     'channelnewsasia': 'channelnewsasia',
     'japanetshoppingdx': 'japanetshoppingdx',
     'antennereunion': 'antennereunion',
-    'hearttv': 'hearttv'
+    'hearttv': 'hearttv',
+    'nrjhitstvbe': 'nrjhitstvbe'
 }
 
 '''
@@ -573,6 +575,7 @@ LABELS = {
     'een': 'Eén',
     'canvas': 'Canvas',
     'ketnet': 'Ketnet',
+    'nrjhitstvbe': 'NRJ Hits TV',
 
     # Canadian channels / live TV
     'tv5': 'TV5',

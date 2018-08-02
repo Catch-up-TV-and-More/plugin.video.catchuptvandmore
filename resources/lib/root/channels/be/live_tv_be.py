@@ -40,7 +40,8 @@ XMLTV_CHANNEL_ID = {
     'ketnet': '',
     'auvio': 'multiple_streams',
     'tvlux': '',
-    'bx1': ''
+    'bx1': '',
+    'nrjhitstvbe': ''
 }
 
 
