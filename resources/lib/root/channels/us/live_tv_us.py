@@ -35,7 +35,8 @@ XMLTV_FILEPATH = os.path.join(common.ADDON_DATA, 'xmltv_fr.xml')
 XMLTV_CHANNEL_ID = {
     'cbsnews': '',
     'tbd': '',
-    'abcnews': ''
+    'abcnews': '',
+    'pbskids': ''
 }
 
 

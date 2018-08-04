@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.14~beta017"
+       version="0.1.14~beta018"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -49,6 +49,7 @@
 [Fix] BVN - Live TV / Replay (wwark)
 [Add Live TV] Heart TV (UK) (wwark)
 [Add Live TV] NRJ Hits TV (BE) (wwark)
+[Add Live TV] PBS Kids (US) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

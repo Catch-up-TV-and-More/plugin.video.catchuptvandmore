@@ -139,7 +139,8 @@ SKELETON = {
             ('us', 'build_live_tv_menu'): [
                 ('cbsnews', 'none'),
                 ('tbd', 'none'),
-                ('abcnews', 'none')
+                ('abcnews', 'none'),
+                ('pbskids', 'none')
             ],
 
             ('pl', 'build_live_tv_menu'): [
@@ -533,7 +534,8 @@ CHANNELS = {
     'japanetshoppingdx': 'japanetshoppingdx',
     'antennereunion': 'antennereunion',
     'hearttv': 'hearttv',
-    'nrjhitstvbe': 'nrjhitstvbe'
+    'nrjhitstvbe': 'nrjhitstvbe',
+    'pbskids': 'pbskids'
 }
 
 '''
@@ -732,6 +734,7 @@ LABELS = {
     'tbd': 'TBD',
     'nycmedia': 'NYC Media',
     'abcnews': 'ABC News',
+    'pbskids': 'PBS Kids',
 
     # Poland channels / live TV
     'tvp': 'TVP',

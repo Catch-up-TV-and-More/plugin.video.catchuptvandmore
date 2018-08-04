@@ -587,6 +587,9 @@
 
             <setting label="ABC News" type="bool" id="abcnews" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="abcnews.order" default="4"/>
+
+            <setting label="PBS Kids" type="bool" id="pbskids" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="pbskids.order" default="5"/>
         <!-- United States -->
 
         <!-- Poland -->
