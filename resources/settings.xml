@@ -129,6 +129,9 @@
 
             <setting label="RTR auf SRF 2" type="bool" id="rtraufsrf2" default="true" visible="eq(-39,true)"/>
             <setting label="" type="number" visible="false" id="rtraufsrf2.order" default="20"/>
+
+            <setting label="Teleticino" type="bool" id="teleticino" default="true" visible="eq(-41,true)"/>
+            <setting label="" type="number" visible="false" id="teleticino.order" default="21"/>
         <!-- Switzerland -->
 
 

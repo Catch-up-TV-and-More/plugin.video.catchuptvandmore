@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2018  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -25,13 +25,13 @@ from resources.lib import utils
 from resources.lib import common
 
 # TO DO
-# Add replay
+# Add Replay
 
 
-URL_ROOT = 'http://www.rouge.com'
+URL_ROOT = 'http://teleticino.ch'
 
 # Live
-URL_LIVE = URL_ROOT + '/rouge-tv-live'
+URL_LIVE = URL_ROOT + '/diretta'
 
 
 def channel_entry(params):
@@ -47,22 +47,26 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_shows(params):
+    return None
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_videos(params):
-    """Build videos listing"""
     return None
-
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
     params['next'] = 'play_l'
     return get_video_url(params)
 
-
 def get_video_url(params):
     """Get video URL and start video player"""
-    if params.next == 'play_l':
-        live_html = utils.get_webcontent(URL_LIVE)
-        return re.compile(
-            'streaming_url = \'(.*?)\'').findall(live_html)[0]
+    live_html = utils.get_webcontent(URL_LIVE)
+    list_live = re.compile(
+        r'file":  "(.*?)"').findall(live_html)
+    stream_url = ''
+    for stream in list_live:
+        if 'm3u8' in stream:
+            stream_url = stream
+    return stream_url

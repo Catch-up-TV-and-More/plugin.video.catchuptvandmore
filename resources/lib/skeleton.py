@@ -103,7 +103,8 @@ SKELETON = {
                 ('srfzwei', 'none'),
                 ('rtraufsrf1', 'none'),
                 ('rtraufsrf2', 'none'),
-                ('rtraufsrfinfo', 'none')
+                ('rtraufsrfinfo', 'none'),
+                ('teleticino', 'none')
             ],
 
             ('uk', 'build_live_tv_menu'): [
@@ -535,7 +536,8 @@ CHANNELS = {
     'antennereunion': 'antennereunion',
     'hearttv': 'hearttv',
     'nrjhitstvbe': 'nrjhitstvbe',
-    'pbskids': 'pbskids'
+    'pbskids': 'pbskids',
+    'teleticino': 'teleticino'
 }
 
 '''
@@ -608,6 +610,7 @@ LABELS = {
     'rtraufsrf1': 'RTR auf SRF 1',
     'rtraufsrf2': 'RTR auf SRF 2',
     'rtraufsrfinfo': 'RTR auf SRF Info',
+    'teleticino': 'Teleticino',
 
     # French channels / live TV
     'tf1': 'TF1',

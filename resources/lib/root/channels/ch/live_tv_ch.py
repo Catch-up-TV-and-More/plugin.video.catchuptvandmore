@@ -45,7 +45,8 @@ XMLTV_CHANNEL_ID = {
     'rtraufsrf1': '',
     'rtraufsrf2': '',
     'rtraufsrfinfo': '',
-    'rougetv': ''
+    'rougetv': '',
+    'teleticino': ''
 }
 
 

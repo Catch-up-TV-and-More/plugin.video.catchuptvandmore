@@ -220,6 +220,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RSI *(Replay)*
 - RSI La 1 *(Live TV)*
 - RSI La 2 *(Live TV)*
+- Teleticino *(Live TV)*
 
 ##### TV Communauté allemande — *German Community TV*
 - SRF *(Replay)*
