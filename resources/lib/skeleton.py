@@ -297,7 +297,7 @@ SKELETON = {
                 ('drama', 'replay_entry'),
                 ('skynews', 'replay_entry'),
                 ('skysports', 'replay_entry'),
-                ('questtv', 'replay_entry')
+                # ('questtv', 'replay_entry')
             ],
 
             ('wo', 'generic_menu'): [
