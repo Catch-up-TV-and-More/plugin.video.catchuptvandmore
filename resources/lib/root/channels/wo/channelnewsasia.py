@@ -375,8 +375,13 @@ def get_video_url(params):
             URL_VIDEO_VOD % (pcode, stream_id_list[0]))
         stream_jsonparser = json.loads(stream_json)
         # Get Value url encodebase64
-        for stream in stream_jsonparser["authorization_data"][stream_id_list[0]]["streams"]:
-            if stream["delivery_type"] == 'hls':
-                url_base64 = stream["url"]["data"]
-        return base64.standard_b64decode(url_base64)
+        if 'streams' in stream_jsonparser["authorization_data"][stream_id_list[0]]:
+            for stream in stream_jsonparser["authorization_data"][stream_id_list[0]]["streams"]:
+                if stream["delivery_type"] == 'hls':
+                    url_base64 = stream["url"]["data"]
+            return base64.standard_b64decode(url_base64)
+        else:
+            # TODO catch the error (geo-blocked, deleted, etc ...)
+            utils.send_notification(
+                common.ADDON.get_localized_string(30716))
     return None
