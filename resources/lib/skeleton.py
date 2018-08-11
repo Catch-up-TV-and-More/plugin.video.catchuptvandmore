@@ -87,7 +87,8 @@ SKELETON = {
                 ('telequebec', 'none'),
                 ('yestv', 'none'),
                 ('tva', 'none'),
-                ('icitele', 'none')
+                ('icitele', 'none'),
+                ('ntvca', 'none')
             ],
 
             ('ch', 'build_live_tv_menu'): [
@@ -537,7 +538,8 @@ CHANNELS = {
     'hearttv': 'hearttv',
     'nrjhitstvbe': 'nrjhitstvbe',
     'pbskids': 'pbskids',
-    'teleticino': 'teleticino'
+    'teleticino': 'teleticino',
+    'ntvca': 'ntvca'
 }
 
 '''
@@ -588,6 +590,7 @@ LABELS = {
     'telequebec': 'Télé-Québec',
     'tva': 'TVA',
     'icitele': 'ICI Télé',
+    'ntvca': 'NTV',
 
     # Switzerland channels / live TV
     'rts': 'RTS',
