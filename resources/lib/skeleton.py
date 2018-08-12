@@ -112,7 +112,6 @@ SKELETON = {
                 ('blaze', 'none'),
                 ('skynews', 'none'),
                 ('stv', 'none'),
-                ('stv2', 'none'),
                 ('hearttv', 'none')
             ],
 
@@ -473,7 +472,6 @@ CHANNELS = {
     'tvlux': 'tvlux',
     'beinsports': 'beinsports',
     'stv': 'stv',
-    'stv2': 'stv',
     'onzeo': 'onzeo',
     'souvenirsfromearth': 'souvenirsfromearth',
     'qvc': 'qvc',
@@ -706,7 +704,6 @@ LABELS = {
     'skynews': 'Sky News',
     'skysports': 'Sky Sports',
     'stv': 'STV',
-    'stv2': 'STV 2',
     'questtv': 'Quest TV',
     'hearttv': 'Heart TV',
 
