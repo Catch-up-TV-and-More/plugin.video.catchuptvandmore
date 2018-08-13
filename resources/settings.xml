@@ -163,8 +163,8 @@
             <setting label="STV" type="bool" id="stv" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="stv.order" default="8"/>
 
-            <setting label="Quest TV" type="bool" id="questtv" default="true" visible="eq(-17,true)"/>
-            <setting label="" type="number" visible="false" id="questtv.order" default="9"/>
+            <setting label="Quest OD" type="bool" id="questod" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="questod.order" default="9"/>
 
             <setting label="Heart TV" type="bool" id="hearttv" default="true" visible="eq(-19,true)"/>
             <setting label="" type="number" visible="false" id="hearttv.order" default="10"/>

@@ -20,24 +20,31 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import re
-from bs4 import BeautifulSoup as bs
+import ast
+import json
 from resources.lib import utils
 from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# 
+#
 
-URL_ROOT = 'https://www.questtv.co.uk'
+URL_ROOT = 'https://www.questod.co.uk'
 
-URL_VIDEOS = URL_ROOT + '/content/discovery/neur/uk/questtv/video/jcr:content/root/columns_container_1/column1/brightcove_video_lis.content'
+URL_SHOWS = URL_ROOT + '/api/shows/?limit=12&page=%s'
+# page
+
+URL_VIDEOS = URL_ROOT + '/api/show-detail/%s'
+# showId
+
+URL_STREAM = URL_ROOT + '/api/video-playback/%s'
+# videoId
 
 def channel_entry(params):
     """Entry function of the module"""
     if 'replay_entry' == params.next:
         params.next = "list_shows_1"
-        params["page"] = "0"
+        params["page"] = "1"
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
@@ -51,30 +58,81 @@ def channel_entry(params):
 def list_shows(params):
     """Build shows listing"""
     shows = []
+    if 'previous_listing' in params:
+        shows = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_shows_1':
 
-        all_video = common.ADDON.get_localized_string(30701)
+        list_shows_json = utils.get_webcontent(
+            URL_SHOWS % params.page)
+        list_shows_jsonparser = json.loads(list_shows_json)
 
+        for show_datas in list_shows_jsonparser["items"]:
+
+            show_title = show_datas["title"]
+            show_id = show_datas["id"]
+            show_image = show_datas["image"]["src"]
+
+            shows.append({
+                'label': show_title,
+                'thumb': show_image,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='list_shows_2',
+                    show_id=show_id,
+                    show_title=show_title,
+                    window_title=show_title
+                )
+            })
+
+        # More programs...
         shows.append({
-            'label': common.GETTEXT('All videos'),
+            'label': common.ADDON.get_localized_string(30708),
             'url': common.PLUGIN.get_url(
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                next='list_videos_1',
-                page=1,
-                all_video=all_video,
-                window_title=all_video
+                next='list_shows_1',
+                page=str(int(params.page) + 1),
+                update_listing=True,
+                previous_listing=str(shows)
             )
         })
-    
+
+    elif params.next == 'list_shows_2':
+
+        list_seasons_json = utils.get_webcontent(
+            URL_VIDEOS % params.show_id)
+        list_seasons_jsonparser = json.loads(list_seasons_json)
+
+        for season_datas in list_seasons_jsonparser["show"]["seasonNumbers"]:
+
+            show_season = 'Season - ' + str(season_datas)
+            show_season_id = season_datas
+
+            shows.append({
+                'label': show_season,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='list_videos_1',
+                    show_season_id=show_season_id,
+                    show_id=params.show_id,
+                    show_season=show_season,
+                    window_title=show_season
+                )
+            })
+
     return common.PLUGIN.create_listing(
         shows,
         sort_methods=(
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
+        update_listing='update_listing' in params,
         category=common.get_window_title(params)
     )
 
@@ -85,26 +143,18 @@ def list_videos(params):
     videos = []
 
     if params.next == 'list_videos_1':
-        list_videos_html = utils.get_webcontent(
-            URL_VIDEOS)
-        list_videos_soup = bs(list_videos_html, 'html.parser')
+        list_videos_json = utils.get_webcontent(
+            URL_VIDEOS % params.show_id)
+        list_videos_jsonparser = json.loads(list_videos_json)
 
-        data_account = list_videos_soup.find(
-            'video').get('data-account')
-        data_player = list_videos_soup.find(
-            'video').get('data-player')
+        for video_datas in list_videos_jsonparser["videos"]["episode"][params.show_season_id]:
 
-        videos_datas = list_videos_soup.find_all(
-            'div', class_=re.compile("dni-video-playlist-thumb-box"))
+            video_title = video_datas["title"]
 
-        for video_datas in videos_datas:
-
-            video_title = video_datas.find('h3', class_="descHidden").get_text()
-
-            video_duration = 0
-            video_plot = video_datas.find('p', class_="descHidden").get_text()
-            video_img = video_datas.find('img').get('src')
-            data_video_id = video_datas.find('a').get('href').replace('#', '')
+            video_duration = video_datas["videoDuration"]
+            video_plot = video_datas["description"]
+            video_img = video_datas["image"]["src"]
+            video_id = video_datas["id"]
 
             info = {
                 'video': {
@@ -124,9 +174,7 @@ def list_videos(params):
                     action='download_video',
                     module_path=params.module_path,
                     module_name=params.module_name,
-                    data_account=data_account,
-                    data_player=data_player,
-                    data_video_id=data_video_id) + ')'
+                    video_id=video_id) + ')'
             )
             context_menu = []
             context_menu.append(download_video)
@@ -140,9 +188,7 @@ def list_videos(params):
                     module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
-                    data_account=data_account,
-                    data_player=data_player,
-                    data_video_id=data_video_id
+                    video_id=video_id
                 ),
                 'is_playable': True,
                 'info': info,
@@ -167,7 +213,12 @@ def get_live_item(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
-        return resolver.get_brightcove_video_json(
-            params.data_account,
-            params.data_player,
-            params.data_video_id)
+        list_stream_json = utils.get_webcontent(
+            URL_STREAM % params.video_id)
+        list_stream_jsonparser = json.loads(list_stream_json)
+
+        if 'errors' in list_stream_jsonparser:
+            utils.send_notification(
+                common.ADDON.get_localized_string(30716))
+            return None
+        return list_stream_jsonparser["playback"]["streamUrlHls"]
