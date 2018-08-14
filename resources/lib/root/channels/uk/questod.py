@@ -23,17 +23,18 @@
 import ast
 import json
 from resources.lib import utils
-from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
-# Add Show A-Z Replay
 # Live TV protected by DRM
 
 URL_ROOT = 'https://www.questod.co.uk'
 
 URL_SHOWS = URL_ROOT + '/api/shows/%s/?limit=12&page=%s'
 # mode, page
+
+URL_SHOWS_AZ = URL_ROOT + '/api/shows%s'
+# mode
 
 URL_VIDEOS = URL_ROOT + '/api/show-detail/%s'
 # showId
@@ -44,8 +45,11 @@ URL_STREAM = URL_ROOT + '/api/video-playback/%s'
 SHOW_MODE = {
     'FEATURED': 'featured',
     'MOST POPULAR': 'most-popular',
-    'NEW': 'new',
-    # 'A-Z': 'a-z'
+    'NEW': 'new'
+}
+
+SHOW_MODE_AZ = {
+    'A-Z': '-az'
 }
 
 def channel_entry(params):
@@ -82,6 +86,22 @@ def list_shows(params):
                     page='1',
                     show_mode_value=show_mode_value,
                     next='list_shows_2',
+                    show_title=show_mode_title,
+                    window_title=show_mode_title
+                )
+            })
+
+        for show_mode_title, show_mode_value in SHOW_MODE_AZ.iteritems():
+
+            shows.append({
+                'label': show_mode_title,
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    page='1',
+                    show_mode_value=show_mode_value,
+                    next='list_shows_2_2',
                     show_title=show_mode_title,
                     window_title=show_mode_title
                 )
@@ -127,6 +147,33 @@ def list_shows(params):
                 previous_listing=str(shows)
             )
         })
+
+    elif params.next == 'list_shows_2_2':
+
+        list_shows_json = utils.get_webcontent(
+            URL_SHOWS_AZ % (params.show_mode_value))
+        list_shows_jsonparser = json.loads(list_shows_json)
+
+
+        for show_datas_letter in list_shows_jsonparser:
+
+            for show_datas in show_datas_letter["items"]:
+
+                show_title = show_datas["title"]
+                show_id = show_datas["id"]
+
+                shows.append({
+                    'label': show_title,
+                    'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        action='replay_entry',
+                        next='list_shows_3',
+                        show_id=show_id,
+                        show_title=show_title,
+                        window_title=show_title
+                    )
+                })
 
     elif params.next == 'list_shows_3':
 
@@ -180,7 +227,7 @@ def list_videos(params):
 
                     video_title = video_datas["title"]
 
-                    video_duration = video_datas["videoDuration"]
+                    video_duration = int(str(int(video_datas["videoDuration"])/1000))
                     video_plot = video_datas["description"]
                     video_img = video_datas["image"]["src"]
                     video_id = video_datas["id"]
