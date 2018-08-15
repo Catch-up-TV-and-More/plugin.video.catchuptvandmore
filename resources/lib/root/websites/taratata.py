@@ -446,7 +446,7 @@ def get_video_url(params):
                 video_id = re.compile(
                     'youtube.com/embed/(.*?)\?').findall(videos_html)[0]
                 url = resolver.get_stream_youtube(video_id, False)
-            all_datas_videos_path.append(url)
+            all_datas_videos_path.append(url + '|referer=%s' % params.video_url)
         # Get link from FranceTV
         elif '#ftv-player-' in video.get('href'):
             # Find a better solution to strip
