@@ -209,40 +209,11 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    plot = ''
-    duration = 0
-    img = ''
-
-    live_html = utils.get_webcontent(URL_LIVE)
-    live_id = re.compile(
-        'iframe.dacast.com\/(.*?)"').findall(live_html)[0]
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            live_id=live_id,
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     url_stream = ''
@@ -255,12 +226,15 @@ def get_video_url(params):
             if 'm3u8' in url_video:
                 url_stream = url_video
     elif params.next == 'play_l':
-
+        
+        live_html = utils.get_webcontent(URL_LIVE)
+        live_id = re.compile(
+            'iframe.dacast.com\/(.*?)"').findall(live_html)[0]
         live_stream = utils.get_webcontent(
-            URL_STREAM_LIVE % params.live_id)
+            URL_STREAM_LIVE % live_id)
         live_stream_json = json.loads(live_stream)
         live_token = utils.get_webcontent(
-            URL_TOKEN_LIVE % params.live_id)
+            URL_TOKEN_LIVE % live_id)
         live_token_json = json.loads(live_token)
 
         url_stream = 'https:' + live_stream_json["hls"].encode('utf-8') + \

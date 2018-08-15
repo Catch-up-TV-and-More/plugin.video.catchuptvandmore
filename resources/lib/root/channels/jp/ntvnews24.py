@@ -55,49 +55,34 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    title = params.channel_label
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    info = {
-        'video': {
-            'title': title,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': title,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url=url_live,
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
         file_path = utils.get_webcontent(
             URL_LIVE)
-        data_account = re.compile(
-            r'data-account="(.*?)"').findall(file_path)[0]
-        data_player = re.compile(
-            r'data-player="(.*?)"').findall(file_path)[0]
-        data_video_id = re.compile(
-            r'data-video-id="(.*?)"').findall(file_path)[0]
+        data_account = ''
+        data_player = ''
+        data_video_id = ''
+        if re.compile(
+            r'data-account="(.*?)"').findall(file_path) > 0:
+            data_account = re.compile(
+                r'data-account="(.*?)"').findall(file_path)[0]
+            data_player = re.compile(
+                r'data-player="(.*?)"').findall(file_path)[0]
+            data_video_id = re.compile(
+                r'data-video-id="(.*?)"').findall(file_path)[0]
+        else:
+            data_account = re.compile(
+                r'accountId\: "(.*?)"').findall(file_path)[0]
+            data_player = re.compile(
+                r'player\: "(.*?)"').findall(file_path)[0]
+            data_video_id = re.compile(
+                r'videoId\: "(.*?)"').findall(file_path)[0]
         return resolver.get_brightcove_video_json(
             data_account,
             data_player,

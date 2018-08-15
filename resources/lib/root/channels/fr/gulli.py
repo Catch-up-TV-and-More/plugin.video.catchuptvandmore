@@ -238,41 +238,10 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
-    url_live = ''
-
-    file_path = utils.download_catalog(
-        URL_LIVE_TV,
-        params.channel_name + '_live.html')
-    root_live_html = open(file_path).read()
-    root_live_soup = bs(root_live_html, 'html.parser')
-
-    live_soup = root_live_soup.find(
-        'div',
-        class_='wrapperVideo'
-    )
-
-    url_live_embeded = ''
-    for live in live_soup.find_all('iframe'):
-        url_live_embeded = live.get('src').encode('utf-8')
-
-    file_path_2 = utils.download_catalog(
-        url_live_embeded,
-        params.channel_name + '_live_embeded.html')
-    root_live_embeded_html = open(file_path_2).read()
-
-    all_url_video = re.compile(
-        r'file: \'(.*?)\'').findall(root_live_embeded_html)
-
-    for url_video in all_url_video:
-        if url_video.count('m3u8') > 0:
-            url_live = url_video
-
     params['next'] = 'play_l'
-    params['url_live'] = url_live
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -287,4 +256,32 @@ def get_video_url(params):
         return url_root + last_url
 
     elif params.next == 'play_l':
-        return params.url_live
+        url_live = ''
+
+        file_path = utils.download_catalog(
+            URL_LIVE_TV,
+            params.channel_name + '_live.html')
+        root_live_html = open(file_path).read()
+        root_live_soup = bs(root_live_html, 'html.parser')
+
+        live_soup = root_live_soup.find(
+            'div',
+            class_='wrapperVideo'
+        )
+
+        url_live_embeded = ''
+        for live in live_soup.find_all('iframe'):
+            url_live_embeded = live.get('src').encode('utf-8')
+
+        file_path_2 = utils.download_catalog(
+            url_live_embeded,
+            params.channel_name + '_live_embeded.html')
+        root_live_embeded_html = open(file_path_2).read()
+
+        all_url_video = re.compile(
+            r'file: \'(.*?)\'').findall(root_live_embeded_html)
+
+        for url_video in all_url_video:
+            if url_video.count('m3u8') > 0:
+                url_live = url_video
+        return url_live

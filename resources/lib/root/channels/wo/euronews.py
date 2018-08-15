@@ -33,68 +33,39 @@ URL_LIVE_API = 'http://%s.euronews.com/api/watchlive.json'
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    title = params.channel_label
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    desired_language = common.PLUGIN.get_setting(
-        params.channel_name + '.language')
-
-    if desired_language == 'EN':
-        url_live_json = URL_LIVE_API % 'www'
-    elif desired_language == 'AR':
-        url_live_json = URL_LIVE_API % 'arabic'
-    else:
-        url_live_json = URL_LIVE_API % desired_language.lower()
-
-    file_path = utils.download_catalog(
-        url_live_json,
-        '%s_%s_live.json' % (
-            params.channel_name, desired_language.lower())
-    )
-    json_live = open(file_path).read()
-    json_parser = json.loads(json_live)
-    url_2nd_json = json_parser["url"]
-
-    file_path_2 = utils.download_catalog(
-        url_2nd_json,
-        '%s_%s_live_2.json' % (
-            params.channel_name, desired_language.lower())
-    )
-    json_live_2 = open(file_path_2).read()
-    json_parser_2 = json.loads(json_live_2)
-
-    url_live = json_parser_2["primary"]
-
-    info = {
-        'video': {
-            'title': title,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': title,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url=url_live,
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url
+        desired_language = common.PLUGIN.get_setting(
+            params.channel_name + '.language')
+
+        if desired_language == 'EN':
+            url_live_json = URL_LIVE_API % 'www'
+        elif desired_language == 'AR':
+            url_live_json = URL_LIVE_API % 'arabic'
+        else:
+            url_live_json = URL_LIVE_API % desired_language.lower()
+
+        file_path = utils.download_catalog(
+            url_live_json,
+            '%s_%s_live.json' % (
+                params.channel_name, desired_language.lower())
+        )
+        json_live = open(file_path).read()
+        json_parser = json.loads(json_live)
+        url_2nd_json = json_parser["url"]
+
+        file_path_2 = utils.download_catalog(
+            url_2nd_json,
+            '%s_%s_live_2.json' % (
+                params.channel_name, desired_language.lower())
+        )
+        json_live_2 = open(file_path_2).read()
+        json_parser_2 = json.loads(json_live_2)
+
+        return json_parser_2["primary"]

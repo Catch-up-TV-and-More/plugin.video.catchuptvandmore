@@ -66,7 +66,9 @@ SKELETON = {
                 ('gong', 'none'),
                 ('bfmparis', 'none'),
                 ('melodytv', 'none'),
-                ('virginradiotv', 'none')
+                ('virginradiotv', 'none'),
+                ('kto', 'none'),
+                ('antennereunion', '')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -77,29 +79,40 @@ SKELETON = {
                 ('ketnet', 'none'),
                 ('auvio', 'none'),
                 ('tvlux', 'none'),
-                ('bx1', 'none')
+                ('bx1', 'none'),
+                ('nrjhitstvbe', 'none')
             ],
 
             ('ca', 'build_live_tv_menu'): [
                 ('telequebec', 'none'),
                 ('yestv', 'none'),
                 ('tva', 'none'),
-                ('icitele', 'none')
+                ('icitele', 'none'),
+                ('ntvca', 'none')
             ],
 
             ('ch', 'build_live_tv_menu'): [
                 ('rougetv', 'none'),
-                ('rts', 'none'),
-                ('rsi', 'none'),
-                ('srf', 'none'),
-                ('rtr', 'none')
+                ('rtsun', 'none'),
+                ('rtsdeux', 'none'),
+                ('rtsinfo', 'none'),
+                ('rtscouleur3', 'none'),
+                ('rsila1', 'none'),
+                ('rsila2', 'none'),
+                ('srf1', 'none'),
+                ('srfinfo', 'none'),
+                ('srfzwei', 'none'),
+                ('rtraufsrf1', 'none'),
+                ('rtraufsrf2', 'none'),
+                ('rtraufsrfinfo', 'none'),
+                ('teleticino', 'none')
             ],
 
             ('uk', 'build_live_tv_menu'): [
                 ('blaze', 'none'),
                 ('skynews', 'none'),
                 ('stv', 'none'),
-                ('stv2', 'none')
+                ('hearttv', 'none')
             ],
 
             ('wo', 'build_live_tv_menu'): [
@@ -111,7 +124,8 @@ SKELETON = {
                 ('icitelevision', 'none'),
                 ('nhkworld', 'none'),
                 ('dw', 'none'),
-                ('tv5monde', 'none'),
+                ('tv5mondefbs', 'none'),
+                ('tv5mondeinfo', 'none'),
                 ('tivi5monde', 'none'),
                 ('souvenirsfromearth', 'none'),
                 ('qvc', 'none'),
@@ -119,17 +133,21 @@ SKELETON = {
                 ('cgtn', 'none'),
                 ('cgtndocumentary', 'none'),
                 ('paramountchannel', 'none'),
-                ('afriquemedia', 'none')
+                ('afriquemedia', 'none'),
+                ('channelnewsasia', 'none')
             ],
 
             ('us', 'build_live_tv_menu'): [
                 ('cbsnews', 'none'),
                 ('tbd', 'none'),
-                ('abcnews', 'none')
+                ('abcnews', 'none'),
+                ('pbskids', 'none')
             ],
 
             ('pl', 'build_live_tv_menu'): [
-                ('tvp', 'none')
+                ('tvp3', 'none'),
+                ('tvpinfo', 'none'),
+                ('tvppolonia', 'none')
             ],
 
             ('es', 'build_live_tv_menu'): [
@@ -140,11 +158,18 @@ SKELETON = {
                 ('energy', 'none'),
                 ('divinity', 'none'),
                 ('bemad', 'none'),
-                ('realmadridtv', 'none')
+                ('realmadridtv', 'none'),
+                ('antena3', 'none'),
+                ('lasexta', 'none'),
+                ('neox', 'none'),
+                ('nova', 'none'),
+                ('mega', 'none'),
+                ('atreseries', 'none')
             ],
 
             ('jp', 'build_live_tv_menu'): [
-                ('ntvnews24', 'none')
+                ('ntvnews24', 'none'),
+                ('japanetshoppingdx', 'none')
             ]
         },
 
@@ -234,7 +259,9 @@ SKELETON = {
                 ('slash', 'replay_entry'),
                 ('polar-plus', 'replay_entry'),
                 ('france3regions', 'replay_entry'),
-                ('culturebox', 'replay_entry')
+                ('culturebox', 'replay_entry'),
+                ('bfmparis', 'replay_entry'),
+                ('kto', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -270,7 +297,7 @@ SKELETON = {
                 ('drama', 'replay_entry'),
                 ('skynews', 'replay_entry'),
                 ('skysports', 'replay_entry'),
-                ('questtv', 'replay_entry')
+                ('questod', 'replay_entry')
             ],
 
             ('wo', 'generic_menu'): [
@@ -286,12 +313,14 @@ SKELETON = {
                 ('arirang', 'replay_entry'),
                 ('beinsports', 'replay_entry'),
                 # ('paramountchannel', 'replay_entry'),
-                ('afriquemedia', 'replay_entry')
+                ('afriquemedia', 'replay_entry'),
+                ('channelnewsasia', 'replay_entry')
             ],
 
             ('us', 'generic_menu'): [
                 ('tbd', 'replay_entry'),
-                ('nycmedia', 'replay_entry')
+                ('nycmedia', 'replay_entry'),
+                ('abcnews', 'replay_entry')
             ]
         },
         ('websites', 'generic_menu'): [
@@ -306,7 +335,9 @@ SKELETON = {
             ('elle', 'website_entry'),
             ('nytimes', 'website_entry'),
             ('fosdem', 'website_entry'),
-            ('ina', 'website_entry')
+            ('ina', 'website_entry'),
+            ('onf', 'website_entry'),
+            ('nfb', 'website_entry')
         ]
 
     }
@@ -441,7 +472,6 @@ CHANNELS = {
     'tvlux': 'tvlux',
     'beinsports': 'beinsports',
     'stv': 'stv',
-    'stv2': 'stv',
     'onzeo': 'onzeo',
     'souvenirsfromearth': 'souvenirsfromearth',
     'qvc': 'qvc',
@@ -468,14 +498,46 @@ CHANNELS = {
     'culturebox': 'culturebox',
     'ntvnews24': 'ntvnews24',
     'paramountchannel': 'paramountchannel',
-    'questtv': 'questtv',
+    'questod': 'questod',
     'realmadridtv': 'realmadridtv',
     'afriquemedia': 'afriquemedia',
     'becurioustv': 'becurioustv',
     'een': 'vrt',
     'canvas': 'vrt',
     'ketnet': 'vrt',
-    'abcnews': 'abcnews'
+    'abcnews': 'abcnews',
+    'kto': 'kto',
+    'tv5mondefbs': 'tv5monde',
+    'tv5mondeinfo': 'tv5monde',
+    'tvp3': 'tvp',
+    'tvpinfo': 'tvp',
+    'tvppolonia': 'tvp',
+    'rtsun': 'srgssr',
+    'rtsdeux': 'srgssr',
+    'rtsinfo': 'srgssr',
+    'rtscouleur3': 'srgssr',
+    'rsila1': 'srgssr',
+    'rsila2': 'srgssr',
+    'srf1': 'srgssr',
+    'srfinfo': 'srgssr',
+    'srfzwei': 'srgssr',
+    'rtraufsrf1': 'srgssr',
+    'rtraufsrf2': 'srgssr',
+    'rtraufsrfinfo': 'srgssr',
+    'antena3': 'atresplayer',
+    'lasexta': 'atresplayer',
+    'neox': 'atresplayer',
+    'nova': 'atresplayer',
+    'mega': 'atresplayer',
+    'atreseries': 'atresplayer',
+    'channelnewsasia': 'channelnewsasia',
+    'japanetshoppingdx': 'japanetshoppingdx',
+    'antennereunion': 'antennereunion',
+    'hearttv': 'hearttv',
+    'nrjhitstvbe': 'nrjhitstvbe',
+    'pbskids': 'pbskids',
+    'teleticino': 'teleticino',
+    'ntvca': 'ntvca'
 }
 
 '''
@@ -517,6 +579,7 @@ LABELS = {
     'een': 'Eén',
     'canvas': 'Canvas',
     'ketnet': 'Ketnet',
+    'nrjhitstvbe': 'NRJ Hits TV',
 
     # Canadian channels / live TV
     'tv5': 'TV5',
@@ -525,6 +588,7 @@ LABELS = {
     'telequebec': 'Télé-Québec',
     'tva': 'TVA',
     'icitele': 'ICI Télé',
+    'ntvca': 'NTV',
 
     # Switzerland channels / live TV
     'rts': 'RTS',
@@ -535,6 +599,19 @@ LABELS = {
     'rougetv': 'Rouge TV',
     'tvm3': 'TVM3',
     'becurioustv': 'BeCurious TV',
+    'rtsun': 'RTS Un',
+    'rtsdeux': 'RTS Deux',
+    'rtsinfo': 'RTS Info',
+    'rtscouleur3': 'RTS Couleur 3',
+    'rsila1': 'RSI La 1',
+    'rsila2': 'RSI La 2',
+    'srf1': 'SRF 1',
+    'srfinfo': 'SRF Info',
+    'srfzwei': 'SRF Zwei',
+    'rtraufsrf1': 'RTR auf SRF 1',
+    'rtraufsrf2': 'RTR auf SRF 2',
+    'rtraufsrfinfo': 'RTR auf SRF Info',
+    'teleticino': 'Teleticino',
 
     # French channels / live TV
     'tf1': 'TF1',
@@ -600,6 +677,8 @@ LABELS = {
     'polar-plus': 'Polar+',
     'virginradiotv': 'Virgin Radio TV',
     'culturebox': 'Culturebox (francetv)',
+    'kto': 'KTO',
+    'antennereunion': 'Antenne Réunion',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -614,6 +693,7 @@ LABELS = {
     'abc': '朝日放送株式会社',
     'ytv': '読売テレビ',
     'ntvnews24': '日テレ News24',
+    'japanetshoppingdx': 'ジャパネットチャンネルDX',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',
@@ -624,8 +704,8 @@ LABELS = {
     'skynews': 'Sky News',
     'skysports': 'Sky Sports',
     'stv': 'STV',
-    'stv2': 'STV 2',
-    'questtv': 'Quest TV',
+    'questod': 'Quest OD',
+    'hearttv': 'Heart TV',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',
@@ -648,15 +728,22 @@ LABELS = {
     'cgtndocumentary': 'CGTN Documentary',
     'paramountchannel': 'Paramount Channel (' + common.PLUGIN.get_setting('paramountchannel.language') + ')',
     'afriquemedia': 'Afrique Media',
+    'tv5mondefbs': 'TV5Monde France Belgique Suisse',
+    'tv5mondeinfo': 'TV5Monde Info',
+    'channelnewsasia': 'Channel NewsAsia',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
     'tbd': 'TBD',
     'nycmedia': 'NYC Media',
     'abcnews': 'ABC News',
+    'pbskids': 'PBS Kids',
 
     # Poland channels / live TV
     'tvp': 'TVP',
+    'tvp3': 'TVP 3 (' + common.PLUGIN.get_setting('tvp3.region') + ')',
+    'tvpinfo': 'TVP Info',
+    'tvppolonia': 'TVP Polonia',
 
     # Spanish channels / live TV
     'telecinco': 'Telecinco',
@@ -667,6 +754,12 @@ LABELS = {
     'divinity': 'Divinity',
     'bemad': 'Be Mad',
     'realmadridtv': 'Realmadrid TV (' + common.PLUGIN.get_setting('realmadridtv.language') + ')',
+    'antena3': 'Antena 3',
+    'lasexta': 'La Sexta',
+    'neox': 'Neox',
+    'nova': 'Nova',
+    'mega': 'Mega',
+    'atreseries': 'Atreseries',
 
     # Websites
     'allocine': 'Allociné',
@@ -680,5 +773,7 @@ LABELS = {
     'elle': 'Elle',
     'nytimes': 'New York Times',
     'fosdem': 'Fosdem',
-    'ina': 'Ina'
+    'ina': 'Ina',
+    'onf': 'Office National du Film du Canada',
+    'nfb': 'National Film Board Of Canada'
 }

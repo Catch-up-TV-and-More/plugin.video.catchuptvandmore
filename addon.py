@@ -25,6 +25,15 @@ from resources.lib import common
 from resources.lib import vpn
 from resources.lib import utils
 from resources.lib.root.channels.fr import live_tv_fr
+from resources.lib.root.channels.es import live_tv_es
+from resources.lib.root.channels.jp import live_tv_jp
+from resources.lib.root.channels.us import live_tv_us
+from resources.lib.root.channels.ca import live_tv_ca
+from resources.lib.root.channels.uk import live_tv_uk
+from resources.lib.root.channels.be import live_tv_be
+from resources.lib.root.channels.wo import live_tv_wo
+from resources.lib.root.channels.pl import live_tv_pl
+from resources.lib.root.channels.ch import live_tv_ch
 
 
 @common.PLUGIN.action()
@@ -227,7 +236,24 @@ def build_live_tv_menu(params):
     country = folder_path[-1]
     if country == "fr":
         return live_tv_fr.build_live_tv_menu(params)
-
+    elif country == "es":
+        return live_tv_es.build_live_tv_menu(params)
+    elif country == "jp":
+        return live_tv_jp.build_live_tv_menu(params)
+    elif country == "us":
+        return live_tv_us.build_live_tv_menu(params)
+    elif country == "ca":
+        return live_tv_ca.build_live_tv_menu(params)
+    elif country == "uk":
+        return live_tv_uk.build_live_tv_menu(params)
+    elif country == "be":
+        return live_tv_be.build_live_tv_menu(params)
+    elif country == "wo":
+        return live_tv_wo.build_live_tv_menu(params)
+    elif country == "pl":
+        return live_tv_pl.build_live_tv_menu(params)
+    elif country == "ch":
+        return live_tv_ch.build_live_tv_menu(params)
     else:
 
         # First we sort channels
@@ -340,6 +366,24 @@ def start_live_tv_stream(params):
 
     # Fix tempo pour le XMLTV de France
     if "'fr'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'es'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'jp'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'us'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'ca'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'uk'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'be'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'wo'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'pl'," in params.module_path:
+        return channel.start_live_tv_stream(params)
+    elif "'ch'," in params.module_path:
         return channel.start_live_tv_stream(params)
     else:
         return channel.get_video_url(params)

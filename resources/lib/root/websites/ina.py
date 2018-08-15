@@ -389,7 +389,6 @@ def list_videos(params):
     )
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     stream_xml = utils.get_webcontent(URL_STREAM % params.video_id)

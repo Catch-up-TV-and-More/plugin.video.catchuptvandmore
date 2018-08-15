@@ -57,57 +57,29 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    title = ''
-    # subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    desired_language = common.PLUGIN.get_setting(
-        params.channel_name + '.language')
-
-    if params.channel_name == 'cgtndocumentary':
-        url_live = URL_LIVE_CGTN % ('document', 'doc')
-    else:
-        if desired_language == 'FR':
-            url_live = URL_LIVE_CGTN % ('french', 'f')
-        elif desired_language == 'EN':
-            url_live = URL_LIVE_CGTN % ('english', 'news')
-        elif desired_language == 'AR':
-            url_live = URL_LIVE_CGTN % ('arabic', 'r')
-        elif desired_language == 'ES':
-            url_live = URL_LIVE_CGTN % ('espanol', 'e')
-        elif desired_language == 'RU':
-            url_live = URL_LIVE_CGTN % ('russian', 'r')
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url=url_live
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url
+        desired_language = common.PLUGIN.get_setting(
+            params.channel_name + '.language')
+
+        url_live = ''
+        if params.channel_name == 'cgtndocumentary':
+            url_live = URL_LIVE_CGTN % ('document', 'doc')
+        else:
+            if desired_language == 'FR':
+                url_live = URL_LIVE_CGTN % ('french', 'f')
+            elif desired_language == 'EN':
+                url_live = URL_LIVE_CGTN % ('english', 'news')
+            elif desired_language == 'AR':
+                url_live = URL_LIVE_CGTN % ('arabic', 'r')
+            elif desired_language == 'ES':
+                url_live = URL_LIVE_CGTN % ('espanol', 'e')
+            elif desired_language == 'RU':
+                url_live = URL_LIVE_CGTN % ('russian', 'r')
+        return url_live

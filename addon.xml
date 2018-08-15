@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.13"
-       provider-name="SylvainCecchetto,wwark">
+       version="0.1.14"
+       provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.beautifulsoup4" version="4.3.2"/>
@@ -30,37 +30,30 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.13]
-[Add Live TV] CGTN *(Contents {FR|EN|AR|ES|RU})* (wwark)
-[Add Live TV] CGTN Documentary (wwark)
-[Fix] CBS News (US) - Live TV (wwark)
-[Fix] Télé Quebec (CA) - Live TV (wwark)
-[Add Live TV] QVC *(Contents {JP|DE|IT|UK|US})* (wwark)
-[Fix] FranceTV Education - Replay (wwark)
-[Fix] NHKらいふ - Replay (wwark)
-[Add Live TV] 日テレ News24 (JP) (wwark)
-[Add WebTV] Culturebox (francetv) (wwark)
-[Add Live TV] Paramount Channel *(Contents {ES|IT})* (wwark)
-[Add Channel] Quest TV (UK) (wwark)
-[Add Website] Ina (wwark)
-[Fix] FranceTV Sport - Live TV (wwark)
-[Update] RTBF Auvio - Change flux DRM to playable (darodi)
-[Add Content/Fix] Arte - Replay *(Contents {IT})* - change API (wwark)
-[Fix] ITele (CA) - Replay (wwark)
-[Fix] VRT Nu (BE) - Replay and Live TV (wwark)
-[Fix] RTC (BE) - Replay (wwark)
-[Fix] TVLux (BE) - Replay (wwark)
-[Add Live TV] Realmadrid TV *(Contents {ES|EN})* (wwark)
-[Change] Yes TV (CA) - Add option contents *(Contents {Ontario|Alberta})* (wwark)
-[Update] Allocine - Add Search Videos (wwark)
-[Update] RTBF Auvio - First work for sub categories (wwark)
-[Add Channel - Live TV] Afrique Media (wwark)
-[Fix] Desactivate new feature (reuselanguageinvoker) in Kodi 18 (wwark)
-[Improvement] Dailymotion - send notification when video is not available (wwark)
-[Add Channel] BeCurious TV (CH) (wwark)
-[Fix] Auto Plus - Replay (wwark)
-[Fix] Rouge TV (CH) - Live TV (remove Replay) (wwark)
-[Add Live TV] ABC News (US) (wwark)
+[Version 0.1.14]
+[Add Channel] ABC News (US) (wwark)
+[Add Channel - Live TV] KTO (wwark)
+[Add Channel] BFMParis (wwark)
+[Rework] TVP Live TV (wwark)
+[Improvements] Add better view and faster loading for Live TV (ES, UK, US, WO, CA, PL, BE, JP, CH) (wwark)
+[Fix] 日テレ News24 - Live TV (wwark)
+[Fix] CNews - Replay - Encoding text (wwark)
+[Change] Remove cache for get_video_url (wwark)
+[Change] Return None if cancel is choosen in DialogBox (wwark)
+[Add Live TV] Antena 3, La Sexta, Neox, Nova, Mega and Atreseries (ES) (wwark)
+[Add Website] ONF / NFB (CA) (wwark)
+[Improvements] NYC Media Replay (US) (wwark)
+[Add Channel - Live TV] Channel NewsAsia (WO) (wwark)
+[Add Live TV] ジャパネットチャンネルDX (JP) (wwark)
+[Add Live TV] Antenne Réunion (wwark)
+[Fix] BVN - Live TV / Replay (wwark)
+[Add Live TV] Heart TV (UK) (wwark)
+[Add Live TV] NRJ Hits TV (BE) (wwark)
+[Add Live TV] PBS Kids (US) (wwark)
+[Add Live TV] Teleticino (CH) (wwark)
+[Add Live TV] NTV (CA) (wwark)
+[Remove] STV2 (UK) (wwark)
+[Change] Rework questtv to questod (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

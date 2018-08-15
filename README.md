@@ -19,8 +19,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Yesterday *(Replay)*
 - Sky News *(Replay, Live TV)*
 - STV *(Live TV)*
-- STV 2 *(Live TV)*
-- Quest TV *(Replay)*
+- Quest OD *(Replay)*
+- Heart TV *(Live TV)*
 
 ##### Web TV
 - Sky Sports — Sky *(Replay)*
@@ -38,6 +38,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - BEL RTL *(Replay)*
 - Contact *(Replay)*
 - BX1 *(Replay, Live TV)*
+- NRJ Hits TV *(Live TV)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
 - VRT NU (Eén, Canvas, ...) *(Replay with VRT NU account)*
@@ -58,6 +59,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ##### TV Communauté anglaise — *English Community TV*
 - YES TV *(Live TV)* *(Contents {Ontario|Alberta})*
+- NTV *(Live TV)*
 
 ### Espagne — *Spain*
 ##### TV
@@ -69,13 +71,20 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Divinity *(Live TV)*
 - Be Mad *(Live TV)*
 - Realmadrid TV *(Live TV)* *(Contents {ES|EN})*
+- Antena 3 *(Live TV)*
+- La Sexta *(Live TV)*
+- Neox *(Live TV)*
+- Nova *(Live TV)*
+- Mega *(Live TV)*
+- Atreseries *(Live TV)*
 
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV
 - CBS News *(Live TV)*
 - TBD *(Replay, Live TV)*
 - NYC Media *(Replay)*
-- ABC News *(Live TV)*
+- ABC News *(Replay, Live TV)*
+- PBS Kids *(Live TV)*
 
 ### France
 ##### TV
@@ -121,11 +130,13 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - INFOSPORT+ *(Replay)*
 - Game One *(Replay)*
 - Gong *(Replay, Live TV)*
-- BFM Paris *(Live TV)*
+- BFM Paris *(Replay, Live TV)*
 - Onzéo *(Replay)*
 - Melody TV *(Live TV)*
 - Polar+ *(Replay)*
 - Virgin Radio TV *(Live TV)*
+- KTO *(Replay, Live TV)*
+- Antenne Réunion *(Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
@@ -152,7 +163,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Euronews *(Live TV)* *(Contents {FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU})*
 - France 24 *(Replay, Live TV)* *(Contents {FR|EN|AR|ES})*
 - NHK World *(Replay, Live TV)* *(Contents {Outside Japan|In Japan})*
-- TV5Monde *(Replay, Live TV)*
+- TV5Monde *(Replay)*
+- TV5Monde Info *(Live TV)*
+- TV5Monde France Belgique Suisse *(Live TV)*
 - Tivi 5Monde *(Replay, Live TV)*
 - BVN *(Replay, Live TV)*
 - ICI Télévision *(Replay, Live TV)*
@@ -167,6 +180,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - CGTN Documentary *(Live TV)*
 - Paramount Channel *(Live TV)* *(Contents {ES|IT})*
 - Afrique Media *(Replay, Live TV)*
+- Channel NewsAsia *(Replay, Live TV)*
 
 ### Japon — *Japan*
 ##### TV
@@ -178,6 +192,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - 朝日放送株式会社 *(Replay)*
 - 読売テレビ *(Replay)*
 - 日テレ News24 *(Live TV)*
+- ジャパネットチャンネルDX *(Live TV)*
 
 ##### Web TV
 - NHK ニュース *(Replay)*
@@ -186,23 +201,38 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ### Pologne — *Poland*
 ##### TV
-- TVP *(Live TV)*
+- TVP Info *(Live TV)*
+- TVP Polonia *(Live TV)*
+- TVP 3 *(Live TV)* *(Contents {Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław})*
 
 ### Suisse — *Switzerland*
 ##### TV Communauté française — *French Community TV*
-- RTS *(Replay, Live TV)*
+- RTS *(Replay)*
+- RTS Un *(Live TV)*
+- RTS Deux *(Live TV)*
+- RTS Info *(Live TV)*
+- RTS Couleur 3 *(Live TV)*
 - Rouge TV *(Live TV)*
 - TVM3 *(Replay)*
 - BeCurious TV *(Replay)*
 
 ##### TV Communauté italienne — *Italian Community TV*
-- RSI *(Replay, Live TV)*
+- RSI *(Replay)*
+- RSI La 1 *(Live TV)*
+- RSI La 2 *(Live TV)*
+- Teleticino *(Live TV)*
 
 ##### TV Communauté allemande — *German Community TV*
-- SRF *(Replay, Live TV)*
+- SRF *(Replay)*
+- SRF 1 *(Live TV)*
+- SRF Zwei *(Live TV)*
+- SRF Info *(Live TV)*
 
 ##### TV Communauté romanche — *Romansh Community TV*
-- RTR *(Replay, Live TV)*
+- RTR *(Replay)*
+- RTR auf SRF 1 *(Live TV)*
+- RTR auf SRF 2 *(Live TV)*
+- RTR auf Info *(Live TV)*
 
 ##### Web TV
 - SWISSINFO *(Replay)*
@@ -214,6 +244,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Canada
 ##### Communauté française — *French Community*
 - Au pays des Têtes à claques <https://www.tetesaclaques.tv/>
+- Office National du Film du Canada <https://www.onf.ca/>
+
+##### Communauté anglaise — *English Community*
+- National Film Board Of Canada <https://www.nfb.ca/>
 
 ### Etat Unis d'Amérique — *United State of America*
 - New York Times <https://www.nytimes.com/video>

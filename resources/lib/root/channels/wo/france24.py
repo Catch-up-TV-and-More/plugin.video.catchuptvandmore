@@ -234,54 +234,9 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    desired_language = common.PLUGIN.get_setting(
-        params.channel_name + '.language')
-
-    url_live = URL_LIVE_SITE % desired_language.lower()
-
-    file_path = utils.download_catalog(
-        url_live,
-        '%s_%s_live.html' % (params.channel_name, desired_language.lower())
-    )
-    html_live = open(file_path).read()
-    root_soup = bs(html_live, 'html.parser')
-
-    json_parser = json.loads(
-        root_soup.select_one("script[type=application/json]").text)
-    media_datas_list = json_parser['medias']['media']
-    media_datas_list = media_datas_list['media_sources']['media_source']
-    for datas in media_datas_list:
-        if datas['source']:
-            url_live = datas['source']
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url=url_live,
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -380,11 +335,30 @@ def list_nwb(params):
     )
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url
+        desired_language = common.PLUGIN.get_setting(
+            params.channel_name + '.language')
+
+        url_live = URL_LIVE_SITE % desired_language.lower()
+
+        file_path = utils.download_catalog(
+            url_live,
+            '%s_%s_live.html' % (params.channel_name, desired_language.lower())
+        )
+        html_live = open(file_path).read()
+        root_soup = bs(html_live, 'html.parser')
+
+        url_stream = ''
+        json_parser = json.loads(
+            root_soup.select_one("script[type=application/json]").text)
+        media_datas_list = json_parser['medias']['media']
+        media_datas_list = media_datas_list['media_sources']['media_source']
+        for datas in media_datas_list:
+            if datas['source']:
+                url_stream = datas['source']
+        return url_stream
     elif params.next == 'play_r' or params.next == 'download_video':
         return params.url
     elif params.next == 'play_r_youtube':

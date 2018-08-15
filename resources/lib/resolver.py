@@ -66,16 +66,17 @@ def ytdl_resolver(url_stream):
             common.GETTEXT('Choose video quality'),
             all_quality)
 
-        if seleted_item == -1:
-            quality = 3
-        selected_quality_string = all_quality[seleted_item]
-        quality_string = {
-            'SD': 0,
-            '720p': 1,
-            '1080p': 2,
-            'Highest available': 3
-        }
-        quality = quality_string[selected_quality_string]
+        if seleted_item > -1:
+            selected_quality_string = all_quality[seleted_item]
+            quality_string = {
+                'SD': 0,
+                '720p': 1,
+                '1080p': 2,
+                'Highest available': 3
+            }
+            quality = quality_string[selected_quality_string]
+        else:
+            return None
     elif DESIRED_QUALITY == "BEST":
         quality = 3
 
@@ -92,6 +93,13 @@ def ytdl_resolver(url_stream):
     else:
         return vid.streamURL()
     
+
+# Kaltura Part
+def get_stream_kaltura(video_url, isDownloadVideo):
+
+    if isDownloadVideo == True:
+        return video_url
+    return ytdl_resolver(video_url)
 
 # DailyMotion Part
 def get_stream_dailymotion(video_id, isDownloadVideo):
@@ -145,8 +153,11 @@ def get_stream_facebook(video_id, isDownloadVideo):
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 common.GETTEXT('Choose video quality'),
                 all_datas_videos_quality)
-            return all_datas_videos_path[seleted_item].encode(
-                'utf-8')
+            if selected_item > -1:
+                return all_datas_videos_path[seleted_item].encode(
+                    'utf-8')
+            else:
+                return None
         elif DESIRED_QUALITY == 'BEST':
             return re.compile(
                 r'hd_src_no_ratelimit:"(.*?)"').findall(

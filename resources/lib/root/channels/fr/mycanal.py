@@ -373,14 +373,13 @@ def list_videos(params):
     )
 
 
-#@common.PLUGIN.mem_cached(common.CACHE_TIME)
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
     params['next'] = 'play_l'
     params['live_dailymotion_id'] = LIVE_DAILYMOTION_ID[params.channel_name]
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':

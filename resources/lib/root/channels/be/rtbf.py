@@ -395,7 +395,7 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
+def start_live_tv_stream(params):
     lives = []
 
     title = ''
@@ -447,7 +447,7 @@ def get_live_item(params):
             'fanart': img,
             'thumb': img,
             'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
+                action='replay_entry',
                 next='play_l',
                 module_name=params.module_name,
                 module_path=params.module_path,
@@ -460,7 +460,6 @@ def get_live_item(params):
     return lives
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':

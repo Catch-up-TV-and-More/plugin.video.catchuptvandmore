@@ -122,21 +122,37 @@ def list_videos(params):
         root_html = utils.get_webcontent(
             params.category_url % params.page)
         root_html = root_html.replace('\n\r','').replace(
-            '\\"','"').replace('\\/','/')
+            '\\"','"').replace('\\/','/').replace(
+                '\\u00e9','é').replace('\\u00ea','ê').replace(
+                    '&#039;','\'').replace('\\u00e8','è').replace(
+                        '\\u00e7','ç').replace('\\u00ab','\"').replace(
+                            '\\u00bb','\"').replace('\\u00e0','à').replace(
+                                '\\u00c9','É').replace('\\u00ef','ï').replace(
+                                    '\\u00f9','ù').replace('\\u00c0','À')
         root_soup = bs(root_html, 'html.parser')
         programs = root_soup.find_all('a', class_='video-item-wrapper')
         programs += root_soup.find_all('a', class_='emission-item-wrapper')
 
         for program in programs:
-            title = program.find('img').get('alt').encode('utf-8')
-            thumb = program.find('img').get('data-src').encode('utf-8')
+            title = ''
+            if program.find('span', class_='emission-title'):
+                title = program.find(
+                    'span', class_='emission-title').get_text()
+            elif program.find('span', class_='video-title'):
+                title = program.find(
+                    'span', class_='video-title').get_text()
+            description = ''
+            if program.find('p'):
+                description = program.find(
+                    'p').get_text()
+            thumb = program.find('img').get('data-src')
             video_url = URL_ROOT_SITE + program.get('href')
             duration = 0
 
             info = {
                 'video': {
                     'title': title,
-                    # 'plot': description,
+                    'plot': description,
                     # 'aired': aired,
                     # 'date': date,
                     'duration': duration,
@@ -207,7 +223,6 @@ def start_live_tv_stream(params):
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':

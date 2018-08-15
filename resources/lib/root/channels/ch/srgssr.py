@@ -82,6 +82,21 @@ EMISSION_NAME = {
     'srf': 'sendungen'
 }
 
+LIVE_LIVE_CHANNEL_NAME = {
+    "rtsun": "RTS Un",
+    "rtsdeux": "RTS Deux",
+    "rtsinfo": "RTS Info",
+    "rtscouleur3": "RTS Couleur 3",
+    "rsila1": "RSI La 1",
+    "rsila2": "RSI La 2",
+    "srf1": "SRF 1",
+    "srfinfo": "SRF Info",
+    "srfzwei": "SRF Zwei",
+    "rtraufsrf1": "RTR auf SRF 1",
+    "rtraufsrfinfo": "RTR auf SRF Info",
+    "rtraufsrf2": "RTR auf SRF 2"
+}
+
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -339,51 +354,11 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    items = []
-
-    title = ''
-    # subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-
-    lives_datas = utils.get_webcontent(
-        URL_LIVE_JSON % params.channel_name)
-    lives_json = json.loads(lives_datas)
-
-    for live in lives_json["teaser"]:
-
-        title = live["channelName"]
-        img = live["logo"] + '/scale/width/448'
-        live_id = live["id"]
-
-        info = {
-            'video': {
-                'title': title,
-                'plot': plot,
-                'duration': duration
-            }
-        }
-
-        items.append({
-            'label': title,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                live_id=live_id,
-            ),
-            'is_playable': True,
-            'info': info
-        })
-
-    return items
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -412,17 +387,27 @@ def get_video_url(params):
 
         return url + '?' + token
     elif params.next == 'play_l':
+        
+        lives_datas = utils.get_webcontent(
+            URL_LIVE_JSON % params.channel_name[:3])
+        lives_json = json.loads(lives_datas)
+        live_id = ''
+        for live in lives_json["teaser"]:
+            if live["channelName"] in LIVE_LIVE_CHANNEL_NAME[params.channel_name]:
+                live_id = live["id"]
 
+        if live_id == '':
+            return None
         streams_datas = utils.get_webcontent(
             URL_INFO_VIDEO % (
-                params.channel_name,
-                params.live_id))
+                params.channel_name[:3],
+                live_id))
         streams_json = json.loads(streams_datas)
 
         # build url
         url = ''
         for stream in streams_json["chapterList"]:
-            if params.live_id in stream["id"]:
+            if live_id in stream["id"]:
                 for url_stream in stream["resourceList"]:
                     if 'HD' in url_stream["quality"]:
                         if url_stream["quality"] == 'HD' and \

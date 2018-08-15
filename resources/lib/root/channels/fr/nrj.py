@@ -250,55 +250,10 @@ def list_videos(params):
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
-    url_live = ''
-
-    session_requests = requests.session()
-    result = session_requests.get(URL_COMPTE_LOGIN)
-
-    token_form_login = re.compile(
-        r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
-    ).findall(result.text)[0]
-
-    module_name = eval(params.module_path)[-1]
-
-    # Build PAYLOAD
-    payload = {
-        "login_form[email]": common.PLUGIN.get_setting(
-            module_name + '.login'),
-        "login_form[password]": common.PLUGIN.get_setting(
-            module_name + '.password'),
-        "login_form[_token]": token_form_login
-    }
-
-    # LOGIN
-    result_2 = session_requests.post(
-        URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
-    if 'adresse e-mail ou le mot de passe est invalide.' \
-            in result_2.text.encode('utf-8'):
-        utils.send_notification(
-            params.channel_name + ' : ' + common.ADDON.get_localized_string(30711))
-        return None
-
-    # GET page with url_live with the session logged
-    result_3 = session_requests.get(
-        URL_LIVE_WITH_TOKEN % (params.channel_name),
-        headers=dict(
-            referer=URL_LIVE_WITH_TOKEN % (params.channel_name)))
-
-    root_soup = bs(result_3.text, 'html.parser')
-    live_soup = root_soup.find('div', class_="player")
-
-    url_live_json = live_soup.get('data-options')
-    url_live_json_jsonparser = json.loads(url_live_json)
-
-    url_live = url_live_json_jsonparser["file"]
-
-    params['url_live'] = url_live
     params['next'] = 'play_l'
     return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -314,4 +269,45 @@ def get_video_url(params):
                 stream_url = stream.get('content')
         return stream_url
     elif params.next == 'play_l':
-        return params.url_live
+        url_live = ''
+
+        session_requests = requests.session()
+        result = session_requests.get(URL_COMPTE_LOGIN)
+
+        token_form_login = re.compile(
+            r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
+        ).findall(result.text)[0]
+
+        module_name = eval(params.module_path)[-1]
+
+        # Build PAYLOAD
+        payload = {
+            "login_form[email]": common.PLUGIN.get_setting(
+                module_name + '.login'),
+            "login_form[password]": common.PLUGIN.get_setting(
+                module_name + '.password'),
+            "login_form[_token]": token_form_login
+        }
+
+        # LOGIN
+        result_2 = session_requests.post(
+            URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
+        if 'adresse e-mail ou le mot de passe est invalide.' \
+                in result_2.text.encode('utf-8'):
+            utils.send_notification(
+                params.channel_name + ' : ' + common.ADDON.get_localized_string(30711))
+            return None
+
+        # GET page with url_live with the session logged
+        result_3 = session_requests.get(
+            URL_LIVE_WITH_TOKEN % (params.channel_name),
+            headers=dict(
+                referer=URL_LIVE_WITH_TOKEN % (params.channel_name)))
+
+        root_soup = bs(result_3.text, 'html.parser')
+        live_soup = root_soup.find('div', class_="player")
+
+        url_live_json = live_soup.get('data-options')
+        url_live_json_jsonparser = json.loads(url_live_json)
+
+        return url_live_json_jsonparser["file"]

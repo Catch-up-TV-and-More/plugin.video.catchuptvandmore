@@ -32,6 +32,8 @@ from resources.lib import common
 URL_LIVE_JSON = 'https://player.api.stv.tv/v1/streams/%s/'
 # channel name
 
+URL_EPISODES_JSON = 'https://player.api.stv.tv/v1/episodes'
+
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -59,46 +61,15 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    title = ''
-    # subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-    url_live = ''
-
-    video_html = utils.get_webcontent(
-        URL_LIVE_JSON % params.channel_name)
-    live_jsonparser = json.loads(video_html)
-    title = live_jsonparser["results"]["now"]["title"]
-    url_live = live_jsonparser["results"]["streamUrl"]
-
-    info = {
-        'video': {
-            'title': params.channel_label + " - [I]" + title + "[/I]",
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label + " - [I]" + title + "[/I]",
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            url=url_live
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return params.url
+        video_html = utils.get_webcontent(
+            URL_LIVE_JSON % params.channel_name)
+        live_jsonparser = json.loads(video_html)
+        return live_jsonparser["results"]["streamUrl"]

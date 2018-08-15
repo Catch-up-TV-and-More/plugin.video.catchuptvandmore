@@ -119,7 +119,9 @@ XMLTV_CHANNEL_ID = {
         'france3.region')],
     'bfmparis': '',
     'melodytv': '',
-    'virginradiotv': ''
+    'virginradiotv': '',
+    'kto': '',
+    'antennereunion': ''
 }
 
 

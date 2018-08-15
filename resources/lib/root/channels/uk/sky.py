@@ -375,53 +375,20 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    plot = ''
-    duration = 0
-    img = ''
-    video_id = ''
-
-    # Get URL Live
-    file_path = utils.download_catalog(
-        URL_LIVE_SKYNEWS,
-        '%s_live.html' % params.channel_name,
-    )
-    live_html = open(file_path).read()
-
-    video_id = re.compile(
-        r'www.youtube.com/embed/(.*?)\?').findall(live_html)[0]
-
-    img = URL_IMG_YOUTUBE % video_id
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l',
-            video_id=video_id
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        return resolver.get_stream_youtube(params.video_id, False)
+        # Get URL Live
+        live_html = utils.get_webcontent(
+            URL_LIVE_SKYNEWS)
+        video_id = re.compile(
+            r'www.youtube.com/embed/(.*?)\?').findall(live_html)[0]
+        return resolver.get_stream_youtube(video_id, False)
     elif params.next == 'play_r_news':
         return resolver.get_stream_youtube(params.video_id, False)
     elif params.next == 'play_r_sports':

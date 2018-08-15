@@ -265,91 +265,11 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    """Build live listing"""
-    lives = []
-
-    title = ''
-    subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-    # url_live = ''
-
-    title = params.channel_label
-
-    # Get URL Live
-    file_path = utils.download_catalog(
-        URL_LIVE_NHK % params.channel_name,
-        '%s_live.xml' % params.channel_name,
-    )
-    live_xml = open(file_path).read()
-    xmlElements = ET.XML(live_xml)
-
-    desired_country = common.PLUGIN.get_setting(
-        params.channel_name + '.country')
-    if desired_country == 'Outside Japan':
-        url_live = xmlElements.find("tv_url").findtext("wstrm").encode('utf-8')
-    else:
-        url_live = xmlElements.find("tv_url").findtext("jstrm").encode('utf-8')
-
-    # GET Info Live (JSON)
-    url_json = URL_LIVE_INFO_NHK % (
-        params.channel_name,
-        LOCATION[0], get_api_key(params))
-    file_path_json = utils.download_catalog(
-        url_json,
-        '%s_live.json' % params.channel_name,
-    )
-    live_json = open(file_path_json).read()
-    json_parser = json.loads(live_json)
-
-    # Get First Element
-    if 'item' in json_parser['channel']:
-        for info_live in json_parser['channel']['item']:
-            if info_live["subtitle"] != '':
-                subtitle = subtitle + info_live["subtitle"].encode('utf-8')
-            title = params.channel_label + " - [I]" + \
-                info_live["title"].encode('utf-8') + subtitle + "[/I]"
-
-            start_date = time.strftime(
-                '%H:%M',
-                time.localtime(int(str(info_live["pubDate"])[:-3])))
-            end_date = time.strftime(
-                '%H:%M',
-                time.localtime(int(str(info_live["endDate"])[:-3])))
-            plot = start_date + ' - ' + end_date + '\n ' + \
-                info_live["description"].encode('utf-8')
-            img = URL_ROOT + info_live["thumbnail"].encode('utf-8')
-            break
-
-    info = {
-        'video': {
-            'title': title,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    lives.append({
-        'label': title,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='replay_entry',
-            next='play_l',
-            url_live=url_live,
-        ),
-        'is_playable': True,
-        'info': info
-    })
-
-    return lives
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -368,4 +288,18 @@ def get_video_url(params):
         url = base64.standard_b64decode(url_base64)
         return url
     elif params.next == 'play_l':
-        return params.url_live
+        # Get URL Live
+        file_path = utils.download_catalog(
+            URL_LIVE_NHK % params.channel_name,
+            '%s_live.xml' % params.channel_name,
+        )
+        live_xml = open(file_path).read()
+        xmlElements = ET.XML(live_xml)
+        url_live = ''
+        desired_country = common.PLUGIN.get_setting(
+            params.channel_name + '.country')
+        if desired_country == 'Outside Japan':
+            url_live = xmlElements.find("tv_url").findtext("wstrm").encode('utf-8')
+        else:
+            url_live = xmlElements.find("tv_url").findtext("jstrm").encode('utf-8')
+        return url_live

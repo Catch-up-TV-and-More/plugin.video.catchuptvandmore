@@ -282,54 +282,15 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
+def start_live_tv_stream(params):
     if DESIRED_LANGUAGE == 'FR' or \
             DESIRED_LANGUAGE == 'DE':
-
-        url_live = ''
-
-        file_live = utils.get_webcontent(
-            URL_LIVE_ARTE % DESIRED_LANGUAGE.lower())
-        json_parser = json.loads(file_live)
-
-        title = json_parser["videoJsonPlayer"]["VTI"].encode('utf-8')
-        img = json_parser["videoJsonPlayer"]["VTU"]["IUR"].encode('utf-8')
-        plot = ''
-        if 'V7T' in json_parser["videoJsonPlayer"]:
-            plot = json_parser["videoJsonPlayer"]["V7T"].encode('utf-8')
-        elif 'VDE' in json_parser["videoJsonPlayer"]:
-            plot = json_parser["videoJsonPlayer"]["VDE"].encode('utf-8')
-        duration = 0
-        duration = json_parser["videoJsonPlayer"]["videoDurationSeconds"]
-        url_live = json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
-
-        info = {
-            'video': {
-                'title': params.channel_label + " - [I]" + title + "[/I]",
-                'plot': plot,
-                'duration': duration
-            }
-        }
-
-        return {
-            'label': params.channel_label + " - [I]" + title + "[/I]",
-            'fanart': img,
-            'thumb': img,
-            'url': common.PLUGIN.get_url(
-                action='start_live_tv_stream',
-                next='play_l',
-                module_name=params.module_name,
-                module_path=params.module_path,
-                url=url_live,
-            ),
-            'is_playable': True,
-            'info': info
-        }
+        params['next'] = 'play_l'
+        return get_video_url(params)
     else:
         return None
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_r' or params.next == 'download_video':
@@ -357,9 +318,11 @@ def get_video_url(params):
 
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 "Choose Stream", all_datas_videos_quality)
-
-            url_selected = all_datas_videos_path[seleted_item].encode(
-                'utf-8')
+            if seleted_item > -1:
+                url_selected = all_datas_videos_path[seleted_item].encode(
+                    'utf-8')
+            else:
+                return None
 
         elif desired_quality == "BEST":
             url_selected = video_streams['HTTPS_SQ_1']['url']
@@ -369,4 +332,7 @@ def get_video_url(params):
 
         return url_selected
     elif params.next == 'play_l':
-        return params.url
+        file_live = utils.get_webcontent(
+            URL_LIVE_ARTE % DESIRED_LANGUAGE.lower())
+        json_parser = json.loads(file_live)
+        return json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]

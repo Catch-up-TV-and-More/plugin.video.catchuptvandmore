@@ -66,40 +66,11 @@ def list_videos(params):
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
-def get_live_item(params):
-    
-    lives = []
-
-    title = ''
-    # subtitle = ' - '
-    plot = ''
-    duration = 0
-    img = ''
-
-    info = {
-        'video': {
-            'title': params.channel_label,
-            'plot': plot,
-            'duration': duration
-        }
-    }
-
-    return {
-        'label': params.channel_label,
-        'fanart': img,
-        'thumb': img,
-        'url': common.PLUGIN.get_url(
-            module_path=params.module_path,
-            module_name=params.module_name,
-            action='start_live_tv_stream',
-            next='play_l'
-        ),
-        'is_playable': True,
-        'info': info
-    }
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 
-@common.PLUGIN.mem_cached(common.CACHE_TIME)
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
@@ -164,8 +135,11 @@ def get_video_url(params):
             seleted_item = common.sp.xbmcgui.Dialog().select(
                 common.GETTEXT('Choose video quality'),
                     all_datas_videos_quality)
-            return all_datas_videos_path[seleted_item].encode(
-                'utf-8')
+            if seleted_item > -1:
+                return all_datas_videos_path[seleted_item].encode(
+                    'utf-8')
+            else:
+                return None
         elif DESIRED_QUALITY == 'BEST':
             # Last video in the Best
             for k in range(0, len(lines) - 1):
