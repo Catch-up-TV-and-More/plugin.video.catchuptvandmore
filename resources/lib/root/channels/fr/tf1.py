@@ -582,6 +582,9 @@ def get_video_url(params):
 
         if 'www.wat.tv/embedframe' in params.program_id:
             video_id = re.compile('UVID=(.*?)&').findall(video_html)[0]
+        elif params.channel_name == 'lci':
+            video_id = re.compile(
+                r'data-videoid="(.*?)"').findall(video_html)[0]
         else:
             video_html_soup = bs(video_html, 'html.parser')
             iframe_player_soup = video_html_soup.find(
