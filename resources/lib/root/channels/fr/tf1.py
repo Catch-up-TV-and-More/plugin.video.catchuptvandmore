@@ -293,11 +293,12 @@ def list_videos_lci(params):
                     title = replay.find_all(
                         'img')[0].get('alt').encode('utf-8')
                     duration = 0
-                    img = replay.find_all('source')[0]
-                    try:
-                        img = img['data-srcset'].encode('utf-8')
-                    except Exception:
-                        img = img['srcset'].encode('utf-8')
+                    img = ''
+                    for img in replay.find_all('source'):
+                        try:
+                            img = img['data-srcset'].encode('utf-8')
+                        except Exception:
+                            img = img['srcset'].encode('utf-8')
 
                     img = img.split(',')[0].split(' ')[0]
                     program_id = URL_LCI_ROOT + replay.get(
