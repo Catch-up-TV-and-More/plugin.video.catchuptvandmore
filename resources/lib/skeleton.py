@@ -68,7 +68,8 @@ SKELETON = {
                 ('melodytv', 'none'),
                 ('virginradiotv', 'none'),
                 ('kto', 'none'),
-                ('antennereunion', '')
+                ('antennereunion', 'none'),
+                ('viaoccitanie', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -537,7 +538,8 @@ CHANNELS = {
     'nrjhitstvbe': 'nrjhitstvbe',
     'pbskids': 'pbskids',
     'teleticino': 'teleticino',
-    'ntvca': 'ntvca'
+    'ntvca': 'ntvca',
+    'viaoccitanie': 'viaoccitanie'
 }
 
 '''
@@ -679,6 +681,7 @@ LABELS = {
     'culturebox': 'Culturebox (francetv)',
     'kto': 'KTO',
     'antennereunion': 'Antenne Réunion',
+    'viaoccitanie': 'ViàOccitanie',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

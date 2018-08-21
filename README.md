@@ -137,6 +137,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Virgin Radio TV *(Live TV)*
 - KTO *(Replay, Live TV)*
 - Antenne Réunion *(Live TV)*
+- ViàOccitanie *(Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*

@@ -121,7 +121,8 @@ XMLTV_CHANNEL_ID = {
     'melodytv': '',
     'virginradiotv': '',
     'kto': '',
-    'antennereunion': ''
+    'antennereunion': '',
+    'viaoccitanie': ''
 }
 
 
