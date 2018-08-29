@@ -217,8 +217,11 @@ def list_videos(params):
         json_d = json.loads(result)
         nb_pages = json_d['nbPages']
         for hit in json_d['hits']:
-            label = hit['program']['label']
             title = hit['title']
+            label = ''
+            if 'program' in hit:
+                label = hit['program']['label']
+                title = label + ' - ' + title
             headline = hit['headline_title']
             desc = hit['text']
             duration = hit['duration']
@@ -240,7 +243,6 @@ def list_videos(params):
             image_400 = URL_API + image_400
             image_1024 = URL_API + image_1024
 
-            title = label + ' - ' + title
             if headline and headline != '':
                 desc = headline + '\n' + desc
 
