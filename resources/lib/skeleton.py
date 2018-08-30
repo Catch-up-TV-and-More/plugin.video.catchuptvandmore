@@ -56,7 +56,6 @@ SKELETON = {
                 ('la_1ere', 'none'),
                 ('franceinfo', 'none'),
                 ('bfmbusiness', 'none'),
-                ('rmc', 'none'),
                 ('lci', 'none'),
                 ('lcp', 'none'),
                 ('rmcdecouverte', 'none'),

@@ -108,7 +108,6 @@ XMLTV_CHANNEL_ID = {
         'la_1ere.region')],
     'franceinfo': 'C2111.api.telerama.fr',
     'bfmbusiness': 'C1073.api.telerama.fr',
-    'rmc': 'C546.api.telerama.fr',
     'lci': 'C112.api.telerama.fr',
     'lcp': 'C234.api.telerama.fr',
     'rmcdecouverte': 'C1400.api.telerama.fr',
