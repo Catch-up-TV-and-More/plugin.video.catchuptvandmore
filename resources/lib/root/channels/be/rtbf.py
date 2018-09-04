@@ -233,30 +233,31 @@ def list_shows(params):
             sub_categories_2_json = utils.get_webcontent(
                 URL_SUB_CATEGORIES % (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
             sub_categories_2_jsonparser = json.loads(sub_categories_2_json)
-            sub_categories_2_html = sub_categories_2_jsonparser["blocks"][sub_category_data_uuid]
-            sub_categories_2_soup = bs(sub_categories_2_html, 'html.parser')
-            list_sub_categories_2 = sub_categories_2_soup.find_all(
-                'section', class_="js-item-container")
+            if sub_category_data_uuid in sub_categories_2_jsonparser["blocks"]:
+                sub_categories_2_html = sub_categories_2_jsonparser["blocks"][sub_category_data_uuid]
+                sub_categories_2_soup = bs(sub_categories_2_html, 'html.parser')
+                list_sub_categories_2 = sub_categories_2_soup.find_all(
+                    'section', class_="js-item-container")
 
-            for sub_category_22 in list_sub_categories_2:
+                for sub_category_22 in list_sub_categories_2:
 
-                sub_category_title = " ".join(sub_category_22.find('h2').get_text().encode('utf-8').split())
-                sub_category_id = sub_category_22.get('id')
+                    sub_category_title = " ".join(sub_category_22.find('h2').get_text().encode('utf-8').split())
+                    sub_category_id = sub_category_22.get('id')
 
-                shows.append({
-                    'label': sub_category_title,
-                    'url': common.PLUGIN.get_url(
-                        module_path=params.module_path,
-                        module_name=params.module_name,
-                        sub_category_title=sub_category_title,
-                        action='replay_entry',
-                        sub_category_data_uuid=sub_category_data_uuid,
-                        sub_category_id=sub_category_id,
-                        category_url=params.category_url,
-                        next='list_videos_categorie_2',
-                        window_title=sub_category_title
-                    )
-                })
+                    shows.append({
+                        'label': sub_category_title,
+                        'url': common.PLUGIN.get_url(
+                            module_path=params.module_path,
+                            module_name=params.module_name,
+                            sub_category_title=sub_category_title,
+                            action='replay_entry',
+                            sub_category_data_uuid=sub_category_data_uuid,
+                            sub_category_id=sub_category_id,
+                            category_url=params.category_url,
+                            next='list_videos_categorie_2',
+                            window_title=sub_category_title
+                        )
+                    })
 
 
     return common.PLUGIN.create_listing(
