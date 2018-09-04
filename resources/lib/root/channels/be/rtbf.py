@@ -292,9 +292,11 @@ def list_videos(params):
                 title = video["title"].encode('utf-8')
             img = URL_ROOT_IMAGE_RTBF + video["thumbnail"]["full_medium"]
             url_video = video["urlHls"]
-            if 'drm' in url_video:
-                # the following url is not drm protected
-                url_video = video["urlHlsAes128"]
+            # TODO if urlHls is Null / get url (normally youtube video)
+            if url_video is not None:
+                if 'drm' in url_video:
+                    # the following url is not drm protected
+                    url_video = video["urlHlsAes128"]
             plot = ''
             if video["description"]:
                 plot = video["description"].encode('utf-8')
@@ -588,9 +590,11 @@ def get_video_url(params):
         data_stream = data_stream.replace('&quot;', '"')
         data_stream_json = json.loads(data_stream)
         url_video = data_stream_json["urlHls"]
-        if 'drm' in url_video:
-            # the following url is not drm protected
-            url_video = data_stream_json["urlHlsAes128"]
+        # TODO if urlHls is Null / get url (normally youtube video)
+        if url_video is not None:
+            if 'drm' in url_video:
+                # the following url is not drm protected
+                url_video = data_stream_json["urlHlsAes128"]
         return url_video
     elif params.next == 'play_r':
         return params.url_video
