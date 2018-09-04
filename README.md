@@ -114,7 +114,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - La 1ère *(Replay, Live TV)* *(Contents {Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer})*
 - France Info *(Replay, Live TV)*
 - BFM Business *(Replay, Live TV)*
-- RMC *(Replay, Live TV)*
+- RMC (RMC Sport) *(Replay)*
 - RMC Découverte *(Replay, Live TV)*
 - LCP Assemblée Nationale *(Replay, Live TV)*
 - Public Sénat *(Replay, Live TV)*

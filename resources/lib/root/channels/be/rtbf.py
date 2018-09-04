@@ -40,6 +40,9 @@ URL_JSON_EMISSION_BY_ID = 'https://www.rtbf.be/api/media/video?' \
 
 URL_CATEGORIES = 'https://www.rtbf.be/news/api/menu?site=media'
 
+URL_SUB_CATEGORIES = 'https://www.rtbf.be/news/api/block?data[0][uuid]=%s&data[0][type]=widget&data[0][settings][id]=%s'
+# data-uuid and part of data-uuid
+
 URL_VIDEO_BY_ID = 'https://www.rtbf.be/auvio/embed/media?id=%s&autoplay=1'
 # Video Id
 
@@ -214,12 +217,47 @@ def list_shows(params):
                     module_name=params.module_name,
                     sub_category_title=sub_category_title,
                     action='replay_entry',
-                    sub_category_id=sub_category_id ,
+                    sub_category_id=sub_category_id,
                     category_url=params.category_url,
                     next='list_videos_categorie',
                     window_title=sub_category_title
                 )
             })
+
+        list_sub_categories_to_dl = sub_categories_soup.find_all(
+            'div', class_=re.compile("js-widget js-widget-"))
+
+        for sub_category_2 in list_sub_categories_to_dl:
+
+            sub_category_data_uuid = sub_category_2.find('b').get('data-uuid')
+            sub_categories_2_json = utils.get_webcontent(
+                URL_SUB_CATEGORIES % (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
+            sub_categories_2_jsonparser = json.loads(sub_categories_2_json)
+            sub_categories_2_html = sub_categories_2_jsonparser["blocks"][sub_category_data_uuid]
+            sub_categories_2_soup = bs(sub_categories_2_html, 'html.parser')
+            list_sub_categories_2 = sub_categories_2_soup.find_all(
+                'section', class_="js-item-container")
+
+            for sub_category_22 in list_sub_categories_2:
+
+                sub_category_title = " ".join(sub_category_22.find('h2').get_text().encode('utf-8').split())
+                sub_category_id = sub_category_22.get('id')
+
+                shows.append({
+                    'label': sub_category_title,
+                    'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        sub_category_title=sub_category_title,
+                        action='replay_entry',
+                        sub_category_data_uuid=sub_category_data_uuid,
+                        sub_category_id=sub_category_id,
+                        category_url=params.category_url,
+                        next='list_videos_categorie_2',
+                        window_title=sub_category_title
+                    )
+                })
+
 
     return common.PLUGIN.create_listing(
         shows,
@@ -382,6 +420,80 @@ def list_videos(params):
                             'info': info,
                             'context_menu': context_menu
                         })
+
+    elif params.next == 'list_videos_categorie_2':
+
+        sub_categories_2_json = utils.get_webcontent(
+            URL_SUB_CATEGORIES % (params.sub_category_data_uuid, params.sub_category_data_uuid.split('-')[1]))
+        sub_categories_2_jsonparser = json.loads(sub_categories_2_json)
+        sub_categories_2_html = sub_categories_2_jsonparser["blocks"][params.sub_category_data_uuid]
+        sub_categories_2_soup = bs(sub_categories_2_html, 'html.parser')
+        list_categories = sub_categories_2_soup.find_all(
+            'section', class_="js-item-container")
+
+        for select_category_value in list_categories:
+            if select_category_value.get('id') == params.sub_category_id:
+
+                list_episodes = select_category_value.find_all('article')
+
+                for episode in list_episodes:
+
+                    if episode.get('data-type') == 'media':
+                        if episode.find('h4'):
+                            title = episode.find('h3').find(
+                                'a').get('title') + ' - ' + \
+                                episode.find('h4').get_text()
+                        else:
+                            title = episode.find('h3').find('a').get('title')
+                        duration = 0
+                        video_id = episode.get('data-id')
+                        all_images = episode.find('img').get(
+                            'data-srcset').split(',')
+                        for image in all_images:
+                            img = image.split(' ')[0]
+
+                        info = {
+                            'video': {
+                                'title': title,
+                                # 'plot': plot,
+                                # 'episode': episode_number,
+                                # 'season': season_number,
+                                # 'rating': note,
+                                # 'aired': aired,
+                                # 'date': date,
+                                'duration': duration,
+                                # 'year': year,
+                                'mediatype': 'tvshow'
+                            }
+                        }
+
+                        download_video = (
+                            common.GETTEXT('Download'),
+                            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                                action='download_video',
+                                module_path=params.module_path,
+                                module_name=params.module_name,
+                                video_id=video_id) + ')'
+                        )
+                        context_menu = []
+                        context_menu.append(download_video)
+
+                        videos.append({
+                            'label': title,
+                            'thumb': img,
+                            'fanart': img,
+                            'url': common.PLUGIN.get_url(
+                                module_path=params.module_path,
+                                module_name=params.module_name,
+                                action='replay_entry',
+                                next='play_r_categorie',
+                                video_id=video_id
+                            ),
+                            'is_playable': True,
+                            'info': info,
+                            'context_menu': context_menu
+                        })
+
 
     return common.PLUGIN.create_listing(
         videos,
