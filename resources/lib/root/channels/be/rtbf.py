@@ -25,6 +25,7 @@ import re
 import time
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
@@ -291,12 +292,7 @@ def list_videos(params):
             else:
                 title = video["title"].encode('utf-8')
             img = URL_ROOT_IMAGE_RTBF + video["thumbnail"]["full_medium"]
-            url_video = video["urlHls"]
-            # TODO if urlHls is Null / get url (normally youtube video)
-            if url_video is not None:
-                if 'drm' in url_video:
-                    # the following url is not drm protected
-                    url_video = video["urlHlsAes128"]
+            video_id = video["id"]
             plot = ''
             if video["description"]:
                 plot = video["description"].encode('utf-8')
@@ -334,7 +330,7 @@ def list_videos(params):
                     action='download_video',
                     module_path=params.module_path,
                     module_name=params.module_name,
-                    url_video=url_video) + ')'
+                    video_id=video_id) + ')'
             )
             context_menu = []
             context_menu.append(download_video)
@@ -348,7 +344,7 @@ def list_videos(params):
                     module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
-                    url_video=url_video
+                    video_id=video_id
                 ),
                 'is_playable': True,
                 'info': info,
@@ -416,7 +412,7 @@ def list_videos(params):
                                 module_path=params.module_path,
                                 module_name=params.module_name,
                                 action='replay_entry',
-                                next='play_r_categorie',
+                                next='play_r',
                                 video_id=video_id
                             ),
                             'is_playable': True,
@@ -489,7 +485,7 @@ def list_videos(params):
                                 module_path=params.module_path,
                                 module_name=params.module_name,
                                 action='replay_entry',
-                                next='play_r_categorie',
+                                next='play_r',
                                 video_id=video_id
                             ),
                             'is_playable': True,
@@ -582,19 +578,26 @@ def get_video_url(params):
             utils.send_notification(common.ADDON.get_localized_string(30702))
             return ''
         return params.url_live
-    elif params.next == 'play_r_categorie':
+    elif params.next == 'play_r' or params.next == 'download':
         file_path = utils.get_webcontent(
             URL_VIDEO_BY_ID % params.video_id)
         data_stream = re.compile('data-media=\"(.*?)\"').findall(
             file_path)[0]
         data_stream = data_stream.replace('&quot;', '"')
         data_stream_json = json.loads(data_stream)
-        url_video = data_stream_json["urlHls"]
-        # TODO if urlHls is Null / get url (normally youtube video)
-        if url_video is not None:
+        url_video = ''
+        if data_stream_json["urlHls"] is None:
+            if 'youtube.com' in data_stream_json["url"]:
+                video_id = data_stream_json["url"].rsplit('/', 1)[1]
+                if params.next == 'download_video':
+                    return resolver.get_stream_youtube(video_id, True)
+                else:
+                    return resolver.get_stream_youtube(video_id, False)
+            else:
+                url_video = data_stream_json["url"]
+        else:
+            url_video = data_stream_json["urlHls"]
             if 'drm' in url_video:
                 # the following url is not drm protected
                 url_video = data_stream_json["urlHlsAes128"]
         return url_video
-    elif params.next == 'play_r':
-        return params.url_video
