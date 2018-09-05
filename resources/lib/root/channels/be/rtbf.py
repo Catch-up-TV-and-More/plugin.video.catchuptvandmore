@@ -578,7 +578,7 @@ def get_video_url(params):
             utils.send_notification(common.ADDON.get_localized_string(30702))
             return ''
         return params.url_live
-    elif params.next == 'play_r' or params.next == 'download':
+    elif params.next == 'play_r' or params.next == 'download_video':
         file_path = utils.get_webcontent(
             URL_VIDEO_BY_ID % params.video_id)
         data_stream = re.compile('data-media=\"(.*?)\"').findall(
