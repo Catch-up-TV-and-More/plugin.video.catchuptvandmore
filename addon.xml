@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.15~beta07"
+       version="0.1.15~beta08"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -39,6 +39,7 @@
 [Remove] RMC Live TV (not present anymore) (wwark)
 [Improvements] RTBF Auvio (BE) Add more sub categories (wwark)
 [Fix] Replay VRT NU (BE) (wwark)
+[Fix] France TV Sport - Replay (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
