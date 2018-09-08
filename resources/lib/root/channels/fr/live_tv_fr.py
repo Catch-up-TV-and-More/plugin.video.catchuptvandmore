@@ -121,7 +121,8 @@ XMLTV_CHANNEL_ID = {
     'virginradiotv': '',
     'kto': '',
     'antennereunion': '',
-    'viaoccitanie': ''
+    'viaoccitanie': '',
+    'ouatchtv': ''
 }
 
 

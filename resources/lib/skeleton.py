@@ -68,7 +68,8 @@ SKELETON = {
                 ('virginradiotv', 'none'),
                 ('kto', 'none'),
                 ('antennereunion', 'none'),
-                ('viaoccitanie', 'none')
+                ('viaoccitanie', 'none'),
+                ('ouatchtv', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -539,7 +540,8 @@ CHANNELS = {
     'pbskids': 'pbskids',
     'teleticino': 'teleticino',
     'ntvca': 'ntvca',
-    'viaoccitanie': 'viaoccitanie'
+    'viaoccitanie': 'viaoccitanie',
+    'ouatchtv': 'ouatchtv'
 }
 
 '''
@@ -682,6 +684,7 @@ LABELS = {
     'kto': 'KTO',
     'antennereunion': 'Antenne Réunion',
     'viaoccitanie': 'ViàOccitanie',
+    'ouatchtv': 'Ouatch TV',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

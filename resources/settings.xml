@@ -503,6 +503,9 @@
 
             <setting label="ViàOccitanie" type="bool" id="viaoccitanie" default="true" visible="eq(-131,true)"/>
             <setting label="" type="number" visible="false" id="viaoccitanie.order" default="66"/>
+
+            <setting label="Ouatch TV" type="bool" id="ouatchtv" default="true" visible="eq(-133,true)"/>
+            <setting label="" type="number" visible="false" id="ouatchtv.order" default="67"/>
         <!-- France -->
 
 
