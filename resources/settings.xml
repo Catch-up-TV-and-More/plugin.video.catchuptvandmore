@@ -506,6 +506,9 @@
 
             <setting label="Ouatch TV" type="bool" id="ouatchtv" default="true" visible="eq(-133,true)"/>
             <setting label="" type="number" visible="false" id="ouatchtv.order" default="67"/>
+
+            <setting label="Canal 10" type="bool" id="canal10" default="true" visible="eq(-135,true)"/>
+            <setting label="" type="number" visible="false" id="canal10.order" default="68"/>
         <!-- France -->
 
 
