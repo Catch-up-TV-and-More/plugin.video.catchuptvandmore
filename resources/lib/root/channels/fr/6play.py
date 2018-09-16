@@ -97,11 +97,8 @@ def list_shows(params):
 
         url_root_site = ''
         if params.channel_name == 'stories' or \
-                params.channel_name == 'bruce' or \
-                params.channel_name == 'crazy_kitchen' or \
-                params.channel_name == 'home' or \
-                params.channel_name == 'styles' or \
                 params.channel_name == 'comedy' or \
+                params.channel_name == 'rtl2' or \
                 params.channel_name == 'fun_radio':
             url_root_site = URL_ROOT % params.channel_name
         else:

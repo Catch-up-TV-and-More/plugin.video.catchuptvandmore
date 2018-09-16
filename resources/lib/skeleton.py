@@ -236,10 +236,6 @@ SKELETON = {
                 ('lcp', 'replay_entry'),
                 ('rmcdecouverte', 'replay_entry'),
                 ('stories', 'replay_entry'),
-                ('bruce', 'replay_entry'),
-                ('crazy_kitchen', 'replay_entry'),
-                ('home', 'replay_entry'),
-                ('styles', 'replay_entry'),
                 ('comedy', 'replay_entry'),
                 ('publicsenat', 'replay_entry'),
                 ('histoire', 'replay_entry'),
@@ -265,7 +261,8 @@ SKELETON = {
                 ('culturebox', 'replay_entry'),
                 ('bfmparis', 'replay_entry'),
                 ('kto', 'replay_entry'),
-                ('ouatchtv', 'replay_entry')
+                ('ouatchtv', 'replay_entry'),
+                ('rtl2', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -418,10 +415,6 @@ CHANNELS = {
     'lcp': 'lcp',
     'rmcdecouverte': 'bfmtv',
     'stories': '6play',
-    'bruce': '6play',
-    'crazy_kitchen': '6play',
-    'home': '6play',
-    'styles': '6play',
     'comedy': '6play',
     'fun_radio': '6play',
     'publicsenat': 'publicsenat',
@@ -544,7 +537,8 @@ CHANNELS = {
     'ntvca': 'ntvca',
     'viaoccitanie': 'viaoccitanie',
     'ouatchtv': 'ouatchtv',
-    'canal10': 'canal10'
+    'canal10': 'canal10',
+    'rtl2': '6play'
 }
 
 '''
@@ -655,10 +649,6 @@ LABELS = {
     'lcp': 'LCP Assemblée Nationale',
     'rmcdecouverte': 'RMC Découverte HD24',
     'stories': 'Stories (6play)',
-    'bruce': 'Bruce (6play)',
-    'crazy_kitchen': 'Crazy Kitchen (6play)',
-    'home': 'Home Time (6play)',
-    'styles': 'Sixième Style (6play)',
     'comedy': 'Comic (6play)',
     'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
@@ -689,6 +679,7 @@ LABELS = {
     'viaoccitanie': 'ViàOccitanie',
     'ouatchtv': 'Ouatch TV',
     'canal10': 'Canal 10',
+    'rtl2': 'RTL 2',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

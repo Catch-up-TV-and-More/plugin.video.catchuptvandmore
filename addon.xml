@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.15~beta10"
+       version="0.1.15~beta11"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -43,6 +43,7 @@
 [Add Channel] NRJ Hits TV (BE) (wwark)
 [Add Live TV - Channel] Ouatch TV (wwark)
 [Add Live TV] Canal 10 (wwark)
+[Add/Remove Channels] Add RTL 2 / Remove Bruce, Crazy Kitchen, Home Time, Sixième Style (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

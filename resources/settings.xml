@@ -405,110 +405,101 @@
             <setting label="Stories (6play)" type="bool" id="stories" default="true" visible="eq(-65,true)"/>
             <setting label="" type="number" visible="false" id="stories.order" default="33"/>
 
-            <setting label="Bruce (6play)" type="bool" id="bruce" default="true" visible="eq(-67,true)"/>
-            <setting label="" type="number" visible="false" id="bruce.order" default="34"/>
+            <setting label="Comic (6play)" type="bool" id="comedy" default="true" visible="eq(-67,true)"/>
+            <setting label="" type="number" visible="false" id="comedy.order" default="34"/>
 
-            <setting label="Crazy Kitchen (6play)" type="bool" id="crazy_kitchen" default="true" visible="eq(-69,true)"/>
-            <setting label="" type="number" visible="false" id="crazy_kitchen.order" default="35"/>
+            <setting label="Public Sénat" type="bool" id="publicsenat" default="true" visible="eq(-69,true)"/>
+            <setting label="" type="number" visible="false" id="publicsenat.order" default="35"/>
 
-            <setting label="Home Time (6play)" type="bool" id="home" default="true" visible="eq(-71,true)"/>
-            <setting label="" type="number" visible="false" id="home.order" default="36"/>
+            <setting label="France 3 Régions" type="bool" id="france3regions" default="true" visible="eq(-71,true)"/>
+            <setting label="" type="number" visible="false" id="france3regions.order" default="36"/>
 
-            <setting label="Sixième Style (6play)" type="bool" id="styles" default="true" visible="eq(-73,true)"/>
-            <setting label="" type="number" visible="false" id="styles.order" default="37"/>
+            <setting label="France TV Sport (francetv)" type="bool" id="francetvsport" default="true" visible="eq(-73,true)"/>
+            <setting label="" type="number" visible="false" id="francetvsport.order" default="37"/>
 
-            <setting label="Comic (6play)" type="bool" id="comedy" default="true" visible="eq(-75,true)"/>
-            <setting label="" type="number" visible="false" id="comedy.order" default="38"/>
+            <setting label="Histoire" type="bool" id="histoire" default="true" visible="eq(-75,true)"/>
+            <setting label="" type="number" visible="false" id="histoire.order" default="38"/>
 
-            <setting label="Public Sénat" type="bool" id="publicsenat" default="true" visible="eq(-77,true)"/>
-            <setting label="" type="number" visible="false" id="publicsenat.order" default="39"/>
+            <setting label="TV Breizh" type="bool" id="tvbreizh" default="true" visible="eq(-77,true)"/>
+            <setting label="" type="number" visible="false" id="tvbreizh.order" default="39"/>
 
-            <setting label="France 3 Régions" type="bool" id="france3regions" default="true" visible="eq(-79,true)"/>
-            <setting label="" type="number" visible="false" id="france3regions.order" default="40"/>
+            <setting label="Ushuaïa TV" type="bool" id="ushuaiatv" default="true" visible="eq(-79,true)"/>
+            <setting label="" type="number" visible="false" id="ushuaiatv.order" default="40"/>
 
-            <setting label="France TV Sport (francetv)" type="bool" id="francetvsport" default="true" visible="eq(-81,true)"/>
-            <setting label="" type="number" visible="false" id="francetvsport.order" default="41"/>
+            <setting label="Studio 4 (francetv)" type="bool" id="studio-4" default="true" visible="eq(-81,true)"/>
+            <setting label="" type="number" visible="false" id="studio-4.order" default="41"/>
 
-            <setting label="Histoire" type="bool" id="histoire" default="true" visible="eq(-83,true)"/>
-            <setting label="" type="number" visible="false" id="histoire.order" default="42"/>
+            <setting label="IRL (francetv)" type="bool" id="irl" default="true" visible="eq(-83,true)"/>
+            <setting label="" type="number" visible="false" id="irl.order" default="42"/>
 
-            <setting label="TV Breizh" type="bool" id="tvbreizh" default="true" visible="eq(-85,true)"/>
-            <setting label="" type="number" visible="false" id="tvbreizh.order" default="43"/>
+            <setting label="Seasons" type="bool" id="seasons" default="true" visible="eq(-85,true)"/>
+            <setting label="" type="number" visible="false" id="seasons.order" default="43"/>
 
-            <setting label="Ushuaïa TV" type="bool" id="ushuaiatv" default="true" visible="eq(-87,true)"/>
-            <setting label="" type="number" visible="false" id="ushuaiatv.order" default="44"/>
+            <setting label="Comédie +" type="bool" id="comedie" default="true" visible="eq(-87,true)"/>
+            <setting label="" type="number" visible="false" id="comedie.order" default="44"/>
 
-            <setting label="Studio 4 (francetv)" type="bool" id="studio-4" default="true" visible="eq(-89,true)"/>
-            <setting label="" type="number" visible="false" id="studio-4.order" default="45"/>
+            <setting label="Les chaînes planètes +" type="bool" id="les-chaines-planete" default="true" visible="eq(-89,true)"/>
+            <setting label="" type="number" visible="false" id="les-chaines-planete.order" default="45"/>
 
-            <setting label="IRL (francetv)" type="bool" id="irl" default="true" visible="eq(-91,true)"/>
-            <setting label="" type="number" visible="false" id="irl.order" default="46"/>
+            <setting label="Golf +" type="bool" id="golfplus" default="true" visible="eq(-91,true)"/>
+            <setting label="" type="number" visible="false" id="golfplus.order" default="46"/>
 
-            <setting label="Seasons" type="bool" id="seasons" default="true" visible="eq(-93,true)"/>
-            <setting label="" type="number" visible="false" id="seasons.order" default="47"/>
+            <setting label="Ciné +" type="bool" id="cineplus" default="true" visible="eq(-93,true)"/>
+            <setting label="" type="number" visible="false" id="cineplus.order" default="47"/>
 
-            <setting label="Comédie +" type="bool" id="comedie" default="true" visible="eq(-95,true)"/>
-            <setting label="" type="number" visible="false" id="comedie.order" default="48"/>
+            <setting label="INFOSPORT+" type="bool" id="infosportplus" default="true" visible="eq(-95,true)"/>
+            <setting label="" type="number" visible="false" id="infosportplus.order" default="48"/>
 
-            <setting label="Les chaînes planètes +" type="bool" id="les-chaines-planete" default="true" visible="eq(-97,true)"/>
-            <setting label="" type="number" visible="false" id="les-chaines-planete.order" default="49"/>
+            <setting label="Game One" type="bool" id="gameone" default="true" visible="eq(-97,true)"/>
+            <setting label="" type="number" visible="false" id="gameone.order" default="49"/>
 
-            <setting label="Golf +" type="bool" id="golfplus" default="true" visible="eq(-99,true)"/>
-            <setting label="" type="number" visible="false" id="golfplus.order" default="50"/>
+            <setting label="FranceTV Education (francetv)" type="bool" id="francetveducation" default="true" visible="eq(-99,true)"/>
+            <setting label="" type="number" visible="false" id="francetveducation.order" default="50"/>
 
-            <setting label="Ciné +" type="bool" id="cineplus" default="true" visible="eq(-101,true)"/>
-            <setting label="" type="number" visible="false" id="cineplus.order" default="51"/>
+            <setting label="Gong" type="bool" id="gong" default="true" visible="eq(-101,true)"/>
+            <setting label="" type="number" visible="false" id="gong.order" default="51"/>
 
-            <setting label="INFOSPORT+" type="bool" id="infosportplus" default="true" visible="eq(-103,true)"/>
-            <setting label="" type="number" visible="false" id="infosportplus.order" default="52"/>
+            <setting label="BFM Paris" type="bool" id="bfmparis" default="true" visible="eq(-103,true)"/>
+            <setting label="" type="number" visible="false" id="bfmparis.order" default="52"/>
 
-            <setting label="Game One" type="bool" id="gameone" default="true" visible="eq(-105,true)"/>
-            <setting label="" type="number" visible="false" id="gameone.order" default="53"/>
+            <setting label="Onzéo" type="bool" id="onzeo" default="true" visible="eq(-105,true)"/>
+            <setting label="" type="number" visible="false" id="onzeo.order" default="53"/>
 
-            <setting label="FranceTV Education (francetv)" type="bool" id="francetveducation" default="true" visible="eq(-107,true)"/>
-            <setting label="" type="number" visible="false" id="francetveducation.order" default="54"/>
+            <setting label="Fun Radio" type="bool" id="fun_radio" default="true" visible="eq(-107,true)"/>
+            <setting label="" type="number" visible="false" id="fun_radio.order" default="54"/>
 
-            <setting label="Gong" type="bool" id="gong" default="true" visible="eq(-109,true)"/>
-            <setting label="" type="number" visible="false" id="gong.order" default="55"/>
+            <setting label="Melody TV" type="bool" id="melodytv" default="true" visible="eq(-109,true)"/>
+            <setting label="" type="number" visible="false" id="melodytv.order" default="55"/>
 
-            <setting label="BFM Paris" type="bool" id="bfmparis" default="true" visible="eq(-111,true)"/>
-            <setting label="" type="number" visible="false" id="bfmparis.order" default="56"/>
+            <setting label="France tv slash" type="bool" id="slash" default="true" visible="eq(-111,true)"/>
+            <setting label="" type="number" visible="false" id="slash.order" default="56"/>
 
-            <setting label="Onzéo" type="bool" id="onzeo" default="true" visible="eq(-113,true)"/>
-            <setting label="" type="number" visible="false" id="onzeo.order" default="57"/>
+            <setting label="Polar+" type="bool" id="polar-plus" default="true" visible="eq(-113,true)"/>
+            <setting label="" type="number" visible="false" id="polar-plus.order" default="57"/>
 
-            <setting label="Fun Radio" type="bool" id="fun_radio" default="true" visible="eq(-115,true)"/>
-            <setting label="" type="number" visible="false" id="fun_radio.order" default="58"/>
+            <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-115,true)"/>
+            <setting label="" type="number" visible="false" id="virginradiotv.order" default="58"/>
 
-            <setting label="Melody TV" type="bool" id="melodytv" default="true" visible="eq(-117,true)"/>
-            <setting label="" type="number" visible="false" id="melodytv.order" default="59"/>
+            <setting label="Culturebox (francetv)" type="bool" id="culturebox" default="true" visible="eq(-117,true)"/>
+            <setting label="" type="number" visible="false" id="culturebox.order" default="59"/>
 
-            <setting label="France tv slash" type="bool" id="slash" default="true" visible="eq(-119,true)"/>
-            <setting label="" type="number" visible="false" id="slash.order" default="60"/>
+            <setting label="KTO" type="bool" id="kto" default="true" visible="eq(-119,true)"/>
+            <setting label="" type="number" visible="false" id="kto.order" default="60"/>
 
-            <setting label="Polar+" type="bool" id="polar-plus" default="true" visible="eq(-121,true)"/>
-            <setting label="" type="number" visible="false" id="polar-plus.order" default="61"/>
+            <setting label="Antenne Réunion" type="bool" id="antennereunion" default="true" visible="eq(-121,true)"/>
+            <setting label="" type="number" visible="false" id="antennereunion.order" default="61"/>
 
-            <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
-            <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
+            <setting label="ViàOccitanie" type="bool" id="viaoccitanie" default="true" visible="eq(-123,true)"/>
+            <setting label="" type="number" visible="false" id="viaoccitanie.order" default="62"/>
 
-            <setting label="Culturebox (francetv)" type="bool" id="culturebox" default="true" visible="eq(-125,true)"/>
-            <setting label="" type="number" visible="false" id="culturebox.order" default="63"/>
+            <setting label="Ouatch TV" type="bool" id="ouatchtv" default="true" visible="eq(-125,true)"/>
+            <setting label="" type="number" visible="false" id="ouatchtv.order" default="63"/>
 
-            <setting label="KTO" type="bool" id="kto" default="true" visible="eq(-127,true)"/>
-            <setting label="" type="number" visible="false" id="kto.order" default="64"/>
+            <setting label="Canal 10" type="bool" id="canal10" default="true" visible="eq(-127,true)"/>
+            <setting label="" type="number" visible="false" id="canal10.order" default="64"/>
 
-            <setting label="Antenne Réunion" type="bool" id="antennereunion" default="true" visible="eq(-129,true)"/>
-            <setting label="" type="number" visible="false" id="antennereunion.order" default="65"/>
-
-            <setting label="ViàOccitanie" type="bool" id="viaoccitanie" default="true" visible="eq(-131,true)"/>
-            <setting label="" type="number" visible="false" id="viaoccitanie.order" default="66"/>
-
-            <setting label="Ouatch TV" type="bool" id="ouatchtv" default="true" visible="eq(-133,true)"/>
-            <setting label="" type="number" visible="false" id="ouatchtv.order" default="67"/>
-
-            <setting label="Canal 10" type="bool" id="canal10" default="true" visible="eq(-135,true)"/>
-            <setting label="" type="number" visible="false" id="canal10.order" default="68"/>
+            <setting label="RTL 2" type="bool" id="rtl2" default="true" visible="eq(-129,true)"/>
+            <setting label="" type="number" visible="false" id="rtl2.order" default="65"/>
         <!-- France -->
 
 
