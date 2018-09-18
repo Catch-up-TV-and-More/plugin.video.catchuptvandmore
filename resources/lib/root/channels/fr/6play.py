@@ -73,6 +73,8 @@ URL_JSON_VIDEO = 'https://pc.middleware.6play.fr/6play/v2/platforms/' \
 
 URL_IMG = 'https://images.6play.fr/v1/images/%s/raw'
 
+URL_LIVE_JSON = 'https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/services/6play/live?channel=%s&with=service_display_images,nextdiffusion,extra_data'
+# Chaine
 
 def channel_entry(params):
     """Entry function of the module"""
@@ -333,7 +335,7 @@ def list_videos(params):
                 module_path=params.module_path,
                 module_name=params.module_name,
                 action='replay_entry',
-                next='play',
+                next='play_r',
                 video_id=video_id,
             ),
             'is_playable': True,
@@ -353,64 +355,103 @@ def list_videos(params):
         category=common.get_window_title(params)
     )
 
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def start_live_tv_stream(params):
+    params['next'] = 'play_l'
+    return get_video_url(params)
 
 def get_video_url(params):
     """Get video URL and start video player"""
-    video_json = utils.get_webcontent(
-        URL_JSON_VIDEO % (params.video_id),
-        random_ua=True)
-    json_parser = json.loads(video_json)
+    if params.next == 'play_r' or params.next == 'download_video':
+        video_json = utils.get_webcontent(
+            URL_JSON_VIDEO % (params.video_id),
+            random_ua=True)
+        json_parser = json.loads(video_json)
 
 
-    video_assets = json_parser['clips'][0]['assets']
-    if video_assets is None:
-        utils.send_notification(common.ADDON.get_localized_string(30712))
-        return ''
+        video_assets = json_parser['clips'][0]['assets']
+        if video_assets is None:
+            utils.send_notification(common.ADDON.get_localized_string(30712))
+            return ''
 
-    # "type":"primetime_phls_h264" => Video protected by DRM (m3u8)
-    # "type":"usp_hls_h264" => Video not protected by DRM (m3u8)
-    # "type":"usp_dashcenc_h264" => No supported by Kodi (MDP)
-    # "type":"usp_hlsfp_h264" => Video protected by DRM (m3u8)
-    # "type":"http_h264" => Video not proted by DRM (mp4) (Quality SD "video_quality":"sd", HD "video_quality":"hq", HD "video_quality":"hd", HD "video_quality":"lq", 3G) 
-    # "type":"http_subtitle_vtt_sm" => Subtitle (in English TVShows)
+        # "type":"primetime_phls_h264" => Video protected by DRM (m3u8)
+        # "type":"usp_hls_h264" => Video not protected by DRM (m3u8)
+        # "type":"usp_dashcenc_h264" => No supported by Kodi (MDP)
+        # "type":"usp_hlsfp_h264" => Video protected by DRM (m3u8)
+        # "type":"http_h264" => Video not proted by DRM (mp4) (Quality SD "video_quality":"sd", HD "video_quality":"hq", HD "video_quality":"hd", HD "video_quality":"lq", 3G) 
+        # "type":"http_subtitle_vtt_sm" => Subtitle (in English TVShows)
 
-    desired_quality = common.PLUGIN.get_setting('quality')
-    all_datas_videos_quality = []
-    all_datas_videos_path = []
-    for asset in video_assets:
-        if 'http_h264' in asset["type"]:
-            all_datas_videos_quality.append(asset["video_quality"])
-            all_datas_videos_path.append(
-                asset['full_physical_path'].encode('utf-8'))
-        elif 'h264' in asset["type"]:
-            manifest = utils.get_webcontent(
-                asset['full_physical_path'].encode('utf-8'),
-                random_ua=True)
-            if 'drm' not in manifest:
+        desired_quality = common.PLUGIN.get_setting('quality')
+        all_datas_videos_quality = []
+        all_datas_videos_path = []
+        for asset in video_assets:
+            if 'http_h264' in asset["type"]:
                 all_datas_videos_quality.append(asset["video_quality"])
                 all_datas_videos_path.append(
                     asset['full_physical_path'].encode('utf-8'))
+            elif 'h264' in asset["type"]:
+                manifest = utils.get_webcontent(
+                    asset['full_physical_path'].encode('utf-8'),
+                    random_ua=True)
+                if 'drm' not in manifest:
+                    all_datas_videos_quality.append(asset["video_quality"])
+                    all_datas_videos_path.append(
+                        asset['full_physical_path'].encode('utf-8'))
 
-    if len(all_datas_videos_quality) == 0:
-        utils.send_notification(common.ADDON.get_localized_string(30702))
-        return ''
-    elif len(all_datas_videos_quality) == 1:
-        return all_datas_videos_path[0]
-    else:
-        if desired_quality == "DIALOG":
-            seleted_item = common.sp.xbmcgui.Dialog().select(
-                common.GETTEXT('Choose video quality'),
-                all_datas_videos_quality)
-            if seleted_item == -1:
-                return ''
-            return all_datas_videos_path[seleted_item]
-        elif desired_quality == "BEST":
-            url_best = ''
-            i = 0
-            for data_video in all_datas_videos_quality:
-                if 'lq' not in data_video:
-                    url_best = all_datas_videos_path[i]
-                i = i + 1
-            return url_best
-        else:
+        if len(all_datas_videos_quality) == 0:
+            utils.send_notification(common.ADDON.get_localized_string(30702))
+            return ''
+        elif len(all_datas_videos_quality) == 1:
             return all_datas_videos_path[0]
+        else:
+            if desired_quality == "DIALOG":
+                seleted_item = common.sp.xbmcgui.Dialog().select(
+                    common.GETTEXT('Choose video quality'),
+                    all_datas_videos_quality)
+                if seleted_item == -1:
+                    return ''
+                return all_datas_videos_path[seleted_item]
+            elif desired_quality == "BEST":
+                url_best = ''
+                i = 0
+                for data_video in all_datas_videos_quality:
+                    if 'lq' not in data_video:
+                        url_best = all_datas_videos_path[i]
+                    i = i + 1
+                return url_best
+            else:
+                return all_datas_videos_path[0]
+    elif params.next == 'play_l':
+        if params.channel_name == 'fun_radio' or \
+            params.channel_name == 'rtl2':
+            video_json = utils.get_webcontent(
+                URL_LIVE_JSON % (params.channel_name),
+                random_ua=True)
+            json_parser = json.loads(video_json)
+            video_assets = json_parser[params.channel_name][0]['live']['assets']
+
+            if video_assets is None:
+                utils.send_notification(common.ADDON.get_localized_string(30712))
+                return ''
+
+            # "type":"primetime_phls_h264" => Video protected by DRM (m3u8)
+            # "type":"usp_hls_h264" => Video not protected by DRM (m3u8)
+            # "type":"usp_dashcenc_h264" => No supported by Kodi (MDP)
+            # "type":"usp_hlsfp_h264" => Video protected by DRM (m3u8)
+            # "type":"http_h264" => Video not proted by DRM (mp4) (Quality SD "video_quality":"sd", HD "video_quality":"hq", HD "video_quality":"hd", HD "video_quality":"lq", 3G) 
+            # "type":"http_subtitle_vtt_sm" => Subtitle (in English TVShows)
+
+            # desired_quality = common.PLUGIN.get_setting('quality')
+            url_stream = ''
+
+            if params.channel_name == 'fun_radio' or \
+                params.channel_name == 'rtl2':
+                for asset in video_assets:
+                    if 'delta_hls_h264' in asset["type"]:
+                        url_stream = asset['full_physical_path'].encode('utf-8')
+            else:
+                for asset in video_assets:
+                    if 'delta_dashcenc_h264' in asset["type"]:
+                        url_stream = asset['full_physical_path'].encode('utf-8')
+            return url_stream
+        return None

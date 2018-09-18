@@ -70,7 +70,9 @@ SKELETON = {
                 ('antennereunion', 'none'),
                 ('viaoccitanie', 'none'),
                 ('ouatchtv', 'none'),
-                ('canal10', 'none')
+                ('canal10', 'none'),
+                ('fun_radio', 'none'),
+                ('rtl2', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [

@@ -140,8 +140,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - ViàOccitanie *(Live TV)*
 - Ouatch TV *(Replay, Live TV)*
 - Canal 10 *(Live TV)*
-- Fun Radio *(Replay)*
-- RTL 2 *(Replay)*
+- Fun Radio *(Replay, Live TV)*
+- RTL 2 *(Replay, Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*

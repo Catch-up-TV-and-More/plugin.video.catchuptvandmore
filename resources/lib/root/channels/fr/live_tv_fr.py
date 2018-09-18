@@ -123,7 +123,9 @@ XMLTV_CHANNEL_ID = {
     'antennereunion': '',
     'viaoccitanie': '',
     'ouatchtv': '',
-    'canal10': ''
+    'canal10': '',
+    'fun_radio': '',
+    'rtl2': ''
 }
 
 
