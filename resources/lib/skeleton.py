@@ -193,7 +193,8 @@ SKELETON = {
                 ('bel_rtl', 'replay_entry'),
                 ('contact', 'replay_entry'),
                 ('bx1', 'replay_entry'),
-                ('nrjhitstvbe', 'replay_entry')
+                ('nrjhitstvbe', 'replay_entry'),
+                ('rtl_sport', 'replay_entry')
             ],
 
             ('ca', 'generic_menu'): [
@@ -364,12 +365,12 @@ the channel name and his corresponding python file
 CHANNELS = {
     'auvio': 'rtbf',
     'brf': 'brf',
-    'rtl_tvi': 'rtlbe',
-    'plug_rtl': 'rtlbe',
-    'club_rtl': 'rtlbe',
-    'rtl_info': 'rtlbe',
-    'bel_rtl': 'rtlbe',
-    'contact': 'rtlbe',
+    'rtl_tvi': 'rtlplaybe',
+    'plug_rtl': 'rtlplaybe',
+    'club_rtl': 'rtlplaybe',
+    'rtl_info': 'rtlplaybe',
+    'bel_rtl': 'rtlplaybe',
+    'contact': 'rtlplaybe',
     'vrt': 'vrt',
     'telemb': 'telemb',
     'rtc': 'rtc',
@@ -540,7 +541,8 @@ CHANNELS = {
     'viaoccitanie': 'viaoccitanie',
     'ouatchtv': 'ouatchtv',
     'canal10': 'canal10',
-    'rtl2': '6play'
+    'rtl2': '6play',
+    'rtl_sport': 'rtlplaybe'
 }
 
 '''
@@ -583,6 +585,7 @@ LABELS = {
     'canvas': 'Canvas',
     'ketnet': 'Ketnet',
     'nrjhitstvbe': 'NRJ Hits TV',
+    'rtl_sport': 'RTL Sport',
 
     # Canadian channels / live TV
     'tv5': 'TV5',

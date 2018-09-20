@@ -300,6 +300,9 @@
 
             <setting label="NRJ Hits TV" type="bool" id="nrjhitstvbe" default="true" visible="eq(-33,true)"/>
             <setting label="" type="number" visible="false" id="nrjhitstvbe.order" default="17"/>
+
+            <setting label="RTL Sport" type="bool" id="rtl_sport" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="rtl_sport.order" default="18"/>
         <!-- Belgium -->
 
 
