@@ -402,7 +402,7 @@
             <setting label="LCP Assemblée Nationale" type="bool" id="lcp" default="true" visible="eq(-61,true)"/>
             <setting label="" type="number" visible="false" id="lcp.order" default="31"/>
 
-            <setting label="RMC Découverte HD24" type="bool" id="rmcdecouverte" default="true" visible="eq(-63,true)"/>
+            <setting label="RMC Découverte" type="bool" id="rmcdecouverte" default="true" visible="eq(-63,true)"/>
             <setting label="" type="number" visible="false" id="rmcdecouverte.order" default="32"/>
 
             <setting label="Stories (6play)" type="bool" id="stories" default="true" visible="eq(-65,true)"/>

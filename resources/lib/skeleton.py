@@ -652,7 +652,7 @@ LABELS = {
     'xtra': 'Xtra (MYTF1)',
     'lci': 'LCI',
     'lcp': 'LCP Assemblée Nationale',
-    'rmcdecouverte': 'RMC Découverte HD24',
+    'rmcdecouverte': 'RMC Découverte',
     'stories': 'Stories (6play)',
     'comedy': 'Comic (6play)',
     'fun_radio': 'Fun Radio',

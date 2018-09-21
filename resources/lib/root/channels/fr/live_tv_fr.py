@@ -102,7 +102,7 @@ XMLTV_CHANNEL_ID = {
     'france-o': 'C160.api.telerama.fr',
     'tf1-series-films': 'C1404.api.telerama.fr',
     'lequipe': 'C1401.api.telerama.fr',
-    'rmcstory': 'C1402.api.telerama.fr',
+    'rmcstory': '',
     'cherie25': 'C1399.api.telerama.fr',
     'la_1ere': LIVE_LA_1ERE[common.PLUGIN.get_setting(
         'la_1ere.region')],
