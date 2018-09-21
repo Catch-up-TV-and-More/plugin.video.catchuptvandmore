@@ -109,7 +109,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TF1 Séries Films *(Replay, Live TV)*
 - L'Équipe *(Replay, Live TV)*
 - 6ter *(Replay)*
-- Numéro 23 *(Replay, Live TV)*
+- RMC Story *(Replay, Live TV)*
 - Chérie 25 *(Replay, Live TV with NRJ account)*
 - LCI *(Replay, Live TV)*
 - La 1ère *(Replay, Live TV)* *(Contents {Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer})*

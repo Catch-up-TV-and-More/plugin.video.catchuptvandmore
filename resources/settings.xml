@@ -369,8 +369,8 @@
             <setting label="6ter" type="bool" id="6ter" default="true" visible="eq(-39,true)"/>
             <setting label="" type="number" visible="false" id="6ter.order" default="20"/>
 
-            <setting label="Numéro 23" type="bool" id="numero23" default="true" visible="eq(-41,true)"/>
-            <setting label="" type="number" visible="false" id="numero23.order" default="21"/>
+            <setting label="RMC Story" type="bool" id="rmcstory" default="true" visible="eq(-41,true)"/>
+            <setting label="" type="number" visible="false" id="rmcstory.order" default="21"/>
 
             <setting label="Chérie 25" type="bool" id="cherie25" default="true" visible="eq(-43,true)"/>
             <setting label="" type="number" visible="false" id="cherie25.order" default="22"/>

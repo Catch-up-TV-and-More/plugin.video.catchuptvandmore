@@ -540,7 +540,7 @@ def start_live_tv_stream(params):
             '-' + end_date_value + "[/I]"
 
         url_live = ''
-        if live["url_streaming"]:
+        if "url_streaming" in live:
             url_live = live["url_streaming"]["url_hls"]
         plot = live["description"].encode('utf-8')
         img = live["images"]["illustration"]["16x9"]["1248x702"]
