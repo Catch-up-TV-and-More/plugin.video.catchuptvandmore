@@ -49,6 +49,8 @@ def channel_entry(params):
         return list_shows(params)
     elif 'list_videos' in params.next:
         return list_videos(params)
+    elif 'search' in params.next:
+        return search(params)
     elif 'play' in params.next:
         return get_video_url(params)
     return None
@@ -84,6 +86,8 @@ CATEGORIES_VIDEOS_TIVI5MONDE = {
 def list_shows(params):
     """Build categories listing"""
     shows = []
+    if 'previous_listing' in params:
+        shows = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_shows_1':
         if params.channel_name == 'tv5mondeafrique':
@@ -179,6 +183,19 @@ def list_shows(params):
                     )
                 })
 
+            # Search videos
+            shows.append({
+                'label': common.GETTEXT('Search videos'),
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='search',
+                    window_title=common.GETTEXT('Search videos'),
+                    is_folder=False
+                )
+            })
+
     elif params.next == 'list_shows_2':
         if params.channel_name == 'tv5mondeafrique':
 
@@ -246,7 +263,7 @@ def list_shows(params):
         elif params.channel_name == 'tivi5monde':
 
             list_categories_html = utils.get_webcontent(
-                params.category_url)
+                params.category_url + '?page=%s' % params.page)
             list_categories_soup = bs(
                 list_categories_html, 'html.parser')
             list_categories = list_categories_soup.find_all(
@@ -274,6 +291,21 @@ def list_shows(params):
                         window_title=category_title
                     )
                 })
+
+            # More programs...
+            shows.append({
+                'label': common.ADDON.get_localized_string(30708),
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    next='list_shows_2',
+                    page=str(int(params.page) + 1),
+                    category_url=params.category_url,
+                    update_listing=True,
+                    previous_listing=str(shows)
+                )
+            })
 
     return common.PLUGIN.create_listing(
         shows,
@@ -738,6 +770,78 @@ def list_videos(params):
                 )
             })
 
+    elif params.next == 'list_videos_search':
+
+        if params.channel_name == 'tivi5monde':
+            replay_videos_html = utils.get_webcontent(
+                URL_TIVI5MONDE_ROOT + '/recherche?search_api_views_fulltext=%s&page=%s' % (params.query, params.page))
+            replay_videos_soup = bs(replay_videos_html, 'html.parser')
+
+            all_videos = replay_videos_soup.find_all(
+                'div', class_='row-vignette')
+
+            for video in all_videos:
+
+                video_title = video.find('img').get('alt')
+                video_img = video.find('img').get('src')
+                video_url = URL_TIVI5MONDE_ROOT + video.find(
+                    'a').get('href')
+
+                info = {
+                    'video': {
+                        'title': video_title,
+                        # 'aired': aired,
+                        # 'date': date,
+                        # 'duration': video_duration,
+                        # 'plot': video_plot,
+                        # 'year': year,
+                        'mediatype': 'tvshow'
+                    }
+                }
+
+                download_video = (
+                    common.GETTEXT('Download'),
+                    'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                        action='download_video',
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        video_url=video_url) + ')'
+                )
+                context_menu = []
+                context_menu.append(download_video)
+
+                videos.append({
+                    'label': video_title,
+                    'thumb': video_img,
+                    'url': common.PLUGIN.get_url(
+                        module_path=params.module_path,
+                        module_name=params.module_name,
+                        action='replay_entry',
+                        next='play_r_tivi5monde',
+                        video_url=video_url
+                    ),
+                    'is_playable': True,
+                    'info': info,
+                    'context_menu': context_menu
+                })
+
+            # More videos...
+            videos.append({
+                'label': common.ADDON.get_localized_string(30700),
+                'url': common.PLUGIN.get_url(
+                    module_path=params.module_path,
+                    module_name=params.module_name,
+                    action='replay_entry',
+                    query=params.query,
+                    next=params.next,
+                    page=str(int(params.page) + 1),
+                    title=params.title,
+                    window_title=params.window_title,
+                    update_listing=True,
+                    previous_listing=str(videos)
+                )
+            })
+
     return common.PLUGIN.create_listing(
         videos,
         sort_methods=(
@@ -781,3 +885,18 @@ def get_video_url(params):
             r'data-broadcast=\'(.*?)\'').findall(live_html)[0]
         live_json_parser = json.loads(live_json)
         return live_json_parser["files"][0]["url"]
+
+def search(params):
+    keyboard = common.sp.xbmc.Keyboard(
+        default='',
+        title='',
+        hidden=False)
+    keyboard.doModal()
+    if keyboard.isConfirmed():
+        query = keyboard.getText()
+        params['page'] = '0'
+        params['query'] = query
+        params['next'] = 'list_videos_search'
+        return list_videos(params)
+    else:
+        return None

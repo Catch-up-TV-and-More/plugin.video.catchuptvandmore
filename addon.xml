@@ -50,6 +50,7 @@
 [Rename] Numero 23 to RMC Story (wwark)
 [Update] PNG RMC Decouverte (wwark)
 [Remove] RMC Decouverte Live TV (DRM Protected - AES 128 not supported also by Kodi 18) (wwark)
+[Improvements] Add Search button for Tivi5MondePlus (git issue#81) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
