@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.15~beta14"
+       version="0.1.15~beta15"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -49,6 +49,7 @@
 [Fix] Télé MB - Live TV (BE) (wwark)
 [Rename] Numero 23 to RMC Story (wwark)
 [Update] PNG RMC Decouverte (wwark)
+[Remove] RMC Decouverte Live TV (DRM Protected - AES 128 not supported also by Kodi 18) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
