@@ -209,7 +209,7 @@ def get_video_url(params):
         live_json_token = open(file_path_json_token).read()
         live_jsonparser_token = json.loads(live_json_token)
 
-        return 'http:' + live_jsonparser["hls"].encode('utf-8') + \
+        return live_jsonparser["hls"].encode('utf-8') + \
             live_jsonparser_token["token"].encode('utf-8')
     elif params.next == 'play_r' or params.next == 'download_video':
         # get token
