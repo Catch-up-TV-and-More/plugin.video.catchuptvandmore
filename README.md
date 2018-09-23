@@ -143,6 +143,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Canal 10 *(Live TV)*
 - Fun Radio *(Replay, Live TV)*
 - RTL 2 *(Replay, Live TV)*
+- La Chaîne Météo *(Replay)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
@@ -169,7 +170,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TV5Monde France Belgique Suisse *(Live TV)*
 - Tivi 5Monde *(Replay, Live TV)*
 - BVN *(Replay, Live TV)*
-- ICI Télévision *(Replay, Live TV)*
+- ICI Télévision *(Live TV)*
 - MTV *(Replay)* *(Contents {FR})*
 - Arirang (아리랑) *(Replay, Live TV)*
 - DW *(Live TV)* *(Contents {EN|AR|DE|ES})*

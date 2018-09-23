@@ -264,7 +264,8 @@ SKELETON = {
                 ('bfmparis', 'replay_entry'),
                 ('kto', 'replay_entry'),
                 ('ouatchtv', 'replay_entry'),
-                ('rtl2', 'replay_entry')
+                ('rtl2', 'replay_entry'),
+                ('lachainemeteo', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -311,7 +312,7 @@ SKELETON = {
                 ('tv5monde', 'replay_entry'),
                 ('tivi5monde', 'replay_entry'),
                 ('bvn', 'replay_entry'),
-                ('icitelevision', 'replay_entry'),
+                # ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
                 ('beinsports', 'replay_entry'),
@@ -541,7 +542,8 @@ CHANNELS = {
     'ouatchtv': 'ouatchtv',
     'canal10': 'canal10',
     'rtl2': '6play',
-    'rtl_sport': 'rtlplaybe'
+    'rtl_sport': 'rtlplaybe',
+    'lachainemeteo': 'lachainemeteo'
 }
 
 '''
@@ -684,6 +686,7 @@ LABELS = {
     'ouatchtv': 'Ouatch TV',
     'canal10': 'Canal 10',
     'rtl2': 'RTL 2',
+    'lachainemeteo': 'La Chaîne Météo',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

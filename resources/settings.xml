@@ -503,6 +503,9 @@
 
             <setting label="RTL 2" type="bool" id="rtl2" default="true" visible="eq(-129,true)"/>
             <setting label="" type="number" visible="false" id="rtl2.order" default="65"/>
+
+            <setting label="La Chaîne Météo" type="bool" id="lachainemeteo" default="true" visible="eq(-131,true)"/>
+            <setting label="" type="number" visible="false" id="lachainemeteo.order" default="66"/>
         <!-- France -->
 
 

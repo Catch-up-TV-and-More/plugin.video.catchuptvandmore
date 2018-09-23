@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.15~beta15"
+       version="0.1.15~beta16"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -51,6 +51,9 @@
 [Update] PNG RMC Decouverte (wwark)
 [Remove] RMC Decouverte Live TV (DRM Protected - AES 128 not supported also by Kodi 18) (wwark)
 [Improvements] Add Search button for Tivi5MondePlus (git issue#81) (wwark)
+[Fix] BVN Live TV (Forage)
+[Remove] Ici Télévision - Replay (No more Replay on the website) (wwark)
+[Add Channel] La Chaîne Météo (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
