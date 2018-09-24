@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.15~beta16"
+       version="0.1.15~beta17"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -54,6 +54,7 @@
 [Fix] BVN Live TV (Forage)
 [Remove] Ici Télévision - Replay (No more Replay on the website) (wwark)
 [Add Channel] La Chaîne Météo (wwark)
+[Add Live TV] التلفزة التونسية الوطنية 1 and التلفزة التونسية الوطنية 2 (TN) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

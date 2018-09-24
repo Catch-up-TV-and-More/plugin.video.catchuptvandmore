@@ -173,6 +173,11 @@ SKELETON = {
             ('jp', 'build_live_tv_menu'): [
                 ('ntvnews24', 'none'),
                 ('japanetshoppingdx', 'none')
+            ],
+
+            ('tn', 'build_live_tv_menu'): [
+                ('watania1', 'none'),
+                ('watania2', 'none')
             ]
         },
 
@@ -543,7 +548,9 @@ CHANNELS = {
     'canal10': 'canal10',
     'rtl2': '6play',
     'rtl_sport': 'rtlplaybe',
-    'lachainemeteo': 'lachainemeteo'
+    'lachainemeteo': 'lachainemeteo',
+    'watania1': 'watania',
+    'watania2': 'watania'
 }
 
 '''
@@ -567,6 +574,7 @@ LABELS = {
     'us': 'United State of America',
     'pl': 'Poland',
     'es': 'Spain',
+    'tn': 'Tunisia',
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
@@ -768,6 +776,10 @@ LABELS = {
     'nova': 'Nova',
     'mega': 'Mega',
     'atreseries': 'Atreseries',
+
+    # Tunisia channels / live TV
+    'watania1': 'التلفزة التونسية الوطنية 1',
+    'watania2': 'التلفزة التونسية الوطنية 2',
 
     # Websites
     'allocine': 'Allociné',

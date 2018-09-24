@@ -55,6 +55,9 @@
 
         <setting label="30059" type="bool" id="es" default="true"/>
         <setting label="" type="number" visible="false" id="es.order" default="10"/>
+
+        <setting label="30060" type="bool" id="tn" default="true"/>
+        <setting label="" type="number" visible="false" id="tn.order" default="11"/>
     </category>
     <!-- Countries-->
 
@@ -664,6 +667,17 @@
             <setting label="Atreseries" type="bool" id="atreseries" default="true" visible="eq(-27,true)"/>
             <setting label="" type="number" visible="false" id="atreseries.order" default="14"/>
         <!-- Spain -->
+
+        <!-- Tunisia -->
+        <setting label="30090" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="tn" default="true" visible="false"/>
+
+            <setting label="التلفزة التونسية الوطنية 1" type="bool" id="watania1" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="watania1.order" default="1"/>
+
+            <setting label="التلفزة التونسية الوطنية 2" type="bool" id="watania2" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="watania2.order" default="2"/>
+        <!-- Tunisia -->
 
     </category>
     <!-- Channels --> 
