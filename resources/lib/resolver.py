@@ -33,6 +33,7 @@ from resources.lib import common
 DESIRED_QUALITY = common.PLUGIN.get_setting('quality')
 
 URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
+URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
 # Video_id
 
 URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s?autoplay=1'
@@ -108,7 +109,51 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
 
     if isDownloadVideo == True:
         return url_dmotion
-    return ytdl_resolver(url_dmotion)
+    url_dmotion = URL_DAILYMOTION_EMBED_2 % (video_id)
+    dmotion_json = utils.get_webcontent(url_dmotion)
+    dmotion_jsonparser = json.loads(dmotion_json)
+    all_datas_videos_quality = []
+    all_datas_videos_path = []
+    if "auto" in dmotion_jsonparser["qualities"]:
+        all_datas_videos_quality.append('auto')
+        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["auto"][0]["url"])
+    if "144" in dmotion_jsonparser["qualities"]:
+        all_datas_videos_quality.append('144')
+        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["144"][1]["url"])
+    if "240" in dmotion_jsonparser["qualities"]:
+        all_datas_videos_quality.append('240')
+        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["240"][1]["url"])
+    if "380" in dmotion_jsonparser["qualities"]:
+        all_datas_videos_quality.append('380')
+        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["380"][1]["url"])
+    if "480" in dmotion_jsonparser["qualities"]:
+        all_datas_videos_quality.append('480')
+        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["480"][1]["url"])
+    if "720" in dmotion_jsonparser["qualities"]:
+        all_datas_videos_quality.append('720')
+        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["720"][1]["url"])
+    if "1080" in dmotion_jsonparser["qualities"]:
+        all_datas_videos_quality.append('1080')
+        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["1080"][1]["url"])
+    if DESIRED_QUALITY == "DIALOG":
+        selected_item = common.sp.xbmcgui.Dialog().select(
+            common.GETTEXT('Choose video quality'),
+                all_datas_videos_quality)
+        if selected_item > -1:
+            return all_datas_videos_path[selected_item]
+        else:
+            return None
+    elif DESIRED_QUALITY == 'BEST':
+        url_stream = ''
+        for video_path in all_datas_videos_path:
+            url_stream = video_path
+        return url_stream
+    else:
+        if len(all_datas_videos_path) == 1:
+            return all_datas_videos_path[0]
+        else:
+            return all_datas_videos_path[1]
+    # return ytdl_resolver(url_dmotion)
 
 # Vimeo Part
 def get_stream_vimeo(video_id, isDownloadVideo):
@@ -150,11 +195,11 @@ def get_stream_facebook(video_id, isDownloadVideo):
             all_datas_videos_path.append(re.compile(
                 r'hd_src_no_ratelimit:"(.*?)"').findall(
                 html_facebook)[0])
-            seleted_item = common.sp.xbmcgui.Dialog().select(
+            selected_item = common.sp.xbmcgui.Dialog().select(
                 common.GETTEXT('Choose video quality'),
                 all_datas_videos_quality)
             if selected_item > -1:
-                return all_datas_videos_path[seleted_item].encode(
+                return all_datas_videos_path[selected_item].encode(
                     'utf-8')
             else:
                 return None
