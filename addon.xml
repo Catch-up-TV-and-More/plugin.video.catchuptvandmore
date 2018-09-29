@@ -56,6 +56,7 @@
 [Add Live TV] التلفزة التونسية الوطنية 1 and التلفزة التونسية الوطنية 2 (TN) (wwark)
 [Remove] Xtra (mytf1) (wwark)
 [Temporary Fix] dailymotion videos stream (wwark)
+[Fix] Some sport videos requested HDFAUTH_URL (France TV / France TV Sport) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
