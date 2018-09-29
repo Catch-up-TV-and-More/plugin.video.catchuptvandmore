@@ -418,7 +418,7 @@ CHANNELS = {
     'rmc': 'bfmtv',
     '01net': 'bfmtv',
     'tfou': 'mytf1',
-    'lci': 'tf1',
+    'lci': 'mytf1',
     'lcp': 'lcp',
     'rmcdecouverte': 'bfmtv',
     'stories': '6play',

@@ -32,7 +32,7 @@ from resources.lib import common
 # TO DO
 # Quality Mode on LIVE TV
 # Replay LCI add More Buttons
-# DRM (SAMPLE-AES) for Replay => https://github.com/peak3d/inputstream.adaptive/issues/96
+# Split LCI on his own lci.py
 
 
 URL_ROOT = "http://www.tf1.fr/"
