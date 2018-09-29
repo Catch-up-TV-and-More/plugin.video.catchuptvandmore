@@ -125,12 +125,15 @@ def list_shows(params):
                 params.category_url)
             emissions_soup = bs(emissions_html, 'html.parser')
             list_datas = emissions_soup.find_all(
-                'li', class_="vrtlist__item vrtglossary__item")
+                'a', class_="nui-tile")
             value_next = 'list_videos_1'
 
         for data in list_datas:
 
-            data_url = URL_ROOT + data.find('a').get('href')
+            if value_next == 'list_videos_1':
+                data_url = URL_ROOT + data.get('href')
+            else:
+                data_url = URL_ROOT + data.find('a').get('href')
             data_img = 'https:' + data.find(
                 'img').get('srcset').split('1x')[0].strip()
             if data.find('p'):
@@ -140,6 +143,9 @@ def list_shows(params):
             elif data.find('h3'):
                 data_title = data.find(
                     'h3').get_text().encode('utf-8')
+            elif data.find('h2'):
+                data_title = data.find(
+                    'h2').get_text().encode('utf-8')
             else:
                 data_title = data.find(
                     'span').get_text().encode('utf-8')
@@ -210,7 +216,7 @@ def list_videos(params):
 
             for episode in list_episodes:
 
-                title = episode.find('h2').get_text().strip()
+                title = episode.find('h3').get_text().strip()
                 duration = 0
                 video_url = URL_ROOT + episode.find('a').get('href')
                 img = 'https:' + episode.find(
