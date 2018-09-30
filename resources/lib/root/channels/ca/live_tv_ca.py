@@ -36,7 +36,6 @@ XMLTV_CHANNEL_ID = {
     'icitele': '',
     'telequebec': '',
     'tva': '',
-    'yestv': '',
     'ntvca': ''
 }
 
