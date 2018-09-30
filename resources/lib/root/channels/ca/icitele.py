@@ -29,6 +29,7 @@ from resources.lib import common
 # TO DO
 # Add Region
 # Check different cases of getting videos
+# Add more button videos
 
 URL_API = 'https://api.radio-canada.ca/validationMedia/v1/Validation.html'
 

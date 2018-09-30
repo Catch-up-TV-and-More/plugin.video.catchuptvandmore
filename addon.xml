@@ -32,6 +32,7 @@
     <news>
 [Version 0.1.16]
 [Fix] Ici Télé - Replay (wwark)
+[Improvements] Quest OD - Add notification for DRM protected video (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

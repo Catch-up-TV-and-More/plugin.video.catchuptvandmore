@@ -40,7 +40,7 @@ URL_VIDEOS = URL_ROOT + '/api/show-detail/%s'
 # showId
 
 URL_STREAM = URL_ROOT + '/api/video-playback/%s'
-# videoId
+# path
 
 SHOW_MODE = {
     'FEATURED': 'featured',
@@ -230,7 +230,7 @@ def list_videos(params):
                     video_duration = int(str(int(video_datas["videoDuration"])/1000))
                     video_plot = video_datas["description"]
                     video_img = video_datas["image"]["src"]
-                    video_id = video_datas["id"]
+                    video_id = video_datas["path"]
 
                     info = {
                         'video': {
@@ -301,4 +301,9 @@ def get_video_url(params):
                 utils.send_notification(
                     common.ADDON.get_localized_string(30716))
             return None
-        return list_stream_jsonparser["playback"]["streamUrlHls"]
+        if 'drmEnabled' in list_stream_jsonparser["playback"]:
+            if list_stream_jsonparser["playback"]["drmEnabled"]:
+                utils.send_notification(
+                    common.ADDON.get_localized_string(30702))
+                return None
+        return list_stream_jsonparser["playback"]["streamUrlHls"] + 'bw_start=800'
