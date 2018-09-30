@@ -262,16 +262,9 @@ def get_video_url(params):
             URL_LIVE_TV,
             params.channel_name + '_live.html')
         root_live_html = open(file_path).read()
-        root_live_soup = bs(root_live_html, 'html.parser')
 
-        live_soup = root_live_soup.find(
-            'div',
-            class_='wrapperVideo'
-        )
-
-        url_live_embeded = ''
-        for live in live_soup.find_all('iframe'):
-            url_live_embeded = live.get('src').encode('utf-8')
+        url_live_embeded = re.compile(
+            '<iframe src=\"(.*?)\"').findall(root_live_html)[0]
 
         file_path_2 = utils.download_catalog(
             url_live_embeded,
