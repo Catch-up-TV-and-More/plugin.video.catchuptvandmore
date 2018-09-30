@@ -59,6 +59,7 @@
 [Fix] Some sport videos requested HDFAUTH_URL (France TV / France TV Sport) (wwark)
 [Fix] Euronews Live TV (wwark)
 [Fix] Gulli Live TV (wwark)
+[Remove] Yes TV - No more live tv (CA) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -564,20 +564,17 @@
             <setting label="UNIS" type="bool" id="unis" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="unis.order" default="2"/>
 
-            <setting label="YES TV" type="bool" id="yestv" default="true" visible="eq(-5,true)"/>
-            <setting label="" type="number" visible="false" id="yestv.order" default="3"/>
+            <setting label="Télé-Québec" type="bool" id="telequebec" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="telequebec.order" default="3"/>
 
-            <setting label="Télé-Québec" type="bool" id="telequebec" default="true" visible="eq(-7,true)"/>
-            <setting label="" type="number" visible="false" id="telequebec.order" default="4"/>
+            <setting label="TVA" type="bool" id="tva" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="tva.order" default="4"/>
 
-            <setting label="TVA" type="bool" id="tva" default="true" visible="eq(-9,true)"/>
-            <setting label="" type="number" visible="false" id="tva.order" default="5"/>
+            <setting label="ICI Télé" type="bool" id="icitele" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="icitele.order" default="5"/>
 
-            <setting label="ICI Télé" type="bool" id="icitele" default="true" visible="eq(-11,true)"/>
-            <setting label="" type="number" visible="false" id="icitele.order" default="6"/>
-
-            <setting label="NTV" type="bool" id="ntvca" default="true" visible="eq(-13,true)"/>
-            <setting label="" type="number" visible="false" id="ntvca.order" default="7"/>
+            <setting label="NTV" type="bool" id="ntvca" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="ntvca.order" default="6"/>
         <!-- Canada -->
 
 

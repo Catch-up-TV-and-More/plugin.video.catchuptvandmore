@@ -89,7 +89,6 @@ SKELETON = {
 
             ('ca', 'build_live_tv_menu'): [
                 ('telequebec', 'none'),
-                ('yestv', 'none'),
                 ('tva', 'none'),
                 ('icitele', 'none'),
                 ('ntvca', 'none')
@@ -381,7 +380,6 @@ CHANNELS = {
     'rtc': 'rtc',
     'tv5': 'tv5',
     'unis': 'tv5',
-    'yestv': 'yestv',
     'telequebec': 'telequebec',
     'rts': 'srgssr',
     'rsi': 'srgssr',
@@ -598,7 +596,6 @@ LABELS = {
     # Canadian channels / live TV
     'tv5': 'TV5',
     'unis': 'UNIS',
-    'yestv': 'YES TV (' + common.PLUGIN.get_setting('yestv.region') + ')',
     'telequebec': 'Télé-Québec',
     'tva': 'TVA',
     'icitele': 'ICI Télé',
