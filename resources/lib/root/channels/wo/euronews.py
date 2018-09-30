@@ -58,7 +58,10 @@ def get_video_url(params):
         )
         json_live = open(file_path).read()
         json_parser = json.loads(json_live)
-        url_2nd_json = json_parser["url"]
+        if 'http' in json_parser["url"]:
+            url_2nd_json = json_parser["url"]
+        else:
+            url_2nd_json = 'https:' + json_parser["url"]
 
         file_path_2 = utils.download_catalog(
             url_2nd_json,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.15~beta20"
+       version="0.1.15~beta21"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -57,6 +57,7 @@
 [Remove] Xtra (mytf1) (wwark)
 [Temporary Fix] dailymotion videos stream (wwark)
 [Fix] Some sport videos requested HDFAUTH_URL (France TV / France TV Sport) (wwark)
+[Fix] Euronews Live TV (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
