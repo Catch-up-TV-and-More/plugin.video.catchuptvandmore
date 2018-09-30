@@ -77,9 +77,9 @@ def list_shows(params):
                 emission_name = emission["title"]
                 if 'telejournal-22h' in emission["link"] or \
                 'telejournal-18h' in emission["link"]:
-                    emission_url = emission["link"] + '/2016-2017/episodes'
+                    emission_url = URL_ROOT + emission["link"] + '/2016-2017/episodes'
                 else: 
-                    emission_url = emission["link"] + '/site/episodes'
+                    emission_url = URL_ROOT + emission["link"] + '/site/episodes'
                 emission_image = emission["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
 
                 shows.append({
