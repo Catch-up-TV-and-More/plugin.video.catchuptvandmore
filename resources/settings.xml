@@ -772,12 +772,6 @@
                 
                 <setting label="30165" type="labelenum" id="realmadridtv.language" visible="eq(-1,true)" values="ES|EN" default="ES"/>
 
-            <!-- Canada channels -->
-            <setting label="30086" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="ca" default="true" visible="false"/>
-                
-                <setting label="30166" type="labelenum" id="yestv.region" visible="eq(-1,true)" values="Ontario|Alberta" default="Ontario"/>
-
             <!-- Polish channels -->
             <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="" type="bool" id="pl" default="true" visible="false"/>
