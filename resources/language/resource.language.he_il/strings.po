@@ -129,6 +129,10 @@ msgctxt "#30059"
 msgid "Spain"
 msgstr ""
 
+msgctxt "#30060"
+msgid "Tunisia"
+msgstr ""
+
 # Channels (from 30080 to 30129)
 msgctxt "#30080"
 msgid "French channels"
@@ -168,6 +172,10 @@ msgstr ""
 
 msgctxt "#30089"
 msgid "Spanish channels"
+msgstr ""
+
+msgctxt "#30090"
+msgid "Tunisia channels"
 msgstr ""
 
 # Websites (from 30130 to 30149)

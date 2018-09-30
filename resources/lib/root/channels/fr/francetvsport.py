@@ -134,8 +134,12 @@ def list_videos(params):
             duration = int(video["duration"])
         url_sport = URL_ROOT_SPORT + video["url"]
         html_sport = utils.get_webcontent(url_sport)
-        id_diffusion = re.compile(
-            r'data-video="(.*?)"').findall(html_sport)[0]
+        id_diffusion = ''
+        id_diffusion_list = re.compile(
+            r'data-video="(.*?)"').findall(html_sport)
+        for id_diffusion_value in id_diffusion_list:
+            id_diffusion = id_diffusion_value
+            break
 
         info = {
             'video': {
@@ -314,6 +318,11 @@ def get_video_url(params):
         file_prgm = utils.get_webcontent(SHOW_INFO % (params.id_diffusion))
         json_parser = json.loads(file_prgm)
 
+        if 'videos' not in json_parser:
+            utils.send_notification(
+                common.ADDON.get_localized_string(30716))
+            return None
+
         url_selected = ''
 
         if desired_quality == "DIALOG":
@@ -321,8 +330,7 @@ def get_video_url(params):
             all_datas_videos_path = []
 
             for video in json_parser['videos']:
-                if video['format'] == 'hls_v5_os' or \
-                        video['format'] == 'm3u8-download':
+                if 'hls' in video['format']:
                     if video['format'] == 'hls_v5_os':
                         all_datas_videos_quality.append("HD")
                     else:
@@ -345,9 +353,15 @@ def get_video_url(params):
                 if video['format'] == 'hls_v5_os':
                     url_selected = video['url']
                     drm = video['drm']
+                else:
+                    url_selected = video['url']
+                    drm = video['drm']
         else:
             for video in json_parser['videos']:
                 if video['format'] == 'm3u8-download':
+                    url_selected = video['url']
+                    drm = video['drm']
+                else:
                     url_selected = video['url']
                     drm = video['drm']
 
@@ -356,6 +370,10 @@ def get_video_url(params):
                 common.ADDON.get_localized_string(30702))
             return None
         else:
+            if 'cloudreplayfrancetv' in url_selected:
+                file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_selected))
+                json_parser2 = json.loads(file_prgm2)
+                url_selected = json_parser2['url']
             return url_selected
 
     elif params.next == 'play_l':

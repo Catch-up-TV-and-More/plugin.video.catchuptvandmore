@@ -51,12 +51,11 @@ SKELETON = {
                 ('france-o', 'none'),
                 ('tf1-series-films', 'none'),
                 ('lequipe', 'none'),
-                ('numero23', 'none'),
+                ('rmcstory', 'none'),
                 ('cherie25', 'none'),
                 ('la_1ere', 'none'),
                 ('franceinfo', 'none'),
                 ('bfmbusiness', 'none'),
-                ('rmc', 'none'),
                 ('lci', 'none'),
                 ('lcp', 'none'),
                 ('rmcdecouverte', 'none'),
@@ -68,7 +67,12 @@ SKELETON = {
                 ('melodytv', 'none'),
                 ('virginradiotv', 'none'),
                 ('kto', 'none'),
-                ('antennereunion', '')
+                ('antennereunion', 'none'),
+                ('viaoccitanie', 'none'),
+                ('ouatchtv', 'none'),
+                ('canal10', 'none'),
+                ('fun_radio', 'none'),
+                ('rtl2', 'none')
             ],
 
             ('be', 'build_live_tv_menu'): [
@@ -85,7 +89,6 @@ SKELETON = {
 
             ('ca', 'build_live_tv_menu'): [
                 ('telequebec', 'none'),
-                ('yestv', 'none'),
                 ('tva', 'none'),
                 ('icitele', 'none'),
                 ('ntvca', 'none')
@@ -170,6 +173,11 @@ SKELETON = {
             ('jp', 'build_live_tv_menu'): [
                 ('ntvnews24', 'none'),
                 ('japanetshoppingdx', 'none')
+            ],
+
+            ('tn', 'build_live_tv_menu'): [
+                ('watania1', 'none'),
+                ('watania2', 'none')
             ]
         },
 
@@ -188,7 +196,9 @@ SKELETON = {
                 ('rtl_info', 'replay_entry'),
                 ('bel_rtl', 'replay_entry'),
                 ('contact', 'replay_entry'),
-                ('bx1', 'replay_entry')
+                ('bx1', 'replay_entry'),
+                ('nrjhitstvbe', 'replay_entry'),
+                ('rtl_sport', 'replay_entry')
             ],
 
             ('ca', 'generic_menu'): [
@@ -220,7 +230,7 @@ SKELETON = {
                 ('tf1-series-films', 'replay_entry'),
                 ('lequipe', 'replay_entry'),
                 ('6ter', 'replay_entry'),
-                ('numero23', 'replay_entry'),
+                ('rmcstory', 'replay_entry'),
                 ('cherie25', 'replay_entry'),
                 ('la_1ere', 'replay_entry'),
                 ('franceinfo', 'replay_entry'),
@@ -228,15 +238,10 @@ SKELETON = {
                 ('rmc', 'replay_entry'),
                 ('01net', 'replay_entry'),
                 ('tfou', 'replay_entry'),
-                ('xtra', 'replay_entry'),
                 ('lci', 'replay_entry'),
                 ('lcp', 'replay_entry'),
                 ('rmcdecouverte', 'replay_entry'),
                 ('stories', 'replay_entry'),
-                ('bruce', 'replay_entry'),
-                ('crazy_kitchen', 'replay_entry'),
-                ('home', 'replay_entry'),
-                ('styles', 'replay_entry'),
                 ('comedy', 'replay_entry'),
                 ('publicsenat', 'replay_entry'),
                 ('histoire', 'replay_entry'),
@@ -261,7 +266,10 @@ SKELETON = {
                 ('france3regions', 'replay_entry'),
                 ('culturebox', 'replay_entry'),
                 ('bfmparis', 'replay_entry'),
-                ('kto', 'replay_entry')
+                ('kto', 'replay_entry'),
+                ('ouatchtv', 'replay_entry'),
+                ('rtl2', 'replay_entry'),
+                ('lachainemeteo', 'replay_entry')
             ],
 
             ('jp', 'generic_menu'): [
@@ -308,7 +316,7 @@ SKELETON = {
                 ('tv5monde', 'replay_entry'),
                 ('tivi5monde', 'replay_entry'),
                 ('bvn', 'replay_entry'),
-                ('icitelevision', 'replay_entry'),
+                # ('icitelevision', 'replay_entry'),
                 ('mtv', 'replay_entry'),
                 ('arirang', 'replay_entry'),
                 ('beinsports', 'replay_entry'),
@@ -361,18 +369,17 @@ the channel name and his corresponding python file
 CHANNELS = {
     'auvio': 'rtbf',
     'brf': 'brf',
-    'rtl_tvi': 'rtlbe',
-    'plug_rtl': 'rtlbe',
-    'club_rtl': 'rtlbe',
-    'rtl_info': 'rtlbe',
-    'bel_rtl': 'rtlbe',
-    'contact': 'rtlbe',
+    'rtl_tvi': 'rtlplaybe',
+    'plug_rtl': 'rtlplaybe',
+    'club_rtl': 'rtlplaybe',
+    'rtl_info': 'rtlplaybe',
+    'bel_rtl': 'rtlplaybe',
+    'contact': 'rtlplaybe',
     'vrt': 'vrt',
     'telemb': 'telemb',
     'rtc': 'rtc',
     'tv5': 'tv5',
     'unis': 'tv5',
-    'yestv': 'yestv',
     'telequebec': 'telequebec',
     'rts': 'srgssr',
     'rsi': 'srgssr',
@@ -380,7 +387,7 @@ CHANNELS = {
     'rtr': 'srgssr',
     'swissinfo': 'srgssr',
     'rougetv': 'rougetv',
-    'tf1': 'tf1',
+    'tf1': 'mytf1',
     'france-2': 'francetv',
     'france-3': 'francetv',
     'canalplus': 'mycanal',
@@ -388,8 +395,8 @@ CHANNELS = {
     'm6': '6play',
     'c8': 'mycanal',
     'w9': '6play',
-    'tmc': 'tf1',
-    'tfx': 'tf1',
+    'tmc': 'mytf1',
+    'tfx': 'mytf1',
     'nrj12': 'nrj',
     'france-4': 'francetv',
     'bfmtv': 'bfmtv',
@@ -398,26 +405,21 @@ CHANNELS = {
     'cstar': 'mycanal',
     'gulli': 'gulli',
     'france-o': 'francetv',
-    'tf1-series-films': 'tf1',
+    'tf1-series-films': 'mytf1',
     'lequipe': 'lequipe',
     '6ter': '6play',
-    'numero23': 'numero23',
+    'rmcstory': 'rmcstory',
     'cherie25': 'nrj',
     'la_1ere': 'la_1ere',
     'franceinfo': 'franceinfo',
     'bfmbusiness': 'bfmtv',
     'rmc': 'bfmtv',
     '01net': 'bfmtv',
-    'tfou': 'tf1',
-    'xtra': 'tf1',
-    'lci': 'tf1',
+    'tfou': 'mytf1',
+    'lci': 'mytf1',
     'lcp': 'lcp',
     'rmcdecouverte': 'bfmtv',
     'stories': '6play',
-    'bruce': '6play',
-    'crazy_kitchen': '6play',
-    'home': '6play',
-    'styles': '6play',
     'comedy': '6play',
     'fun_radio': '6play',
     'publicsenat': 'publicsenat',
@@ -537,7 +539,15 @@ CHANNELS = {
     'nrjhitstvbe': 'nrjhitstvbe',
     'pbskids': 'pbskids',
     'teleticino': 'teleticino',
-    'ntvca': 'ntvca'
+    'ntvca': 'ntvca',
+    'viaoccitanie': 'viaoccitanie',
+    'ouatchtv': 'ouatchtv',
+    'canal10': 'canal10',
+    'rtl2': '6play',
+    'rtl_sport': 'rtlplaybe',
+    'lachainemeteo': 'lachainemeteo',
+    'watania1': 'watania',
+    'watania2': 'watania'
 }
 
 '''
@@ -561,6 +571,7 @@ LABELS = {
     'us': 'United State of America',
     'pl': 'Poland',
     'es': 'Spain',
+    'tn': 'Tunisia',
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
@@ -580,11 +591,11 @@ LABELS = {
     'canvas': 'Canvas',
     'ketnet': 'Ketnet',
     'nrjhitstvbe': 'NRJ Hits TV',
+    'rtl_sport': 'RTL Sport',
 
     # Canadian channels / live TV
     'tv5': 'TV5',
     'unis': 'UNIS',
-    'yestv': 'YES TV (' + common.PLUGIN.get_setting('yestv.region') + ')',
     'telequebec': 'Télé-Québec',
     'tva': 'TVA',
     'icitele': 'ICI Télé',
@@ -635,7 +646,7 @@ LABELS = {
     'tf1-series-films': 'TF1 Séries Films',
     'lequipe': 'L\'Équipe',
     '6ter': '6ter',
-    'numero23': 'Numéro 23',
+    'rmcstory': 'RMC Story',
     'cherie25': 'Chérie 25',
     'la_1ere': 'La 1ère (' + common.PLUGIN.get_setting('la_1ere.region') + ')',
     'franceinfo': 'France Info',
@@ -643,15 +654,10 @@ LABELS = {
     'rmc': 'RMC',
     '01net': '01Net TV',
     'tfou': 'Tfou (MYTF1)',
-    'xtra': 'Xtra (MYTF1)',
     'lci': 'LCI',
     'lcp': 'LCP Assemblée Nationale',
-    'rmcdecouverte': 'RMC Découverte HD24',
+    'rmcdecouverte': 'RMC Découverte',
     'stories': 'Stories (6play)',
-    'bruce': 'Bruce (6play)',
-    'crazy_kitchen': 'Crazy Kitchen (6play)',
-    'home': 'Home Time (6play)',
-    'styles': 'Sixième Style (6play)',
     'comedy': 'Comic (6play)',
     'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
@@ -679,6 +685,11 @@ LABELS = {
     'culturebox': 'Culturebox (francetv)',
     'kto': 'KTO',
     'antennereunion': 'Antenne Réunion',
+    'viaoccitanie': 'ViàOccitanie',
+    'ouatchtv': 'Ouatch TV',
+    'canal10': 'Canal 10',
+    'rtl2': 'RTL 2',
+    'lachainemeteo': 'La Chaîne Météo',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -760,6 +771,10 @@ LABELS = {
     'nova': 'Nova',
     'mega': 'Mega',
     'atreseries': 'Atreseries',
+
+    # Tunisia channels / live TV
+    'watania1': 'التلفزة التونسية الوطنية 1',
+    'watania2': 'التلفزة التونسية الوطنية 2',
 
     # Websites
     'allocine': 'Allociné',

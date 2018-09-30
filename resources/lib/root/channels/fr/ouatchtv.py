@@ -20,26 +20,25 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import ast
 import re
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
-# TO DO
-# Replay
+'''
+TODO Add Replay
+'''
 
-URL_ROOT = 'http://www.nrj.be'
+URL_ROOT = 'http://www.ouatch.tv'
 
-URL_LIVE = URL_ROOT + '/nrjhitstv'
-
-URL_REPLAYS = URL_ROOT + '/videos'
+URL_EMISSIONS = URL_ROOT + '/emissions'
 
 
 def channel_entry(params):
     """Entry function of the module"""
     if 'replay_entry' == params.next:
-        params.next = "list_shows_1"
+        params.next = 'list_shows_1'
         return list_shows(params)
     elif 'list_shows' in params.next:
         return list_shows(params)
@@ -49,6 +48,11 @@ def channel_entry(params):
         return get_video_url(params)
     return None
 
+# Dailymotion Id get from these pages below
+# - https://www.dailymotion.com/ouatchtv
+LIVE_DAILYMOTION_ID = {
+    'ouatchtv': 'xuw47s'
+}
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def list_shows(params):
@@ -57,30 +61,27 @@ def list_shows(params):
 
     if params.next == 'list_shows_1':
 
-        replay_categories_html = utils.get_webcontent(URL_REPLAYS)
+        replay_categories_html = utils.get_webcontent(URL_EMISSIONS)
         replay_categories_soup = bs(replay_categories_html, 'html.parser')
         categories = replay_categories_soup.find_all(
-            'div', class_=re.compile('top_menu'))
+            'a', class_='vignepi onglet_emi')
 
         for category in categories:
 
-            category_name = category.get_text()
-            if category.find('a'):
-                category_url = URL_ROOT + category.find('a').get('href')
-                next_value = 'list_videos_1'
-            else:
-                category_url = URL_REPLAYS
-                next_value = 'list_videos_2'
+            category_name = category.get('title')
+            category_img = category.find(
+                'img').get('src')
+            category_url = category.get('href')
             shows.append({
                 'label': category_name,
+                'thumb': category_img,
                 'url': common.PLUGIN.get_url(
                     module_path=params.module_path,
                     module_name=params.module_name,
                     action='replay_entry',
                     category_url=category_url,
                     category_name=category_name,
-                    next=next_value,
-                    page='1',
+                    next='list_videos_1',
                     window_title=category_name
                 )
             })
@@ -99,95 +100,22 @@ def list_shows(params):
 def list_videos(params):
     """Build videos listing"""
     videos = []
-    if 'previous_listing' in params:
-        videos = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_videos_1':
         list_videos_html = utils.get_webcontent(
-            params.category_url + '/%s' % params.page)
+            params.category_url)
         list_videos_soup = bs(list_videos_html, 'html.parser')
 
         videos_data = list_videos_soup.find_all(
-            'div', class_='col-md-6 col-lg-3')
+            'a', class_=re.compile("mix1 vignepi"))
 
         for video in videos_data:
 
-            title = video.find('img').get('alt')
-            plot = ''
+            title = video.find_all('p')[0].get_text()
+            plot = video.find_all('p')[1].get_text()
             duration = 0
-            img = video.find('img').get('src')
-            video_url = video.find(
-                'div', class_='article_social').get('data-url')
-
-            info = {
-                'video': {
-                    'title': title,
-                    'plot': plot,
-                    # 'aired': aired,
-                    # 'date': date,
-                    'duration': duration,
-                    # 'year': year,
-                    'mediatype': 'tvshow'
-                }
-            }
-
-            download_video = (
-                common.GETTEXT('Download'),
-                'XBMC.RunPlugin(' + common.PLUGIN.get_url(
-                    action='download_video',
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    video_url=video_url) + ')'
-            )
-            context_menu = []
-            context_menu.append(download_video)
-
-            videos.append({
-                'label': title,
-                'thumb': img,
-                'url': common.PLUGIN.get_url(
-                    module_path=params.module_path,
-                    module_name=params.module_name,
-                    action='replay_entry',
-                    next='play_r',
-                    video_url=video_url,
-                ),
-                'is_playable': True,
-                'info': info,
-                'context_menu': context_menu
-            })
-
-        # More videos...
-        videos.append({
-            'label': common.ADDON.get_localized_string(30700),
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_videos_1',
-                category_url = params.category_url,
-                page=str(int(params.page) + 1),
-                update_listing=True,
-                previous_listing=str(videos)
-            )
-        })
-
-    elif params.next == 'list_videos_2':
-        list_videos_html = utils.get_webcontent(
-            params.category_url + '/%s' % params.page)
-        list_videos_soup = bs(list_videos_html, 'html.parser')
-
-        videos_data = list_videos_soup.find_all(
-            'div', class_='col-md-6 col-lg-3')
-
-        for video in videos_data:
-
-            title = video.find('img').get('alt')
-            plot = ''
-            duration = 0
-            img = video.find('img').get('src')
-            video_url = video_url = video.find(
-                'div', class_='article_social').get('data-url')
+            img = URL_ROOT + video.find_all('img')[0].get('src')
+            video_url = video.get('href')
 
             info = {
                 'video': {
@@ -233,7 +161,6 @@ def list_videos(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED
         ),
         content='tvshows',
-        update_listing='update_listing' in params,
         category=common.get_window_title(params)
     )
 
@@ -241,22 +168,20 @@ def list_videos(params):
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
 def start_live_tv_stream(params):
     params['next'] = 'play_l'
+    params['live_dailymotion_id'] = LIVE_DAILYMOTION_ID[params.channel_name]
     return get_video_url(params)
 
 
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        stream_html = utils.get_webcontent(
-            URL_LIVE)
-        stream_soup = bs(stream_html, 'html.parser')
-        list_streams = stream_soup.find('div', class_="col-md-12").find_all('a')
-        stream_url = ''
-        for stream_datas in list_streams:
-            stream_url = stream_datas.get('href')
-        return stream_url
+        return resolver.get_stream_dailymotion(
+            params.live_dailymotion_id, False)
     elif params.next == 'play_r' or params.next == 'download_video':
-        video_html = utils.get_webcontent(
-            params.video_url)
-        stream_soup = bs(video_html, 'html.parser')
-        return stream_soup.find(id='VideoPlayer').get('data-filehd')
+        video_html = utils.get_webcontent(params.video_url)
+        video_id = re.compile(
+            r'video: "(.*?)"').findall(video_html)[0]
+        if params.next == 'download_video':
+            return resolver.get_stream_dailymotion(video_id, True)
+        else:
+            return resolver.get_stream_dailymotion(video_id, False)

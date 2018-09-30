@@ -38,7 +38,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - BEL RTL *(Replay)*
 - Contact *(Replay)*
 - BX1 *(Replay, Live TV)*
-- NRJ Hits TV *(Live TV)*
+- NRJ Hits TV *(Replay, Live TV)*
+- RTL Sport *(Replay)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
 - VRT NU (Eén, Canvas, ...) *(Replay with VRT NU account)*
@@ -58,7 +59,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - ICI Télé *(Replay, Live TV)*
 
 ##### TV Communauté anglaise — *English Community TV*
-- YES TV *(Live TV)* *(Contents {Ontario|Alberta})*
 - NTV *(Live TV)*
 
 ### Espagne — *Spain*
@@ -108,13 +108,13 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TF1 Séries Films *(Replay, Live TV)*
 - L'Équipe *(Replay, Live TV)*
 - 6ter *(Replay)*
-- Numéro 23 *(Replay, Live TV)*
+- RMC Story *(Replay, Live TV)*
 - Chérie 25 *(Replay, Live TV with NRJ account)*
 - LCI *(Replay, Live TV)*
 - La 1ère *(Replay, Live TV)* *(Contents {Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer})*
 - France Info *(Replay, Live TV)*
 - BFM Business *(Replay, Live TV)*
-- RMC *(Replay, Live TV)*
+- RMC (RMC Sport) *(Replay)*
 - RMC Découverte *(Replay, Live TV)*
 - LCP Assemblée Nationale *(Replay, Live TV)*
 - Public Sénat *(Replay, Live TV)*
@@ -137,22 +137,22 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Virgin Radio TV *(Live TV)*
 - KTO *(Replay, Live TV)*
 - Antenne Réunion *(Live TV)*
+- ViàOccitanie *(Live TV)*
+- Ouatch TV *(Replay, Live TV)*
+- Canal 10 *(Live TV)*
+- Fun Radio *(Replay, Live TV)*
+- RTL 2 *(Replay, Live TV)*
+- La Chaîne Météo *(Replay)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
-- Bruce — 6play *(Replay)*
-- Crazy Kitchen — 6play *(Replay)*
-- Home Time — 6play *(Replay)*
-- Sixième Style — 6play *(Replay)*
 - Comic — 6play *(Replay)*
 - Tfou — MyTF1 *(Replay)*
-- Xtra — MyTF1 *(Replay)*
 - 01Net TV *(Replay)*
 - France TV Sport — francetv *(Replay, Live)*
 - Studio 4 — francetv *(Replay)*
 - IRL — francetv *(Replay)*
 - France TV Education — francetv *(Replay)*
-- Fun Radio *(Replay)*
 - France TV Slash — francetv *(Replay)*
 - Culturebox — francetv *(Replay)*
 
@@ -168,7 +168,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TV5Monde France Belgique Suisse *(Live TV)*
 - Tivi 5Monde *(Replay, Live TV)*
 - BVN *(Replay, Live TV)*
-- ICI Télévision *(Replay, Live TV)*
+- ICI Télévision *(Live TV)*
 - MTV *(Replay)* *(Contents {FR})*
 - Arirang (아리랑) *(Replay, Live TV)*
 - DW *(Live TV)* *(Contents {EN|AR|DE|ES})*
@@ -236,6 +236,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ##### Web TV
 - SWISSINFO *(Replay)*
+
+### Tunisie — *Tunisia*
+- التلفزة التونسية الوطنية 1 *(Live TV)*
+- التلفزة التونسية الوطنية 2 *(Live TV)*
 
 ## Sites internet disponibles — *Available Websites*
 ### Belgique — *Belgium*

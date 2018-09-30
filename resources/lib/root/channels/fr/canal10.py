@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2018  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -22,21 +22,41 @@
 
 import json
 import re
+from bs4 import BeautifulSoup as bs
 from resources.lib import utils
 from resources.lib import common
 
-# TO DO
-# Replay add emissions
-# Add info LIVE TV
+'''
+TODO Add Replay
+'''
 
-URL_LIVE = 'http://www.yestv.com/watch-live/?stream=%s'
-# Town
+URL_ROOT = 'https://www.canal10.fr/accueil'
+
+URL_STREAM = 'https://livevideo.infomaniak.com/player_config/%s.json'
+# player_id
+
+def channel_entry(params):
+    """Entry function of the module"""
+    if 'replay_entry' == params.next:
+        params.next = 'list_shows_root'
+        return list_shows(params)
+    elif 'list_shows' in params.next:
+        return list_shows(params)
+    elif 'list_videos' in params.next:
+        return list_videos(params)
+    elif 'play' in params.next:
+        return get_video_url(params)
+    return None
 
 
-LIVES_TOWN = {
-    'Ontario': 'YESTV-ONT',
-    'Alberta': 'YESTV-AB-C'
-}
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_shows(params):
+    return None
+
+
+@common.PLUGIN.mem_cached(common.CACHE_TIME)
+def list_videos(params):
+    return None
 
 
 @common.PLUGIN.mem_cached(common.CACHE_TIME)
@@ -48,21 +68,11 @@ def start_live_tv_stream(params):
 def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
-        desired_region = common.PLUGIN.get_setting(
-            params.channel_name + '.region')
+        live_html = utils.get_webcontent(URL_ROOT)
+        player_id = re.compile(
+            r'\;player\=(.*?)\"').findall(live_html)[0]
+        stream_json = utils.get_webcontent(
+            URL_STREAM % player_id)
+        stream_jsonparser = json.loads(stream_json)
+        return 'https://' + stream_jsonparser["sPlaylist"]
         
-        live_id = LIVES_TOWN[desired_region]
-
-        live_html = utils.get_webcontent(
-            URL_LIVE % live_id)
-        url_live_2 = re.compile(
-            'iframe src="(.*?) "').findall(live_html)[0]
-        url_live_2 = url_live_2 + live_id
-        live_html_2 = utils.get_webcontent(url_live_2)
-        live_json = re.compile(
-            'sources\:(.*?)\]\,').findall(live_html_2)[0]
-        live_jsonpaser = json.loads(live_json + ']')
-
-        url_live = 'http:' + live_jsonpaser[0]["file"]    
-
-        return url_live

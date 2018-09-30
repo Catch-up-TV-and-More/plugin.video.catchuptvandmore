@@ -125,21 +125,30 @@ def list_shows(params):
                 params.category_url)
             emissions_soup = bs(emissions_html, 'html.parser')
             list_datas = emissions_soup.find_all(
-                'li', class_="vrtlist__item vrtglossary__item")
+                'a', class_="nui-tile")
             value_next = 'list_videos_1'
 
         for data in list_datas:
 
-            data_url = URL_ROOT + data.find('a').get('href')
+            if value_next == 'list_videos_1':
+                data_url = URL_ROOT + data.get('href')
+            else:
+                data_url = URL_ROOT + data.find('a').get('href')
             data_img = 'https:' + data.find(
                 'img').get('srcset').split('1x')[0].strip()
             if data.find('p'):
                 data_title = data.find(
                     'h3').get_text().encode('utf-8') + ' - ' + \
                     data.find('p').get_text().encode('utf-8')
-            else:
+            elif data.find('h3'):
                 data_title = data.find(
                     'h3').get_text().encode('utf-8')
+            elif data.find('h2'):
+                data_title = data.find(
+                    'h2').get_text().encode('utf-8')
+            else:
+                data_title = data.find(
+                    'span').get_text().encode('utf-8')
 
             shows.append({
                 'label': data_title,
@@ -201,9 +210,9 @@ def list_videos(params):
         file_path = utils.get_webcontent(params.data_url)
         episodes_soup = bs(file_path, 'html.parser')
 
-        if episodes_soup.find('ul', class_='swiper-wrapper'):
+        if episodes_soup.find('ul', class_='vrtnu-list'):
             list_episodes = episodes_soup.find(
-                'ul', class_='swiper-wrapper').find_all('li')
+                'ul', class_='vrtnu-list').find_all('li')
 
             for episode in list_episodes:
 
@@ -212,11 +221,14 @@ def list_videos(params):
                 video_url = URL_ROOT + episode.find('a').get('href')
                 img = 'https:' + episode.find(
                     'img').get('srcset').split('1x')[0].strip()
+                plot = ''
+                if episode.find('p'):
+                    plot = episode.find('p').get_text().strip()
 
                 info = {
                     'video': {
                         'title': title,
-                        # 'plot': plot,
+                        'plot': plot,
                         # 'episode': episode_number,
                         # 'season': season_number,
                         # 'rating': note,
@@ -261,9 +273,9 @@ def list_videos(params):
                     'div', class_='content-container')
 
                 title = episode.find(
-                    'span', class_='content__title').get_text().strip()
+                    'h1').get_text().strip()
                 plot = episode.find(
-                    'span', class_='content__shortdescription').get_text(
+                    'div', class_='content__shortdescription').get_text(
                     ).strip()
                 duration = 0
                 video_url = re.compile(

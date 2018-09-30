@@ -31,6 +31,9 @@ from resources.lib import common
 
 # TO DO
 # More button (bfmparis) ?
+# Live TV RMC Decouverte
+# #EXT-X-KEY:METHOD=AES-128,URI="https://nextmediahdslive-lh.akamaihd.net/i/DVMR_RMCDecouverte@300868/crypt-p.key
+# https://github.com/peak3d/inputstream.adaptive/blob/master/src/parser/HLSTree.cpp => AES-128 not supported
 
 # BFMTV, RMC, ONENET, etc ...
 URL_TOKEN = 'http://api.nextradiotv.com/%s-applications/'

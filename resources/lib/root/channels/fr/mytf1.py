@@ -32,7 +32,7 @@ from resources.lib import common
 # TO DO
 # Quality Mode on LIVE TV
 # Replay LCI add More Buttons
-# DRM (SAMPLE-AES) for Replay => https://github.com/peak3d/inputstream.adaptive/issues/96
+# Split LCI on his own lci.py
 
 
 URL_ROOT = "http://www.tf1.fr/"
@@ -293,11 +293,12 @@ def list_videos_lci(params):
                     title = replay.find_all(
                         'img')[0].get('alt').encode('utf-8')
                     duration = 0
-                    img = replay.find_all('source')[0]
-                    try:
-                        img = img['data-srcset'].encode('utf-8')
-                    except Exception:
-                        img = img['srcset'].encode('utf-8')
+                    img = ''
+                    for img in replay.find_all('source'):
+                        try:
+                            img = img['data-srcset'].encode('utf-8')
+                        except Exception:
+                            img = img['srcset'].encode('utf-8')
 
                     img = img.split(',')[0].split(' ')[0]
                     program_id = URL_LCI_ROOT + replay.get(
@@ -582,6 +583,9 @@ def get_video_url(params):
 
         if 'www.wat.tv/embedframe' in params.program_id:
             video_id = re.compile('UVID=(.*?)&').findall(video_html)[0]
+        elif params.channel_name == 'lci':
+            video_id = re.compile(
+                r'data-videoid="(.*?)"').findall(video_html)[0]
         else:
             video_html_soup = bs(video_html, 'html.parser')
             iframe_player_soup = video_html_soup.find(

@@ -218,6 +218,11 @@ def get_video_url(params):
     file_prgm = utils.get_webcontent(SHOW_INFO % (params.id_diffusion))
     json_parser = json.loads(file_prgm)
 
+    if 'videos' not in json_parser:
+        utils.send_notification(
+            common.ADDON.get_localized_string(30716))
+        return None
+
     url_selected = ''
 
     if desired_quality == "DIALOG":

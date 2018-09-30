@@ -237,6 +237,6 @@ def get_video_url(params):
             URL_TOKEN_LIVE % live_id)
         live_token_json = json.loads(live_token)
 
-        url_stream = 'https:' + live_stream_json["hls"].encode('utf-8') + \
+        url_stream = live_stream_json["hls"].encode('utf-8') + \
             live_token_json["token"].encode('utf-8')
     return url_stream

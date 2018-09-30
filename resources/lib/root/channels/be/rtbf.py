@@ -25,6 +25,7 @@ import re
 import time
 from bs4 import BeautifulSoup as bs
 from resources.lib import utils
+from resources.lib import resolver
 from resources.lib import common
 
 # TO DO
@@ -39,6 +40,9 @@ URL_JSON_EMISSION_BY_ID = 'https://www.rtbf.be/api/media/video?' \
 # emission_id
 
 URL_CATEGORIES = 'https://www.rtbf.be/news/api/menu?site=media'
+
+URL_SUB_CATEGORIES = 'https://www.rtbf.be/news/api/block?data[0][uuid]=%s&data[0][type]=widget&data[0][settings][id]=%s'
+# data-uuid and part of data-uuid
 
 URL_VIDEO_BY_ID = 'https://www.rtbf.be/auvio/embed/media?id=%s&autoplay=1'
 # Video Id
@@ -214,12 +218,48 @@ def list_shows(params):
                     module_name=params.module_name,
                     sub_category_title=sub_category_title,
                     action='replay_entry',
-                    sub_category_id=sub_category_id ,
+                    sub_category_id=sub_category_id,
                     category_url=params.category_url,
                     next='list_videos_categorie',
                     window_title=sub_category_title
                 )
             })
+
+        list_sub_categories_to_dl = sub_categories_soup.find_all(
+            'div', class_=re.compile("js-widget js-widget-"))
+
+        for sub_category_2 in list_sub_categories_to_dl:
+
+            sub_category_data_uuid = sub_category_2.find('b').get('data-uuid')
+            sub_categories_2_json = utils.get_webcontent(
+                URL_SUB_CATEGORIES % (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
+            sub_categories_2_jsonparser = json.loads(sub_categories_2_json)
+            if sub_category_data_uuid in sub_categories_2_jsonparser["blocks"]:
+                sub_categories_2_html = sub_categories_2_jsonparser["blocks"][sub_category_data_uuid]
+                sub_categories_2_soup = bs(sub_categories_2_html, 'html.parser')
+                list_sub_categories_2 = sub_categories_2_soup.find_all(
+                    'section', class_="js-item-container")
+
+                for sub_category_22 in list_sub_categories_2:
+
+                    sub_category_title = " ".join(sub_category_22.find('h2').get_text().encode('utf-8').split())
+                    sub_category_id = sub_category_22.get('id')
+
+                    shows.append({
+                        'label': sub_category_title,
+                        'url': common.PLUGIN.get_url(
+                            module_path=params.module_path,
+                            module_name=params.module_name,
+                            sub_category_title=sub_category_title,
+                            action='replay_entry',
+                            sub_category_data_uuid=sub_category_data_uuid,
+                            sub_category_id=sub_category_id,
+                            category_url=params.category_url,
+                            next='list_videos_categorie_2',
+                            window_title=sub_category_title
+                        )
+                    })
+
 
     return common.PLUGIN.create_listing(
         shows,
@@ -252,10 +292,7 @@ def list_videos(params):
             else:
                 title = video["title"].encode('utf-8')
             img = URL_ROOT_IMAGE_RTBF + video["thumbnail"]["full_medium"]
-            url_video = video["urlHls"]
-            if 'drm' in url_video:
-                # the following url is not drm protected
-                url_video = video["urlHlsAes128"]
+            video_id = video["id"]
             plot = ''
             if video["description"]:
                 plot = video["description"].encode('utf-8')
@@ -293,7 +330,7 @@ def list_videos(params):
                     action='download_video',
                     module_path=params.module_path,
                     module_name=params.module_name,
-                    url_video=url_video) + ')'
+                    video_id=video_id) + ')'
             )
             context_menu = []
             context_menu.append(download_video)
@@ -307,7 +344,7 @@ def list_videos(params):
                     module_name=params.module_name,
                     action='replay_entry',
                     next='play_r',
-                    url_video=url_video
+                    video_id=video_id
                 ),
                 'is_playable': True,
                 'info': info,
@@ -375,13 +412,87 @@ def list_videos(params):
                                 module_path=params.module_path,
                                 module_name=params.module_name,
                                 action='replay_entry',
-                                next='play_r_categorie',
+                                next='play_r',
                                 video_id=video_id
                             ),
                             'is_playable': True,
                             'info': info,
                             'context_menu': context_menu
                         })
+
+    elif params.next == 'list_videos_categorie_2':
+
+        sub_categories_2_json = utils.get_webcontent(
+            URL_SUB_CATEGORIES % (params.sub_category_data_uuid, params.sub_category_data_uuid.split('-')[1]))
+        sub_categories_2_jsonparser = json.loads(sub_categories_2_json)
+        sub_categories_2_html = sub_categories_2_jsonparser["blocks"][params.sub_category_data_uuid]
+        sub_categories_2_soup = bs(sub_categories_2_html, 'html.parser')
+        list_categories = sub_categories_2_soup.find_all(
+            'section', class_="js-item-container")
+
+        for select_category_value in list_categories:
+            if select_category_value.get('id') == params.sub_category_id:
+
+                list_episodes = select_category_value.find_all('article')
+
+                for episode in list_episodes:
+
+                    if episode.get('data-type') == 'media':
+                        if episode.find('h4'):
+                            title = episode.find('h3').find(
+                                'a').get('title') + ' - ' + \
+                                episode.find('h4').get_text()
+                        else:
+                            title = episode.find('h3').find('a').get('title')
+                        duration = 0
+                        video_id = episode.get('data-id')
+                        all_images = episode.find('img').get(
+                            'data-srcset').split(',')
+                        for image in all_images:
+                            img = image.split(' ')[0]
+
+                        info = {
+                            'video': {
+                                'title': title,
+                                # 'plot': plot,
+                                # 'episode': episode_number,
+                                # 'season': season_number,
+                                # 'rating': note,
+                                # 'aired': aired,
+                                # 'date': date,
+                                'duration': duration,
+                                # 'year': year,
+                                'mediatype': 'tvshow'
+                            }
+                        }
+
+                        download_video = (
+                            common.GETTEXT('Download'),
+                            'XBMC.RunPlugin(' + common.PLUGIN.get_url(
+                                action='download_video',
+                                module_path=params.module_path,
+                                module_name=params.module_name,
+                                video_id=video_id) + ')'
+                        )
+                        context_menu = []
+                        context_menu.append(download_video)
+
+                        videos.append({
+                            'label': title,
+                            'thumb': img,
+                            'fanart': img,
+                            'url': common.PLUGIN.get_url(
+                                module_path=params.module_path,
+                                module_name=params.module_name,
+                                action='replay_entry',
+                                next='play_r',
+                                video_id=video_id
+                            ),
+                            'is_playable': True,
+                            'info': info,
+                            'context_menu': context_menu
+                        })
+
 
     return common.PLUGIN.create_listing(
         videos,
@@ -429,7 +540,7 @@ def start_live_tv_stream(params):
             '-' + end_date_value + "[/I]"
 
         url_live = ''
-        if live["url_streaming"]:
+        if "url_streaming" in live:
             url_live = live["url_streaming"]["url_hls"]
         plot = live["description"].encode('utf-8')
         img = live["images"]["illustration"]["16x9"]["1248x702"]
@@ -467,17 +578,26 @@ def get_video_url(params):
             utils.send_notification(common.ADDON.get_localized_string(30702))
             return ''
         return params.url_live
-    elif params.next == 'play_r_categorie':
+    elif params.next == 'play_r' or params.next == 'download_video':
         file_path = utils.get_webcontent(
             URL_VIDEO_BY_ID % params.video_id)
         data_stream = re.compile('data-media=\"(.*?)\"').findall(
             file_path)[0]
         data_stream = data_stream.replace('&quot;', '"')
         data_stream_json = json.loads(data_stream)
-        url_video = data_stream_json["urlHls"]
-        if 'drm' in url_video:
-            # the following url is not drm protected
-            url_video = data_stream_json["urlHlsAes128"]
+        url_video = ''
+        if data_stream_json["urlHls"] is None:
+            if 'youtube.com' in data_stream_json["url"]:
+                video_id = data_stream_json["url"].rsplit('/', 1)[1]
+                if params.next == 'download_video':
+                    return resolver.get_stream_youtube(video_id, True)
+                else:
+                    return resolver.get_stream_youtube(video_id, False)
+            else:
+                url_video = data_stream_json["url"]
+        else:
+            url_video = data_stream_json["urlHls"]
+            if 'drm' in url_video:
+                # the following url is not drm protected
+                url_video = data_stream_json["urlHlsAes128"]
         return url_video
-    elif params.next == 'play_r':
-        return params.url_video
