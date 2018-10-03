@@ -167,7 +167,7 @@ def get_video_url(params):
     if params.next == 'play_r' or params.next == 'download_video':
         video_html = utils.get_webcontent(params.episode_url)
         data_account = re.compile(
-            'data-account=\'(.*?)\'').findall(video_html)[0]
+            'players.brightcove.net/(.*?)/').findall(video_html)[0]
         data_video_id = re.compile(
             'data-video-id=\'(.*?)\'').findall(video_html)[0]
         data_player = re.compile(
