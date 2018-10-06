@@ -128,7 +128,9 @@ def list_videos(params):
     for video in list_videos_parserjson["page"]["flux"]:
 
         title = video["title"]
-        image = video["image"]["large_16_9"]
+        image = ''
+        if 'image' in video:
+            image = video["image"]["large_16_9"]
         duration = 0
         if 'duration' in video:
             duration = int(video["duration"])
