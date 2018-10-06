@@ -36,7 +36,7 @@ URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
 # Video_id
 
-URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s?autoplay=1'
+URL_VIMEO_BY_ID = 'https://player.vimeo.com/video/%s?byline=0&portrait=0&autoplay=1'
 # Video_id
 
 URL_FACEBOOK_BY_ID = 'https://www.facebook.com/allocine/videos/%s'
@@ -114,6 +114,10 @@ def get_stream_dailymotion(video_id, isDownloadVideo):
     dmotion_jsonparser = json.loads(dmotion_json)
     all_datas_videos_quality = []
     all_datas_videos_path = []
+    if "qualities" not in dmotion_jsonparser:
+        utils.send_notification(
+            common.ADDON.get_localized_string(30716))
+        return None
     if "auto" in dmotion_jsonparser["qualities"]:
         all_datas_videos_quality.append('auto')
         all_datas_videos_path.append(dmotion_jsonparser["qualities"]["auto"][0]["url"])
@@ -164,8 +168,7 @@ def get_stream_vimeo(video_id, isDownloadVideo):
         return url_vimeo
 
     html_vimeo = utils.get_webcontent(url_vimeo)
-    # TODO Find a better way to get JSON of VIMEO
-    json_vimeo = json.loads(re.compile('var a=(.*?);').findall(
+    json_vimeo = json.loads(re.compile(r'\{var r=(.*?)\;if').findall(
         html_vimeo)[0])
     hls_json = json_vimeo["request"]["files"]["hls"]
     default_cdn = hls_json["default_cdn"]
