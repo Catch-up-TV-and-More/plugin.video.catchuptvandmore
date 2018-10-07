@@ -262,9 +262,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Taratata <http://mytaratata.com/>
 - Noob TV <http://noob-tv.com/>
 - Culturepub <http://www.culturepub.fr/>
-- Auto Plus <https://video.autoplus.fr>
-- 30 Millions d'Amis <http://www.30millionsdamis.fr>
-- Elle <http://videos.elle.fr>
+- Auto Plus <https://video.autoplus.fr/>
+- 30 Millions d'Amis <http://www.30millionsdamis.fr/>
+- Elle <http://www.elle.fr/>
 - Ina <http://www.ina.fr/>
 
 ### Suisse — *Switzerland*
