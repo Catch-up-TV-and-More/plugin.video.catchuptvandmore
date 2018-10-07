@@ -575,6 +575,9 @@
 
             <setting label="NTV" type="bool" id="ntvca" default="true" visible="eq(-11,true)"/>
             <setting label="" type="number" visible="false" id="ntvca.order" default="6"/>
+
+            <setting label="ICI Tou.TV" type="bool" id="icitoutv" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="icitoutv.order" default="7"/>
         <!-- Canada -->
 
 

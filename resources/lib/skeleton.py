@@ -206,7 +206,8 @@ SKELETON = {
                 ('unis', 'replay_entry'),
                 ('telequebec', 'replay_entry'),
                 ('tva', 'replay_entry'),
-                ('icitele', 'replay_entry')
+                ('icitele', 'replay_entry'),
+                ('icitoutv', 'replay_entry')
             ],
 
             ('fr', 'generic_menu'): [
@@ -547,7 +548,8 @@ CHANNELS = {
     'rtl_sport': 'rtlplaybe',
     'lachainemeteo': 'lachainemeteo',
     'watania1': 'watania',
-    'watania2': 'watania'
+    'watania2': 'watania',
+    'icitoutv': 'icitoutv'
 }
 
 '''
@@ -600,6 +602,7 @@ LABELS = {
     'tva': 'TVA',
     'icitele': 'ICI Télé',
     'ntvca': 'NTV',
+    'icitoutv': 'ICI Tou.TV',
 
     # Switzerland channels / live TV
     'rts': 'RTS',

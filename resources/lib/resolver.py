@@ -267,6 +267,7 @@ def get_brightcove_video_json(data_account, data_player, data_video_id):
             return None
     return video_url
 
+# MTVN Services Part
 def get_mtvnservices_stream(video_uri):
     json_video_stream = utils.get_webcontent(
         URL_MTVNSERVICES_STREAM % video_uri)
