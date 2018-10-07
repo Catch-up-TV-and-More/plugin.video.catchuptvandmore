@@ -272,4 +272,8 @@ def get_mtvnservices_stream(video_uri):
     json_video_stream = utils.get_webcontent(
         URL_MTVNSERVICES_STREAM % video_uri)
     json_video_stream_parser = json.loads(json_video_stream)
+    if 'redition' not in json_video_stream_parser["package"]["video"]["item"][0]:
+        utils.send_notification(
+            common.ADDON.get_localized_string(30716))
+        return None
     return json_video_stream_parser["package"]["video"]["item"][0]["rendition"][0]["src"]
