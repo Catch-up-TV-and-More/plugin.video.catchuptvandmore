@@ -274,13 +274,14 @@ def get_video_url(params):
         list_stream_jsonparser = json.loads(list_stream_json)
 
         if 'error' in list_stream_jsonparser:
-            if list_stream_jsonparser["error"]["status"] == '403':
-                utils.send_notification(
-                    common.ADDON.get_localized_string(30713))
-            else:
-                utils.send_notification(
-                    common.ADDON.get_localized_string(30716))
-            return None
+            if list_stream_jsonparser["error"] is not None:
+                if list_stream_jsonparser["error"]["status"] == '403':
+                    utils.send_notification(
+                        common.ADDON.get_localized_string(30713))
+                else:
+                    utils.send_notification(
+                        common.ADDON.get_localized_string(30716))
+                return None
         if 'drmEnabled' in list_stream_jsonparser["playback"]:
             if list_stream_jsonparser["playback"]["drmEnabled"]:
                 utils.send_notification(
