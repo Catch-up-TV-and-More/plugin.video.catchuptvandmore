@@ -80,7 +80,7 @@ def list_shows(params):
 
         for category in json_parser['pages']['list'][value_code]['zones']:
 
-            if category['type'] == 'category':
+            if 'category' in category['code']['name']:
                 category_name = category['title']
                 category_url = category['link']['url']
 
@@ -108,26 +108,21 @@ def list_shows(params):
         for category in json_parser['pages']['list'][value_code]['zones']:
 
             sub_category_name = ''
-            if category['type'] == 'category':
+            datas = ''
+            category_code_name = ''
+            sub_category_code_name = ''
+            if 'subcategory' in category['code']['name']:
                 sub_category_name = category['title']
-                sub_category_type = category['type']
+                category_code_name = category['code']['name']
                 next_value = 'list_videos_1'
                 datas = category['link']['page']
-            if category['type'] == 'playlist':
+            elif category['code']['name'] == 'playlists' or \
+            category['code']['name'] == 'collections' or \
+            category['code']['name'] == 'magazines':
                 sub_category_name = category['title']
-                sub_category_type = category['type']
-                next_value = 'list_shows_3'
+                sub_category_code_name = category['code']['name']
                 datas = params.category_url
-            if category['type'] == 'collection':
-                sub_category_name = category['title']
-                sub_category_type = category['type']
                 next_value = 'list_shows_3'
-                datas = params.category_url
-            if category['type'] == 'magazine':
-                sub_category_name = category['title']
-                sub_category_type = category['type']
-                next_value = 'list_shows_3'
-                datas = params.category_url
 
             if sub_category_name != '':
                 shows.append({
@@ -138,9 +133,10 @@ def list_shows(params):
                         action='replay_entry',
                         next=next_value,
                         sub_category_name=sub_category_name,
+                        sub_category_code_name=sub_category_code_name,
+                        category_code_name=category_code_name,
                         datas=datas,
-                        type=category['type'],
-                        sub_category_type=sub_category_type,
+                        # sub_category_url=sub_category_url,
                         page='1',
                         window_title=sub_category_name
                     )
@@ -158,7 +154,7 @@ def list_shows(params):
 
         for category in json_parser['pages']['list'][value_code]['zones']:
 
-            if category['type'] == params.sub_category_type:
+            if category['code']['name'] == params.sub_category_code_name:
                 for program_datas in category['data']:
                     program_title = program_datas['title'].encode('utf-8')
                     datas = program_datas['programId']
@@ -175,7 +171,7 @@ def list_shows(params):
                             action='replay_entry',
                             next='list_videos_1',
                             datas=datas,
-                            type=params.type,
+                            sub_category_code_name=params.sub_category_code_name,
                             page='1',
                             window_title=program_title
                         )
@@ -200,12 +196,12 @@ def list_videos(params):
 
     if params.next == 'list_videos_1':
         
-        if params.type == 'category':
+        if params.category_code_name is not None:
             file_replay = utils.get_webcontent(
                 URL_VIDEOS % (params.datas, params.page, DESIRED_LANGUAGE.lower()))
         else:
             file_replay = utils.get_webcontent(
-                URL_VIDEOS_2 % (params.type.upper(), params.datas, DESIRED_LANGUAGE.lower()))
+                URL_VIDEOS_2 % (params.sub_category_code_name.upper(), params.datas, DESIRED_LANGUAGE.lower()))
         json_parser = json.loads(file_replay)
 
         for video_datas in json_parser['videos']:

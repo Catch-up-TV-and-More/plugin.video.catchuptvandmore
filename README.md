@@ -13,10 +13,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Angleterre — *United Kingdom*
 ##### TV
 - Blaze *(Replay, Live TV)*
-- Dave *(Replay)*
-- Drama *(Replay)*
-- Really *(Replay)*
-- Yesterday *(Replay)*
 - Sky News *(Replay, Live TV)*
 - STV *(Live TV)*
 - Quest OD *(Replay)*
@@ -133,7 +129,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Gong *(Replay, Live TV)*
 - BFM Paris *(Replay, Live TV)*
 - Onzéo *(Replay)*
-- Melody TV *(Live TV)*
 - Polar+ *(Replay)*
 - Virgin Radio TV *(Live TV)*
 - KTO *(Replay, Live TV)*

@@ -64,7 +64,7 @@ SKELETON = {
                 ('francetvsport', 'none'),
                 ('gong', 'none'),
                 ('bfmparis', 'none'),
-                ('melodytv', 'none'),
+                # ('melodytv', 'none'),
                 ('virginradiotv', 'none'),
                 ('kto', 'none'),
                 ('antennereunion', 'none'),
@@ -300,10 +300,10 @@ SKELETON = {
 
             ('uk', 'generic_menu'): [
                 ('blaze', 'replay_entry'),
-                ('dave', 'replay_entry'),
-                ('really', 'replay_entry'),
-                ('yesterday', 'replay_entry'),
-                ('drama', 'replay_entry'),
+                # ('dave', 'replay_entry'),
+                # ('really', 'replay_entry'),
+                # ('yesterday', 'replay_entry'),
+                # ('drama', 'replay_entry'),
                 ('skynews', 'replay_entry'),
                 ('skysports', 'replay_entry'),
                 ('questod', 'replay_entry')

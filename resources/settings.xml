@@ -145,16 +145,16 @@
             <setting label="Blaze" type="bool" id="blaze" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="blaze.order" default="1"/>
 
-            <setting label="Dave" type="bool" id="dave" default="true" visible="eq(-3,true)"/>
+            <setting label="Dave" type="bool" id="dave" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="dave.order" default="2"/>
 
-            <setting label="Really" type="bool" id="really" default="true" visible="eq(-5,true)"/>
+            <setting label="Really" type="bool" id="really" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="really.order" default="3"/>
 
-            <setting label="Yesterday" type="bool" id="yesterday" default="true" visible="eq(-7,true)"/>
+            <setting label="Yesterday" type="bool" id="yesterday" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="yesterday.order" default="4"/>
 
-            <setting label="Drama" type="bool" id="drama" default="true" visible="eq(-9,true)"/>
+            <setting label="Drama" type="bool" id="drama" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="drama.order" default="5"/>
 
             <setting label="Sky News" type="bool" id="skynews" default="true" visible="eq(-11,true)"/>
@@ -471,7 +471,7 @@
             <setting label="Fun Radio" type="bool" id="fun_radio" default="true" visible="eq(-105,true)"/>
             <setting label="" type="number" visible="false" id="fun_radio.order" default="53"/>
 
-            <setting label="Melody TV" type="bool" id="melodytv" default="true" visible="eq(-107,true)"/>
+            <setting label="Melody TV" type="bool" id="melodytv" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="melodytv.order" default="54"/>
 
             <setting label="France tv slash" type="bool" id="slash" default="true" visible="eq(-109,true)"/>
