@@ -97,6 +97,8 @@ def list_shows(params):
                     value_next = 'list_shows_2'
                 elif category["contents"][0]["type"] == 'pfv':
                     value_next = 'list_videos_1'
+                else:
+                    value_next = 'list_shows_2'
 
                 shows.append({
                     'label': title,

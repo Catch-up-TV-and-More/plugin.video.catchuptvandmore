@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.16~beta07"
+       version="0.1.16~beta08"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -43,6 +43,7 @@
 [Remove] Melodie TV (wwark) - Paid content (wwark)
 [Remove] Dave, Drama, Really, ... - DRM Content - Present in Test DRM Plugin (wwark)
 [Fix] Autoplus website (wwark)
+[Fix] Canal + Replay (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>
