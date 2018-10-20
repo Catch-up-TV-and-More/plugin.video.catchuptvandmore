@@ -190,7 +190,7 @@ SKELETON = {
                 ('plug_rtl', 'replay_entry'),
                 ('club_rtl', 'replay_entry'),
                 ('vrt', 'replay_entry'),
-                ('telemb', 'replay_entry'),
+                # ('telemb', 'replay_entry'),
                 ('rtc', 'replay_entry'),
                 ('tvlux', 'replay_entry'),
                 ('rtl_info', 'replay_entry'),
