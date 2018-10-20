@@ -50,7 +50,8 @@ URL_VIDEO_BY_ID = 'https://www.rtbf.be/auvio/embed/media?id=%s&autoplay=1'
 URL_ROOT_IMAGE_RTBF = 'https://ds1.static.rtbf.be'
 
 URL_JSON_LIVE = 'https://www.rtbf.be/api/partner/generic/live/' \
-                'planninglist?target_site=media&partner_key=%s'
+                'planninglist?target_site=media&origin_site=media&category_id=0&' \
+                'start_date=&offset=0&limit=15&partner_key=%s&v=8'
 # partener_key
 
 URL_ROOT_LIVE = 'https://www.rtbf.be/auvio/direct#/'
@@ -575,8 +576,7 @@ def get_video_url(params):
     """Get video URL and start video player"""
     if params.next == 'play_l':
         if 'drm' in params.url_live:
-            utils.send_notification(common.ADDON.get_localized_string(30702))
-            return ''
+            return params.url_live.replace('_drm.m3u8', '_aes.m3u8')
         return params.url_live
     elif params.next == 'play_r' or params.next == 'download_video':
         file_path = utils.get_webcontent(
