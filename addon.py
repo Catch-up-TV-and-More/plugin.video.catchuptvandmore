@@ -255,6 +255,11 @@ def tv_guide_menu(plugin, menu_id, item_module=None):
             if 'genre_specifique' in channel_guide_infos:
                 plot.append(channel_guide_infos['genre_specifique'])
 
+            if 'debut' in channel_guide_infos and 'fin' in channel_guide_infos:
+                debut_l = channel_guide_infos['debut'].split()[1].split(':')
+                fin_l = channel_guide_infos['fin'].split()[1].split(':')
+                plot.append(debut_l[0] + 'h' + debut_l[1] + ' - ' + fin_l[0] + 'h' + fin_l[1])
+
             if 'soustitre' in channel_guide_infos:
                 plot.append(channel_guide_infos['soustitre'])
 
