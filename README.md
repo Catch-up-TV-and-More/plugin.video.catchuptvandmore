@@ -14,7 +14,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV
 - Blaze *(Replay, Live TV)*
 - Sky News *(Replay, Live TV)*
-- STV *(Live TV)*
+- STV *(Replay, Live TV)*
 - Quest OD *(Replay)*
 - Heart TV *(Live TV)*
 
@@ -23,11 +23,11 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ### Belgique — *Belgium*
 ##### TV Communauté française — *French Community TV*
-- RTBF Auvio (La Une, La Deux, La Trois, ...) *(Replay, Live)*
+- RTBF Auvio *(Replay, Live)*
 - RTL-TVI *(Replay)*
 - PLUG RTL *(Replay)*
 - CLUB RTL *(Replay)*
-- Télé MB *(Replay, Live TV)*
+- Télé MB *(Live TV)*
 - RTC Télé Liège *(Replay, Live TV)*
 - TV Lux *(Replay, Live TV)*
 - RTL INFO *(Replay)*
@@ -38,7 +38,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RTL Sport *(Replay)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
-- VRT NU (Eén, Canvas, ...) *(Replay with VRT NU account)*
+- VRT NU *(Replay with VRT NU account)*
 - Eén *(Live TV)*
 - Canvas *(Live TV)*
 - Ketnet *(Live TV)*
@@ -257,10 +257,11 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Taratata <http://mytaratata.com/>
 - Noob TV <http://noob-tv.com/>
 - Culturepub <http://www.culturepub.fr/>
-- Auto Plus <https://video.autoplus.fr/>
-- 30 Millions d'Amis <http://www.30millionsdamis.fr/>
-- Elle <http://www.elle.fr/>
+- Auto Plus <https://www.autoplus.fr/video/>
+- 30 Millions d'Amis <http://www.30millionsdamis.fr>
+- Elle <http://videos.elle.fr>
 - Ina <http://www.ina.fr/>
+- Marmiton <https://www.marmiton.org/>
 
 ### Suisse — *Switzerland*
 ##### Communauté française — *French Community*

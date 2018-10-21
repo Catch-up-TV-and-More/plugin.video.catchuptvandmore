@@ -20,778 +20,1658 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from resources.lib import common
+# The unicode_literals import only has
+# an effect on Python 2.
+# It makes string literals as unicode like in Python 3
+from __future__ import unicode_literals
+from codequick import Script
 
-'''
-SKELETON dictionary corresponds to the architecture of each menu of the addon
-(elt1, elt2) -->
-    elt1: label
-    elt2: next function to call
-'''
-SKELETON = {
-    ('root', 'generic_menu'): {
 
-        ('live_tv', 'generic_menu'): {
+"""
+The following dictionaries describe
+the addon's tree architecture.
+* Key: item id
+* Value: item infos
+    - callback: Callback function to run once this item is selected
+    - thumb: Item thumb path relative to "media" folder
+    - fanart: Item fanart path relative to "meia" folder
+    - module: Item module to load in order to work (like 6play.py)
+"""
 
-            ('fr', 'build_live_tv_menu'): [
-                ('tf1', 'none'),
-                ('france-2', 'none'),
-                ('france-3', 'none'),
-                ('france-5', 'none'),
-                ('canalplus', 'none'),
-                ('c8', 'none'),
-                ('tmc', 'none'),
-                ('tfx', 'none'),
-                ('nrj12', 'none'),
-                ('france-4', 'none'),
-                ('bfmtv', 'none'),
-                ('cnews', 'none'),
-                ('cstar', 'none'),
-                ('gulli', 'none'),
-                ('france-o', 'none'),
-                ('tf1-series-films', 'none'),
-                ('lequipe', 'none'),
-                ('rmcstory', 'none'),
-                ('cherie25', 'none'),
-                ('la_1ere', 'none'),
-                ('franceinfo', 'none'),
-                ('bfmbusiness', 'none'),
-                ('lci', 'none'),
-                ('lcp', 'none'),
-                ('rmcdecouverte', 'none'),
-                ('publicsenat', 'none'),
-                ('france3regions', 'none'),
-                ('francetvsport', 'none'),
-                ('gong', 'none'),
-                ('bfmparis', 'none'),
-                # ('melodytv', 'none'),
-                ('virginradiotv', 'none'),
-                ('kto', 'none'),
-                ('antennereunion', 'none'),
-                ('viaoccitanie', 'none'),
-                ('ouatchtv', 'none'),
-                ('canal10', 'none'),
-                ('fun_radio', 'none'),
-                ('rtl2', 'none')
-            ],
-
-            ('be', 'build_live_tv_menu'): [
-                ('rtc', 'none'),
-                ('telemb', 'none'),
-                ('een', 'none'),
-                ('canvas', 'none'),
-                ('ketnet', 'none'),
-                ('auvio', 'none'),
-                ('tvlux', 'none'),
-                ('bx1', 'none'),
-                ('nrjhitstvbe', 'none')
-            ],
-
-            ('ca', 'build_live_tv_menu'): [
-                ('telequebec', 'none'),
-                ('tva', 'none'),
-                ('icitele', 'none'),
-                ('ntvca', 'none')
-            ],
-
-            ('ch', 'build_live_tv_menu'): [
-                ('rougetv', 'none'),
-                ('rtsun', 'none'),
-                ('rtsdeux', 'none'),
-                ('rtsinfo', 'none'),
-                ('rtscouleur3', 'none'),
-                ('rsila1', 'none'),
-                ('rsila2', 'none'),
-                ('srf1', 'none'),
-                ('srfinfo', 'none'),
-                ('srfzwei', 'none'),
-                ('rtraufsrf1', 'none'),
-                ('rtraufsrf2', 'none'),
-                ('rtraufsrfinfo', 'none'),
-                ('teleticino', 'none')
-            ],
-
-            ('uk', 'build_live_tv_menu'): [
-                ('blaze', 'none'),
-                ('skynews', 'none'),
-                ('stv', 'none'),
-                ('hearttv', 'none')
-            ],
-
-            ('wo', 'build_live_tv_menu'): [
-                ('arirang', 'none'),
-                ('arte', 'none'),
-                ('bvn', 'none'),
-                ('euronews', 'none'),
-                ('france24', 'none'),
-                ('icitelevision', 'none'),
-                ('nhkworld', 'none'),
-                ('dw', 'none'),
-                ('tv5mondefbs', 'none'),
-                ('tv5mondeinfo', 'none'),
-                ('tivi5monde', 'none'),
-                ('souvenirsfromearth', 'none'),
-                ('qvc', 'none'),
-                ('icirdi', 'none'),
-                ('cgtn', 'none'),
-                ('cgtndocumentary', 'none'),
-                ('paramountchannel', 'none'),
-                ('afriquemedia', 'none'),
-                ('channelnewsasia', 'none')
-            ],
-
-            ('us', 'build_live_tv_menu'): [
-                ('cbsnews', 'none'),
-                ('tbd', 'none'),
-                ('abcnews', 'none'),
-                ('pbskids', 'none')
-            ],
-
-            ('pl', 'build_live_tv_menu'): [
-                ('tvp3', 'none'),
-                ('tvpinfo', 'none'),
-                ('tvppolonia', 'none')
-            ],
-
-            ('es', 'build_live_tv_menu'): [
-                ('telecinco', 'none'),
-                ('cuatro', 'none'),
-                ('fdf', 'none'),
-                ('boing', 'none'),
-                ('energy', 'none'),
-                ('divinity', 'none'),
-                ('bemad', 'none'),
-                ('realmadridtv', 'none'),
-                ('antena3', 'none'),
-                ('lasexta', 'none'),
-                ('neox', 'none'),
-                ('nova', 'none'),
-                ('mega', 'none'),
-                ('atreseries', 'none')
-            ],
-
-            ('jp', 'build_live_tv_menu'): [
-                ('ntvnews24', 'none'),
-                ('japanetshoppingdx', 'none')
-            ],
-
-            ('tn', 'build_live_tv_menu'): [
-                ('watania1', 'none'),
-                ('watania2', 'none')
-            ]
-        },
-
-        ('replay', 'generic_menu'): {
-
-            ('be', 'generic_menu'): [
-                ('auvio', 'replay_entry'),
-                ('brf', 'replay_entry'),
-                ('rtl_tvi', 'replay_entry'),
-                ('plug_rtl', 'replay_entry'),
-                ('club_rtl', 'replay_entry'),
-                ('vrt', 'replay_entry'),
-                # ('telemb', 'replay_entry'),
-                ('rtc', 'replay_entry'),
-                ('tvlux', 'replay_entry'),
-                ('rtl_info', 'replay_entry'),
-                ('bel_rtl', 'replay_entry'),
-                ('contact', 'replay_entry'),
-                ('bx1', 'replay_entry'),
-                ('nrjhitstvbe', 'replay_entry'),
-                ('rtl_sport', 'replay_entry')
-            ],
-
-            ('ca', 'generic_menu'): [
-                ('tv5', 'replay_entry'),
-                ('unis', 'replay_entry'),
-                ('telequebec', 'replay_entry'),
-                ('tva', 'replay_entry'),
-                ('icitele', 'replay_entry'),
-                ('icitoutv', 'replay_entry')
-            ],
-
-            ('fr', 'generic_menu'): [
-                ('tf1', 'replay_entry'),
-                ('france-2', 'replay_entry'),
-                ('france-3', 'replay_entry'),
-                ('canalplus', 'replay_entry'),
-                ('france-5', 'replay_entry'),
-                ('m6', 'replay_entry'),
-                ('c8', 'replay_entry'),
-                ('w9', 'replay_entry'),
-                ('tmc', 'replay_entry'),
-                ('tfx', 'replay_entry'),
-                ('nrj12', 'replay_entry'),
-                ('france-4', 'replay_entry'),
-                ('bfmtv', 'replay_entry'),
-                ('cnews', 'replay_entry'),
-                ('cstar', 'replay_entry'),
-                ('gulli', 'replay_entry'),
-                ('france-o', 'replay_entry'),
-                ('tf1-series-films', 'replay_entry'),
-                ('lequipe', 'replay_entry'),
-                ('6ter', 'replay_entry'),
-                ('rmcstory', 'replay_entry'),
-                ('cherie25', 'replay_entry'),
-                ('la_1ere', 'replay_entry'),
-                ('franceinfo', 'replay_entry'),
-                ('bfmbusiness', 'replay_entry'),
-                ('rmc', 'replay_entry'),
-                ('01net', 'replay_entry'),
-                ('tfou', 'replay_entry'),
-                ('lci', 'replay_entry'),
-                ('lcp', 'replay_entry'),
-                ('rmcdecouverte', 'replay_entry'),
-                ('stories', 'replay_entry'),
-                ('comedy', 'replay_entry'),
-                ('publicsenat', 'replay_entry'),
-                ('histoire', 'replay_entry'),
-                ('tvbreizh', 'replay_entry'),
-                ('ushuaiatv', 'replay_entry'),
-                ('studio-4', 'replay_entry'),
-                ('irl', 'replay_entry'),
-                ('seasons', 'replay_entry'),
-                ('comedie', 'replay_entry'),
-                ('les-chaines-planete', 'replay_entry'),
-                ('golfplus', 'replay_entry'),
-                ('cineplus', 'replay_entry'),
-                ('infosportplus', 'replay_entry'),
-                ('gameone', 'replay_entry'),
-                ('francetveducation', 'replay_entry'),
-                ('gong', 'replay_entry'),
-                ('francetvsport', 'replay_entry'),
-                ('onzeo', 'replay_entry'),
-                ('fun_radio', 'replay_entry'),
-                ('slash', 'replay_entry'),
-                ('polar-plus', 'replay_entry'),
-                ('france3regions', 'replay_entry'),
-                ('culturebox', 'replay_entry'),
-                ('bfmparis', 'replay_entry'),
-                ('kto', 'replay_entry'),
-                ('ouatchtv', 'replay_entry'),
-                ('rtl2', 'replay_entry'),
-                ('lachainemeteo', 'replay_entry')
-            ],
-
-            ('jp', 'generic_menu'): [
-                ('nhknews', 'replay_entry'),
-                ('nhklifestyle', 'replay_entry'),
-                ('tbsnews', 'replay_entry'),
-                ('ntv', 'replay_entry'),
-                ('ex', 'replay_entry'),
-                ('tbs', 'replay_entry'),
-                ('tx', 'replay_entry'),
-                # ('cx': 'replay_entry'), (Protected by DRM)
-                ('mbs', 'replay_entry'),
-                ('abc', 'replay_entry'),
-                ('ytv', 'replay_entry')
-            ],
-
-            ('ch', 'generic_menu'): [
-                ('rts', 'replay_entry'),
-                ('rsi', 'replay_entry'),
-                ('srf', 'replay_entry'),
-                ('rtr', 'replay_entry'),
-                ('swissinfo', 'replay_entry'),
-                # ('rougetv', 'replay_entry'),
-                ('tvm3', 'replay_entry'),
-                ('becurioustv', 'replay_entry')
-            ],
-
-            ('uk', 'generic_menu'): [
-                ('blaze', 'replay_entry'),
-                # ('dave', 'replay_entry'),
-                # ('really', 'replay_entry'),
-                # ('yesterday', 'replay_entry'),
-                # ('drama', 'replay_entry'),
-                ('skynews', 'replay_entry'),
-                ('skysports', 'replay_entry'),
-                ('questod', 'replay_entry')
-            ],
-
-            ('wo', 'generic_menu'): [
-                ('tv5mondeafrique', 'replay_entry'),
-                ('arte', 'replay_entry'),
-                ('france24', 'replay_entry'),
-                ('nhkworld', 'replay_entry'),
-                ('tv5monde', 'replay_entry'),
-                ('tivi5monde', 'replay_entry'),
-                ('bvn', 'replay_entry'),
-                # ('icitelevision', 'replay_entry'),
-                ('mtv', 'replay_entry'),
-                ('arirang', 'replay_entry'),
-                ('beinsports', 'replay_entry'),
-                # ('paramountchannel', 'replay_entry'),
-                ('afriquemedia', 'replay_entry'),
-                ('channelnewsasia', 'replay_entry')
-            ],
-
-            ('us', 'generic_menu'): [
-                ('tbd', 'replay_entry'),
-                ('nycmedia', 'replay_entry'),
-                ('abcnews', 'replay_entry')
-            ]
-        },
-        ('websites', 'generic_menu'): [
-            ('allocine', 'website_entry'),
-            ('tetesaclaques', 'website_entry'),
-            ('taratata', 'website_entry'),
-            ('noob', 'website_entry'),
-            ('culturepub', 'website_entry'),
-            ('autoplus', 'website_entry'),
-            ('notrehistoirech', 'website_entry'),
-            ('30millionsdamis', 'website_entry'),
-            ('elle', 'website_entry'),
-            ('nytimes', 'website_entry'),
-            ('fosdem', 'website_entry'),
-            ('ina', 'website_entry'),
-            ('onf', 'website_entry'),
-            ('nfb', 'website_entry')
-        ]
-
+ROOT = {
+    'live_tv': {
+        'callback': 'generic_menu',
+        'thumb': ['live_tv.png']
+    },
+    'replay': {
+        'callback': 'generic_menu',
+        'thumb': ['replay.png']
+    },
+    'websites': {
+        'callback': 'generic_menu',
+        'thumb': ['websites.png']
     }
 }
 
 
-'''
-SKELETON dictionary is the bridge between
-the item in Kodi and the real folder location on disk
-'''
-FOLDERS = {
-    'live_tv': 'channels',
-    'replay': 'channels'
+LIVE_TV = {
+    'fr_live': {
+        'callback': 'tv_guide_menu' if Script.setting.get_boolean('tv_guide') else 'generic_menu',
+        'thumb': ['channels', 'fr.png']
+    },
+    'be_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'be.png']
+    },
+    'ca_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'ca.png']
+    },
+    'ch_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'ch.png']
+    },
+    'uk_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'uk.png']
+    },
+    'wo_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'wo.png']
+    },
+    'us_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'us.png']
+    },
+    'pl_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'pl.png']
+    },
+    'es_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'es.png']
+    },
+    'jp_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'jp.png']
+    },
+    'tn_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'tn.png']
+    }
 }
 
 
-'''
-CHANNELS dictionary is the bridge between
-the channel name and his corresponding python file
-'''
-CHANNELS = {
-    'auvio': 'rtbf',
-    'brf': 'brf',
-    'rtl_tvi': 'rtlplaybe',
-    'plug_rtl': 'rtlplaybe',
-    'club_rtl': 'rtlplaybe',
-    'rtl_info': 'rtlplaybe',
-    'bel_rtl': 'rtlplaybe',
-    'contact': 'rtlplaybe',
-    'vrt': 'vrt',
-    'telemb': 'telemb',
-    'rtc': 'rtc',
-    'tv5': 'tv5',
-    'unis': 'tv5',
-    'telequebec': 'telequebec',
-    'rts': 'srgssr',
-    'rsi': 'srgssr',
-    'srf': 'srgssr',
-    'rtr': 'srgssr',
-    'swissinfo': 'srgssr',
-    'rougetv': 'rougetv',
-    'tf1': 'mytf1',
-    'france-2': 'francetv',
-    'france-3': 'francetv',
-    'canalplus': 'mycanal',
-    'france-5': 'francetv',
-    'm6': '6play',
-    'c8': 'mycanal',
-    'w9': '6play',
-    'tmc': 'mytf1',
-    'tfx': 'mytf1',
-    'nrj12': 'nrj',
-    'france-4': 'francetv',
-    'bfmtv': 'bfmtv',
-    'bfmparis': 'bfmtv',
-    'cnews': 'cnews',
-    'cstar': 'mycanal',
-    'gulli': 'gulli',
-    'france-o': 'francetv',
-    'tf1-series-films': 'mytf1',
-    'lequipe': 'lequipe',
-    '6ter': '6play',
-    'rmcstory': 'rmcstory',
-    'cherie25': 'nrj',
-    'la_1ere': 'la_1ere',
-    'franceinfo': 'franceinfo',
-    'bfmbusiness': 'bfmtv',
-    'rmc': 'bfmtv',
-    '01net': 'bfmtv',
-    'tfou': 'mytf1',
-    'lci': 'mytf1',
-    'lcp': 'lcp',
-    'rmcdecouverte': 'bfmtv',
-    'stories': '6play',
-    'comedy': '6play',
-    'fun_radio': '6play',
-    'publicsenat': 'publicsenat',
-    'france3regions': 'france3regions',
-    'francetvsport': 'francetvsport',
-    'histoire': 'tf1thematiques',
-    'tvbreizh': 'tf1thematiques',
-    'ushuaiatv': 'tf1thematiques',
-    'studio-4': 'nouvellesecritures',
-    'irl': 'nouvellesecritures',
-    'seasons': 'mycanal',
-    'comedie': 'mycanal',
-    'les-chaines-planete': 'mycanal',
-    'golfplus': 'mycanal',
-    'cineplus': 'mycanal',
-    'infosportplus': 'mycanal',
-    'gameone': 'gameone',
-    'francetveducation': 'francetveducation',
-    'gong': 'gong',
-    'nhknews': 'nhk',
-    'nhklifestyle': 'nhk',
-    'tbsnews': 'tbs',
-    'blaze': 'blaze',
-    'dave': 'uktvplay',
-    'really': 'uktvplay',
-    'yesterday': 'uktvplay',
-    'drama': 'uktvplay',
-    'skynews': 'sky',
-    'skysports': 'sky',
-    'tv5mondeafrique': 'tv5monde',
-    'arte': 'arte',
-    'euronews': 'euronews',
-    'france24': 'france24',
-    'nhkworld': 'nhkworld',
-    'tv5monde': 'tv5monde',
-    'tivi5monde': 'tv5monde',
-    'bvn': 'bvn',
-    'icitelevision': 'icitelevision',
-    'mtv': 'mtv',
-    'arirang': 'arirang',
-    'dw': 'dw',
-    'ntv': 'tver',
-    'ex': 'tver',
-    'tbs': 'tver',
-    'tx': 'tver',
-    # 'cx': 'tver', (Protected by DRM)
-    'mbs': 'tver',
-    'abc': 'tver',
-    'ytv': 'tver',
-    'tvm3': 'tvm3',
-    'tva': 'tva',
-    'tvlux': 'tvlux',
-    'beinsports': 'beinsports',
-    'stv': 'stv',
-    'onzeo': 'onzeo',
-    'souvenirsfromearth': 'souvenirsfromearth',
-    'qvc': 'qvc',
-    'cbsnews': 'cbsnews',
-    'melodytv': 'melodytv',
-    'bx1': 'bx1',
-    'tvp': 'tvp',
-    'slash': 'francetv',
-    'telecinco': 'mitele',
-    'cuatro': 'mitele',
-    'fdf': 'mitele',
-    'boing': 'mitele',
-    'energy': 'mitele',
-    'divinity': 'mitele',
-    'bemad': 'mitele',
-    'icirdi': 'icirdi',
-    'icitele': 'icitele',
-    'polar-plus': 'mycanal',
-    'virginradiotv': 'virginradiotv',
-    'tbd': 'tbd',
-    'nycmedia': 'nycmedia',
-    'cgtn': 'cgtn',
-    'cgtndocumentary': 'cgtn',
-    'culturebox': 'culturebox',
-    'ntvnews24': 'ntvnews24',
-    'paramountchannel': 'paramountchannel',
-    'questod': 'questod',
-    'realmadridtv': 'realmadridtv',
-    'afriquemedia': 'afriquemedia',
-    'becurioustv': 'becurioustv',
-    'een': 'vrt',
-    'canvas': 'vrt',
-    'ketnet': 'vrt',
-    'abcnews': 'abcnews',
-    'kto': 'kto',
-    'tv5mondefbs': 'tv5monde',
-    'tv5mondeinfo': 'tv5monde',
-    'tvp3': 'tvp',
-    'tvpinfo': 'tvp',
-    'tvppolonia': 'tvp',
-    'rtsun': 'srgssr',
-    'rtsdeux': 'srgssr',
-    'rtsinfo': 'srgssr',
-    'rtscouleur3': 'srgssr',
-    'rsila1': 'srgssr',
-    'rsila2': 'srgssr',
-    'srf1': 'srgssr',
-    'srfinfo': 'srgssr',
-    'srfzwei': 'srgssr',
-    'rtraufsrf1': 'srgssr',
-    'rtraufsrf2': 'srgssr',
-    'rtraufsrfinfo': 'srgssr',
-    'antena3': 'atresplayer',
-    'lasexta': 'atresplayer',
-    'neox': 'atresplayer',
-    'nova': 'atresplayer',
-    'mega': 'atresplayer',
-    'atreseries': 'atresplayer',
-    'channelnewsasia': 'channelnewsasia',
-    'japanetshoppingdx': 'japanetshoppingdx',
-    'antennereunion': 'antennereunion',
-    'hearttv': 'hearttv',
-    'nrjhitstvbe': 'nrjhitstvbe',
-    'pbskids': 'pbskids',
-    'teleticino': 'teleticino',
-    'ntvca': 'ntvca',
-    'viaoccitanie': 'viaoccitanie',
-    'ouatchtv': 'ouatchtv',
-    'canal10': 'canal10',
-    'rtl2': '6play',
-    'rtl_sport': 'rtlplaybe',
-    'lachainemeteo': 'lachainemeteo',
-    'watania1': 'watania',
-    'watania2': 'watania',
-    'icitoutv': 'icitoutv'
+REPLAY = {
+    'be_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'be.png']
+    },
+    'ca_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'ca.png']
+    },
+    'fr_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'fr.png']
+    },
+    'jp_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'jp.png']
+    },
+    'ch_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'ch.png']
+    },
+    'uk_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'uk.png']
+    },
+    'wo_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'wo.png']
+    },
+    'us_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'us.png']
+    }
 }
 
-'''
-LABELS dict is only used to retrieve correct element in english strings.po
-'''
-LABELS = {
 
-    # root
-    'live_tv': 'Live TV',
-    'replay': 'Catch-up TV',
-    'websites': 'Websites',
+FR_LIVE = {
+    'tf1': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'tf1.png'],
+        'fanart': ['channels', 'fr', 'tf1_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'tmc': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'tmc.png'],
+        'fanart': ['channels', 'fr', 'tmc_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'tf1-series-films': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'tf1-series-films.png'],
+        'fanart': ['channels', 'fr', 'tf1-series-films_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'tfx': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'tfx.png'],
+        'fanart': ['channels', 'fr', 'tfx_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'rtl2': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'rtl2.png'],
+        'fanart': ['channels', 'fr', 'rtl2_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'fun_radio': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'fun_radio.png'],
+        'fanart': ['channels', 'fr', 'fun_radio_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'virginradiotv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'virginradiotv.png'],
+        'fanart': ['channels', 'fr', 'virginradiotv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.virginradiotv'
+    },
+    'viaoccitanie': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'viaoccitanie.png'],
+        'fanart': ['channels', 'fr', 'viaoccitanie_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.viaoccitanie'
+    },
+    'lci': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'lci.png'],
+        'fanart': ['channels', 'fr', 'lci_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.lci'
+    },
+    'antennereunion': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'antennereunion.png'],
+        'fanart': ['channels', 'fr', 'antennereunion_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.antennereunion'
+    },
+    'gulli': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'gulli.png'],
+        'fanart': ['channels', 'fr', 'gulli_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.gulli'
+    },
+    'canalplus': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'canalplus.png'],
+        'fanart': ['channels', 'fr', 'canalplus_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'c8': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'c8.png'],
+        'fanart': ['channels', 'fr', 'c8_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'cstar': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'cstar.png'],
+        'fanart': ['channels', 'fr', 'cstar_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'france-2': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'france-2.png'],
+        'fanart': ['channels', 'fr', 'france-2_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'france-3': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'france-3.png'],
+        'fanart': ['channels', 'fr', 'france-3_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'france-4': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'france-4.png'],
+        'fanart': ['channels', 'fr', 'france-4_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'france-5': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'france-5.png'],
+        'fanart': ['channels', 'fr', 'france-5_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'france-o': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'france-o.png'],
+        'fanart': ['channels', 'fr', 'france-o_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'lequipe': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'lequipe.png'],
+        'fanart': ['channels', 'fr', 'lequipe_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.lequipe'
+    },
+    'cnews': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'cnews.png'],
+        'fanart': ['channels', 'fr', 'cnews_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.cnews'
+    },
+    'rmcdecouverte': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'rmcdecouverte.png'],
+        'fanart': ['channels', 'fr', 'rmcdecouverte_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.rmcdecouverte'
+    },
+    'rmcstory': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'rmcstory.png'],
+        'fanart': ['channels', 'fr', 'rmcstory_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.rmcstory'
+    },
+    'canal10': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'canal10.png'],
+        'fanart': ['channels', 'fr', 'canal10_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.canal10'
+    },
+    'nrj12': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'nrj12.png'],
+        'fanart': ['channels', 'fr', 'nrj12_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.nrj'
+    },
+    'cherie25': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'cherie25.png'],
+        'fanart': ['channels', 'fr', 'cherie25_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.nrj'
+    },
+    'bfmparis': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'bfmparis.png'],
+        'fanart': ['channels', 'fr', 'bfmparis_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.bfmparis'
+    },
+    'bfmtv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'bfmtv.png'],
+        'fanart': ['channels', 'fr', 'bfmtv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.bfmtv'
+    },
+    'bfmbusiness': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'bfmbusiness.png'],
+        'fanart': ['channels', 'fr', 'bfmbusiness_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.bfmtv'
+    },
+    'gong': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'gong.png'],
+        'fanart': ['channels', 'fr', 'gong_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.gong'
+    },
+    'la_1ere': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'la_1ere.png'],
+        'fanart': ['channels', 'fr', 'la_1ere_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.la_1ere'
+    },
+    'kto': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'kto.png'],
+        'fanart': ['channels', 'fr', 'kto_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.kto'
+    },
+    'ouatchtv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'ouatchtv.png'],
+        'fanart': ['channels', 'fr', 'ouatchtv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.ouatchtv'
+    },
+    'publicsenat': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'publicsenat.png'],
+        'fanart': ['channels', 'fr', 'publicsenat_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.publicsenat'
+    },
+    'lcp': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'lcp.png'],
+        'fanart': ['channels', 'fr', 'lcp_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.lcp'
+    },
+    'francetvsport': {
+        'callback': 'multi_live_bridge',
+        'thumb': ['channels', 'fr', 'francetvsport.png'],
+        'fanart': ['channels', 'fr', 'francetvsport_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetvsport'
+    },
+    'franceinfo': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'franceinfo.png'],
+        'fanart': ['channels', 'fr', 'franceinfo_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.franceinfo'
+    },
+    'france3regions': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'france3regions.png'],
+        'fanart': ['channels', 'fr', 'france3regions_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.france3regions'
+    }
+}
 
-    # Countries
-    'be': 'Belgium',
-    'fr': 'France',
-    'jp': 'Japan',
-    'ch': 'Switzerland',
-    'uk': 'United Kingdom',
-    'wo': 'International',
-    'ca': 'Canada',
-    'us': 'United State of America',
-    'pl': 'Poland',
-    'es': 'Spain',
-    'tn': 'Tunisia',
+TN_LIVE = {
+    'watania1': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'tn', 'watania1.png'],
+        'fanart': ['channels', 'tn', 'watania1_fanart.jpg'],
+        'module': 'resources.lib.channels.tn.watania'
+    },
+    'watania2': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'tn', 'watania2.png'],
+        'fanart': ['channels', 'tn', 'watania2_fanart.jpg'],
+        'module': 'resources.lib.channels.tn.watania'
+    }
+}
 
-    # Belgium channels / live TV
-    'auvio': 'RTBF Auvio (La Une, La deux, La Trois, ...)',
-    'brf': 'BRF Mediathek',
-    'rtl_tvi': 'RTL-TVI',
-    'plug_rtl': 'PLUG RTL',
-    'club_rtl': 'CLUB RTL',
-    'vrt': 'VRT NU',
-    'telemb': 'Télé MB',
-    'rtc': 'RTC Télé Liège',
-    'tvlux': 'TV Lux',
-    'contact': 'Contact',
-    'bel_rtl': 'BEL RTL',
-    'rtl_info': 'RTL INFO',
-    'bx1': 'BX1',
-    'een': 'Eén',
-    'canvas': 'Canvas',
-    'ketnet': 'Ketnet',
-    'nrjhitstvbe': 'NRJ Hits TV',
-    'rtl_sport': 'RTL Sport',
+PL_LIVE = {
+    'tvp3': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'pl', 'tvp3.png'],
+        'fanart': ['channels', 'pl', 'tvp3_fanart.jpg'],
+        'module': 'resources.lib.channels.pl.tvp'
+    },
+    'tvpinfo': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'pl', 'tvpinfo.png'],
+        'fanart': ['channels', 'pl', 'tvpinfo_fanart.jpg'],
+        'module': 'resources.lib.channels.pl.tvp'
+    },
+    'tvppolonia': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'pl', 'tvppolonia.png'],
+        'fanart': ['channels', 'pl', 'tvppolonia_fanart.jpg'],
+        'module': 'resources.lib.channels.pl.tvp'
+    }
+}
 
-    # Canadian channels / live TV
-    'tv5': 'TV5',
-    'unis': 'UNIS',
-    'telequebec': 'Télé-Québec',
-    'tva': 'TVA',
-    'icitele': 'ICI Télé',
-    'ntvca': 'NTV',
-    'icitoutv': 'ICI Tou.TV',
+ES_LIVE = {
+    'realmadridtv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'realmadridtv.png'],
+        'fanart': ['channels', 'es', 'realmadridtv_fanart.jpg'],
+        'module': 'resources.lib.channels.es.realmadridtv'
+    },
+    'antena3': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'antena3.png'],
+        'fanart': ['channels', 'es', 'antena3_fanart.jpg'],
+        'module': 'resources.lib.channels.es.atresplayer'
+    },
+    'lasexta': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'lasexta.png'],
+        'fanart': ['channels', 'es', 'lasexta_fanart.jpg'],
+        'module': 'resources.lib.channels.es.atresplayer'
+    },
+    'neox': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'neox.png'],
+        'fanart': ['channels', 'es', 'neox_fanart.jpg'],
+        'module': 'resources.lib.channels.es.atresplayer'
+    },
+    'nova': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'nova.png'],
+        'fanart': ['channels', 'es', 'nova_fanart.jpg'],
+        'module': 'resources.lib.channels.es.atresplayer'
+    },
+    'mega': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'mega.png'],
+        'fanart': ['channels', 'es', 'mega_fanart.jpg'],
+        'module': 'resources.lib.channels.es.atresplayer'
+    },
+    'atreseries': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'atreseries.png'],
+        'fanart': ['channels', 'es', 'atreseries_fanart.jpg'],
+        'module': 'resources.lib.channels.es.atresplayer'
+    },
+    'telecinco': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'telecinco.png'],
+        'fanart': ['channels', 'es', 'telecinco_fanart.jpg'],
+        'module': 'resources.lib.channels.es.mitele'
+    },
+    'cuatro': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'cuatro.png'],
+        'fanart': ['channels', 'es', 'cuatro_fanart.jpg'],
+        'module': 'resources.lib.channels.es.mitele'
+    },
+    'fdf': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'fdf.png'],
+        'fanart': ['channels', 'es', 'fdf_fanart.jpg'],
+        'module': 'resources.lib.channels.es.mitele'
+    },
+    'boing': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'boing.png'],
+        'fanart': ['channels', 'es', 'boing_fanart.jpg'],
+        'module': 'resources.lib.channels.es.mitele'
+    },
+    'energy': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'energy.png'],
+        'fanart': ['channels', 'es', 'energy_fanart.jpg'],
+        'module': 'resources.lib.channels.es.mitele'
+    },
+    'divinity': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'divinity.png'],
+        'fanart': ['channels', 'es', 'divinity_fanart.jpg'],
+        'module': 'resources.lib.channels.es.mitele'
+    },
+    'bemad': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'es', 'bemad.png'],
+        'fanart': ['channels', 'es', 'bemad_fanart.jpg'],
+        'module': 'resources.lib.channels.es.mitele'
+    }
+}
 
-    # Switzerland channels / live TV
-    'rts': 'RTS',
-    'rsi': 'RSI',
-    'srf': 'SRF',
-    'rtr': 'RTR',
-    'swissinfo': 'SWISSINFO',
-    'rougetv': 'Rouge TV',
-    'tvm3': 'TVM3',
-    'becurioustv': 'BeCurious TV',
-    'rtsun': 'RTS Un',
-    'rtsdeux': 'RTS Deux',
-    'rtsinfo': 'RTS Info',
-    'rtscouleur3': 'RTS Couleur 3',
-    'rsila1': 'RSI La 1',
-    'rsila2': 'RSI La 2',
-    'srf1': 'SRF 1',
-    'srfinfo': 'SRF Info',
-    'srfzwei': 'SRF Zwei',
-    'rtraufsrf1': 'RTR auf SRF 1',
-    'rtraufsrf2': 'RTR auf SRF 2',
-    'rtraufsrfinfo': 'RTR auf SRF Info',
-    'teleticino': 'Teleticino',
+WO_LIVE = {
+    'tivi5monde': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'tivi5monde.png'],
+        'fanart': ['channels', 'wo', 'tivi5monde_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.tivi5monde'
+    },
+    'tv5mondefbs': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'tv5mondefbs.png'],
+        'fanart': ['channels', 'wo', 'tv5mondefbs_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.tv5monde'
+    },
+    'tv5mondeinfo': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'tv5mondeinfo.png'],
+        'fanart': ['channels', 'wo', 'tv5mondeinfo_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.tv5monde'
+    },
+    'euronews': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'euronews.png'],
+        'fanart': ['channels', 'wo', 'euronews_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.euronews'
+    },
+    'arte': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'arte.png'],
+        'fanart': ['channels', 'wo', 'arte_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.arte'
+    },
+    'arirang': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'arirang.png'],
+        'fanart': ['channels', 'wo', 'arirang_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.arirang'
+    },
+    'afriquemedia': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'afriquemedia.png'],
+        'fanart': ['channels', 'wo', 'afriquemedia_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.afriquemedia'
+    },
+    'dw': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'dw.png'],
+        'fanart': ['channels', 'wo', 'dw_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.dw'
+    },
+    'icirdi': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'icirdi.png'],
+        'fanart': ['channels', 'wo', 'icirdi_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.icirdi'
+    },
+    'bvn': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'bvn.png'],
+        'fanart': ['channels', 'wo', 'bvn_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.bvn'
+    },
+    'france24': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'france24.png'],
+        'fanart': ['channels', 'wo', 'france24_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.france24'
+    },
+    'qvc': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'qvc.png'],
+        'fanart': ['channels', 'wo', 'qvc_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.qvc'
+    },
+    'souvenirsfromearth': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'souvenirsfromearth.png'],
+        'fanart': ['channels', 'wo', 'souvenirsfromearth_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.souvenirsfromearth'
+    },
+    'nhkworld': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'nhkworld.png'],
+        'fanart': ['channels', 'wo', 'nhkworld_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.nhkworld'
+    },
+    'icitelevision': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'icitelevision.png'],
+        'fanart': ['channels', 'wo', 'icitelevision_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.icitelevision'
+    },
+    'channelnewsasia': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'channelnewsasia.png'],
+        'fanart': ['channels', 'wo', 'channelnewsasia_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.channelnewsasia'
+    },
+    'cgtn': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'cgtn.png'],
+        'fanart': ['channels', 'wo', 'cgtn_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.cgtn'
+    },
+    'cgtndocumentary': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'cgtndocumentary.png'],
+        'fanart': ['channels', 'wo', 'cgtndocumentary_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.cgtn'
+    },
+    'paramountchannel': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'paramountchannel.png'],
+        'fanart': ['channels', 'wo', 'paramountchannel_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.paramountchannel'
+    }
+}
 
-    # French channels / live TV
-    'tf1': 'TF1',
-    'france-2': 'France 2',
-    'france-3': 'France 3',
-    'canalplus': 'Canal +',
-    'france-5': 'France 5',
-    'm6': 'M6',
-    'c8': 'C8',
-    'w9': 'W9',
-    'tmc': 'TMC',
-    'tfx': 'TFX',
-    'nrj12': 'NRJ 12',
-    'france-4': 'France 4',
-    'bfmtv': 'BFM TV',
-    'bfmparis': 'BFM Paris',
-    'cnews': 'CNews',
-    'cstar': 'CStar',
-    'gulli': 'Gulli',
-    'france-o': 'France Ô',
-    'tf1-series-films': 'TF1 Séries Films',
-    'lequipe': 'L\'Équipe',
-    '6ter': '6ter',
-    'rmcstory': 'RMC Story',
-    'cherie25': 'Chérie 25',
-    'la_1ere': 'La 1ère (' + common.PLUGIN.get_setting('la_1ere.region') + ')',
-    'franceinfo': 'France Info',
-    'bfmbusiness': 'BFM Business',
-    'rmc': 'RMC',
-    '01net': '01Net TV',
-    'tfou': 'Tfou (MYTF1)',
-    'lci': 'LCI',
-    'lcp': 'LCP Assemblée Nationale',
-    'rmcdecouverte': 'RMC Découverte',
-    'stories': 'Stories (6play)',
-    'comedy': 'Comic (6play)',
-    'fun_radio': 'Fun Radio',
-    'publicsenat': 'Public Sénat',
-    'france3regions': 'France 3 Régions (' + common.PLUGIN.get_setting('france3.region') + ')',
-    'francetvsport': 'France TV Sport (francetv)',
-    'histoire': 'Histoire',
-    'tvbreizh': 'TV Breizh',
-    'ushuaiatv': 'Ushuaïa TV',
-    'studio-4': 'Studio 4 (francetv)',
-    'irl': 'IRL (francetv)',
-    'seasons': 'Seasons',
-    'comedie': 'Comédie +',
-    'les-chaines-planete': 'Les chaînes planètes +',
-    'golfplus': 'Golf +',
-    'cineplus': 'Ciné +',
-    'infosportplus': 'INFOSPORT+',
-    'gameone': 'Game One',
-    'francetveducation': 'France TV Education (francetv)',
-    'gong': 'Gong',
-    'onzeo': 'Onzéo',
-    'melodytv': 'Melody TV',
-    'slash': 'France tv slash',
-    'polar-plus': 'Polar+',
-    'virginradiotv': 'Virgin Radio TV',
-    'culturebox': 'Culturebox (francetv)',
-    'kto': 'KTO',
-    'antennereunion': 'Antenne Réunion',
-    'viaoccitanie': 'ViàOccitanie',
-    'ouatchtv': 'Ouatch TV',
-    'canal10': 'Canal 10',
-    'rtl2': 'RTL 2',
-    'lachainemeteo': 'La Chaîne Météo',
+JP_LIVE = {
+    'japanetshoppingdx': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'jp', 'japanetshoppingdx.png'],
+        'fanart': ['channels', 'jp', 'japanetshoppingdx_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.japanetshoppingdx'
+    },
+    'ntvnews24': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'jp', 'ntvnews24.png'],
+        'fanart': ['channels', 'jp', 'ntvnews24_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.ntvnews24'
+    }
+}
 
-    # Japan channels / live TV
-    'nhknews': 'NHK ニュース',
-    'nhklifestyle': 'NHKらいふ',
-    'tbsnews': 'TBS ニュース',
-    'ntv': '日テレ',
-    'ex': 'テレビ朝日',
-    'tbs': 'TBSテレビ',
-    'tx': 'テレビ東京',
-    # 'cx': 'フジテレビ', (Protected by DRM)
-    'mbs': 'MBSテレビ',
-    'abc': '朝日放送株式会社',
-    'ytv': '読売テレビ',
-    'ntvnews24': '日テレ News24',
-    'japanetshoppingdx': 'ジャパネットチャンネルDX',
+UK_LIVE = {
+    'hearttv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'hearttv.png'],
+        'fanart': ['channels', 'uk', 'hearttv_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.hearttv'
+    },
+    'blaze': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'blaze.png'],
+        'fanart': ['channels', 'uk', 'blaze_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.blaze'
+    },
+    'skynews': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'skynews.png'],
+        'fanart': ['channels', 'uk', 'skynews_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.sky'
+    },
+    'stv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'stv.png'],
+        'fanart': ['channels', 'uk', 'stv_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.stv'
+    }
+}
 
-    # United Kingdom channels / live TV
-    'blaze': 'Blaze',
-    'dave': 'Dave',
-    'really': 'Really',
-    'yesterday': 'Yesterday',
-    'drama': 'Drama',
-    'skynews': 'Sky News',
-    'skysports': 'Sky Sports',
-    'stv': 'STV',
-    'questod': 'Quest OD',
-    'hearttv': 'Heart TV',
+BE_LIVE = {
+    'bx1': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'bx1.png'],
+        'fanart': ['channels', 'be', 'bx1_fanart.jpg'],
+        'module': 'resources.lib.channels.be.bx1'
+    },
+    'nrjhitstvbe': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'nrjhitstvbe.png'],
+        'fanart': ['channels', 'be', 'nrjhitstvbe_fanart.jpg'],
+        'module': 'resources.lib.channels.be.nrjhitstvbe'
+    },
+    'auvio': {
+        'callback': 'multi_live_bridge',
+        'thumb': ['channels', 'be', 'auvio.png'],
+        'fanart': ['channels', 'be', 'auvio_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtbf'
+    },
+    'rtc': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'rtc.png'],
+        'fanart': ['channels', 'be', 'rtc_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtc'
+    },
+    'telemb': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'telemb.png'],
+        'fanart': ['channels', 'be', 'telemb_fanart.jpg'],
+        'module': 'resources.lib.channels.be.telemb'
+    },
+    'tvlux': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'tvlux.png'],
+        'fanart': ['channels', 'be', 'tvlux_fanart.jpg'],
+        'module': 'resources.lib.channels.be.tvlux'
+    },
+    'een': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'een.png'],
+        'fanart': ['channels', 'be', 'een_fanart.jpg'],
+        'module': 'resources.lib.channels.be.vrt'
+    },
+    'canvas': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'canvas.png'],
+        'fanart': ['channels', 'be', 'canvas_fanart.jpg'],
+        'module': 'resources.lib.channels.be.vrt'
+    },
+    'ketnet': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'ketnet.png'],
+        'fanart': ['channels', 'be', 'ketnet_fanart.jpg'],
+        'module': 'resources.lib.channels.be.vrt'
+    }
+}
 
-    # International channels / live TV
-    'tv5mondeafrique': 'TV5Monde Afrique',
-    'arte': 'Arte (' + common.PLUGIN.get_setting('arte.language') + ')',
-    'euronews': 'Euronews (' + common.PLUGIN.get_setting('euronews.language') + ')',
-    'france24': 'France 24 (' + common.PLUGIN.get_setting('france24.language') + ')',
-    'nhkworld': 'NHK World (' + common.PLUGIN.get_setting('nhkworld.country') + ')',
-    'tv5monde': 'TV5Monde',
-    'tivi5monde': 'Tivi 5Monde',
-    'bvn': 'BVN',
-    'icitelevision': 'ICI Télévision',
-    'mtv': 'MTV (' + common.PLUGIN.get_setting('mtv.language') + ')',
-    'arirang': 'Arirang (아리랑)',
-    'dw': 'DW (' + common.PLUGIN.get_setting('dw.language') + ')',
-    'beinsports': 'Bein Sports (' + common.PLUGIN.get_setting('beinsports.language') + ')',
-    'souvenirsfromearth': 'Souvenirs From Earth',
-    'qvc': 'QVC (' + common.PLUGIN.get_setting('qvc.language') + ')',
-    'icirdi': 'ICI RDI',
-    'cgtn': 'CGTN (' + common.PLUGIN.get_setting('cgtn.language') + ')',
-    'cgtndocumentary': 'CGTN Documentary',
-    'paramountchannel': 'Paramount Channel (' + common.PLUGIN.get_setting('paramountchannel.language') + ')',
-    'afriquemedia': 'Afrique Media',
-    'tv5mondefbs': 'TV5Monde France Belgique Suisse',
-    'tv5mondeinfo': 'TV5Monde Info',
-    'channelnewsasia': 'Channel NewsAsia',
+CA_LIVE = {
+    'ntvca': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ca', 'ntvca.png'],
+        'fanart': ['channels', 'ca', 'ntvca_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.ntvca'
+    },
+    'tva': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ca', 'tva.png'],
+        'fanart': ['channels', 'ca', 'tva_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.tva'
+    },
+    'telequebec': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ca', 'telequebec.png'],
+        'fanart': ['channels', 'ca', 'telequebec_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.telequebec'
+    },
+    'icitele': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ca', 'icitele.png'],
+        'fanart': ['channels', 'ca', 'icitele_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.icitele'
+    }
+}
 
-    # United State of America channels / live TV
-    'cbsnews': 'CBS News',
-    'tbd': 'TBD',
-    'nycmedia': 'NYC Media',
-    'abcnews': 'ABC News',
-    'pbskids': 'PBS Kids',
+CH_LIVE = {
+    'rtsun': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rtsun.png'],
+        'fanart': ['channels', 'ch', 'rtsun_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rtsdeux': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rtsdeux.png'],
+        'fanart': ['channels', 'ch', 'rtsdeux_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rtsinfo': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rtsinfo.png'],
+        'fanart': ['channels', 'ch', 'rtsinfo_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rtscouleur3': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rtscouleur3.png'],
+        'fanart': ['channels', 'ch', 'rtscouleur3_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rsila1': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rsila1.png'],
+        'fanart': ['channels', 'ch', 'rsila1_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rsila2': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rsila2.png'],
+        'fanart': ['channels', 'ch', 'rsila2_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'srf1': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'srf1.png'],
+        'fanart': ['channels', 'ch', 'srf1_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'srfinfo': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'srfinfo.png'],
+        'fanart': ['channels', 'ch', 'srfinfo_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'srfzwei': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'srfzwei.png'],
+        'fanart': ['channels', 'ch', 'srfzwei_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rtraufsrf1': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rtraufsrf1.png'],
+        'fanart': ['channels', 'ch', 'rtraufsrf1_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rtraufsrfinfo': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rtraufsrfinfo.png'],
+        'fanart': ['channels', 'ch', 'rtraufsrfinfo_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rtraufsrf2': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rtraufsrf2.png'],
+        'fanart': ['channels', 'ch', 'rtraufsrf2_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rougetv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'rougetv.png'],
+        'fanart': ['channels', 'ch', 'rougetv_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.rougetv'
+    },
+    'teleticino': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'teleticino.png'],
+        'fanart': ['channels', 'ch', 'teleticino_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.teleticino'
+    }
+}
 
-    # Poland channels / live TV
-    'tvp': 'TVP',
-    'tvp3': 'TVP 3 (' + common.PLUGIN.get_setting('tvp3.region') + ')',
-    'tvpinfo': 'TVP Info',
-    'tvppolonia': 'TVP Polonia',
+US_LIVE = {
+    'pbskids': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'us', 'pbskids.png'],
+        'fanart': ['channels', 'us', 'pbskids_fanart.jpg'],
+        'module': 'resources.lib.channels.us.pbskids'
+    },
+    'tbd': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'us', 'tbd.png'],
+        'fanart': ['channels', 'us', 'tbd_fanart.jpg'],
+        'module': 'resources.lib.channels.us.tbd'
+    },
+    'cbsnews': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'us', 'cbsnews.png'],
+        'fanart': ['channels', 'us', 'cbsnews_fanart.jpg'],
+        'module': 'resources.lib.channels.us.cbsnews'
+    },
+    'abcnews': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'us', 'abcnews.png'],
+        'fanart': ['channels', 'us', 'abcnews_fanart.jpg'],
+        'module': 'resources.lib.channels.us.abcnews'
+    }
+}
 
-    # Spanish channels / live TV
-    'telecinco': 'Telecinco',
-    'cuatro': 'Cuatro',
-    'fdf': 'Factoria de Ficcion',
-    'boing': 'Boing',
-    'energy': 'Energy TV',
-    'divinity': 'Divinity',
-    'bemad': 'Be Mad',
-    'realmadridtv': 'Realmadrid TV (' + common.PLUGIN.get_setting('realmadridtv.language') + ')',
-    'antena3': 'Antena 3',
-    'lasexta': 'La Sexta',
-    'neox': 'Neox',
-    'nova': 'Nova',
-    'mega': 'Mega',
-    'atreseries': 'Atreseries',
+FR_REPLAY = {
+    'tf1': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tf1.png'],
+        'fanart': ['channels', 'fr', 'tf1_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'tmc': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tmc.png'],
+        'fanart': ['channels', 'fr', 'tmc_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'tf1-series-films': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tf1-series-films.png'],
+        'fanart': ['channels', 'fr', 'tf1-series-films_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'tfx': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tfx.png'],
+        'fanart': ['channels', 'fr', 'tfx_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'tfou': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tfou.png'],
+        'fanart': ['channels', 'fr', 'tfou_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mytf1'
+    },
+    'm6': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'm6.png'],
+        'fanart': ['channels', 'fr', 'm6_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'w9': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'w9.png'],
+        'fanart': ['channels', 'fr', 'w9_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    '6ter': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', '6ter.png'],
+        'fanart': ['channels', 'fr', '6ter_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'stories': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'stories.png'],
+        'fanart': ['channels', 'fr', 'stories_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'comedy': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'comedy.png'],
+        'fanart': ['channels', 'fr', 'comedy_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'rtl2': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'rtl2.png'],
+        'fanart': ['channels', 'fr', 'rtl2_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'fun_radio': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'fun_radio.png'],
+        'fanart': ['channels', 'fr', 'fun_radio_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'lci': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'lci.png'],
+        'fanart': ['channels', 'fr', 'lci_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.lci'
+    },
+    'gulli': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'gulli.png'],
+        'fanart': ['channels', 'fr', 'gulli_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.gulli'
+    },
+    'canalplus': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'canalplus.png'],
+        'fanart': ['channels', 'fr', 'canalplus_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'c8': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'c8.png'],
+        'fanart': ['channels', 'fr', 'c8_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'cstar': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'cstar.png'],
+        'fanart': ['channels', 'fr', 'cstar_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'seasons': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'seasons.png'],
+        'fanart': ['channels', 'fr', 'seasons_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'comedie': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'comedie.png'],
+        'fanart': ['channels', 'fr', 'comedie_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'les-chaines-planete': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'les-chaines-planete.png'],
+        'fanart': ['channels', 'fr', 'les-chaines-planete_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'golfplus': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'golfplus.png'],
+        'fanart': ['channels', 'fr', 'golfplus_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'cineplus': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'cineplus.png'],
+        'fanart': ['channels', 'fr', 'cineplus_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'infosportplus': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'infosportplus.png'],
+        'fanart': ['channels', 'fr', 'infosportplus_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'polar-plus': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'polar-plus.png'],
+        'fanart': ['channels', 'fr', 'polar-plus_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'france-2': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'france-2.png'],
+        'fanart': ['channels', 'fr', 'france-2_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'france-3': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'france-3.png'],
+        'fanart': ['channels', 'fr', 'france-3_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'france-4': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'france-4.png'],
+        'fanart': ['channels', 'fr', 'france-4_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'france-5': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'france-5.png'],
+        'fanart': ['channels', 'fr', 'france-5_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'france-o': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'france-o.png'],
+        'fanart': ['channels', 'fr', 'france-o_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'lequipe': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'lequipe.png'],
+        'fanart': ['channels', 'fr', 'lequipe_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.lequipe'
+    },
+    'cnews': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'cnews.png'],
+        'fanart': ['channels', 'fr', 'cnews_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.cnews'
+    },
+    'rmcdecouverte': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'rmcdecouverte.png'],
+        'fanart': ['channels', 'fr', 'rmcdecouverte_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.rmcdecouverte'
+    },
+    'rmcstory': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'rmcstory.png'],
+        'fanart': ['channels', 'fr', 'rmcstory_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.rmcstory'
+    },
+    'nrj12': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'nrj12.png'],
+        'fanart': ['channels', 'fr', 'nrj12_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.nrj'
+    },
+    'cherie25': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'cherie25.png'],
+        'fanart': ['channels', 'fr', 'cherie25_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.nrj'
+    },
+    'lachainemeteo': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'lachainemeteo.png'],
+        'fanart': ['channels', 'fr', 'lachainemeteo_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.lachainemeteo'
+    },
+    'histoire': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'histoire.png'],
+        'fanart': ['channels', 'fr', 'histoire_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.tf1thematiques'
+    },
+    'tvbreizh': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tvbreizh.png'],
+        'fanart': ['channels', 'fr', 'tvbreizh_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.tf1thematiques'
+    },
+    'ushuaiatv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'ushuaiatv.png'],
+        'fanart': ['channels', 'fr', 'ushuaiatv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.tf1thematiques'
+    },
+    'slash': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'slash.png'],
+        'fanart': ['channels', 'fr', 'slash_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetv'
+    },
+    'bfmparis': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'bfmparis.png'],
+        'fanart': ['channels', 'fr', 'bfmparis_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.bfmparis'
+    },
+    'bfmtv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'bfmtv.png'],
+        'fanart': ['channels', 'fr', 'bfmtv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.bfmtv'
+    },
+    'bfmbusiness': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'bfmbusiness.png'],
+        'fanart': ['channels', 'fr', 'bfmbusiness_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.bfmtv'
+    },
+    'rmc': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'rmc.png'],
+        'fanart': ['channels', 'fr', 'rmc_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.bfmtv'
+    },
+    '01net': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', '01net.png'],
+        'fanart': ['channels', 'fr', '01net_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.bfmtv'
+    },
+    'gong': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'gong.png'],
+        'fanart': ['channels', 'fr', 'gong_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.gong'
+    },
+    'la_1ere': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'la_1ere.png'],
+        'fanart': ['channels', 'fr', 'la_1ere_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.la_1ere'
+    },
+    'kto': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'kto.png'],
+        'fanart': ['channels', 'fr', 'kto_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.kto'
+    },
+    'ouatchtv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'ouatchtv.png'],
+        'fanart': ['channels', 'fr', 'ouatchtv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.ouatchtv'
+    },
+    'onzeo': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'onzeo.png'],
+        'fanart': ['channels', 'fr', 'onzeo_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.onzeo'
+    },
+    'publicsenat': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'publicsenat.png'],
+        'fanart': ['channels', 'fr', 'publicsenat_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.publicsenat'
+    },
+    'lcp': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'lcp.png'],
+        'fanart': ['channels', 'fr', 'lcp_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.lcp'
+    },
+    'gameone': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'gameone.png'],
+        'fanart': ['channels', 'fr', 'gameone_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.gameone'
+    },
+    'francetvsport': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'francetvsport.png'],
+        'fanart': ['channels', 'fr', 'francetvsport_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetvsport'
+    },
+    'franceinfo': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'franceinfo.png'],
+        'fanart': ['channels', 'fr', 'franceinfo_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.franceinfo'
+    },
+    'france3regions': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'france3regions.png'],
+        'fanart': ['channels', 'fr', 'france3regions_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.france3regions'
+    },
+    'culturebox': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'culturebox.png'],
+        'fanart': ['channels', 'fr', 'culturebox_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.culturebox'
+    },
+    'francetveducation': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'francetveducation.png'],
+        'fanart': ['channels', 'fr', 'francetveducation_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.francetveducation'
+    },
+    'irl': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'irl.png'],
+        'fanart': ['channels', 'fr', 'irl_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.nouvellesecritures'
+    },
+    'studio-4': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'studio-4.png'],
+        'fanart': ['channels', 'fr', 'studio-4_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.nouvellesecritures'
+    }
+}
 
-    # Tunisia channels / live TV
-    'watania1': 'التلفزة التونسية الوطنية 1',
-    'watania2': 'التلفزة التونسية الوطنية 2',
 
-    # Websites
-    'allocine': 'Allociné',
-    'tetesaclaques': 'Au pays des Têtes à claques',
-    'taratata': 'Taratata',
-    'noob': 'Noob TV',
-    'culturepub': 'Culturepub',
-    'autoplus': 'Auto Plus',
-    'notrehistoirech': 'Notre Histoire',
-    '30millionsdamis': '30 Millions d\'Amis',
-    'elle': 'Elle',
-    'nytimes': 'New York Times',
-    'fosdem': 'Fosdem',
-    'ina': 'Ina',
-    'onf': 'Office National du Film du Canada',
-    'nfb': 'National Film Board Of Canada'
+UK_REPLAY = {
+    'questod': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'uk', 'questod.png'],
+        'fanart': ['channels', 'uk', 'questod_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.questod'
+    },
+    'blaze': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'uk', 'blaze.png'],
+        'fanart': ['channels', 'uk', 'blaze_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.blaze'
+    },
+    'skynews': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'uk', 'skynews.png'],
+        'fanart': ['channels', 'uk', 'skynews_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.sky'
+    },
+    'skysports': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'uk', 'skysports.png'],
+        'fanart': ['channels', 'uk', 'skysports_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.sky'
+    },
+    'stv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'uk', 'stv.png'],
+        'fanart': ['channels', 'uk', 'stv_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.stv'
+    }
+}
+
+
+BE_REPLAY = {
+    'rtl_tvi': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'rtl_tvi.png'],
+        'fanart': ['channels', 'be', 'rtl_tvi_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'plug_rtl': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'plug_rtl.png'],
+        'fanart': ['channels', 'be', 'plug_rtl_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'club_rtl': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'club_rtl.png'],
+        'fanart': ['channels', 'be', 'club_rtl_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'rtl_info': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'rtl_info.png'],
+        'fanart': ['channels', 'be', 'rtl_info_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'bel_rtl': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'bel_rtl.png'],
+        'fanart': ['channels', 'be', 'bel_rtl_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'contact': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'contact.png'],
+        'fanart': ['channels', 'be', 'contact_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'rtl_sport': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'rtl_sport.png'],
+        'fanart': ['channels', 'be', 'rtl_sport_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'brf': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'brf.png'],
+        'fanart': ['channels', 'be', 'brf_fanart.jpg'],
+        'module': 'resources.lib.channels.be.brf'
+    },
+    'bx1': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'bx1.png'],
+        'fanart': ['channels', 'be', 'bx1_fanart.jpg'],
+        'module': 'resources.lib.channels.be.bx1'
+    },
+    'nrjhitstvbe': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'nrjhitstvbe.png'],
+        'fanart': ['channels', 'be', 'nrjhitstvbe_fanart.jpg'],
+        'module': 'resources.lib.channels.be.nrjhitstvbe'
+    },
+    'auvio': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'auvio.png'],
+        'fanart': ['channels', 'be', 'auvio_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtbf'
+    },
+    'rtc': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'rtc.png'],
+        'fanart': ['channels', 'be', 'rtc_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtc'
+    },
+    'telemb': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'telemb.png'],
+        'fanart': ['channels', 'be', 'telemb_fanart.jpg'],
+        'module': 'resources.lib.channels.be.telemb'
+    },
+    'tvlux': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'tvlux.png'],
+        'fanart': ['channels', 'be', 'tvlux_fanart.jpg'],
+        'module': 'resources.lib.channels.be.tvlux'
+    },
+    'vrt': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'vrt.png'],
+        'fanart': ['channels', 'be', 'vrt_fanart.jpg'],
+        'module': 'resources.lib.channels.be.vrt'
+    }
+}
+
+WO_REPLAY = {
+    'tv5mondeafrique': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'tv5mondeafrique.png'],
+        'fanart': ['channels', 'wo', 'tv5mondeafrique_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.tv5mondeafrique'
+    },
+    'tivi5monde': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'tivi5monde.png'],
+        'fanart': ['channels', 'wo', 'tivi5monde_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.tivi5monde'
+    },
+    'tv5monde': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'tv5monde.png'],
+        'fanart': ['channels', 'wo', 'tv5monde_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.tv5monde'
+    },
+    'arte': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'arte.png'],
+        'fanart': ['channels', 'wo', 'arte_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.arte'
+    },
+    'arirang': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'arirang.png'],
+        'fanart': ['channels', 'wo', 'arirang_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.arirang'
+    },
+    'afriquemedia': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'afriquemedia.png'],
+        'fanart': ['channels', 'wo', 'afriquemedia_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.afriquemedia'
+    },
+    'beinsports': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'beinsports.png'],
+        'fanart': ['channels', 'wo', 'beinsports_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.beinsports'
+    },
+    'bvn': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'bvn.png'],
+        'fanart': ['channels', 'wo', 'bvn_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.bvn'
+    },
+    'mtv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'mtv.png'],
+        'fanart': ['channels', 'wo', 'mtv_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.mtv'
+    },
+    'nhkworld': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'nhkworld.png'],
+        'fanart': ['channels', 'wo', 'nhkworld_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.nhkworld'
+    },
+    'channelnewsasia': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'channelnewsasia.png'],
+        'fanart': ['channels', 'wo', 'channelnewsasia_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.channelnewsasia'
+    },
+    'france24': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'france24.png'],
+        'fanart': ['channels', 'wo', 'france24_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.france24'
+    }
+}
+
+JP_REPLAY = {
+    'tbsnews': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'tbsnews.png'],
+        'fanart': ['channels', 'jp', 'tbsnews_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tbsnews'
+    },
+    'ntv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'ntv.png'],
+        'fanart': ['channels', 'jp', 'ntv_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tver'
+    },
+    'ex': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'ex.png'],
+        'fanart': ['channels', 'jp', 'ex_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tver'
+    },
+    'tbs': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'tbs.png'],
+        'fanart': ['channels', 'jp', 'tbs_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tver'
+    },
+    'tx': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'tx.png'],
+        'fanart': ['channels', 'jp', 'tx_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tver'
+    },
+    'mbs': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'mbs.png'],
+        'fanart': ['channels', 'jp', 'mbs_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tver'
+    },
+    'abc': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'abc.png'],
+        'fanart': ['channels', 'jp', 'abc_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tver'
+    },
+    'ytv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'ytv.png'],
+        'fanart': ['channels', 'jp', 'ytv_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tver'
+    },
+    'nhknews': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'nhknews.png'],
+        'fanart': ['channels', 'jp', 'nhknews_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.nhknews'
+    },
+    'nhklifestyle': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'nhklifestyle.png'],
+        'fanart': ['channels', 'jp', 'nhklifestyle_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.nhklifestyle'
+    }
+}
+
+CH_REPLAY = {
+    'rts': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'rts.png'],
+        'fanart': ['channels', 'ch', 'rts_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rsi': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'rsi.png'],
+        'fanart': ['channels', 'ch', 'rsi_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'srf': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'srf.png'],
+        'fanart': ['channels', 'ch', 'srf_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'rtr': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'rtr.png'],
+        'fanart': ['channels', 'ch', 'rtr_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'swissinfo': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'swissinfo.png'],
+        'fanart': ['channels', 'ch', 'swissinfo_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.srgssr'
+    },
+    'tvm3': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'tvm3.png'],
+        'fanart': ['channels', 'ch', 'tvm3_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.tvm3'
+    },
+    'becurioustv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'becurioustv.png'],
+        'fanart': ['channels', 'ch', 'becurioustv_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.becurioustv'
+    }
+}
+
+CA_REPLAY = {
+    'tva': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ca', 'tva.png'],
+        'fanart': ['channels', 'ca', 'tva_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.tva'
+    },
+    'tv5': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ca', 'tv5.png'],
+        'fanart': ['channels', 'ca', 'tv5_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.tv5'
+    },
+    'unis': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ca', 'unis.png'],
+        'fanart': ['channels', 'ca', 'unis_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.unis'
+    },
+    'telequebec': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ca', 'telequebec.png'],
+        'fanart': ['channels', 'ca', 'telequebec_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.telequebec'
+    },
+    'icitoutv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ca', 'icitoutv.png'],
+        'fanart': ['channels', 'ca', 'icitoutv_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.icitoutv'
+    },
+    'icitele': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ca', 'icitele.png'],
+        'fanart': ['channels', 'ca', 'icitele_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.icitele'
+    }
+}
+
+US_REPLAY = {
+    'tbd': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'us', 'tbd.png'],
+        'fanart': ['channels', 'us', 'tbd_fanart.jpg'],
+        'module': 'resources.lib.channels.us.tbd'
+    },
+    'nycmedia': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'us', 'nycmedia.png'],
+        'fanart': ['channels', 'us', 'nycmedia_fanart.jpg'],
+        'module': 'resources.lib.channels.us.nycmedia'
+    },
+    'abcnews': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'us', 'abcnews.png'],
+        'fanart': ['channels', 'us', 'abcnews_fanart.jpg'],
+        'module': 'resources.lib.channels.us.abcnews'
+    }
+}
+
+WEBSITES = {
+    'allocine': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'allocine.png'],
+        'fanart': ['websites', 'allocine_fanart.jpg'],
+        'module': 'resources.lib.websites.allocine'
+    },
+    'tetesaclaques': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'tetesaclaques.png'],
+        'fanart': ['websites', 'tetesaclaques_fanart.jpg'],
+        'module': 'resources.lib.websites.tetesaclaques'
+    },
+    'taratata': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'taratata.png'],
+        'fanart': ['websites', 'taratata_fanart.jpg'],
+        'module': 'resources.lib.websites.taratata'
+    },
+    'onf': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'onf.png'],
+        'fanart': ['websites', 'onf_fanart.jpg'],
+        'module': 'resources.lib.websites.onf'
+    },
+    'nytimes': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'nytimes.png'],
+        'fanart': ['websites', 'nytimes_fanart.jpg'],
+        'module': 'resources.lib.websites.nytimes'
+    },
+    'notrehistoirech': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'notrehistoirech.png'],
+        'fanart': ['websites', 'notrehistoirech_fanart.jpg'],
+        'module': 'resources.lib.websites.notrehistoirech'
+    },
+    'noob': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'noob.png'],
+        'fanart': ['websites', 'noob_fanart.jpg'],
+        'module': 'resources.lib.websites.noob'
+    },
+    'nfb': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'nfb.png'],
+        'fanart': ['websites', 'nfb_fanart.jpg'],
+        'module': 'resources.lib.websites.nfb'
+    },
+    'ina': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'ina.png'],
+        'fanart': ['websites', 'ina_fanart.jpg'],
+        'module': 'resources.lib.websites.ina'
+    },
+    'fosdem': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'fosdem.png'],
+        'fanart': ['websites', 'fosdem_fanart.jpg'],
+        'module': 'resources.lib.websites.fosdem'
+    },
+    'elle': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'elle.png'],
+        'fanart': ['websites', 'elle_fanart.jpg'],
+        'module': 'resources.lib.websites.elle'
+    },
+    'culturepub': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'culturepub.png'],
+        'fanart': ['websites', 'culturepub_fanart.jpg'],
+        'module': 'resources.lib.websites.culturepub'
+    },
+    'autoplus': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'autoplus.png'],
+        'fanart': ['websites', 'autoplus_fanart.jpg'],
+        'module': 'resources.lib.websites.autoplus'
+    },
+    '30millionsdamis': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', '30millionsdamis.png'],
+        'fanart': ['websites', '30millionsdamis_fanart.jpg'],
+        'module': 'resources.lib.websites.30millionsdamis'
+    },
+    'marmiton': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'marmiton.png'],
+        'fanart': ['websites', 'marmiton_fanart.jpg'],
+        'module': 'resources.lib.websites.marmiton'
+    }
 }
