@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.15"
+       version="0.1.16"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,36 +30,23 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.15]
-[Fix] Taratata (need referer) (wwark)
-[Update] Noob TV - Add Descartomanciens (wwark)
-[Fix] Replay LCI (wwark)
-[Add Live TV] ViàOccitanie (wwark)
-[Fix] FranceTV - Title without label (wwark)
-[Remove] RMC Live TV (not present anymore) (wwark)
-[Improvements] RTBF Auvio (BE) Add more sub categories (wwark)
-[Fix] Replay VRT NU (BE) (wwark)
-[Fix] France TV Sport - Replay (wwark)
-[Add Channel] NRJ Hits TV (BE) (wwark)
-[Add Live TV - Channel] Ouatch TV (wwark)
-[Add Live TV] Canal 10 (wwark)
-[Add/Remove Channels] Add RTL 2 / Remove Bruce, Crazy Kitchen, Home Time, Sixième Style (wwark)
-[Add Live TV] Fun Radio and RTL 2 (wwark)
-[Add Channel] RTL Sport (BE) (wwark)
-[Fix] Télé MB - Live TV (BE) (wwark)
-[Rename] Numero 23 to RMC Story (wwark)
-[Update] PNG RMC Decouverte (wwark)
-[Improvements] Add Search button for Tivi5MondePlus (git issue#81) (wwark)
-[Fix] BVN Live TV (Forage)
-[Remove] Ici Télévision - Replay (No more Replay on the website) (wwark)
-[Add Channel] La Chaîne Météo (wwark)
-[Add Live TV] التلفزة التونسية الوطنية 1 and التلفزة التونسية الوطنية 2 (TN) (wwark)
-[Remove] Xtra (mytf1) (wwark)
-[Temporary Fix] dailymotion videos stream (wwark)
-[Fix] Some sport videos requested HDFAUTH_URL (France TV / France TV Sport) (wwark)
-[Fix] Euronews Live TV (wwark)
-[Fix] Gulli Live TV (wwark)
-[Remove] Yes TV - No more live tv (CA) (wwark)
+[Version 0.1.16]
+[Fix] Ici Télé - Replay (wwark)
+[Improvements] Quest OD - Add notification for DRM protected video / Website Changes (wwark)
+[Fix] France TV (Sport) - Some replays (wwark)
+[Fix] La chaine météo - Replay (wwark)
+[Fix] Elle.fr - Website (wwark)
+[Fix] Vimeo Videos / Add Notification for Dailymotion Video (wwark)
+[Add Channel] ICI TOU.TV (CA) (wwark)
+[Fix] Paramount Channel (ES) - Live TV (wwark)
+[Fix] Arte.tv - Replay (wwark)
+[Remove] Melodie TV (wwark) - Paid content (wwark)
+[Remove] Dave, Drama, Really, ... - DRM Content - Present in Test DRM Plugin (wwark)
+[Fix] Autoplus website (wwark)
+[Fix] Canal + Replay (wwark)
+[Fix/Remove] TéléMB - Fix Live TV - Remove Replay (BE) (wwark)
+[Improvements] RTBF Auvio - Live TV (wwark, thanks to rickybiscus)
+[Fix] GameOne (Replay), MTV FR (Replay), Paramount Channel ES/IT (Live TV) (wwark)
     </news>
     <assets>
       <icon>icon.png</icon>

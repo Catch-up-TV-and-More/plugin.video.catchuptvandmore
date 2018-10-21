@@ -31,11 +31,11 @@ from resources.lib import common
 
 DESIRED_LANGUAGE = common.PLUGIN.get_setting('paramountchannel.language')
 
-URL_ROOT = 'http://www.paramountchannel.%s' % DESIRED_LANGUAGE.lower()
+URL_LIVE_ES = 'http://www.paramountnetwork.es/en-directo/4ypes1'
 
-URL_LIVE_ES = URL_ROOT + '/programacion/en-directo'
+# URL_LIVE_US = 'https://www.paramountnetwork.com/live-tv/oeojy2'
 
-URL_LIVE_IT = URL_ROOT + '/tv/diretta'
+URL_LIVE_IT = 'http://www.paramountchannel.it/tv/diretta'
 
 URL_LIVE_URI = 'http://media.mtvnservices.com/pmt/e1/access/index.html?uri=%s&configtype=edge'
 
@@ -77,7 +77,12 @@ def get_video_url(params):
             video_html = utils.get_webcontent(
                 URL_LIVE_ES)
             video_uri = re.compile(
-                r'data-mtv-uri="(.*?)"').findall(video_html)[0]
+                r'\"config"\:\{\"uri\"\:\"(.*?)\"').findall(video_html)[0]
+        # elif DESIRED_LANGUAGE.lower() == 'us':
+        #     video_html = utils.get_webcontent(
+        #         URL_LIVE_US)
+        #     video_uri = re.compile(
+        #         r'\"config"\:\{\"uri\"\:\"(.*?)\"').findall(video_html)[0]
         elif DESIRED_LANGUAGE.lower() == 'it':
             video_html = utils.get_webcontent(
                 URL_LIVE_IT)
@@ -87,6 +92,10 @@ def get_video_url(params):
             video_html_2 = utils.get_webcontent(
                 URL_LIVE_URI % video_uri_1, specific_headers=headers)
             video_uri_jsonparser = json.loads(video_html_2)
+            if 'items' not in video_uri_jsonparser["feed"]:
+                utils.send_notification(
+                    common.ADDON.get_localized_string(30716))
+                return None
             video_uri = video_uri_jsonparser["feed"]["items"][0]["guid"]
         else:
             return ''

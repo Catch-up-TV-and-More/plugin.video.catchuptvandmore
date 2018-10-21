@@ -591,7 +591,11 @@ def get_video_url(params):
             iframe_player_soup = video_html_soup.find(
                 'div',
                 class_='iframe_player')
-            video_id = iframe_player_soup['data-watid'].encode('utf-8')
+            if iframe_player_soup is not None:
+                video_id = iframe_player_soup['data-watid']
+            else:
+                video_id = re.compile(
+                    r'www\.tf1\.fr\/embedplayer\/(.*?)\"').findall(video_html)[0]
 
         url_json = URL_VIDEO_STREAM % video_id
         htlm_json = utils.get_webcontent(url_json, random_ua=True)

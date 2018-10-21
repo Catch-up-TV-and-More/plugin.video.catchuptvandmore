@@ -13,10 +13,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Angleterre — *United Kingdom*
 ##### TV
 - Blaze *(Replay, Live TV)*
-- Dave *(Replay)*
-- Drama *(Replay)*
-- Really *(Replay)*
-- Yesterday *(Replay)*
 - Sky News *(Replay, Live TV)*
 - STV *(Live TV)*
 - Quest OD *(Replay)*
@@ -57,6 +53,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Télé-Québec *(Replay, Live TV)*
 - TVA *(Replay, Live TV)*
 - ICI Télé *(Replay, Live TV)*
+- ICI Tou.TV *(Replay)*
 
 ##### TV Communauté anglaise — *English Community TV*
 - NTV *(Live TV)*
@@ -132,7 +129,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Gong *(Replay, Live TV)*
 - BFM Paris *(Replay, Live TV)*
 - Onzéo *(Replay)*
-- Melody TV *(Live TV)*
 - Polar+ *(Replay)*
 - Virgin Radio TV *(Live TV)*
 - KTO *(Replay, Live TV)*
@@ -261,9 +257,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Taratata <http://mytaratata.com/>
 - Noob TV <http://noob-tv.com/>
 - Culturepub <http://www.culturepub.fr/>
-- Auto Plus <https://video.autoplus.fr>
-- 30 Millions d'Amis <http://www.30millionsdamis.fr>
-- Elle <http://videos.elle.fr>
+- Auto Plus <https://video.autoplus.fr/>
+- 30 Millions d'Amis <http://www.30millionsdamis.fr/>
+- Elle <http://www.elle.fr/>
 - Ina <http://www.ina.fr/>
 
 ### Suisse — *Switzerland*

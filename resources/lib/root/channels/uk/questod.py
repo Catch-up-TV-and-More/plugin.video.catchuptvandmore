@@ -20,7 +20,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-import ast
 import json
 from resources.lib import utils
 from resources.lib import common
@@ -30,7 +29,7 @@ from resources.lib import common
 
 URL_ROOT = 'https://www.questod.co.uk'
 
-URL_SHOWS = URL_ROOT + '/api/shows/%s/?limit=12&page=%s'
+URL_SHOWS = URL_ROOT + '/api/shows/%s'
 # mode, page
 
 URL_SHOWS_AZ = URL_ROOT + '/api/shows%s'
@@ -40,12 +39,13 @@ URL_VIDEOS = URL_ROOT + '/api/show-detail/%s'
 # showId
 
 URL_STREAM = URL_ROOT + '/api/video-playback/%s'
-# videoId
+# path
 
 SHOW_MODE = {
     'FEATURED': 'featured',
     'MOST POPULAR': 'most-popular',
-    'NEW': 'new'
+    'NEW': 'new',
+    'LEAVING SOON': 'leaving-soon'
 }
 
 SHOW_MODE_AZ = {
@@ -70,8 +70,6 @@ def channel_entry(params):
 def list_shows(params):
     """Build shows listing"""
     shows = []
-    if 'previous_listing' in params:
-        shows = ast.literal_eval(params['previous_listing'])
 
     if params.next == 'list_shows_1':
 
@@ -83,7 +81,6 @@ def list_shows(params):
                     module_path=params.module_path,
                     module_name=params.module_name,
                     action='replay_entry',
-                    page='1',
                     show_mode_value=show_mode_value,
                     next='list_shows_2',
                     show_title=show_mode_title,
@@ -99,7 +96,6 @@ def list_shows(params):
                     module_path=params.module_path,
                     module_name=params.module_name,
                     action='replay_entry',
-                    page='1',
                     show_mode_value=show_mode_value,
                     next='list_shows_2_2',
                     show_title=show_mode_title,
@@ -110,7 +106,7 @@ def list_shows(params):
     elif params.next == 'list_shows_2':
 
         list_shows_json = utils.get_webcontent(
-            URL_SHOWS % (params.show_mode_value, params.page))
+            URL_SHOWS % params.show_mode_value)
         list_shows_jsonparser = json.loads(list_shows_json)
 
         for show_datas in list_shows_jsonparser["items"]:
@@ -133,21 +129,6 @@ def list_shows(params):
                 )
             })
 
-        # More programs...
-        shows.append({
-            'label': common.ADDON.get_localized_string(30708),
-            'url': common.PLUGIN.get_url(
-                module_path=params.module_path,
-                module_name=params.module_name,
-                action='replay_entry',
-                next='list_shows_1',
-                page=str(int(params.page) + 1),
-                show_mode_value=params.show_mode_value,
-                update_listing=True,
-                previous_listing=str(shows)
-            )
-        })
-
     elif params.next == 'list_shows_2_2':
 
         list_shows_json = utils.get_webcontent(
@@ -155,7 +136,7 @@ def list_shows(params):
         list_shows_jsonparser = json.loads(list_shows_json)
 
 
-        for show_datas_letter in list_shows_jsonparser:
+        for show_datas_letter in list_shows_jsonparser["items"]:
 
             for show_datas in show_datas_letter["items"]:
 
@@ -206,7 +187,6 @@ def list_shows(params):
             common.sp.xbmcplugin.SORT_METHOD_UNSORTED,
             common.sp.xbmcplugin.SORT_METHOD_LABEL
         ),
-        update_listing='update_listing' in params,
         category=common.get_window_title(params)
     )
 
@@ -230,7 +210,7 @@ def list_videos(params):
                     video_duration = int(str(int(video_datas["videoDuration"])/1000))
                     video_plot = video_datas["description"]
                     video_img = video_datas["image"]["src"]
-                    video_id = video_datas["id"]
+                    video_id = video_datas["path"]
 
                     info = {
                         'video': {
@@ -293,12 +273,18 @@ def get_video_url(params):
             URL_STREAM % params.video_id)
         list_stream_jsonparser = json.loads(list_stream_json)
 
-        if 'errors' in list_stream_jsonparser:
-            if list_stream_jsonparser["errors"][0]["status"] == '403':
+        if 'error' in list_stream_jsonparser:
+            if list_stream_jsonparser["error"] is not None:
+                if list_stream_jsonparser["error"]["status"] == '403':
+                    utils.send_notification(
+                        common.ADDON.get_localized_string(30713))
+                else:
+                    utils.send_notification(
+                        common.ADDON.get_localized_string(30716))
+                return None
+        if 'drmEnabled' in list_stream_jsonparser["playback"]:
+            if list_stream_jsonparser["playback"]["drmEnabled"]:
                 utils.send_notification(
-                    common.ADDON.get_localized_string(30713))
-            else:
-                utils.send_notification(
-                    common.ADDON.get_localized_string(30716))
-            return None
-        return list_stream_jsonparser["playback"]["streamUrlHls"]
+                    common.ADDON.get_localized_string(30702))
+                return None
+        return list_stream_jsonparser["playback"]["streamUrlHls"] + 'bw_start=800'

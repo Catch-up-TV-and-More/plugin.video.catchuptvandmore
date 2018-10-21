@@ -30,7 +30,7 @@ from resources.lib import common
 
 # TO DO
 
-URL_ROOT = 'https://video.autoplus.fr'
+URL_ROOT = 'https://www.autoplus.fr/video/'
 
 
 def website_entry(params):

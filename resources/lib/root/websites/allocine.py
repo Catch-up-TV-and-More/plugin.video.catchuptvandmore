@@ -831,7 +831,7 @@ def get_video_url(params):
                         video_id, False)
             # Case Vimeo
             elif 'vimeo' in url_video_resolver:
-                video_id = re.compile('player.vimeo.com/video/(.*?)"').findall(
+                video_id = re.compile('player.vimeo.com/video/(.*?)[\?\"]').findall(
                     url_video_resolver)[0]
                 if params.next == 'download_video':
                     return resolver.get_stream_vimeo(

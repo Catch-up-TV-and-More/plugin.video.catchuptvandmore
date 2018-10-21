@@ -128,7 +128,9 @@ def list_videos(params):
     for video in list_videos_parserjson["page"]["flux"]:
 
         title = video["title"]
-        image = video["image"]["large_16_9"]
+        image = ''
+        if 'image' in video:
+            image = video["image"]["large_16_9"]
         duration = 0
         if 'duration' in video:
             duration = int(video["duration"])
@@ -366,9 +368,10 @@ def get_video_url(params):
                     drm = video['drm']
 
         if drm:
-            utils.send_notification(
-                common.ADDON.get_localized_string(30702))
-            return None
+            file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_selected))
+            json_parser2 = json.loads(file_prgm2)
+            url_selected = json_parser2['url']
+            return url_selected.replace('.m3u8:', '.m4u9:')
         else:
             if 'cloudreplayfrancetv' in url_selected:
                 file_prgm2 = utils.get_webcontent(HDFAUTH_URL % (url_selected))

@@ -64,7 +64,7 @@ SKELETON = {
                 ('francetvsport', 'none'),
                 ('gong', 'none'),
                 ('bfmparis', 'none'),
-                ('melodytv', 'none'),
+                # ('melodytv', 'none'),
                 ('virginradiotv', 'none'),
                 ('kto', 'none'),
                 ('antennereunion', 'none'),
@@ -190,7 +190,7 @@ SKELETON = {
                 ('plug_rtl', 'replay_entry'),
                 ('club_rtl', 'replay_entry'),
                 ('vrt', 'replay_entry'),
-                ('telemb', 'replay_entry'),
+                # ('telemb', 'replay_entry'),
                 ('rtc', 'replay_entry'),
                 ('tvlux', 'replay_entry'),
                 ('rtl_info', 'replay_entry'),
@@ -206,7 +206,8 @@ SKELETON = {
                 ('unis', 'replay_entry'),
                 ('telequebec', 'replay_entry'),
                 ('tva', 'replay_entry'),
-                ('icitele', 'replay_entry')
+                ('icitele', 'replay_entry'),
+                ('icitoutv', 'replay_entry')
             ],
 
             ('fr', 'generic_menu'): [
@@ -299,10 +300,10 @@ SKELETON = {
 
             ('uk', 'generic_menu'): [
                 ('blaze', 'replay_entry'),
-                ('dave', 'replay_entry'),
-                ('really', 'replay_entry'),
-                ('yesterday', 'replay_entry'),
-                ('drama', 'replay_entry'),
+                # ('dave', 'replay_entry'),
+                # ('really', 'replay_entry'),
+                # ('yesterday', 'replay_entry'),
+                # ('drama', 'replay_entry'),
                 ('skynews', 'replay_entry'),
                 ('skysports', 'replay_entry'),
                 ('questod', 'replay_entry')
@@ -547,7 +548,8 @@ CHANNELS = {
     'rtl_sport': 'rtlplaybe',
     'lachainemeteo': 'lachainemeteo',
     'watania1': 'watania',
-    'watania2': 'watania'
+    'watania2': 'watania',
+    'icitoutv': 'icitoutv'
 }
 
 '''
@@ -600,6 +602,7 @@ LABELS = {
     'tva': 'TVA',
     'icitele': 'ICI Télé',
     'ntvca': 'NTV',
+    'icitoutv': 'ICI Tou.TV',
 
     # Switzerland channels / live TV
     'rts': 'RTS',

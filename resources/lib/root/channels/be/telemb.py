@@ -39,17 +39,8 @@ URL_VIDEOS = URL_ROOT + '/rss.php?id_menu=%s'
 
 URL_LIVE = URL_ROOT + '/direct'
 
-URL_STREAM_LIVE = 'https://json.dacast.com/%s'
+URL_STREAM_LIVE = 'https://telemb.fcst.tv/player/embed/%s'
 # LiveId
-
-URL_TOKEN_LIVE = 'https://services.dacast.com/token/i/%s?'
-# LiveId
-# value 'i' maybe change (https://player.dacast.com/js/player.js)
-# function fh(a, b) {
-#         b = "https://services.dacast.com/token/" + b + "/b/" + a.s + "/";
-#         a = a.b;
-#         return b += a.j ? a.o + "/" + Kd(a.a[a.b]) : Kd(a.a[a.b])
-#     }
 
 
 def channel_entry(params):
@@ -229,14 +220,9 @@ def get_video_url(params):
         
         live_html = utils.get_webcontent(URL_LIVE)
         live_id = re.compile(
-            'iframe.dacast.com\/(.*?)"').findall(live_html)[0]
+             r'telemb.fcst.tv/player/embed\/(.*?)[\?\"]').findall(live_html)[0]
         live_stream = utils.get_webcontent(
             URL_STREAM_LIVE % live_id)
-        live_stream_json = json.loads(live_stream)
-        live_token = utils.get_webcontent(
-            URL_TOKEN_LIVE % live_id)
-        live_token_json = json.loads(live_token)
-
-        url_stream = live_stream_json["hls"].encode('utf-8') + \
-            live_token_json["token"].encode('utf-8')
+        url_stream = 'https://tvl-live.l3.freecaster.net' + re.compile(
+            r'freecaster\.net(.*?)\"').findall(live_stream)[0]
     return url_stream
