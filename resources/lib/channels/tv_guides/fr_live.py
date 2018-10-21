@@ -35,7 +35,302 @@ import hmac
 import re
 import urllib
 
+
+class TeleramaXMLTVGrabber:
+    """Implements grabbing and processing functionalities required to generate XMLTV data from
+    Télérama mobile API.
+    """
+
+    CHANNELS_ID = {}  # Built on the fly
+
+    ID_CHANNELS = {
+        192: 'tf1',
+        1404: 'tf1-series-films',
+        446: 'tfx',
+        195: 'tmc',
+        112: 'lci',
+        482: 'gulli',
+        34: 'canalplus',
+        445: 'c8',
+        458: 'cstar',
+        4: 'france-2',
+        80: 'france-3',
+        78: 'france-4',
+        47: 'france-5',
+        160: 'france-o',
+        1401: 'lequipe',
+        226: 'cnews',
+        1400: 'rmcdecouverte',
+        1402: 'rmcstory',
+        1399: 'cherie25',
+        444: 'nrj12',
+        481: 'bfmtv',
+        1073: 'bfmbusiness',
+        110: 'kto',
+        234: 'lcp',
+        2111: 'franceinfo'
+    }
+
+    _API_URL = 'https://api.telerama.fr'
+    _API_USER_AGENT = 'okhttp/3.2.0'
+    _API_KEY = 'apitel-5304b49c90511'
+    _API_SECRET = 'Eufea9cuweuHeif'
+    _API_DEVICE = 'android_tablette'
+    _API_ENCODING = 'UTF-8'
+    _TELERAMA_PROGRAM_URL = 'http://www.telerama.fr'
+    _RATING_ICON_URL_TEMPLATE = 'http://television.telerama.fr/sites/tr_master/themes/tr/html/' \
+                                'images/tv/-{}.png'
+
+    _TELERAMA_DATE_FORMAT = '%Y-%m-%d'
+    _TELERAMA_TIME_FORMAT = '{} %H:%M:%S'.format(_TELERAMA_DATE_FORMAT)
+    _XMLTV_DATETIME_FORMAT = '%Y%m%d%H%M%S %z'
+    _XMLTV_DATETIME_FORMAT_PP = '%d/%m/%Y %H:%M:%S'
+
+    _MAX_PROGRAMS_PER_PAGE = 100
+
+    _TELERAMA_CATEGORIES = {
+        1: "Divertissement",
+        2: "Documentaire",
+        3: "Film",
+        4: "Jeunesse",
+        5: "Magazine",
+        6: "Musique",
+        7: "Série",
+        8: "Sport",
+        9: "Téléfilm"
+    }
+
+    # http://www.microsoft.com/typography/unicode/1252.htm
+    _WINDOWS_1252_UTF_8 = {
+        u"\x80": u"\u20AC",  # EURO SIGN
+        u"\x82": u"\u201A",  # SINGLE LOW-9 QUOTATION MARK
+        u"\x83": u"\u0192",  # LATIN SMALL LETTER F WITH HOOK
+        u"\x84": u"\u201E",  # DOUBLE LOW-9 QUOTATION MARK
+        u"\x85": u"\u2026",  # HORIZONTAL ELLIPSIS
+        u"\x86": u"\u2020",  # DAGGER
+        u"\x87": u"\u2021",  # DOUBLE DAGGER
+        u"\x88": u"\u02C6",  # MODIFIER LETTER CIRCUMFLEX ACCENT
+        u"\x89": u"\u2030",  # PER MILLE SIGN
+        u"\x8A": u"\u0160",  # LATIN CAPITAL LETTER S WITH CARON
+        u"\x8B": u"\u2039",  # SINGLE LEFT-POINTING ANGLE QUOTATION MARK
+        u"\x8C": u"\u0152",  # LATIN CAPITAL LIGATURE OE
+        u"\x8E": u"\u017D",  # LATIN CAPITAL LETTER Z WITH CARON
+        u"\x91": u"\u2018",  # LEFT SINGLE QUOTATION MARK
+        u"\x92": u"\u2019",  # RIGHT SINGLE QUOTATION MARK
+        u"\x93": u"\u201C",  # LEFT DOUBLE QUOTATION MARK
+        u"\x94": u"\u201D",  # RIGHT DOUBLE QUOTATION MARK
+        u"\x95": u"\u2022",  # BULLET
+        u"\x96": u"\u2013",  # EN DASH
+        u"\x97": u"\u2014",  # EM DASH
+        u"\x98": u"\u02DC",  # SMALL TILDE
+        u"\x99": u"\u2122",  # TRADE MARK SIGN
+        u"\x9A": u"\u0161",  # LATIN SMALL LETTER S WITH CARON
+        u"\x9B": u"\u203A",  # SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
+        u"\x9C": u"\u0153",  # LATIN SMALL LIGATURE OE
+        u"\x9E": u"\u017E",  # LATIN SMALL LETTER Z WITH CARON
+        u"\x9F": u"\u0178",  # LATIN CAPITAL LETTER Y WITH DIAERESIS
+    }
+
+    def __init__(self):
+        self.CHANNELS_ID = {v: k for k, v in self.ID_CHANNELS.iteritems()}
+
+    def _fix_xml_unicode_string(self, text):
+        """Replace in a string all Windows-1252 specific chars to UTF-8 and delete non
+        XML-compatible characters.
+        """
+        fixed_text = ''.join(
+            [self._WINDOWS_1252_UTF_8.get(c, c) for c in text])
+        fixed_text = re.sub(r'[\x00-\x08\x0b\x0E-\x1F\x7F]', '', fixed_text)
+
+        return fixed_text
+
+    def _parse_program_dict(self, program):
+        program_dict = {}
+
+        # Channel ID
+        program_dict['id_chaine'] = program['id_chaine']
+
+        # Horaire
+        program_dict['debut'] = program['horaire']['debut']
+        program_dict['fin'] = program['horaire']['fin']
+
+        # Title
+        program_dict['title'] = program['titre']
+
+        if program['titre_original']:
+            program_dict['originaltitle'] = program['titre_original']
+
+        # Sub-title
+        if program['soustitre']:
+            program_dict['soustitre'] = program['soustitre']
+
+        # Desc
+        if program['resume']:
+            program_dict['plot'] = utils.strip_tags(
+                self._fix_xml_unicode_string(program['resume']))
+
+        # Categories
+        if program['id_genre']:
+            program_dict['genre'] = self._TELERAMA_CATEGORIES.get(
+                program['id_genre'], 'Inconnue')
+
+        # Add specific category
+        if program['genre_specifique']:
+            program_dict['genre_specifique'] = program['genre_specifique']
+
+        # Icon
+        if 'vignettes' in program:
+            program_dict['thumb'] = program['vignettes']['grande']
+            program_dict['fanart'] = program['vignettes']['grande169']
+
+        # Episode/season
+        if program['serie'] and program['serie']['numero_episode']:
+            program_dict['season'] = (program['serie'].get('saison', 1) or 1) - 1
+            program_dict['episode'] = program['serie']['numero_episode'] - 1
+
+        # Video format
+        aspect = None
+        if program['flags']['est_ar16x9']:
+            aspect = '16:9'
+        elif program['flags']['est_ar4x3']:
+            aspect = '4:3'
+        if aspect is not None:
+            program_dict['aspect'] = aspect
+        if program['flags']['est_hd']:
+            program_dict['quality'] = 'HDTV'
+
+        # Audio format
+        stereo = None
+        if program['flags']['est_dolby']:
+            stereo = 'dolby'
+        elif program['flags']['est_stereoar16x9'] or program['flags']['est_stereo']:
+            stereo = 'stereo'
+        elif program['flags']['est_vm']:
+            stereo = 'bilingual'
+        if stereo is not None:
+            program_dict['audio'] = stereo
+
+        # Check whether the program was previously shown
+        if program['flags']['est_premdif'] or program['flags']['est_inedit']:
+            # program_xml.append(Element('premiere'))
+            program_dict['diffusion'] = 'Inédit'
+        elif program['flags']['est_redif']:
+            # program_xml.append(Element('previously-shown'))
+            program_dict['diffusion'] = 'Redifusion'
+        elif program['flags']['est_derdif']:
+            # program_xml.append(Element('last-chance'))
+            program_dict['diffusion'] = 'Dernière chance'
+
+        # Subtitles
+        if program['flags']['est_stm']:
+            # program_xml.append(Element('subtitles', type='deaf-signed'))
+            program_dict['subtitles'] = 'deaf-signed'
+        elif program['flags']['est_vost']:
+            # program_xml.append(Element('subtitles', type='onscreen'))
+            program_dict['subtitles'] = 'onscreen'
+
+        # Star rating
+        if program['note_telerama'] > 0:
+            program_dict['rating'] = float(program['note_telerama'] * 2)  # Pour avoir sur 10 pour Kodi
+
+        return program_dict
+
+    def _query_telerama_api(self, procedure, **query):
+        """Query the Télérama API."""
+
+        # Authentication method taken from https://github.com/zubrick/tv_grab_fr_telerama
+        updated_query = dict(query)
+        updated_query['appareil'] = self._API_DEVICE
+        signing_string = procedure + ''.join(
+            sorted([k + str(v) for k, v in updated_query.items()]))
+        signature = hmac.new(
+            self._API_SECRET.encode(),
+            signing_string.encode(),
+            hashlib.sha1).hexdigest()
+        updated_query['api_signature'] = signature
+        updated_query['api_cle'] = self._API_KEY
+
+        url = '{}{}?{}'.format(
+            self._API_URL, procedure, urllib.urlencode(updated_query))
+
+        # print('Retrieving URL %s', url)
+        return urlquick.get(
+            url,
+            headers={'User-agent': self._API_USER_AGENT},
+            max_age=-1)
+
+        '''
+        with requests.Session() as session:
+            response = session.get(
+                url, headers={'User-agent': self._API_USER_AGENT})
+            return response
+        '''
+
+    def _get_current_programs(self, channels):
+        """Get Télérama current programs for a given channel and a given day."""
+
+        # print('Getting Télérama programs on %s', date)
+
+        telerama_ids = []
+        for channel in channels:
+            if channel in self.CHANNELS_ID:
+                telerama_ids.append(self.CHANNELS_ID[channel])
+        page = 1
+        programs = []
+        while True:
+            response = self._query_telerama_api(
+                '/v1/programmes/maintenant',
+                id_chaines=','.join(str(i) for i in telerama_ids),
+                page=page,
+                nb_par_page=self._MAX_PROGRAMS_PER_PAGE
+            )
+            try:
+                data = response.json()
+                if response.status_code == 200:
+                    programs += data.get('donnees', [])
+                    page += 1
+                    # continue
+                    break  # 100 programmes c'est déjà bien, il ne devrait pas y avoir d'autres pages
+                else:
+                    data = response.json()
+                    if response.status_code == 404 and data.get('error') and \
+                       data.get('msg') == "Il n'y a pas de programmes.":
+                        # No more program page available
+                        break
+            except ValueError:
+                pass
+
+            # print('Unable to retrieve program data for date %s', str(date))
+            # response.raise_for_status()
+
+        return programs
+
+    def _get_programs_data(self, channels):
+
+        programs = {}
+        for program in self._get_current_programs(channels):
+            program_dict = self._parse_program_dict(program)
+            programs[self.ID_CHANNELS[program_dict['id_chaine']]] = program_dict
+
+        return programs
+
+
+def grab_tv_guide(channels):
+    telerama = TeleramaXMLTVGrabber()
+    programs = telerama._get_programs_data(channels)
+    return programs
+
+
+# Only for testing purpose
+if __name__ == '__main__':
+    channels = ['france2', 'm6', 'w9', 'test_channel_no_present']
+
+    programs = grab_tv_guide(channels)
+
+
 '''
+Telerama ID
+
 '13eme RUE': '2',
 '2M Monde': '340',
 '3SAT': '3',
@@ -348,323 +643,5 @@ import urllib
 'XXL': '218',
 'ZDF': '219',
 'Zee Cinéma': '527',
-'Zee TV': '526.tv.telerama.fr'
+'Zee TV': '526'
 '''
-
-
-class TeleramaXMLTVGrabber:
-    """Implements grabbing and processing functionalities required to generate XMLTV data from
-    Télérama mobile API.
-    """
-
-    CHANNELS_ID = {
-        'tf1': '192',
-        'tf1-series-films': '1404',
-        'tfx': '446',
-        'tmc': '195',
-        'lci': '112',
-        'gulli': '482',
-        'canalplus': '34',
-        'c8': '445',
-        'cstar': '458',
-        'france-2': '4',
-        'france-3': '80',
-        'france-4': '78',
-        'france-5': '47',
-        'france-o': '160',
-        'lequipe': '1401',
-        'cnews': '226',
-        'rmcdecouverte': '1400',
-        'rmcstory': '1402',
-        'cherie25': '1399',
-        'nrj12': '444',
-        'bfmbusiness': '1073',
-        'bfmtv': '481',
-        'kto': '110',
-        'lcp': '234',
-        'franceinfo': '2111'
-    }
-
-    ID_CHANNELS = {
-        192: 'tf1',
-        1404: 'tf1-series-films',
-        446: 'tfx',
-        195: 'tmc',
-        112: 'lci',
-        482: 'gulli',
-        34: 'canalplus',
-        445: 'c8',
-        458: 'cstar',
-        4: 'france-2',
-        80: 'france-3',
-        78: 'france-4',
-        47: 'france-5',
-        160: 'france-o',
-        1401: 'lequipe',
-        226: 'cnews',
-        1400: 'rmcdecouverte',
-        1402: 'rmcstory',
-        1399: 'cherie25',
-        444: 'nrj12',
-        481: 'bfmtv',
-        1073: 'bfmbusiness',
-        110: 'kto',
-        234: 'lcp',
-        2111: 'franceinfo'
-    }
-
-    _API_URL = 'https://api.telerama.fr'
-    _API_USER_AGENT = 'okhttp/3.2.0'
-    _API_KEY = 'apitel-5304b49c90511'
-    _API_SECRET = 'Eufea9cuweuHeif'
-    _API_DEVICE = 'android_tablette'
-    _API_ENCODING = 'UTF-8'
-    _TELERAMA_PROGRAM_URL = 'http://www.telerama.fr'
-    _RATING_ICON_URL_TEMPLATE = 'http://television.telerama.fr/sites/tr_master/themes/tr/html/' \
-                                'images/tv/-{}.png'
-
-    _TELERAMA_DATE_FORMAT = '%Y-%m-%d'
-    _TELERAMA_TIME_FORMAT = '{} %H:%M:%S'.format(_TELERAMA_DATE_FORMAT)
-    _XMLTV_DATETIME_FORMAT = '%Y%m%d%H%M%S %z'
-    _XMLTV_DATETIME_FORMAT_PP = '%d/%m/%Y %H:%M:%S'
-
-    _MAX_PROGRAMS_PER_PAGE = 100
-
-    _TELERAMA_CATEGORIES = {
-        1: "Divertissement",
-        2: "Documentaire",
-        3: "Film",
-        4: "Jeunesse",
-        5: "Magazine",
-        6: "Musique",
-        7: "Série",
-        8: "Sport",
-        9: "Téléfilm"
-    }
-
-    # http://www.microsoft.com/typography/unicode/1252.htm
-    _WINDOWS_1252_UTF_8 = {
-        u"\x80": u"\u20AC",  # EURO SIGN
-        u"\x82": u"\u201A",  # SINGLE LOW-9 QUOTATION MARK
-        u"\x83": u"\u0192",  # LATIN SMALL LETTER F WITH HOOK
-        u"\x84": u"\u201E",  # DOUBLE LOW-9 QUOTATION MARK
-        u"\x85": u"\u2026",  # HORIZONTAL ELLIPSIS
-        u"\x86": u"\u2020",  # DAGGER
-        u"\x87": u"\u2021",  # DOUBLE DAGGER
-        u"\x88": u"\u02C6",  # MODIFIER LETTER CIRCUMFLEX ACCENT
-        u"\x89": u"\u2030",  # PER MILLE SIGN
-        u"\x8A": u"\u0160",  # LATIN CAPITAL LETTER S WITH CARON
-        u"\x8B": u"\u2039",  # SINGLE LEFT-POINTING ANGLE QUOTATION MARK
-        u"\x8C": u"\u0152",  # LATIN CAPITAL LIGATURE OE
-        u"\x8E": u"\u017D",  # LATIN CAPITAL LETTER Z WITH CARON
-        u"\x91": u"\u2018",  # LEFT SINGLE QUOTATION MARK
-        u"\x92": u"\u2019",  # RIGHT SINGLE QUOTATION MARK
-        u"\x93": u"\u201C",  # LEFT DOUBLE QUOTATION MARK
-        u"\x94": u"\u201D",  # RIGHT DOUBLE QUOTATION MARK
-        u"\x95": u"\u2022",  # BULLET
-        u"\x96": u"\u2013",  # EN DASH
-        u"\x97": u"\u2014",  # EM DASH
-        u"\x98": u"\u02DC",  # SMALL TILDE
-        u"\x99": u"\u2122",  # TRADE MARK SIGN
-        u"\x9A": u"\u0161",  # LATIN SMALL LETTER S WITH CARON
-        u"\x9B": u"\u203A",  # SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
-        u"\x9C": u"\u0153",  # LATIN SMALL LIGATURE OE
-        u"\x9E": u"\u017E",  # LATIN SMALL LETTER Z WITH CARON
-        u"\x9F": u"\u0178",  # LATIN CAPITAL LETTER Y WITH DIAERESIS
-    }
-
-    def __init__(self):
-        pass
-
-    def _fix_xml_unicode_string(self, text):
-        """Replace in a string all Windows-1252 specific chars to UTF-8 and delete non
-        XML-compatible characters.
-        """
-        fixed_text = ''.join(
-            [self._WINDOWS_1252_UTF_8.get(c, c) for c in text])
-        fixed_text = re.sub(r'[\x00-\x08\x0b\x0E-\x1F\x7F]', '', fixed_text)
-
-        return fixed_text
-
-    def _parse_program_dict(self, program):
-        program_dict = {}
-
-        # Channel ID
-        program_dict['id_chaine'] = program['id_chaine']
-
-        # Horaire
-        program_dict['debut'] = program['horaire']['debut']
-        program_dict['fin'] = program['horaire']['fin']
-
-        # Title
-        program_dict['title'] = program['titre']
-
-        if program['titre_original']:
-            program_dict['originaltitle'] = program['titre_original']
-
-        # Sub-title
-        if program['soustitre']:
-            program_dict['soustitre'] = program['soustitre']
-
-        # Desc
-        if program['resume']:
-            program_dict['plot'] = utils.strip_tags(
-                self._fix_xml_unicode_string(program['resume']))
-
-        # Categories
-        if program['id_genre']:
-            program_dict['genre'] = self._TELERAMA_CATEGORIES.get(
-                program['id_genre'], 'Inconnue')
-
-        # Add specific category
-        if program['genre_specifique']:
-            program_dict['genre_specifique'] = program['genre_specifique']
-
-        # Icon
-        if 'vignettes' in program:
-            program_dict['thumb'] = program['vignettes']['grande']
-            program_dict['fanart'] = program['vignettes']['grande169']
-
-        # Episode/season
-        if program['serie'] and program['serie']['numero_episode']:
-            program_dict['season'] = (program['serie'].get('saison', 1) or 1) - 1
-            program_dict['episode'] = program['serie']['numero_episode'] - 1
-
-        # Video format
-        aspect = None
-        if program['flags']['est_ar16x9']:
-            aspect = '16:9'
-        elif program['flags']['est_ar4x3']:
-            aspect = '4:3'
-        if aspect is not None:
-            program_dict['aspect'] = aspect
-        if program['flags']['est_hd']:
-            program_dict['quality'] = 'HDTV'
-
-        # Audio format
-        stereo = None
-        if program['flags']['est_dolby']:
-            stereo = 'dolby'
-        elif program['flags']['est_stereoar16x9'] or program['flags']['est_stereo']:
-            stereo = 'stereo'
-        elif program['flags']['est_vm']:
-            stereo = 'bilingual'
-        if stereo is not None:
-            program_dict['audio'] = stereo
-
-        # Check whether the program was previously shown
-        if program['flags']['est_premdif'] or program['flags']['est_inedit']:
-            # program_xml.append(Element('premiere'))
-            program_dict['diffusion'] = 'Inédit'
-        elif program['flags']['est_redif']:
-            # program_xml.append(Element('previously-shown'))
-            program_dict['diffusion'] = 'Redifusion'
-        elif program['flags']['est_derdif']:
-            # program_xml.append(Element('last-chance'))
-            program_dict['diffusion'] = 'Dernière chance'
-
-        # Subtitles
-        if program['flags']['est_stm']:
-            # program_xml.append(Element('subtitles', type='deaf-signed'))
-            program_dict['subtitles'] = 'deaf-signed'
-        elif program['flags']['est_vost']:
-            # program_xml.append(Element('subtitles', type='onscreen'))
-            program_dict['subtitles'] = 'onscreen'
-
-        # Star rating
-        if program['note_telerama'] > 0:
-            program_dict['rating'] = float(program['note_telerama'] * 2)  # Pour avoir sur 10 pour Kodi
-
-        return program_dict
-
-    def _query_telerama_api(self, procedure, **query):
-        """Query the Télérama API."""
-
-        # Authentication method taken from https://github.com/zubrick/tv_grab_fr_telerama
-        updated_query = dict(query)
-        updated_query['appareil'] = self._API_DEVICE
-        signing_string = procedure + ''.join(
-            sorted([k + str(v) for k, v in updated_query.items()]))
-        signature = hmac.new(
-            self._API_SECRET.encode(),
-            signing_string.encode(),
-            hashlib.sha1).hexdigest()
-        updated_query['api_signature'] = signature
-        updated_query['api_cle'] = self._API_KEY
-
-        url = '{}{}?{}'.format(
-            self._API_URL, procedure, urllib.urlencode(updated_query))
-
-        # print('Retrieving URL %s', url)
-        return urlquick.get(
-            url,
-            headers={'User-agent': self._API_USER_AGENT},
-            max_age=-1)
-
-        '''
-        with requests.Session() as session:
-            response = session.get(
-                url, headers={'User-agent': self._API_USER_AGENT})
-            return response
-        '''
-
-    def _get_current_programs(self, channels):
-        """Get Télérama current programs for a given channel and a given day."""
-
-        # print('Getting Télérama programs on %s', date)
-
-        telerama_ids = []
-        for channel in channels:
-            if channel in self.CHANNELS_ID:
-                telerama_ids.append(self.CHANNELS_ID[channel])
-        page = 1
-        programs = []
-        while True:
-            response = self._query_telerama_api(
-                '/v1/programmes/maintenant',
-                id_chaines=','.join(str(i) for i in telerama_ids),
-                page=page,
-                nb_par_page=self._MAX_PROGRAMS_PER_PAGE
-            )
-            try:
-                data = response.json()
-                if response.status_code == 200:
-                    programs += data.get('donnees', [])
-                    page += 1
-                    # continue
-                    break  # 100 programmes c'est déjà bien, il ne devrait pas y avoir d'autres pages
-                else:
-                    data = response.json()
-                    if response.status_code == 404 and data.get('error') and \
-                       data.get('msg') == "Il n'y a pas de programmes.":
-                        # No more program page available
-                        break
-            except ValueError:
-                pass
-
-            # print('Unable to retrieve program data for date %s', str(date))
-            # response.raise_for_status()
-
-        return programs
-
-    def _get_programs_data(self, channels):
-
-        programs = {}
-        for program in self._get_current_programs(channels):
-            program_dict = self._parse_program_dict(program)
-            programs[self.ID_CHANNELS[program_dict['id_chaine']]] = program_dict
-
-        return programs
-
-
-def grab_tv_guide(channels):
-    telerama = TeleramaXMLTVGrabber()
-    programs = telerama._get_programs_data(channels)
-    return programs
-
-
-# Only for testing purpose
-if __name__ == '__main__':
-    channels = ['france2', 'm6', 'w9', 'test_channel_no_present']
-
-    programs = grab_tv_guide(channels)
