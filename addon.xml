@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.16"
+       version="0.2.0~beta0"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -30,23 +30,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.16]
-[Fix] Ici Télé - Replay (wwark)
-[Improvements] Quest OD - Add notification for DRM protected video / Website Changes (wwark)
-[Fix] France TV (Sport) - Some replays (wwark)
-[Fix] La chaine météo - Replay (wwark)
-[Fix] Elle.fr - Website (wwark)
-[Fix] Vimeo Videos / Add Notification for Dailymotion Video (wwark)
-[Add Channel] ICI TOU.TV (CA) (wwark)
-[Fix] Paramount Channel (ES) - Live TV (wwark)
-[Fix] Arte.tv - Replay (wwark)
-[Remove] Melodie TV (wwark) - Paid content (wwark)
-[Remove] Dave, Drama, Really, ... - DRM Content - Present in Test DRM Plugin (wwark)
-[Fix] Autoplus website (wwark)
-[Fix] Canal + Replay (wwark)
-[Fix/Remove] TéléMB - Fix Live TV - Remove Replay (BE) (wwark)
-[Improvements] RTBF Auvio - Live TV (wwark, thanks to rickybiscus)
-[Fix] GameOne (Replay), MTV FR (Replay), Paramount Channel ES/IT (Live TV) (wwark)
+[Version 0.2.0]
     </news>
     <assets>
       <icon>icon.png</icon>
