@@ -1209,6 +1209,12 @@ FR_REPLAY = {
         'thumb': ['channels', 'fr', 'studio-4.png'],
         'fanart': ['channels', 'fr', 'studio-4_fanart.jpg'],
         'module': 'resources.lib.channels.fr.nouvellesecritures'
+    },
+    'j_one': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'j_one.png'],
+        'fanart': ['channels', 'fr', 'j_one_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.j_one'
     }
 }
 

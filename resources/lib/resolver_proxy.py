@@ -70,6 +70,11 @@ URL_MTVNSERVICES_STREAM = 'https://media-utils.mtvnservices.com/services/' \
                           'MediaGenerator/%s?&format=json&acceptMethods=hls'
 # videoURI
 
+URL_MTVNSERVICES_STREAM_ACCOUNT = 'https://media-utils.mtvnservices.com/services/' \
+                                  'MediaGenerator/%s?&format=json&acceptMethods=hls' \
+                                  '&accountOverride=%s'
+# videoURI, accountOverride
+
 URL_FRANCETV_LIVE_PROGRAM_INFO = 'http://sivideo.webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/?idDiffusion=%s'
 # VideoId
 
@@ -231,9 +236,14 @@ def get_brightcove_video_json(
 
 # MTVN Services Part
 def get_mtvnservices_stream(
-        plugin, video_uri, download_mode=False, video_label=None):
-    json_video_stream = urlquick.get(
-        URL_MTVNSERVICES_STREAM % video_uri)
+        plugin, video_uri, account_override=None, download_mode=False, video_label=None):
+    if account_override:
+        json_video_stream = urlquick.get(
+            URL_MTVNSERVICES_STREAM_ACCOUNT % (video_uri, account_override))
+    else:
+        json_video_stream = urlquick.get(
+            URL_MTVNSERVICES_STREAM % video_uri)
+
     json_video_stream_parser = json.loads(json_video_stream.text)
     if 'rendition' not in json_video_stream_parser["package"]["video"]["item"][0]:
         plugin.notify('ERROR', plugin.localize(30716))

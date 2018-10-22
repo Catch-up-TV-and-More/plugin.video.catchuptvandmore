@@ -285,6 +285,7 @@ LABELS = {
     'rtl2': 'RTL 2',
     'lachainemeteo': 'La Chaîne Météo',
     'mb': 'M6 Boutique',
+    'j_one': 'J-One',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

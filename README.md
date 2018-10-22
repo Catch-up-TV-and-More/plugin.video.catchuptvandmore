@@ -139,6 +139,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Fun Radio *(Replay, Live TV)*
 - RTL 2 *(Replay, Live TV)*
 - La Chaîne Météo *(Replay)*
+- J-One *(Replay)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*

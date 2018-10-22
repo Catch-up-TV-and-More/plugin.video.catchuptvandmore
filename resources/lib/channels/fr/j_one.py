@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2018  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -40,10 +40,10 @@ import urlquick
 # ....
 
 
-URL_ROOT = 'http://www.gameone.net'
+URL_ROOT = 'http://www.j-one.com'
 # ChannelName
 
-URL_VIDEOS = URL_ROOT + '/dernieres-videos/%s'
+URL_VIDEOS = URL_ROOT + '/category/videos/page/%s/'
 # PageId
 
 
@@ -78,16 +78,20 @@ def list_videos(plugin, item_id, page):
     resp = urlquick.get(URL_VIDEOS % page)
     root_soup = bs(resp.text, 'html.parser')
     list_videos_datas = root_soup.find_all(
-        'div', class_='thumbnail singlebox')
+        'article', class_=re.compile('item-list'))
 
     for video_datas in list_videos_datas:
-        video_title = video_datas.find('h3').find('span').text
+        video_title = video_datas.find('h2').text
         video_image = video_datas.find('img').get('src')
-        video_url = URL_ROOT + video_datas.find('a').get('href')
+        video_plot = ''
+        if video_datas.find('p'):
+            video_plot = video_datas.find('p').text
+        video_url = video_datas.find('a').get('href')
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
+        item.info['plot'] = video_plot
 
         item.context.script(
             get_video_url,
@@ -117,6 +121,8 @@ def get_video_url(
         headers={'User-Agent': web_utils.get_random_ua},
         max_age=-1)
     video_uri = re.compile(
-        r'data-mtv-uri="(.*?)"').findall(resp.text)[0]
+        r'uri\: \'(.*?)\'').findall(resp.text)[0]
+    account_override = 'intl.mtvi.com'
+    print 'video_uri value ' + video_uri
     return resolver_proxy.get_mtvnservices_stream(
-        plugin, video_uri, download_mode, video_label)
+        plugin, video_uri, account_override, download_mode, video_label)
