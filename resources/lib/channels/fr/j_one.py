@@ -123,6 +123,6 @@ def get_video_url(
     video_uri = re.compile(
         r'uri\: \'(.*?)\'').findall(resp.text)[0]
     account_override = 'intl.mtvi.com'
-    print 'video_uri value ' + video_uri
+
     return resolver_proxy.get_mtvnservices_stream(
         plugin, video_uri, account_override, download_mode, video_label)

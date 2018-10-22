@@ -162,6 +162,17 @@ def list_sub_programs(plugin, item_id, next_url):
                 next_url=next_url,
                 sub_program_title=sub_program_title)
             yield item
+        else:
+            sub_program_title = json_parser["currentPage"]["displayName"]
+
+            item = Listitem()
+            item.label = sub_program_title
+            item.set_callback(
+                list_videos,
+                item_id=item_id,
+                next_url=next_url,
+                sub_program_title=sub_program_title)
+            yield item
 
 
 @Route.register
@@ -171,32 +182,60 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
     json_parser = json.loads(resp.text)
 
     for sub_program_datas in json_parser["strates"]:
-        if sub_program_title == sub_program_datas["title"]:
-            for video_datas in sub_program_datas["contents"]:
-                if 'subtitle' in video_datas:
-                    video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
-                else:
-                    video_title = video_datas['title']
-                video_image = video_datas['URLImage']
-                video_url = video_datas["onClick"]["URLMedias"]
+        if 'title' in sub_program_datas:
+            if sub_program_title == sub_program_datas["title"]:
+                for video_datas in sub_program_datas["contents"]:
+                    if 'subtitle' in video_datas:
+                        video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
+                    else:
+                        video_title = video_datas['title']
+                    video_image = video_datas['URLImage']
+                    video_url = video_datas["onClick"]["URLMedias"]
 
-                item = Listitem()
-                item.label = video_title
-                item.art['thumb'] = video_image
+                    item = Listitem()
+                    item.label = video_title
+                    item.art['thumb'] = video_image
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    next_url=video_url,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
+                    item.context.script(
+                        get_video_url,
+                        plugin.localize(LABELS['Download']),
+                        item_id=item_id,
+                        next_url=video_url,
+                        video_label=LABELS[item_id] + ' - ' + item.label,
+                        download_mode=True)
 
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    next_url=video_url)
-                yield item
+                    item.set_callback(
+                        get_video_url,
+                        item_id=item_id,
+                        next_url=video_url)
+                    yield item
+        else:
+            if sub_program_title == json_parser["currentPage"]["displayName"]:
+                for video_datas in sub_program_datas["contents"]:
+                    if 'subtitle' in video_datas:
+                        video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
+                    else:
+                        video_title = video_datas['title']
+                    video_image = video_datas['URLImage']
+                    video_url = video_datas["onClick"]["URLMedias"]
+
+                    item = Listitem()
+                    item.label = video_title
+                    item.art['thumb'] = video_image
+
+                    item.context.script(
+                        get_video_url,
+                        plugin.localize(LABELS['Download']),
+                        item_id=item_id,
+                        next_url=video_url,
+                        video_label=LABELS[item_id] + ' - ' + item.label,
+                        download_mode=True)
+
+                    item.set_callback(
+                        get_video_url,
+                        item_id=item_id,
+                        next_url=video_url)
+                    yield item
 
 
 @Resolver.register
