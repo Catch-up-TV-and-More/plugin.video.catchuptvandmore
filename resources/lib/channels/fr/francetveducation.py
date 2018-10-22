@@ -31,6 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+import resources.lib.cq_utils as cqu
 
 from bs4 import BeautifulSoup as bs
 
@@ -161,7 +162,8 @@ def list_videos(plugin, item_id, next_url, page):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            video_data_contenu=video_data_contenu)
+            video_data_contenu=video_data_contenu,
+            item_dict=cqu.item2dict(item))
         yield item
 
     yield Listitem.next_page(
@@ -172,7 +174,7 @@ def list_videos(plugin, item_id, next_url, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_data_contenu,
+        plugin, item_id, video_data_contenu, item_dict,
         download_mode=False, video_label=None):
 
     resp = urlquick.get(URL_VIDEO_DATA_EDUCATION % video_data_contenu)
@@ -180,4 +182,4 @@ def get_video_url(
         r'videos.francetv.fr\/video\/(.*?)\@'
         ).findall(resp.text)[0]
     return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, download_mode, video_label)
+        plugin, id_diffusion, item_dict, download_mode, video_label)

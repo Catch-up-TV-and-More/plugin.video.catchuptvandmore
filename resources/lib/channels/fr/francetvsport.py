@@ -31,6 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+import resources.lib.cq_utils as cqu
 
 import re
 import json
@@ -122,7 +123,8 @@ def list_videos(plugin, item_id, mode, page):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            video_url=video_url)
+            video_url=video_url,
+            item_dict=cqu.item2dict(item))
         yield item
 
     yield Listitem.next_page(
@@ -133,7 +135,7 @@ def list_videos(plugin, item_id, mode, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url)
     id_diffusion = ''
@@ -144,7 +146,7 @@ def get_video_url(
         break
 
     return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, download_mode, video_label)
+        plugin, id_diffusion, item_dict, download_mode, video_label)
 
 
 def multi_live_entry(plugin, item_id):

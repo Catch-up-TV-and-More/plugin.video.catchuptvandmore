@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta0"
+       version="0.2.0~beta01"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -32,8 +32,12 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.O~beta0]
+[Version 0.2.O]
 [Framework] Switch to CodeQuick framework
+[New] TV Guide FR
+[Add Channel] STV (UK)
+[Improvements] Allocine - Add new contents / fix thumb in certain cases
+[Improvements] FranceTV - Add subtitle for Replay
     </news>
     <assets>
       <icon>icon.png</icon>

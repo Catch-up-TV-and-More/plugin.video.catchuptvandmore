@@ -31,6 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+import resources.lib.cq_utils as cqu
 
 import json
 import time
@@ -223,7 +224,8 @@ def list_videos_last(plugin, item_id, page=1):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            id_diffusion=id_diffusion)
+            id_diffusion=id_diffusion,
+            item_dict=cqu.item2dict(item))
         yield item
 
     # More videos...
@@ -285,7 +287,8 @@ def list_videos(plugin, item_id, program_part_url, page=0):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            id_diffusion=id_diffusion)
+            id_diffusion=id_diffusion,
+            item_dict=cqu.item2dict(item))
         yield item
 
     # More videos...
@@ -384,7 +387,8 @@ def list_videos_search(plugin, item_id, search_query, page=0):
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
-                id_yatta=id_yatta)
+                id_yatta=id_yatta,
+                item_dict=cqu.item2dict(item))
             yield item
         page = page + 1
 
@@ -400,7 +404,7 @@ def list_videos_search(plugin, item_id, search_query, page=0):
 @Resolver.register
 def get_video_url(
         plugin, item_id, id_diffusion=None,
-        id_yatta=None, download_mode=False, video_label=None):
+        id_yatta=None, item_dict=None, download_mode=False, video_label=None):
 
     if id_yatta is not None:
         url_yatta_video = 'standard/publish/contents/%s' % id_yatta
@@ -412,7 +416,7 @@ def get_video_url(
                 break
 
     return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, download_mode, video_label)
+        plugin, id_diffusion, item_dict, download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict):

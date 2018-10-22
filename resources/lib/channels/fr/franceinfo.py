@@ -32,6 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
+import resources.lib.cq_utils as cqu
 
 
 import json
@@ -194,7 +195,8 @@ def list_videos(plugin, item_id, next_url, page):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            video_url=video_url)
+            video_url=video_url,
+            item_dict=cqu.item2dict(item))
         yield item
 
     if at_least_one_item:
@@ -209,7 +211,7 @@ def list_videos(plugin, item_id, next_url, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url)
     json_parser = json.loads(resp.text)
@@ -231,7 +233,7 @@ def get_video_url(
             return media['sourceUrl']
     if method == 'id_diffusion':
         return resolver_proxy.get_francetv_video_stream(
-            plugin, id_diffusion, download_mode, video_label)
+            plugin, id_diffusion, item_dict, download_mode, video_label)
     elif method == 'stream_videos':
         url_hd = ''
         url_default = ''

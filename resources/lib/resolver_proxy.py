@@ -25,7 +25,7 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-from codequick import Script
+from codequick import Script, Listitem
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
@@ -248,7 +248,7 @@ def get_mtvnservices_stream(
 # FranceTV Part
 # FranceTV, FranceTV Sport, France Info, ...
 def get_francetv_video_stream(
-        plugin, id_diffusion, download_mode=False, video_label=None):
+        plugin, id_diffusion, item_dict=None, download_mode=False, video_label=None):
 
     resp = urlquick.get(
         URL_FRANCETV_LIVE_PROGRAM_INFO % id_diffusion,
@@ -258,6 +258,13 @@ def get_francetv_video_stream(
     if 'videos' not in json_parser:
         plugin.notify('ERROR', plugin.localize(30716))
         return False
+
+    subtitles = []
+    if json_parser['subtitles']:
+        subtitles_list = json_parser['subtitles']
+        for subtitle in subtitles_list:
+            if subtitle['format'] == 'vtt':
+                subtitles.append(subtitle['url'])
 
     url_selected = ''
 
@@ -305,7 +312,6 @@ def get_francetv_video_stream(
                     url_selected = video['url']
                     drm = video['drm']
 
-    final_video_url = url_selected
     if drm:
         file_prgm2 = urlquick.get(
             URL_FRANCETV_HDFAUTH_URL % (url_selected),
@@ -313,20 +319,33 @@ def get_francetv_video_stream(
             max_age=-1)
         json_parser3 = json.loads(file_prgm2.text)
         url_selected = json_parser3['url']
-        final_video_url = url_selected.replace('.m3u8:', '.m4u9:')
-    else:
-        if 'cloudreplayfrancetv' in url_selected:
-            file_prgm2 = urlquick.get(
-                URL_FRANCETV_HDFAUTH_URL % (url_selected),
-                headers={'User-Agent': web_utils.get_random_ua},
-                max_age=-1)
-            json_parser3 = json.loads(file_prgm2.text)
-            url_selected = json_parser3['url']
-        final_video_url = url_selected
+        url_selected = url_selected.replace('.m3u8:', '.m4u9:')
+
+    if 'cloudreplayfrancetv' in url_selected:
+        file_prgm2 = urlquick.get(
+            URL_FRANCETV_HDFAUTH_URL % (url_selected),
+            headers={'User-Agent': web_utils.get_random_ua},
+            max_age=-1)
+        json_parser3 = json.loads(file_prgm2.text)
+        url_selected = json_parser3['url']
+        if drm:
+            url_selected = url_selected.replace('.m3u8:', '.m4u9:')
+
+    final_video_url = url_selected
 
     if download_mode:
         return download.download_video(final_video_url, video_label)
-    return final_video_url
+
+    if len(subtitles) > 0:
+        item = Listitem()
+        item.path = final_video_url
+        item.listitem.setSubtitles(subtitles)
+        item.label = item_dict['label']
+        item.info.update(item_dict['info'])
+        item.art.update(item_dict['art'])
+        return item
+    else:
+        return final_video_url
 
 
 def get_francetv_live_stream(plugin, live_id):
