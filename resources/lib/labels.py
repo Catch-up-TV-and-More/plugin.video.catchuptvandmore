@@ -279,13 +279,16 @@ LABELS = {
     'culturebox': 'Culturebox (francetv)',
     'kto': 'KTO',
     'antennereunion': 'Antenne Réunion',
-    'viaoccitanie': 'ViàOccitanie',
+    'viaoccitanie': 'viàOccitanie',
     'ouatchtv': 'Ouatch TV',
     'canal10': 'Canal 10',
     'rtl2': 'RTL 2',
     'lachainemeteo': 'La Chaîne Météo',
     'mb': 'M6 Boutique',
     'j_one': 'J-One',
+    'viaatv': 'viàATV',
+    'viagrandparis': 'viàGrandParis',
+    'via93': 'vià93',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

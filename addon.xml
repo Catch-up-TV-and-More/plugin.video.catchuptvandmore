@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta01"
+       version="0.2.0~beta02"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -36,9 +36,10 @@
 [Framework] Switch to CodeQuick framework
 [New] TV Guide FR
 [Add Channel] STV (UK)
-[Improvements] Allocine - Add new contents / fix thumb in certain cases
-[Improvements] FranceTV - Add subtitle for Replay
+[Improvements] Allocine - Add new contents / fix thumb in certain cases (FR)
+[Improvements] FranceTV - Add subtitle for Replay (FR)
 [Add Channel] J-One (FR)
+[Add Live TV] viàATV, vià93 et viàGrandParis (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -553,7 +553,7 @@
             <setting label="Antenne Réunion" type="bool" id="antennereunion" default="true" visible="eq(-129,true)"/>
             <setting label="" type="number" visible="false" id="antennereunion.order" default="65"/>
 
-            <setting label="ViàOccitanie" type="bool" id="viaoccitanie" default="true" visible="eq(-131,true)"/>
+            <setting label="viàOccitanie" type="bool" id="viaoccitanie" default="true" visible="eq(-131,true)"/>
             <setting label="" type="number" visible="false" id="viaoccitanie.order" default="66"/>
 
             <setting label="Ouatch TV" type="bool" id="ouatchtv" default="true" visible="eq(-133,true)"/>
@@ -570,6 +570,15 @@
 
             <setting label="J-One" type="bool" id="j_one" default="true" visible="eq(-141,true)"/>
             <setting label="" type="number" visible="false" id="j_one.order" default="71"/>
+
+            <setting label="viàATV" type="bool" id="viaatv" default="true" visible="eq(-143,true)"/>
+            <setting label="" type="number" visible="false" id="viaatv.order" default="72"/>
+
+            <setting label="viàGrandParis" type="bool" id="viagrandparis" default="true" visible="eq(-145,true)"/>
+            <setting label="" type="number" visible="false" id="viagrandparis.order" default="73"/>
+
+            <setting label="vià93" type="bool" id="via93" default="true" visible="eq(-147,true)"/>
+            <setting label="" type="number" visible="false" id="via93.order" default="74"/>
         <!-- France -->
 
 

@@ -185,7 +185,7 @@ FR_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'fr', 'viaoccitanie.png'],
         'fanart': ['channels', 'fr', 'viaoccitanie_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.viaoccitanie'
+        'module': 'resources.lib.channels.fr.via'
     },
     'lci': {
         'callback': 'live_bridge',
@@ -366,6 +366,24 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'france3regions.png'],
         'fanart': ['channels', 'fr', 'france3regions_fanart.jpg'],
         'module': 'resources.lib.channels.fr.france3regions'
+    },
+    'viaatv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'viaatv.png'],
+        'fanart': ['channels', 'fr', 'viaatv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
+    },
+    'viagrandparis': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'viagrandparis.png'],
+        'fanart': ['channels', 'fr', 'viagrandparis_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
+    },
+    'via93': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'via93.png'],
+        'fanart': ['channels', 'fr', 'via93_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
     }
 }
 

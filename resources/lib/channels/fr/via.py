@@ -29,6 +29,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+from resources.lib import resolver_proxy
 
 from bs4 import BeautifulSoup as bs
 
@@ -40,12 +41,16 @@ import urlquick
 TODO Add Replay
 '''
 
-URL_ROOT = 'https://viaoccitanie.tv'
+URL_ROOT = 'https://%s.tv'
 
 URL_LIVE = URL_ROOT + '/direct-tv/'
 
+URL_LIVE_VIA93 =  URL_ROOT + '/le-direct/'
+
 URL_STREAM = 'https://player.myvideoplace.tv/ajax_actions.php'
 
+URL_STREAM_INFOMANIAK = 'https://livevideo.infomaniak.com/player_config/%s.json'
+# player_id
 
 def live_entry(plugin, item_id, item_dict):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
@@ -54,22 +59,40 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    live_html = urlquick.get(
-        URL_LIVE,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    if item_id == 'via93':
+        live_html = urlquick.get(
+            URL_LIVE_VIA93 % item_id,
+            headers={'User-Agent': web_utils.get_random_ua},
+            max_age=-1)
+    else:
+        live_html = urlquick.get(
+            URL_LIVE % item_id,
+            headers={'User-Agent': web_utils.get_random_ua},
+            max_age=-1)
     live_soup = bs(live_html.text, 'html.parser')
     list_lives_datas = live_soup.find_all(
         'iframe')
     live_id = ''
     for live_datas in list_lives_datas:
         src_datas = live_datas.get('src')
+        break
+
+    if 'dailymotion' in src_datas:
+        live_id = re.compile(
+            r'dailymotion.com/embed/video/(.*?)[\"\?]').findall(src_datas)[0]
+        return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
+    elif 'infomaniak' in src_datas:
+        player_id = src_datas.split('player=')[1]
+        resp2 = urlquick.get(
+            URL_STREAM_INFOMANIAK % player_id, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+        json_parser = json.loads(resp2.text)
+        return 'https://' + json_parser["sPlaylist"]
+    else:
         live_id = re.compile(
             r'v=(.*?)\&').findall(src_datas)[0]
-        break
-    stream_json = urlquick.post(
-        URL_STREAM,
-        data={'action': 'video_info', 'refvideo': live_id},
-        headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-    stream_jsonparser = json.loads(stream_json.text)
-    return stream_jsonparser["data"]["bitrates"]["hls"]
+        stream_json = urlquick.post(
+            URL_STREAM,
+            data={'action': 'video_info', 'refvideo': live_id},
+            headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+        stream_jsonparser = json.loads(stream_json.text)
+        return stream_jsonparser["data"]["bitrates"]["hls"]
