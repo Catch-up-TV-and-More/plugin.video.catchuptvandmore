@@ -165,6 +165,8 @@ LABELS = {
     'drm_notification': 30702,
     'choose_video_quality': 30709,
     'No videos found': 30718,
+    'Inputstream Adaptive is not enable': 30719,
+    'Kodi 17.6 or > is required': 30720,
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio',
@@ -372,6 +374,7 @@ LABELS = {
     'nova': 'Nova',
     'mega': 'Mega',
     'atreseries': 'Atreseries',
+    'atresplayer': 'Atresplayer',
 
     # Tunisia channels / live TV
     'watania1': 'التلفزة التونسية الوطنية 1',

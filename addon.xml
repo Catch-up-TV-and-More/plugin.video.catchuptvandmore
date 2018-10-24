@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta02"
+       version="0.2.0~beta03"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -40,6 +40,7 @@
 [Improvements] FranceTV - Add subtitle for Replay (FR)
 [Add Channel] J-One (FR)
 [Add Live TV] viàATV, vià93 et viàGrandParis (FR)
+[Add Channel] Atresplayer (ES) - Kodi 17.6 and inputstream.adaptive "enable" are required
     </news>
     <assets>
       <icon>icon.png</icon>

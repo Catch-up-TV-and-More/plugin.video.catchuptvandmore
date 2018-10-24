@@ -79,7 +79,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     if 'dailymotion' in src_datas:
         live_id = re.compile(
-            r'dailymotion.com/embed/video/(.*?)[\"\?]').findall(src_datas)[0]
+            r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(src_datas)[0]
         return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
     elif 'infomaniak' in src_datas:
         player_id = src_datas.split('player=')[1]

@@ -740,6 +740,9 @@
 
             <setting label="Atreseries" type="bool" id="atreseries" default="true" visible="eq(-27,true)"/>
             <setting label="" type="number" visible="false" id="atreseries.order" default="14"/>
+
+            <setting label="Atresplayer" type="bool" id="atresplayer" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="atresplayer.order" default="15"/>
         <!-- Spain -->
 
         <!-- Tunisia -->

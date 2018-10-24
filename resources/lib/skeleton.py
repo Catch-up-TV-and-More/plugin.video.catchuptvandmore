@@ -134,6 +134,10 @@ REPLAY = {
     'us_replay': {
         'callback': 'generic_menu',
         'thumb': ['channels', 'us.png']
+    },
+    'es_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'es.png']
     }
 }
 
@@ -1604,6 +1608,15 @@ US_REPLAY = {
         'thumb': ['channels', 'us', 'abcnews.png'],
         'fanart': ['channels', 'us', 'abcnews_fanart.jpg'],
         'module': 'resources.lib.channels.us.abcnews'
+    }
+}
+
+ES_REPLAY = {
+    'atresplayer': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'es', 'atresplayer.png'],
+        'fanart': ['channels', 'es', 'atresplayer_fanart.jpg'],
+        'module': 'resources.lib.channels.es.atresplayer'
     }
 }
 

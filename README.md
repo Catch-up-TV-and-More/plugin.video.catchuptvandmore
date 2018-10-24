@@ -74,6 +74,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Nova *(Live TV)*
 - Mega *(Live TV)*
 - Atreseries *(Live TV)*
+- Atresplayer *(Replay)* - *(Kodi 17.6 and inputstream.adaptive "enable" are required)*
 
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV
