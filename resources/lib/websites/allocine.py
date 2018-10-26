@@ -681,7 +681,7 @@ def list_videos_news_videos(plugin, item_id, category_url, page):
 
 @Resolver.register
 def get_video_url_news_videos(
-        plugin, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url)
     root_soup = bs(resp.text, 'html.parser')

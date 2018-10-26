@@ -320,6 +320,14 @@ msgctxt "#30247"
 msgid "RTLplay Password"
 msgstr ""
 
+msgctxt "#30248"
+msgid "Atresplayer Login"
+msgstr ""
+
+msgctxt "#30249"
+msgid "Atresplayer Password"
+msgstr ""
+
 # Reserved space for other tab/category in settins (from 30260 to 30339)
 
 
@@ -539,5 +547,5 @@ msgid "Inputstream Adaptive not enable"
 msgstr ""
 
 msgctxt "#30720"
-msgid "Kodi 17.6 ou ">" est requis"
+msgid "Kodi 17.6 or > is required"
 msgstr ""
