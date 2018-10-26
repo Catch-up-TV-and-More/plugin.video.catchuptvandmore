@@ -349,6 +349,10 @@ def get_video_url(
         max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
+    if 'error_desc' in json_parser:
+        plugin.notify('ERROR', plugin.localize(30716))
+        return False
+
     # Check DRM in the m3u8 file
     manifest = urlquick.get(
         json_parser["hls"],
