@@ -209,8 +209,27 @@
             <setting label="Quest OD" type="bool" id="questod" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="questod.order" default="9"/>
 
-            <setting label="Heart TV" type="bool" id="hearttv" default="true" visible="eq(-19,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Heart TV" type="bool" id="hearttv" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="hearttv.order" default="10"/>
+
+            <setting label="Kerrang" type="bool" id="kerrang" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="kerrang.order" default="11"/>
+
+            <setting label="Magic" type="bool" id="magic" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="magic.order" default="12"/>
+
+            <setting label="Kiss" type="bool" id="kiss" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="kiss.order" default="13"/>
+
+            <setting label="The Box" type="bool" id="the-box" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="the-box.order" default="14"/>
+
+            <setting label="Box Hits" type="bool" id="box-hits" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="box-hits.order" default="15"/>
+
+            <setting label="Box Upfront" type="bool" id="box-upfront" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="box-upfront.order" default="16"/>
         <!-- United Kingdom -->
 
 

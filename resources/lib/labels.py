@@ -320,6 +320,12 @@ LABELS = {
     'hearttv': 'Heart TV',
     'questred': 'Quest RED',
     'questtv': 'Quest TV',
+    'kerrang': 'Kerrang',
+    'magic': 'Magic',
+    'kiss': 'Kiss',
+    'the-box': 'The Box',
+    'box-upfront': 'Box Upfront',
+    'box-hits': 'Box Hits',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',

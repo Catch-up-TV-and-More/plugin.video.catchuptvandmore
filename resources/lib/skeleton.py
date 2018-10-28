@@ -653,12 +653,12 @@ JP_LIVE = {
 }
 
 UK_LIVE = {
-    'hearttv': {
-        'callback': 'live_bridge',
-        'thumb': ['channels', 'uk', 'hearttv.png'],
-        'fanart': ['channels', 'uk', 'hearttv_fanart.jpg'],
-        'module': 'resources.lib.channels.uk.hearttv'
-    },
+    # 'hearttv': {
+    #     'callback': 'live_bridge',
+    #     'thumb': ['channels', 'uk', 'hearttv.png'],
+    #     'fanart': ['channels', 'uk', 'hearttv_fanart.jpg'],
+    #     'module': 'resources.lib.channels.uk.hearttv'
+    # },
     'blaze': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'uk', 'blaze.png'],
@@ -676,6 +676,42 @@ UK_LIVE = {
         'thumb': ['channels', 'uk', 'stv.png'],
         'fanart': ['channels', 'uk', 'stv_fanart.jpg'],
         'module': 'resources.lib.channels.uk.stv'
+    },
+    'kerrang': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'kerrang.png'],
+        'fanart': ['channels', 'uk', 'kerrang_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.boxplus'
+    },
+    'magic': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'magic.png'],
+        'fanart': ['channels', 'uk', 'magic_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.boxplus'
+    },
+    'kiss': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'kiss.png'],
+        'fanart': ['channels', 'uk', 'kiss_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.boxplus'
+    },
+    'the-box': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'the-box.png'],
+        'fanart': ['channels', 'uk', 'the-box_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.boxplus'
+    },
+    'box-upfront': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'box-upfront.png'],
+        'fanart': ['channels', 'uk', 'box-upfront_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.boxplus'
+    },
+    'box-hits': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'box-hits.png'],
+        'fanart': ['channels', 'uk', 'box-hits_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.boxplus'
     }
 }
 
