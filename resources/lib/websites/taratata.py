@@ -24,9 +24,11 @@ from __future__ import unicode_literals
 from codequick import Route, Resolver, Listitem, utils
 import urlquick
 
+import json
 import re
 from bs4 import BeautifulSoup as bs
 import xbmcgui
+import resources.lib.cq_utils as cqu
 
 from resources.lib.labels import LABELS
 from resources.lib import download
@@ -45,9 +47,8 @@ URL_EMBED_FTV = 'http://api-embed.webservices.francetelevisions.fr/key/%s'
 # Id Video
 # http://embed.francetv.fr/?ue=fb23d5e2c7e5c020b2e710c5fe233aea
 
-SHOW_INFO_FTV = 'http://webservices.francetelevisions.fr/tools/' \
-                'getInfosOeuvre/v2/?idDiffusion=%s'
-# idDiffusion
+SHOW_INFO_FTV = 'https://api-embed.webservices.francetelevisions.fr/v2/key/%s'
+# idEmbeded
 
 
 def website_entry(plugin, item_id):
@@ -247,6 +248,7 @@ def list_videos(plugin, item_id, category_url):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            item_dict=cqu.item2dict(item)
         )
         yield item
 
@@ -269,6 +271,7 @@ def list_videos(plugin, item_id, category_url):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            item_dict=cqu.item2dict(item)
         )
         yield item
 
@@ -306,6 +309,7 @@ def list_videos_bonus(plugin, item_id, category_url, page):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            item_dict=cqu.item2dict(item)
         )
         yield item
 
@@ -328,6 +332,7 @@ def list_videos_bonus(plugin, item_id, category_url, page):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            item_dict=cqu.item2dict(item)
         )
         yield item
 
@@ -344,7 +349,7 @@ def list_videos_bonus(plugin, item_id, category_url, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
     """Get video URL and start video player"""
     url_selected = ''
     all_datas_videos_quality = []
@@ -375,10 +380,9 @@ def get_video_url(
                 url = resolver_proxy.get_stream_youtube(plugin, video_id, False)
 
             all_datas_videos_path.append(url + '|referer=%s' % video_url)
+
         # Get link from FranceTV
         elif '#ftv-player-' in video.get('href'):
-            # Find a better solution to strip
-            all_datas_videos_quality.append(video.get_text().strip())
             # Get link
             value_ftvlayer_id = video.get('data-ftvplayer-id')
             list_streams = videos_soup.find_all(
@@ -386,9 +390,11 @@ def get_video_url(
             for stream in list_streams:
                 if stream.get('id') == value_ftvlayer_id:
                     url_id = stream.get('src')
-
-            url = plugin.extract_source(url_id)
-            all_datas_videos_path.append(url)
+            id_embeded = url_id.split('akamaihd.net/')[1]
+            json_value = urlquick.get(SHOW_INFO_FTV % id_embeded)
+            json_value_parser = json.loads(json_value.text)
+            id_diffusion = json_value_parser["video_id"]
+            return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion, item_dict, download_mode=download_mode)
 
     final_url = ''
     if len(all_datas_videos_quality) > 1:
@@ -396,7 +402,7 @@ def get_video_url(
             plugin.localize(LABELS['choose_video_quality']),
             all_datas_videos_quality)
         if seleted_item == -1:
-            return ''
+            return False
         url_selected = all_datas_videos_path[seleted_item]
         final_url = url_selected
     else:
