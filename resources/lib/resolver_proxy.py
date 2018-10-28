@@ -118,27 +118,21 @@ def get_stream_dailymotion(
     if "qualities" not in dmotion_jsonparser:
         plugin.notify('ERROR', plugin.localize(30716))
         return False
+
     if "auto" in dmotion_jsonparser["qualities"]:
-        all_datas_videos_quality.append('auto')
-        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["auto"][0]["url"])
-    if "144" in dmotion_jsonparser["qualities"]:
-        all_datas_videos_quality.append('144')
-        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["144"][1]["url"])
-    if "240" in dmotion_jsonparser["qualities"]:
-        all_datas_videos_quality.append('240')
-        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["240"][1]["url"])
-    if "380" in dmotion_jsonparser["qualities"]:
-        all_datas_videos_quality.append('380')
-        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["380"][1]["url"])
-    if "480" in dmotion_jsonparser["qualities"]:
-        all_datas_videos_quality.append('480')
-        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["480"][1]["url"])
-    if "720" in dmotion_jsonparser["qualities"]:
-        all_datas_videos_quality.append('720')
-        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["720"][1]["url"])
-    if "1080" in dmotion_jsonparser["qualities"]:
-        all_datas_videos_quality.append('1080')
-        all_datas_videos_path.append(dmotion_jsonparser["qualities"]["1080"][1]["url"])
+        root = dmotion_jsonparser["qualities"]["auto"][0]["url"].split('master.m3u8')[0]
+        list_m3u8_datas = urlquick.get(
+            dmotion_jsonparser["qualities"]["auto"][0]["url"]).text.splitlines()
+        k = 0
+        while k < len(list_m3u8_datas) - 1:
+            if 'RESOLUTION=' in list_m3u8_datas[k]:
+                all_datas_videos_quality.append(list_m3u8_datas[k].split('RESOLUTION=')[1].split(',')[0])
+                if 'http' in list_m3u8_datas[k + 1]:
+                    all_datas_videos_path.append(list_m3u8_datas[k + 1])
+                else:
+                    all_datas_videos_path.append(root + '/' + list_m3u8_datas[k + 1])
+                k = k + 2
+            k = k + 1
 
     if DESIRED_QUALITY == "DIALOG":
         selected_item = xbmcgui.Dialog().select(
@@ -156,10 +150,7 @@ def get_stream_dailymotion(
         return url_stream
 
     else:
-        if len(all_datas_videos_path) == 1:
-            return all_datas_videos_path[0]
-        else:
-            return all_datas_videos_path[1]
+        return all_datas_videos_path[0]
 
 
 # Vimeo Part
