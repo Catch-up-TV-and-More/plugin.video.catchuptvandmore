@@ -754,6 +754,9 @@
 
             <setting label="التلفزة التونسية الوطنية 2" type="bool" id="watania2" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="watania2.order" default="2"/>
+
+            <setting label="نسمة تي في" type="bool" id="nessma" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="nessma.order" default="3"/>
         <!-- Tunisia -->
 
     </category>

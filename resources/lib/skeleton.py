@@ -403,6 +403,12 @@ TN_LIVE = {
         'thumb': ['channels', 'tn', 'watania2.png'],
         'fanart': ['channels', 'tn', 'watania2_fanart.jpg'],
         'module': 'resources.lib.channels.tn.watania'
+    },
+    'nessma': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'tn', 'nessma.png'],
+        'fanart': ['channels', 'tn', 'nessma_fanart.jpg'],
+        'module': 'resources.lib.channels.tn.nessma'
     }
 }
 
@@ -1348,12 +1354,12 @@ BE_REPLAY = {
         'fanart': ['channels', 'be', 'rtc_fanart.jpg'],
         'module': 'resources.lib.channels.be.rtc'
     },
-    'telemb': {
-        'callback': 'replay_bridge',
-        'thumb': ['channels', 'be', 'telemb.png'],
-        'fanart': ['channels', 'be', 'telemb_fanart.jpg'],
-        'module': 'resources.lib.channels.be.telemb'
-    },
+    # 'telemb': {
+    #     'callback': 'replay_bridge',
+    #     'thumb': ['channels', 'be', 'telemb.png'],
+    #     'fanart': ['channels', 'be', 'telemb_fanart.jpg'],
+    #     'module': 'resources.lib.channels.be.telemb'
+    # },
     'tvlux': {
         'callback': 'replay_bridge',
         'thumb': ['channels', 'be', 'tvlux.png'],

@@ -379,6 +379,7 @@ LABELS = {
     # Tunisia channels / live TV
     'watania1': 'التلفزة التونسية الوطنية 1',
     'watania2': 'التلفزة التونسية الوطنية 2',
+    'nessma': 'نسمة تي في',
 
     # Websites
     'allocine': 'Allociné',

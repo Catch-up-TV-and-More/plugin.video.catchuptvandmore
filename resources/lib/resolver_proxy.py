@@ -119,20 +119,28 @@ def get_stream_dailymotion(
         plugin.notify('ERROR', plugin.localize(30716))
         return False
 
-    if "auto" in dmotion_jsonparser["qualities"]:
-        root = dmotion_jsonparser["qualities"]["auto"][0]["url"].split('master.m3u8')[0]
-        list_m3u8_datas = urlquick.get(
-            dmotion_jsonparser["qualities"]["auto"][0]["url"]).text.splitlines()
-        k = 0
-        while k < len(list_m3u8_datas) - 1:
-            if 'RESOLUTION=' in list_m3u8_datas[k]:
-                all_datas_videos_quality.append(list_m3u8_datas[k].split('RESOLUTION=')[1].split(',')[0])
-                if 'http' in list_m3u8_datas[k + 1]:
-                    all_datas_videos_path.append(list_m3u8_datas[k + 1])
-                else:
-                    all_datas_videos_path.append(root + '/' + list_m3u8_datas[k + 1])
-                k = k + 2
-            k = k + 1
+    i = 0
+    for quality, media_list in dmotion_jsonparser["qualities"].items():
+        i = i + 1
+
+    if i > 1:
+        if "auto" in dmotion_jsonparser["qualities"]:
+            root = dmotion_jsonparser["qualities"]["auto"][0]["url"].rsplit('/',1)[0]
+            list_m3u8_datas = urlquick.get(
+                dmotion_jsonparser["qualities"]["auto"][0]["url"]).text.splitlines()
+            k = 0
+            while k < len(list_m3u8_datas) - 1:
+                if 'RESOLUTION=' in list_m3u8_datas[k]:
+                    all_datas_videos_quality.append(list_m3u8_datas[k].split('RESOLUTION=')[1].split(',')[0])
+                    if 'http' in list_m3u8_datas[k + 1]:
+                        all_datas_videos_path.append(list_m3u8_datas[k + 1])
+                    else:
+                        all_datas_videos_path.append(root + '/' + list_m3u8_datas[k + 1])
+                k = k + 1
+    else:
+        if "auto" in dmotion_jsonparser["qualities"]:
+            all_datas_videos_quality.append('auto')
+            all_datas_videos_path.append(dmotion_jsonparser["qualities"]["auto"][0]["url"])
 
     if DESIRED_QUALITY == "DIALOG":
         selected_item = xbmcgui.Dialog().select(
