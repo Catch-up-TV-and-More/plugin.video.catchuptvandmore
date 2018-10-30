@@ -110,7 +110,7 @@ def list_videos(plugin, item_id, day_id):
         list_video_id = video_datas.find('a').get('href').rsplit('/')
         video_id = list_video_id[len(list_video_id)-1]
         video_title = ''
-        if video_datas.find('span', class_="m-section__scroll__item__bottom__title--sub").text is not None:
+        if video_datas.find('span', class_="m-section__scroll__item__bottom__title--sub").string is not None:
             video_title = video_datas.find('span', class_="m-section__scroll__item__bottom__title").text + \
                 ' - ' + video_datas.find('span', class_="m-section__scroll__item__bottom__title--sub").text
         else:
