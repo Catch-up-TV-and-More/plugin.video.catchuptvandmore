@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta05"
+       version="0.2.0~beta06"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -47,6 +47,7 @@
 [Add Live TV] نسمة تي في (TN)
 [Remove] Heart TV - Live TV (UK)
 [Add Live TV] Kerrang, Magic, Kiss, The Box, Box Hits, Box Upfront (UK)
+[Fix] BVN - Fix dash behind every video title - Thanks Forage
     </news>
     <assets>
       <icon>icon.png</icon>
