@@ -123,8 +123,8 @@ def list_sub_categories(plugin, item_id, category_url):
     """
     resp = urlquick.get(category_url)
     json_value = re.compile(
-        r'_INITIAL_STATE__ = (.*?);').findall(resp.text)[0]
-    json_parser = json.loads(json_value)
+        r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
+    json_parser = json.loads(json_value + '}')
 
     value_code = json_parser['pages']['currentCode']
     for sub_category_datas in json_parser['pages']['list'][value_code]['zones']:
@@ -171,8 +171,8 @@ def list_programs(plugin, item_id, sub_category_code_name, sub_category_url):
     """
     resp = urlquick.get(sub_category_url)
     json_value = re.compile(
-        r'_INITIAL_STATE__ = (.*?);').findall(resp.text)[0]
-    json_parser = json.loads(json_value)
+        r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
+    json_parser = json.loads(json_value + '}')
 
     value_code = json_parser['pages']['currentCode']
     for sub_category_datas in json_parser['pages']['list'][value_code]['zones']:
