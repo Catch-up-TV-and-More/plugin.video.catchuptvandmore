@@ -95,9 +95,9 @@ def list_categories(plugin, item_id):
     """
     resp = urlquick.get(URL_ROOT % DESIRED_LANGUAGE.lower())
     json_value = re.compile(
-        r'_INITIAL_STATE__ = (.*?);').findall(resp.text)[0]
+        r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
     # print 'json_value : ' + repr(json_value)
-    json_parser = json.loads(json_value)
+    json_parser = json.loads(json_value + '}')
 
     value_code = json_parser['pages']['currentCode']
     for category_datas in json_parser['pages']['list'][value_code]['zones']:
