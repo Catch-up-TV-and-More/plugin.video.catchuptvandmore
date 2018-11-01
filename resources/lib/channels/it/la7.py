@@ -49,6 +49,6 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    resp = urlquick.get(URL_LIVE)
+    resp = urlquick.get(URL_LIVE, max_age=-1)
     return re.compile(
         r'var vS \= \'(.*?)\'').findall(resp.text)[0]
