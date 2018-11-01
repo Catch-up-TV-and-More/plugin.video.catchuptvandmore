@@ -98,6 +98,10 @@ LIVE_TV = {
     'tn_live': {
         'callback': 'generic_menu',
         'thumb': ['channels', 'tn.png']
+    },
+    'it_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'it.png']
     }
 }
 
@@ -910,6 +914,15 @@ US_LIVE = {
         'thumb': ['channels', 'us', 'abcnews.png'],
         'fanart': ['channels', 'us', 'abcnews_fanart.jpg'],
         'module': 'resources.lib.channels.us.abcnews'
+    }
+}
+
+IT_LIVE = {
+    'la7': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'la7.png'],
+        'fanart': ['channels', 'it', 'la7_fanart.jpg'],
+        'module': 'resources.lib.channels.it.la7'
     }
 }
 

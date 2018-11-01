@@ -72,6 +72,8 @@ LABELS = {
     'es_live': 30059,
     'tn_replay': 30060,
     'tn_live': 30060,
+    'it_replay': 30061,
+    'it_live': 30061,
     'French channels': 30080,
     'Belgian channels': 30081,
     'Japanese channels': 30082,
@@ -83,6 +85,7 @@ LABELS = {
     'Polish channels': 30088,
     'Spanish channels': 30089,
     'Tunisia channels': 30090,
+    'Italian channels': 30091,
     'Video quality': 30150,
     'Video quality (BEST|DEFAULT|DIALOG)': 30151,
     'Contents': 30152,
@@ -386,6 +389,9 @@ LABELS = {
     'watania1': 'التلفزة التونسية الوطنية 1',
     'watania2': 'التلفزة التونسية الوطنية 2',
     'nessma': 'نسمة تي في',
+
+    # Italian channels / live TV
+    'la7': 'La7',
 
     # Websites
     'allocine': 'Allociné',

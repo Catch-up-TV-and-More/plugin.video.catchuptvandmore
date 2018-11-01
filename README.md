@@ -188,6 +188,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Afrique Media *(Replay, Live TV)*
 - Channel NewsAsia *(Replay, Live TV)*
 
+### Italie — *Italia*
+##### TV
+- La7 *(Live TV)*
+
 ### Japon — *Japan*
 ##### TV
 - 日テレ *(Replay)*

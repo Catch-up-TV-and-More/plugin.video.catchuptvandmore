@@ -59,6 +59,9 @@
             <setting label="30060" type="bool" id="tn_live" default="true"/>
             <setting label="" type="number" visible="false" id="tn_live.order" default="11"/>
 
+            <setting label="30061" type="bool" id="it_live" default="true"/>
+            <setting label="" type="number" visible="false" id="it_live.order" default="12"/>
+
         <!-- Hide catch-up TV countries -->
         <setting label="30016" type="lsep"/>
 
@@ -94,6 +97,9 @@
 
             <setting label="30060" type="bool" id="tn_replay" default="true"/>
             <setting label="" type="number" visible="false" id="tn_replay.order" default="11"/>
+
+            <setting label="30061" type="bool" id="it_replay" default="true"/>
+            <setting label="" type="number" visible="false" id="it_replay.order" default="12"/>
     </category>
     <!-- Countries-->
 
@@ -777,6 +783,14 @@
             <setting label="نسمة تي في" type="bool" id="nessma" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="nessma.order" default="3"/>
         <!-- Tunisia -->
+
+        <!-- Italia -->
+        <setting label="30091" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="it" default="true" visible="false"/>
+
+            <setting label="La7" type="bool" id="la7" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="la7.order" default="1"/>
+        <!-- Italia -->
 
     </category>
     <!-- Channels -->

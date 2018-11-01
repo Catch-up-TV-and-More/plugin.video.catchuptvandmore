@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta07"
+       version="0.2.0~beta08"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -49,6 +49,7 @@
 [Add Live TV] Kerrang, Magic, Kiss, The Box, Box Hits, Box Upfront (UK)
 [Fix] BVN - Fix dash behind every video title - Thanks Forage
 [Fix] Arte TV - Replay
+[Add Live TV] La7 (IT)
     </news>
     <assets>
       <icon>icon.png</icon>
