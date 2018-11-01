@@ -128,34 +128,28 @@ def list_videos(plugin, item_id, category_url, page):
                 int(video_duration_list[1])
 
         # get month and day on the page
-        '''
-        print 'info_video[2] value : ' + repr(info_video[2])
-        print 'str(info_video[2]) value : ' + repr(str(info_video[2]))
-        print 'utils.ensure_native_str(info_video[2]) value' + repr(utils.ensure_native_str(info_video[2]))
-        print 'utils.ensure_unicode(info_video[2]) value' + repr(utils.ensure_unicode(info_video[2], 'UTF-8'))
-        '''
-        date_list = utils.strip_tags(str(info_video[2])).split(' ')
+        try:
+            date_list = utils.strip_tags(str(info_video[2])).split(' ')
+        except:
+            pass
         day = '00'
-        mounth = '00'
+        month = '00'
         year = '2018'
         if len(date_list) > 3:
             day = date_list[2]
             try:
-                mounth = CORRECT_MONTH[date_list[3]]
+                month = CORRECT_MONTH[date_list[3]]
             except Exception:
-                mounth = '00'
+                month = '00'
             # get year ?
 
-        date = '.'.join((day, mounth, year))
-        aired = '-'.join((year, mounth, day))
+        date_value = '-'.join((year, month, day))
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_img
         item.info['duration'] = video_duration
-        item.info['year'] = year
-        item.info['date'] = date
-        item.info['aired'] = aired
+        item.info.date(date_value, '%Y-%m-%d')
 
         item.context.script(
             get_video_url,
