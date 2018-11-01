@@ -657,12 +657,6 @@ JP_LIVE = {
 }
 
 UK_LIVE = {
-    # 'hearttv': {
-    #     'callback': 'live_bridge',
-    #     'thumb': ['channels', 'uk', 'hearttv.png'],
-    #     'fanart': ['channels', 'uk', 'hearttv_fanart.jpg'],
-    #     'module': 'resources.lib.channels.uk.hearttv'
-    # },
     'blaze': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'uk', 'blaze.png'],
@@ -1403,12 +1397,12 @@ BE_REPLAY = {
         'fanart': ['channels', 'be', 'rtc_fanart.jpg'],
         'module': 'resources.lib.channels.be.rtc'
     },
-    # 'telemb': {
-    #     'callback': 'replay_bridge',
-    #     'thumb': ['channels', 'be', 'telemb.png'],
-    #     'fanart': ['channels', 'be', 'telemb_fanart.jpg'],
-    #     'module': 'resources.lib.channels.be.telemb'
-    # },
+    'telemb': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'telemb.png'],
+        'fanart': ['channels', 'be', 'telemb_fanart.jpg'],
+        'module': 'resources.lib.channels.be.telemb'
+    },
     'tvlux': {
         'callback': 'replay_bridge',
         'thumb': ['channels', 'be', 'tvlux.png'],

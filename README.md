@@ -32,7 +32,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RTL-TVI *(Replay)*
 - PLUG RTL *(Replay)*
 - CLUB RTL *(Replay)*
-- Télé MB *(Live TV)*
+- Télé MB *(Replay, Live TV)*
 - RTC Télé Liège *(Replay, Live TV)*
 - TV Lux *(Replay, Live TV)*
 - RTL INFO *(Replay)*
