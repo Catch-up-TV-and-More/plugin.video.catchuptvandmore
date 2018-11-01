@@ -41,16 +41,17 @@
 [Add Channel] J-One (FR)
 [Add Live TV] viàATV, vià93 et viàGrandParis (FR)
 [Add Channel] Atresplayer (ES) - Kodi 17.6 and inputstream.adaptive "enable" are required
-[Improvements] MYTF1 - Add notification when the video is not available
+[Improvements] MYTF1 - Add notification when the video is not available (FR)
 [Improvements] Dailymotion stream
-[Fix] Taratata - Video from FranceTV
+[Fix] Taratata - Video from FranceTV (FR)
 [Add Live TV] نسمة تي في (TN)
 [Remove] Heart TV - Live TV (UK)
 [Add Live TV] Kerrang, Magic, Kiss, The Box, Box Hits, Box Upfront (UK)
-[Fix] BVN - Fix dash behind every video title - Thanks Forage
-[Fix] Arte TV - Replay
+[Fix] BVN - Fix dash behind every video title - Thanks Forage (WO)
+[Fix] Arte TV - Replay (WO)
 [Add Live TV] La7 (IT)
 [Readd Channel] TéléMB (BE)
+[Fix] Canal+ - Fix some errors on Replay (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
