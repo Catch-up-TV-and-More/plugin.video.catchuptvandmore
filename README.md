@@ -191,6 +191,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Italie — *Italia*
 ##### TV
 - La7 *(Live TV)*
+- Rai News 24 *(Live TV)*
 
 ### Japon — *Japan*
 ##### TV

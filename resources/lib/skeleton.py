@@ -917,6 +917,12 @@ IT_LIVE = {
         'thumb': ['channels', 'it', 'la7.png'],
         'fanart': ['channels', 'it', 'la7_fanart.jpg'],
         'module': 'resources.lib.channels.it.la7'
+    },
+    'rainews24': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'rainews24.png'],
+        'fanart': ['channels', 'it', 'rainews24_fanart.jpg'],
+        'module': 'resources.lib.channels.it.rai'
     }
 }
 

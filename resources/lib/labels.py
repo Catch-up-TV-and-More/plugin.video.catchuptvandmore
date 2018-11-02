@@ -392,6 +392,7 @@ LABELS = {
 
     # Italian channels / live TV
     'la7': 'La7',
+    'rainews24': 'Rai News 24',
 
     # Websites
     'allocine': 'Allociné',

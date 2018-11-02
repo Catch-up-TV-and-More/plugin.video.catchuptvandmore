@@ -790,6 +790,9 @@
 
             <setting label="La7" type="bool" id="la7" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="la7.order" default="1"/>
+
+            <setting label="Rai News 24" type="bool" id="rainews24" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="rainews24.order" default="2"/>
         <!-- Italia -->
 
     </category>
