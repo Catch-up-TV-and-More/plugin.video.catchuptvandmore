@@ -922,7 +922,79 @@ IT_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'it', 'rainews24.png'],
         'fanart': ['channels', 'it', 'rainews24_fanart.jpg'],
-        'module': 'resources.lib.channels.it.rai'
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'rai1': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'rai1.png'],
+        'fanart': ['channels', 'it', 'rai1_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'rai2': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'rai2.png'],
+        'fanart': ['channels', 'it', 'rai2_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'rai3': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'rai3.png'],
+        'fanart': ['channels', 'it', 'rai3_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'rai4': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'rai4.png'],
+        'fanart': ['channels', 'it', 'rai4_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'rai5': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'rai5.png'],
+        'fanart': ['channels', 'it', 'rai5_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'raisportpiuhd': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'raisportpiuhd.png'],
+        'fanart': ['channels', 'it', 'raisportpiuhd_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'raimovie': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'raimovie.png'],
+        'fanart': ['channels', 'it', 'raimovie_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'raipremium': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'raipremium.png'],
+        'fanart': ['channels', 'it', 'raipremium_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'raiyoyo': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'raiyoyo.png'],
+        'fanart': ['channels', 'it', 'raiyoyo_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'raigulp': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'raigulp.png'],
+        'fanart': ['channels', 'it', 'raigulp_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'raistoria': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'raistoria.png'],
+        'fanart': ['channels', 'it', 'raistoria_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
+    },
+    'raiscuola': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'it', 'raiscuola.png'],
+        'fanart': ['channels', 'it', 'raiscuola_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
     }
 }
 

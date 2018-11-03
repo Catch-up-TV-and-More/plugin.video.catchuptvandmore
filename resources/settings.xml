@@ -793,6 +793,42 @@
 
             <setting label="Rai News 24" type="bool" id="rainews24" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="rainews24.order" default="2"/>
+
+            <setting label="Rai 1" type="bool" id="rai1" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="rai1.order" default="3"/>
+
+            <setting label="Rai 2" type="bool" id="rai2" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="rai2.order" default="4"/>
+
+            <setting label="Rai 3" type="bool" id="rai3" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="rai3.order" default="5"/>
+
+            <setting label="Rai 4" type="bool" id="rai4" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="rai4.order" default="6"/>
+
+            <setting label="Rai 5" type="bool" id="rai5" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="rai5.order" default="7"/>
+
+            <setting label="Rai Sport" type="bool" id="raisportpiuhd" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="raisportpiuhd.order" default="8"/>
+
+            <setting label="Rai Movie" type="bool" id="raimovie" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="raimovie.order" default="9"/>
+
+            <setting label="Rai Premium" type="bool" id="raipremium" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="raipremium.order" default="10"/>
+
+            <setting label="Rai Yoyo" type="bool" id="raiyoyo" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="raiyoyo.order" default="11"/>
+
+            <setting label="Rai Gulp" type="bool" id="raigulp" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="raigulp.order" default="12"/>
+
+            <setting label="Rai Storia" type="bool" id="raistoria" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="raistoria.order" default="13"/>
+
+            <setting label="Rai Scuola" type="bool" id="raiscuola" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="raiscuola.order" default="14"/>
         <!-- Italia -->
 
     </category>

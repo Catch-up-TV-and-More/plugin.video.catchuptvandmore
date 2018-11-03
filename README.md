@@ -192,6 +192,18 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV
 - La7 *(Live TV)*
 - Rai News 24 *(Live TV)*
+- Rai 1 *(Live TV)*
+- Rai 2 *(Live TV)*
+- Rai 3 *(Live TV)*
+- Rai 4 *(Live TV)*
+- Rai 5 *(Live TV)*
+- Rai Sport *(Live TV)*
+- Rai Movie *(Live TV)*
+- Rai Premium *(Live TV)*
+- Rai Yoyo *(Live TV)*
+- Rai Gulp *(Live TV)*
+- Rai Storia *(Live TV)*
+- Rai Scuola *(Live TV)*
 
 ### Japon — *Japan*
 ##### TV

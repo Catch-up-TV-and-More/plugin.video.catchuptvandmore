@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta09"
+       version="0.2.0~beta10"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -53,7 +53,7 @@
 [Readd Channel] TéléMB (BE)
 [Fix] Canal+ - Fix some errors on Replay (FR)
 [Fix] RMC Story - Dates on Replay (FR)
-[Add Live TV] Rai News 24 (IT)
+[Add Live TV] All Live Rai (Rai 1, 2, News 24, Sport, ...) (IT)
     </news>
     <assets>
       <icon>icon.png</icon>

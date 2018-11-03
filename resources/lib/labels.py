@@ -393,6 +393,18 @@ LABELS = {
     # Italian channels / live TV
     'la7': 'La7',
     'rainews24': 'Rai News 24',
+    'rai1': 'Rai 1',
+    'rai2': 'Rai 2',
+    'rai3': 'Rai 3',
+    'rai4': 'Rai 4',
+    'rai5': 'Rai 5',
+    'raisportpiuhd': 'Rai Sport',
+    'raimovie': 'Rai Movie',
+    'raipremium': 'Rai Premium',
+    'raiyoyo': 'Rai Yoyo',
+    'raigulp': 'Rai Gulp',
+    'raistoria': 'Rai Storia',
+    'raiscuola': 'Rai Scuola',
 
     # Websites
     'allocine': 'Allociné',
