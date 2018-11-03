@@ -101,15 +101,15 @@ def get_stream_kaltura(
 def get_stream_dailymotion(
         plugin, video_id, download_mode=False, video_label=None):
 
-    # url_dmotion = URL_DAILYMOTION_EMBED % (video_id)
+    url_dmotion_dl = URL_DAILYMOTION_EMBED % (video_id)
     # Just now YBDL seems to not be able to deals with Dailymotion URL :-/
     # So we keep to legacy method below
     # return get_stream_default(plugin, url_dmotion, download_mode)
 
-    url_dmotion = URL_DAILYMOTION_EMBED_2 % (video_id)
-
     if download_mode:
-        return download.download_video(url_dmotion, video_label)
+        return download.download_video(url_dmotion_dl, video_label)
+
+    url_dmotion = URL_DAILYMOTION_EMBED_2 % (video_id)
 
     dmotion_json = urlquick.get(url_dmotion)
     dmotion_jsonparser = json.loads(dmotion_json.text)

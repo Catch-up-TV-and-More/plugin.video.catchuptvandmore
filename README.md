@@ -161,6 +161,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France TV Education — francetv *(Replay)*
 - France TV Slash — francetv *(Replay)*
 - Culturebox — francetv *(Replay)*
+- Jack — mycanal *(Replay)*
 
 ### Internationales — *International*
 ##### TV

@@ -294,6 +294,7 @@ LABELS = {
     'viaatv': 'viàATV',
     'viagrandparis': 'viàGrandParis',
     'via93': 'vià93',
+    'jack': 'Jack (mycanal)',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

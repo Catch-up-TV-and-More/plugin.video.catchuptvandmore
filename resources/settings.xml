@@ -604,6 +604,9 @@
 
             <setting label="vià93" type="bool" id="via93" default="true" visible="eq(-147,true)"/>
             <setting label="" type="number" visible="false" id="via93.order" default="74"/>
+
+            <setting label="Jack (mycanal)" type="bool" id="jack" default="true" visible="eq(-149,true)"/>
+            <setting label="" type="number" visible="false" id="jack.order" default="75"/>
         <!-- France -->
 
 
