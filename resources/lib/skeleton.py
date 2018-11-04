@@ -1370,6 +1370,12 @@ FR_REPLAY = {
         'thumb': ['channels', 'fr', 'jack.png'],
         'fanart': ['channels', 'fr', 'jack_fanart.jpg'],
         'module': 'resources.lib.channels.fr.jack'
+    },
+    'antennereunion': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'antennereunion.png'],
+        'fanart': ['channels', 'fr', 'antennereunion_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.antennereunion'
     }
 }
 
