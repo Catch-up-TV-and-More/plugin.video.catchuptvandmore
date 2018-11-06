@@ -142,6 +142,10 @@ REPLAY = {
     'es_replay': {
         'callback': 'generic_menu',
         'thumb': ['channels', 'es.png']
+    },
+    'it_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'it.png']
     }
 }
 
@@ -1376,6 +1380,12 @@ FR_REPLAY = {
         'thumb': ['channels', 'fr', 'antennereunion.png'],
         'fanart': ['channels', 'fr', 'antennereunion_fanart.jpg'],
         'module': 'resources.lib.channels.fr.antennereunion'
+    },
+    'caledonia': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'caledonia.png'],
+        'fanart': ['channels', 'fr', 'caledonia_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.caledonia'
     }
 }
 
@@ -1759,6 +1769,21 @@ ES_REPLAY = {
     }
 }
 
+IT_REPLAY = {
+    # 'la7': {
+    #     'callback': 'replay_bridge',
+    #     'thumb': ['channels', 'it', 'la7.png'],
+    #     'fanart': ['channels', 'it', 'la7_fanart.jpg'],
+    #     'module': 'resources.lib.channels.it.la7'
+    # },
+    # 'la7d': {
+    #     'callback': 'replay_bridge',
+    #     'thumb': ['channels', 'it', 'la7d.png'],
+    #     'fanart': ['channels', 'it', 'la7d_fanart.jpg'],
+    #     'module': 'resources.lib.channels.it.la7'
+    # }
+}
+
 WEBSITES = {
     'allocine': {
         'callback': 'website_bridge',
@@ -1850,4 +1875,11 @@ WEBSITES = {
         'fanart': ['websites', 'marmiton_fanart.jpg'],
         'module': 'resources.lib.websites.marmiton'
     }
+    # },
+    # 'lesargonautes': {
+    #     'callback': 'website_bridge',
+    #     'thumb': ['websites', 'lesargonautes.png'],
+    #     'fanart': ['websites', 'lesargonautes_fanart.jpg'],
+    #     'module': 'resources.lib.websites.lesargonautes'
+    # }
 }

@@ -607,6 +607,9 @@
 
             <setting label="Jack (mycanal)" type="bool" id="jack" default="true" visible="eq(-149,true)"/>
             <setting label="" type="number" visible="false" id="jack.order" default="75"/>
+
+            <setting label="Caledonia" type="bool" id="caledonia" default="true" visible="eq(-151,true)"/>
+            <setting label="" type="number" visible="false" id="caledonia.order" default="76"/>
         <!-- France -->
 
 
@@ -832,6 +835,9 @@
 
             <setting label="Rai Scuola" type="bool" id="raiscuola" default="true" visible="eq(-27,true)"/>
             <setting label="" type="number" visible="false" id="raiscuola.order" default="14"/>
+
+            <!--<setting label="La7d" type="bool" id="la7d" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="la7d.order" default="15"/>-->
         <!-- Italia -->
 
     </category>
@@ -890,6 +896,9 @@
 
             <setting label="Marmiton" type="bool" id="marmiton" default="true" visible="eq(-29,true)"/>
             <setting label="" type="number" visible="false" id="marmiton.order" default="15"/>
+
+            <!--<setting label="Les Argonautes" type="bool" id="lesargonautes" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="lesargonautes.order" default="16"/>-->
     </category>
     <!-- Websites -->
 

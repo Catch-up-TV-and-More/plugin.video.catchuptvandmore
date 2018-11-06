@@ -295,6 +295,7 @@ LABELS = {
     'viagrandparis': 'viàGrandParis',
     'via93': 'vià93',
     'jack': 'Jack (mycanal)',
+    'caledonia': 'Caledonia',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -406,6 +407,7 @@ LABELS = {
     'raigulp': 'Rai Gulp',
     'raistoria': 'Rai Storia',
     'raiscuola': 'Rai Scuola',
+    'la7d': 'La7d',
 
     # Websites
     'allocine': 'Allociné',
@@ -422,5 +424,6 @@ LABELS = {
     'ina': 'Ina',
     'onf': 'Office National du Film du Canada',
     'nfb': 'National Film Board Of Canada',
-    'marmiton': 'Marmiton'
+    'marmiton': 'Marmiton',
+    'lesargonautes': 'Les Argonautes'
 }
