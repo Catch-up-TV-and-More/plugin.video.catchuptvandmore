@@ -29,6 +29,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+from resources.lib import download
 
 from bs4 import BeautifulSoup as bs
 
@@ -129,6 +130,8 @@ def get_video_url(
         if 'http' in stream_datas:
             stream_url = stream_datas
 
+    if download_mode:
+        return download.download_video(stream_url, video_label)
     return stream_url
 
 

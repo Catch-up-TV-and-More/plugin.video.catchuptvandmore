@@ -137,8 +137,11 @@ def get_video_url(
     video_id_url = root_soup.find_all('iframe')[1].get('src')
 
     resp2 = urlquick.get(video_id_url, max_age=-1)
-    return 'https://tvl-vod.l3.freecaster.net' + re.compile(
+    final_video_url = 'https://tvl-vod.l3.freecaster.net' + re.compile(
         r'freecaster\.net(.*?)\"').findall(resp2.text)[0] + '/master.m3u8'
+    if download_mode:
+        return download.download_video(final_video_url, video_label)
+    return final_video_url
 
 
 def live_entry(plugin, item_id, item_dict):
