@@ -29,6 +29,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+from resources.lib import download
 
 from bs4 import BeautifulSoup as bs
 
@@ -125,6 +126,8 @@ def get_video_url(
     json_value = re.compile(
         r'src\: \{(.*?)\}\,').findall(resp.text)[0]
     json_parser = json.loads('{' + json_value + '}')
+    if download_mode:
+        return download.download_video(json_parser["m3u8"], video_label)
     return json_parser["m3u8"]
 
 
