@@ -49,7 +49,7 @@
 [Add Live TV] Kerrang, Magic, Kiss, The Box, Box Hits, Box Upfront (UK)
 [Fix] BVN - Fix dash behind every video title - Thanks Forage (WO)
 [Fix] Arte TV - Replay (WO)
-[Add Live TV] La7 (IT)
+[Add Channel - Live TV] La7 (IT)
 [Readd Channel] TéléMB (BE)
 [Fix] Canal+ - Fix some errors on Replay (FR)
 [Fix] RMC Story - Dates on Replay (FR)
@@ -58,6 +58,7 @@
 [Improvements] BVN - Add time on video title - Thanks Forage (WO)
 [Add Channel] Antenne Réunion (FR)
 [Add Channel] Caledonia (FR)
+[Add Channel] La7d (IT)
     </news>
     <assets>
       <icon>icon.png</icon>

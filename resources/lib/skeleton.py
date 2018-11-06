@@ -1770,18 +1770,18 @@ ES_REPLAY = {
 }
 
 IT_REPLAY = {
-    # 'la7': {
-    #     'callback': 'replay_bridge',
-    #     'thumb': ['channels', 'it', 'la7.png'],
-    #     'fanart': ['channels', 'it', 'la7_fanart.jpg'],
-    #     'module': 'resources.lib.channels.it.la7'
-    # },
-    # 'la7d': {
-    #     'callback': 'replay_bridge',
-    #     'thumb': ['channels', 'it', 'la7d.png'],
-    #     'fanart': ['channels', 'it', 'la7d_fanart.jpg'],
-    #     'module': 'resources.lib.channels.it.la7'
-    # }
+    'la7': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'it', 'la7.png'],
+        'fanart': ['channels', 'it', 'la7_fanart.jpg'],
+        'module': 'resources.lib.channels.it.la7'
+    },
+    'la7d': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'it', 'la7d.png'],
+        'fanart': ['channels', 'it', 'la7d_fanart.jpg'],
+        'module': 'resources.lib.channels.it.la7'
+    }
 }
 
 WEBSITES = {

@@ -192,7 +192,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 
 ### Italie — *Italia*
 ##### TV
-- La7 *(Live TV)*
+- La7 *(Replay, Live TV)*
 - Rai News 24 *(Live TV)*
 - Rai 1 *(Live TV)*
 - Rai 2 *(Live TV)*
@@ -206,6 +206,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Rai Gulp *(Live TV)*
 - Rai Storia *(Live TV)*
 - Rai Scuola *(Live TV)*
+- La7d *(Replay)*
 
 ### Japon — *Japan*
 ##### TV
@@ -275,7 +276,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### Communauté française — *French Community*
 - Au pays des Têtes à claques <https://www.tetesaclaques.tv/>
 - Office National du Film du Canada <https://www.onf.ca/>
-- Les Argonautes <http://lesargonautes.telequebec.tv>
 
 ##### Communauté anglaise — *English Community*
 - National Film Board Of Canada <https://www.nfb.ca/>

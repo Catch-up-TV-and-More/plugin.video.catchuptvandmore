@@ -836,8 +836,8 @@
             <setting label="Rai Scuola" type="bool" id="raiscuola" default="true" visible="eq(-27,true)"/>
             <setting label="" type="number" visible="false" id="raiscuola.order" default="14"/>
 
-            <!--<setting label="La7d" type="bool" id="la7d" default="true" visible="eq(-29,true)"/>
-            <setting label="" type="number" visible="false" id="la7d.order" default="15"/>-->
+            <setting label="La7d" type="bool" id="la7d" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="la7d.order" default="15"/>
         <!-- Italia -->
 
     </category>
