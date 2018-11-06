@@ -92,10 +92,12 @@ def list_videos(plugin, item_id, program_url):
         video_image = re.compile(
             r'url\(\'(.*?)\'').findall(video_image)[0]
         video_url = 'https:' + video_datas.find('a').get('href')
+        date_value = video_datas.find('div', class_='wrap-infos mt-3').text.strip()[-10:]
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
+        item.info.date(date_value, '%d-%m-%Y')
 
         item.context.script(
             get_video_url,
