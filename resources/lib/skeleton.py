@@ -1874,12 +1874,11 @@ WEBSITES = {
         'thumb': ['websites', 'marmiton.png'],
         'fanart': ['websites', 'marmiton_fanart.jpg'],
         'module': 'resources.lib.websites.marmiton'
+    },
+    'lesargonautes': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'lesargonautes.png'],
+        'fanart': ['websites', 'lesargonautes_fanart.jpg'],
+        'module': 'resources.lib.websites.lesargonautes'
     }
-    # },
-    # 'lesargonautes': {
-    #     'callback': 'website_bridge',
-    #     'thumb': ['websites', 'lesargonautes.png'],
-    #     'fanart': ['websites', 'lesargonautes_fanart.jpg'],
-    #     'module': 'resources.lib.websites.lesargonautes'
-    # }
 }

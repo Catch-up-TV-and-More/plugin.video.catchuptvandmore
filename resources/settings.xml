@@ -897,8 +897,8 @@
             <setting label="Marmiton" type="bool" id="marmiton" default="true" visible="eq(-29,true)"/>
             <setting label="" type="number" visible="false" id="marmiton.order" default="15"/>
 
-            <!--<setting label="Les Argonautes" type="bool" id="lesargonautes" default="true" visible="eq(-31,true)"/>
-            <setting label="" type="number" visible="false" id="lesargonautes.order" default="16"/>-->
+            <setting label="Les Argonautes" type="bool" id="lesargonautes" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="lesargonautes.order" default="16"/>
     </category>
     <!-- Websites -->
 
