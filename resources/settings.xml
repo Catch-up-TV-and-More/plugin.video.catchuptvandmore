@@ -838,6 +838,9 @@
 
             <setting label="La7d" type="bool" id="la7d" default="true" visible="eq(-29,true)"/>
             <setting label="" type="number" visible="false" id="la7d.order" default="15"/>
+
+            <setting label="Rai Play" type="bool" id="raiplay" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="raiplay.order" default="16"/>
         <!-- Italia -->
 
     </category>

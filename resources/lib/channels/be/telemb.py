@@ -41,6 +41,7 @@ import urlquick
 
 # TO DO
 # Token (live) maybe more work todo
+# Fix Download Mode
 
 URL_ROOT = 'https://www.telemb.be'
 

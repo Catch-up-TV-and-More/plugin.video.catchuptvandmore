@@ -408,6 +408,7 @@ LABELS = {
     'raistoria': 'Rai Storia',
     'raiscuola': 'Rai Scuola',
     'la7d': 'La7d',
+    'raiplay': 'Rai Play',
 
     # Websites
     'allocine': 'Allociné',

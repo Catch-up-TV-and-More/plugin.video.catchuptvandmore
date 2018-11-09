@@ -1781,6 +1781,12 @@ IT_REPLAY = {
         'thumb': ['channels', 'it', 'la7d.png'],
         'fanart': ['channels', 'it', 'la7d_fanart.jpg'],
         'module': 'resources.lib.channels.it.la7'
+    },
+    'raiplay': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'it', 'raiplay.png'],
+        'fanart': ['channels', 'it', 'raiplay_fanart.jpg'],
+        'module': 'resources.lib.channels.it.raiplay'
     }
 }
 

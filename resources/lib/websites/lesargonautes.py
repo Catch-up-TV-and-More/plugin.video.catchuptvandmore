@@ -33,7 +33,7 @@ from resources.lib import download
 
 
 # TO DO
-# Play Spanish Videos
+# Fix Download Mode
 
 URL_ROOT = 'http://lesargonautes.telequebec.tv'
 
