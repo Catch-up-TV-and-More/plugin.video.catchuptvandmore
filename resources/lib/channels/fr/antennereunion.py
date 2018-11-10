@@ -42,11 +42,11 @@ URL_ROOT = 'http://www.antennereunion.fr'
 URL_LIVE = URL_ROOT + '/direct'
 
 CATEGORIES = {
-    'ÉMISSIONS': URL_ROOT + '/replay/emissions?debut_article_divertissement=%s',
+    'ÉMISSIONS': URL_ROOT + '/replay/emissions?debut_article_divertissement=%s#pagination_article_divertissement',
     'SÉRIES ET FICTIONS':
-        URL_ROOT + '/replay/series-et-fictions?debut_article_divertissement=%s',
+        URL_ROOT + '/replay/series-et-fictions?debut_article_divertissement=%s#pagination_article_divertissement',
     'INFO ET MAGAZINES':
-        URL_ROOT + '/replay/info-et-magazines?debut_article_divertissement=%s'
+        URL_ROOT + '/replay/info-et-magazines?debut_article_divertissement=%s#pagination_article_divertissement'
 }
 
 
@@ -120,7 +120,7 @@ def list_videos(plugin, item_id, category_url, page):
 def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
-    resp = urlquick.get(video_url, max_age=-1)
+    resp = urlquick.get(video_url, timeout=20, max_age=-1)
 
     list_streams_datas = re.compile(
         r'file: \'(.*?)\'').findall(resp.text)
@@ -129,6 +129,7 @@ def get_video_url(
     for stream_datas in list_streams_datas:
         if 'http' in stream_datas:
             stream_url = stream_datas
+            break
 
     if download_mode:
         return download.download_video(stream_url, video_label)
