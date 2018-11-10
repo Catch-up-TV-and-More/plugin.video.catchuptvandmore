@@ -371,8 +371,8 @@ def get_live_url(plugin, item_id, video_id, item_dict):
             if 'delta_hls_h264' in asset["type"]:
                 item = Listitem()
                 item.path = asset['full_physical_path']
-                item.label = title_value
-                item.info['plot'] = plot_value
-                item.art["thumb"] = img_value
+                item.label = item_dict['label']
+                item.info.update(item_dict['info'])
+                item.art.update(item_dict['art'])
                 return item
     return False
