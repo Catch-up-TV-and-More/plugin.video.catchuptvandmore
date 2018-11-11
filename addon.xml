@@ -42,7 +42,6 @@
 [Add Live TV] viàATV, vià93 et viàGrandParis (FR)
 [Add Channel] Atresplayer (ES) - Kodi 17.6 and inputstream.adaptive "enable" are required
 [Improvements] MYTF1 - Add notification when the video is not available (FR)
-[Improvements] Dailymotion stream
 [Fix] Taratata - Video from FranceTV (FR)
 [Add Live TV] نسمة تي في (TN)
 [Remove] Heart TV - Live TV (UK)
@@ -63,6 +62,8 @@
 [Add Channel] Rai Play (IT)
 [Fix] RTL 2 and Fun Radio Live TV (FR)
 [Add Channel - Live TV] Tébéo (FR)
+[Fix] Autoplus - website (FR)
+[Change] Dailymotion content rely on youtube-dl
     </news>
     <assets>
       <icon>icon.png</icon>

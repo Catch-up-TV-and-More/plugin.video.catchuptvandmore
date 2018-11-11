@@ -46,21 +46,6 @@ URL_REPLAY = URL_ROOT + '/le-replay'
 
 URL_STREAM = URL_ROOT + '/player.php?idprogramme=%s'
 
-CORRECT_MONTH = {
-    'janvier': '01',
-    'février': '02',
-    'mars': '03',
-    'avril': '04',
-    'mai': '05',
-    'juin': '06',
-    'juillet': '07',
-    'août': '08',
-    'septembre': '09',
-    'octobre': '10',
-    'novembre': '11',
-    'décembre': '12'
-}
-
 
 def replay_entry(plugin, item_id):
     """

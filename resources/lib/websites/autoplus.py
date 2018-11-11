@@ -132,7 +132,7 @@ def get_video_url(
     video_html = urlquick.get(video_url).text
     # Get DailyMotion Id Video
     video_id = re.compile(
-        r'embed/video/(.*?)[\"\?]').findall(
+        r'video: \"(.*?)\"').findall(
         video_html)[0]
 
     return resolver_proxy.get_stream_dailymotion(
