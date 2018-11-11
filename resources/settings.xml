@@ -610,6 +610,9 @@
 
             <setting label="Caledonia" type="bool" id="caledonia" default="true" visible="eq(-151,true)"/>
             <setting label="" type="number" visible="false" id="caledonia.order" default="76"/>
+
+            <setting label="Tébéo" type="bool" id="tebeo" default="true" visible="eq(-153,true)"/>
+            <setting label="" type="number" visible="false" id="tebeo.order" default="77"/>
         <!-- France -->
 
 
