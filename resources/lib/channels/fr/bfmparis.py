@@ -141,13 +141,10 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     live_soup = bs(resp.text, 'html.parser')
     data_live_soup = live_soup.find(
-        'div', class_='BCLvideoWrapper')
-    data_account = data_live_soup.find(
-        'script')['data-account']
-    data_video_id = data_live_soup.find(
-        'script')['data-video-id']
-    data_player = data_live_soup.find(
-        'script')['data-player']
+        'div', class_='next-player')
+    data_account = data_live_soup['data-account']
+    data_video_id = data_live_soup['data-video-id']
+    data_player = data_live_soup['data-player']
     return resolver_proxy.get_brightcove_video_json(
         plugin,
         data_account,

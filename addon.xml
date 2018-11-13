@@ -65,6 +65,7 @@
 [Fix] Autoplus - website (FR)
 [Change] Dailymotion content rely on youtube-dl
 [Improvements] FranceTV - Replay - Add program Name in recent videos (FR)
+[Fix] BFM TV / BFM Business / BFM Paris - Live TV (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
