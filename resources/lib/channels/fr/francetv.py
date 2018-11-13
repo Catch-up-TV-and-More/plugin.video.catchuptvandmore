@@ -187,10 +187,21 @@ def list_videos_last(plugin, item_id, page=1):
 
     for video_datas in json_parser["result"]:
         item = Listitem()
-        if video_datas["type"] == 'extrait':
-            item.label = 'Extrait - ' + video_datas["title"]
+        program_name = ''
+        for program_datas in video_datas["content_has_taxonomys"]:
+            if 'program' in program_datas["type"]:
+                program_name = program_datas['taxonomy']['label']
+
+        if program_name:
+            if video_datas["type"] == 'extrait':
+                item.label = 'Extrait - ' + program_name + ' ' + video_datas["title"]
+            else:
+                item.label = program_name + ' ' + video_datas["title"]
         else:
-            item.label = video_datas["title"]
+            if video_datas["type"] == 'extrait':
+                item.label = 'Extrait - ' + ' ' + video_datas["title"]
+            else:
+                item.label = video_datas["title"]
 
         image = ''
         for video_media in video_datas["content_has_medias"]:
