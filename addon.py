@@ -129,7 +129,7 @@ def root(plugin):
 
 
 @Route.register
-def generic_menu(plugin, menu_id, item_module=None):
+def generic_menu(plugin, menu_id, item_module=None, item_dict=None):
     """
     Build a generic addon menu
     with all not hidden items
@@ -176,13 +176,14 @@ def generic_menu(plugin, menu_id, item_module=None):
         # item will be selected by the user
         item.set_callback(
             eval(item_infos['callback']),
-            item_id)
+            item_id,
+            item_dict=cqu.item2dict(item))
 
         yield item
 
 
 @Route.register
-def tv_guide_menu(plugin, menu_id, item_module=None):
+def tv_guide_menu(plugin, menu_id, item_module=None, item_dict=None):
 
     # TEMPO (waiting for the CodeQuick update)
     plugin.cache_to_disc = True
