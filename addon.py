@@ -42,6 +42,15 @@ def root(params):
     # Download xmltv files in background
     if common.PLUGIN.get_setting('fr'):
         live_tv_fr.download_xmltv_in_background()
+
+    xbmc_version = int(
+        common.sp.xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
+
+    if xbmc_version < 17:
+        common.sp.xbmcgui.Dialog().ok(
+            'Warning',
+            'The next major version of the plugin will no longer support Kodi 16 (Jarvis). To continue using this addon please update to (at least) Kodi 17 or contact us for more information. Thank you for your understanding.')
+
     return generic_menu(params)
 
 
