@@ -40,7 +40,13 @@ URL_PROGRAMS = 'https://api-ctr.programme-tv.net/v2/broadcasts.json?' \
 
 
 ID_CHANNELS = {
-   24: 'canvas'
+   24: 'canvas',
+   382: 'bx1',
+   387: 'telemb',
+   390: 'rtc',
+   392: 'tvlux',
+   1280: 'ketnet',
+   23: 'een'
 }
 
 
@@ -63,11 +69,35 @@ def grab_tv_guide(channels):
             channel_id = ID_CHANNELS[channel_crt_id]
             program_dict = {}
 
-            program_dict['duration'] = guide_item['duration']
-            program_dict['debut'] = guide_item['startedAt']
+            program_dict['duration'] = guide_item['duration']  # sec
+
+            start_time = guide_item['startedAt']
+            start_time_l = start_time.split('T')[1].split(':')
+            start_time = start_time_l[0] + 'h' + start_time_l[1]
+            program_dict['start_time'] = start_time
+
+            program_dict['genre'] = guide_item['program']['formatGenre']['genre']['name']
+
             program_dict['program_id'] = guide_item['id']
+
             program_dict['title'] = guide_item['title']
+
+            # https://tel.img.pmdstatic.net/fit/http.3A.2F.2Fimages.2Eone.2Eprismamedia.2Ecom.2Fchannel.2F2.2F3.2F9.2Fe.2F1.2F3.2F1.2Fb.2Ff.2Fd.2Fa.2F0.2F2.2Fa.2F3.2Fd.2Epng/76x76/quality/100/image.png
+            # https://tel.img.pmdstatic.net/fit/http.3A.2F.2Fimages.2Eone.2Eprismamedia.2Ecom.2Fprogram.2Fe.2F0.2F0.2F2.2F5.2Fc.2F3.2F3.2F2.2F1.2F1.2F1.2F1.2Fa.2F4.2F9.2Ejpg/520x336/quality/75/image.jpg
+            # https://tel.img.pmdstatic.net/{transformation}/http.3A.2F.2Fimages.2Eone.2Eprismamedia.2Ecom.2Fprogram.2F8.2F0.2F4.2F4.2F4.2F7.2F9.2F3.2F5.2F4.2F9.2F7.2F4.2Fb.2Ff.2Fd.2Ejpg/{width}x{height}/{parameters}/{title}.jpg
+
+            if 'image' in guide_item['program']:
+                image = guide_item['program']['image']['urlTemplate']
+                image = image.replace('{transformation}', 'fit')
+                image = image.replace('{width}', '520')
+                image = image.replace('{height}', '336')
+                image = image.replace('{parameters}', 'quality/75')
+                image = image.replace('{title}', 'image')
+                program_dict['thumb'] = image
+
             programs[channel_id] = program_dict
+
+    return programs
 
 
 # Only for testing purpose

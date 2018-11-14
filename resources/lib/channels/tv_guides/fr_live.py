@@ -151,8 +151,15 @@ class TeleramaXMLTVGrabber:
         program_dict['id_chaine'] = program['id_chaine']
 
         # Horaire
-        program_dict['debut'] = program['horaire']['debut']
-        program_dict['fin'] = program['horaire']['fin']
+        debut = program['horaire']['debut']
+        debut_l = debut.split()[1].split(':')
+        debut_s = debut_l[0] + 'h' + debut_l[1]
+        program_dict['start_time'] = debut_s
+
+        fin = program['horaire']['fin']
+        fin_l = fin.split()[1].split(':')
+        fin_s = fin_l[0] + 'h' + fin_l[1]
+        program_dict['stop_time'] = fin_s
 
         # Title
         program_dict['title'] = program['titre']
@@ -162,7 +169,7 @@ class TeleramaXMLTVGrabber:
 
         # Sub-title
         if program['soustitre']:
-            program_dict['soustitre'] = program['soustitre']
+            program_dict['subtitle'] = program['soustitre']
 
         # Desc
         if program['resume']:
@@ -176,7 +183,7 @@ class TeleramaXMLTVGrabber:
 
         # Add specific category
         if program['genre_specifique']:
-            program_dict['genre_specifique'] = program['genre_specifique']
+            program_dict['specific_genre'] = program['genre_specifique']
 
         # Icon
         if 'vignettes' in program:

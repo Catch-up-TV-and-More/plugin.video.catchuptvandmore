@@ -129,7 +129,7 @@ def root(plugin):
 
 
 @Route.register
-def generic_menu(plugin, menu_id):
+def generic_menu(plugin, menu_id, item_module=None):
     """
     Build a generic addon menu
     with all not hidden items
@@ -170,8 +170,7 @@ def generic_menu(plugin, menu_id):
 
         # If this item requires a module to work, get
         # the module path to be loaded
-        if 'module' in item_infos:
-            item.params['item_module'] = item_infos['module']
+        item.params['item_module'] = item_infos.get('module')
 
         # Get the next action to trigger if this
         # item will be selected by the user
@@ -220,7 +219,7 @@ def tv_guide_menu(plugin, menu_id, item_module=None):
         label = LABELS[channel_id]
         if isinstance(label, int):
             label = plugin.localize(label)
-        item.label = utils.color(label, 'blue')
+        item.label = label
 
         # Get item path of icon and fanart
         if 'thumb' in channel_infos:
@@ -233,55 +232,54 @@ def tv_guide_menu(plugin, menu_id, item_module=None):
 
         # If this item requires a module to work, get
         # the module path to be loaded
-        if 'module' in channel_infos:
-            item.params['item_module'] = channel_infos['module']
+        item.params['item_module'] = channel_infos.get('module')
 
         # If we have program infos from the grabber
         if channel_id in tv_guide:
-            channel_guide_infos = tv_guide[channel_id]
+            guide_infos = tv_guide[channel_id]
 
-            if 'title' in channel_guide_infos:
-                item.label = item.label + ' — ' + \
-                    utils.italic(channel_guide_infos['title'])
+            if 'title' in guide_infos:
+                item.label = item.label + ' — ' + guide_infos['title']
 
-            if 'originaltitle' in channel_guide_infos:
-                item.info['originaltitle'] = channel_guide_infos['originaltitle']
+            item.info['originaltitle'] = guide_infos.get('originaltitle')
 
-            if 'genre' in channel_guide_infos:
-                item.info['genre'] = channel_guide_infos['genre']
+            # e.g Divertissement, Documentaire, Film, ...
+            item.info['genre'] = guide_infos.get('genre')
 
             plot = []
 
-            if 'genre_specifique' in channel_guide_infos:
-                plot.append(channel_guide_infos['genre_specifique'])
+            if 'specific_genre' in guide_infos:
+                if 'genre' not in guide_infos:
+                    item.info['genre'] = guide_infos['specific_genre']
+                elif guide_infos.get('genre') in guide_infos['specific_genre']:
+                    item.info['genre'] = guide_infos['specific_genre']
+                else:
+                    plot.append(guide_infos['specific_genre'])
 
-            if 'debut' in channel_guide_infos and 'fin' in channel_guide_infos:
-                debut_l = channel_guide_infos['debut'].split()[1].split(':')
-                fin_l = channel_guide_infos['fin'].split()[1].split(':')
-                plot.append(debut_l[0] + 'h' + debut_l[1] + ' - ' + fin_l[0] + 'h' + fin_l[1])
+            # start_time and stop_time must be a string
+            if 'start_time' in guide_infos and 'stop_time' in guide_infos:
+                plot.append(guide_infos['start_time'] + ' - ' + guide_infos['stop_time'])
+            elif 'start_time' in guide_infos:
+                plot.append(guide_infos['start_time'])
 
-            if 'soustitre' in channel_guide_infos:
-                plot.append(channel_guide_infos['soustitre'])
+            if 'subtitle' in guide_infos:
+                plot.append(guide_infos['subtitle'])
 
-            if 'plot' in channel_guide_infos:
-                plot.append(channel_guide_infos['plot'])
+            if 'plot' in guide_infos:
+                plot.append(guide_infos['plot'])
 
             item.info['plot'] = '\n'.join(plot)
 
-            if 'episode' in channel_guide_infos:
-                item.info['episode'] = channel_guide_infos['episode']
+            item.info['episode'] = guide_infos.get('episode')
+            item.info['season'] = guide_infos.get('season')
+            item.info["rating"] = guide_infos.get('rating')
+            item.info["duration"] = guide_infos.get('duration')
 
-            if 'season' in channel_guide_infos:
-                item.info['season'] = channel_guide_infos['season']
+            if 'fanart' in guide_infos:
+                item.art["fanart"] = guide_infos['fanart']
 
-            if 'fanart' in channel_guide_infos:
-                item.art["fanart"] = channel_guide_infos['fanart']
-
-            if 'thumb' in channel_guide_infos:
-                item.art["thumb"] = channel_guide_infos['thumb']
-
-            if 'rating' in channel_guide_infos:
-                item.info["rating"] = channel_guide_infos['rating']
+            if 'thumb' in guide_infos:
+                item.art["thumb"] = guide_infos['thumb']
 
         # Get the next action to trigger if this
         # item will be selected by the user

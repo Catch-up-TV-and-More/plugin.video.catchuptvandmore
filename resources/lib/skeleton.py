@@ -60,7 +60,7 @@ LIVE_TV = {
         'thumb': ['channels', 'fr.png']
     },
     'be_live': {
-        'callback': 'generic_menu',
+        'callback': 'tv_guide_menu' if Script.setting.get_boolean('tv_guide') else 'generic_menu',
         'thumb': ['channels', 'be.png']
     },
     'ca_live': {
