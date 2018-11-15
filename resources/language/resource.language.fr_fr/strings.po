@@ -275,6 +275,9 @@ msgctxt "#30168"
 msgid "Enable TV guide (slower)"
 msgstr "Activer le programme TV (plus lent)"
 
+msgctxt "#30169"
+msgid "Enable Subtitle if present in the content"
+msgstr "Activer les sous-titres si présent dans le contenu"
 
 # Download (from 30200 to 30239)
 

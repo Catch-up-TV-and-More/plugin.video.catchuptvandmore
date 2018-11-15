@@ -926,6 +926,9 @@
             <!-- TV Guide -->
             <setting label="30168" type="bool" id="tv_guide" default="true"/>
 
+            <!-- Subtitle -->
+            <setting label="30169" type="bool" id="active_subtitle" default="false"/>
+
             <!-- International channels -->
             <setting label="30085" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <setting label="" type="bool" id="wo" default="true" visible="false"/>

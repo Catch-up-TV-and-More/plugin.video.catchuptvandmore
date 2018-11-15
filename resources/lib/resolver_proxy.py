@@ -211,11 +211,12 @@ def get_francetv_video_stream(
         return False
 
     subtitles = []
-    if json_parser['subtitles']:
-        subtitles_list = json_parser['subtitles']
-        for subtitle in subtitles_list:
-            if subtitle['format'] == 'vtt':
-                subtitles.append(subtitle['url'])
+    if plugin.setting.get_boolean('active_subtitle'):
+        if json_parser['subtitles']:
+            subtitles_list = json_parser['subtitles']
+            for subtitle in subtitles_list:
+                if subtitle['format'] == 'vtt':
+                    subtitles.append(subtitle['url'])
 
     url_selected = ''
 

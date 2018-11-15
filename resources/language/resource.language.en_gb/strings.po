@@ -275,6 +275,9 @@ msgctxt "#30168"
 msgid "Enable TV guide (slower)"
 msgstr ""
 
+msgctxt "#30169"
+msgid "Enable Subtitle if present in the content"
+msgstr ""
 
 # Download (from 30200 to 30239)
 
