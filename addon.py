@@ -293,7 +293,7 @@ def tv_guide_menu(plugin, menu_id, item_module=None, item_dict=None):
 
 
 @Route.register
-def replay_bridge(plugin, item_id, item_module):
+def replay_bridge(plugin, item_id, item_module, item_dict={}):
     """
     replay_bridge is the bridge between the
     addon.py file and each channel modules files.
@@ -314,7 +314,7 @@ def replay_bridge(plugin, item_id, item_module):
 
 
 @Route.register
-def website_bridge(plugin, item_id, item_module):
+def website_bridge(plugin, item_id, item_module, item_dict={}):
     """
     Like replay_bridge
     """
