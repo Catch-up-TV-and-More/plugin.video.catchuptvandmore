@@ -509,7 +509,7 @@ def list_videos_search(plugin, item_id, page, search_query):
             elif 'video-' in episode.find('a').get('href'):
                 video_id = episode.find(
                     'a').get('href').split('-')[1].replace('/', '')
-            item.art['thumn'] = episode.find('img').get('src')
+            item.art['thumb'] = episode.find('img').get('src')
 
             item.context.script(
                 get_video_url,
