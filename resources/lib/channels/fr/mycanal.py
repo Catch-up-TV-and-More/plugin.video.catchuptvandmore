@@ -116,10 +116,15 @@ def list_contents(plugin, item_id, title_value):
 
             if title_value == title:
                 for content in category["contents"]:
-                    if content["type"] == 'quicktime':
+                    if content["type"] == 'quicktime' or content["type"] == 'pfv':
                         video_title = content["onClick"]["displayName"]
                         video_image = content['URLImage']
-                        video_url = content["onClick"]["URLMedias"]
+                        if content["type"] == 'quicktime':
+                            video_url = content["onClick"]["URLMedias"]
+                        else:
+                            resp2 = urlquick.get(content["onClick"]["URLPage"])
+                            json_parser2 = json.loads(resp2.text)
+                            video_url = json_parser2['detail']['informations']['URLMedias']
 
                         item = Listitem()
                         item.label = video_title
@@ -240,7 +245,7 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
             if sub_program_title == sub_program_datas["title"]:
                 if 'contents' in sub_program_datas:
                     for video_datas in sub_program_datas["contents"]:
-                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'VoD':
+                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD':
                             if 'subtitle' in video_datas:
                                 video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
                             else:
@@ -275,7 +280,7 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
             if sub_program_title == json_parser["currentPage"]["displayName"]:
                 if 'contents' in sub_program_datas:
                     for video_datas in sub_program_datas["contents"]:
-                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'VoD':
+                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD':
                             if 'subtitle' in video_datas:
                                 video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
                             else:
