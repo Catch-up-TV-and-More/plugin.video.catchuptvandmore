@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta18"
+       version="0.2.0~beta19"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -68,6 +68,7 @@
 [Fix] BFM TV / BFM Business / BFM Paris - Live TV (FR)
 [Improvements] Add TV Guide (BE)
 [Improvements] Add settings to activate subtitle if present in the content (desactivate by default)
+[Fix] Navigation Mycanal replay / Add notification for DRM video for mycanal replay (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

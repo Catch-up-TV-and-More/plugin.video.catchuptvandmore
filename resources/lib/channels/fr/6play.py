@@ -318,7 +318,7 @@ def get_video_url(
 
     if len(all_datas_videos_quality) == 0:
         Script.notify(
-            "TEST",
+            "INFO",
             plugin.localize(LABELS['drm_notification']),
             Script.NOTIFY_INFO)
         return False
