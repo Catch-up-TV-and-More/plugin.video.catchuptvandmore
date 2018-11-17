@@ -162,6 +162,9 @@ def list_sub_programs(plugin, item_id, next_url):
 
             if sub_program_datas['type'] == 'plainTextHTML':
                 continue
+            
+            if sub_program_datas['type'] == 'carrousel':
+                continue
 
             if 'title' in sub_program_datas:
                 sub_program_title = sub_program_datas["title"]
