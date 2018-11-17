@@ -245,11 +245,14 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
             if sub_program_title == sub_program_datas["title"]:
                 if 'contents' in sub_program_datas:
                     for video_datas in sub_program_datas["contents"]:
-                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD':
-                            if 'subtitle' in video_datas:
-                                video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
+                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD' or video_datas["type"] == 'detailPage':
+                            if 'title' in video_datas:
+                                if 'subtitle' in video_datas:
+                                    video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
+                                else:
+                                    video_title = video_datas['title']
                             else:
-                                video_title = video_datas['title']
+                                video_title = video_datas["onClick"]["displayName"]
                             video_image = video_datas['URLImage']
                             video_url = ''
                             if video_datas["type"] == 'quicktime':
@@ -280,11 +283,14 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
             if sub_program_title == json_parser["currentPage"]["displayName"]:
                 if 'contents' in sub_program_datas:
                     for video_datas in sub_program_datas["contents"]:
-                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD':
-                            if 'subtitle' in video_datas:
-                                video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
+                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD' or video_datas["type"] == 'detailPage':
+                            if 'title' in video_datas:
+                                if 'subtitle' in video_datas:
+                                    video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
+                                else:
+                                    video_title = video_datas['title']
                             else:
-                                video_title = video_datas['title']
+                                video_title = video_datas["onClick"]["displayName"]
                             video_image = video_datas['URLImage']
                             video_url = ''
                             if video_datas["type"] == 'quicktime':
