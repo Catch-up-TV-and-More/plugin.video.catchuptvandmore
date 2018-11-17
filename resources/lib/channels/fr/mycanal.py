@@ -116,7 +116,7 @@ def list_contents(plugin, item_id, title_value):
 
             if title_value == title:
                 for content in category["contents"]:
-                    if content["type"] == 'quicktime' or content["type"] == 'pfv':
+                    if content["type"] == 'quicktime' or content["type"] == 'pfv' or content["type"] == 'detailPage':
                         video_title = content["onClick"]["displayName"]
                         video_image = content['URLImage']
                         if content["type"] == 'quicktime':
