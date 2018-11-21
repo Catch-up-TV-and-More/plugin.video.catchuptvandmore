@@ -323,13 +323,6 @@ def get_francetv_live_stream(plugin, live_id):
     if url_hls_v1 == '' and url_hls_v5 == '':
         final_url = url_hls
 
-    xbmc_version = cq_utils.get_kodi_version()
-
-    # Case Jarvis
-    if xbmc_version < 17 \
-            and url_hls_v1 != '':
-        final_url = url_hls_v1
-    # Case Krypton, Leia, ...
     if final_url == '' and url_hls_v5 != '':
         final_url = url_hls_v5
     elif final_url == '':
