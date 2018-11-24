@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta21"
+       version="0.2.0~beta22"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -70,6 +70,7 @@
 [Improvements] Add settings to activate subtitle if present in the content (desactivate by default)
 [Fix] Navigation Mycanal replay / Add notification for DRM video for mycanal replay (FR)
 [Remove] Specific Code for Kodi Jarvis (not supported by codequick)
+[Change] Update screenshots
     </news>
     <assets>
       <icon>icon.png</icon>
