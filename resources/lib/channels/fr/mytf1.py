@@ -360,7 +360,7 @@ def get_video_url(
         max_age=-1).text
     if 'drm' in manifest:
         Script.notify(
-            "TEST",
+            "INFO",
             plugin.localize(LABELS['drm_notification']),
             Script.NOTIFY_INFO)
         return False
