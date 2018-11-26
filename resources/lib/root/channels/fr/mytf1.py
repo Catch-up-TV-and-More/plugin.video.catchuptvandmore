@@ -122,7 +122,6 @@ def list_shows(params):
     else:
         url = ''.join((
             URL_ROOT,
-            params.channel_name,
             '/programmes-tv'))
         file_path = utils.download_catalog(
             url,
