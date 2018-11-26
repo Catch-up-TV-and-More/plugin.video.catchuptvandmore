@@ -26,6 +26,10 @@
 from __future__ import unicode_literals
 import urlquick
 import json
+import datetime
+import time
+from resources.lib.tzlocal import get_localzone
+import pytz
 
 URL_PROGRAMS = 'https://api-ctr.programme-tv.net/v2/broadcasts.json?' \
                'limit=auto&projection=id,title,startedAt,duration,isHD' \
@@ -49,6 +53,9 @@ ID_CHANNELS = {
    23: 'een'
 }
 
+GUIDE_TIMEZONE = pytz.timezone('UTC')
+GUIDE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
+
 
 def grab_tv_guide(channels):
     programs = {}
@@ -71,9 +78,22 @@ def grab_tv_guide(channels):
 
             program_dict['duration'] = guide_item['duration']  # sec
 
-            start_time = guide_item['startedAt']
-            start_time_l = start_time.split('T')[1].split(':')
-            start_time = start_time_l[0] + 'h' + start_time_l[1]
+            start_s = guide_item['startedAt']
+            start_s = start_s.split('+')[0]
+
+            try:
+                start = datetime.datetime.strptime(
+                    start_s,
+                    GUIDE_TIME_FORMAT)
+            except TypeError:
+                start = datetime.datetime(*(time.strptime(
+                    start_s, GUIDE_TIME_FORMAT)[0:6]))
+
+            local_tz = get_localzone()
+            start = GUIDE_TIMEZONE.localize(start)
+            start = start.astimezone(local_tz)
+            start_time = start.strftime("%Hh%M")
+
             program_dict['start_time'] = start_time
 
             program_dict['genre'] = guide_item['program']['formatGenre']['genre']['name']
