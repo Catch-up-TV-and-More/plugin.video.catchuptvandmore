@@ -29,11 +29,14 @@ from __future__ import unicode_literals
 
 from codequick import utils
 import urlquick
-
+import pytz
 import hashlib
 import hmac
 import re
 import urllib
+import datetime
+import time
+from resources.lib.tzlocal import get_localzone
 
 
 class TeleramaXMLTVGrabber:
@@ -81,8 +84,9 @@ class TeleramaXMLTVGrabber:
     _RATING_ICON_URL_TEMPLATE = 'http://television.telerama.fr/sites/tr_master/themes/tr/html/' \
                                 'images/tv/-{}.png'
 
-    _TELERAMA_DATE_FORMAT = '%Y-%m-%d'
-    _TELERAMA_TIME_FORMAT = '{} %H:%M:%S'.format(_TELERAMA_DATE_FORMAT)
+    _TELERAMA_TIMEZONE = pytz.timezone('Europe/Paris')
+    _TELERAMA_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+
     _XMLTV_DATETIME_FORMAT = '%Y%m%d%H%M%S %z'
     _XMLTV_DATETIME_FORMAT_PP = '%d/%m/%Y %H:%M:%S'
 
@@ -151,15 +155,36 @@ class TeleramaXMLTVGrabber:
         program_dict['id_chaine'] = program['id_chaine']
 
         # Horaire
-        debut = program['horaire']['debut']
-        debut_l = debut.split()[1].split(':')
-        debut_s = debut_l[0] + 'h' + debut_l[1]
-        program_dict['start_time'] = debut_s
+        local_tz = get_localzone()
 
-        fin = program['horaire']['fin']
-        fin_l = fin.split()[1].split(':')
-        fin_s = fin_l[0] + 'h' + fin_l[1]
-        program_dict['stop_time'] = fin_s
+        start_s = program['horaire']['debut']
+        try:
+            start = datetime.datetime.strptime(
+                start_s,
+                self._TELERAMA_TIME_FORMAT)
+        except TypeError:
+            start = datetime.datetime(*(time.strptime(
+                start_s, self._TELERAMA_TIME_FORMAT)[0:6]))
+
+        start = self._TELERAMA_TIMEZONE.localize(start)
+        start = start.astimezone(local_tz)
+        final_start_s = start.strftime("%Hh%M")
+        program_dict['start_time'] = final_start_s
+
+
+        stop_s = program['horaire']['fin']
+        try:
+            stop = datetime.datetime.strptime(
+                stop_s,
+                self._TELERAMA_TIME_FORMAT)
+        except TypeError:
+            stop = datetime.datetime(*(time.strptime(
+                stop_s, self._TELERAMA_TIME_FORMAT)[0:6]))
+
+        stop = self._TELERAMA_TIMEZONE.localize(stop)
+        stop = stop.astimezone(local_tz)
+        final_stop_s = stop.strftime("%Hh%M")
+        program_dict['stop_time'] = final_stop_s
 
         # Title
         program_dict['title'] = program['titre']

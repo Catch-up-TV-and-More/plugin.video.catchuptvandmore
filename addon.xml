@@ -9,6 +9,7 @@
     <import addon="script.module.youtube.dl" version="18.225.0"/>
     <import addon="script.module.requests" version="2.12.4"/>
     <import addon="script.module.codequick" version="0.9.5"/>
+    <import addon="script.module.pytz" version="2014.2"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
