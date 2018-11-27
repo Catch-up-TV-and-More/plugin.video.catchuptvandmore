@@ -80,7 +80,7 @@ def list_categories(plugin, item_id):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'))
+    resp = urlquick.get(URL_ROOT('/programmes-tv'))
     root_soup = bs(resp.text, 'html.parser')
     categories_soup = root_soup.find(
         'ul',
@@ -106,49 +106,56 @@ def list_programs(plugin, item_id, category):
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'))
+    resp = urlquick.get(URL_ROOT('/programmes-tv'))
     root_soup = bs(resp.text, 'html.parser')
     programs_soup = root_soup.find(
         'ul',
         attrs={'id': 'js_filter_el_container'})
     for program in programs_soup.find_all('li'):
-        current_category = program['data-type']
-        if category == current_category or category == 'all':
-            item = Listitem()
-            program_url = program.find(
-                'div',
-                class_='description')
-            program_url = program_url.find('a')['href']
-            program_name = program.find(
-                'p',
-                class_='program').get_text()
-            img = program.find('img')
-            try:
-                img = img['data-srcset']
-            except Exception:
-                img = img['srcset']
+        is_channel_program = False
+        list_channels = program.find_all('div', class_=re.compile('channel'))
+        for channel in list_channels:
+            if item_id in channel.get('class'):
+                is_channel_program = True
 
-            img = 'http:' + img.split(',')[-1].split(' ')[0]
+        if is_channel_program:
+            current_category = program['data-type']
+            if category == current_category or category == 'all':
+                item = Listitem()
+                program_url = program.find(
+                    'div',
+                    class_='description')
+                program_url = program_url.find('a')['href']
+                program_name = program.find(
+                    'p',
+                    class_='program').get_text()
+                img = program.find('img')
+                try:
+                    img = img['data-srcset']
+                except Exception:
+                    img = img['srcset']
 
-            if 'meteo.tf1.fr/meteo-france' in program_url:
-                item.label = program_name
-                item.art["thumb"] = img
-                item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    program_category_url=program_url
-                )
-                yield item
+                img = 'http:' + img.split(',')[-1].split(' ')[0]
 
-            else:
-                item.label = program_name
-                item.art["thumb"] = img
-                item.set_callback(
-                    list_program_categories,
-                    item_id=item_id,
-                    program_url=program_url
-                )
-                yield item
+                if 'meteo.tf1.fr/meteo-france' in program_url:
+                    item.label = program_name
+                    item.art["thumb"] = img
+                    item.set_callback(
+                        list_videos,
+                        item_id=item_id,
+                        program_category_url=program_url
+                    )
+                    yield item
+
+                else:
+                    item.label = program_name
+                    item.art["thumb"] = img
+                    item.set_callback(
+                        list_program_categories,
+                        item_id=item_id,
+                        program_url=program_url
+                    )
+                    yield item
 
 
 @Route.register
