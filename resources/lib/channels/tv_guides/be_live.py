@@ -89,7 +89,12 @@ def grab_tv_guide(channels):
                 start = datetime.datetime(*(time.strptime(
                     start_s, GUIDE_TIME_FORMAT)[0:6]))
 
-            local_tz = get_localzone()
+            try:
+                local_tz = get_localzone()
+            except:
+                # Hotfix issue #102
+                local_tz = pytz.timezone('Europe/Brussels')
+            
             start = GUIDE_TIMEZONE.localize(start)
             start = start.astimezone(local_tz)
             start_time = start.strftime("%Hh%M")

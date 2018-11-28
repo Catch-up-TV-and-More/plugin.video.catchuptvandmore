@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta23"
+       version="0.2.0~beta24"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -72,6 +72,7 @@
 [Fix] Navigation Mycanal replay / Add notification for DRM video for mycanal replay (FR)
 [Remove] Specific Code for Kodi Jarvis (not supported by codequick)
 [Change] Update screenshots
+[Fix] Fir timezone error (issue #102)
     </news>
     <assets>
       <icon>icon.png</icon>

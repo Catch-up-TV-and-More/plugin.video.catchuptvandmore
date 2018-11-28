@@ -155,7 +155,11 @@ class TeleramaXMLTVGrabber:
         program_dict['id_chaine'] = program['id_chaine']
 
         # Horaire
-        local_tz = get_localzone()
+        try:
+            local_tz = get_localzone()
+        except:
+            # Hotfix issue #102
+            local_tz = pytz.timezone('Europe/Paris')
 
         start_s = program['horaire']['debut']
         try:
