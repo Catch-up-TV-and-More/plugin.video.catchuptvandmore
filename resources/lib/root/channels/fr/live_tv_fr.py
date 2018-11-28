@@ -155,21 +155,25 @@ def build_live_tv_menu(params):
     # current_time = int(time.strftime('%Y%m%d%H%M%S'))
     current_time = int(datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S'))
     if os.path.exists(XMLTV_FILEPATH):
-        tree = ET.parse(XMLTV_FILEPATH)
-        root = tree.getroot()
-        for channel in root.findall('channel'):
-            channels_xmltv[channel.get('id')] = channel
-        for pgrm in root.findall('programme'):
-            pgrm_channel = pgrm.get('channel')
-            if pgrm_channel in pgrms_xmltv:
-                continue
-            pgrm_start_s = pgrm.get('start')
-            pgrm_start = int(pgrm_start_s.split()[0])
-            pgrm_stop_s = pgrm.get('stop')
-            pgrm_stop = int(pgrm_stop_s.split()[0])
-            if current_time >= pgrm_start and \
-                    current_time <= pgrm_stop:
-                pgrms_xmltv[pgrm_channel] = pgrm
+        try:
+            tree = ET.parse(XMLTV_FILEPATH)
+        except Exception:
+            tree = None
+        if tree is not None:
+            root = tree.getroot()
+            for channel in root.findall('channel'):
+                channels_xmltv[channel.get('id')] = channel
+            for pgrm in root.findall('programme'):
+                pgrm_channel = pgrm.get('channel')
+                if pgrm_channel in pgrms_xmltv:
+                    continue
+                pgrm_start_s = pgrm.get('start')
+                pgrm_start = int(pgrm_start_s.split()[0])
+                pgrm_stop_s = pgrm.get('stop')
+                pgrm_stop = int(pgrm_stop_s.split()[0])
+                if current_time >= pgrm_start and \
+                        current_time <= pgrm_stop:
+                    pgrms_xmltv[pgrm_channel] = pgrm
 
     # We sort not hidden channels
     menu = []

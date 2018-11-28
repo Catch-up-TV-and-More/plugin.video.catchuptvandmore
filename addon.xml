@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.1.17"
+       version="0.1.18"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.24.0"/>
@@ -30,8 +30,8 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.1.17]
-[WARNING] Please update to Kodi 17 or 18 to continue using this addon. Thank you.
+[Version 0.1.18]
+[HotFix] Guide TV FR if xmltv_fr.xml is not wellformatted
     </news>
     <assets>
       <icon>icon.png</icon>
