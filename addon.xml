@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.0~beta24"
+       version="0.2.1~beta0"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -33,46 +33,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.O]
-[Framework] Switch to CodeQuick framework
-[New] TV Guide FR
-[Add Channel] STV (UK)
-[Improvements] Allocine - Add new contents / fix thumb in certain cases (FR)
-[Improvements] FranceTV - Add subtitle for Replay (FR)
-[Add Channel] J-One (FR)
-[Add Live TV] viàATV, vià93 et viàGrandParis (FR)
-[Add Channel] Atresplayer (ES) - Kodi 17.6 and inputstream.adaptive "enable" are required
-[Improvements] MYTF1 - Add notification when the video is not available - Get list of programs more accurate (FR)
-[Fix] Taratata - Video from FranceTV (FR)
-[Add Live TV] نسمة تي في (TN)
-[Remove] Heart TV - Live TV (UK)
-[Add Live TV] Kerrang, Magic, Kiss, The Box, Box Hits, Box Upfront (UK)
-[Fix] BVN - Fix dash behind every video title - Thanks Forage (WO)
-[Fix] Arte TV - Replay (WO)
-[Add Channel - Live TV] La7 (IT)
-[Readd Channel] TéléMB (BE)
-[Fix] Canal+ - Fix some errors on Replay (FR)
-[Fix] RMC Story - Dates on Replay (FR)
-[Add Live TV] All Live Rai (Rai 1, 2, News 24, Sport, ...) (IT)
-[Add Channel] Jack (mycanal) (FR)
-[Improvements] BVN - Add time on video title - Thanks Forage (WO)
-[Add Channel] Antenne Réunion (FR)
-[Add Channel] Caledonia (FR)
-[Add Channel] La7d (IT)
-[Add Website] Les Argonautes (CA)
-[Add Channel] Rai Play (IT)
-[Fix] RTL 2 and Fun Radio Live TV (FR)
-[Add Channel - Live TV] Tébéo (FR)
-[Fix] Autoplus - website (FR)
-[Change] Dailymotion content rely on youtube-dl
-[Improvements] FranceTV - Replay - Add program Name in recent videos (FR)
-[Fix] BFM TV / BFM Business / BFM Paris - Live TV (FR)
-[Improvements] Add TV Guide (BE)
-[Improvements] Add settings to activate subtitle if present in the content (desactivate by default)
-[Fix] Navigation Mycanal replay / Add notification for DRM video for mycanal replay (FR)
-[Remove] Specific Code for Kodi Jarvis (not supported by codequick)
-[Change] Update screenshots
-[Fix] Fir timezone error (issue #102)
+[Version 0.2.1]
     </news>
     <assets>
       <icon>icon.png</icon>
