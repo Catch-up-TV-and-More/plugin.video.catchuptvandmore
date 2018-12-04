@@ -14,16 +14,21 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### TV
 - Blaze *(Replay, Live TV)*
 - Sky News *(Replay, Live TV)*
-- STV *(Live TV)*
+- STV *(Replay, Live TV)*
 - Quest OD *(Replay)*
-- Heart TV *(Live TV)*
+- Kerrang *(Live TV)*
+- Magic *(Live TV)*
+- Kiss *(Live TV)*
+- The Box *(Live TV)*
+- Box Hits *(Live TV)*
+- Box Upfront *(Live TV)*
 
 ##### Web TV
 - Sky Sports — Sky *(Replay)*
 
 ### Belgique — *Belgium*
 ##### TV Communauté française — *French Community TV*
-- RTBF Auvio (La Une, La Deux, La Trois, ...) *(Replay, Live)*
+- RTBF Auvio *(Replay, Live)*
 - RTL-TVI *(Replay)*
 - PLUG RTL *(Replay)*
 - CLUB RTL *(Replay)*
@@ -38,7 +43,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RTL Sport *(Replay)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
-- VRT NU (Eén, Canvas, ...) *(Replay with VRT NU account)*
+- VRT NU *(Replay with VRT NU account)*
 - Eén *(Live TV)*
 - Canvas *(Live TV)*
 - Ketnet *(Live TV)*
@@ -74,6 +79,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Nova *(Live TV)*
 - Mega *(Live TV)*
 - Atreseries *(Live TV)*
+- Atresplayer *(Replay)* - *(Kodi 17.6 and inputstream.adaptive "enable" are required)*
 
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV
@@ -132,13 +138,19 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Polar+ *(Replay)*
 - Virgin Radio TV *(Live TV)*
 - KTO *(Replay, Live TV)*
-- Antenne Réunion *(Live TV)*
-- ViàOccitanie *(Live TV)*
+- Antenne Réunion *(Replay, Live TV)*
+- viàOccitanie *(Live TV)*
 - Ouatch TV *(Replay, Live TV)*
 - Canal 10 *(Live TV)*
 - Fun Radio *(Replay, Live TV)*
 - RTL 2 *(Replay, Live TV)*
 - La Chaîne Météo *(Replay)*
+- J-One *(Replay)*
+- vià93 *(Live TV)*
+- viàGrandParis *(Live TV)*
+- viàATV *(Live TV)*
+- Caledonia *(Replay)*
+- Tébéo *(Replay, Live TV)*
 
 ##### Web TV
 - Stories — 6play *(Replay)*
@@ -151,6 +163,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France TV Education — francetv *(Replay)*
 - France TV Slash — francetv *(Replay)*
 - Culturebox — francetv *(Replay)*
+- Jack — mycanal *(Replay)*
 
 ### Internationales — *International*
 ##### TV
@@ -177,6 +190,25 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Paramount Channel *(Live TV)* *(Contents {ES|IT})*
 - Afrique Media *(Replay, Live TV)*
 - Channel NewsAsia *(Replay, Live TV)*
+
+### Italie — *Italia*
+##### TV
+- La7 *(Replay, Live TV)*
+- Rai News 24 *(Live TV)*
+- Rai 1 *(Live TV)*
+- Rai 2 *(Live TV)*
+- Rai 3 *(Live TV)*
+- Rai 4 *(Live TV)*
+- Rai 5 *(Live TV)*
+- Rai Sport *(Live TV)*
+- Rai Movie *(Live TV)*
+- Rai Premium *(Live TV)*
+- Rai Yoyo *(Live TV)*
+- Rai Gulp *(Live TV)*
+- Rai Storia *(Live TV)*
+- Rai Scuola *(Live TV)*
+- La7d *(Replay)*
+- Rai Play *(Replay)*
 
 ### Japon — *Japan*
 ##### TV
@@ -236,6 +268,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Tunisie — *Tunisia*
 - التلفزة التونسية الوطنية 1 *(Live TV)*
 - التلفزة التونسية الوطنية 2 *(Live TV)*
+- نسمة تي في *(Live TV)*
 
 ## Sites internet disponibles — *Available Websites*
 ### Belgique — *Belgium*
@@ -245,6 +278,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ##### Communauté française — *French Community*
 - Au pays des Têtes à claques <https://www.tetesaclaques.tv/>
 - Office National du Film du Canada <https://www.onf.ca/>
+- Les Argonautes <http://lesargonautes.telequebec.tv>
 
 ##### Communauté anglaise — *English Community*
 - National Film Board Of Canada <https://www.nfb.ca/>
@@ -257,10 +291,11 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Taratata <http://mytaratata.com/>
 - Noob TV <http://noob-tv.com/>
 - Culturepub <http://www.culturepub.fr/>
-- Auto Plus <https://video.autoplus.fr/>
-- 30 Millions d'Amis <http://www.30millionsdamis.fr/>
-- Elle <http://www.elle.fr/>
+- Auto Plus <https://www.autoplus.fr/video/>
+- 30 Millions d'Amis <http://www.30millionsdamis.fr>
+- Elle <http://videos.elle.fr>
 - Ina <http://www.ina.fr/>
+- Marmiton <https://www.marmiton.org/>
 
 ### Suisse — *Switzerland*
 ##### Communauté française — *French Community*
