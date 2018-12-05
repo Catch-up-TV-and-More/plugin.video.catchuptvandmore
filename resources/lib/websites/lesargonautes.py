@@ -113,6 +113,10 @@ def get_video_url(
         plugin, item_id, video_id, download_mode=False, video_label=None):
     """Get video URL and start video player"""
 
+    if video_id == '':
+        plugin.notify('ERROR', plugin.localize(30716))
+        return False
+
     resp = urlquick.get(URL_STREAM_DATAS % video_id, verify=False)
     json_parser = json.loads(resp.text)
 
