@@ -720,6 +720,18 @@ UK_LIVE = {
         'thumb': ['channels', 'uk', 'box-hits.png'],
         'fanart': ['channels', 'uk', 'box-hits_fanart.jpg'],
         'module': 'resources.lib.channels.uk.boxplus'
+    },
+    'questtv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'questtv.png'],
+        'fanart': ['channels', 'uk', 'questtv_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.questod'
+    },
+    'questred': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'questred.png'],
+        'fanart': ['channels', 'uk', 'questred_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.questod'
     }
 }
 
@@ -1432,6 +1444,12 @@ UK_REPLAY = {
         'thumb': ['channels', 'uk', 'stv.png'],
         'fanart': ['channels', 'uk', 'stv_fanart.jpg'],
         'module': 'resources.lib.channels.uk.stv'
+    },
+    'uktvplay': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'uk', 'uktvplay.png'],
+        'fanart': ['channels', 'uk', 'uktvplay_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.uktvplay'
     }
 }
 

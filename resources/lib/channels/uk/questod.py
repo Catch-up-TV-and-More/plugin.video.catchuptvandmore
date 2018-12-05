@@ -20,16 +20,24 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
+# The unicode_literals import only has
+# an effect on Python 2.
+# It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+import resources.lib.cq_utils as cqu
 from resources.lib import download
 
+import inputstreamhelper
 import json
+import re
 import urlquick
+import xbmc
+import xbmcgui
 
 # TO DO
 
@@ -48,6 +56,11 @@ URL_VIDEOS = URL_ROOT + '/api/show-detail/%s'
 URL_STREAM = URL_ROOT + '/api/video-playback/%s'
 # path
 
+URL_LIVE = 'https://www.questod.co.uk/channel/%s'
+
+URL_LICENCE_KEY = 'https://lic.caas.conax.com/nep/wv/license|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&PreAuthorization=%s&Host=lic.caas.conax.com|R{SSM}|'
+# videoId
+
 CATEGORIES_MODE = {
     'FEATURED': 'featured',
     'MOST POPULAR': 'most-popular',
@@ -58,7 +71,6 @@ CATEGORIES_MODE = {
 CATEGORIES_MODE_AZ = {
     'A-Z': '-az'
 }
-
 
 def replay_entry(plugin, item_id):
     """
@@ -215,9 +227,7 @@ def list_videos(plugin, item_id, program_id, program_season_number):
                     get_video_url,
                     item_id=item_id,
                     video_id=video_id,
-                    video_title=video_title,
-                    video_plot=video_plot,
-                    video_image=video_image
+                    item_dict=cqu.item2dict(item)
                 )
                 yield item
 
@@ -228,7 +238,7 @@ def list_videos(plugin, item_id, program_id, program_season_number):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, video_title, video_plot, video_image,
+        plugin, item_id, video_id, item_dict,
         download_mode=False, video_label=None):
 
     resp = urlquick.get(URL_STREAM % video_id, max_age=-1)
@@ -242,16 +252,84 @@ def get_video_url(
                 plugin.notify('ERROR', plugin.localize(30716))
             return False
 
-    if 'drmEnabled' in json_parser["playback"]:
-        if json_parser["playback"]["drmEnabled"]:
-            Script.notify(
-                "TEST",
-                plugin.localize(LABELS['drm_notification']),
-                Script.NOTIFY_INFO)
+    if 'drmToken' in json_parser["playback"]:
+
+        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
+
+        if xbmc_version < 18:
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30602))
             return False
-    final_video_url = json_parser["playback"]["streamUrlHls"]
 
-    if download_mode:
-        return download.download_video(final_video_url, video_label)
+        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not is_helper.check_inputstream():
+            return False
 
-    return final_video_url
+        token = json_parser["playback"]["drmToken"]
+
+        item = Listitem()
+        item.path = json_parser["playback"]["streamUrlDash"]
+        item.label = item_dict['label']
+        item.info.update(item_dict['info'])
+        item.art.update(item_dict['art'])
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
+
+        return item
+    else:
+        final_video_url = json_parser["playback"]["streamUrlHls"]
+
+        if download_mode:
+            return download.download_video(final_video_url, video_label)
+
+        return final_video_url
+
+
+def live_entry(plugin, item_id, item_dict):
+    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, video_id, item_dict):
+
+    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
+
+    if xbmc_version < 18:
+        xbmcgui.Dialog().ok(
+            'Info',
+            plugin.localize(30602))
+        return False
+
+    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
+
+    if item_id == 'questtv':
+        resp = urlquick.get(URL_LIVE % 'quest', max_age=-1)
+    elif item_id == 'questred':
+        resp = urlquick.get(URL_LIVE % 'quest-red', max_age=-1)
+
+    if len(re.compile(
+        r'drmToken\"\:\"(.*?)\"').findall(resp.text)) > 0:
+        token = re.compile(
+            r'drmToken\"\:\"(.*?)\"').findall(resp.text)[0]
+        if len(re.compile(
+            r'streamUrlDash\"\:\"(.*?)\"').findall(resp.text)) > 0:
+            live_url = re.compile(
+                r'streamUrlDash\"\:\"(.*?)\"').findall(resp.text)[0]
+
+            item = Listitem()
+            item.path = live_url
+            item.label = item_dict['label']
+            item.info.update(item_dict['info'])
+            item.art.update(item_dict['art'])
+            item.property['inputstreamaddon'] = 'inputstream.adaptive'
+            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
+            return item
+    plugin.notify('ERROR', plugin.localize(30713))
+    return False

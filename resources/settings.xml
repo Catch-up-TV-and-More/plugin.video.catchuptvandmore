@@ -236,6 +236,15 @@
 
             <setting label="Box Upfront" type="bool" id="box-upfront" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="box-upfront.order" default="16"/>
+
+            <setting label="UKTV Play" type="bool" id="uktvplay" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="uktvplay.order" default="17"/>
+
+            <setting label="Quest TV" type="bool" id="questtv" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="questtv.order" default="18"/>
+
+            <setting label="Quest Red" type="bool" id="questred" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="questred.order" default="19"/>
         <!-- United Kingdom -->
 
 

@@ -323,7 +323,6 @@ LABELS = {
     'skysports': 'Sky Sports',
     'stv': 'STV',
     'questod': 'Quest OD',
-    'hearttv': 'Heart TV',
     'questred': 'Quest RED',
     'questtv': 'Quest TV',
     'kerrang': 'Kerrang',
@@ -332,6 +331,7 @@ LABELS = {
     'the-box': 'The Box',
     'box-upfront': 'Box Upfront',
     'box-hits': 'Box Hits',
+    'uktvplay': 'UKTV Play',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',
