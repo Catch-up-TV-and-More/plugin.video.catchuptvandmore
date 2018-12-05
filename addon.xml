@@ -36,7 +36,11 @@
     <news>
 [Version 0.2.1]
 [Add] InputStreamHelper
-[Improvements] Les Argonautes - check video is available
+[Improvements] Les Argonautes - check video is available (CA)
+[Fix] Allocine - Change website (FR)
+[Add Channel] Add UKTV Play - DRM Contents (UK)
+[Add Live TV] Quest TV and Quest RED - DRM Contents (UK)
+[Add DRM] Quest OD (UK)
     </news>
     <assets>
       <icon>icon.png</icon>
