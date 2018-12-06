@@ -402,6 +402,30 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'tebeo.png'],
         'fanart': ['channels', 'fr', 'tebeo_fanart.jpg'],
         'module': 'resources.lib.channels.fr.tebeo'
+    },
+    'mb': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'mb.png'],
+        'fanart': ['channels', 'fr', 'mb_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'm6': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'm6.png'],
+        'fanart': ['channels', 'fr', 'm6_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'w9': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'w9.png'],
+        'fanart': ['channels', 'fr', 'w9_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    '6ter': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', '6ter.png'],
+        'fanart': ['channels', 'fr', '6ter_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
     }
 }
 
