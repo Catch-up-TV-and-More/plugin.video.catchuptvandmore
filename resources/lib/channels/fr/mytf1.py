@@ -31,6 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+import resources.lib.cq_utils as cqu
 
 
 from bs4 import BeautifulSoup as bs
@@ -38,10 +39,12 @@ from bs4 import BeautifulSoup as bs
 # https://docs.python.org/3/library/hashlib.html
 from hashlib import md5
 
+import inputstreamhelper
 import json
 import os
 import re
 import urlquick
+import xbmc
 import xbmcgui
 
 
@@ -59,7 +62,11 @@ VERSION = '2.1.3'
 HOSTING_APPLICATION_NAME = 'com.tf1.applitf1'
 HOSTING_APPLICATION_VERSION = '7.0.4'
 
-URL_VIDEO_STREAM = 'https://www.wat.tv/get/webhtml/%s'
+URL_VIDEO_STREAM = 'https://delivery.tf1.fr/mytf1-wrd/%s?format=%s'
+# videoId, format['hls', 'dash']
+
+URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=drm-wide.tf1.fr|R{SSM}|'
+# videoId
 
 DESIRED_QUALITY = Script.setting['quality']
 
@@ -260,7 +267,8 @@ def list_videos(plugin, item_id, program_category_url):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            program_id=program_id
+            program_id=program_id,
+            item_dict=cqu.item2dict(item)
         )
         yield item
 
@@ -341,7 +349,8 @@ def list_videos(plugin, item_id, program_category_url):
                     item.set_callback(
                         get_video_url,
                         item_id=item_id,
-                        program_id=program_id
+                        program_id=program_id,
+                        item_dict=cqu.item2dict(item)
                     )
                     yield item
 
@@ -366,7 +375,7 @@ def list_videos(plugin, item_id, program_category_url):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, program_id, download_mode=False, video_label=None):
+        plugin, item_id, program_id, item_dict=None, download_mode=False, video_label=None):
 
     if 'www.wat.tv/embedframe' in program_id:
         url = 'http:' + program_id
@@ -390,66 +399,109 @@ def get_video_url(
             video_id = iframe_player_soup['data-watid']
         else:
             video_id = re.compile(
-                r'www\.tf1\.fr\/embedplayer\/(.*?)\"').findall(video_html)[0]
+                r'\"data\"\:\{\"id\"\:\"(.*?)\"').findall(video_html)[0]
 
-    url_json = URL_VIDEO_STREAM % video_id
+    video_format = 'hls'
+    url_json = URL_VIDEO_STREAM % (video_id, video_format)
     htlm_json = urlquick.get(
         url_json,
         headers={'User-Agent': web_utils.get_random_ua},
         max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
-    if 'error_desc' in json_parser:
+    if json_parser['code'] >= 400:
         plugin.notify('ERROR', plugin.localize(30716))
         return False
 
     # Check DRM in the m3u8 file
     manifest = urlquick.get(
-        json_parser["hls"],
+        json_parser["url"],
         headers={'User-Agent': web_utils.get_random_ua},
         max_age=-1).text
     if 'drm' in manifest:
-        Script.notify(
-            "INFO",
-            plugin.localize(LABELS['drm_notification']),
-            Script.NOTIFY_INFO)
-        return False
 
-    root = os.path.dirname(json_parser["hls"])
+        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
+        if xbmc_version < 18:
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30602))
+            return False
+        else:
+            video_format = 'dash'
 
-    manifest = urlquick.get(
-        json_parser["hls"].split('&max_bitrate=')[0],
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    if video_format == 'hls':
 
-    lines = manifest.text.splitlines()
-    final_video_url = ''
-    all_datas_videos_quality = []
-    all_datas_videos_path = []
-    for k in range(0, len(lines) - 1):
-        if 'RESOLUTION=' in lines[k]:
-            all_datas_videos_quality.append(
-                re.compile(
-                    r'RESOLUTION=(.*?),').findall(
-                    lines[k])[0])
-            all_datas_videos_path.append(
-                root + '/' + lines[k + 1])
-    if DESIRED_QUALITY == "DIALOG":
-        seleted_item = xbmcgui.Dialog().select(
-            plugin.localize(LABELS['choose_video_quality']),
-            all_datas_videos_quality)
-        final_video_url = all_datas_videos_path[seleted_item]
-    elif DESIRED_QUALITY == 'BEST':
-        # Last video in the Best
-        for k in all_datas_videos_path:
-            url = k
-        final_video_url = url
+        root = os.path.dirname(json_parser["url"])
+
+        url_without_max_bitrate_list = json_parser["url"].split('&max_bitrate=')
+        if '&' in url_without_max_bitrate_list[1]:
+            url_without_max_bitrate = url_without_max_bitrate_list[0] + '&' + url_without_max_bitrate_list[1].split('&')[1]
+        else:
+            url_without_max_bitrate = url_without_max_bitrate_list[0]
+        manifest = urlquick.get(
+            url_without_max_bitrate,
+            headers={'User-Agent': web_utils.get_random_ua},
+            max_age=-1)
+
+        lines = manifest.text.splitlines()
+        final_video_url = ''
+        all_datas_videos_quality = []
+        all_datas_videos_path = []
+        for k in range(0, len(lines) - 1):
+            if 'RESOLUTION=' in lines[k]:
+                all_datas_videos_quality.append(
+                    re.compile(
+                        r'RESOLUTION=(.*?),').findall(
+                        lines[k])[0])
+                all_datas_videos_path.append(
+                    root + '/' + lines[k + 1])
+        if DESIRED_QUALITY == "DIALOG":
+            seleted_item = xbmcgui.Dialog().select(
+                plugin.localize(LABELS['choose_video_quality']),
+                all_datas_videos_quality)
+
+            if seleted_item == -1:
+                return False
+
+            final_video_url = all_datas_videos_path[seleted_item]
+        elif DESIRED_QUALITY == 'BEST':
+            # Last video in the Best
+            for k in all_datas_videos_path:
+                url = k
+            final_video_url = url
+        else:
+            final_video_url = all_datas_videos_path[0]
+
+        if download_mode:
+            return download.download_video(final_video_url, video_label)
+        return final_video_url
+
     else:
-        final_video_url = all_datas_videos_path[0]
+        if download_mode:
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30603))
+            return False
 
-    if download_mode:
-        return download.download_video(final_video_url, video_label)
-    return final_video_url
+        url_json = URL_VIDEO_STREAM % (video_id, video_format)
+        htlm_json = urlquick.get(url_json, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+        json_parser = json.loads(htlm_json.text)
+
+        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not is_helper.check_inputstream():
+            return False
+
+        item = Listitem()
+        item.path = json_parser["url"]
+        item.label = item_dict['label']
+        item.info.update(item_dict['info'])
+        item.art.update(item_dict['art'])
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
+
+        return item
 
 
 def live_entry(plugin, item_id, item_dict):

@@ -480,6 +480,9 @@ msgctxt "#30602"
 msgid "This content is DRM protected. To be able to play it we invite you to update Kodi to the version 18 or above. Thank you for your understanding."
 msgstr "Ce contenu est protégé par DRM. Pour pouvoir le lire nous vous invitons à mettre à jour Kodi à la version 18 ou supérieure. Merci pour votre compréhension"
 
+msgctxt "#30603"
+msgid "This content is DRM protected. The download mode doesn't work for a content DRM protected. Thank you for your understanding."
+msgstr "Ce contenu est protégé par DRM. Le mode "téléchargement" ne fonctionne pas pour un contenu protégé par DRM. Merci pour votre compréhension"
 
 # Others (from 30700 to 30799)
 msgctxt "#30700"

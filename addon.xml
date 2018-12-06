@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.1~beta01"
+       version="0.2.1~beta02"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -41,6 +41,7 @@
 [Add Channel] Add UKTV Play - DRM Contents (UK)
 [Add Live TV] Quest TV and Quest RED - DRM Contents (UK)
 [Add DRM] Quest OD (UK)
+[Add DRM] MyTF1 (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

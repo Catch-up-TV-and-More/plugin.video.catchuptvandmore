@@ -266,6 +266,12 @@ def get_video_url(
         if not is_helper.check_inputstream():
             return False
 
+        if download_mode:
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30603))
+            return False
+
         token = json_parser["playback"]["drmToken"]
 
         item = Listitem()
