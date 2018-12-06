@@ -41,8 +41,10 @@
 [Add Channel] Add UKTV Play - DRM Contents (UK)
 [Add Live TV] Quest TV and Quest RED - DRM Contents (UK)
 [Add DRM] Quest OD (UK)
-[Add DRM] MyTF1 (FR)
-[Add DRM] 6play (FR)
+[Add DRM] MyTF1 Replay (FR)
+[Add DRM] 6play Replay and Live TV (FR)
+[Add Live TV] M6 Boutique (FR)
+[Add DRM] RTLPlay Replay (BE)
     </news>
     <assets>
       <icon>icon.png</icon>
