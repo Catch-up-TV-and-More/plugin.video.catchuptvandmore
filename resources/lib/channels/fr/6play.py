@@ -381,14 +381,19 @@ def get_video_url(
             r'\"eu1.gigya.com\"\,key\:\"(.*?)\"'
         ).findall(resp.text)[0]
 
-        module_name = '6play'
+        if plugin.setting.get_string('6play.login') == '' or\
+            plugin.setting.get_string('6play.password') == '':
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30604) % ('6play', 'https://www.6play.fr'))
+            return False
 
         # Build PAYLOAD
         payload = {
             "loginID": plugin.setting.get_string(
-                module_name + '.login'),
+                '6play.login'),
             "password": plugin.setting.get_string(
-                module_name + '.password'),
+                '6play.password'),
             "apiKey": api_key,
             "format": "jsonp",
             "callback": "jsonp_3bbusffr388pem4"
@@ -406,7 +411,7 @@ def get_video_url(
             resp2.text.replace('jsonp_3bbusffr388pem4(', '').replace(');', ''))
 
         if "UID" not in json_parser:
-            plugin.notify(module_name, plugin.localize(30711))
+            plugin.notify('ERROR', '6play : ' + plugin.localize(30711))
             return False
         account_id = json_parser["UID"]
         account_timestamp = json_parser["signatureTimestamp"]
@@ -534,14 +539,19 @@ def get_live_url(plugin, item_id, video_id, item_dict):
             r'\"eu1.gigya.com\"\,key\:\"(.*?)\"'
         ).findall(resp.text)[0]
 
-        module_name = '6play'
+        if plugin.setting.get_string('6play.login') == '' or\
+            plugin.setting.get_string('6play.password') == '':
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30604) % ('6play', 'https://www.6play.fr'))
+            return False
 
         # Build PAYLOAD
         payload = {
             "loginID": plugin.setting.get_string(
-                module_name + '.login'),
+                '6play.login'),
             "password": plugin.setting.get_string(
-                module_name + '.password'),
+                '6play.password'),
             "apiKey": api_key,
             "format": "jsonp",
             "callback": "jsonp_3bbusffr388pem4"
@@ -559,7 +569,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
             resp2.text.replace('jsonp_3bbusffr388pem4(', '').replace(');', ''))
 
         if "UID" not in json_parser:
-            plugin.notify(module_name, plugin.localize(30711))
+            plugin.notify('ERROR', '6play : ' + plugin.localize(30711))
             return False
         account_id = json_parser["UID"]
         account_timestamp = json_parser["signatureTimestamp"]

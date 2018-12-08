@@ -483,6 +483,10 @@ msgctxt "#30603"
 msgid "This content is DRM protected. The download mode doesn't work for a content DRM protected. Thank you for your understanding."
 msgstr ""
 
+msgctxt "#30604"
+msgid "This content require an account %s. You could configure your login and your password in the configuration of this addon. If you don't have an account, you could create it at this url %s."
+msgstr ""
+
 # Others (from 30700 to 30799)
 msgctxt "#30700"
 msgid "More videos..."

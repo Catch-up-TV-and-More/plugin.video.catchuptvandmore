@@ -400,14 +400,19 @@ def get_video_url(
             r'\"sso-login.rtl.be\"\,key\:\"(.*?)\"'
             ).findall(resp.text)[0]
 
-        module_name = 'rtlplaybe'
+        if plugin.setting.get_string('rtlplaybe.login') == '' or\
+            plugin.setting.get_string('rtlplaybe.password') == '':
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30604) % ('RTLPlay (BE)', 'https://www.rtlplay.be'))
+            return False
 
         # Build PAYLOAD
         payload = {
             "loginID": plugin.setting.get_string(
-                module_name + '.login'),
+                'rtlplaybe.login'),
             "password": plugin.setting.get_string(
-                module_name + '.password'),
+                'rtlplaybe.password'),
             "apiKey": api_key,
             "format": "jsonp",
             "callback": "jsonp_3bbusffr388pem4"
@@ -417,7 +422,7 @@ def get_video_url(
             URL_COMPTE_LOGIN, data=payload, headers={'User-Agent': web_utils.get_random_ua, 'referer':'https://www.rtlplay.be/connexion'})
         json_parser = json.loads(resp2.text.replace('jsonp_3bbusffr388pem4(', '').replace(');',''))
         if "UID" not in json_parser:
-            plugin.notify(module_name, plugin.localize(30711))
+            plugin.notify('ERROR', 'RTLPlay (BE) : ' + plugin.localize(30711))
             return None
         account_id = json_parser["UID"]
         account_timestamp = json_parser["signatureTimestamp"]
