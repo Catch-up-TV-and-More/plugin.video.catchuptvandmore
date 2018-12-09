@@ -65,7 +65,7 @@ LIVE_LA1ERE_REGIONS = {
     "Réunion": "reunion",
     "St-Pierre et Miquelon": "saintpierremiquelon",
     "Wallis et Futuna": "wallisfutuna",
-    "Outre-mer": "1ere"
+    "Outre-mer": ""
 }
 
 CORRECT_MONTH = {
