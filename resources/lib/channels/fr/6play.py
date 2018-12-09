@@ -459,7 +459,7 @@ def get_video_url(
                 item = Listitem()
                 item.path = asset['full_physical_path']
                 if 'http' in subtitle_url:
-                    item.listitem.setSubtitles([subtitle_url])
+                    item.subtitles.append(subtitle_url)
                 item.label = item_dict['label']
                 item.info.update(item_dict['info'])
                 item.art.update(item_dict['art'])
@@ -474,7 +474,7 @@ def get_video_url(
                     item = Listitem()
                     item.path = asset['full_physical_path']
                     if 'http' in subtitle_url:
-                        item.listitem.setSubtitles([subtitle_url])
+                        item.subtitles.append(subtitle_url)
                     item.label = item_dict['label']
                     item.info.update(item_dict['info'])
                     item.art.update(item_dict['art'])
@@ -512,7 +512,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                 item = Listitem()
                 item.path = asset['full_physical_path']
                 if 'http' in subtitle_url:
-                    item.listitem.setSubtitles([subtitle_url])
+                    item.subtitles.append(subtitle_url)
 
                 item.label = item_dict['label']
                 item.info.update(item_dict['info'])
@@ -624,7 +624,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                 item = Listitem()
                 item.path = asset['full_physical_path']
                 if 'http' in subtitle_url:
-                    item.listitem.setSubtitles([subtitle_url])
+                    item.subtitles.append(subtitle_url)
                 item.property['inputstreamaddon'] = 'inputstream.adaptive'
                 item.property['inputstream.adaptive.manifest_type'] = 'mpd'
                 item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'

@@ -291,7 +291,8 @@ def get_francetv_video_stream(
     if len(subtitles) > 0:
         item = Listitem()
         item.path = final_video_url
-        item.listitem.setSubtitles(subtitles)
+        for subtitle in subtitles:
+            item.subtitles.append(subtitle)
         item.label = item_dict['label']
         item.info.update(item_dict['info'])
         item.art.update(item_dict['art'])
