@@ -33,7 +33,10 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 
+from bs4 import BeautifulSoup as bs
+
 import json
+import re
 import urlquick
 
 '''
@@ -48,9 +51,7 @@ URL_ROOT = 'http://france3-regions.francetvinfo.fr'
 
 URL_LIVES_JSON = URL_ROOT + '/webservices/mobile/live.json'
 
-URL_JT_JSON = URL_ROOT + '/webservices/mobile/newscast.json?region=%s'
-# region
-
+URL_EMISSIONS = URL_ROOT + '/%s/emissions'
 
 LIVE_FR3_REGIONS = {
     "Alpes": "alpes",
@@ -113,45 +114,55 @@ def list_programs(plugin, item_id):
     """
     region = utils.ensure_unicode(Script.setting['france3.region'])
     region = LIVE_FR3_REGIONS[region]
-    resp = urlquick.get(URL_JT_JSON % region)
-    json_parser = json.loads(resp.text).keys()
+    resp2 = urlquick.get(URL_EMISSIONS % region)
+    root_soup = bs(resp2.text, 'html.parser')
+    list_programs_datas = root_soup.find_all(
+        'div', class_=re.compile('little-column-style--content col-sm-6 col-md-4'))
 
-    for list_jt_name in json_parser:
-        if list_jt_name != 'mea':
-            item = Listitem()
-            item.label = list_jt_name
-            item.set_callback(
-                list_videos,
-                item_id=item_id,
-                list_jt_name=list_jt_name)
-            yield item
+    for program_datas in list_programs_datas:
+        program_title = program_datas.find('h2').get_text()
+        program_plot = program_datas.find('div', class_='column-style--text hidden-xs').get_text()
+        program_image = program_datas.find('img').get('data-srcset')
+        program_url = program_datas.find('a').get('href')
+
+        item = Listitem()
+        item.label = program_title
+        item.art['thumb'] = program_image
+        item.info['plot'] = program_plot
+        item.set_callback(
+            list_videos,
+            item_id=item_id,
+            program_url=program_url)
+        yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, list_jt_name):
+def list_videos(plugin, item_id, program_url):
 
-    region = utils.ensure_unicode(Script.setting['france3.region'])
-    region = LIVE_FR3_REGIONS[region]
-    resp = urlquick.get(URL_JT_JSON % region)
-    json_parser = json.loads(resp.text)
+    resp = urlquick.get(program_url)
+    root_soup = bs(resp.text, 'html.parser')
+    list_videos_datas = root_soup.find_all(
+        'a', class_=re.compile('video_mosaic'))
 
-    for video_datas in json_parser[list_jt_name]:
-        video_title = video_datas["titre"] + ' - ' + video_datas["date"]
-        video_image = video_datas["url_image"]
-        id_diffusion = video_datas["id"]
-        date_value = video_datas["date"].split(' ')
-        day = date_value[1]
-        try:
-            month = CORRECT_MONTH[date_value[2]]
-        except Exception:
-            month = '00'
-        year = date_value[3]
-        date_value = '-'.join((year, month, day))
+    for video_datas in list_videos_datas:
+        video_title = video_datas.get('title')
+        video_plot = video_datas.get('description')
+        if video_datas.find('img').get('data-srcset'):
+            video_image = video_datas.find('img').get('data-srcset')
+        else:
+            video_image = video_datas.find('img').get('src')
+        id_diffusion = re.compile(
+            r'video\/(.*?)\@Regions').findall(video_datas.get('href'))[0]
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
-        item.info.date(date_value, '%Y-%m-%d')
+        item.info['plot'] = video_plot
+
+        date_value = ''
+        if video_datas.find('p', class_='slider-inline-style--text text-light m-t-0').get_text():
+            date_value = video_datas.find('p', class_='slider-inline-style--text text-light m-t-0').get_text().split(' du ')[1]
+            item.info.date(date_value, '%d/%m/%Y')
 
         item.context.script(
             get_video_url,
