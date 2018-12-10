@@ -1940,5 +1940,11 @@ WEBSITES = {
         'thumb': ['websites', 'lesargonautes.png'],
         'fanart': ['websites', 'lesargonautes_fanart.jpg'],
         'module': 'resources.lib.websites.lesargonautes'
+    },
+    'nationalfff': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'nationalfff.png'],
+        'fanart': ['websites', 'nationalfff_fanart.jpg'],
+        'module': 'resources.lib.websites.nationalfff'
     }
 }

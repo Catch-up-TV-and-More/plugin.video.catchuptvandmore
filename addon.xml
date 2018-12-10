@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.1~beta04"
+       version="0.2.1~beta05"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -49,6 +49,8 @@
 [Change] Add Subtitle to listitem - adapt the code to use last change of codequick
 [Fix] Function 'Clear cache' in the settings
 [Improvements] La 1ère and France3Region Replay (Add emissions, ...) (FR)
+[Fix] TZLocal on Windows
+[Add Website] National FFF (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

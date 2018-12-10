@@ -300,6 +300,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Elle <http://videos.elle.fr>
 - Ina <http://www.ina.fr/>
 - Marmiton <https://www.marmiton.org/>
+- National FFF <https://national.fff.fr/>
 
 ### Suisse — *Switzerland*
 ##### Communauté française — *French Community*
