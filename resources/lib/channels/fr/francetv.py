@@ -154,10 +154,10 @@ def list_programs(plugin, item_id, category_part_url, page = 0):
         item.label = program['label']
         if "media_image" in program:
             if program['media_image'] is not None:
-                for image_datas in program['media_image']['patterns']:
-                    if "vignette_16x9" in image_datas['type']:
+                for image in program['media_image']['patterns']:
+                    if "vignette_16x9" in image['type']:
                         item.art['thumb'] = URL_API(
-                            image_datas['urls']['w:1024'])
+                            image['urls']['w:1024'])
 
         if "description" in program:
             item.info['plot'] = program['description']
@@ -190,22 +190,22 @@ def list_videos_last(plugin, item_id, page = 1):
             'sort': "begin_date:desc"})
     json_parser = json.loads(resp.text)
 
-    for video_datas in json_parser['result']:
+    for video in json_parser['result']:
         item = Listitem()
-        id_diffusion = populate_item(item, video_datas, True)
+        broadcast_id = populate_item(item, video, True)
 
         item.context.script(
             get_video_url,
             plugin.localize(LABELS['Download']),
             item_id = item_id,
-            id_diffusion = id_diffusion,
+            id_diffusion = broadcast_id,
             video_label = LABELS[item_id] + " - " + item.label,
             download_mode = True)
 
         item.set_callback(
             get_video_url,
             item_id = item_id,
-            id_diffusion = id_diffusion,
+            id_diffusion = broadcast_id,
             item_dict = cqu.item2dict(item))
         yield item
 
@@ -230,22 +230,22 @@ def list_videos(plugin, item_id, program_part_url, page = 0):
             'sort': "sort = begin_date:desc"})
     json_parser = json.loads(resp.text)
 
-    for video_datas in json_parser['result']:
+    for video in json_parser['result']:
         item = Listitem()
-        id_diffusion = populate_item(item, video_datas)
+        broadcast_id = populate_item(item, video)
 
         item.context.script(
             get_video_url,
             plugin.localize(LABELS['Download']),
             item_id = item_id,
-            id_diffusion = id_diffusion,
+            id_diffusion = broadcast_id,
             video_label = LABELS[item_id] + " - " + item.label,
             download_mode = True)
 
         item.set_callback(
             get_video_url,
             item_id = item_id,
-            id_diffusion = id_diffusion,
+            id_diffusion = broadcast_id,
             item_dict = cqu.item2dict(item))
         yield item
 
@@ -381,20 +381,20 @@ def list_videos_search(plugin, item_id, search_query, page = 0):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, id_diffusion = None,
+        plugin, item_id, broadcast_id = None,
         id_yatta = None, item_dict = None, download_mode = False, video_label = None):
 
     if id_yatta is not None:
         url_yatta_video = "standard/publish/contents/%s" % id_yatta
         resp = urlquick.get(URL_API(url_yatta_video), max_age = -1)
         json_parser = json.loads(resp.text)
-        for media in json_parser['content_has_medias']:
-            if "si_id" in media['media']:
-                id_diffusion = media['media']['si_id']
+        for medium in json_parser['content_has_medias']:
+            if "si_id" in medium['media']:
+                broadcast_id = medium['media']['si_id']
                 break
 
     return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, item_dict, download_mode, video_label)
+        plugin, broadcast_id, item_dict, download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict):
@@ -410,21 +410,21 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         max_age = -1)
     json_parser = json.loads(resp.text)
 
-    for live in json_parser['result']:
-        if live['channel'] == item_id:
-            live_datas = live['collection'][0]['content_has_medias']
-            liveId = ""
-            for live_data in live_datas:
-                if "si_direct_id" in live_data['media']:
-                    liveId = live_data['media']['si_direct_id']
-            return resolver_proxy.get_francetv_live_stream(plugin, liveId)
+    for broadcast in json_parser['result']:
+        if broadcast['channel'] == item_id:
+            media = broadcast['collection'][0]['content_has_medias']
+            broadcast_id = ""
+            for medium in media:
+                if "si_direct_id" in medium['media']:
+                    broadcast_id = medium['media']['si_direct_id']
+            return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
 
 
-def populate_item(item, video_data, include_program_name = False): 
+def populate_item(item, video, include_program_name = False): 
     program_name = ""
-    for program_data in video_data['content_has_taxonomys']:
-        if program_data['type'] == "program":
-            program_name = program_data['taxonomy']['label']
+    for taxonomy in video['content_has_taxonomys']:
+        if taxonomy['type'] == "program":
+            program_name = taxonomy['taxonomy']['label']
     
     item.label = ""
     if program_name:
@@ -435,71 +435,71 @@ def populate_item(item, video_data, include_program_name = False):
     
     # What about "teaser" and "resume"?
     # E.g. http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-3_plus-belle-la-vie/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
-    if video_data['type'] == "extrait":
+    if video['type'] == "extrait":
         item.label += "[extrait] "
 
-    item.label += video_data['title']
+    item.label += video['title']
     
     # It's too bad item.info['title'] overrules item.label everywhere
     # so there's no difference between what is shown in the video list 
     # and what is shown in the video details
-    #item.info['title'] = video_data['title']
+    #item.info['title'] = video['title']
     item.info['title'] = item.label
     
-    image = ""
-    for video_media in video_data['content_has_medias']:
-        if video_media['type'] == "main":
-            id_diffusion = video_media['media']['si_id']
-            if video_data['type'] != "extrait":
-                item.info['duration'] = int(video_media['media']['duration'])
+    image_url = ""
+    for medium in video['content_has_medias']:
+        if medium['type'] == "main":
+            broadcast_id = medium['media']['si_id']
+            if video['type'] != "extrait":
+                item.info['duration'] = int(medium['media']['duration'])
             
-            rating = video_media['media']['rating_csa_code']
+            rating = medium['media']['rating_csa_code']
             # Add a dash before the numbers, instead of e.g. "TP",
             # to simulate the CSA logo instead of having the long description
             if rating.isdigit():
                 item.info['mpaa'] = "-" + rating
             else:
-                # Not using video_media['media']['rating_csa'] here, 
+                # Not using medium['media']['rating_csa'] here, 
                 # to be consistent with the search results that only include a code
                 item.info['mpaa'] = rating
-        elif video_media['type'] == "image":
-            for image_datas in video_media['media']['patterns']:
-                if image_datas['type'] == "vignette_16x9":
-                    image = URL_API(image_datas['urls']['w:1024'])
+        elif medium['type'] == "image":
+            for image in medium['media']['patterns']:
+                if image['type'] == "vignette_16x9":
+                    image_url = URL_API(image['urls']['w:1024'])
     
     # 2018-09-20T05:03:01+02:00
-    publication_date = video_data['first_publication_date'].split("T")[0]
+    publication_date = video['first_publication_date'].split("T")[0]
     item.info.date(publication_date, "%Y-%m-%d")
 
-    if "text" in video_data and video_data['text']:
-        item.info['plot'] = video_data['text']
+    if "text" in video and video['text']:
+        item.info['plot'] = video['text']
         
-    if "director" in video_data and video_data['director']:
-        item.info['director'] = video_data['director']
+    if "director" in video and video['director']:
+        item.info['director'] = video['director']
     
-    if "saison" in video_data and video_data['saison']:
-        item.info['season'] = video_data['saison']
+    if "saison" in video and video['saison']:
+        item.info['season'] = video['saison']
         
-    if "episode" in video_data and video_data['episode']:
+    if "episode" in video and video['episode']:
         # Now we know for sure we are dealing with an episode
         item.info['mediatype'] = "episode"
-        item.info['episode'] = video_data['episode']
+        item.info['episode'] = video['episode']
     
     actors = []
-    if "casting" in video_data and video_data['casting']:
-        actors = [actor.strip() for actor in video_data['casting'].split(",")]
-    elif "presenter" in video_data and video_data['presenter']:
-        actors.append(video_data['presenter'])
+    if "casting" in video and video['casting']:
+        actors = [actor.strip() for actor in video['casting'].split(",")]
+    elif "presenter" in video and video['presenter']:
+        actors.append(video['presenter'])
     
     item.info['cast'] = actors
     
-    if "characters" in video_data and video_data['characters']:
-        characters = [role.strip() for role in video_data['characters'].split(",")]
+    if "characters" in video and video['characters']:
+        characters = [role.strip() for role in video['characters'].split(",")]
         if len(actors) > 0 and len(characters) > 0:
             item.info['castandrole'] = list(zip_longest(actors, characters))
 
-    item.art['fanart'] = image
-    item.art['thumb'] = image
+    item.art['fanart'] = image_url
+    item.art['thumb'] = image_url
 
-    return id_diffusion
+    return broadcast_id
 
