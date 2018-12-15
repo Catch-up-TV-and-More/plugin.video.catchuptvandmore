@@ -701,6 +701,9 @@
 
             <setting label="ICI Tou.tv" type="bool" id="icitoutv" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="icitoutv.order" default="8"/>
+
+            <setting label="Télé-Mag" type="bool" id="telemag" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="telemag.order" default="9"/>
         <!-- Canada -->
 
 

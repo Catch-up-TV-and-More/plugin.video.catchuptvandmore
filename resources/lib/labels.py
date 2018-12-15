@@ -199,6 +199,7 @@ LABELS = {
     'icitele': 'ICI Télé',
     'ntvca': 'NTV',
     'icitoutv': 'ICI Tou.tv',
+    'telemag': 'Télé-Mag',
 
     # Switzerland channels / live TV
     'rts': 'RTS',

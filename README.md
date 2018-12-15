@@ -62,6 +62,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TVA *(Replay, Live TV)*
 - ICI Télé *(Replay, Live TV)*
 - ICI Tou.TV *(Replay)*
+- Télé-Mag *(Live TV)*
 
 ##### TV Communauté anglaise — *English Community TV*
 - NTV *(Live TV)*
