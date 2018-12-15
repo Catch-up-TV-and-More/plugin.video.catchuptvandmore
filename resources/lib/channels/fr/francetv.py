@@ -197,14 +197,14 @@ def list_videos_last(plugin, item_id, page = 1):
             get_video_url,
             plugin.localize(LABELS['Download']),
             item_id = item_id,
-            id_diffusion = broadcast_id,
+            broadcast_id = broadcast_id,
             video_label = LABELS[item_id] + " - " + item.label,
             download_mode = True)
 
         item.set_callback(
             get_video_url,
             item_id = item_id,
-            id_diffusion = broadcast_id,
+            broadcast_id = broadcast_id,
             item_dict = cqu.item2dict(item))
         yield item
 
@@ -237,14 +237,14 @@ def list_videos(plugin, item_id, program_part_url, page = 0):
             get_video_url,
             plugin.localize(LABELS['Download']),
             item_id = item_id,
-            id_diffusion = broadcast_id,
+            broadcast_id = broadcast_id,
             video_label = LABELS[item_id] + " - " + item.label,
             download_mode = True)
 
         item.set_callback(
             get_video_url,
             item_id = item_id,
-            id_diffusion = broadcast_id,
+            broadcast_id = broadcast_id,
             item_dict = cqu.item2dict(item))
         yield item
 
