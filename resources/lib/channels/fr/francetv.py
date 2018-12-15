@@ -149,7 +149,6 @@ def list_programs(plugin, item_id, category_part_url, page = 0):
 
     for program in json_parser['result']:
         item = Listitem()
-        item.info['mediatype'] = "tvshow"
 
         item.label = program['label']
         if "media_image" in program:
