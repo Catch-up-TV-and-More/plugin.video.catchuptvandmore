@@ -317,11 +317,14 @@ def list_videos_search(plugin, item_id, search_query, page = 0):
                 image_400 = show['image']['formats']['vignette_16x9']['urls']['w:400']
                 image_1024 = show['image']['formats']['vignette_16x9']['urls']['w:1024']
                 
-            rating = show['rating_csa_code']
-            # Add a dash before the numbers, instead of e.g. "TP",
-            # to simulate the CSA logo instead of having the long description
-            if rating and rating.isdigit():
-                rating = "-" + rating
+            rating = None
+            if 'rating_csa_code' in show and show['rating_csa_code']
+                rating = show['rating_csa_code']
+                
+                # Add a dash before the numbers, instead of e.g. "TP",
+                # to simulate the CSA logo instead of having the long description
+                if rating.isdigit():
+                    rating = "-" + rating
             
             item = Listitem()
             item.label = label
@@ -452,14 +455,16 @@ def populate_item(item, video, include_program_name = False):
             if video['type'] != "extrait":
                 item.info['duration'] = int(medium['media']['duration'])
             
-            rating = medium['media']['rating_csa_code']
-            # Add a dash before the numbers, instead of e.g. "TP",
-            # to simulate the CSA logo instead of having the long description
-            if rating and rating.isdigit():
-                item.info['mpaa'] = "-" + rating
-            else:
+            if 'rating_csa_code' in medium['media'] and medium['media']['rating_csa_code']
                 # Not using medium['media']['rating_csa'] here, 
                 # to be consistent with the search results that only include a code
+                rating = medium['media']['rating_csa_code']
+                
+                # Add a dash before the numbers, instead of e.g. "TP",
+                # to simulate the CSA logo instead of having the long description
+                if rating.isdigit():
+                    rating = "-" + rating
+                
                 item.info['mpaa'] = rating
         elif medium['type'] == "image":
             for image in medium['media']['patterns']:
