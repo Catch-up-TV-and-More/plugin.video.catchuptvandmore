@@ -320,7 +320,7 @@ def list_videos_search(plugin, item_id, search_query, page = 0):
             rating = show['rating_csa_code']
             # Add a dash before the numbers, instead of e.g. "TP",
             # to simulate the CSA logo instead of having the long description
-            if rating.isdigit():
+            if rating and rating.isdigit():
                 rating = "-" + rating
             
             item = Listitem()
@@ -455,7 +455,7 @@ def populate_item(item, video, include_program_name = False):
             rating = medium['media']['rating_csa_code']
             # Add a dash before the numbers, instead of e.g. "TP",
             # to simulate the CSA logo instead of having the long description
-            if rating.isdigit():
+            if rating and rating.isdigit():
                 item.info['mpaa'] = "-" + rating
             else:
                 # Not using medium['media']['rating_csa'] here, 
