@@ -33,8 +33,6 @@ from resources.lib import resolver_proxy
 
 from bs4 import BeautifulSoup as bs
 
-import json
-import re
 import urlquick
 
 # TODO
