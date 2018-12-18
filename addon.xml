@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.1~beta07"
+       version="0.2.2~beta07"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -34,7 +34,7 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.1]
+[Version 0.2.2]
 [Add] InputStreamHelper
 [Improvements] Les Argonautes - check video is available (CA)
 [Fix] Allocine - Change website (FR)
