@@ -151,7 +151,7 @@ def get_video_url(
     token = token_json_parser["token"]
 
     # get stream url
-    resp2 = urlquick.get(URL_VIDEO_REPLAY % (video_id, token))
+    resp2 = urlquick.get(URL_VIDEO_REPLAY % (video_id, token), max_age = -1)
     json_parser = json.loads(resp2.text)
     stream_url = ''
     if 'items' in json_parser:
