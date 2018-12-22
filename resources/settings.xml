@@ -871,7 +871,7 @@
     <category label="30007">
         <!-- Hide websites -->
         <setting label="30014" type="lsep" visible="eq(1,true)"/>
-        <setting label="" type="bool" id="websites" default="true" visible="false"/>
+        <!--<setting label="" type="bool" id="websites" default="true" visible="false"/>-->
 
             <setting label="Allociné" type="bool" id="allocine" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="allocine.order" default="1"/>
@@ -949,7 +949,7 @@
 
             <!-- International channels -->
             <setting label="30085" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="wo" default="true" visible="false"/>
+            <!--<setting label="" type="bool" id="wo" default="true" visible="false"/>-->
 
                 <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE|EN|ES|PL|IT" default="FR"/>
                 <setting label="30155" type="labelenum" id="euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU" default="FR"/>
@@ -964,20 +964,20 @@
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="fr" default="true" visible="false"/>
+            <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
                 <setting label="30158" type="labelenum" id="france3.region" visible="eq(-1,true)" values="Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes" default="Alpes"/>
                 <setting label="30159" type="labelenum" id="la_1ere.region" visible="eq(-2,true)" values="Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer" default="Guadeloupe"/>
 
             <!-- Spain channels -->
             <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="es" default="true" visible="false"/>
+            <!--<setting label="" type="bool" id="es" default="true" visible="false"/>-->
 
                 <setting label="30165" type="labelenum" id="realmadridtv.language" visible="eq(-1,true)" values="ES|EN" default="ES"/>
 
             <!-- Polish channels -->
             <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="pl" default="true" visible="false"/>
+            <!--<setting label="" type="bool" id="pl" default="true" visible="false"/>-->
 
                 <setting label="30167" type="labelenum" id="tvp3.region" visible="eq(-1,true)" values="Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław" default="Białystok"/>
 
@@ -1004,7 +1004,7 @@
     <category label="30004">
 
         <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="" type="bool" id="fr" default="true" visible="false"/>
+        <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
             <setting label="30240" type="text" id="nrj.login" visible="eq(-1,true)" defaut=""/>
             <setting label="30241" type="text" id="nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
@@ -1013,7 +1013,7 @@
             <setting label="30245" type="text" id="6play.password" option="hidden" visible="eq(-4,true)" defaut=""/>
 
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="" type="bool" id="be" default="true" visible="false"/>
+        <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
             <setting label="30242" type="text" id="vrt.login" visible="eq(-1,true)" defaut=""/>
             <setting label="30243" type="text" id="vrt.password" option="hidden" visible="eq(-2,true)" defaut=""/>

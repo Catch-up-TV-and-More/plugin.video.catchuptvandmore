@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.2~beta08"
+       version="0.2.2~beta09"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -56,6 +56,8 @@
 [Fix] Replay - RMC Decouverte (FR)
 [Improvements] Replay - France TV - Add more details - thanks Forage
 [Add Subtitle] BVN - Replay (WO)
+[Fix] BVN - Replay - Not using cache if token (WO)
+[Work-Around] Settings not shown for Kodi 18 - to be fixed
     </news>
     <assets>
       <icon>icon.png</icon>
