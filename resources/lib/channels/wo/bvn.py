@@ -146,7 +146,7 @@ def get_video_url(
         plugin, item_id, video_id, download_mode=False, video_label=None):
 
     # get token
-    resp = urlquick.get(URL_TOKEN)
+    resp = urlquick.get(URL_TOKEN, max_age = -1)
     token_json_parser = json.loads(resp.text)
     token = token_json_parser["token"]
 
