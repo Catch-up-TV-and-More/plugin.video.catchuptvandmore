@@ -59,6 +59,7 @@
 [Fix] BVN - Replay - Not using cache if token / no cache also for the token (WO)
 [Work-Around] Settings not shown for Kodi 18 - to be fixed
 [Update] Noob TV (website) (FR)
+[Fix] Website - Culture Pub (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

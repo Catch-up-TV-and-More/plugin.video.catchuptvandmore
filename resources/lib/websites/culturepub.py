@@ -29,6 +29,7 @@ import urlquick
 import xbmcgui
 
 from resources.lib.labels import LABELS
+from resources.lib import web_utils
 from resources.lib import download
 
 
@@ -156,7 +157,9 @@ def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
     """Get video URL and start video player"""
 
-    info_video_html = urlquick.get(video_url).text
+    info_video_html = urlquick.get(video_url,
+        headers={'User-Agent': web_utils.get_random_ua},
+        max_age=-1).text
     video_id = re.compile(
         'player=7&pod=(.*?)[\"\&]').findall(
         info_video_html)[0]
