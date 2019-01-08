@@ -483,7 +483,8 @@
             <setting label="RMC Découverte" type="bool" id="rmcdecouverte" default="true" visible="eq(-63,true)"/>
             <setting label="" type="number" visible="false" id="rmcdecouverte.order" default="32"/>
 
-            <setting label="Stories (6play)" type="bool" id="stories" default="true" visible="eq(-65,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Stories (6play)" type="bool" id="stories" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="stories.order" default="33"/>
 
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
@@ -502,7 +503,8 @@
             <setting label="Sixième Style (6play)" type="bool" id="styles" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="styles.order" default="37"/>
 
-            <setting label="Comic (6play)" type="bool" id="comedy" default="true" visible="eq(-75,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Comic (6play)" type="bool" id="comedy" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="comedy.order" default="38"/>
 
             <setting label="Public Sénat" type="bool" id="publicsenat" default="true" visible="eq(-77,true)"/>

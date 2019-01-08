@@ -257,8 +257,6 @@ LABELS = {
     'lci': 'LCI',
     'lcp': 'LCP Assemblée Nationale',
     'rmcdecouverte': 'RMC Découverte',
-    'stories': 'Stories (6play)',
-    'comedy': 'Comic (6play)',
     'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
     'france3regions': 'France 3 Régions (' + utils.ensure_unicode(Script.setting['france3.region']) + ')',

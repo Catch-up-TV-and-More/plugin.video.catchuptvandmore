@@ -158,8 +158,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - M6 Boutique *(Live TV)* *(with 6play account)*
 
 ##### Web TV
-- Stories — 6play *(Replay)*
-- Comic — 6play *(Replay)*
 - Tfou — MyTF1 *(Replay)*
 - 01Net TV *(Replay)*
 - France TV Sport — francetv *(Replay, Live)*

@@ -125,9 +125,7 @@ def list_categories(plugin, item_id):
     - Informations
     - ...
     """
-    if item_id == 'stories' or \
-        item_id == 'comedy' or \
-        item_id == 'rtl2' or \
+    if item_id == 'rtl2' or \
         item_id == 'fun_radio':
         resp = urlquick.get(URL_ROOT % item_id)
     else:

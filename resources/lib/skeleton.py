@@ -1099,18 +1099,6 @@ FR_REPLAY = {
         'fanart': ['channels', 'fr', '6ter_fanart.jpg'],
         'module': 'resources.lib.channels.fr.6play'
     },
-    'stories': {
-        'callback': 'replay_bridge',
-        'thumb': ['channels', 'fr', 'stories.png'],
-        'fanart': ['channels', 'fr', 'stories_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.6play'
-    },
-    'comedy': {
-        'callback': 'replay_bridge',
-        'thumb': ['channels', 'fr', 'comedy.png'],
-        'fanart': ['channels', 'fr', 'comedy_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.6play'
-    },
     'rtl2': {
         'callback': 'replay_bridge',
         'thumb': ['channels', 'fr', 'rtl2.png'],
