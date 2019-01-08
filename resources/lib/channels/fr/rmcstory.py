@@ -135,7 +135,7 @@ def list_videos(plugin, item_id, category_url, page):
             pass
         day = '00'
         month = '00'
-        year = '2018'
+        year = '2019'
         if len(date_list) > 3:
             day = date_list[2]
             try:
