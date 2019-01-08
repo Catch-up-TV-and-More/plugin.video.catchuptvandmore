@@ -41,6 +41,8 @@ URL_ROOT = 'https://www.lachainemeteo.com'
 
 URL_VIDEOS = URL_ROOT + '/videos-meteo/videos-la-chaine-meteo'
 
+URL_BRIGHTCOVE_DATAS = URL_ROOT + '/jsdyn/lcmjs.js'
+
 
 def replay_entry(plugin, item_id):
     """
@@ -117,12 +119,13 @@ def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url)
-    data_account = re.compile(
-        'players.brightcove.net/(.*?)/').findall(resp.text)[0]
     data_video_id = re.compile(
         'data-video-id=\'(.*?)\'').findall(resp.text)[0]
     data_player = re.compile(
         'data-player=\'(.*?)\'').findall(resp.text)[0]
+    resp2 = urlquick.get(URL_BRIGHTCOVE_DATAS)
+    data_account = re.compile(
+        'players.brightcove.net/(.*?)/').findall(resp2.text)[0]
     return resolver_proxy.get_brightcove_video_json(
         plugin,
         data_account,
