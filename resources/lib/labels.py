@@ -296,6 +296,7 @@ LABELS = {
     'jack': 'Jack (mycanal)',
     'caledonia': 'Caledonia',
     'tebeo': 'Tébéo',
+    'vialmtv': 'viàLMTv Sarthe',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

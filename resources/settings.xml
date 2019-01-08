@@ -627,6 +627,9 @@
 
             <setting label="M6 Boutique" type="bool" id="mb" default="true" visible="eq(-155,true)"/>
             <setting label="" type="number" visible="false" id="mb.order" default="78"/>
+
+            <setting label="viàLMTv Sarthe" type="bool" id="vialmtv" default="true" visible="eq(-157,true)"/>
+            <setting label="" type="number" visible="false" id="vialmtv.order" default="79"/>
         <!-- France -->
 
 

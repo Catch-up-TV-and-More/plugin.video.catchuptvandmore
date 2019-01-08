@@ -426,6 +426,12 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', '6ter.png'],
         'fanart': ['channels', 'fr', '6ter_fanart.jpg'],
         'module': 'resources.lib.channels.fr.6play'
+    },
+    'vialmtv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'vialmtv.png'],
+        'fanart': ['channels', 'fr', 'vialmtv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
     }
 }
 
