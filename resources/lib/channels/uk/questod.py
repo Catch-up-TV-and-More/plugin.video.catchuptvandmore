@@ -124,7 +124,9 @@ def list_programs_mode(plugin, item_id, category_name_value):
     for program_datas in json_parser["items"]:
         program_title = program_datas["title"]
         program_id = program_datas["id"]
-        program_image = program_datas["image"]["src"]
+        program_image = ''
+        if 'image' in program_datas:
+            program_image = program_datas["image"]["src"]
 
         item = Listitem()
         item.label = program_title
