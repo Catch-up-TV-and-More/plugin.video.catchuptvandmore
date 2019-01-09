@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.2~beta11"
+       version="0.2.2~beta12"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -51,7 +51,7 @@
 [Improvements] La 1ère and France3Region Replay (Add emissions, ...) (FR)
 [Fix] TZLocal on Windows
 [Add Website] National FFF (FR)
-[Add Live TV] Télé-Mag (CA)
+[Add Channel - Live TV] Télé-Mag (CA)
 [Fix] Replay - RMC story (FR)
 [Fix] Replay - RMC Decouverte (FR)
 [Improvements] Replay - France TV - Add more details - thanks Forage

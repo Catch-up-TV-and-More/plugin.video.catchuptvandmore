@@ -1790,6 +1790,12 @@ CA_REPLAY = {
         'thumb': ['channels', 'ca', 'icitele.png'],
         'fanart': ['channels', 'ca', 'icitele_fanart.jpg'],
         'module': 'resources.lib.channels.ca.icitele'
+    },
+    'telemag': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ca', 'telemag.png'],
+        'fanart': ['channels', 'ca', 'telemag_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.telemag'
     }
 }
 
