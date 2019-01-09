@@ -73,8 +73,10 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         return stream_url
     elif desired_language == 'JP':
         resp = urlquick.get(URL_LIVE_QVC_JP)
-        return 'http:' + re.compile(
-            r'src\', \'(.*?)\'').findall(resp.text)[0]
+        resp.encoding = "shift_jis"
+        return 'https://cdn-live1.qvc.jp' + re.compile(
+            r'cdn-live1\.qvc\.jp(.*?)\'').findall(
+                resp.text)[0] + '|referer=https://qvc.jp/cont/live/Main'
     elif desired_language == 'DE' or\
             desired_language == 'UK' or\
             desired_language == 'US':
