@@ -630,6 +630,9 @@
 
             <setting label="viàLMTv Sarthe" type="bool" id="vialmtv" default="true" visible="eq(-157,true)"/>
             <setting label="" type="number" visible="false" id="vialmtv.order" default="79"/>
+
+            <setting label="viàMirabelle" type="bool" id="viamirabelle" default="true" visible="eq(-159,true)"/>
+            <setting label="" type="number" visible="false" id="viamirabelle.order" default="80"/>
         <!-- France -->
 
 

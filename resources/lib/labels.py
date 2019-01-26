@@ -297,6 +297,7 @@ LABELS = {
     'caledonia': 'Caledonia',
     'tebeo': 'Tébéo',
     'vialmtv': 'viàLMTv Sarthe',
+    'viamirabelle': 'viàMirabelle',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

@@ -432,6 +432,12 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'vialmtv.png'],
         'fanart': ['channels', 'fr', 'vialmtv_fanart.jpg'],
         'module': 'resources.lib.channels.fr.via'
+    },
+    'viamirabelle': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'viamirabelle.png'],
+        'fanart': ['channels', 'fr', 'viamirabelle_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
     }
 }
 
