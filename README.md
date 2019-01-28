@@ -156,7 +156,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Caledonia *(Replay)*
 - Tébéo *(Replay, Live TV)*
 - M6 Boutique *(Live TV)* *(with 6play account)*
-- viàLMTv Sarthe *(Live TV)*
+- viàLMtv Sarthe *(Live TV)*
+- viàLMirabelle *(Live TV)*
 
 ##### Web TV
 - Tfou — MyTF1 *(Replay)*
