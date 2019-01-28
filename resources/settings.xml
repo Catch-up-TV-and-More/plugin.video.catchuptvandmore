@@ -236,6 +236,15 @@
 
             <setting label="Box Upfront" type="bool" id="box-upfront" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="box-upfront.order" default="16"/>
+
+            <setting label="UKTV Play" type="bool" id="uktvplay" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="uktvplay.order" default="17"/>
+
+            <setting label="Quest TV" type="bool" id="questtv" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="questtv.order" default="18"/>
+
+            <setting label="Quest Red" type="bool" id="questred" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="questred.order" default="19"/>
         <!-- United Kingdom -->
 
 
@@ -474,7 +483,8 @@
             <setting label="RMC Découverte" type="bool" id="rmcdecouverte" default="true" visible="eq(-63,true)"/>
             <setting label="" type="number" visible="false" id="rmcdecouverte.order" default="32"/>
 
-            <setting label="Stories (6play)" type="bool" id="stories" default="true" visible="eq(-65,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Stories (6play)" type="bool" id="stories" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="stories.order" default="33"/>
 
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
@@ -493,7 +503,8 @@
             <setting label="Sixième Style (6play)" type="bool" id="styles" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="styles.order" default="37"/>
 
-            <setting label="Comic (6play)" type="bool" id="comedy" default="true" visible="eq(-75,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Comic (6play)" type="bool" id="comedy" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="comedy.order" default="38"/>
 
             <setting label="Public Sénat" type="bool" id="publicsenat" default="true" visible="eq(-77,true)"/>
@@ -613,6 +624,15 @@
 
             <setting label="Tébéo" type="bool" id="tebeo" default="true" visible="eq(-153,true)"/>
             <setting label="" type="number" visible="false" id="tebeo.order" default="77"/>
+
+            <setting label="M6 Boutique" type="bool" id="mb" default="true" visible="eq(-155,true)"/>
+            <setting label="" type="number" visible="false" id="mb.order" default="78"/>
+
+            <setting label="viàLMTv Sarthe" type="bool" id="vialmtv" default="true" visible="eq(-157,true)"/>
+            <setting label="" type="number" visible="false" id="vialmtv.order" default="79"/>
+
+            <setting label="viàMirabelle" type="bool" id="viamirabelle" default="true" visible="eq(-159,true)"/>
+            <setting label="" type="number" visible="false" id="viamirabelle.order" default="80"/>
         <!-- France -->
 
 
@@ -689,6 +709,9 @@
 
             <setting label="ICI Tou.tv" type="bool" id="icitoutv" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="icitoutv.order" default="8"/>
+
+            <setting label="Télé-Mag" type="bool" id="telemag" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="telemag.order" default="9"/>
         <!-- Canada -->
 
 
@@ -856,7 +879,7 @@
     <category label="30007">
         <!-- Hide websites -->
         <setting label="30014" type="lsep" visible="eq(1,true)"/>
-        <setting label="" type="bool" id="websites" default="true" visible="false"/>
+        <!--<setting label="" type="bool" id="websites" default="true" visible="false"/>-->
 
             <setting label="Allociné" type="bool" id="allocine" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="allocine.order" default="1"/>
@@ -905,6 +928,9 @@
 
             <setting label="Les Argonautes" type="bool" id="lesargonautes" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="lesargonautes.order" default="16"/>
+
+            <setting label="National FFF" type="bool" id="nationalfff" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="nationalfff.order" default="17"/>
     </category>
     <!-- Websites -->
 
@@ -931,7 +957,7 @@
 
             <!-- International channels -->
             <setting label="30085" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="wo" default="true" visible="false"/>
+            <!--<setting label="" type="bool" id="wo" default="true" visible="false"/>-->
 
                 <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE|EN|ES|PL|IT" default="FR"/>
                 <setting label="30155" type="labelenum" id="euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU" default="FR"/>
@@ -946,20 +972,20 @@
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="fr" default="true" visible="false"/>
+            <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
                 <setting label="30158" type="labelenum" id="france3.region" visible="eq(-1,true)" values="Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes" default="Alpes"/>
                 <setting label="30159" type="labelenum" id="la_1ere.region" visible="eq(-2,true)" values="Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer" default="Guadeloupe"/>
 
             <!-- Spain channels -->
             <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="es" default="true" visible="false"/>
+            <!--<setting label="" type="bool" id="es" default="true" visible="false"/>-->
 
                 <setting label="30165" type="labelenum" id="realmadridtv.language" visible="eq(-1,true)" values="ES|EN" default="ES"/>
 
             <!-- Polish channels -->
             <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
-            <setting label="" type="bool" id="pl" default="true" visible="false"/>
+            <!--<setting label="" type="bool" id="pl" default="true" visible="false"/>-->
 
                 <setting label="30167" type="labelenum" id="tvp3.region" visible="eq(-1,true)" values="Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław" default="Białystok"/>
 
@@ -986,16 +1012,22 @@
     <category label="30004">
 
         <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="" type="bool" id="fr" default="true" visible="false"/>
+        <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
             <setting label="30240" type="text" id="nrj.login" visible="eq(-1,true)" defaut=""/>
             <setting label="30241" type="text" id="nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
 
+            <setting label="30244" type="text" id="6play.login" visible="eq(-3,true)" defaut=""/>
+            <setting label="30245" type="text" id="6play.password" option="hidden" visible="eq(-4,true)" defaut=""/>
+
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
-        <setting label="" type="bool" id="be" default="true" visible="false"/>
+        <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
             <setting label="30242" type="text" id="vrt.login" visible="eq(-1,true)" defaut=""/>
             <setting label="30243" type="text" id="vrt.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+
+            <setting label="30246" type="text" id="rtlplaybe.login" visible="eq(-3,true)" defaut=""/>
+            <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" visible="eq(-4,true)" defaut=""/>
 
     </category>
     <!-- Accounts -->

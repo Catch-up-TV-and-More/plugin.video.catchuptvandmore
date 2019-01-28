@@ -128,13 +128,14 @@ def list_videos(plugin, item_id, category_url, page):
                 int(video_duration_list[1])
 
         # get month and day on the page
+        date_list = ''
         try:
             date_list = utils.strip_tags(str(info_video[2])).split(' ')
         except:
             pass
         day = '00'
         month = '00'
-        year = '2018'
+        year = '2019'
         if len(date_list) > 3:
             day = date_list[2]
             try:
@@ -149,7 +150,10 @@ def list_videos(plugin, item_id, category_url, page):
         item.label = video_title
         item.art['thumb'] = video_img
         item.info['duration'] = video_duration
-        item.info.date(date_value, '%Y-%m-%d')
+        try:
+            item.info.date(date_value, '%Y-%m-%d')
+        except:
+            pass
 
         item.context.script(
             get_video_url,

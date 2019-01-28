@@ -37,6 +37,7 @@ import json
 import re
 import requests
 import urlquick
+import xbmcgui
 
 
 # TO DO
@@ -264,6 +265,13 @@ def get_video_url(
 
     session_requests = requests.session()
 
+    if plugin.setting.get_string('vrt.login') == '' or\
+        plugin.setting.get_string('vrt.password') == '':
+        xbmcgui.Dialog().ok(
+            'Info',
+            plugin.localize(30604) % ('VRT NU', 'https://www.vrt.be/vrtnu/'))
+        return False
+
     # Build PAYLOAD
     payload = {
         'loginID': plugin.setting.get_string(
@@ -281,7 +289,7 @@ def get_video_url(
     json_parser = json.loads(resp.text)
     if json_parser['statusCode'] != 200:
         plugin.notify(
-            'ERROR', item_id + ' : ' + plugin.localize(30711))
+            'ERROR', 'VRT NU : ' + plugin.localize(30711))
         return False
     # Request Token
     headers = {'Content-Type': 'application/json',

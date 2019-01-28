@@ -71,7 +71,7 @@ def list_programs(plugin, item_id):
     json_parser = json.loads(json_value)
 
     # All programs
-    for programs_datas in json_parser["teleShowsList"]["pageModel"]["data"]["programmes"]:
+    for programs_datas in json_parser["pages"]["teleShowsList"]["pageModel"]["data"]["programmes"]:
 
         if '/tele/' in programs_datas["link"]:
             program_title = programs_datas["title"]

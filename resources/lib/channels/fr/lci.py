@@ -90,7 +90,7 @@ def list_programs(plugin, item_id):
         attrs={'class': 'topic-chronology-milestone-component'})
     for program in programs_soup.find_all('li'):
         item = Listitem()
-        program_url = URL_LCI_ROOT + program.find(
+        program_url = URL_LCI_ROOT + '/emission/' + program.find(
             'a')['href']
         program_name = program.find(
             'h2',

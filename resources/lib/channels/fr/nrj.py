@@ -37,6 +37,7 @@ import json
 import re
 import requests
 import urlquick
+import xbmcgui
 
 
 # TO DO
@@ -223,6 +224,13 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
         ).findall(resp.text)[0]
 
+    if plugin.setting.get_string('nrj.login') == '' or\
+        plugin.setting.get_string('nrj.password') == '':
+        xbmcgui.Dialog().ok(
+            'Info',
+            plugin.localize(30604) % ('NRJ', 'http://www.nrj-play.fr'))
+        return False
+
     # Build PAYLOAD
     payload = {
         "login_form[email]": plugin.setting.get_string(
@@ -238,7 +246,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
     resp2 = session_requests.post(
         URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
-    if 'Une erreur est survenue' in repr(resp2.text):
+    if 'error alert alert-danger' in repr(resp2.text):
         plugin.notify('ERROR', 'NRJ : ' + plugin.localize(30711))
         return False
 

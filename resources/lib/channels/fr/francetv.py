@@ -37,36 +37,40 @@ import json
 import time
 import urlquick
 
+try:
+    from itertools import zip_longest as zip_longest
+except:
+    from itertools import izip_longest as zip_longest
 
-'''
+"""
 Channels:
     * France 2
     * France 3 Nationale
     * France 4
     * France Ô
     * France 5
-'''
+"""
 
-URL_API = utils.urljoin_partial('http://api-front.yatta.francetv.fr')
+URL_API = utils.urljoin_partial("http://api-front.yatta.francetv.fr")
 
-URL_LIVE_JSON = URL_API('standard/edito/directs')
+URL_LIVE_JSON = URL_API("standard/edito/directs")
 
 HEADERS_YATTA = {
-    'X-Algolia-API-Key': '80d9c91958fc448dd20042d399ebdf16',
-    'X-Algolia-Application-Id': 'VWDLASHUFE'
+    'X-Algolia-API-Key': "80d9c91958fc448dd20042d399ebdf16",
+    'X-Algolia-Application-Id': "VWDLASHUFE"
 }
 
 
-'''
-URL_SEARCH_VIDEOS = 'https://vwdlashufe-dsn.algolia.net/1/indexes/' \
-                    'yatta_prod_contents/query'
+"""
+URL_SEARCH_VIDEOS = "https://vwdlashufe-dsn.algolia.net/1/indexes/" \
+                    "yatta_prod_contents/query"
 
-URL_YATTA_VIDEO = URL_API + '/standard/publish/contents/%s'
+URL_YATTA_VIDEO = URL_API + "/standard/publish/contents/%s"
 # Param : id_yatta
 
-URL_VIDEOS = URL_API + '/standard/publish/taxonomies/%s/contents'
+URL_VIDEOS = URL_API + "/standard/publish/taxonomies/%s/contents"
 # program
-'''
+"""
 
 
 def replay_entry(plugin, item_id):
@@ -88,43 +92,43 @@ def list_categories(plugin, item_id):
     # URL example: http://api-front.yatta.francetv.fr/standard/publish/channels/france-2/categories/
     # category_part_url example: actualites-et-societe
 
-    url_categories = 'standard/publish/channels/%s/categories/' % item_id
+    url_categories = "standard/publish/channels/%s/categories/" % item_id
     resp = urlquick.get(URL_API(url_categories))
     json_parser = json.loads(resp.text)
 
-    for category in json_parser["result"]:
+    for category in json_parser['result']:
         item = Listitem()
 
-        item.label = category["label"]
-        category_part_url = category["url"]
+        item.label = category['label']
+        category_part_url = category['url']
 
         item.set_callback(
             list_programs,
-            item_id=item_id,
-            category_part_url=category_part_url)
+            item_id = item_id,
+            category_part_url = category_part_url)
         yield item
 
-    '''
+    """
     Seems to be broken in current CodeQuick version
     yield Listitem.recent(
         list_videos_last,
-        item_id=item_id)
-    '''
+        item_id = item_id)
+    """
     item = Listitem()
-    item.label = 'Recent'
+    item.label = "Recent"
     item.set_callback(
         list_videos_last,
-        item_id=item_id)
+        item_id = item_id)
     yield item
 
     item = Listitem.search(
         list_videos_search,
-        item_id=item_id)
+        item_id = item_id)
     yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category_part_url, page=0):
+def list_programs(plugin, item_id, category_part_url, page = 0):
     """
     Build programs listing
     - Journal de 20H
@@ -132,206 +136,147 @@ def list_programs(plugin, item_id, category_part_url, page=0):
     """
     # URL example: http://api-front.yatta.francetv.fr/standard/publish/categories/actualites-et-societe/programs/france-2/?size=20&page=0&filter=with-no-vod,only-visible&sort=begin_date:desc
     # program_part_url example: france-2_cash-investigation
-    url_programs = 'standard/publish/categories/%s/programs/%s/' % (
+    url_programs = "standard/publish/categories/%s/programs/%s/" % (
         category_part_url, item_id)
     resp = urlquick.get(
         URL_API(url_programs),
-        params={
+        params = {
             'size': 20,
             'page': page,
-            'filter': 'with-no-vod,only-visible',
-            'sort': 'begin_date:desc'})
+            'filter': "with-no-vod,only-visible",
+            'sort': "begin_date:desc"})
     json_parser = json.loads(resp.text)
 
-    for program in json_parser["result"]:
+    for program in json_parser['result']:
         item = Listitem()
 
-        item.label = program["label"]
-        if 'media_image' in program:
-            if program["media_image"] is not None:
-                for image_datas in program["media_image"]["patterns"]:
-                    if "vignette_16x9" in image_datas["type"]:
+        item.label = program['label']
+        if "media_image" in program:
+            if program['media_image'] is not None:
+                for image in program['media_image']['patterns']:
+                    if "vignette_16x9" in image['type']:
                         item.art['thumb'] = URL_API(
-                            image_datas["urls"]["w:1024"])
+                            image['urls']['w:1024'])
 
-        if 'description' in program:
+        if "description" in program:
             item.info['plot'] = program['description']
 
-        program_part_url = program["url_complete"].replace('/', '_')
+        program_part_url = program['url_complete'].replace("/", "_")
 
         item.set_callback(
             list_videos,
-            item_id=item_id,
-            program_part_url=program_part_url)
+            item_id = item_id,
+            program_part_url = program_part_url)
         yield item
 
     # Next page
-    if json_parser["cursor"]["next"] is not None:
+    if json_parser['cursor']['next'] is not None:
         yield Listitem.next_page(
-            item_id=item_id,
-            category_part_url=category_part_url,
-            page=json_parser["cursor"]["next"])
+            item_id = item_id,
+            category_part_url = category_part_url,
+            page = json_parser['cursor']['next'])
 
 
 @Route.register
-def list_videos_last(plugin, item_id, page=1):
-    url_last = 'standard/publish/channels/%s/contents/' % item_id
+def list_videos_last(plugin, item_id, page = 1):
+    url_last = "standard/publish/channels/%s/contents/" % item_id
     resp = urlquick.get(
         URL_API(url_last),
-        params={
+        params = {
             'size': 20,
             'page': page,
-            'filter': 'with-no-vod,only-visible',
-            'sort': 'begin_date:desc'})
+            'filter': "with-no-vod,only-visible",
+            'sort': "begin_date:desc"})
     json_parser = json.loads(resp.text)
 
-    for video_datas in json_parser["result"]:
+    for video in json_parser['result']:
         item = Listitem()
-        program_name = ''
-        for program_datas in video_datas["content_has_taxonomys"]:
-            if 'program' in program_datas["type"]:
-                program_name = program_datas['taxonomy']['label']
-
-        if program_name:
-            if video_datas["type"] == 'extrait':
-                item.label = 'Extrait - ' + program_name + ' ' + video_datas["title"]
-            else:
-                item.label = program_name + ' ' + video_datas["title"]
-        else:
-            if video_datas["type"] == 'extrait':
-                item.label = 'Extrait - ' + ' ' + video_datas["title"]
-            else:
-                item.label = video_datas["title"]
-
-        image = ''
-        for video_media in video_datas["content_has_medias"]:
-            if "main" in video_media["type"]:
-                id_diffusion = video_media["media"]["si_id"]
-                if video_datas["type"] != 'extrait':
-                    item.info['duration'] = int(video_media["media"]["duration"])
-            elif "image" in video_media["type"]:
-                for image_datas in video_media["media"]["patterns"]:
-                    if "vignette_16x9" in image_datas["type"]:
-                        image = URL_API(image_datas["urls"]["w:1024"])
-
-        date_value = video_datas['first_publication_date'].split('T')[0]
-        # 2018-09-20T05:03:01+02:00
-        item.info.date(date_value, '%Y-%m-%d')
-
-        if "text" in video_datas:
-            item.info['plot'] = video_datas["text"]
-
-        item.art['fanart'] = image
-        item.art['thumb'] = image
+        broadcast_id = populate_item(item, video, True)
 
         item.context.script(
             get_video_url,
             plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            id_diffusion=id_diffusion,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
+            item_id = item_id,
+            broadcast_id = broadcast_id,
+            video_label = LABELS[item_id] + " - " + item.label,
+            download_mode = True)
 
         item.set_callback(
             get_video_url,
-            item_id=item_id,
-            id_diffusion=id_diffusion,
-            item_dict=cqu.item2dict(item))
+            item_id = item_id,
+            broadcast_id = broadcast_id,
+            item_dict = cqu.item2dict(item))
         yield item
 
     # More videos...
-    if json_parser["cursor"]["next"] is not None:
+    if json_parser['cursor']['next'] is not None:
         yield Listitem.next_page(
-            item_id=item_id,
-            page=json_parser["cursor"]["next"])
+            item_id = item_id,
+            page = json_parser['cursor']['next'])
 
 
 @Route.register
-def list_videos(plugin, item_id, program_part_url, page=0):
+def list_videos(plugin, item_id, program_part_url, page = 0):
 
     # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
-    url_program = 'standard/publish/taxonomies/%s/contents/' % program_part_url
+    url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
     resp = urlquick.get(
         URL_API(url_program),
-        params={
+        params = {
             'size': 20,
             'page': page,
-            'filter': 'with-no-vod,only-visible',
-            'sort': 'sort=begin_date:desc'})
+            'filter': "with-no-vod,only-visible",
+            'sort': "sort = begin_date:desc"})
     json_parser = json.loads(resp.text)
 
-    for video_datas in json_parser["result"]:
+    for video in json_parser['result']:
         item = Listitem()
-        if video_datas["type"] == 'extrait':
-            item.label = 'Extrait - ' + video_datas["title"]
-        else:
-            item.label = video_datas["title"]
-
-        image = ''
-        for video_media in video_datas["content_has_medias"]:
-            if "main" in video_media["type"]:
-                id_diffusion = video_media["media"]["si_id"]
-                if video_datas["type"] != 'extrait':
-                    item.info['duration'] = int(video_media["media"]["duration"])
-            elif "image" in video_media["type"]:
-                for image_datas in video_media["media"]["patterns"]:
-                    if "vignette_16x9" in image_datas["type"]:
-                        image = URL_API(image_datas["urls"]["w:1024"])
-
-        date_value = video_datas['first_publication_date'].split('T')[0]
-        item.info.date(date_value, '%Y-%m-%d')
-
-        if "text" in video_datas:
-            item.info['plot'] = video_datas["text"]
-
-        item.art['fanart'] = image
-        item.art['thumb'] = image
+        broadcast_id = populate_item(item, video)
 
         item.context.script(
             get_video_url,
             plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            id_diffusion=id_diffusion,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
+            item_id = item_id,
+            broadcast_id = broadcast_id,
+            video_label = LABELS[item_id] + " - " + item.label,
+            download_mode = True)
 
         item.set_callback(
             get_video_url,
-            item_id=item_id,
-            id_diffusion=id_diffusion,
-            item_dict=cqu.item2dict(item))
+            item_id = item_id,
+            broadcast_id = broadcast_id,
+            item_dict = cqu.item2dict(item))
         yield item
 
     # More videos...
-    if json_parser["cursor"]["next"] is not None:
+    if json_parser['cursor']['next'] is not None:
         yield Listitem.next_page(
-            item_id=item_id,
-            program_part_url=program_part_url,
-            page=json_parser["cursor"]["next"])
+            item_id = item_id,
+            program_part_url = program_part_url,
+            page = json_parser['cursor']['next'])
 
 
 @Route.register
-def list_videos_search(plugin, item_id, search_query, page=0):
-    at_least_one_item = False
+def list_videos_search(plugin, item_id, search_query, page = 0):
+    has_item = False
 
-    while not at_least_one_item:
-        url_search = 'https://vwdlashufe-dsn.algolia.net/1/indexes/yatta_prod_contents/'
+    while not has_item:
+        url_search = "https://vwdlashufe-dsn.algolia.net/1/indexes/yatta_prod_contents/"
         resp = urlquick.get(
             url_search,
-            params={
+            params = {
                 'page': page,
-                'filters': 'class:video',
+                'filters': "class:video",
                 'query': search_query},
-            headers=HEADERS_YATTA)
+            headers = HEADERS_YATTA)
 
         json_parser = json.loads(resp.text)
 
         nb_pages = json_parser['nbPages']
 
-        for hit in json_parser['hits']:
-
+        for show in json_parser['hits']:
             item_id_found = False
-            for channel in hit['channels']:
+            for channel in show['channels']:
                 if channel['url'] == item_id:
                     item_id_found = True
                     break
@@ -339,67 +284,91 @@ def list_videos_search(plugin, item_id, search_query, page=0):
             if not item_id_found:
                 continue
 
-            at_least_one_item = True
+            has_item = True
 
-            title = hit['title']
-            if 'program' in hit:
-                label = hit['program']['label']
-                title = label + ' - ' + title
-            headline = hit['headline_title']
-            desc = hit['text']
-            duration = hit['duration']
-            season = hit['season_number']
-            episode = hit['episode_number']
-            id_yatta = hit['id']
-            director = hit['director']
-            # producer = hit['producer']
-            presenter = hit['presenter']
-            casting = hit['casting']
-            # characters = hit['characters']
-            last_publication_date = hit['dates']['last_publication_date']
-            date_value = time.strftime(
-                '%Y-%m-%d', time.localtime(last_publication_date))
+            title = show['title']
+            label = ""
+            program_name = None
+            if "program" in show:
+                program_name = show['program']['label']
+                label += program_name + " - "
+                
+                # What about "teaser" and "resume"?
+                # E.g. http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-3_plus-belle-la-vie/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
+                if show['type'] == "extrait":
+                    label += "[extrait] "
+            
+            label += title
+            
+            headline = show['headline_title']
+            plot = ""
+            if headline:
+                plot += headline + "\n"
+            
+            plot += show['text']
+            
+            last_publication_date = show['dates']['last_publication_date']
+            publication_date = time.strftime(
+                "%Y-%m-%d", time.localtime(last_publication_date))
 
-            image_400 = ''
-            image_1024 = ''
-            if 'image' in hit:
-                image_400 = hit['image']['formats']['vignette_16x9']['urls']['w:400']
-                image_1024 = hit['image']['formats']['vignette_16x9']['urls']['w:1024']
-
-            image_400 = URL_API(image_400)
-            image_1024 = URL_API(image_1024)
-
-            if headline and headline != '':
-                desc = headline + '\n' + desc
-
-            if not director:
-                director = presenter
-
+            image_400 = ""
+            image_1024 = ""
+            if "image" in show:
+                image_400 = show['image']['formats']['vignette_16x9']['urls']['w:400']
+                image_1024 = show['image']['formats']['vignette_16x9']['urls']['w:1024']
+                
+            rating = None
+            if 'rating_csa_code' in show and show['rating_csa_code']:
+                rating = show['rating_csa_code']
+                
+                # Add a dash before the numbers, instead of e.g. "TP",
+                # to simulate the CSA logo instead of having the long description
+                if rating.isdigit():
+                    rating = "-" + rating
+            
             item = Listitem()
-            item.label = title
-            item.art['fanart'] = image_1024
-            item.art['thumb'] = image_400
-            item.info['plot'] = desc
-            item.info['duration'] = duration
-            item.info['season'] = season
-            item.info['episode'] = episode
-            item.info['cast'] = casting.split(', ')
-            item.info['director'] = director
-            item.info.date(date_value, '%Y-%m-%d')
+            item.label = label
+            item.info['title'] = label
+            item.info['tvshowtitle'] = program_name
+            item.art['fanart'] = URL_API(image_1024)
+            item.art['thumb'] = URL_API(image_400)
+            item.info.date(publication_date, "%Y-%m-%d")
+            item.info['plot'] = plot
+            item.info['duration'] = show['duration']
+            item.info['director'] = show['director']
+            item.info['season'] = show['season_number']
+            item.info['mpaa'] = rating
+            
+            if "episode_number" in show and show['episode_number']:
+                item.info['mediatype'] = "episode"
+                item.info['episode'] = show['episode_number']
+
+            actors = []
+            if "casting" in show and show['casting']:
+                actors = [actor.strip() for actor in show['casting'].split(",")]
+            elif "presenter" in show and show['presenter']:
+                actors.append(show['presenter'])
+            
+            item.info['cast'] = actors
+
+            if "characters" in show and show['characters']:
+                characters = [role.strip() for role in show['characters'].split(",")]
+                if len(actors) > 0 and len(characters) > 0:
+                    item.info['castandrole'] = list(zip_longest(actors, characters))
 
             item.context.script(
                 get_video_url,
                 plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                id_yatta=id_yatta,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
+                item_id = item_id,
+                id_yatta = show['id'],
+                video_label = LABELS[item_id] + " - " + item.label,
+                download_mode = True)
 
             item.set_callback(
                 get_video_url,
-                item_id=item_id,
-                id_yatta=id_yatta,
-                item_dict=cqu.item2dict(item))
+                item_id = item_id,
+                id_yatta = show['id'],
+                item_dict = cqu.item2dict(item))
             yield item
         page = page + 1
 
@@ -407,27 +376,27 @@ def list_videos_search(plugin, item_id, search_query, page=0):
     # More videos...
     if page != nb_pages - 1:
         yield Listitem.next_page(
-            search_query=search_query,
-            item_id=item_id,
-            page=page + 1)
+            search_query = search_query,
+            item_id = item_id,
+            page = page + 1)
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, id_diffusion=None,
-        id_yatta=None, item_dict=None, download_mode=False, video_label=None):
+        plugin, item_id, broadcast_id = None,
+        id_yatta = None, item_dict = None, download_mode = False, video_label = None):
 
     if id_yatta is not None:
-        url_yatta_video = 'standard/publish/contents/%s' % id_yatta
-        resp = urlquick.get(URL_API(url_yatta_video), max_age=-1)
+        url_yatta_video = "standard/publish/contents/%s" % id_yatta
+        resp = urlquick.get(URL_API(url_yatta_video), max_age = -1)
         json_parser = json.loads(resp.text)
-        for media in json_parser['content_has_medias']:
-            if 'si_id' in media['media']:
-                id_diffusion = media['media']['si_id']
+        for medium in json_parser['content_has_medias']:
+            if "si_id" in medium['media']:
+                broadcast_id = medium['media']['si_id']
                 break
 
     return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, item_dict, download_mode, video_label)
+        plugin, broadcast_id, item_dict, download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict):
@@ -439,15 +408,102 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     resp = urlquick.get(
         URL_LIVE_JSON,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+        headers = {"User-Agent": web_utils.get_random_ua},
+        max_age = -1)
     json_parser = json.loads(resp.text)
 
-    for live in json_parser["result"]:
-        if live["channel"] == item_id:
-            live_datas = live["collection"][0]["content_has_medias"]
-            liveId = ''
-            for live_data in live_datas:
-                if "si_direct_id" in live_data["media"]:
-                    liveId = live_data["media"]["si_direct_id"]
-            return resolver_proxy.get_francetv_live_stream(plugin, liveId)
+    for broadcast in json_parser['result']:
+        if broadcast['channel'] == item_id:
+            media = broadcast['collection'][0]['content_has_medias']
+            broadcast_id = ""
+            for medium in media:
+                if "si_direct_id" in medium['media']:
+                    broadcast_id = medium['media']['si_direct_id']
+            return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
+
+
+def populate_item(item, video, include_program_name = False): 
+    program_name = ""
+    for taxonomy in video['content_has_taxonomys']:
+        if taxonomy['type'] == "program":
+            program_name = taxonomy['taxonomy']['label']
+    
+    item.label = ""
+    if program_name:
+        item.info['tvshowtitle'] = program_name
+        
+        if include_program_name:
+            item.label += program_name + " - "
+    
+    # What about "teaser" and "resume"?
+    # E.g. http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-3_plus-belle-la-vie/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
+    if video['type'] == "extrait":
+        item.label += "[extrait] "
+
+    item.label += video['title']
+    
+    # It's too bad item.info['title'] overrules item.label everywhere
+    # so there's no difference between what is shown in the video list 
+    # and what is shown in the video details
+    #item.info['title'] = video['title']
+    item.info['title'] = item.label
+    
+    image_url = ""
+    for medium in video['content_has_medias']:
+        if medium['type'] == "main":
+            broadcast_id = medium['media']['si_id']
+            if video['type'] != "extrait":
+                item.info['duration'] = int(medium['media']['duration'])
+            
+            if 'rating_csa_code' in medium['media'] and medium['media']['rating_csa_code']:
+                # Not using medium['media']['rating_csa'] here, 
+                # to be consistent with the search results that only include a code
+                rating = medium['media']['rating_csa_code']
+                
+                # Add a dash before the numbers, instead of e.g. "TP",
+                # to simulate the CSA logo instead of having the long description
+                if rating.isdigit():
+                    rating = "-" + rating
+                
+                item.info['mpaa'] = rating
+        elif medium['type'] == "image":
+            for image in medium['media']['patterns']:
+                if image['type'] == "vignette_16x9":
+                    image_url = URL_API(image['urls']['w:1024'])
+    
+    # 2018-09-20T05:03:01+02:00
+    publication_date = video['first_publication_date'].split("T")[0]
+    item.info.date(publication_date, "%Y-%m-%d")
+
+    if "text" in video and video['text']:
+        item.info['plot'] = video['text']
+        
+    if "director" in video and video['director']:
+        item.info['director'] = video['director']
+    
+    if "saison" in video and video['saison']:
+        item.info['season'] = video['saison']
+        
+    if "episode" in video and video['episode']:
+        # Now we know for sure we are dealing with an episode
+        item.info['mediatype'] = "episode"
+        item.info['episode'] = video['episode']
+    
+    actors = []
+    if "casting" in video and video['casting']:
+        actors = [actor.strip() for actor in video['casting'].split(",")]
+    elif "presenter" in video and video['presenter']:
+        actors.append(video['presenter'])
+    
+    item.info['cast'] = actors
+    
+    if "characters" in video and video['characters']:
+        characters = [role.strip() for role in video['characters'].split(",")]
+        if len(actors) > 0 and len(characters) > 0:
+            item.info['castandrole'] = list(zip_longest(actors, characters))
+
+    item.art['fanart'] = image_url
+    item.art['thumb'] = image_url
+
+    return broadcast_id
+

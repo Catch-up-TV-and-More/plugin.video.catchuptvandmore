@@ -328,7 +328,7 @@ def list_shows_films_series_1(plugin, item_id, category_url):
     replay_types_films_series_soup = bs(
         replay_types_films_series_html, 'html.parser')
     replay_types_films_series = replay_types_films_series_soup.find_all(
-        'div', class_='left_col_menu_item')[0]
+        'ul', class_='filter-entity-word')[0]
 
     item = Listitem()
     item.label = '# Toutes les videos'
@@ -381,18 +381,20 @@ def list_videos_films_series_1(plugin, item_id, page, show_url):
         show_url + '?page=%s' % page).text
     replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
     episodes = replay_episodes_soup.find_all(
-        'article', class_="media-meta sidecontent small")
+        'div', class_='card card-video card-video-row mdl-fixed')
 
     for episode in episodes:
         item = Listitem()
-        item.label = episode.find('h2').find(
-            'span').find('a').get_text().strip()
+        item.label = episode.find('img').get('alt')
         try:
             video_id = re.compile(
-                'cmedia=(.*?)&').findall(episode.find('a').get('href'))[0]
+                'cmedia=(.*?)&').findall(episode.find('a', class_='meta-title-link').get('href'))[0]
         except IndexError:
             continue
-        item.art['thumb'] = episode.find('img').get('src')
+        if episode.find('img').get('data-src'):
+            item.art['thumb'] = episode.find('img').get('data-src')
+        else:
+            item.art['thumb'] = episode.find('img').get('src')
 
         item.context.script(
             get_video_url,

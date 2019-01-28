@@ -61,7 +61,8 @@ URL_INFO_REPLAY = 'https://e.omroep.nl/metadata/%s'
 # Id Video, time
 URL_VIDEO_REPLAY = 'https://ida.omroep.nl/app.php/%s?adaptive=yes&token=%s'
 # Id Video, Token
-
+URL_SUBTITLE = 'https://tt888.omroep.nl/tt888/%s'
+# Id Video
 
 def replay_entry(plugin, item_id):
     """
@@ -121,6 +122,9 @@ def list_videos(plugin, item_id, day_id):
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
+        
+        if plugin.setting.get_boolean('active_subtitle'):
+            item.subtitles.append(URL_SUBTITLE % video_id)
 
         item.context.script(
             get_video_url,
@@ -142,12 +146,12 @@ def get_video_url(
         plugin, item_id, video_id, download_mode=False, video_label=None):
 
     # get token
-    resp = urlquick.get(URL_TOKEN)
+    resp = urlquick.get(URL_TOKEN, max_age = 3600)
     token_json_parser = json.loads(resp.text)
     token = token_json_parser["token"]
 
     # get stream url
-    resp2 = urlquick.get(URL_VIDEO_REPLAY % (video_id, token))
+    resp2 = urlquick.get(URL_VIDEO_REPLAY % (video_id, token), max_age = -1)
     json_parser = json.loads(resp2.text)
     stream_url = ''
     if 'items' in json_parser:

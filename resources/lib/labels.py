@@ -199,6 +199,7 @@ LABELS = {
     'icitele': 'ICI Télé',
     'ntvca': 'NTV',
     'icitoutv': 'ICI Tou.tv',
+    'telemag': 'Télé-Mag',
 
     # Switzerland channels / live TV
     'rts': 'RTS',
@@ -256,8 +257,6 @@ LABELS = {
     'lci': 'LCI',
     'lcp': 'LCP Assemblée Nationale',
     'rmcdecouverte': 'RMC Découverte',
-    'stories': 'Stories (6play)',
-    'comedy': 'Comic (6play)',
     'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
     'france3regions': 'France 3 Régions (' + utils.ensure_unicode(Script.setting['france3.region']) + ')',
@@ -297,6 +296,8 @@ LABELS = {
     'jack': 'Jack (mycanal)',
     'caledonia': 'Caledonia',
     'tebeo': 'Tébéo',
+    'vialmtv': 'viàLMTv Sarthe',
+    'viamirabelle': 'viàMirabelle',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -323,7 +324,6 @@ LABELS = {
     'skysports': 'Sky Sports',
     'stv': 'STV',
     'questod': 'Quest OD',
-    'hearttv': 'Heart TV',
     'questred': 'Quest RED',
     'questtv': 'Quest TV',
     'kerrang': 'Kerrang',
@@ -332,6 +332,7 @@ LABELS = {
     'the-box': 'The Box',
     'box-upfront': 'Box Upfront',
     'box-hits': 'Box Hits',
+    'uktvplay': 'UKTV Play',
 
     # International channels / live TV
     'tv5mondeafrique': 'TV5Monde Afrique',
@@ -427,5 +428,6 @@ LABELS = {
     'onf': 'Office National du Film du Canada',
     'nfb': 'National Film Board Of Canada',
     'marmiton': 'Marmiton',
-    'lesargonautes': 'Les Argonautes'
+    'lesargonautes': 'Les Argonautes',
+    'nationalfff': 'National FFF'
 }

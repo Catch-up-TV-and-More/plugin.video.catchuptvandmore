@@ -45,6 +45,8 @@ URL_LIVE = URL_ROOT + '/nrjhitstv'
 
 URL_VIDEOS = URL_ROOT + '/videos'
 
+URL_STREAM = URL_ROOT + '/utils/videos/embed/internal/%s'
+#videoId
 
 def replay_entry(plugin, item_id):
     """
@@ -93,13 +95,14 @@ def list_videos_categories(plugin, item_id, category_url, page):
     resp = urlquick.get(category_url + '/%s' % page)
     root_soup = bs(resp.text, 'html.parser')
     list_videos_datas = root_soup.find_all(
-        'div', class_='col-md-6 col-lg-3')
+        'div', class_='col-xs-6 col-md-4 col-lg-3 col-centered')
 
     for video_datas in list_videos_datas:
         video_title = video_datas.find('img').get('alt')
         video_image = video_datas.find('img').get('src')
-        video_url = video_datas.find(
-            'div', class_='article_social').get('data-url')
+        video_id = re.compile(
+            r'changeVideoBrid\((.*?)\,').findall(
+                video_datas.find('div', class_='play_hover').get('onclick'))[0]
 
         item = Listitem()
         item.label = video_title
@@ -109,14 +112,14 @@ def list_videos_categories(plugin, item_id, category_url, page):
             get_video_url,
             plugin.localize(LABELS['Download']),
             item_id=item_id,
-            video_url=video_url,
+            video_id=video_id,
             video_label=LABELS[item_id] + ' - ' + item.label,
             download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            video_url=video_url)
+            video_id=video_id)
         yield item
 
     yield Listitem.next_page(
@@ -131,13 +134,14 @@ def list_videos_last_videos(plugin, item_id, category_url):
     resp = urlquick.get(category_url)
     root_soup = bs(resp.text, 'html.parser')
     list_videos_datas = root_soup.find_all(
-        'div', class_='col-md-6 col-lg-3')
+        'div', class_='col-xs-6 col-md-4 col-lg-3 col-centered')
 
     for video_datas in list_videos_datas:
         video_title = video_datas.find('img').get('alt')
         video_image = video_datas.find('img').get('src')
-        video_url = video_datas.find(
-            'div', class_='article_social').get('data-url')
+        video_id = re.compile(
+            r'changeVideoBrid\((.*?)\,').findall(
+                video_datas.find('div', class_='play_hover').get('onclick'))[0]
 
         item = Listitem()
         item.label = video_title
@@ -147,24 +151,24 @@ def list_videos_last_videos(plugin, item_id, category_url):
             get_video_url,
             plugin.localize(LABELS['Download']),
             item_id=item_id,
-            video_url=video_url,
+            video_id=video_id,
             video_label=LABELS[item_id] + ' - ' + item.label,
             download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            video_url=video_url)
+            video_id=video_id)
         yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_id, download_mode=False, video_label=None):
 
-    resp = urlquick.get(video_url)
+    resp = urlquick.get(URL_STREAM % video_id)
     root_soup = bs(resp.text, 'html.parser')
-    final_video_url = root_soup.find(id='VideoPlayer').get('data-filehd')
+    final_video_url = root_soup.find(id='VideoPlayerDatas').get('data-filehd')
 
     if download_mode:
         return download.download_video(final_video_url, video_label)

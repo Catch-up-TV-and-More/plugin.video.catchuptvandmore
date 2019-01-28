@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.1"
+       version="0.2.2"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -10,6 +10,7 @@
     <import addon="script.module.requests" version="2.12.4"/>
     <import addon="script.module.codequick" version="0.9.5"/>
     <import addon="script.module.pytz" version="2014.2"/>
+    <import addon="script.module.inputstreamhelper" version="0.3.3"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -33,10 +34,44 @@
     <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.1]
-[Fix] Les Argonautes (CA)
+[Version 0.2.2]
+[Add] InputStreamHelper
+[Improvements] Les Argonautes - check video is available (CA)
+[Fix] Allocine - Change website (FR)
+[Add Channel] Add UKTV Play - DRM Contents (UK)
+[Add Live TV] Quest TV and Quest RED - DRM Contents (UK)
+[Add DRM] Quest OD (UK)
+[Add DRM] MyTF1 Replay (FR)
+[Add DRM] 6play Replay and Live TV (FR)
+[Add Live TV] M6 Boutique (FR)
+[Add DRM] RTLPlay Replay (BE)
+[Improvements] Messages for content required account
+[Change] Add Subtitle to listitem - adapt the code to use last change of codequick
 [Fix] Function 'Clear cache' in the settings
+[Improvements] La 1ère and France3Region Replay (Add emissions, ...) (FR)
 [Fix] TZLocal on Windows
+[Add Website] National FFF (FR)
+[Add Channel - Live TV] Télé-Mag (CA)
+[Fix] Replay - RMC story (FR)
+[Fix] Replay - RMC Decouverte (FR)
+[Improvements] Replay - France TV - Add more details - thanks Forage
+[Add Subtitle] BVN - Replay (WO)
+[Fix] BVN - Replay - Not using cache if token / no cache also for the token (WO)
+[Work-Around] Settings not shown for Kodi 18 - to be fixed
+[Update] Noob TV (website) (FR)
+[Fix] Website - Culture Pub (FR)
+[Fix] Replay - Ici Télé (CA)
+[Fix] Replay - NRJ TV (BE)
+[Fix] Replay - TV5Monde Afrique (WO)
+[Fix] Replay - MTV FR (WO)
+[Fix] Replay - Quest OD (UK)
+[Fix] Replay - La Chaine Météo (FR)
+[Remove] Comic and Stories (6play) (FR)
+[Fix] Replay - LCI (FR)
+[Upate] Replay - RMC Story - Update Year 2019 (FR)
+[Fix] Replay - L'equipe (FR)
+[Add Live TV] viàLMTv Sarthe (FR)
+[Add Live TV] viàLMirabelle (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

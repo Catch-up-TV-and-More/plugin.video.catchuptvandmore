@@ -47,6 +47,8 @@ URL_LIVE = URL_ROOT + '/direct-tv/'
 
 URL_LIVE_VIA93 =  URL_ROOT + '/le-direct/'
 
+URL_LIVE_VIAMIRABELLE = URL_ROOT + '/direct/'
+
 URL_STREAM = 'https://player.myvideoplace.tv/ajax_actions.php'
 
 URL_STREAM_INFOMANIAK = 'https://livevideo.infomaniak.com/player_config/%s.json'
@@ -62,6 +64,11 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     if item_id == 'via93':
         live_html = urlquick.get(
             URL_LIVE_VIA93 % item_id,
+            headers={'User-Agent': web_utils.get_random_ua},
+            max_age=-1)
+    elif item_id == 'viamirabelle':
+        live_html = urlquick.get(
+            URL_LIVE_VIAMIRABELLE % item_id,
             headers={'User-Agent': web_utils.get_random_ua},
             max_age=-1)
     else:
@@ -87,6 +94,11 @@ def get_live_url(plugin, item_id, video_id, item_dict):
             URL_STREAM_INFOMANIAK % player_id, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
         json_parser = json.loads(resp2.text)
         return 'https://' + json_parser["sPlaylist"]
+    elif 'creacast' in src_datas:
+        resp2 = urlquick.get(
+            src_datas, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+        return re.compile(
+            r'file\: \"(.*?)\"').findall(resp2.text)[0]
     else:
         live_id = re.compile(
             r'v=(.*?)\&').findall(src_datas)[0]

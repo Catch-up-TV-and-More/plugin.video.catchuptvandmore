@@ -22,6 +22,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - The Box *(Live TV)*
 - Box Hits *(Live TV)*
 - Box Upfront *(Live TV)*
+- UKTV Play *(Replay)*
+- Quest TV *(Live TV)*
+- Quest RED *(Live TV)*
 
 ##### Web TV
 - Sky Sports — Sky *(Replay)*
@@ -29,18 +32,18 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Belgique — *Belgium*
 ##### TV Communauté française — *French Community TV*
 - RTBF Auvio *(Replay, Live)*
-- RTL-TVI *(Replay)*
-- PLUG RTL *(Replay)*
-- CLUB RTL *(Replay)*
+- RTL-TVI *(Replay with RTLPlay account)*
+- PLUG RTL *(Replay with RTLPlay account)*
+- CLUB RTL *(Replay with RTLPlay account)*
 - Télé MB *(Replay, Live TV)*
 - RTC Télé Liège *(Replay, Live TV)*
 - TV Lux *(Replay, Live TV)*
-- RTL INFO *(Replay)*
-- BEL RTL *(Replay)*
-- Contact *(Replay)*
+- RTL INFO *(Replay with RTLPlay account)*
+- BEL RTL *(Replay with RTLPlay account)*
+- Contact *(Replay with RTLPlay account)*
 - BX1 *(Replay, Live TV)*
 - NRJ Hits TV *(Replay, Live TV)*
-- RTL Sport *(Replay)*
+- RTL Sport *(Replay with RTLPlay account)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
 - VRT NU *(Replay with VRT NU account)*
@@ -59,6 +62,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TVA *(Replay, Live TV)*
 - ICI Télé *(Replay, Live TV)*
 - ICI Tou.TV *(Replay)*
+- Télé-Mag *(Replay, Live TV)*
 
 ##### TV Communauté anglaise — *English Community TV*
 - NTV *(Live TV)*
@@ -96,9 +100,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France 3 *(Replay, Live TV)*
 - Canal + *(Replay, Live TV)*
 - France 5 *(Replay, Live TV)*
-- M6 *(Replay)*
+- M6 *(Replay, Live TV)* *(with 6play account)*
 - C8 *(Replay, Live TV)*
-- W9 *(Replay)*
+- W9 *(Replay, Live TV)* *(with 6play account)*
 - TMC *(Replay, Live TV)*
 - TFX *(Replay, Live TV)*
 - NRJ 12 *(Replay, Live TV with NRJ account)*
@@ -110,7 +114,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - France Ô *(Replay, Live TV)*
 - TF1 Séries Films *(Replay, Live TV)*
 - L'Équipe *(Replay, Live TV)*
-- 6ter *(Replay)*
+- 6ter *(Replay, Live TV)* *(with 6play account)*
 - RMC Story *(Replay, Live TV)*
 - Chérie 25 *(Replay, Live TV with NRJ account)*
 - LCI *(Replay, Live TV)*
@@ -151,10 +155,10 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - viàATV *(Live TV)*
 - Caledonia *(Replay)*
 - Tébéo *(Replay, Live TV)*
+- M6 Boutique *(Live TV)* *(with 6play account)*
+- viàLMTv Sarthe *(Live TV)*
 
 ##### Web TV
-- Stories — 6play *(Replay)*
-- Comic — 6play *(Replay)*
 - Tfou — MyTF1 *(Replay)*
 - 01Net TV *(Replay)*
 - France TV Sport — francetv *(Replay, Live)*
@@ -296,6 +300,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Elle <http://videos.elle.fr>
 - Ina <http://www.ina.fr/>
 - Marmiton <https://www.marmiton.org/>
+- National FFF <https://national.fff.fr/>
 
 ### Suisse — *Switzerland*
 ##### Communauté française — *French Community*

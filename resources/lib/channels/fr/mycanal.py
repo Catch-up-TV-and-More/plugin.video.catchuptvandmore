@@ -31,11 +31,14 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
+import resources.lib.cq_utils as cqu
 
-
+import inputstreamhelper
 import re
 import json
 import urlquick
+import xbmc
+import xbmcgui
 
 # TO DO
 # Wait Kodi 18 to use live with DRM
@@ -48,6 +51,12 @@ URL_ROOT_SITE = 'https://www.mycanal.fr'
 URL_REPLAY = URL_ROOT_SITE + '/chaines/%s'
 # Channel name
 
+# TODO
+URL_LICENCE_DRM = '[license-server url]|[Header]|[Post-Data]|[Response]'
+# com.widevine.alpha
+# license_key must be a string template with 4 | separated fields: [license-server url]|[Header]|[Post-Data]|[Response] in which [license-server url] allows B{SSM} placeholder and [Post-Data] allows [b/B/R]{SSM} and [b/B/R]{SID} placeholders to transport the widevine challenge and if required the DRM SessionId in base64NonURLencoded, Base64URLencoded or Raw format.
+# [Response] can be a.) empty or R to specify that the response payload of the license request is binary format, b.) B if the response payload is base64 encoded or c.) J[licensetoken] if the license key data is located in a JSON struct returned in the response payload.
+# inputstream.adaptive searches for the key [licensetoken] and handles the value as base64 encoded data.
 
 # Dailymotion Id get from these pages below
 # - http://www.dailymotion.com/cstar
@@ -233,7 +242,8 @@ def list_videos_seasons(plugin, item_id, next_url):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            next_url=video_url)
+            next_url=video_url,
+            item_dict=cqu.item2dict(item))
         yield item
 
 
@@ -280,7 +290,8 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
                             item.set_callback(
                                 get_video_url,
                                 item_id=item_id,
-                                next_url=video_url)
+                                next_url=video_url,
+                                item_dict=cqu.item2dict(item))
                             yield item
         else:
             if sub_program_title == json_parser["currentPage"]["displayName"]:
@@ -318,13 +329,14 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
                             item.set_callback(
                                 get_video_url,
                                 item_id=item_id,
-                                next_url=video_url)
+                                next_url=video_url,
+                                item_dict=cqu.item2dict(item))
                             yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, next_url, download_mode=False, video_label=None):
+        plugin, item_id, next_url, item_dict=None, download_mode=False, video_label=None):
 
     resp = urlquick.get(
         next_url,
@@ -338,6 +350,74 @@ def get_video_url(
             plugin.localize(LABELS['drm_notification']),
             Script.NOTIFY_INFO)
         return False
+
+        # TODO Add CODE DRM
+
+        # Utile ?
+        # https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin
+        # Response
+        # CsECCAMSEBcFuRfMEgSGiwYzOi93KowYgrSCkgUijgIwggEKAoIBAQCZ7Vs7Mn2rXiTvw7YqlbWYUgrVvMs3UD4GRbgU2Ha430BRBEGtjOOtsRu4jE5yWl5KngeVKR1YWEAjp+GvDjipEnk5MAhhC28VjIeMfiG/+/7qd+EBnh5XgeikX0YmPRTmDoBYqGB63OBPrIRXsTeo1nzN6zNwXZg6IftO7L1KEMpHSQykfqpdQ4IY3brxyt4zkvE9b/tkQv0x4b9AsMYE0cS6TJUgpL+X7r1gkpr87vVbuvVk4tDnbNfFXHOggrmWEguDWe3OJHBwgmgNb2fG2CxKxfMTRJCnTuw3r0svAQxZ6ChD4lgvC2ufXbD8Xm7fZPvTCLRxG88SUAGcn1oJAgMBAAE6FGxpY2Vuc2Uud2lkZXZpbmUuY29tEoADrjRzFLWoNSl/JxOI+3u4y1J30kmCPN3R2jC5MzlRHrPMveoEuUS5J8EhNG79verJ1BORfm7BdqEEOEYKUDvBlSubpOTOD8S/wgqYCKqvS/zRnB3PzfV0zKwo0bQQQWz53ogEMBy9szTK/NDUCXhCOmQuVGE98K/PlspKkknYVeQrOnA+8XZ/apvTbWv4K+drvwy6T95Z0qvMdv62Qke4XEMfvKUiZrYZ/DaXlUP8qcu9u/r6DhpV51Wjx7zmVflkb1gquc9wqgi5efhn9joLK3/bNixbxOzVVdhbyqnFk8ODyFfUnaq3fkC3hR3f0kmYgI41sljnXXjqwMoW9wRzBMINk+3k6P8cbxfmJD4/Paj8FwmHDsRfuoI6Jj8M76H3CTsZCZKDJjM3BQQ6Kb2m+bQ0LMjfVDyxoRgvfF//M/EEkPrKWyU2C3YBXpxaBquO4C8A0ujVmGEEqsxN1HX9lu6c5OMm8huDxwWFd7OHMs3avGpr7RP7DUnTikXrh6X0
+
+        # https://player.mycanal.fr/one/prod/v2/1.1.chunk-944c87e5f2f065eab0f3.js
+        # To build the token not simple ...
+
+        # url below return json containint the item.path but return 401 if not correct headers - Get token
+        # GET
+        # https://www.mycanal.fr/sport/direct-auto-emission-du-10-nov-2018/h/10515868_50013
+        # Headers
+        # Accept: application/json, text/plain, */*
+        # Authorization: PASS Token="00201oTfyIjG4X1JI2XEq8mtfyh5-JBHqtPYF5RP7y6E_gJVA9DadDf3mVa9dIow1h5NavjKHL_JpJDRE36Lc45c89RdVX8xiKJYmgW8HpKdAz4RDDuB8JZB9RDjwJCk1V65WGBQ9EaDSi3Afi1OWXaOeFucej700fnnWaiRrb7o4_FQFPEwQ9FyPK6aeFB3YtC1ztwNLDzG6SpXjKQXreaZ1750wY05jrNpqztQAaJJxMayK9QD-3cW04Ou__Naa-UV-I6raAOP4n98xZIMA3fcaGwGPaadmrSMYHwMpYxuuM19vPIC3jXYZPRhjqQrbZdCtYhqehRwNaOWGZhptE-Kj6ebyNClrc529ALHe-BOaUPc8hh8JbgouT-sUWbB-ttT5kGSVKYGA0fb0dQYxCVxL2bm9mrV91A1iinKulUJyrfvhzWU8hvcYVqQFCKQXpVeFYW8BzqsgDGiDg_6ZcUb9NapENT_5X4N4SzDdwNmczvw."
+        # Origin: https://www.mycanal.fr
+        # Referer: https://www.mycanal.fr/sport/direct-auto-emission-du-10-nov-2018/h/10515868_50013
+        # User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36
+        # XX-API-VERSION: 2.1
+        # XX-DEVICE: pc d5be705a-eb47-44a6-9ef5-a5cd9b77465b
+        # XX-DISTMODES: catchup,live,svod,tvod,posttvod
+        # XX-DOMAIN: json
+        # XX-OPERATOR: pc
+        # XX-Profile-Id: 0
+        # XX-Request-Id: d5be705a-eb47-44a6-9ef5-a5cd9b77465b-1542392348455-179657
+        # XX-SERVICE: mycanal
+        # XX-SPYRO-VERSION: 2.0
+        # XX-Tracking: redirection deeplink
+
+        # URL of the licence pour mycanal
+        # POST to be used on URL_LICENCE_DRM normally
+        # https://secure-gen-hapi.canal-plus.com/conso/view/1bde6500-e9cc-11e8-b6fb-61e6db3574ae/licence?drmType=DRM%20Widevine
+        # Headers
+        # Accept: application/json, text/plain, */*
+        # Authorization: PASS Token="00201oTfyIjG4X1JI2XEq8mtfyh5-JBHqtPYF5RP7y6E_gJVA9DadDf3mVa9dIow1h5NavjKHL_JpJDRE36Lc45c89RdVX8xiKJYmgW8HpKdAz4RDDuB8JZB9RDjwJCk1V65WGBQ9EaDSi3Afi1OWXaOeFucej700fnnWaiRrb7o4_FQFPEwQ9FyPK6aeFB3YtC1ztwNLDzG6SpXjKQXreaZ1750wY05jrNpqztQAaJJxMayK9QD-3cW04Ou__Naa-UV-I6raAOP4n98xZIMA3fcaGwGPaadmrSMYHwMpYxuuM19vPIC3jXYZPRhjqQrbZdCtYhqehRwNaOWGZhptE-Kj6ebyNClrc529ALHe-BOaUPc8hh8JbgouT-sUWbB-ttT5kGSVKYGA0fb0dQYxCVxL2bm9mrV91A1iinKulUJyrfvhzWU8hvcYVqQFCKQXpVeFYW8BzqsgDGiDg_6ZcUb9NapENT_5X4N4SzDdwNmczvw."
+        # Content-Type: text/plain
+        # Origin: https://www.mycanal.fr
+        # Referer: https://www.mycanal.fr/sport/direct-auto-emission-du-10-nov-2018/h/10515868_50013
+        # User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36
+        # XX-API-VERSION: 2.1
+        # XX-DEVICE: pc d5be705a-eb47-44a6-9ef5-a5cd9b77465b
+        # XX-DISTMODES: catchup,live,svod,tvod,posttvod
+        # XX-DOMAIN: json
+        # XX-OPERATOR: pc
+        # XX-Profile-Id: 0
+        # XX-Request-Id: d5be705a-eb47-44a6-9ef5-a5cd9b77465b-1542392395854-797159
+        # XX-SERVICE: mycanal
+        # XX-SPYRO-VERSION: undefined
+
+        # query string
+        # drmType: DRM%20Widevine
+
+        # request payload
+        # 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
+
+
+        # item = Listitem()
+        # item.path = ''
+        # item.label = item_dict['label']
+        # item.info.update(item_dict['info'])
+        # item.art.update(item_dict['art'])
+        # item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        # item.property['inputstream.adaptive.manifest_type'] = 'ism'
+        # item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        # item.property['inputstream.adaptive.license_key'] = URL_LICENCE_DRM
+        # return item
 
     stream_url = ''
     for stream_datas in json_parser["detail"]["informations"]["videoURLs"]:

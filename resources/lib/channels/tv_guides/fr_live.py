@@ -71,7 +71,11 @@ class TeleramaXMLTVGrabber:
         1073: 'bfmbusiness',
         110: 'kto',
         234: 'lcp',
-        2111: 'franceinfo'
+        2111: 'franceinfo',
+        118: 'm6',
+        184: 'mb',
+        119: 'w9',
+        1403: '6ter'
     }
 
     _API_URL = 'https://api.telerama.fr'

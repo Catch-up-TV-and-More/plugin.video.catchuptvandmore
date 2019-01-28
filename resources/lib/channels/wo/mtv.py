@@ -157,7 +157,7 @@ def list_videos(plugin, item_id, next_url):
         if 'nextPageURL' in json_parser["result"]:
             yield Listitem.next_page(
                 item_id=item_id,
-                next_url=video_datas["result"]["nextPageURL"])
+                next_url=json_parser["result"]["nextPageURL"])
 
 
 @Resolver.register

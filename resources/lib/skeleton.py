@@ -402,6 +402,42 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'tebeo.png'],
         'fanart': ['channels', 'fr', 'tebeo_fanart.jpg'],
         'module': 'resources.lib.channels.fr.tebeo'
+    },
+    'mb': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'mb.png'],
+        'fanart': ['channels', 'fr', 'mb_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'm6': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'm6.png'],
+        'fanart': ['channels', 'fr', 'm6_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'w9': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'w9.png'],
+        'fanart': ['channels', 'fr', 'w9_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    '6ter': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', '6ter.png'],
+        'fanart': ['channels', 'fr', '6ter_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.6play'
+    },
+    'vialmtv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'vialmtv.png'],
+        'fanart': ['channels', 'fr', 'vialmtv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
+    },
+    'viamirabelle': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'viamirabelle.png'],
+        'fanart': ['channels', 'fr', 'viamirabelle_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
     }
 }
 
@@ -720,6 +756,18 @@ UK_LIVE = {
         'thumb': ['channels', 'uk', 'box-hits.png'],
         'fanart': ['channels', 'uk', 'box-hits_fanart.jpg'],
         'module': 'resources.lib.channels.uk.boxplus'
+    },
+    'questtv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'questtv.png'],
+        'fanart': ['channels', 'uk', 'questtv_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.questod'
+    },
+    'questred': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'uk', 'questred.png'],
+        'fanart': ['channels', 'uk', 'questred_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.questod'
     }
 }
 
@@ -804,6 +852,12 @@ CA_LIVE = {
         'thumb': ['channels', 'ca', 'icitele.png'],
         'fanart': ['channels', 'ca', 'icitele_fanart.jpg'],
         'module': 'resources.lib.channels.ca.icitele'
+    },
+    'telemag': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ca', 'telemag.png'],
+        'fanart': ['channels', 'ca', 'telemag_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.telemag'
     }
 }
 
@@ -1055,18 +1109,6 @@ FR_REPLAY = {
         'callback': 'replay_bridge',
         'thumb': ['channels', 'fr', '6ter.png'],
         'fanart': ['channels', 'fr', '6ter_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.6play'
-    },
-    'stories': {
-        'callback': 'replay_bridge',
-        'thumb': ['channels', 'fr', 'stories.png'],
-        'fanart': ['channels', 'fr', 'stories_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.6play'
-    },
-    'comedy': {
-        'callback': 'replay_bridge',
-        'thumb': ['channels', 'fr', 'comedy.png'],
-        'fanart': ['channels', 'fr', 'comedy_fanart.jpg'],
         'module': 'resources.lib.channels.fr.6play'
     },
     'rtl2': {
@@ -1432,6 +1474,12 @@ UK_REPLAY = {
         'thumb': ['channels', 'uk', 'stv.png'],
         'fanart': ['channels', 'uk', 'stv_fanart.jpg'],
         'module': 'resources.lib.channels.uk.stv'
+    },
+    'uktvplay': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'uk', 'uktvplay.png'],
+        'fanart': ['channels', 'uk', 'uktvplay_fanart.jpg'],
+        'module': 'resources.lib.channels.uk.uktvplay'
     }
 }
 
@@ -1748,6 +1796,12 @@ CA_REPLAY = {
         'thumb': ['channels', 'ca', 'icitele.png'],
         'fanart': ['channels', 'ca', 'icitele_fanart.jpg'],
         'module': 'resources.lib.channels.ca.icitele'
+    },
+    'telemag': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ca', 'telemag.png'],
+        'fanart': ['channels', 'ca', 'telemag_fanart.jpg'],
+        'module': 'resources.lib.channels.ca.telemag'
     }
 }
 
@@ -1898,5 +1952,11 @@ WEBSITES = {
         'thumb': ['websites', 'lesargonautes.png'],
         'fanart': ['websites', 'lesargonautes_fanart.jpg'],
         'module': 'resources.lib.websites.lesargonautes'
+    },
+    'nationalfff': {
+        'callback': 'website_bridge',
+        'thumb': ['websites', 'nationalfff.png'],
+        'fanart': ['websites', 'nationalfff_fanart.jpg'],
+        'module': 'resources.lib.websites.nationalfff'
     }
 }

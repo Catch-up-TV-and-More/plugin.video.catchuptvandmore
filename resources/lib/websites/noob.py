@@ -46,10 +46,7 @@ CATEGORIES = {
     'Blog de Gaea': URL_ROOT + '/videos.php?id=2',
     'Funglisoft': URL_ROOT + '/videos.php?id=6',
     'Flander''s Company': URL_ROOT + '/videos.php?id=7',
-    'Damned 7': URL_ROOT + '/videos.php?id=8',
-    'IRL': URL_ROOT + '/videos.php?id=9',
-    'Emissions': URL_ROOT + '/videos.php?id=5',
-    'Descartomanciens': URL_ROOT + '/videos.php?id=11'
+    'Emissions': URL_ROOT + '/videos.php?id=5'
 }
 
 

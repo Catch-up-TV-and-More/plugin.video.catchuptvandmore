@@ -46,18 +46,18 @@ URL_LIVE = URL_ROOT + '/lachainelequipe/'
 URL_API_LEQUIPE = URL_ROOT + '/equipehd/applis/filtres/videosfiltres.json'
 
 CORRECT_MONTH = {
-    'janv..': '01',
-    'févr..': '02',
-    'mars.': '03',
-    'avril.': '04',
-    'mai.': '05',
-    'juin.': '06',
-    'juil..': '07',
-    'août.': '08',
-    'sept..': '09',
-    'oct..': '10',
-    'nov..': '11',
-    'déc..': '12'
+    'Jan.': '01',
+    'Feb.': '02',
+    'Mar.': '03',
+    'Apr.': '04',
+    'May.': '05',
+    'Jun.': '06',
+    'Jul.': '07',
+    'Aug.': '08',
+    'Sep.': '09',
+    'Oct.': '10',
+    'Nov.': '11',
+    'Dec.': '12'
 }
 
 
