@@ -34,7 +34,7 @@ URL_SCHEDULE_XML = 'https://fosdem.org/%s/schedule/xml'
 # Year
 
 BEGINING_YEAR_XML = 2012
-LAST_YEAR_XML = 2018
+LAST_YEAR_XML = 2019
 
 
 def website_entry(plugin, item_id):
