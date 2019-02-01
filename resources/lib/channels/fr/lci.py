@@ -54,15 +54,8 @@ URL_ROOT = utils.urljoin_partial("http://www.tf1.fr")
 URL_LCI_REPLAY = "http://www.lci.fr/emissions"
 URL_LCI_ROOT = "http://www.lci.fr"
 
-URL_TIME = 'http://www.wat.tv/servertime2/'
-
-URL_TOKEN = 'http://api.wat.tv/services/Delivery'
-
-SECRET_KEY = 'W3m0#1mFI'
-APP_NAME = 'sdk/Iphone/1.0'
-VERSION = '2.1.3'
-HOSTING_APPLICATION_NAME = 'com.tf1.applitf1'
-HOSTING_APPLICATION_VERSION = '7.0.4'
+URL_VIDEO_STREAM_2 = 'https://delivery.tf1.fr/mytf1-wrd/%s?format=%s'
+# videoId, format['hls', 'dash']
 
 URL_VIDEO_STREAM = 'https://www.wat.tv/get/webhtml/%s'
 
@@ -266,32 +259,12 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     video_id = 'L_%s' % item_id.upper()
 
-    timeserver = str(urlquick.get(URL_TIME, max_age=-1).text)
+    video_format = 'hls'
+    url_json = URL_VIDEO_STREAM_2 % (video_id, video_format)
+    htlm_json = urlquick.get(
+        url_json,
+        headers={'User-Agent': web_utils.get_random_ua},
+        max_age=-1)
+    json_parser = json.loads(htlm_json.text)
 
-    auth_key = '%s-%s-%s-%s-%s' % (
-        video_id,
-        SECRET_KEY,
-        APP_NAME,
-        SECRET_KEY,
-        timeserver
-    )
-
-    auth_key = md5(auth_key).hexdigest()
-    auth_key = auth_key + '/' + timeserver
-
-    post_data = {
-        'appName': APP_NAME,
-        'method': 'getUrl',
-        'mediaId': video_id,
-        'authKey': auth_key,
-        'version': VERSION,
-        'hostingApplicationName': HOSTING_APPLICATION_NAME,
-        'hostingApplicationVersion': HOSTING_APPLICATION_VERSION
-    }
-
-    url_video = urlquick.post(
-        URL_TOKEN,
-        data=post_data, max_age=-1)
-    url_video = json.loads(url_video.text)
-    url_video = url_video['message'].replace('\\', '')
-    return url_video.split('&b=')[0]
+    return json_parser['url']
