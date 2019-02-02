@@ -291,7 +291,8 @@
             <setting label="Bein Sports" type="bool" id="beinsports" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="beinsports.order" default="13"/>
 
-            <setting label="Souvenirs From Earth" type="bool" id="souvenirsfromearth" default="true" visible="eq(-27,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Souvenirs From Earth" type="bool" id="souvenirsfromearth" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="souvenirsfromearth.order" default="14"/>
 
             <setting label="QVC" type="bool" id="qvc" default="true" visible="eq(-29,true)"/>

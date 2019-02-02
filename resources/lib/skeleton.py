@@ -643,12 +643,6 @@ WO_LIVE = {
         'fanart': ['channels', 'wo', 'qvc_fanart.jpg'],
         'module': 'resources.lib.channels.wo.qvc'
     },
-    'souvenirsfromearth': {
-        'callback': 'live_bridge',
-        'thumb': ['channels', 'wo', 'souvenirsfromearth.png'],
-        'fanart': ['channels', 'wo', 'souvenirsfromearth_fanart.jpg'],
-        'module': 'resources.lib.channels.wo.souvenirsfromearth'
-    },
     'nhkworld': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'wo', 'nhkworld.png'],

@@ -348,7 +348,6 @@ LABELS = {
     'arirang': 'Arirang (아리랑)',
     'dw': 'DW (' + Script.setting['dw.language'] + ')',
     'beinsports': 'Bein Sports (' + Script.setting['beinsports.language'] + ')',
-    'souvenirsfromearth': 'Souvenirs From Earth',
     'qvc': 'QVC (' + Script.setting['qvc.language'] + ')',
     'icirdi': 'ICI RDI',
     'cgtn': 'CGTN (' + Script.setting['cgtn.language'] + ')',
