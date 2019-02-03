@@ -637,6 +637,9 @@
 
             <setting label="viàVosges" type="bool" id="viavosges" default="true" visible="eq(-161,true)"/>
             <setting label="" type="number" visible="false" id="viavosges.order" default="81"/>
+
+            <setting label="Télévision Loire 7" type="bool" id="tl7" default="true" visible="eq(-163,true)"/>
+            <setting label="" type="number" visible="false" id="tl7.order" default="82"/>
         <!-- France -->
 
 

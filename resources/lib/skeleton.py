@@ -438,6 +438,12 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'viavosges.png'],
         'fanart': ['channels', 'fr', 'viavosges_fanart.jpg'],
         'module': 'resources.lib.channels.fr.via'
+    },
+    'tl7': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'tl7.png'],
+        'fanart': ['channels', 'fr', 'tl7_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.tl7'
     }
 }
 

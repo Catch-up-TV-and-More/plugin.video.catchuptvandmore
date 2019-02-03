@@ -159,6 +159,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - viàLMtv Sarthe *(Live TV)*
 - viàLMirabelle *(Live TV)*
 - viàVosges *(Live TV)*
+- Télévision Loire 7 *(Live TV)*
 
 ##### Web TV
 - Tfou — MyTF1 *(Replay)*

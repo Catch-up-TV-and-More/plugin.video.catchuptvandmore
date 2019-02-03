@@ -299,6 +299,7 @@ LABELS = {
     'vialmtv': 'viàLMTv Sarthe',
     'viamirabelle': 'viàMirabelle',
     'viavosges': 'viàVosges',
+    'tl7': 'Télévision Loire 7',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
