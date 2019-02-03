@@ -391,12 +391,6 @@ FR_LIVE = {
         'fanart': ['channels', 'fr', 'viagrandparis_fanart.jpg'],
         'module': 'resources.lib.channels.fr.via'
     },
-    'via93': {
-        'callback': 'live_bridge',
-        'thumb': ['channels', 'fr', 'via93.png'],
-        'fanart': ['channels', 'fr', 'via93_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.via'
-    },
     'tebeo': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'fr', 'tebeo.png'],
@@ -1434,6 +1428,12 @@ FR_REPLAY = {
         'thumb': ['channels', 'fr', 'tebeo.png'],
         'fanart': ['channels', 'fr', 'tebeo_fanart.jpg'],
         'module': 'resources.lib.channels.fr.tebeo'
+    },
+    'via93': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'via93.png'],
+        'fanart': ['channels', 'fr', 'via93_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
     }
 }
 
