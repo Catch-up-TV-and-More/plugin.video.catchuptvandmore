@@ -298,6 +298,7 @@ LABELS = {
     'tebeo': 'Tébéo',
     'vialmtv': 'viàLMTv Sarthe',
     'viamirabelle': 'viàMirabelle',
+    'viavosges': 'viàVosges',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

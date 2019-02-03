@@ -634,6 +634,9 @@
 
             <setting label="viàMirabelle" type="bool" id="viamirabelle" default="true" visible="eq(-159,true)"/>
             <setting label="" type="number" visible="false" id="viamirabelle.order" default="80"/>
+
+            <setting label="viàVosges" type="bool" id="viavosges" default="true" visible="eq(-161,true)"/>
+            <setting label="" type="number" visible="false" id="viavosges.order" default="81"/>
         <!-- France -->
 
 

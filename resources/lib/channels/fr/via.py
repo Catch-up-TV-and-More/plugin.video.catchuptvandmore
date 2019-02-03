@@ -29,6 +29,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+from resources.lib import resolver_proxy
 from resources.lib import download
 
 from bs4 import BeautifulSoup as bs
@@ -46,6 +47,10 @@ URL_ROOT = 'https://%s.tv'
 URL_LIVE = URL_ROOT + '/direct-tv/'
 
 URL_LIVE_VIAMIRABELLE = URL_ROOT + '/direct/'
+
+URL_ROOT_VIAVOSGES = 'https://www.viavosges.tv'
+
+URL_LIVE_VIAVOSGES = URL_ROOT_VIAVOSGES + '/Direct.html'
 
 URL_STREAM = 'https://player.myvideoplace.tv/ajax_actions.php'
 
@@ -134,45 +139,69 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    if item_id == 'viamirabelle':
+    if item_id == 'viavosges':
         live_html = urlquick.get(
-            URL_LIVE_VIAMIRABELLE % item_id,
+            URL_LIVE_VIAVOSGES,
             headers={'User-Agent': web_utils.get_random_ua},
             max_age=-1)
-    else:
-        live_html = urlquick.get(
-            URL_LIVE % item_id,
-            headers={'User-Agent': web_utils.get_random_ua},
-            max_age=-1)
-    live_soup = bs(live_html.text, 'html.parser')
-    list_lives_datas = live_soup.find_all(
-        'iframe')
-    live_id = ''
-    for live_datas in list_lives_datas:
-        src_datas = live_datas.get('src')
-        break
+        live_soup = bs(live_html.text, 'html.parser')
+        url_live_datas = URL_ROOT_VIAVOSGES + live_soup.find(
+            'div', class_='HDR_VISIO').get('data-url') + '&mode=html'
 
-    if 'dailymotion' in src_datas:
-        live_id = re.compile(
-            r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(src_datas)[0]
-        return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
-    elif 'infomaniak' in src_datas:
-        player_id = src_datas.split('player=')[1]
-        resp2 = urlquick.get(
-            URL_STREAM_INFOMANIAK % player_id, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-        json_parser = json.loads(resp2.text)
-        return 'https://' + json_parser["sPlaylist"]
-    elif 'creacast' in src_datas:
-        resp2 = urlquick.get(
-            src_datas, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-        return re.compile(
-            r'file\: \"(.*?)\"').findall(resp2.text)[0]
+        resp = urlquick.get(
+            url_live_datas,
+            headers={'User-Agent': web_utils.get_random_ua},
+            max_age=-1)
+        json_parser = json.loads(resp.text)
+
+        item = Listitem()
+        item.path = json_parser["files"]["auto"]
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+        item.label = item_dict['label']
+        item.info.update(item_dict['info'])
+        item.art.update(item_dict['art'])
+        return item
     else:
-        live_id = re.compile(
-            r'v=(.*?)\&').findall(src_datas)[0]
-        stream_json = urlquick.post(
-            URL_STREAM,
-            data={'action': 'video_info', 'refvideo': live_id},
-            headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-        stream_jsonparser = json.loads(stream_json.text)
-        return stream_jsonparser["data"]["bitrates"]["hls"]
+        if item_id == 'viamirabelle':
+            live_html = urlquick.get(
+                URL_LIVE_VIAMIRABELLE % item_id,
+                headers={'User-Agent': web_utils.get_random_ua},
+                max_age=-1)
+        else:
+            live_html = urlquick.get(
+                URL_LIVE % item_id,
+                headers={'User-Agent': web_utils.get_random_ua},
+                max_age=-1)
+        live_soup = bs(live_html.text, 'html.parser')
+        list_lives_datas = live_soup.find_all(
+            'iframe')
+        live_id = ''
+        for live_datas in list_lives_datas:
+            src_datas = live_datas.get('src')
+            break
+
+        if 'dailymotion' in src_datas:
+            live_id = re.compile(
+                r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(src_datas)[0]
+            return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
+        elif 'infomaniak' in src_datas:
+            player_id = src_datas.split('player=')[1]
+            resp2 = urlquick.get(
+                URL_STREAM_INFOMANIAK % player_id, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+            json_parser = json.loads(resp2.text)
+            return 'https://' + json_parser["sPlaylist"]
+        elif 'creacast' in src_datas:
+            resp2 = urlquick.get(
+                src_datas, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+            return re.compile(
+                r'file\: \"(.*?)\"').findall(resp2.text)[0]
+        else:
+            live_id = re.compile(
+                r'v=(.*?)\&').findall(src_datas)[0]
+            stream_json = urlquick.post(
+                URL_STREAM,
+                data={'action': 'video_info', 'refvideo': live_id},
+                headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+            stream_jsonparser = json.loads(stream_json.text)
+            return stream_jsonparser["data"]["bitrates"]["hls"]
