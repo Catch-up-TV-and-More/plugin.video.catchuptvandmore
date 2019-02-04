@@ -391,12 +391,6 @@ FR_LIVE = {
         'fanart': ['channels', 'fr', 'viagrandparis_fanart.jpg'],
         'module': 'resources.lib.channels.fr.via'
     },
-    'via93': {
-        'callback': 'live_bridge',
-        'thumb': ['channels', 'fr', 'via93.png'],
-        'fanart': ['channels', 'fr', 'via93_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.via'
-    },
     'tebeo': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'fr', 'tebeo.png'],
@@ -438,6 +432,18 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'viamirabelle.png'],
         'fanart': ['channels', 'fr', 'viamirabelle_fanart.jpg'],
         'module': 'resources.lib.channels.fr.via'
+    },
+    'viavosges': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'viavosges.png'],
+        'fanart': ['channels', 'fr', 'viavosges_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
+    },
+    'tl7': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'tl7.png'],
+        'fanart': ['channels', 'fr', 'tl7_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.tl7'
     }
 }
 
@@ -642,12 +648,6 @@ WO_LIVE = {
         'thumb': ['channels', 'wo', 'qvc.png'],
         'fanart': ['channels', 'wo', 'qvc_fanart.jpg'],
         'module': 'resources.lib.channels.wo.qvc'
-    },
-    'souvenirsfromearth': {
-        'callback': 'live_bridge',
-        'thumb': ['channels', 'wo', 'souvenirsfromearth.png'],
-        'fanart': ['channels', 'wo', 'souvenirsfromearth_fanart.jpg'],
-        'module': 'resources.lib.channels.wo.souvenirsfromearth'
     },
     'nhkworld': {
         'callback': 'live_bridge',
@@ -1440,6 +1440,12 @@ FR_REPLAY = {
         'thumb': ['channels', 'fr', 'tebeo.png'],
         'fanart': ['channels', 'fr', 'tebeo_fanart.jpg'],
         'module': 'resources.lib.channels.fr.tebeo'
+    },
+    'via93': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'via93.png'],
+        'fanart': ['channels', 'fr', 'via93_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.via'
     }
 }
 

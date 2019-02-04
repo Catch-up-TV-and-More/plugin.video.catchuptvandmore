@@ -150,7 +150,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RTL 2 *(Replay, Live TV)*
 - La Chaîne Météo *(Replay)*
 - J-One *(Replay)*
-- vià93 *(Live TV)*
+- vià93 *(Replay)*
 - viàGrandParis *(Live TV)*
 - viàATV *(Live TV)*
 - Caledonia *(Replay)*
@@ -158,6 +158,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - M6 Boutique *(Live TV)* *(with 6play account)*
 - viàLMtv Sarthe *(Live TV)*
 - viàLMirabelle *(Live TV)*
+- viàVosges *(Live TV)*
+- Télévision Loire 7 *(Live TV)*
 
 ##### Web TV
 - Tfou — MyTF1 *(Replay)*
@@ -187,7 +189,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Arirang (아리랑) *(Replay, Live TV)*
 - DW *(Live TV)* *(Contents {EN|AR|DE|ES})*
 - Bein Sports *(Replay)* *(Contents {AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY})*
-- Souvenirs From Earth *(Live TV)*
 - QVC *(Live TV)* *(Contents {FR|JP|DE|IT|UK|US})*
 - ICI RDI *(Live TV)*
 - CGTN *(Live TV)* *(Contents {FR|EN|AR|ES|RU})*

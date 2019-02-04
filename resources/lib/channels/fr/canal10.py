@@ -40,7 +40,7 @@ import urlquick
 TODO Add Replay
 '''
 
-URL_ROOT = 'https://www.canal10.fr/accueil'
+URL_ROOT = 'https://www.canal10.fr'
 
 URL_STREAM = 'https://livevideo.infomaniak.com/player_config/%s.json'
 # player_id
@@ -55,7 +55,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     resp = urlquick.get(URL_ROOT, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
     player_id = re.compile(
-        r'\;player\=(.*?)\"').findall(resp.text)[0]
+        r'\&player\=(.*?)\"').findall(resp.text)[0]
     resp2 = urlquick.get(
         URL_STREAM % player_id, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
     json_parser = json.loads(resp2.text)

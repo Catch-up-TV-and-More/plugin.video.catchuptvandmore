@@ -34,10 +34,11 @@ from resources.lib import resolver_proxy
 import re
 import urlquick
 
-# TO DO
+'''
+TODO Add Replay
+'''
 
-# Live
-URL_LIVE = 'http://www.souvenirsfromearth.tv/'
+URL_ROOT = 'http://www.tl7.fr/'
 
 
 def live_entry(plugin, item_id, item_dict):
@@ -47,6 +48,7 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    resp = urlquick.get(URL_LIVE)
-    return re.compile(
-        r'src:  "(.*?)"').findall(resp.text)[0]
+    resp = urlquick.get(URL_ROOT, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+    live_id = re.compile(
+        r'video\: \'(.*?)\'').findall(resp.text)[0]
+    return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)

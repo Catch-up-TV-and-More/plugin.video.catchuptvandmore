@@ -291,7 +291,8 @@
             <setting label="Bein Sports" type="bool" id="beinsports" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="beinsports.order" default="13"/>
 
-            <setting label="Souvenirs From Earth" type="bool" id="souvenirsfromearth" default="true" visible="eq(-27,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Souvenirs From Earth" type="bool" id="souvenirsfromearth" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="souvenirsfromearth.order" default="14"/>
 
             <setting label="QVC" type="bool" id="qvc" default="true" visible="eq(-29,true)"/>
@@ -633,6 +634,12 @@
 
             <setting label="viàMirabelle" type="bool" id="viamirabelle" default="true" visible="eq(-159,true)"/>
             <setting label="" type="number" visible="false" id="viamirabelle.order" default="80"/>
+
+            <setting label="viàVosges" type="bool" id="viavosges" default="true" visible="eq(-161,true)"/>
+            <setting label="" type="number" visible="false" id="viavosges.order" default="81"/>
+
+            <setting label="Télévision Loire 7" type="bool" id="tl7" default="true" visible="eq(-163,true)"/>
+            <setting label="" type="number" visible="false" id="tl7.order" default="82"/>
         <!-- France -->
 
 

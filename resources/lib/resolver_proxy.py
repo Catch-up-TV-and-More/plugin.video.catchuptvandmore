@@ -272,6 +272,10 @@ def get_francetv_video_stream(
         json_parser3 = json.loads(file_prgm2.text)
         url_selected = json_parser3['url']
         url_selected = url_selected.replace('.m3u8:', '.m4u9:')
+    
+    if url_selected is None:
+        plugin.notify('ERROR', plugin.localize(30716))
+        return False
 
     if 'cloudreplayfrancetv' in url_selected:
         file_prgm2 = urlquick.get(

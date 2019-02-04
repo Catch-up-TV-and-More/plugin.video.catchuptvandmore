@@ -406,6 +406,6 @@ def live_entry(plugin, item_id, item_dict):
                     if json_channel['code'] == 'direct_f24':
                         for json_video in json_channel['videos']:
                             for json_format in json_video['formats']:
-                                if json_format['code'] == 'hls_android':
+                                if json_format['code'] == 'hls':
                                     return json_format['url']
     return False
