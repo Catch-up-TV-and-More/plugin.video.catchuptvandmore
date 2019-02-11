@@ -190,6 +190,7 @@ LABELS = {
     'ketnet': 'Ketnet',
     'nrjhitstvbe': 'NRJ Hits TV',
     'rtl_sport': 'RTL Sport',
+    'tvcom': 'TV Com',
 
     # Canadian channels / live TV
     'tv5': 'TV5',

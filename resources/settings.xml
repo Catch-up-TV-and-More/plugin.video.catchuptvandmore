@@ -381,6 +381,9 @@
 
             <setting label="RTL Sport" type="bool" id="rtl_sport" default="true" visible="eq(-35,true)"/>
             <setting label="" type="number" visible="false" id="rtl_sport.order" default="18"/>
+
+            <setting label="TV Com" type="bool" id="tvcom" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="tvcom.order" default="19"/>
         <!-- Belgium -->
 
 

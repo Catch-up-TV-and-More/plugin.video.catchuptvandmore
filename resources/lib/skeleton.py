@@ -825,6 +825,12 @@ BE_LIVE = {
         'thumb': ['channels', 'be', 'ketnet.png'],
         'fanart': ['channels', 'be', 'ketnet_fanart.jpg'],
         'module': 'resources.lib.channels.be.vrt'
+    },
+    'tvcom': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'tvcom.png'],
+        'fanart': ['channels', 'be', 'tvcom_fanart.jpg'],
+        'module': 'resources.lib.channels.be.tvcom'
     }
 }
 

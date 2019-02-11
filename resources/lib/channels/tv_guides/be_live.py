@@ -50,7 +50,8 @@ ID_CHANNELS = {
    390: 'rtc',
    392: 'tvlux',
    1280: 'ketnet',
-   23: 'een'
+   23: 'een',
+   385: 'tvcom'
 }
 
 GUIDE_TIMEZONE = pytz.timezone('UTC')
