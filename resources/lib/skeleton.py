@@ -1446,6 +1446,12 @@ FR_REPLAY = {
         'thumb': ['channels', 'fr', 'via93.png'],
         'fanart': ['channels', 'fr', 'via93_fanart.jpg'],
         'module': 'resources.lib.channels.fr.via'
+    },
+    'tl7': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tl7.png'],
+        'fanart': ['channels', 'fr', 'tl7_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.tl7'
     }
 }
 
