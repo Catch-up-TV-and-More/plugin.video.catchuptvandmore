@@ -177,6 +177,9 @@
 
             <setting label="Teleticino" type="bool" id="teleticino" default="true" visible="eq(-41,true)"/>
             <setting label="" type="number" visible="false" id="teleticino.order" default="21"/>
+
+            <setting label="Léman BLeu" type="bool" id="lemanbleu" default="true" visible="eq(-43,true)"/>
+            <setting label="" type="number" visible="false" id="lemanbleu.order" default="22"/>
         <!-- Switzerland -->
 
 

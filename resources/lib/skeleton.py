@@ -957,6 +957,12 @@ CH_LIVE = {
         'thumb': ['channels', 'ch', 'teleticino.png'],
         'fanart': ['channels', 'ch', 'teleticino_fanart.jpg'],
         'module': 'resources.lib.channels.ch.teleticino'
+    },
+    'lemanbleu': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'lemanbleu.png'],
+        'fanart': ['channels', 'ch', 'lemanbleu_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.lemanbleu'
     }
 }
 

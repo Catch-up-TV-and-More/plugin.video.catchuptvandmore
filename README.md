@@ -251,6 +251,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Rouge TV *(Live TV)*
 - TVM3 *(Replay)*
 - BeCurious TV *(Replay)*
+- Léman Bleu *(Live TV)*
 
 ##### TV Communauté italienne — *Italian Community TV*
 - RSI *(Replay)*

@@ -224,6 +224,7 @@ LABELS = {
     'rtraufsrf2': 'RTR auf SRF 2',
     'rtraufsrfinfo': 'RTR auf SRF Info',
     'teleticino': 'Teleticino',
+    'lemanbleu': 'Léman Bleu',
 
     # French channels / live TV
     'tf1': 'TF1',
