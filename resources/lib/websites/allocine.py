@@ -381,7 +381,7 @@ def list_videos_films_series_1(plugin, item_id, page, show_url):
         show_url + '?page=%s' % page).text
     replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
     episodes = replay_episodes_soup.find_all(
-        'div', class_='card card-video card-video-row mdl-fixed')
+        'div', class_='card video-card video-card-row mdl-fixed')
 
     for episode in episodes:
         item = Listitem()
@@ -647,7 +647,7 @@ def list_videos_news_videos(plugin, item_id, category_url, page):
         category_url + '?page=%s' % page).text
     replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
     episodes = replay_episodes_soup.find_all(
-        'div', class_=re.compile('card card-news'))
+        'div', class_=re.compile('card news-card'))
 
     for episode in episodes:
         if episode.find('a', class_='meta-title-link'):
