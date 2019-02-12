@@ -760,6 +760,9 @@
 
             <setting label="TVP Polonia" type="bool" id="tvppolonia" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="tvppolonia.order" default="4"/>
+
+            <setting label="TVP Poland IN" type="bool" id="tvppolandin" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="tvppolandin.order" default="5"/>
         <!-- Poland -->
 
         <!-- Spain -->

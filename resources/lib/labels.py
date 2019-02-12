@@ -373,6 +373,7 @@ LABELS = {
     'tvp3': 'TVP 3 (' + utils.ensure_unicode(Script.setting['tvp3.region']) + ')',
     'tvpinfo': 'TVP Info',
     'tvppolonia': 'TVP Polonia',
+    'tvppolandin': 'TVP Poland IN',
 
     # Spanish channels / live TV
     'telecinco': 'Telecinco',

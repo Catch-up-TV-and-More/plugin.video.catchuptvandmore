@@ -239,6 +239,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TVP Info *(Live TV)*
 - TVP Polonia *(Live TV)*
 - TVP 3 *(Live TV)* *(Contents {Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław})*
+- TVP Poland IN *(Live TV)*
 
 ### Suisse — *Switzerland*
 ##### TV Communauté française — *French Community TV*

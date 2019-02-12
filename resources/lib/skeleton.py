@@ -486,6 +486,12 @@ PL_LIVE = {
         'thumb': ['channels', 'pl', 'tvppolonia.png'],
         'fanart': ['channels', 'pl', 'tvppolonia_fanart.jpg'],
         'module': 'resources.lib.channels.pl.tvp'
+    },
+    'tvppolandin': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'pl', 'tvppolandin.png'],
+        'fanart': ['channels', 'pl', 'tvppolandin_fanart.jpg'],
+        'module': 'resources.lib.channels.pl.tvp'
     }
 }
 
