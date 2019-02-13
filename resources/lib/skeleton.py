@@ -1793,6 +1793,12 @@ CH_REPLAY = {
         'thumb': ['channels', 'ch', 'becurioustv.png'],
         'fanart': ['channels', 'ch', 'becurioustv_fanart.jpg'],
         'module': 'resources.lib.channels.ch.becurioustv'
+    },
+    'lemanbleu': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'lemanbleu.png'],
+        'fanart': ['channels', 'ch', 'lemanbleu_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.lemanbleu'
     }
 }
 
