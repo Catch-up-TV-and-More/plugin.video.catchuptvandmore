@@ -1604,6 +1604,12 @@ BE_REPLAY = {
         'thumb': ['channels', 'be', 'vrt.png'],
         'fanart': ['channels', 'be', 'vrt_fanart.jpg'],
         'module': 'resources.lib.channels.be.vrt'
+    },
+    'tvcom': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'tvcom.png'],
+        'fanart': ['channels', 'be', 'tvcom_fanart.jpg'],
+        'module': 'resources.lib.channels.be.tvcom'
     }
 }
 
