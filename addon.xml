@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.4~beta06"
+       version="0.2.4~beta07"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -44,6 +44,7 @@
 [Add] Live TV - TVP Poland IN (PL)
 [Add] Replay and Live TV - Léman Bleu (CH)
 [Fix] Website - Allociné (FR)
+[Add] Live TV - Lucky Jack (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

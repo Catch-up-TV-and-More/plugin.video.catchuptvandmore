@@ -302,6 +302,7 @@ LABELS = {
     'viamirabelle': 'viàMirabelle',
     'viavosges': 'viàVosges',
     'tl7': 'Télévision Loire 7',
+    'luckyjack': 'Lucky Jack',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

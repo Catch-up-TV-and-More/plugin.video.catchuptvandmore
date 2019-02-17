@@ -334,12 +334,12 @@ msgid "RTLplay Password"
 msgstr "Mot de passe RTLplay"
 
 msgctxt "#30248"
-msgid "Atresplayer Login"
-msgstr "Login Atresplayer"
+msgid "ABWeb Login"
+msgstr "Login ABWeb"
 
 msgctxt "#30249"
-msgid "Atresplayer Password"
-msgstr "Mot de passe Atresplayer"
+msgid "ABWeb Password"
+msgstr "Mot de passe ABWeb"
 
 # Reserved space for other tab/category in settins (from 30260 to 30339)
 

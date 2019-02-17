@@ -444,6 +444,12 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'tl7.png'],
         'fanart': ['channels', 'fr', 'tl7_fanart.jpg'],
         'module': 'resources.lib.channels.fr.tl7'
+    },
+    'luckyjack': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'luckyjack.png'],
+        'fanart': ['channels', 'fr', 'luckyjack_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.abweb'
     }
 }
 

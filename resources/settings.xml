@@ -646,6 +646,9 @@
 
             <setting label="Télévision Loire 7" type="bool" id="tl7" default="true" visible="eq(-163,true)"/>
             <setting label="" type="number" visible="false" id="tl7.order" default="82"/>
+
+            <setting label="Lucky Jack" type="bool" id="luckyjack" default="true" visible="eq(-165,true)"/>
+            <setting label="" type="number" visible="false" id="luckyjack.order" default="83"/>
         <!-- France -->
 
 
@@ -1035,6 +1038,9 @@
 
             <setting label="30244" type="text" id="6play.login" visible="eq(-3,true)" defaut=""/>
             <setting label="30245" type="text" id="6play.password" option="hidden" visible="eq(-4,true)" defaut=""/>
+
+            <setting label="30248" type="text" id="abweb.login" visible="eq(-5,true)" defaut=""/>
+            <setting label="30249" type="text" id="abweb.password" option="hidden" visible="eq(-6,true)" defaut=""/>
 
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
