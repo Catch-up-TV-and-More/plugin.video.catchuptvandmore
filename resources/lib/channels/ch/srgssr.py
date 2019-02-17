@@ -334,7 +334,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     acl_value = '/i/%s/*' % (re.compile(
         r'\/i\/(.*?)\/').findall(stream_url)[0])
-    token_datas = urlquick.get(URL_TOKEN % acl_value)
+    token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
     token_jsonparser = json.loads(token_datas.text)
     token = token_jsonparser["token"]["authparams"]
-    return stream_url + '?' + token
+    return stream_url + '&' + token

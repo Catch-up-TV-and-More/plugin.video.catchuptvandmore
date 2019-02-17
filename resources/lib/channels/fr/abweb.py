@@ -38,7 +38,6 @@ import re
 import requests
 import urlquick
 import xbmcgui
-import urllib
 
 
 # TO DO
@@ -118,7 +117,6 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     if item_id == 'luckyjack':
         chnid_value = re.compile(
             r'luckyjack\'\,\'(.*?)\'').findall(resp3.text)[0]
-        print 'chnid_value ' + chnid_value
 
         payload = {'chn': 'luckyjack', 'chnid': chnid_value}
         resp4 = session_requests.post(URL_LIVES, params=payload,
