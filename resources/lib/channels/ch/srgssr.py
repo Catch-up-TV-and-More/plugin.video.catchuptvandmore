@@ -31,10 +31,13 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
+import inputstreamhelper
 import datetime
 import json
 import re
 import urlquick
+import xbmc
+import xbmcgui
 
 
 # TO DO and Infos
@@ -325,17 +328,58 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     for stream_datas in json_parser2["chapterList"]:
         if live_id in stream_datas["id"]:
             for stream_datas_url in stream_datas["resourceList"]:
-                if 'HD' in stream_datas_url["quality"] and \
-                        'mpegURL' in stream_datas_url["mimeType"]:
-                    stream_url = stream_datas_url["url"]
-                    break
-                else:
-                    if 'mpegURL' in stream_datas_url["mimeType"]:
-                        stream_url = stream_datas_url["url"]
+                if 'drmList' in stream_datas_url:
+                    is_drm = True
 
-    acl_value = '/i/%s/*' % (re.compile(
-        r'\/i\/(.*?)\/').findall(stream_url)[0])
-    token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
-    token_jsonparser = json.loads(token_datas.text)
-    token = token_jsonparser["token"]["authparams"]
-    return stream_url + '&' + token
+    if is_drm:
+        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
+        if xbmc_version < 18:
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30602))
+            return False
+
+        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not is_helper.check_inputstream():
+            return False
+
+        licence_drm_url = ''
+        for stream_datas in json_parser2["chapterList"]:
+            if live_id in stream_datas["id"]:
+                for stream_datas_url in stream_datas["resourceList"]:
+                    stream_url = stream_datas_url["url"]
+                    for licence_drm_datas in stream_datas_url["drmList"]:
+                        if 'WIDEVINE' in licence_drm_datas["type"]:
+                            licence_drm_url = licence_drm_datas["licenseUrl"]
+
+        item = Listitem()
+        item.path = stream_url
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property['inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
+
+        item.label = item_dict['label']
+        item.info.update(item_dict['info'])
+        item.art.update(item_dict['art'])
+
+        return item
+
+    else:
+        for stream_datas in json_parser2["chapterList"]:
+            if live_id in stream_datas["id"]:
+                for stream_datas_url in stream_datas["resourceList"]:
+                    if 'HD' in stream_datas_url["quality"] and \
+                            'mpegURL' in stream_datas_url["mimeType"]:
+                        stream_url = stream_datas_url["url"]
+                        break
+                    else:
+                        if 'mpegURL' in stream_datas_url["mimeType"]:
+                            stream_url = stream_datas_url["url"]
+
+        acl_value = '/i/%s/*' % (re.compile(
+            r'\/i\/(.*?)\/').findall(stream_url)[0])
+        token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
+        token_jsonparser = json.loads(token_datas.text)
+        token = token_jsonparser["token"]["authparams"]
+        return stream_url + '&' + token

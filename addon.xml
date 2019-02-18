@@ -48,6 +48,7 @@
 [Fix] Live TV - RTS Info (CH)
 [Add] Live TV - TVM3 (CH)
 [Fix] Live TV - SRGSSR - HTTP 400 (CH)
+[DRM] Live TV - SRGSSR - First Work - it is DRM DASH (see TODO https://github.com/peak3d/inputstream.adaptive) (CH)
     </news>
     <assets>
       <icon>icon.png</icon>
