@@ -250,7 +250,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RTS Info *(Live TV)*
 - RTS Couleur 3 *(Live TV)*
 - Rouge TV *(Live TV)*
-- TVM3 *(Replay)*
+- TVM3 *(Replay, Live TV)*
 - BeCurious TV *(Replay)*
 - Léman Bleu *(Replay, Live TV)*
 

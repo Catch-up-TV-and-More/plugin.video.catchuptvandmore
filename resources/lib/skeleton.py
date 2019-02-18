@@ -969,6 +969,12 @@ CH_LIVE = {
         'thumb': ['channels', 'ch', 'lemanbleu.png'],
         'fanart': ['channels', 'ch', 'lemanbleu_fanart.jpg'],
         'module': 'resources.lib.channels.ch.lemanbleu'
+    },
+    'tvm3': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'tvm3.png'],
+        'fanart': ['channels', 'ch', 'tvm3_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.tvm3'
     }
 }
 

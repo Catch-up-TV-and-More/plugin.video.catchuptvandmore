@@ -34,6 +34,7 @@ from resources.lib import resolver_proxy
 
 from bs4 import BeautifulSoup as bs
 
+import json
 import re
 import urlquick
 
@@ -46,6 +47,8 @@ URL_ROOT = 'http://www.tvm3.tv'
 # Replay
 URL_REPLAY = URL_ROOT + '/replay'
 
+URL_STREAM = 'https://livevideo.infomaniak.com/player_config/%s.json'
+# player_id
 
 def replay_entry(plugin, item_id):
     """
@@ -141,3 +144,19 @@ def get_video_url(
     else:
         return resolver_proxy.get_stream_vimeo(
             plugin, video_id, download_mode, video_label)
+
+
+def live_entry(plugin, item_id, item_dict):
+    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, video_id, item_dict):
+
+    resp = urlquick.get(URL_ROOT, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+    player_id = re.compile(
+        r'\;player\=(.*?)\'').findall(resp.text)[0]
+    resp2 = urlquick.get(
+        URL_STREAM % player_id, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+    json_parser = json.loads(resp2.text)
+    return 'https://' + json_parser["sPlaylist"]

@@ -321,6 +321,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     # build stream_url
     stream_url = ''
+    is_drm = False
     for stream_datas in json_parser2["chapterList"]:
         if live_id in stream_datas["id"]:
             for stream_datas_url in stream_datas["resourceList"]:
