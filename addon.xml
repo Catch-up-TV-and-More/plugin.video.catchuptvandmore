@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.4~beta09"
+       version="0.2.4~beta10"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -49,6 +49,7 @@
 [Add] Live TV - TVM3 (CH)
 [Fix] Live TV - SRGSSR - HTTP 400 (CH)
 [DRM] Live TV - SRGSSR - First Work - it is DRM DASH (see TODO https://github.com/peak3d/inputstream.adaptive) (CH)
+[Fix] Replay - SRGSSR (CH)
     </news>
     <assets>
       <icon>icon.png</icon>

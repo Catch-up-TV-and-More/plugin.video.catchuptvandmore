@@ -291,12 +291,15 @@ def get_video_url(
                     if 'mpegURL' in stream_datas_url["mimeType"]:
                         stream_url = stream_datas_url["url"]
     acl_value = '/i/%s/*' % (re.compile(
-        r'\/i\/(.*?)\/').findall(stream_url)[0])
+        r'\/i\/(.*?)\/master').findall(stream_url)[0])
     token_datas = urlquick.get(URL_TOKEN % acl_value)
     token_jsonparser = json.loads(token_datas.text)
     token = token_jsonparser["token"]["authparams"]
 
-    final_video_url = stream_url + '?' + token
+    if '?' in stream_url:
+        final_video_url = stream_url + '&' + token
+    else:
+        final_video_url = stream_url + '?' + token
 
     if download_mode:
         return download.download_video(final_video_url, video_label)
@@ -382,4 +385,8 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
         token_jsonparser = json.loads(token_datas.text)
         token = token_jsonparser["token"]["authparams"]
-        return stream_url + '&' + token
+        if '?' in stream_url:
+            final_video_url = stream_url + '&' + token
+        else:
+            final_video_url = stream_url + '?' + token
+        return final_video_url
