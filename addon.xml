@@ -47,6 +47,7 @@
 [Add] Live TV - Lucky Jack (FR)
 [Fix] Live TV - RTS Info (CH)
 [Add] Live TV - TVM3 (CH)
+[Fix] Live TV - SRGSSR - HTTP 400 (CH)
     </news>
     <assets>
       <icon>icon.png</icon>
