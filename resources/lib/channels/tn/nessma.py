@@ -37,12 +37,97 @@ import re
 import urlquick
 
 # TO DO
-# Add Replay
+# Add info videos
 
 # Live
 URL_ROOT = 'https://www.nessma.tv'
 
 URL_LIVE = URL_ROOT + '/live'
+
+URL_REPLAY = URL_ROOT + '/replays'
+
+
+def replay_entry(plugin, item_id):
+    """
+    First executed function after replay_bridge
+    """
+    return list_programs(plugin, item_id)
+
+
+@Route.register
+def list_programs(plugin, item_id):
+    """
+    Build progams listing
+    - Le JT
+    - ...
+    """
+    resp = urlquick.get(URL_REPLAY)
+    root_soup = bs(resp.text, 'html.parser')
+    list_programs_datas = root_soup.find_all(
+        'li', class_='col-md-4 col-sm-4')
+
+    for program_datas in list_programs_datas:
+        program_title = program_datas.find('h2').find('a').text
+        program_image = program_datas.find('img').get('src')
+        program_url = program_datas.find('a').get('href')
+
+        item = Listitem()
+        item.label = program_title
+        item.art['thumb'] = program_image
+
+        item.set_callback(
+            list_videos,
+            item_id=item_id,
+            program_url=program_url,
+            page='1')
+        yield item
+
+
+@Route.register
+def list_videos(plugin, item_id, program_url, page):
+
+    resp = urlquick.get(program_url + '/page/%s' % (page))
+    root_soup = bs(resp.text, 'html.parser')
+    list_videos_datas = root_soup.find_all(
+        'li', class_='col-md-6 col-sm-6')
+
+    for video_datas in list_videos_datas:
+        video_title = video_datas.find('img').get('alt')
+        video_image = video_datas.find('img').get('src')
+        video_url = video_datas.find('a').get('href')
+
+        item = Listitem()
+        item.label = video_title
+        item.art['thumb'] = video_image
+
+        item.context.script(
+            get_video_url,
+            plugin.localize(LABELS['Download']),
+            item_id=item_id,
+            video_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
+            download_mode=True)
+
+        item.set_callback(
+            get_video_url,
+            item_id=item_id,
+            video_url=video_url)
+        yield item
+
+    yield Listitem.next_page(
+        item_id=item_id,
+        program_url=program_url,
+        page=str(int(page) + 1))
+
+@Resolver.register
+def get_video_url(
+        plugin, item_id, video_url, download_mode=False, video_label=None):
+
+    resp = urlquick.get(video_url)
+    video_id = re.compile(
+        r'youtube\.com\/embed\/(.*.)\?').findall(resp.text)[0]
+
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict):

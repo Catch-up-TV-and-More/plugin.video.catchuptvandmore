@@ -278,7 +278,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Tunisie — *Tunisia*
 - التلفزة التونسية الوطنية 1 *(Live TV)*
 - التلفزة التونسية الوطنية 2 *(Live TV)*
-- نسمة تي في *(Live TV)*
+- نسمة تي في *(Replay, Live TV)*
 
 ## Sites internet disponibles — *Available Websites*
 ### Belgique — *Belgium*

@@ -146,6 +146,10 @@ REPLAY = {
     'it_replay': {
         'callback': 'generic_menu',
         'thumb': ['channels', 'it.png']
+    },
+    'tn_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'tn.png']
     }
 }
 
@@ -1907,6 +1911,15 @@ IT_REPLAY = {
         'thumb': ['channels', 'it', 'raiplay.png'],
         'fanart': ['channels', 'it', 'raiplay_fanart.jpg'],
         'module': 'resources.lib.channels.it.raiplay'
+    }
+}
+
+TN_REPLAY = {
+    'nessma': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'tn', 'nessma.png'],
+        'fanart': ['channels', 'tn', 'nessma_fanart.jpg'],
+        'module': 'resources.lib.channels.tn.nessma'
     }
 }
 
