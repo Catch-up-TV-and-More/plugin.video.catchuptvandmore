@@ -180,10 +180,10 @@ def get_mtvnservices_stream(
         plugin, video_uri, account_override=None, download_mode=False, video_label=None):
     if account_override:
         json_video_stream = urlquick.get(
-            URL_MTVNSERVICES_STREAM_ACCOUNT % (video_uri, account_override))
+            URL_MTVNSERVICES_STREAM_ACCOUNT % (video_uri, account_override), max_age=-1)
     else:
         json_video_stream = urlquick.get(
-            URL_MTVNSERVICES_STREAM % video_uri)
+            URL_MTVNSERVICES_STREAM % video_uri, max_age=-1)
 
     json_video_stream_parser = json.loads(json_video_stream.text)
     if 'rendition' not in json_video_stream_parser["package"]["video"]["item"][0]:

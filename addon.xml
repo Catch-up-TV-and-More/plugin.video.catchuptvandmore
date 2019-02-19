@@ -51,6 +51,7 @@
 [DRM] Live TV - SRGSSR - First Work - it is DRM DASH (see TODO https://github.com/peak3d/inputstream.adaptive) (CH)
 [Fix] Replay - SRGSSR (CH)
 [Add] Replay - نسمة تي في (TN)
+[Fix] Live TV - Paramount Channel (ES|IT)
     </news>
     <assets>
       <icon>icon.png</icon>
