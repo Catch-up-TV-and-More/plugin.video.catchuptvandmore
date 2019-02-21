@@ -700,6 +700,12 @@ WO_LIVE = {
         'thumb': ['channels', 'wo', 'paramountchannel.png'],
         'fanart': ['channels', 'wo', 'paramountchannel_fanart.jpg'],
         'module': 'resources.lib.channels.wo.paramountchannel'
+    },
+    'rt': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'rt.png'],
+        'fanart': ['channels', 'wo', 'rt_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.rt'
     }
 }
 

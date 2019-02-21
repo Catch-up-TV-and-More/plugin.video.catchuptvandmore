@@ -264,7 +264,7 @@ msgid "Realmadrid TV: Choose Channel"
 msgstr ""
 
 msgctxt "#30166"
-msgid "Yes TV: Choose region"
+msgid "RT: Choose Channel"
 msgstr ""
 
 msgctxt "#30167"

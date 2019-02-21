@@ -324,6 +324,9 @@
 
             <setting label="Channel NewsAsia" type="bool" id="channelnewsasia" default="true" visible="eq(-45,true)"/>
             <setting label="" type="number" visible="false" id="channelnewsasia.order" default="23"/>
+
+            <setting label="RT" type="bool" id="rt" default="true" visible="eq(-47,true)"/>
+            <setting label="" type="number" visible="false" id="rt.order" default="24"/>
         <!-- International -->
 
 
@@ -988,6 +991,7 @@
                 <setting label="30162" type="labelenum" id="nhkworld.country" visible="eq(-8,true)" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" visible="eq(-9,true)" values="FR|EN|AR|ES|RU" default="FR"/>
                 <setting label="30164" type="labelenum" id="paramountchannel.language" visible="eq(-10,true)" values="ES|IT" default="ES"/>
+                <setting label="30166" type="labelenum" id="rt.language" visible="eq(-11,true)" values="FR|EN|AR|ES" default="FR"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>

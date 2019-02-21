@@ -362,6 +362,7 @@ LABELS = {
     'tv5mondefbs': 'TV5Monde France Belgique Suisse',
     'tv5mondeinfo': 'TV5Monde Info',
     'channelnewsasia': 'Channel NewsAsia',
+    'rt': 'RT (' + Script.setting['rt.language'] + ')',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
