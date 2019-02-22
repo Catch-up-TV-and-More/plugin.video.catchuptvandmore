@@ -106,7 +106,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     #     URL_COMPTE_LOGIN, data=payload,
     #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
     resp2 = session_requests.post(
-        URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
+        URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN), verify=False)
     if 'tentative' in repr(resp2.text):
         plugin.notify('ERROR', 'ABWeb : ' + plugin.localize(30711))
         return False
