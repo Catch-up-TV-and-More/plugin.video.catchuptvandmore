@@ -65,7 +65,7 @@ CATEGORIES_MODE = {
     'FEATURED': 'featured',
     'MOST POPULAR': 'most-popular',
     'NEW': 'new',
-    'LEAVING SOON': 'leaving-soon'
+    'LEAVING SOON': 'last-chance'
 }
 
 CATEGORIES_MODE_AZ = {

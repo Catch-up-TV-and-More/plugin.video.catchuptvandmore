@@ -73,14 +73,15 @@ def list_programs(plugin, item_id):
     # All programs
     for programs_datas in json_parser["pages"]["teleShowsList"]["pageModel"]["data"]["programmes"]:
 
-        if '/tele/' in programs_datas["link"]:
+        if '/tele/' in programs_datas["url"]:
             program_title = programs_datas["title"]
-            program_image = programs_datas["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
-            if 'telejournal-22h' in programs_datas["link"] or \
-                'telejournal-18h' in programs_datas["link"]:
-                program_url = URL_ROOT + programs_datas["link"] + '/2016-2017/episodes'
+            program_image = programs_datas["picture"]["url"].replace('{0}', '648').replace('{1}', '4x3')
+            program_url = ''
+            if 'telejournal-22h' in programs_datas["url"] or \
+                'telejournal-18h' in programs_datas["url"]:
+                program_url = URL_ROOT + programs_datas["url"] + '/2016-2017/episodes'
             else:
-                program_url = URL_ROOT + programs_datas["link"] + '/site/episodes'
+                program_url = URL_ROOT + programs_datas["url"] + '/site/episodes'
 
             item = Listitem()
             item.label = program_title

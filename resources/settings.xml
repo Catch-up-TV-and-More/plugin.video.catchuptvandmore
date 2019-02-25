@@ -177,6 +177,9 @@
 
             <setting label="Teleticino" type="bool" id="teleticino" default="true" visible="eq(-41,true)"/>
             <setting label="" type="number" visible="false" id="teleticino.order" default="21"/>
+
+            <setting label="Léman BLeu" type="bool" id="lemanbleu" default="true" visible="eq(-43,true)"/>
+            <setting label="" type="number" visible="false" id="lemanbleu.order" default="22"/>
         <!-- Switzerland -->
 
 
@@ -321,6 +324,9 @@
 
             <setting label="Channel NewsAsia" type="bool" id="channelnewsasia" default="true" visible="eq(-45,true)"/>
             <setting label="" type="number" visible="false" id="channelnewsasia.order" default="23"/>
+
+            <setting label="RT" type="bool" id="rt" default="true" visible="eq(-47,true)"/>
+            <setting label="" type="number" visible="false" id="rt.order" default="24"/>
         <!-- International -->
 
 
@@ -381,6 +387,9 @@
 
             <setting label="RTL Sport" type="bool" id="rtl_sport" default="true" visible="eq(-35,true)"/>
             <setting label="" type="number" visible="false" id="rtl_sport.order" default="18"/>
+
+            <setting label="TV Com" type="bool" id="tvcom" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="tvcom.order" default="19"/>
         <!-- Belgium -->
 
 
@@ -640,6 +649,9 @@
 
             <setting label="Télévision Loire 7" type="bool" id="tl7" default="true" visible="eq(-163,true)"/>
             <setting label="" type="number" visible="false" id="tl7.order" default="82"/>
+
+            <setting label="Lucky Jack" type="bool" id="luckyjack" default="true" visible="eq(-165,true)"/>
+            <setting label="" type="number" visible="false" id="luckyjack.order" default="83"/>
         <!-- France -->
 
 
@@ -757,6 +769,9 @@
 
             <setting label="TVP Polonia" type="bool" id="tvppolonia" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="tvppolonia.order" default="4"/>
+
+            <setting label="TVP Poland IN" type="bool" id="tvppolandin" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="tvppolandin.order" default="5"/>
         <!-- Poland -->
 
         <!-- Spain -->
@@ -976,6 +991,7 @@
                 <setting label="30162" type="labelenum" id="nhkworld.country" visible="eq(-8,true)" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" visible="eq(-9,true)" values="FR|EN|AR|ES|RU" default="FR"/>
                 <setting label="30164" type="labelenum" id="paramountchannel.language" visible="eq(-10,true)" values="ES|IT" default="ES"/>
+                <setting label="30166" type="labelenum" id="rt.language" visible="eq(-11,true)" values="FR|EN|AR|ES" default="FR"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
@@ -1026,6 +1042,9 @@
 
             <setting label="30244" type="text" id="6play.login" visible="eq(-3,true)" defaut=""/>
             <setting label="30245" type="text" id="6play.password" option="hidden" visible="eq(-4,true)" defaut=""/>
+
+            <setting label="30248" type="text" id="abweb.login" visible="eq(-5,true)" defaut=""/>
+            <setting label="30249" type="text" id="abweb.password" option="hidden" visible="eq(-6,true)" defaut=""/>
 
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->

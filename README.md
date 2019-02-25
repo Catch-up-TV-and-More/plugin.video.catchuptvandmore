@@ -44,6 +44,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - BX1 *(Replay, Live TV)*
 - NRJ Hits TV *(Replay, Live TV)*
 - RTL Sport *(Replay with RTLPlay account)*
+- TV Com *(Replay, Live TV)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
 - VRT NU *(Replay with VRT NU account)*
@@ -159,7 +160,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - viàLMtv Sarthe *(Live TV)*
 - viàLMirabelle *(Live TV)*
 - viàVosges *(Live TV)*
-- Télévision Loire 7 *(Live TV)*
+- Télévision Loire 7 *(Replay, Live TV)*
+- Lucky Jack *(Live TV)* *(with ABWeb account)*
 
 ##### Web TV
 - Tfou — MyTF1 *(Replay)*
@@ -196,6 +198,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Paramount Channel *(Live TV)* *(Contents {ES|IT})*
 - Afrique Media *(Replay, Live TV)*
 - Channel NewsAsia *(Replay, Live TV)*
+- RT *(Live TV)* *(Contents {FR|EN|AR|ES})*
 
 ### Italie — *Italia*
 ##### TV
@@ -238,6 +241,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - TVP Info *(Live TV)*
 - TVP Polonia *(Live TV)*
 - TVP 3 *(Live TV)* *(Contents {Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław})*
+- TVP Poland IN *(Live TV)*
 
 ### Suisse — *Switzerland*
 ##### TV Communauté française — *French Community TV*
@@ -247,8 +251,9 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - RTS Info *(Live TV)*
 - RTS Couleur 3 *(Live TV)*
 - Rouge TV *(Live TV)*
-- TVM3 *(Replay)*
+- TVM3 *(Replay, Live TV)*
 - BeCurious TV *(Replay)*
+- Léman Bleu *(Replay, Live TV)*
 
 ##### TV Communauté italienne — *Italian Community TV*
 - RSI *(Replay)*
@@ -274,7 +279,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Tunisie — *Tunisia*
 - التلفزة التونسية الوطنية 1 *(Live TV)*
 - التلفزة التونسية الوطنية 2 *(Live TV)*
-- نسمة تي في *(Live TV)*
+- نسمة تي في *(Replay, Live TV)*
 
 ## Sites internet disponibles — *Available Websites*
 ### Belgique — *Belgium*

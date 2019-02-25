@@ -190,6 +190,7 @@ LABELS = {
     'ketnet': 'Ketnet',
     'nrjhitstvbe': 'NRJ Hits TV',
     'rtl_sport': 'RTL Sport',
+    'tvcom': 'TV Com',
 
     # Canadian channels / live TV
     'tv5': 'TV5',
@@ -223,6 +224,7 @@ LABELS = {
     'rtraufsrf2': 'RTR auf SRF 2',
     'rtraufsrfinfo': 'RTR auf SRF Info',
     'teleticino': 'Teleticino',
+    'lemanbleu': 'Léman Bleu',
 
     # French channels / live TV
     'tf1': 'TF1',
@@ -300,6 +302,7 @@ LABELS = {
     'viamirabelle': 'viàMirabelle',
     'viavosges': 'viàVosges',
     'tl7': 'Télévision Loire 7',
+    'luckyjack': 'Lucky Jack',
 
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
@@ -359,6 +362,7 @@ LABELS = {
     'tv5mondefbs': 'TV5Monde France Belgique Suisse',
     'tv5mondeinfo': 'TV5Monde Info',
     'channelnewsasia': 'Channel NewsAsia',
+    'rt': 'RT (' + Script.setting['rt.language'] + ')',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
@@ -372,6 +376,7 @@ LABELS = {
     'tvp3': 'TVP 3 (' + utils.ensure_unicode(Script.setting['tvp3.region']) + ')',
     'tvpinfo': 'TVP Info',
     'tvppolonia': 'TVP Polonia',
+    'tvppolandin': 'TVP Poland IN',
 
     # Spanish channels / live TV
     'telecinco': 'Telecinco',

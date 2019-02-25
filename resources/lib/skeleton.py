@@ -146,6 +146,10 @@ REPLAY = {
     'it_replay': {
         'callback': 'generic_menu',
         'thumb': ['channels', 'it.png']
+    },
+    'tn_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'tn.png']
     }
 }
 
@@ -444,6 +448,12 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'tl7.png'],
         'fanart': ['channels', 'fr', 'tl7_fanart.jpg'],
         'module': 'resources.lib.channels.fr.tl7'
+    },
+    'luckyjack': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'luckyjack.png'],
+        'fanart': ['channels', 'fr', 'luckyjack_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.abweb'
     }
 }
 
@@ -485,6 +495,12 @@ PL_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'pl', 'tvppolonia.png'],
         'fanart': ['channels', 'pl', 'tvppolonia_fanart.jpg'],
+        'module': 'resources.lib.channels.pl.tvp'
+    },
+    'tvppolandin': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'pl', 'tvppolandin.png'],
+        'fanart': ['channels', 'pl', 'tvppolandin_fanart.jpg'],
         'module': 'resources.lib.channels.pl.tvp'
     }
 }
@@ -684,6 +700,12 @@ WO_LIVE = {
         'thumb': ['channels', 'wo', 'paramountchannel.png'],
         'fanart': ['channels', 'wo', 'paramountchannel_fanart.jpg'],
         'module': 'resources.lib.channels.wo.paramountchannel'
+    },
+    'rt': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'wo', 'rt.png'],
+        'fanart': ['channels', 'wo', 'rt_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.rt'
     }
 }
 
@@ -825,6 +847,12 @@ BE_LIVE = {
         'thumb': ['channels', 'be', 'ketnet.png'],
         'fanart': ['channels', 'be', 'ketnet_fanart.jpg'],
         'module': 'resources.lib.channels.be.vrt'
+    },
+    'tvcom': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'tvcom.png'],
+        'fanart': ['channels', 'be', 'tvcom_fanart.jpg'],
+        'module': 'resources.lib.channels.be.tvcom'
     }
 }
 
@@ -945,6 +973,18 @@ CH_LIVE = {
         'thumb': ['channels', 'ch', 'teleticino.png'],
         'fanart': ['channels', 'ch', 'teleticino_fanart.jpg'],
         'module': 'resources.lib.channels.ch.teleticino'
+    },
+    'lemanbleu': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'lemanbleu.png'],
+        'fanart': ['channels', 'ch', 'lemanbleu_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.lemanbleu'
+    },
+    'tvm3': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'ch', 'tvm3.png'],
+        'fanart': ['channels', 'ch', 'tvm3_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.tvm3'
     }
 }
 
@@ -1446,6 +1486,12 @@ FR_REPLAY = {
         'thumb': ['channels', 'fr', 'via93.png'],
         'fanart': ['channels', 'fr', 'via93_fanart.jpg'],
         'module': 'resources.lib.channels.fr.via'
+    },
+    'tl7': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tl7.png'],
+        'fanart': ['channels', 'fr', 'tl7_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.tl7'
     }
 }
 
@@ -1580,6 +1626,12 @@ BE_REPLAY = {
         'thumb': ['channels', 'be', 'vrt.png'],
         'fanart': ['channels', 'be', 'vrt_fanart.jpg'],
         'module': 'resources.lib.channels.be.vrt'
+    },
+    'tvcom': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'be', 'tvcom.png'],
+        'fanart': ['channels', 'be', 'tvcom_fanart.jpg'],
+        'module': 'resources.lib.channels.be.tvcom'
     }
 }
 
@@ -1763,6 +1815,12 @@ CH_REPLAY = {
         'thumb': ['channels', 'ch', 'becurioustv.png'],
         'fanart': ['channels', 'ch', 'becurioustv_fanart.jpg'],
         'module': 'resources.lib.channels.ch.becurioustv'
+    },
+    'lemanbleu': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'ch', 'lemanbleu.png'],
+        'fanart': ['channels', 'ch', 'lemanbleu_fanart.jpg'],
+        'module': 'resources.lib.channels.ch.lemanbleu'
     }
 }
 
@@ -1859,6 +1917,15 @@ IT_REPLAY = {
         'thumb': ['channels', 'it', 'raiplay.png'],
         'fanart': ['channels', 'it', 'raiplay_fanart.jpg'],
         'module': 'resources.lib.channels.it.raiplay'
+    }
+}
+
+TN_REPLAY = {
+    'nessma': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'tn', 'nessma.png'],
+        'fanart': ['channels', 'tn', 'nessma_fanart.jpg'],
+        'module': 'resources.lib.channels.tn.nessma'
     }
 }
 

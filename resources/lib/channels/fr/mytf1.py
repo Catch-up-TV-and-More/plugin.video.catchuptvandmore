@@ -511,4 +511,4 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
-    return json_parser['url']
+    return json_parser['url'].replace('master_2000000.m3u8', 'master_4000000.m3u8')

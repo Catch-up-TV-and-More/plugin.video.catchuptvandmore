@@ -31,10 +31,13 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
+import inputstreamhelper
 import datetime
 import json
 import re
 import urlquick
+import xbmc
+import xbmcgui
 
 
 # TO DO and Infos
@@ -83,11 +86,11 @@ LIVE_LIVE_CHANNEL_NAME = {
     "rtsdeux": "RTS Deux",
     "rtsinfo": "RTS Info",
     "rtscouleur3": "RTS Couleur 3",
-    "rsila1": "RSI La 1",
-    "rsila2": "RSI La 2",
+    "rsila1": "RSI LA 1",
+    "rsila2": "RSI LA 2",
     "srf1": "SRF 1",
-    "srfinfo": "SRF Info",
-    "srfzwei": "SRF Zwei",
+    "srfinfo": "SRF info",
+    "srfzwei": "SRF zwei",
     "rtraufsrf1": "RTR auf SRF 1",
     "rtraufsrfinfo": "RTR auf SRF Info",
     "rtraufsrf2": "RTR auf SRF 2"
@@ -288,12 +291,15 @@ def get_video_url(
                     if 'mpegURL' in stream_datas_url["mimeType"]:
                         stream_url = stream_datas_url["url"]
     acl_value = '/i/%s/*' % (re.compile(
-        r'\/i\/(.*?)\/').findall(stream_url)[0])
+        r'\/i\/(.*?)\/master').findall(stream_url)[0])
     token_datas = urlquick.get(URL_TOKEN % acl_value)
     token_jsonparser = json.loads(token_datas.text)
     token = token_jsonparser["token"]["authparams"]
 
-    final_video_url = stream_url + '?' + token
+    if '?' in stream_url:
+        final_video_url = stream_url + '&' + token
+    else:
+        final_video_url = stream_url + '?' + token
 
     if download_mode:
         return download.download_video(final_video_url, video_label)
@@ -321,20 +327,66 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     # build stream_url
     stream_url = ''
+    is_drm = False
     for stream_datas in json_parser2["chapterList"]:
         if live_id in stream_datas["id"]:
             for stream_datas_url in stream_datas["resourceList"]:
-                if 'HD' in stream_datas_url["quality"] and \
-                        'mpegURL' in stream_datas_url["mimeType"]:
-                    stream_url = stream_datas_url["url"]
-                    break
-                else:
-                    if 'mpegURL' in stream_datas_url["mimeType"]:
-                        stream_url = stream_datas_url["url"]
+                if 'drmList' in stream_datas_url:
+                    is_drm = True
 
-    acl_value = '/i/%s/*' % (re.compile(
-        r'\/i\/(.*?)\/').findall(stream_url)[0])
-    token_datas = urlquick.get(URL_TOKEN % acl_value)
-    token_jsonparser = json.loads(token_datas.text)
-    token = token_jsonparser["token"]["authparams"]
-    return stream_url + '?' + token
+    if is_drm:
+        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
+        if xbmc_version < 18:
+            xbmcgui.Dialog().ok(
+                'Info',
+                plugin.localize(30602))
+            return False
+
+        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not is_helper.check_inputstream():
+            return False
+
+        licence_drm_url = ''
+        for stream_datas in json_parser2["chapterList"]:
+            if live_id in stream_datas["id"]:
+                for stream_datas_url in stream_datas["resourceList"]:
+                    stream_url = stream_datas_url["url"]
+                    for licence_drm_datas in stream_datas_url["drmList"]:
+                        if 'WIDEVINE' in licence_drm_datas["type"]:
+                            licence_drm_url = licence_drm_datas["licenseUrl"]
+
+        item = Listitem()
+        item.path = stream_url
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property['inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
+
+        item.label = item_dict['label']
+        item.info.update(item_dict['info'])
+        item.art.update(item_dict['art'])
+
+        return item
+
+    else:
+        for stream_datas in json_parser2["chapterList"]:
+            if live_id in stream_datas["id"]:
+                for stream_datas_url in stream_datas["resourceList"]:
+                    if 'HD' in stream_datas_url["quality"] and \
+                            'mpegURL' in stream_datas_url["mimeType"]:
+                        stream_url = stream_datas_url["url"]
+                        break
+                    else:
+                        if 'mpegURL' in stream_datas_url["mimeType"]:
+                            stream_url = stream_datas_url["url"]
+
+        acl_value = '/i/%s/*' % (re.compile(
+            r'\/i\/(.*?)\/').findall(stream_url)[0])
+        token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
+        token_jsonparser = json.loads(token_datas.text)
+        token = token_jsonparser["token"]["authparams"]
+        if '?' in stream_url:
+            final_video_url = stream_url + '&' + token
+        else:
+            final_video_url = stream_url + '?' + token
+        return final_video_url

@@ -31,14 +31,104 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
+from bs4 import BeautifulSoup as bs
+
 import re
 import urlquick
 
 '''
-TODO Add Replay
+TODO info videos replay (dates)
 '''
 
-URL_ROOT = 'http://www.tl7.fr/'
+URL_ROOT = 'http://www.tl7.fr'
+
+URL_REPLAY = URL_ROOT + '/replay.html'
+
+URL_VIDEOS = URL_ROOT + '/views/htmlFragments/replayDetail_pages.php?page=%s&elementsPerPage=10&idEmission=%s'
+
+
+def replay_entry(plugin, item_id):
+    """
+    First executed function after replay_bridge
+    """
+    return list_programs(plugin, item_id)
+
+
+@Route.register
+def list_programs(plugin, item_id):
+    """
+    Build progams listing
+    - Le JT
+    - ...
+    """
+    resp = urlquick.get(URL_REPLAY)
+    root_soup = bs(resp.text, 'html.parser')
+    list_programs_datas = root_soup.find_all(
+        'div', class_='emission black')
+
+    for program_datas in list_programs_datas:
+        program_title = program_datas.find('a').text
+        program_image = URL_ROOT + '/' + program_datas.find('img').get('src')
+        program_id = re.compile(
+            r'fichiers\/emissions\/(.*?)\/').findall(program_datas.find('img').get('src'))[0]
+
+        item = Listitem()
+        item.label = program_title
+        item.art['thumb'] = program_image
+
+        item.set_callback(
+            list_videos,
+            item_id=item_id,
+            program_id=program_id,
+            page='1')
+        yield item
+
+
+@Route.register
+def list_videos(plugin, item_id, program_id, page):
+
+    resp = urlquick.get(URL_VIDEOS % (page, program_id))
+    root_soup = bs(resp.text, 'html.parser')
+    list_videos_datas = root_soup.find_all(
+        'div', class_='replay campton-light')
+
+    for video_datas in list_videos_datas:
+        video_title = video_datas.find('a').get('title')
+        video_image = video_datas.find('img').get('src')
+        video_url = URL_ROOT + '/' + video_datas.find('a').get('href')
+
+        item = Listitem()
+        item.label = video_title
+        item.art['thumb'] = video_image
+
+        item.context.script(
+            get_video_url,
+            plugin.localize(LABELS['Download']),
+            item_id=item_id,
+            video_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
+            download_mode=True)
+
+        item.set_callback(
+            get_video_url,
+            item_id=item_id,
+            video_url=video_url)
+        yield item
+
+    yield Listitem.next_page(
+        item_id=item_id,
+        program_id=program_id,
+        page=str(int(page) + 1))
+
+@Resolver.register
+def get_video_url(
+        plugin, item_id, video_url, download_mode=False, video_label=None):
+
+    resp = urlquick.get(video_url)
+    video_id = re.compile(
+        r'\&idVideo=(.*?)\&').findall(resp.text)[0]
+    
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict):

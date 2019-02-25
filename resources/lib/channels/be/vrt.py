@@ -147,13 +147,14 @@ def list_categories(plugin, item_id, root_url):
     resp = urlquick.get(root_url, max_age=-1)
     root_soup = bs(resp.text, 'html.parser')
     list_categories_datas = root_soup.find_all(
-        attrs={'class': 'tile tile--category'})
+        attrs={'class': 'page-category page'})
 
     for category_datas in list_categories_datas:
         category_title = category_datas.find('h2').text.strip()
         category_image = 'https:' + category_datas.find(
-            'img').get('srcset').split('1x')[0].strip()
-        category_url = URL_ROOT + category_datas.get('href')
+            'div', class_='nui-tile--image nui-responsive-image').get(
+                'data-responsive-image')
+        category_url = URL_ROOT + category_datas.find('a').get('href')
 
         item = Listitem()
         item.label = category_title

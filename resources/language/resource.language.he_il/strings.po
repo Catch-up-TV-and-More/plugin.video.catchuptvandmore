@@ -264,7 +264,7 @@ msgid "Realmadrid TV: Choose Channel"
 msgstr "Realmadrid TV : בחר ערוץ"
 
 msgctxt "#30166"
-msgid "Yes TV: Choose region"
+msgid "RT: Choose Channel"
 msgstr ""
 
 msgctxt "#30167"
@@ -333,11 +333,11 @@ msgid "RTLplay Password"
 msgstr ""
 
 msgctxt "#30248"
-msgid "Atresplayer Login"
+msgid "ABWeb Login"
 msgstr ""
 
 msgctxt "#30249"
-msgid "Atresplayer Password"
+msgid "ABWeb Password"
 msgstr ""
 
 # Reserved space for other tab/category in settins (from 30260 to 30339)

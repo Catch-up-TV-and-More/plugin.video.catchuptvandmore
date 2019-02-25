@@ -86,6 +86,9 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         elif item_id == 'tvppolonia':
             if 'Polonia' in live_datas.get('data-title'):
                 live_id = live_datas.get('data-video-id')
+        elif item_id == 'tvppolandin':
+            if 'News and entertainment' in live_datas.get('data-title'):
+                live_id = live_datas.get('data-video-id')
         elif item_id == 'tvp3':
             if LIVE_TVP3_REGIONS[utils.ensure_unicode(
                     Script.setting['tvp3.region'])] in live_datas.find('img').get('alt'):
