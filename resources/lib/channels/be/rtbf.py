@@ -414,8 +414,11 @@ def list_lives(plugin, item_id):
         end_time_value = format_hours(live_datas["end_date"])
         date_value = format_day(live_datas["start_date"])
         live_title = live_channel_title + " - " + live_datas["title"]
+        if live_datas['subtitle']:
+            live_title += " - " + live_datas['subtitle']
         live_plot = 'Début le %s à %s (CET)' % (date_value, start_time_value) + \
             '\n\r' + 'Fin le %s à %s (CET)' % (date_value, end_time_value) + '\n\r' + \
+            'Accessibilité: ' + live_datas["geolock"]["title"] + '\n\r' + \
             live_datas["description"]
         live_image = live_datas["images"]["illustration"]["16x9"]["1248x702"]
 
@@ -423,7 +426,9 @@ def list_lives(plugin, item_id):
         item.label = live_title
         item.art['thumb'] = live_image
         item.info['plot'] = live_plot
-        item.info.date(date_value, '%Y/%m/%d')
+        #commented this line because othrewie sorting is made by date and then by title
+        #and doesn't help to find the direct
+        #item.info.date(date_time_value, '%Y/%m/%d')
         item.set_callback(
             get_live_url,
             item_id=item_id,
