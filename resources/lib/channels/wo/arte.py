@@ -130,7 +130,7 @@ def list_sub_categories(plugin, item_id, category_url):
     for sub_category_datas in json_parser['pages']['list'][value_code]['zones']:
         if 'subcategory' in sub_category_datas['code']['name']:
             sub_category_title = sub_category_datas['title']
-            sub_category_url = sub_category_datas['link']['page']
+            sub_category_url = sub_category_datas['link']['url']
 
             item = Listitem()
             item.label = sub_category_title
@@ -138,7 +138,7 @@ def list_sub_categories(plugin, item_id, category_url):
                 list_videos_sub_category,
                 item_id=item_id,
                 sub_category_url=sub_category_url,
-                category_url=category_url)
+                page='1')
             yield item
 
         elif sub_category_datas['code']['name'] == 'playlists' or \
@@ -196,56 +196,53 @@ def list_programs(plugin, item_id, sub_category_code_name, sub_category_url):
 
 
 @Route.register
-def list_videos_sub_category(plugin, item_id, sub_category_url, category_url):
+def list_videos_sub_category(plugin, item_id, sub_category_url, page):
 
-    resp = urlquick.get(category_url)
+    resp = urlquick.get(sub_category_url + '?page=%s' % page)
     json_value = re.compile(
         r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
     json_parser = json.loads(json_value + '}')
 
     value_code = json_parser['pages']['currentCode']
     for sub_category_datas in json_parser['pages']['list'][value_code]['zones']:
-        if 'subcategory' in sub_category_datas['code']['name']:
-            if sub_category_url == sub_category_datas['link']['page']:
-                for video_datas in sub_category_datas['data']:
-                    if video_datas['subtitle'] is not None:
-                        video_title = video_datas['title'] + ' - ' + video_datas['subtitle']
-                    else:
-                        video_title = video_datas['title']
-                    video_id = video_datas['programId']
-                    vudeo_image = video_datas['images']['landscape']['resolutions'][0]['url']
-                    video_duration = video_datas["duration"]
-                    video_plot = video_datas["shortDescription"]
-                    # date_value = video_datas["videoRightsBegin"].split(' ')
-                    # day = date_value[1]
-                    # try:
-                    #     month = CORRECT_MONTH[date_value[2]]
-                    # except Exception:
-                    #     month = '00'
-                    # year = date_value[3]
-                    # date_value = '-'.join((year, month, day))
+        if 'videos_subcategory' == sub_category_datas['code']['name']:
+            for video_datas in sub_category_datas['data']:
+                if video_datas['subtitle'] is not None:
+                    video_title = video_datas['title'] + ' - ' + video_datas['subtitle']
+                else:
+                    video_title = video_datas['title']
+                video_id = video_datas['programId']
+                video_image = ''
+                if 'resolutions' in video_datas['images']['landscape']:
+                    for video_image_datas in video_datas['images']['landscape']['resolutions']:
+                        video_image = video_image_datas['url']
+                video_duration = video_datas["duration"]
+                video_plot = video_datas["description"]
 
-                    item = Listitem()
-                    item.label = video_title
-                    item.art['thumb'] = vudeo_image
-                    item.info['duration'] = video_duration
-                    item.info['plot'] = video_plot
-                    # item.info.date(date_value, '%Y-%m-%d')
+                item = Listitem()
+                item.label = video_title
+                item.art['thumb'] = video_image
+                item.info['duration'] = video_duration
+                item.info['plot'] = video_plot
 
-                    item.context.script(
-                        get_video_url,
-                        plugin.localize(LABELS['Download']),
-                        item_id=item_id,
-                        video_id=video_id,
-                        video_label=LABELS[item_id] + ' - ' + item.label,
-                        download_mode=True)
+                item.context.script(
+                    get_video_url,
+                    plugin.localize(LABELS['Download']),
+                    item_id=item_id,
+                    video_id=video_id,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
+                    download_mode=True)
 
-                    item.set_callback(
-                        get_video_url,
-                        item_id=item_id,
-                        video_id=video_id)
-                    yield item
+                item.set_callback(
+                    get_video_url,
+                    item_id=item_id,
+                    video_id=video_id)
+                yield item
 
+    yield Listitem.next_page(
+        item_id=item_id,
+        sub_category_url=sub_category_url,
+        page=str(int(page) + 1))
 
 @Route.register
 def list_videos_program(plugin, item_id, sub_category_code_name, program_id):
