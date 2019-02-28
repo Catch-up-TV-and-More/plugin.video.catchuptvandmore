@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.5~beta0"
+       version="0.2.5~beta01"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -35,6 +35,7 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.2.5]
+[Update] Live TV - RTBF - Add avaibility / Remove Date / Add subtitle (BE) - Thanks Gaet81
     </news>
     <assets>
       <icon>icon.png</icon>
