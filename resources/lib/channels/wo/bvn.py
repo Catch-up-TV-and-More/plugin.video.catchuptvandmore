@@ -61,7 +61,7 @@ URL_INFO_REPLAY = 'https://e.omroep.nl/metadata/%s'
 # Id Video, time
 URL_VIDEO_REPLAY = 'https://ida.omroep.nl/app.php/%s?adaptive=yes&token=%s'
 # Id Video, Token
-URL_SUBTITLE = 'https://tt888.omroep.nl/tt888/%s'
+URL_SUBTITLE = 'https://rs.poms.omroep.nl/v1/api/subtitles/%s'
 # Id Video
 
 def replay_entry(plugin, item_id):
