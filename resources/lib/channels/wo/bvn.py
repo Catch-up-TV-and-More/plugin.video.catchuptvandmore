@@ -122,11 +122,6 @@ def list_videos(plugin, item_id, day_id):
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
-        
-        if plugin.setting.get_boolean('active_subtitle'):
-            list_video_id = video_datas.find('a').get('href').rsplit('/')
-            video_id = list_video_id[len(list_video_id)-1]
-            item.subtitles.append(URL_SUBTITLE % video_id)
 
         item.set_callback(
             get_video_url,
@@ -172,9 +167,8 @@ def get_video_url(
     item.label = item_dict['label']
     item.info.update(item_dict['info'])
     item.art.update(item_dict['art'])
-    # TODO work on subtitles ?
-    # if plugin.setting.get_boolean('active_subtitle'):
-    #     item.subtitles = item_dict['subtitles']
+    if plugin.setting.get_boolean('active_subtitle'):
+        item.subtitles.append(URL_SUBTITLE % video_id)
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
