@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.5~beta01"
+       version="0.2.5~beta02"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -37,6 +37,8 @@
 [Version 0.2.5]
 [Update] Live TV - RTBF - Add avaibility / Remove Date / Add subtitle (BE) - Thanks Gaet81
 [Fix] Replay - Arte (WO)
+[Fix] Subtitle - BVN (WO)
+[DRM] Replay - BVN (WO)
     </news>
     <assets>
       <icon>icon.png</icon>
