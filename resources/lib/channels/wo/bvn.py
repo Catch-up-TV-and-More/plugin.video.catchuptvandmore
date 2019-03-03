@@ -32,20 +32,13 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
 
-
-from bs4 import BeautifulSoup as bs
-
 import inputstreamhelper
 import json
 import re
-import time
 import urlquick
 import xbmc
 import xbmcgui
 
-
-# TO DO
-# Info DATE
 
 URL_ROOT = 'https://www.bvn.tv'
 
@@ -79,14 +72,13 @@ def list_days(plugin, item_id):
     - day 2
     - ...
     """
+    
     resp = urlquick.get(URL_DAYS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_days_datas = root_soup.find_all(
-        "h3", class_=re.compile("m-section__title"))
+    root = resp.parse("div", attrs={"id": "missed"})
+    
     day_id = 0
-
-    for day_datas in list_days_datas:
-        day_title = day_datas.text
+    for title in root.iterfind(".//h3[@class='m-section__title']"):
+        day_title = title.text
         day_id = day_id + 1
 
         item = Listitem()
@@ -100,25 +92,20 @@ def list_days(plugin, item_id):
 
 @Route.register
 def list_videos(plugin, item_id, day_id):
-
     resp = urlquick.get(URL_DAYS)
-    root_soup = bs(resp.text, 'html.parser')
-    slick_missed_day_id = 'slick-missed-day-%s' % (day_id)
-    list_videos_datas = root_soup.find_all(
-        id=slick_missed_day_id)[0].find_all('li')
-
-    for video_datas in list_videos_datas:
-
-        video_title = ''
-        video_time = video_datas.find('time', class_="m-section__scroll__item__bottom__time").text.replace('.', ':')
-        if video_datas.find('span', class_="m-section__scroll__item__bottom__title--sub").string is not None:
-            video_title = video_time + ' - ' + video_datas.find('span', class_="m-section__scroll__item__bottom__title").text + \
-                ': ' + video_datas.find('span', class_="m-section__scroll__item__bottom__title--sub").text
-        else:
-            video_title = video_time + ' - ' + video_datas.find('span', class_="m-section__scroll__item__bottom__title").text
-        video_image = URL_ROOT + video_datas.find('img').get('data-src')
-        video_url = URL_ROOT + video_datas.find('a').get('href')
-
+    root = resp.parse("ul", attrs={"id": "slick-missed-day-%s" % (day_id)})
+    
+    for broadcast in root.iterfind(".//li"):
+        video_time = broadcast.find(".//time[@class='m-section__scroll__item__bottom__time']").text.replace('.', ':')
+        video_title = video_time + " - " + broadcast.find(".//span[@class='m-section__scroll__item__bottom__title']").text
+        
+        subtitle = broadcast.find("span[@class='m-section__scroll__item__bottom__title--sub']")
+        if subtitle is not None and subtitle.text is not None:
+            video_title += ": " + subtitle
+            
+        video_image = URL_ROOT + broadcast.find('.//img').get('data-src')
+        video_url = URL_ROOT + broadcast.find('.//a').get('href')
+        
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
@@ -167,8 +154,10 @@ def get_video_url(
     item.label = item_dict['label']
     item.info.update(item_dict['info'])
     item.art.update(item_dict['art'])
+    
     if plugin.setting.get_boolean('active_subtitle'):
         item.subtitles.append(URL_SUBTITLE % video_id)
+    
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
