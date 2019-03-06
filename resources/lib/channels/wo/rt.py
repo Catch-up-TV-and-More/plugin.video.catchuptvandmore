@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib import download
 
 import re
 import urlquick
@@ -41,7 +42,9 @@ URL_ROOT_FR = 'https://francais.rt.com'
 
 URL_LIVE_FR = URL_ROOT_FR + '/en-direct'
 
-URL_LIVE_EN = 'https://www.rt.com/on-air/'
+URL_ROOT_EN = 'https://www.rt.com'
+
+URL_LIVE_EN = URL_ROOT_EN + '/on-air/'
 
 URL_LIVE_AR = 'https://arabic.rt.com/live/'
 
@@ -55,6 +58,10 @@ CATEGORIES_VIDEOS_FR = {
     URL_ROOT_FR + '/magazines': 'Magazines',
     URL_ROOT_FR + '/documentaires': 'Documentaires',
     URL_ROOT_FR + '/videos': 'Vidéos'
+}
+
+CATEGORIES_VIDEOS_EN = {
+    URL_ROOT_EN + '/shows/': 'Shows'
 }
 
 
@@ -74,10 +81,10 @@ def list_categories(plugin, item_id):
     - Informations
     - ...
     """
-    if DESIRED_LANGUAGE == 'FR':
+    if DESIRED_LANGUAGE == 'FR' or DESIRED_LANGUAGE == 'EN':
         CATEGORIES_VIDEOS = eval('CATEGORIES_VIDEOS_%s' % DESIRED_LANGUAGE)
         for category_url, category_title in CATEGORIES_VIDEOS.iteritems():
-            if 'magazines' in category_url:
+            if 'magazines' in category_url or 'shows' in category_url:
                 item = Listitem()
                 item.label = category_title
                 item.set_callback(
@@ -94,7 +101,7 @@ def list_categories(plugin, item_id):
                     next_url=category_url,
                     page='0')
                 yield item
-            else:
+            elif 'videos' in category_url:
                 item = Listitem()
                 item.label = category_title
                 item.set_callback(
@@ -121,65 +128,119 @@ def list_programs(plugin, item_id, next_url):
     - ...
     """
     resp = urlquick.get(next_url)
-    root = resp.parse("ul", attrs={"class": "media-rows"})
+    if DESIRED_LANGUAGE == 'FR':
+        root = resp.parse("ul", attrs={"class": "media-rows"})
 
-    for program_datas in root.iterfind("li"):
-        program_title = program_datas.find('.//img').get('alt')
-        program_url = eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + program_datas.find(
-            './/a').get('href')
-        program_image = program_datas.find('.//img').get('data-src')
-        program_plot = program_datas.find('.//p').text
+        for program_datas in root.iterfind("li"):
+            program_title = program_datas.find('.//img').get('alt')
+            program_url = eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + program_datas.find(
+                './/a').get('href')
+            program_image = program_datas.find('.//img').get('data-src')
+            program_plot = program_datas.find('.//p').text
 
-        item = Listitem()
-        item.label = program_title
-        item.art['thumb'] = program_image
-        item.info['plot'] = program_plot
-        item.set_callback(
-            list_videos_programs,
-            item_id=item_id,
-            next_url=program_url,
-            page='0')
-        yield item
+            item = Listitem()
+            item.label = program_title
+            item.art['thumb'] = program_image
+            item.info['plot'] = program_plot
+            item.set_callback(
+                list_videos_programs,
+                item_id=item_id,
+                next_url=program_url,
+                page='0')
+            yield item
+    elif DESIRED_LANGUAGE == 'EN':
+        root = resp.parse("ul", attrs={"class": "card-rows"})
+
+        for program_datas in root.iterfind("li"):
+            program_title = program_datas.find('.//img').get('alt')
+            program_url = eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + program_datas.find(
+                './/a').get('href')
+            program_image = program_datas.find('.//img').get('data-src')
+
+            item = Listitem()
+            item.label = program_title
+            item.art['thumb'] = program_image
+            item.set_callback(
+                list_videos_programs,
+                item_id=item_id,
+                next_url=program_url,
+                page='0')
+            yield item
 
 
 @Route.register
 def list_videos_programs(plugin, item_id, next_url, page):
 
     resp = urlquick.get(next_url)
-    program_id = re.compile(
-        r'pageID \= \"(.*?)\"').findall(resp.text)[0]
+    if 'pageID' in resp.text:
+        program_id = re.compile(
+            r'pageID \= \"(.*?)\"').findall(resp.text)[0]
+    else:
+        program_id = re.compile(
+            r'\/program\.(.*?)\/prepare').findall(resp.text)[0]
 
-    resp2 = urlquick.get(
-        eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/idi-listing/10/%s' % (program_id, page))
+    if DESIRED_LANGUAGE == 'FR':
+        resp2 = urlquick.get(
+            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/idi-listing/10/%s' % (program_id, page))
+        root = resp2.parse("div", attrs={"data-role": "content"})
 
-    root = resp2.parse("div", attrs={"data-role": "content"})
+        for video_datas in root.iterfind(".//div[@data-role='item']"):
+            video_title = video_datas.find(".//span[@class='st-idi-episode-card__title']").text.strip()
+            video_image_datas = video_datas.find(".//span[@class='st-idi-episode-card__image']").get('style')
+            video_image = re.compile(
+                r'url\((.*?)\)').findall(video_image_datas)[0]
+            video_url = video_datas.find('.//a').get('href')
+            video_plot = video_datas.find(".//span[@class='st-idi-episode-card__summary']").text.strip()
 
-    for video_datas in root.iterfind(".//div[@data-role='item']"):
-        video_title = video_datas.find(".//span[@class='st-idi-episode-card__title']").text.strip()
-        video_image_datas = video_datas.find(".//span[@class='st-idi-episode-card__image']").get('style')
-        video_image = re.compile(
-            r'url\((.*?)\)').findall(video_image_datas)[0]
-        video_url = video_datas.find('.//a').get('href')
-        video_plot = video_datas.find(".//span[@class='st-idi-episode-card__summary']").text.strip()
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
+            item.info['plot'] = video_plot
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = video_image
-        item.info['plot'] = video_plot
+            item.context.script(
+                get_video_url,
+                plugin.localize(LABELS['Download']),
+                item_id=item_id,
+                video_url=video_url,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                download_mode=True)
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_url=video_url)
+            yield item
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
-        yield item
+    elif DESIRED_LANGUAGE == 'EN':
+        resp2 = urlquick.get(
+            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/latestepisodes/10/%s' % (program_id, page))
+
+        root = resp2.parse("ul", attrs={"class": "card-rows js-listing__list"})
+
+        for video_datas in root.iterfind("li"):
+            video_title = video_datas.find(".//img").get('alt')
+            video_image = video_datas.find(".//img").get('data-src')
+            video_url = eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + video_datas.find('.//a').get('href')
+            video_plot = video_datas.find(".//div[@class='card__summary ']").text.strip()
+
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
+            item.info['plot'] = video_plot
+
+            item.context.script(
+                get_video_url,
+                plugin.localize(LABELS['Download']),
+                item_id=item_id,
+                video_url=video_url,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                download_mode=True)
+
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_url=video_url)
+            yield item
 
     yield Listitem.next_page(
         item_id=item_id,
@@ -319,9 +380,17 @@ def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url, max_age=-1)
-    video_id = re.compile(
-        r'youtube\.com\/embed\/(.*?)[\?\"]').findall(resp.text)[0]
-    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode, video_label)
+    if 'youtube.com/embed' in resp.text:
+        video_id = re.compile(
+            r'youtube\.com\/embed\/(.*?)[\?\"]').findall(resp.text)[0]
+        return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode, video_label)
+    else:
+        final_url = re.compile(
+            r'file\: \"(.*?)\"').findall(resp.text)
+        if download_mode:
+            return download.download_video(final_url, video_label)
+
+        return final_url
 
 
 def live_entry(plugin, item_id, item_dict):
