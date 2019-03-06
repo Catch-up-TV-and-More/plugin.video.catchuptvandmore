@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # Settings tabs/categories (from 30000 to 30019)
@@ -306,7 +306,6 @@ msgid "Automatically rename the video (download directory required)"
 msgstr "Hernoem de video automatisch (download map vereist)"
 
 
-
 # Accounts (from 30240 to 30259)
 
 msgctxt "#30240"
@@ -489,12 +488,12 @@ msgid "This content is DRM protected. To be able to play it we invite you to upd
 msgstr "Deze inhoud is DRM beveiligd. Om het af te kunnen spelen nodigen wij u uit Kodi te updaten naar versie 18 of hoger. Bedankt voor uw begrip."
 
 msgctxt "#30603"
-msgid "This content is DRM protected. The download mode doesn't work for a content DRM protected. Thank you for your understanding."
+msgid "This content is DRM protected. The download mode doesn't work for this kind of protection. Thank you for your understanding."
 msgstr "Deze inhoud is DRM beveiligd. Downloaden is niet mogelijk met een dergelijke beveiliging. Bedankt voor uw begrip."
 
 msgctxt "#30604"
-msgid "This content require an account %s. You could configure your login and your password in the configuration of this addon. If you don't have an account, you could create it at this url %s."
-msgstr "Deze inhoud vereist een account %s. U kunt de gegevens hiervoor verstrekken in de instellingen van deze add-on. Wanneer u geen account heeft kunt u deze aanmaken op het volgende adres %s."
+msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
+msgstr "Toegang tot deze inhoud vereist een account %s. U kunt de gegevens hiervoor verstrekken in de instellingen van deze add-on. Wanneer u geen account heeft kunt u deze aanmaken op het volgende adres %s."
 
 # Others (from 30700 to 30799)
 msgctxt "#30700"
