@@ -199,8 +199,8 @@ msgid "Italian channels"
 msgstr "Chaînes italiennes"
 
 msgctxt "#30092"
-msgid "Netherlands channels"
-msgstr "Chaînes des Pays-Bas"
+msgid "Dutch channels"
+msgstr "Chaînes néerlandaises"
 
 # Websites (from 30130 to 30149)
 

@@ -88,7 +88,7 @@ LABELS = {
     'Spanish channels': 30089,
     'Tunisia channels': 30090,
     'Italian channels': 30091,
-    'Netherlands channels': 30092,
+    'Dutch channels': 30092,
     'Video quality': 30150,
     'Video quality (BEST|DEFAULT|DIALOG)': 30151,
     'Contents': 30152,
