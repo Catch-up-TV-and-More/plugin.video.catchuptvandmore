@@ -165,7 +165,7 @@ def get_video_url(
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property['inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com&x-custom-data=%s|R{SSM}|' % xcdata_value
+    item.property['inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&x-custom-data=%s|R{SSM}|' % xcdata_value
 
     return item
 
