@@ -74,6 +74,8 @@ LABELS = {
     'tn_live': 30060,
     'it_replay': 30061,
     'it_live': 30061,
+    'nl_replay': 30062,
+    'nl_live': 30062,
     'French channels': 30080,
     'Belgian channels': 30081,
     'Japanese channels': 30082,
@@ -86,6 +88,7 @@ LABELS = {
     'Spanish channels': 30089,
     'Tunisia channels': 30090,
     'Italian channels': 30091,
+    'Netherlands channels': 30092,
     'Video quality': 30150,
     'Video quality (BEST|DEFAULT|DIALOG)': 30151,
     'Contents': 30152,
@@ -417,6 +420,16 @@ LABELS = {
     'raiscuola': 'Rai Scuola',
     'la7d': 'La7d',
     'raiplay': 'Rai Play',
+
+    # Netherlands channels / live TV
+    'npo-1': 'NPO 1',
+    'npo-2': 'NPO 2',
+    'npo-zapp': 'NPO Zapp',
+    'npo-1-extra': 'NPO 1 Extra',
+    'npo-2-extra': 'NPO 2 Extra',
+    'npo-zappelin-extra': 'NPO Zappelin Extra',
+    'npo-nieuws': 'NPO Nieuws',
+    'npo-politiek': 'NPO Politiek',
 
     # Websites
     'allocine': 'Allociné',

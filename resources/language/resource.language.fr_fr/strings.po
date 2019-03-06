@@ -145,6 +145,10 @@ msgctxt "#30061"
 msgid "Italia"
 msgstr "Italie"
 
+msgctxt "#30062"
+msgid "Netherlands"
+msgstr "Pays-Bas"
+
 # Channels (from 30080 to 30129)
 msgctxt "#30080"
 msgid "French channels"
@@ -193,6 +197,10 @@ msgstr "Chaînes tunisiennes"
 msgctxt "#30091"
 msgid "Italian channels"
 msgstr "Chaînes italiennes"
+
+msgctxt "#30092"
+msgid "Netherlands channels"
+msgstr "Chaînes des Pays-Bas"
 
 # Websites (from 30130 to 30149)
 
