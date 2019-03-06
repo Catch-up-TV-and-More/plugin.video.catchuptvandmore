@@ -430,6 +430,7 @@ LABELS = {
     'npo-zappelin-extra': 'NPO Zappelin Extra',
     'npo-nieuws': 'NPO Nieuws',
     'npo-politiek': 'NPO Politiek',
+    'npo-start': 'NPO Start',
 
     # Websites
     'allocine': 'Allociné',

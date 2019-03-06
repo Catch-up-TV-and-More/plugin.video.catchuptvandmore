@@ -54,6 +54,25 @@ URL_SUBTITLE = 'https://rs.poms.omroep.nl/v1/api/subtitles/%s'
 # Id Video
 
 
+def replay_entry(plugin, item_id):
+    """
+    First executed function after replay_bridge
+    """
+    return list_categories(plugin, item_id)
+
+
+@Route.register
+def list_categories(plugin, item_id):
+    """
+    Build categories listing
+    - Tous les programmes
+    - Séries
+    - Informations
+    - ...
+    """
+    return False
+
+
 def live_entry(plugin, item_id, item_dict):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 

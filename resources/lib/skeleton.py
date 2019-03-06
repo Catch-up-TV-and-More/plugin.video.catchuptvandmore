@@ -154,6 +154,10 @@ REPLAY = {
     'tn_replay': {
         'callback': 'generic_menu',
         'thumb': ['channels', 'tn.png']
+    },
+    'nl_replay': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'nl.png']
     }
 }
 
@@ -1987,6 +1991,15 @@ TN_REPLAY = {
         'thumb': ['channels', 'tn', 'nessma.png'],
         'fanart': ['channels', 'tn', 'nessma_fanart.jpg'],
         'module': 'resources.lib.channels.tn.nessma'
+    }
+}
+
+NL_REPLAY = {
+    'npo-start': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'nl', 'npo-start.png'],
+        'fanart': ['channels', 'nl', 'npo-start_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
     }
 }
 
