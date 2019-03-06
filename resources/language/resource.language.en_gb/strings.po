@@ -199,7 +199,7 @@ msgid "Italian channels"
 msgstr ""
 
 msgctxt "#30092"
-msgid "Netherlands channels"
+msgid "Dutch channels"
 msgstr ""
 
 # Websites (from 30130 to 30149)
