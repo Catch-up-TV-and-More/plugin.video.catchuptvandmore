@@ -62,6 +62,9 @@
             <setting label="30061" type="bool" id="it_live" default="true"/>
             <setting label="" type="number" visible="false" id="it_live.order" default="12"/>
 
+            <setting label="30062" type="bool" id="nl_live" default="true"/>
+            <setting label="" type="number" visible="false" id="nl_live.order" default="13"/>
+
         <!-- Hide catch-up TV countries -->
         <setting label="30016" type="lsep"/>
 
@@ -100,6 +103,9 @@
 
             <setting label="30061" type="bool" id="it_replay" default="true"/>
             <setting label="" type="number" visible="false" id="it_replay.order" default="12"/>
+
+            <setting label="30062" type="bool" id="nl_replay" default="true"/>
+            <setting label="" type="number" visible="false" id="nl_replay.order" default="13"/>
     </category>
     <!-- Countries-->
 
@@ -890,6 +896,36 @@
             <setting label="Rai Play" type="bool" id="raiplay" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="raiplay.order" default="16"/>
         <!-- Italia -->
+
+        <!-- Netherlands -->
+        <setting label="30092" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="nl" default="true" visible="false"/>
+
+            <setting label="NPO 1" type="bool" id="npo-1" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="npo-1.order" default="1"/>
+
+            <setting label="NPO 2" type="bool" id="npo-2" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="npo-2.order" default="2"/>
+
+            <setting label="NPO Zapp" type="bool" id="npo-zapp" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="npo-zapp.order" default="3"/>
+
+            <setting label="NPO 1 Extra" type="bool" id="npo-1-extra" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="npo-1-extra.order" default="4"/>
+
+            <setting label="NPO 2 Extra" type="bool" id="npo-2-extra" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="npo-2-extra.order" default="5"/>
+
+            <setting label="NPO Zappelin Extra" type="bool" id="npo-zappelin-extra" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="npo-zappelin-extra.order" default="6"/>
+
+            <setting label="NPO Nieuws" type="bool" id="npo-nieuws" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="npo-nieuws.order" default="7"/>
+
+            <setting label="NPO Politiek" type="bool" id="npo-politiek" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="npo-politiek.order" default="8"/>
+       <!-- Netherlands -->
+
 
     </category>
     <!-- Channels -->

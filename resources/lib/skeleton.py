@@ -102,6 +102,10 @@ LIVE_TV = {
     'it_live': {
         'callback': 'generic_menu',
         'thumb': ['channels', 'it.png']
+    },
+    'nl_live': {
+        'callback': 'generic_menu',
+        'thumb': ['channels', 'nl.png']
     }
 }
 
@@ -1099,6 +1103,57 @@ IT_LIVE = {
         'thumb': ['channels', 'it', 'raiscuola.png'],
         'fanart': ['channels', 'it', 'raiscuola_fanart.jpg'],
         'module': 'resources.lib.channels.it.raiplay'
+    }
+}
+
+NL_LIVE = {
+    'npo-1': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'nl', 'npo-1.png'],
+        'fanart': ['channels', 'nl', 'npo-1_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
+    },
+    'npo-2': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'nl', 'npo-2.png'],
+        'fanart': ['channels', 'nl', 'npo-2_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
+    },
+    'npo-zapp': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'nl', 'npo-zapp.png'],
+        'fanart': ['channels', 'nl', 'npo-zapp_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
+    },
+    'npo-1-extra': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'nl', 'npo-1-extra.png'],
+        'fanart': ['channels', 'nl', 'npo-1-extra_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
+    },
+    'npo-2-extra': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'nl', 'npo-2-extra.png'],
+        'fanart': ['channels', 'nl', 'npo-2-extra_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
+    },
+    'npo-zappelin-extra': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'nl', 'npo-zappelin-extra.png'],
+        'fanart': ['channels', 'nl', 'npo-zappelin-extra_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
+    },
+    'npo-nieuws': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'nl', 'npo-nieuws.png'],
+        'fanart': ['channels', 'nl', 'npo-nieuws_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
+    },
+    'npo-politiek': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'nl', 'npo-politiek.png'],
+        'fanart': ['channels', 'nl', 'npo-politiek_fanart.jpg'],
+        'module': 'resources.lib.channels.nl.npo'
     }
 }
 
