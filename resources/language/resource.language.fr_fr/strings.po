@@ -493,7 +493,7 @@ msgstr "Ce contenu est protégé par DRM. Le mode "téléchargement" ne fonction
 
 msgctxt "#30604"
 msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
-msgstr "Accèss a ce contenu nécessite un compte %s. Vous pouvez configurer votre identifiant et votre mot de passe dans la configuration de cette extension. Si vous n'avez pas de compte, vous pouvez le créer à cette URL %s."
+msgstr "Accèss à ce contenu nécessite un compte %s. Vous pouvez configurer votre identifiant et votre mot de passe dans la configuration de cette extension. Si vous n'avez pas de compte, vous pouvez le créer à cette URL %s."
 
 # Others (from 30700 to 30799)
 msgctxt "#30700"
