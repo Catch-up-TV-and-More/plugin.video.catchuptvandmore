@@ -1707,6 +1707,12 @@ WO_REPLAY = {
         'thumb': ['channels', 'wo', 'france24.png'],
         'fanart': ['channels', 'wo', 'france24_fanart.jpg'],
         'module': 'resources.lib.channels.wo.france24'
+    },
+    'rt': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'wo', 'rt.png'],
+        'fanart': ['channels', 'wo', 'rt_fanart.jpg'],
+        'module': 'resources.lib.channels.wo.rt'
     }
 }
 
