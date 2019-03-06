@@ -924,6 +924,9 @@
 
             <setting label="NPO Politiek" type="bool" id="npo-politiek" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="npo-politiek.order" default="8"/>
+
+            <setting label="NPO Start" type="bool" id="npo-start" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="npo-start.order" default="9"/>
        <!-- Netherlands -->
 
 
