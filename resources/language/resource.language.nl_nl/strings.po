@@ -8,199 +8,199 @@ msgstr ""
 "Report-Msgid-Bugs-To: alanwww1@kodi.org\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: SylvainCecchetto\n"
+"Last-Translator: AgeBosma\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # Settings tabs/categories (from 30000 to 30019)
 msgctxt "#30000"
 msgid "Main menu"
-msgstr ""
+msgstr "Hoofdmenu"
 
 msgctxt "#30001"
 msgid "Countries"
-msgstr ""
+msgstr "Landen"
 
 msgctxt "#30002"
 msgid "Quality and content"
-msgstr ""
+msgstr "Kwaliteit en inhoud"
 
 msgctxt "#30003"
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 msgctxt "#30004"
 msgid "Accounts"
-msgstr ""
+msgstr "Accounts"
 
 msgctxt "#30005"
 msgid "Advanced settings"
-msgstr ""
+msgstr "Geavanceerde instellingen"
 
 msgctxt "#30006"
 msgid "Channels"
-msgstr ""
+msgstr "Kanalen"
 
 msgctxt "#30007"
 msgid "Websites"
-msgstr ""
+msgstr "Websites"
 
 
 
 # Settings line separators (from 30010 to 30029)
 msgctxt "#30010"
 msgid "Hide main menu categories"
-msgstr ""
+msgstr "Verberg hoofdmenu categorieën"
 
 msgctxt "#30011"
 msgid "Hide channels"
-msgstr ""
+msgstr "Verberg kanalen"
 
 msgctxt "#30012"
 msgid "To configure YTDL go settings of script.module.youtube.dl"
-msgstr ""
+msgstr "Ga naar de instellingen van script.module.youtube.dl om YTDL te configureren"
 
 msgctxt "#30013"
 msgid "Hide countries"
-msgstr ""
+msgstr "Verberg landen"
 
 msgctxt "#30014"
 msgid "Hide websites"
-msgstr ""
+msgstr "Verberg websites"
 
 msgctxt "#30015"
 msgid "Hide live TV countries"
-msgstr ""
+msgstr "Verberg live tv landen"
 
 msgctxt "#30016"
 msgid "Hide catch-up TV countries"
-msgstr ""
+msgstr "Verberg replay tv landen"
 
 
 # Main menu (from 30030 to 30049)
 msgctxt "#30030"
 msgid "Live TV"
-msgstr ""
+msgstr "Live tv"
 
 msgctxt "#30031"
 msgid "Catch-up TV"
-msgstr ""
+msgstr "Replay tv"
 
 msgctxt "#30032"
 msgid "Websites"
-msgstr ""
+msgstr "Websites"
 
 
 
 # Countries (from 30050 to 30079)
 msgctxt "#30050"
 msgid "France"
-msgstr ""
+msgstr "Frankrijk"
 
 msgctxt "#30051"
 msgid "Switzerland"
-msgstr ""
+msgstr "Zwitserland"
 
 msgctxt "#30052"
 msgid "United Kingdom"
-msgstr ""
+msgstr "Groot-Brittannië"
 
 msgctxt "#30053"
 msgid "International"
-msgstr ""
+msgstr "Internationaal"
 
 msgctxt "#30054"
 msgid "Belgium"
-msgstr ""
+msgstr "België"
 
 msgctxt "#30055"
 msgid "Japan"
-msgstr ""
+msgstr "Japan"
 
 msgctxt "#30056"
 msgid "Canada"
-msgstr ""
+msgstr "Canada"
 
 msgctxt "#30057"
 msgid "United States of America"
-msgstr ""
+msgstr "Verenigde Staten"
 
 msgctxt "#30058"
 msgid "Poland"
-msgstr ""
+msgstr "Polen"
 
 msgctxt "#30059"
 msgid "Spain"
-msgstr ""
+msgstr "Spanje"
 
 msgctxt "#30060"
 msgid "Tunisia"
-msgstr ""
+msgstr "Tunesië"
 
 msgctxt "#30061"
 msgid "Italia"
-msgstr ""
+msgstr "Italië"
 
 msgctxt "#30062"
 msgid "Netherlands"
-msgstr ""
+msgstr "Nederland"
 
 # Channels (from 30080 to 30129)
 msgctxt "#30080"
 msgid "French channels"
-msgstr ""
+msgstr "Franse kanalen"
 
 msgctxt "#30081"
 msgid "Belgian channels"
-msgstr ""
+msgstr "Belgische kanalen"
 
 msgctxt "#30082"
 msgid "Japanese channels"
-msgstr ""
+msgstr "Japanse kanalen"
 
 msgctxt "#30083"
 msgid "Switzerland channels"
-msgstr ""
+msgstr "Zwitserse Kanalen"
 
 msgctxt "#30084"
 msgid "United Kingdom channels"
-msgstr ""
+msgstr "Engelse kanalen"
 
 msgctxt "#30085"
 msgid "International channels"
-msgstr ""
+msgstr "Internationale kanalen"
 
 msgctxt "#30086"
 msgid "Canadian channels"
-msgstr ""
+msgstr "Canadese kanalen"
 
 msgctxt "#30087"
 msgid "United States channels"
-msgstr ""
+msgstr "Amerikaanse kanalen"
 
 msgctxt "#30088"
 msgid "Polish channels"
-msgstr ""
+msgstr "Poolse kanalen"
 
 msgctxt "#30089"
 msgid "Spanish channels"
-msgstr ""
+msgstr "Spaanse kanalen"
 
 msgctxt "#30090"
 msgid "Tunisia channels"
-msgstr ""
+msgstr "Tunesische kanalen"
 
 msgctxt "#30091"
 msgid "Italian channels"
-msgstr ""
+msgstr "Italiaanse kanalen"
 
 msgctxt "#30092"
 msgid "Dutch channels"
-msgstr ""
+msgstr "Nederlandse kanalen"
 
 # Websites (from 30130 to 30149)
 
@@ -209,144 +209,144 @@ msgstr ""
 # Quality and content (from 30150 to 30199)
 msgctxt "#30150"
 msgid "Video quality"
-msgstr ""
+msgstr "Video kwaliteit"
 
 msgctxt "#30151"
 msgid "Video quality (BEST|DEFAULT|DIALOG)"
-msgstr ""
+msgstr "Video kwaliteit (BEST|DEFAULT|DIALOG)"
 
 msgctxt "#30152"
 msgid "Contents"
-msgstr ""
+msgstr "Inhoud"
 
 msgctxt "#30153"
 msgid "Arte: Choose Channel"
-msgstr ""
+msgstr "Arte: Kies kanaal"
 
 msgctxt "#30154"
 msgid "France 24: Choose Channel"
-msgstr ""
+msgstr "France 24: Kies kanaal"
 
 msgctxt "#30155"
 msgid "Euronews: Choose Channel"
-msgstr ""
+msgstr "Euronews: Kies kanaal"
 
 msgctxt "#30156"
 msgid "MTV: Choose Channel"
-msgstr ""
+msgstr "MTV: Kies kanaal"
 
 msgctxt "#30157"
 msgid "DW: Choose Channel"
-msgstr ""
+msgstr "DW: Kies kanaal"
 
 msgctxt "#30158"
 msgid "France 3 Régions: Choose region"
-msgstr ""
+msgstr "France 3 Régions: Kies regio"
 
 msgctxt "#30159"
 msgid "La 1ère: Choose region"
-msgstr ""
+msgstr "La 1ère: Kies regio"
 
 msgctxt "#30160"
 msgid "Bein Sports: Choose Channel"
-msgstr ""
+msgstr "Bein Sports: Kies kanaal"
 
 msgctxt "#30161"
 msgid "QVC: Choose Channel"
-msgstr ""
+msgstr "QVC: Kies kanaal"
 
 msgctxt "#30162"
 msgid "NHK World: Choose Country"
-msgstr ""
+msgstr "NHK World: Kies land"
 
 msgctxt "#30163"
 msgid "CGTN: Choose Channel"
-msgstr ""
+msgstr "CGTN: Kies kanaal"
 
 msgctxt "#30164"
 msgid "Paramount Channel: Choose Channel"
-msgstr ""
+msgstr "Paramount Channel: Kies kanaal"
 
 msgctxt "#30165"
 msgid "Realmadrid TV: Choose Channel"
-msgstr ""
+msgstr "Realmadrid TV: Kies kanaal"
 
 msgctxt "#30166"
 msgid "RT: Choose Channel"
-msgstr ""
+msgstr "RT: Kies kanaal"
 
 msgctxt "#30167"
 msgid "TVP 3: Choose region"
-msgstr ""
+msgstr "TVP 3: Kies regio"
 
 msgctxt "#30168"
 msgid "Enable TV guide (slower)"
-msgstr ""
+msgstr "Activeer tv-gids (langzamer)"
 
 msgctxt "#30169"
 msgid "Enable Subtitle if present in the content"
-msgstr ""
+msgstr "Activeer ondertiteling wanneer beschikbaar"
 
 # Download (from 30200 to 30239)
 
 msgctxt "#30200"
 msgid "Download directory"
-msgstr ""
+msgstr "Download map"
 
 msgctxt "#30201"
 msgid "Quality of the video to download"
-msgstr ""
+msgstr "Video download kwaliteit"
 
 msgctxt "#30202"
 msgid "Download in background"
-msgstr ""
+msgstr "Download op de achtergrond"
 
 msgctxt "#30203"
 msgid "Automatically rename the video (download directory required)"
-msgstr ""
+msgstr "Hernoem de video automatisch (download map vereist)"
 
 
 # Accounts (from 30240 to 30259)
 
 msgctxt "#30240"
 msgid "NRJ Login"
-msgstr ""
+msgstr "NRJ gebruikersnaam"
 
 msgctxt "#30241"
 msgid "NRJ Password"
-msgstr ""
+msgstr "NRJ wachtwoord"
 
 msgctxt "#30242"
 msgid "VRT NU Login"
-msgstr ""
+msgstr "VRT NU gebruikersnaam"
 
 msgctxt "#30243"
 msgid "VRT NU Password"
-msgstr ""
+msgstr "VRT NU wachtwoord"
 
 msgctxt "#30244"
 msgid "6play Login"
-msgstr ""
+msgstr "6play gebruikersnaam"
 
 msgctxt "#30245"
 msgid "6play Password"
-msgstr ""
+msgstr "6play wachtwoord"
 
 msgctxt "#30246"
 msgid "RTLplay Login"
-msgstr ""
+msgstr "RTLplay gebruikersnaam"
 
 msgctxt "#30247"
 msgid "RTLplay Password"
-msgstr ""
+msgstr "RTLplay wachtwoord"
 
 msgctxt "#30248"
 msgid "ABWeb Login"
-msgstr ""
+msgstr "ABWeb gebruikersnaam"
 
 msgctxt "#30249"
 msgid "ABWeb Password"
-msgstr ""
+msgstr "ABWeb wachtwoord"
 
 # Reserved space for other tab/category in settins (from 30260 to 30339)
 
@@ -354,91 +354,91 @@ msgstr ""
 # OpenVPN (from 30340 to 30369)
 msgctxt "#30340"
 msgid "Enable VPN feature"
-msgstr ""
+msgstr "Activeer VPN functionaliteit"
 
 msgctxt "#30341"
 msgid "OpenVPN filepath"
-msgstr ""
+msgstr "OpenVPN bestandspad"
 
 msgctxt "#30342"
 msgid "Import OpenVPN configuration file"
-msgstr ""
+msgstr "Importeer OpenVPN configuratiebestand"
 
 msgctxt "#30343"
 msgid "Delete OpenVPN configuration file"
-msgstr ""
+msgstr "Verwijder OpenVPN configuratiebestand"
 
 msgctxt "#30344"
 msgid "Additional arguments"
-msgstr ""
+msgstr "Additionele argumenten"
 
 msgctxt "#30345"
 msgid "Run OpenVPN with superuser privileges (sudo)"
-msgstr ""
+msgstr "Lanceer OpenVPN met superuser-privileges (sudo)"
 
 msgctxt "#30346"
 msgid "Ask for sudo password"
-msgstr ""
+msgstr "Vraag naar sudo wachtwoord"
 
 msgctxt "#30347"
 msgid "Connect VPN"
-msgstr ""
+msgstr "Verbind VPN"
 
 msgctxt "#30348"
 msgid "Choose a name for OpenVPN configuration"
-msgstr ""
+msgstr "Kies een naam voor de OpenVPN configuratie"
 
 msgctxt "#30349"
 msgid "This OpenVPN configuration name already exists. Overwrite?"
-msgstr ""
+msgstr "Deze OpenVPN configuratienaam bestaat reeds. Overschrijven?"
 
 msgctxt "#30350"
 msgid "Import cancelled"
-msgstr ""
+msgstr "Importeren geannuleerd"
 
 msgctxt "#30351"
 msgid "Import failed. You must specify a name for the OpenVPN configuration"
-msgstr ""
+msgstr "Importeren mislukt. U dient een naam voor de OpenVPN configuratie op te geven"
 
 msgctxt "#30352"
 msgid "Select OpenVPN configuration to run"
-msgstr ""
+msgstr "Kies de uit te voeren OpenVPN configuratie"
 
 msgctxt "#30353"
 msgid "Enter your sudo password"
-msgstr ""
+msgstr "Voer uw sudo wachtwoord in"
 
 msgctxt "#30354"
 msgid "Started VPN connection"
-msgstr ""
+msgstr "VPN verbinding gestart"
 
 msgctxt "#30355"
 msgid "Stopped VPN connection"
-msgstr ""
+msgstr "VPN verbinding gestopt"
 
 msgctxt "#30356"
 msgid "An existing OpenVPN instance appears to be running."
-msgstr ""
+msgstr "Er lijkt reeds een OpenVPN instantie te lopen."
 
 msgctxt "#30357"
 msgid "Disconnect it?"
-msgstr ""
+msgstr "Deze verbreken?"
 
 msgctxt "#30358"
 msgid "An error has occurred whilst trying to connect OpenVPN"
-msgstr ""
+msgstr "Er is een fout opgetreden bij het opbouwen van de verbinding"
 
 msgctxt "#30359"
 msgid "Disconnect VPN"
-msgstr ""
+msgstr "Verbreek VPN verbinding"
 
 msgctxt "#30360"
 msgid "Select OpenVPN configuration to delete"
-msgstr ""
+msgstr "Selecteer de te verwijderen OpenVPN configuratie"
 
 msgctxt "#30361"
 msgid "Connect/Disconnect VPN"
-msgstr ""
+msgstr "Verbind/Verbreek VPN"
 
 
 
@@ -446,11 +446,11 @@ msgstr ""
 
 msgctxt "#30370"
 msgid "Clear cache"
-msgstr ""
+msgstr "Cache legen"
 
 msgctxt "#30371"
 msgid "Cache cleared"
-msgstr ""
+msgstr "Cache geleegd"
 
 
 # Reserved space for other tab/category in settins (from 30400 to 30499)
@@ -459,123 +459,123 @@ msgstr ""
 # Context menu (from 30500 to 30599)
 msgctxt "#30500"
 msgid "Move down"
-msgstr ""
+msgstr "Verplaats omlaag"
 
 msgctxt "#30501"
 msgid "Move up"
-msgstr ""
+msgstr "Verplaats omhoog"
 
 msgctxt "#30502"
 msgid "Hide"
-msgstr ""
+msgstr "Verbergen"
 
 msgctxt "#30503"
 msgid "Download"
-msgstr ""
+msgstr "Downloaden"
 
 
 # Dialog boxes (from 30600 to 30699)
 msgctxt "#30600"
 msgid "Information"
-msgstr ""
+msgstr "Informatie"
 
 msgctxt "#30601"
 msgid "To re-enable hidden items go to the plugin settings"
-msgstr ""
+msgstr "Ga naar de add-on instellingen om verborgen items te heractiveren"
 
 msgctxt "#30602"
 msgid "This content is DRM protected. To be able to play it we invite you to update Kodi to the version 18 or above. Thank you for your understanding."
-msgstr ""
+msgstr "Deze inhoud is DRM beveiligd. Om het af te kunnen spelen nodigen wij u uit Kodi te updaten naar versie 18 of hoger. Bedankt voor uw begrip."
 
 msgctxt "#30603"
 msgid "This content is DRM protected. The download mode doesn't work for this kind of protection. Thank you for your understanding."
-msgstr ""
+msgstr "Deze inhoud is DRM beveiligd. Downloaden is niet mogelijk met een dergelijke beveiliging. Bedankt voor uw begrip."
 
 msgctxt "#30604"
 msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
-msgstr ""
+msgstr "Toegang tot deze inhoud vereist een account %s. U kunt de gegevens hiervoor verstrekken in de instellingen van deze add-on. Wanneer u geen account heeft kunt u deze aanmaken op het volgende adres %s."
 
 # Others (from 30700 to 30799)
 msgctxt "#30700"
 msgid "More videos..."
-msgstr ""
+msgstr "Meer video's..."
 
 msgctxt "#30701"
 msgid "All videos"
-msgstr ""
+msgstr "Alle video's"
 
 msgctxt "#30702"
 msgid "DRM protected video"
-msgstr ""
+msgstr "DRM beveiligde video"
 
 msgctxt "#30703"
 msgid "Search"
-msgstr ""
+msgstr "Zoeken"
 
 msgctxt "#30704"
 msgid "Last videos"
-msgstr ""
+msgstr "Laatste video's"
 
 msgctxt "#30705"
 msgid "From A to Z"
-msgstr ""
+msgstr "Van A naar Z"
 
 msgctxt "#30706"
 msgid "Ascending"
-msgstr ""
+msgstr "Oplopend"
 
 msgctxt "#30707"
 msgid "Descending"
-msgstr ""
+msgstr "Aflopend"
 
 msgctxt "#30708"
 msgid "More programs..."
-msgstr ""
+msgstr "Meer programma's..."
 
 msgctxt "#30709"
 msgid "Choose video quality"
-msgstr ""
+msgstr "Kies video kwaliteit"
 
 msgctxt "#30710"
 msgid "Video stream no longer exists"
-msgstr ""
+msgstr "Video stream niet langer beschikbaar"
 
 msgctxt "#30711"
 msgid "Authentication failed"
-msgstr ""
+msgstr "Authenticatie mislukt"
 
 msgctxt "#30712"
 msgid "Video with an account needed"
-msgstr ""
+msgstr "Video met een account nodig"
 
 msgctxt "#30713"
 msgid "Geo-blocked video"
-msgstr ""
+msgstr "Geo-geblokkeerde video"
 
 msgctxt "#30714"
 msgid "Search videos"
-msgstr ""
+msgstr "Zoek video's"
 
 msgctxt "#30715"
 msgid "Search programs"
-msgstr ""
+msgstr "Zoek programma's"
 
 msgctxt "#30716"
 msgid "Video stream is not available"
-msgstr ""
+msgstr "Video stream niet beschikbaar"
 
 msgctxt "#30717"
 msgid "All programs"
-msgstr ""
+msgstr "Alle programma's"
 
 msgctxt "#30718"
 msgid "No videos found"
-msgstr ""
+msgstr "Geen video's gevonden"
 
 msgctxt "#30719"
 msgid "Inputstream Adaptive not enable"
-msgstr ""
+msgstr "Inputstream Adaptive is niet geactiveerd"
 
 msgctxt "#30720"
 msgid "Kodi 17.6 or > is required"
-msgstr ""
+msgstr "Kodi 17.6 of > is vereist"

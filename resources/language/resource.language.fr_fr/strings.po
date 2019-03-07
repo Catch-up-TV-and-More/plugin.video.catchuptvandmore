@@ -306,7 +306,6 @@ msgid "Automatically rename the video (download directory required)"
 msgstr "Renommer automatiquement la vidéo (répertoire de téléchargement requis)"
 
 
-
 # Accounts (from 30240 to 30259)
 
 msgctxt "#30240"
@@ -489,12 +488,12 @@ msgid "This content is DRM protected. To be able to play it we invite you to upd
 msgstr "Ce contenu est protégé par DRM. Pour pouvoir le lire nous vous invitons à mettre à jour Kodi à la version 18 ou supérieure. Merci pour votre compréhension"
 
 msgctxt "#30603"
-msgid "This content is DRM protected. The download mode doesn't work for a content DRM protected. Thank you for your understanding."
+msgid "This content is DRM protected. The download mode doesn't work for this kind of protection. Thank you for your understanding."
 msgstr "Ce contenu est protégé par DRM. Le mode "téléchargement" ne fonctionne pas pour un contenu protégé par DRM. Merci pour votre compréhension"
 
 msgctxt "#30604"
-msgid "This content require an account %s. You could configure your login and your password in the configuration of this addon. If you don't have an account, you could create it at this url %s."
-msgstr "Ce contenu nécessite un compte %s. Vous pouvez configurer votre identifiant et votre mot de passe dans la configuration de cette extension. Si vous n'avez pas de compte, vous pouvez le créer à cette URL %s."
+msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
+msgstr "Accèss à ce contenu nécessite un compte %s. Vous pouvez configurer votre identifiant et votre mot de passe dans la configuration de cette extension. Si vous n'avez pas de compte, vous pouvez le créer à cette URL %s."
 
 # Others (from 30700 to 30799)
 msgctxt "#30700"
