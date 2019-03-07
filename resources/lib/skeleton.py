@@ -861,6 +861,48 @@ BE_LIVE = {
         'thumb': ['channels', 'be', 'tvcom.png'],
         'fanart': ['channels', 'be', 'tvcom_fanart.jpg'],
         'module': 'resources.lib.channels.be.tvcom'
+    },
+    'rtl_tvi': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'rtl_tvi.png'],
+        'fanart': ['channels', 'be', 'rtl_tvi_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'plug_rtl': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'plug_rtl.png'],
+        'fanart': ['channels', 'be', 'plug_rtl_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'club_rtl': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'club_rtl.png'],
+        'fanart': ['channels', 'be', 'club_rtl_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'rtl_info': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'rtl_info.png'],
+        'fanart': ['channels', 'be', 'rtl_info_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'bel_rtl': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'bel_rtl.png'],
+        'fanart': ['channels', 'be', 'bel_rtl_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'contact': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'contact.png'],
+        'fanart': ['channels', 'be', 'contact_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
+    },
+    'rtl_sport': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'be', 'rtl_sport.png'],
+        'fanart': ['channels', 'be', 'rtl_sport_fanart.jpg'],
+        'module': 'resources.lib.channels.be.rtlplaybe'
     }
 }
 
