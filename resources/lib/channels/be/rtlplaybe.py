@@ -477,3 +477,115 @@ def get_video_url(
                     item.art.update(item_dict['art'])
                     return item
         return False
+    
+def live_entry(plugin, item_id, item_dict):
+    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, video_id, item_dict):
+    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
+    if xbmc_version < 18:
+        xbmcgui.Dialog().ok(
+            'Info',
+            plugin.localize(30602))
+        return False
+
+    resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY)
+    js_id = re.compile(
+        r'client\-(.*?)\.bundle\.js').findall(
+        resp_js_id.text)[0]
+    resp = urlquick.get(URL_API_KEY % js_id)
+
+    api_key = re.compile(
+        r'\"sso-login.rtl.be\"\,key\:\"(.*?)\"'
+    ).findall(resp.text)[0]
+
+    if plugin.setting.get_string('rtlplaybe.login') == '' or\
+        plugin.setting.get_string('rtlplaybe.password') == '':
+        xbmcgui.Dialog().ok(
+            'Info',
+            plugin.localize(30604) % ('RTLPlay (BE)', 'https://www.rtlplay.be'))
+        return False
+
+    # Build PAYLOAD
+    payload = {
+        "loginID": plugin.setting.get_string(
+            'rtlplaybe.login'),
+        "password": plugin.setting.get_string(
+            'rtlplaybe.password'),
+        "apiKey": api_key,
+        "format": "jsonp",
+        "callback": "jsonp_3bbusffr388pem4"
+    }
+    # LOGIN
+    resp2 = urlquick.post(
+        URL_COMPTE_LOGIN,
+        data=payload,
+        headers={
+            'User-Agent': web_utils.get_random_ua,
+            'referer': 'https://www.rtlplay.be/connexion'
+        }
+    )
+    json_parser = json.loads(
+        resp2.text.replace('jsonp_3bbusffr388pem4(', '').replace(');', ''))
+
+    if "UID" not in json_parser:
+        plugin.notify('ERROR', 'RTLPlay (BE) : ' + plugin.localize(30711))
+        return False
+    account_id = json_parser["UID"]
+    account_timestamp = json_parser["signatureTimestamp"]
+    account_signature = json_parser["UIDSignature"]
+
+    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
+
+    # Build PAYLOAD headers
+    payload_headers = {
+        'x-auth-gigya-signature': account_signature,
+        'x-auth-gigya-signature-timestamp': account_timestamp,
+        'x-auth-gigya-uid': account_id,
+        'User-Agent': web_utils.get_random_ua,
+        'x-customer-name': 'rtlbe'
+    }
+    channel = 'rtlbe_' + item_id
+    token_json = urlquick.get(
+            URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % (channel)), headers=payload_headers, max_age=-1)
+    token_jsonparser = json.loads(token_json.text)
+    token = token_jsonparser["token"]
+    
+    
+    video_json = urlquick.get(
+        URL_LIVE_JSON % (channel),
+        headers={'User-Agent': web_utils.get_random_ua, 'x-customer-name': 'rtlbe'}, max_age=-1)
+    json_parser = json.loads(video_json.text)
+    video_assets = json_parser[channel][0]['live']['assets']
+
+    if video_assets is None:
+        plugin.notify('ERROR', plugin.localize(30712))
+        return False
+
+    subtitle_url = ''
+    if plugin.setting.get_boolean('active_subtitle'):
+        for asset in video_assets:
+            if 'subtitle_vtt' in asset["type"]:
+                subtitle_url = asset['full_physical_path']
+
+    for asset in video_assets:
+        if 'delta_dashcenc_h264' in asset["type"]:
+            item = Listitem()
+            item.path = asset['full_physical_path']
+            if 'http' in subtitle_url:
+                item.subtitles.append(subtitle_url)
+            item.property['inputstreamaddon'] = 'inputstream.adaptive'
+            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
+
+            item.label = item_dict['label']
+            item.info.update(item_dict['info'])
+            item.art.update(item_dict['art'])
+
+            return item
+    return False
