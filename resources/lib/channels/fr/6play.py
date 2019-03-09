@@ -488,12 +488,20 @@ def live_entry(plugin, item_id, item_dict):
 def get_live_url(plugin, item_id, video_id, item_dict):
 
     if item_id == 'fun_radio' or \
-            item_id == 'rtl2':
-        video_json = urlquick.get(
-            URL_LIVE_JSON % (item_id),
-            headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-        json_parser = json.loads(video_json.text)
-        video_assets = json_parser[item_id][0]['live']['assets']
+            item_id == 'rtl2' or \
+            item_id == 'mb':
+        if item_id == 'mb':
+            video_json = urlquick.get(
+                URL_LIVE_JSON % (item_id.upper()),
+                headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+            json_parser = json.loads(video_json.text)
+            video_assets = json_parser[item_id.upper()][0]['live']['assets']
+        else:
+            video_json = urlquick.get(
+                URL_LIVE_JSON % (item_id),
+                headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+            json_parser = json.loads(video_json.text)
+            video_assets = json_parser[item_id][0]['live']['assets']
 
         if video_assets is None:
             plugin.notify('ERROR', plugin.localize(30712))

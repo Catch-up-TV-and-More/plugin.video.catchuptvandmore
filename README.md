@@ -32,18 +32,18 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Belgique — *Belgium*
 ##### TV Communauté française — *French Community TV*
 - RTBF Auvio *(Replay, Live)*
-- RTL-TVI *(Replay with RTLPlay account)*
-- PLUG RTL *(Replay with RTLPlay account)*
-- CLUB RTL *(Replay with RTLPlay account)*
+- RTL-TVI *(Replay, Live TV)* *(with RTLPlay account)*
+- PLUG RTL *(Replay, Live TV)* *(with RTLPlay account)*
+- CLUB RTL *(Replay, Live TV)* *(with RTLPlay account)*
 - Télé MB *(Replay, Live TV)*
 - RTC Télé Liège *(Replay, Live TV)*
 - TV Lux *(Replay, Live TV)*
-- RTL INFO *(Replay with RTLPlay account)*
-- BEL RTL *(Replay with RTLPlay account)*
-- Contact *(Replay with RTLPlay account)*
+- RTL INFO *(Replay, Live TV)* *(with RTLPlay account)*
+- BEL RTL *(Replay, Live TV)* *(with RTLPlay account)*
+- Contact *(Replay, Live TV)* *(with RTLPlay account)*
 - BX1 *(Replay, Live TV)*
 - NRJ Hits TV *(Replay, Live TV)*
-- RTL Sport *(Replay with RTLPlay account)*
+- RTL Sport *(Replay, Live TV)* *(with RTLPlay account)*
 - TV Com *(Replay, Live TV)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
