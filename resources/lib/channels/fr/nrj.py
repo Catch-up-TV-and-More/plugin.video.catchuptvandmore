@@ -49,6 +49,8 @@ URL_ROOT = 'http://www.nrj-play.fr'
 URL_REPLAY = URL_ROOT + '/%s/replay'
 # channel_name (nrj12, ...)
 
+URL_COMPTE_LOGIN_MODAL = URL_ROOT + '/compte/loginmodal'
+
 URL_COMPTE_LOGIN = URL_ROOT + '/compte/login'
 # TO DO add account for using Live Direct
 
@@ -219,7 +221,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     # Get Token
     # KO - resp = session_urlquick.get(URL_COMPTE_LOGIN)
-    resp = session_requests.get(URL_COMPTE_LOGIN)
+    resp = session_requests.get(URL_COMPTE_LOGIN_MODAL)
     token_form_login = re.compile(
         r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
         ).findall(resp.text)[0]
