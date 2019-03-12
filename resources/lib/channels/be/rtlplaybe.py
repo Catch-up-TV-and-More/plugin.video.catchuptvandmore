@@ -560,12 +560,20 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         URL_LIVE_JSON % (channel),
         headers={'User-Agent': web_utils.get_random_ua, 'x-customer-name': 'rtlbe'}, max_age=-1)
     json_parser = json.loads(video_json.text)
+    if not json_parser[channel]:
+        plugin.notify('ERROR', plugin.localize(30712))
+        return False
+    
     video_assets = json_parser[channel][0]['live']['assets']
 
     if video_assets is None:
         plugin.notify('ERROR', plugin.localize(30712))
         return False
-
+    
+    if not video_assets:
+        plugin.notify('INFO', plugin.localize(30716))
+        return False
+    
     subtitle_url = ''
     if plugin.setting.get_boolean('active_subtitle'):
         for asset in video_assets:
