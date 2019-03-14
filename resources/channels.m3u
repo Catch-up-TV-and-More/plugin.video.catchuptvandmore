@@ -1,9 +1,97 @@
 #EXTM3U tvg-shift=0
 
-#EXTINF:-1 tvg-id="tf1" tvg-name="TF1" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tf1.png" group-title="France",TF1
+
+# Live TV FR
+
+## France TNT
+
+#EXTINF:-1 tvg-id="tf1.telestar.fr" tvg-name="tf1" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tf1.png" group-title="France TNT",TF1
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tf1&item_module=resources.lib.channels.fr.mytf1
-#EXTINF:-1 tvg-id="france-2" tvg-name="France_2" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-2.png" group-title="France",France 2
+
+#EXTINF:-1 tvg-id="france2.telestar.fr" tvg-name="france2" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-2.png" group-title="France TNT",France 2
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-2&item_module=resources.lib.channels.fr.francetv
+
+#EXTINF:-1 tvg-id="france3.telestar.fr" tvg-name="france3" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-3.png" group-title="France TNT",France 3
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-3&item_module=resources.lib.channels.fr.francetv
+
+#EXTINF:-1 tvg-id="canalplus.telestar.fr" tvg-name="canalplus" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/canalplus.png" group-title="France TNT",Canal +
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=canalplus&item_module=resources.lib.channels.fr.mycanal
+
+#EXTINF:-1 tvg-id="france5.telestar.fr" tvg-name="france5" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-5.png" group-title="France TNT",France 5
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-5&item_module=resources.lib.channels.fr.francetv
+
+#EXTINF:-1 tvg-id="m6.telestar.fr" tvg-name="m6" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/m6.png" group-title="France TNT",M6
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=m6&item_module=resources.lib.channels.fr.6play
+
+#EXTINF:-1 tvg-id="c8.telestar.fr" tvg-name="c8" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/c8.png" group-title="France TNT",C8
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=c8&item_module=resources.lib.channels.fr.mycanal
+
+#EXTINF:-1 tvg-id="w9.telestar.fr" tvg-name="w9" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/w9.png" group-title="France TNT",W9
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=w9&item_module=resources.lib.channels.fr.6play
+
+#EXTINF:-1 tvg-id="tmc.telestar.fr" tvg-name="tmc" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tmc.png" group-title="France TNT",TMC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tmc&item_module=resources.lib.channels.fr.mytf1
+
+#EXTINF:-1 tvg-id="tfx.telestar.fr" tvg-name="tfx" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tfx.png" group-title="France TNT",TFX
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tfx&item_module=resources.lib.channels.fr.mytf1
+
+#EXTINF:-1 tvg-id="nrj12.telestar.fr" tvg-name="nrj12" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/nrj12.png" group-title="France TNT",NRJ 12
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=nrj12&item_module=resources.lib.channels.fr.nrj
+
+#EXTINF:-1 tvg-id="france4.telestar.fr" tvg-name="france4" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-4.png" group-title="France TNT",France 4
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-4&item_module=resources.lib.channels.fr.francetv
+
+#EXTINF:-1 tvg-id="bfmtv.telestar.fr" tvg-name="bfmtv" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/bfmtv.png" group-title="France TNT",BFM TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmtv&item_module=resources.lib.channels.fr.bfmtv
+
+#EXTINF:-1 tvg-id="cnews.telestar.fr" tvg-name="cnews" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/cnews.png" group-title="France TNT",CNEWS
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cnews&item_module=resources.lib.channels.fr.cnews
+
+#EXTINF:-1 tvg-id="cstar.telestar.fr" tvg-name="cstar" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/cstar.png" group-title="France TNT",CStar
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cstar&item_module=resources.lib.channels.fr.mycanal
+
+#EXTINF:-1 tvg-id="gulli.telestar.fr" tvg-name="gulli" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/gulli.png" group-title="France TNT",Gulli
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=gulli&item_module=resources.lib.channels.fr.gulli
+
+#EXTINF:-1 tvg-id="franceo.telestar.fr" tvg-name="franceo" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-o.png" group-title="France TNT",France Ô
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-o&item_module=resources.lib.channels.fr.francetv
+
+#EXTINF:-1 tvg-id="tf1seriesfilms.telestar.fr" tvg-name="tf1seriesfilms" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tf1-series-films.png" group-title="France TNT",TF1 Séries Films
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tf1-series-films&item_module=resources.lib.channels.fr.mytf1
+
+#EXTINF:-1 tvg-id="lequipe.telestar.fr" tvg-name="lequipe" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/lequipe.png" group-title="France TNT",L'Équipe
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=lequipe&item_module=resources.lib.channels.fr.lequipe
+
+#EXTINF:-1 tvg-id="6ter.telestar.fr" tvg-name="6ter" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/6ter.png" group-title="France TNT",6ter
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=6ter&item_module=resources.lib.channels.fr.6play
+
+#EXTINF:-1 tvg-id="rmcstory.telestar.fr" tvg-name="rmcstory" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/rmcstory.png" group-title="France TNT",RMC Story
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rmcstory&item_module=resources.lib.channels.fr.rmcstory
+
+#EXTINF:-1 tvg-id="cherie25.telestar.fr" tvg-name="cherie25" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/cherie25.png" group-title="France TNT",Chérie 25
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cherie25&item_module=resources.lib.channels.fr.nrj
+
+## France TNT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
