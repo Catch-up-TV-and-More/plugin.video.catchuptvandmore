@@ -1,8 +1,8 @@
 #EXTM3U tvg-shift=0
 
-#EXTINF:-1 tvg-id="tf1" tvg-name="TF1" tvg-logo="TODO" group-title="France",TF1
+#EXTINF:-1 tvg-id="tf1" tvg-name="TF1" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tf1.png" group-title="France",TF1
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tf1&item_module=resources.lib.channels.fr.mytf1
-#EXTINF:-1 tvg-id="france-2" tvg-name="France_2" tvg-logo="TODO" group-title="France",France 2
+#EXTINF:-1 tvg-id="france-2" tvg-name="France_2" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-2.png" group-title="France",France 2
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-2&item_module=resources.lib.channels.fr.francetv
 
 
