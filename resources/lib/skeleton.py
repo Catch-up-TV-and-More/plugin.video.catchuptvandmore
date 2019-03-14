@@ -1877,6 +1877,12 @@ JP_REPLAY = {
         'thumb': ['channels', 'jp', 'nhklifestyle.png'],
         'fanart': ['channels', 'jp', 'nhklifestyle_fanart.jpg'],
         'module': 'resources.lib.channels.jp.nhklifestyle'
+    },
+    'ktv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'jp', 'ktv.png'],
+        'fanart': ['channels', 'jp', 'ktv_fanart.jpg'],
+        'module': 'resources.lib.channels.jp.tver'
     }
 }
 

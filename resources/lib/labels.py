@@ -321,6 +321,7 @@ LABELS = {
     'ytv': '読売テレビ',
     'ntvnews24': '日テレ News24',
     'japanetshoppingdx': 'ジャパネットチャンネルDX',
+    'ktv': '関西テレビ',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',

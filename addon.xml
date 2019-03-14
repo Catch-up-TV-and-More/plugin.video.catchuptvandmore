@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.5~beta06"
+       version="0.2.5~beta07"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -49,6 +49,8 @@
 [Fix] Live TV - M6 Boutique (FR)
 [Add] Live TV - RTLPlay (RTL-TVI, RTL INFO, ...) (BE) - Thanks Gaet81
 [Fix] Live TV - NRJ 12 and Cherie 25 (FR)
+[Fix] Plugin - remove some warning log
+[Add] Replay - 関西テレビ (JP)
     </news>
     <assets>
       <icon>icon.png</icon>

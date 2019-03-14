@@ -230,6 +230,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - 読売テレビ *(Replay)*
 - 日テレ News24 *(Live TV)*
 - ジャパネットチャンネルDX *(Live TV)*
+- 関西テレビ *(Replay)*
 
 ##### Web TV
 - NHK ニュース *(Replay)*

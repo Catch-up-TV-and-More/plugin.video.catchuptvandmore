@@ -44,17 +44,6 @@ URL_ROOT = 'https://tver.jp'
 URL_REPLAY_BY_TV = URL_ROOT + '/%s'
 # channel
 
-LIST_CHANNELS = {
-    'ntv': URL_REPLAY_BY_TV % 'ntv',
-    'ex': URL_REPLAY_BY_TV % 'ex',
-    'tbs': URL_REPLAY_BY_TV % 'tbs',
-    'tx': URL_REPLAY_BY_TV % 'tx',
-    # 'cx': URL_REPLAY_BY_TV % 'cx', (protectd by DRM)
-    'mbs': URL_REPLAY_BY_TV % 'mbs',
-    'abc': URL_REPLAY_BY_TV % 'abc',
-    'ytv': URL_REPLAY_BY_TV % 'ytv'
-}
-
 
 def replay_entry(plugin, item_id):
     """
@@ -73,7 +62,7 @@ def list_categories(plugin, item_id):
     - ...
     """
     category_title = plugin.localize(LABELS['All videos'])
-    category_url = LIST_CHANNELS[item_id]
+    category_url = URL_REPLAY_BY_TV % item_id
 
     item = Listitem()
     item.label = category_title

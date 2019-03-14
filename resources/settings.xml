@@ -701,6 +701,9 @@
             <setting label="ジャパネットチャンネルDX" type="bool" id="japanetshoppingdx" default="true" visible="eq(-23,true)"/>
             <setting label="" type="number" visible="false" id="japanetshoppingdx.order" default="12"/>
 
+            <setting label="関西テレビ" type="bool" id="ktv" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="ktv.order" default="13"/>
+
             <!--<setting label="フジテレビ" type="bool" id="cx" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="cx.order" default="8"/>-->
         <!-- Japan -->
