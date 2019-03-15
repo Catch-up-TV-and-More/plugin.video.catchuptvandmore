@@ -51,6 +51,7 @@
 [Fix] Live TV - NRJ 12 and Cherie 25 (FR)
 [Fix] Plugin - remove some warning log
 [Add] Replay - 関西テレビ (JP)
+[Remove] Beautifulsoup - 30 millions d'Amis (website)
     </news>
     <assets>
       <icon>icon.png</icon>
