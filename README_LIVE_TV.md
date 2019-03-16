@@ -15,7 +15,11 @@
 9. Choose "Local Path" in "Location"
 10. Choose "M3U Play List Path"
 11. You have to go in your `special://home` folder (the path depend on your OS, check here: [Default OS mappings](https://kodi.wiki/view/Special_protocol#Default_OS_mappings)) then navigate in `addons/plugin.video.catchuptvandmore/resources` then choose the file `channels.m3u`
-12. Choose "Ok" in order to save the settings
+12. Go in "EPG Settings tab"
+13. Choose "Remote Path" in "Location"
+14. Copy `https://github.com/Catch-up-TV-and-More/xmltv/blob/master/tv_guide_fr.xml?raw=true` in "XMLTV URL"
+15. Enable "Cache XMLTV at local storage"
+12. Finally choose "Ok" in order to save the settings
 13. Restart Kodi
 14. Normally you can now found Live TV channels in the "TV" tabs of Kodi  
 
