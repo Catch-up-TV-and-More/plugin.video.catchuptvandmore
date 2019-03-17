@@ -23,6 +23,21 @@
 13. Restart Kodi
 14. Normally you can now found Live TV channels in the "TV" tabs of Kodi  
 
+## Record Live TV tested just with EPG activated
+1. Install the repository available here https://github.com/primaeval/repository.primaeval/raw/master/zips/repository.primaeval/repository.primaeval-0.0.2.zip
+2. Choose "Videos Add-ons" from this repository
+3. Choose "IPTV Recorder"
+5. Choose Install
+6. Choose "IPTV Recorder"
+7. Choose "Configure"
+8. Go in "Jobs and Rules" tab
+9. Choose "ffmeg exe" and put the path of the ffmpeg binary (depends of each OS) / Maybe need to be installed
+10. Restart Kodi
+11. Open the add-on "IPTV Recorder"
+12. Go to "Channel Groups"
+13. Select the channel
+14. Select the programm
+15. Select the record mode
 
 ## Hide channels or country
 
