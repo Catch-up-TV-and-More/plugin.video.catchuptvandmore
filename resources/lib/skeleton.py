@@ -154,11 +154,12 @@ REPLAY = {
     'tn_replay': {
         'callback': 'generic_menu',
         'thumb': ['channels', 'tn.png']
-    },
-    'nl_replay': {
-        'callback': 'generic_menu',
-        'thumb': ['channels', 'nl.png']
     }
+    # ,
+    # 'nl_replay': {
+    #     'callback': 'generic_menu',
+    #     'thumb': ['channels', 'nl.png']
+    # }
 }
 
 
@@ -2043,12 +2044,12 @@ TN_REPLAY = {
 }
 
 NL_REPLAY = {
-    'npo-start': {
-        'callback': 'replay_bridge',
-        'thumb': ['channels', 'nl', 'npo-start.png'],
-        'fanart': ['channels', 'nl', 'npo-start_fanart.jpg'],
-        'module': 'resources.lib.channels.nl.npo'
-    }
+    # 'npo-start': {
+    #     'callback': 'replay_bridge',
+    #     'thumb': ['channels', 'nl', 'npo-start.png'],
+    #     'fanart': ['channels', 'nl', 'npo-start_fanart.jpg'],
+    #     'module': 'resources.lib.channels.nl.npo'
+    # }
 }
 
 WEBSITES = {
