@@ -42,7 +42,7 @@
 [Fix] Replay - Arte (WO)
 [Fix] Subtitle - BVN (WO)
 [DRM] Replay - BVN (WO)
-[Remove] Beautifulsoup - BVN (WO)
+[Remove] Beautifulsoup - [BVN] (WO) | [30 millions d'Amis, Culturepub] (website)
 [Add] Replay - RT (Contents {FR|EN}) (WO)
 [Add] Live TV - NPO Channels (NPO 1, NPO 2, NPO Nieuws, ....) (NL) - Thanks Forage !
 [Add] Dutch translation of this add-on
@@ -51,7 +51,6 @@
 [Fix] Live TV - NRJ 12 and Cherie 25 (FR)
 [Fix] Plugin - remove some warning log
 [Add] Replay - 関西テレビ (JP)
-[Remove] Beautifulsoup - 30 millions d'Amis (website)
 [Fix] Replay - Cnews (FR)
     </news>
     <assets>

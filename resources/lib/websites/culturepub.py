@@ -21,7 +21,6 @@
 from __future__ import unicode_literals
 
 import re
-from bs4 import BeautifulSoup as bs
 import json
 
 from codequick import Route, Resolver, Listitem, Script
@@ -57,16 +56,15 @@ def website_entry(plugin, item_id):
 
 def root(plugin, item_id):
     """Add modes in the listing"""
-    list_categories_html = urlquick.get(URL_ROOT).text
-    list_categories_soup = bs(list_categories_html, 'html.parser')
-    list_categories = list_categories_soup.find(
-        'ul', class_='nav').find_all('a', class_='dropdown-toggle')
+    
+    resp = urlquick.get(URL_ROOT)
+    root = resp.parse("ul", attrs={"class": "nav"})
 
-    for category in list_categories:
+    for category in root.iterfind(".//a[@class='dropdown-toggle']"):
 
         if 'emissions' in category.get('href'):
             item = Listitem()
-            item.label = category.get_text().strip()
+            item.label = category.text.strip()
             category_url = URL_ROOT + category.get('href')
 
             item.set_callback(
@@ -77,7 +75,7 @@ def root(plugin, item_id):
 
         elif 'videos' in category.get('href'):
             item = Listitem()
-            item.label = category.get_text().strip()
+            item.label = category.text.strip()
             category_url = URL_ROOT + category.get('href')
 
             item.set_callback(
@@ -91,15 +89,12 @@ def root(plugin, item_id):
 @Route.register
 def list_shows(plugin, item_id, category_url):
     """Build categories listing"""
-    list_shows_html = urlquick.get(category_url).text
-    list_shows_soup = bs(list_shows_html, 'html.parser')
-    list_shows = list_shows_soup.find_all(
-        'div',
-        class_='widget-header')
+    resp = urlquick.get(category_url)
+    root = resp.parse()
 
-    for show in list_shows:
+    for show in root.iterfind(".//div[@class='widget-header']"):
         item = Listitem()
-        item.label = show.find('h3').get_text()
+        item.label = show.find('h3').text
         show_url = show.find('a').get('href')
 
         item.set_callback(
@@ -113,20 +108,19 @@ def list_shows(plugin, item_id, category_url):
 @Route.register
 def list_videos(plugin, item_id, page, category_url):
     """Build videos listing"""
-    replay_videos_html = urlquick.get(
-        category_url + '?paged=%s' % page).text
-    replay_videos_soup = bs(replay_videos_html, 'html.parser')
-    all_videos = replay_videos_soup.find_all('article')
+    resp = urlquick.get(
+        category_url + '?paged=%s' % page)
+    root = resp.parse()
 
-    for video in all_videos:
+    for video in root.iterfind(".//article"):
         item = Listitem()
-        item.label = video.find('h2').find(
+        item.label = video.find('.//h2').find(
             'a').get('title')
-        if video.find('img').get('data-src'):
-            item.art['thumb'] = video.find('img').get('data-src')
+        if video.find('.//img').get('data-src'):
+            item.art['thumb'] = video.find('.//img').get('data-src')
         else:
-            item.art['thumb'] = video.find('img').get('src')
-        video_url = URL_ROOT + video.find('h2').find(
+            item.art['thumb'] = video.find('.//img').get('src')
+        video_url = URL_ROOT + video.find('.//h2').find(
             'a').get('href')
 
         # TO DO Playlist
