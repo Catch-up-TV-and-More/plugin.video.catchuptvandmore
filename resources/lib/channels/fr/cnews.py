@@ -44,21 +44,17 @@ import urlquick
 # Fix some encodage (HTML not well formated)
 
 # URL :
-URL_ROOT_SITE = 'http://www.cnews.fr'
+URL_ROOT_SITE = 'https://www.cnews.fr'
 
 # Live :
 URL_LIVE_CNEWS = URL_ROOT_SITE + '/le-direct'
 
 # Replay CNews
 URL_REPLAY_CNEWS = URL_ROOT_SITE + '/replay'
-URL_EMISSIONS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_emissions/%s/10/0'
+URL_EMISSIONS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_emissions/%s/0'
 # num Page
-URL_VIDEOS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_sujets/%s/15/0'
+URL_VIDEOS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_sujets/%s/0'
 # num Page
-
-# Replay/Live => VideoId
-URL_INFO_CONTENT = 'https://secure-service.canal-plus.com/' \
-                   'video/rest/getVideosLiees/cplus/%s?format=json'
 
 
 def replay_entry(plugin, item_id):
