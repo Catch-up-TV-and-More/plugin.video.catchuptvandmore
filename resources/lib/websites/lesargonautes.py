@@ -21,7 +21,6 @@
 from __future__ import unicode_literals
 
 import re
-from bs4 import BeautifulSoup as bs
 
 from codequick import Route, Resolver, Listitem, utils
 import urlquick
@@ -73,20 +72,16 @@ def root(plugin, item_id):
 def list_videos(plugin, item_id, season_title):
 
     resp = urlquick.get(URL_VIDEOS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find(
-        'li', attrs={'path': season_title}).find_all(
-            'li', class_='episode')
+    root = resp.parse("li", attrs={"path": season_title})
     
-    for video_datas in list_videos_datas:
+    for video_datas in root.iterfind(".//li[@class='episode']"):
         video_title = video_datas.find(
-            'div', class_='title').text.strip() + ' (' + \
-                video_datas.find(
-                    'div', class_='header').text.strip() + ')'
-        video_image = video_datas.find('img', class_='screen').get('src')
-        video_plot = video_datas.find('div', class_='summary').text.strip()
+            ".//div[@class='title']").text.strip() + ' - Episode ' + video_datas.find(
+                ".//span[@path='Number']").text.strip()
+        video_image = video_datas.find(".//img[@class='screen']").get('src')
+        video_plot = video_datas.find(".//div[@class='summary']").text.strip()
         video_id = video_datas.find(
-            'input', attrs={'path': 'MediaUid'}).get('value')
+            ".//input[@path='MediaUid']").get('value')
 
         item = Listitem()
         item.label = video_title
