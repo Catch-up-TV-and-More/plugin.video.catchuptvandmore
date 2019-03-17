@@ -45,43 +45,40 @@ def website_entry(plugin, item_id):
 
 def root(plugin, item_id):
     """Add modes in the listing"""
-    list_categories_html = urlquick.get(URL_ROOT('')).text
-    list_categories_soup = bs(list_categories_html, 'html.parser')
-    list_categories = list_categories_soup.find(
-        'div', class_='jqueryslidemenu').find('ul').find('ul').find_all('li')
+    resp = urlquick.get(URL_ROOT(''))
+    root = resp.parse("li", attrs={"id": "menu-videos"})
 
-    for category in list_categories:
-        item = Listitem()
-        if 'personnages' in category.find('a').get('href'):
-            value_next = 'list_shows'
-        else:
-            value_next = 'list_videos_1'
-        item.label = category.find('a').get_text()
+    for category in root.iterfind(".//li"):
+        if 'clips_espagnol' not in category.find('.//a').get('href'):
+            item = Listitem()
+            if 'personnages' in category.find('.//a').get('href'):
+                value_next = 'list_shows'
+            else:
+                value_next = 'list_videos_1'
+            item.label = category.find('.//a').text
 
-        category_url = URL_ROOT(category.find('a').get('href'))
+            category_url = URL_ROOT(category.find('.//a').get('href'))
 
-        item.set_callback(
-            eval(value_next),
-            item_id=item_id,
-            category_url=category_url,
-            page=1
-        )
-        yield item
+            item.set_callback(
+                eval(value_next),
+                item_id=item_id,
+                category_url=category_url,
+                page=1
+            )
+            yield item
 
 
 @Route.register
 def list_shows(plugin, item_id, category_url, page):
     """Build categories listing"""
 
-    list_shows_html = urlquick.get(category_url).text
-    list_shows_soup = bs(list_shows_html, 'html.parser')
-    list_shows = list_shows_soup.find(
-        'div', class_='personnages').find_all('a')
+    resp = urlquick.get(category_url)
+    root = resp.parse("div", attrs={"class": "personnages"})
 
-    for personnage in list_shows:
+    for personnage in root.iterfind(".//a"):
         item = Listitem()
         item.label = personnage.get('title')
-        item.art['thumb'] = URL_ROOT(personnage.find('img').get('src'))
+        item.art['thumb'] = URL_ROOT(personnage.find('.//img').get('src'))
         show_url = URL_ROOT(personnage.get('href'))
 
         item.set_callback(
@@ -95,27 +92,23 @@ def list_shows(plugin, item_id, category_url, page):
 @Route.register
 def list_videos_1(plugin, item_id, category_url, page):
     """Build videos listing"""
-    replay_episodes_html = urlquick.get(
-        category_url + '/par_date/%s' % str(page)).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-
+    resp = urlquick.get(
+        category_url + '/par_date/%s' % str(page))
+ 
     at_least_one_item = False
     if 'serietele' in category_url:
-        episodes = replay_episodes_soup.find(
-            'div', class_='serieTele').find_all('div')
+        root = resp.parse("div", attrs={"class": "serieTele"})
 
-        for episode in episodes:
-            if episode.find('a') is not None and \
-                    episode.find('img', class_='thumb') is not None:
+        for episode in root.iterfind(".//div"):
+            if episode.find('.//a') is not None and \
+                    episode.find(".//img[@class='thumb']") is not None:
 
                 at_least_one_item = True
                 item = Listitem()
 
-                item.label = episode.find('a').find(
-                    'span', class_='saison-episode'
-                ).get_text().strip() + ' ' + episode.find('img').get('alt')
-                video_url = URL_ROOT(episode.find('a').get('href'))
-                item.art['thumb'] = URL_ROOT(episode.find('img').get('src'))
+                item.label = episode.find(".//span[@class='saison-episode']").text.strip() + ' ' + episode.find('.//img').get('alt')
+                video_url = URL_ROOT(episode.find('.//a').get('href'))
+                item.art['thumb'] = URL_ROOT(episode.find('.//img').get('src'))
 
                 item.context.script(
                     get_video_url,
@@ -133,15 +126,14 @@ def list_videos_1(plugin, item_id, category_url, page):
                 yield item
 
     else:
-        episodes = replay_episodes_soup.find_all(
-            'a', class_='lienThumbCollection')
+        root = resp.parse()
 
-        for episode in episodes:
+        for episode in root.iterfind(".//a[@class='lienThumbCollection']"):
             at_least_one_item = True
             item = Listitem()
-            item.label = episode.find('img').get('alt')
+            item.label = episode.find('.//img').get('alt')
             video_url = URL_ROOT(episode.get('href'))
-            item.art['thumb'] = URL_ROOT(episode.find('img').get('src'))
+            item.art['thumb'] = URL_ROOT(episode.find('.//img').get('src'))
 
             item.set_callback(
                 get_video_url,
@@ -172,16 +164,14 @@ def list_videos_1(plugin, item_id, category_url, page):
 @Route.register
 def list_videos_2(plugin, item_id, category_url):
     """Build videos listing"""
-    replay_episodes_html = urlquick.get(category_url).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-    episodes = replay_episodes_soup.find_all(
-        'a', class_='lienThumbCollection')
+    resp = urlquick.get(category_url)
+    root = resp.parse()
 
-    for episode in episodes:
+    for episode in root.iterfind(".//a[@class='lienThumbCollection']"):
         item = Listitem()
-        item.label = episode.find('img').get('alt')
+        item.label = episode.find('.//img').get('alt')
         video_url = URL_ROOT(episode.get('href'))
-        item.art['thumb'] = URL_ROOT(episode.find('img').get('src'))
+        item.art['thumb'] = URL_ROOT(episode.find('.//img').get('src'))
 
         item.context.script(
             get_video_url,
