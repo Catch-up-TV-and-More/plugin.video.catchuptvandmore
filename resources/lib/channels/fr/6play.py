@@ -520,9 +520,12 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                 if 'http' in subtitle_url:
                     item.subtitles.append(subtitle_url)
 
-                item.label = item_dict['label']
-                item.info.update(item_dict['info'])
-                item.art.update(item_dict['art'])
+                if 'label' in item_dict:
+                    item.label = item_dict['label']
+                if 'info' in item_dict:
+                    item.info.update(item_dict['info'])
+                if 'art' in item_dict:
+                    item.art.update(item_dict['art'])
                 return item
         return False
 
@@ -636,9 +639,12 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                 item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
                 item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
 
-                item.label = item_dict['label']
-                item.info.update(item_dict['info'])
-                item.art.update(item_dict['art'])
+                if 'label' in item_dict:
+                    item.label = item_dict['label']
+                if 'info' in item_dict:
+                    item.info.update(item_dict['info'])
+                if 'art' in item_dict:
+                    item.art.update(item_dict['art'])
 
                 return item
         return False
