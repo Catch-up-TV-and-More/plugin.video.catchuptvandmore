@@ -20,22 +20,22 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-import re
-import json
-from bs4 import BeautifulSoup as bs
-import xml.etree.ElementTree as ET
-
 from codequick import Route, Resolver, Listitem, utils
-import urlquick
-
 
 from resources.lib import download
 from resources.lib.labels import LABELS
 
+import htmlement
+import json
+import re
+import urlquick
+import xml.etree.ElementTree as ET
 
 # TO DO
 # Add Premium Account (purchase an account to test)
 # Add last videos
+# Fix Info add Premium Content
+
 
 URL_ROOT = 'http://www.ina.fr'
 
@@ -90,17 +90,17 @@ def root(plugin, item_id):
 def list_shows(plugin, item_id, category_mode, page):
     """Build categories listing"""
     list_programs_json = urlquick.get(
-        URL_PROGRAMS % (page, category_mode)).text
-    list_programs_jsonparser = json.loads(list_programs_json)
-    list_programs_soup = bs(list_programs_jsonparser["html"], 'html.parser')
-    list_programs = list_programs_soup.find_all(
-        'div', class_='media')
+        URL_PROGRAMS % (page, category_mode))
+    list_programs_jsonparser = json.loads(list_programs_json.text)
+    parser = htmlement.HTMLement()
+    parser.feed(list_programs_jsonparser["html"])
+    root = parser.close()
 
-    for program_datas in list_programs:
+    for program_datas in root.iterfind(".//div[@class='media']"):
         item = Listitem()
-        item.label = program_datas.find('img').get('alt')
-        item.art['thumb'] = URL_ROOT + program_datas.find('img').get('src')
-        program_url = URL_ROOT + program_datas.find('a').get('href')
+        item.label = program_datas.find('.//img').get('alt')
+        item.art['thumb'] = URL_ROOT + program_datas.find('.//img').get('src')
+        program_url = URL_ROOT + program_datas.find('.//a').get('href')
 
         item.set_callback(
             list_videos,
@@ -125,25 +125,24 @@ def list_videos(plugin, item_id, program_url, nb_videos):
     replay_episodes_json = urlquick.get(
         URL_VIDEOS % (program_title, nb_videos)).text
     list_episodes_jsonparser = json.loads(replay_episodes_json)
-    list_episodes_soup = bs(list_episodes_jsonparser["content"], 'html.parser')
-    list_episodes = list_episodes_soup.find_all(
-        'div', class_='media zoomarticle afficheNotices')
+    parser = htmlement.HTMLement()
+    parser.feed(list_episodes_jsonparser["content"])
+    root = parser.close()
     at_least_one_item = False
-    for episode in list_episodes:
+    for episode in root.iterfind(".//div[@class='media zoomarticle afficheNotices']"):
         at_least_one_item = True
         item = Listitem()
         item.label = 'No title'
-        if episode.find(
-            'div', class_=re.compile("media-inapremium-slide")):
+        if episode.find(".//div[@class='media-inapremium-slide']") is not None:
             item.label = '[Ina Premium] ' + episode.find(
-                'img').get('alt')
+                './/img').get('alt')
         else:
             item.label = episode.find(
-                'img').get('alt')
-        video_id = episode.find('a').get('href').split('/')[2]
-        item.art['thumb'] = episode.find(
-            'img').get('src')
-        video_duration_text_datas = episode.find('span', class_='duration').get_text().split(' ')
+                './/img').get('alt')
+        video_id = episode.find('.//a').get('href').split('/')[2]
+        item.art['thumb'] = URL_ROOT + episode.find(
+            './/img').get('src')
+        video_duration_text_datas = episode.find(".//span[@class='duration']").text.split(' ')
         video_duration = 0
         for video_duration_datas in video_duration_text_datas:
             if 's' in video_duration_datas:
@@ -157,8 +156,8 @@ def list_videos(plugin, item_id, program_url, nb_videos):
                 video_duration = video_duration + (int(video_duration_datas) * 3600)
         item.info['duration'] = video_duration
 
-        if episode.find('span', class_='broadcast'):
-            video_date = episode.find('span', class_='broadcast').get_text()
+        if episode.find(".//span[@class='broadcast']") is not None:
+            video_date = episode.find(".//span[@class='broadcast']").text
             item.info.date(video_date, '%d/%m/%Y')
 
         item.context.script(
@@ -191,24 +190,23 @@ def list_videos_search(plugin, item_id, nb_videos, search_query):
     replay_episodes_json = urlquick.get(
         URL_VIDEOS_SEARCH % (search_query, nb_videos)).text
     list_episodes_jsonparser = json.loads(replay_episodes_json)
-    list_episodes_soup = bs(list_episodes_jsonparser["content"], 'html.parser')
-    list_episodes = list_episodes_soup.find_all(
-        'div', class_='media zoomarticle')
+    parser = htmlement.HTMLement()
+    parser.feed(list_episodes_jsonparser["content"])
+    root = parser.close()
 
-    for episode in list_episodes:
+    for episode in root.iterfind(".//div[@class='media zoomarticle']"):
         item = Listitem()
         item.label = 'No title'
-        if episode.find(
-                'div', class_=re.compile("media-inapremium-search")):
+        if episode.find(".//div[@class='media-inapremium-search']") is not None:
             item.label = '[Ina Premium] ' + episode.find(
-                'img').get('alt')
+                './/img').get('alt')
         else:
             item.label = episode.find(
-                'img').get('alt')
-        video_id = episode.find('a').get('href').split('/')[2]
-        item.art['thumb'] = episode.find(
-            'img').get('src')
-        video_duration_text_datas = episode.find('span', class_='duration').get_text().split(' ')
+                './/img').get('alt')
+        video_id = episode.find('.//a').get('href').split('/')[2]
+        item.art['thumb'] = URL_ROOT + episode.find(
+            './/img').get('src')
+        video_duration_text_datas = episode.find(".//span[@class='duration']").text.split(' ')
         video_duration = 0
         for video_duration_datas in video_duration_text_datas:
             if 's' in video_duration_datas:
@@ -222,8 +220,8 @@ def list_videos_search(plugin, item_id, nb_videos, search_query):
                 video_duration = video_duration + (int(video_duration_datas) * 3600)
         item.info['duration'] = video_duration
 
-        if episode.find('span', class_='broadcast'):
-            video_date = episode.find('span', class_='broadcast').get_text()
+        if episode.find(".//span[@class='broadcast']") is not None:
+            video_date = episode.find(".//span[@class='broadcast']").text
             item.info.date(video_date, '%d/%m/%Y')
 
         item.context.script(
