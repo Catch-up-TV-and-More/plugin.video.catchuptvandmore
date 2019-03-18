@@ -54,6 +54,7 @@ Channels:
 URL_API = utils.urljoin_partial("http://api-front.yatta.francetv.fr")
 
 URL_LIVE_JSON = URL_API("standard/edito/directs")
+# Find broadcast_Id (some mistmatchs on the json France 4 replace by the broacast Id of France 5)
 
 HEADERS_YATTA = {
     'X-Algolia-API-Key': "80d9c91958fc448dd20042d399ebdf16",
@@ -406,20 +407,8 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    resp = urlquick.get(
-        URL_LIVE_JSON,
-        headers = {"User-Agent": web_utils.get_random_ua},
-        max_age = -1)
-    json_parser = json.loads(resp.text)
-
-    for broadcast in json_parser['result']:
-        if broadcast['channel'] == item_id:
-            media = broadcast['collection'][0]['content_has_medias']
-            broadcast_id = ""
-            for medium in media:
-                if "si_direct_id" in medium['media']:
-                    broadcast_id = medium['media']['si_direct_id']
-            return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
+    broadcast_id = 'SIM_France%s'
+    return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id % item_id.split('-')[1])
 
 
 def populate_item(item, video, include_program_name = False): 

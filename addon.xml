@@ -55,6 +55,7 @@
 [Fix] Plugin - remove some warning log
 [Add] Replay - 関西テレビ (JP)
 [Fix] Replay - Cnews (FR)
+[Fix] Live TV - France TV - some mistmatchs on the json "France 4 have the broacast_Id of France 5" (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
