@@ -32,8 +32,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -88,17 +86,15 @@ def list_categories(plugin, item_id):
 def list_programs(plugin, item_id):
 
     resp = resp = urlquick.get(URL_EMISSIONS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'div', class_='col-sm-4')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//div[@class='col-sm-4']"):
 
-        program_title = program_datas.find('h3').text
+        program_title = program_datas.find('.//h3').text
         program_image = URL_ROOT + '/' + program_datas.find(
-            'img').get('src')
+            './/img').get('src')
         program_url = URL_ROOT + '/' + program_datas.find(
-            "a").get("href")
+            ".//a").get("href")
 
         item = Listitem()
         item.label = program_title
@@ -115,14 +111,12 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, next_url, page):
 
     resp = urlquick.get(next_url + '?lim_un=%s' % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='col-sm-4')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('h3').text
-        video_image = video_datas.find('img').get('src')
-        video_url = video_datas.find('a').get('href')
+    for video_datas in root.iterfind(".//div[@class='col-sm-4']"):
+        video_title = video_datas.find('.//h3').text
+        video_image = video_datas.find('.//img').get('src')
+        video_url = video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title
@@ -174,10 +168,10 @@ def live_entry(plugin, item_id, item_dict):
 def get_live_url(plugin, item_id, video_id, item_dict):
 
     resp = urlquick.get(URL_LIVE)
-    root_soup = bs(resp.text, 'html.parser')
-    stream_datas_url = 'https:' + root_soup.find(
-        'iframe').get('src')
+    root = resp.parse()
+    stream_datas_url = 'https:' + root.find(
+        './/iframe').get('src')
     resp2 = urlquick.get(stream_datas_url)
-    root_soup2 = bs(resp2.text, 'html.parser')
-    return 'https:' + root_soup2.find(
-        'source').get('src')
+    root_2 = resp2.parse()
+    return 'https:' + root_2.find(
+        './/source').get('src')
