@@ -31,9 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -62,11 +59,9 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_ROOT_BRF)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find(
-        'ul', class_="off-canvas-list").find_all('a')
+    root = resp.parse("ul", attrs={"class": "off-canvas-list"})
 
-    for category_data in list_categories_datas:
+    for category_data in root.iterfind(".//a"):
 
         if 'http' in category_data.get('href'):
             category_title = category_data.text
@@ -86,18 +81,16 @@ def list_categories(plugin, item_id):
 def list_videos(plugin, item_id, category_url, page):
 
     resp = urlquick.get(category_url + 'page/%s' % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'article', class_='post column small-12 medium-6 large-4 left')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find_all('a')[0].get('title')
-        video_image = video_datas.find_all('a')[0].find('img').get('src')
+    for video_datas in root.iterfind(".//article[@class='post column small-12 medium-6 large-4 left']"):
+        video_title = video_datas.find('.//a').get('title')
+        video_image = video_datas.find('.//a').find('.//img').get('src')
         duration_list_value = video_datas.find(
-            'time').text.split('-')[1].strip().split(':')
+            './/time').text.split('-')[1].strip().split(':')
         video_duration = int(duration_list_value[0]) * 60 + int(duration_list_value[1])
         date_list_value = video_datas.find(
-            'time').get_text().split('-')[0].strip().split('.')
+            './/time').text.split('-')[0].strip().split('.')
         if len(date_list_value[0]) == 1:
             day = "0" + date_list_value[0]
         else:
@@ -108,8 +101,8 @@ def list_videos(plugin, item_id, category_url, page):
             month = date_list_value[1]
         year = date_list_value[2]
         date_value = year + '-' + month + '-' + day
-        video_url = video_datas.find_all(
-            'a')[0].get('href')
+        video_url = video_datas.find(
+            './/a').get('href')
 
         item = Listitem()
         item.label = video_title
