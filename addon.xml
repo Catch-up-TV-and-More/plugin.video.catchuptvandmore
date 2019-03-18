@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.5~beta08"
+       version="0.2.5~beta09"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -43,7 +43,7 @@
 [Fix] Subtitle - BVN (WO)
 [DRM] Replay - BVN (WO)
 [Remove] Beautifulsoup - [BVN] (WO)
-[Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, Office National Film] (website)
+[Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB] (website)
 [Remove] Beautifulsoup - [CNews] (FR)
 [Add] Replay - RT (Contents {FR|EN}) (WO)
 [Add] Live TV - NPO Channels (NPO 1, NPO 2, NPO Nieuws, ....) (NL) - Thanks Forage !
