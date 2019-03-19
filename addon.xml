@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.5~beta09"
+       version="0.2.5~beta10"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -44,7 +44,7 @@
 [DRM] Replay - BVN (WO)
 [Remove] Beautifulsoup - [BVN] (WO)
 [Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB, INA] (website)
-[Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion] (FR)
+[Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion, BFM TV] (FR)
 [Remove] Beautifulsoup - [BRF Mediathek, RTC Télé Liege, Télé MB] (BE)
 [Remove] Beautifulsoup - [Atresplayer, Realmadrir TV, Mitele] (ES)
 [Remove] Beautifulsoup - [ICI Télé, ICI TouTV, NTV, Téléquebec] (CA)
