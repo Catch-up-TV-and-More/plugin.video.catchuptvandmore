@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import requests
