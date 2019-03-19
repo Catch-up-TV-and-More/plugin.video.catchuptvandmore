@@ -32,8 +32,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -67,16 +65,15 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'div', class_='uk-panel uk-panel-hover')
-    for program_datas in list_programs_datas:
+    root = resp.parse()
+
+    for program_datas in root.iterfind(".//div[@class='uk-panel uk-panel-hover']"):
         program_title = program_datas.find(
-            'img').get('alt')
+            './/img').get('alt')
         program_image = URL_ROOT + program_datas.find(
-            'img').get('src')
+            './/img').get('src')
         program_url = URL_ROOT + program_datas.find(
-            'a').get('href')
+            './/a').get('href')
 
         item = Listitem()
         item.label = program_title
@@ -92,26 +89,26 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='uk-panel uk-panel-hover uk-invisible')
-    list_videos_datas += root_soup.find_all(
-        'div', class_='uk-panel uk-panel-space uk-invisible')
+    root = resp.parse()
+    list_videos_datas = root.findall(
+        ".//div[@class='uk-panel uk-panel-hover uk-invisible']")
+    list_videos_datas += root.findall(
+        ".//div[@class='uk-panel uk-panel-space uk-invisible']")
 
     is_youtube = False
 
     for video_datas in list_videos_datas:
         video_title = video_datas.find(
-            'h3').find('a').text
-        if video_datas.find('div', class_='youtube-player'):
+            './/h3').find('.//a').text
+        if video_datas.find(".//div[@class='youtube-player']") is not None:
             video_id = video_datas.find(
-                'div', class_='youtube-player').get('data-id')
+                ".//div[@class='youtube-player']").get('data-id')
             is_youtube = True
-        elif video_datas.find('iframe'):
+        elif video_datas.find('.//iframe'):
             video_id = re.compile(
                 r'player.vimeo.com/video/(.*?)[\?\"]').findall(
                 video_datas.find(
-                    'iframe').get('src'))[0]
+                    './/iframe').get('src'))[0]
 
         item = Listitem()
         item.label = video_title
