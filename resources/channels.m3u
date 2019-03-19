@@ -54,10 +54,10 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tfx&item_module
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=nrj12&item_module=resources.lib.channels.fr.nrj
 
 # 13
-#EXTINF:-1 tvg-id="444" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/publicsenat.png" group-title="France TNT",Public Sénat
+#EXTINF:-1 tvg-id="234" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/publicsenat.png" group-title="France TNT",Public Sénat
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=publicsenat&item_module=resources.lib.channels.fr.publicsenat
 
-#EXTINF:-1 tvg-id="444" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/lcp.png" group-title="France TNT",LCP Assemblée Nationale
+#EXTINF:-1 tvg-id="234" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/lcp.png" group-title="France TNT",LCP Assemblée Nationale
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=lcp&item_module=resources.lib.channels.fr.lcp
 
 # 14
@@ -101,7 +101,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=6ter&item_modul
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rmcstory&item_module=resources.lib.channels.fr.rmcstory
 
 # 24
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/rmcdecouverte.png" group-title="France TNT",RMC Découverte
+#EXTINF:-1 tvg-id="1400" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/rmcdecouverte.png" group-title="France TNT",RMC Découverte
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rmcdecouverte&item_module=resources.lib.channels.fr.rmcdecouverte
 
 # 25
@@ -109,11 +109,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rmcdecouverte&i
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cherie25&item_module=resources.lib.channels.fr.nrj
 
 # 26
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/lci.png" group-title="France TNT",LCI
+#EXTINF:-1 tvg-id="112" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/lci.png" group-title="France TNT",LCI
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=lci&item_module=resources.lib.channels.fr.lci
 
 # 27
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/franceinfo.png" group-title="France TNT",France Info
+#EXTINF:-1 tvg-id="2111" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/franceinfo.png" group-title="France TNT",France Info
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=franceinfo&item_module=resources.lib.channels.fr.franceinfo
 
 
@@ -174,7 +174,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmparis&item_m
 
 ## France Satellite/FAI
 
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/bfmbusiness.png" group-title="France Satellite/FAI",BFM Business
+#EXTINF:-1 tvg-id="1073" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/bfmbusiness.png" group-title="France Satellite/FAI",BFM Business
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmbusiness&item_module=resources.lib.channels.fr.bfmbusiness
 
 
@@ -182,7 +182,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmbusiness&ite
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=gong&item_module=resources.lib.channels.fr.gong
 
 
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/kto.png" group-title="France Satellite/FAI",KTO
+#EXTINF:-1 tvg-id="110" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/kto.png" group-title="France Satellite/FAI",KTO
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=kto&item_module=resources.lib.channels.fr.kto
 
 
@@ -194,7 +194,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=ouatchtv&item_m
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=luckyjack&item_module=resources.lib.channels.fr.abweb
 
 
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/mb.png" group-title="France Satellite/FAI",M6 Boutique
+#EXTINF:-1 tvg-id="184" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/mb.png" group-title="France Satellite/FAI",M6 Boutique
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=mb&item_module=resources.lib.channels.fr.6play
 
 
