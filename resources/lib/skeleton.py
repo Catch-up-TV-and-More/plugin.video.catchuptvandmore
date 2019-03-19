@@ -1955,7 +1955,7 @@ CA_REPLAY = {
         'callback': 'replay_bridge',
         'thumb': ['channels', 'ca', 'unis.png'],
         'fanart': ['channels', 'ca', 'unis_fanart.jpg'],
-        'module': 'resources.lib.channels.ca.unis'
+        'module': 'resources.lib.channels.ca.tv5'
     },
     'telequebec': {
         'callback': 'replay_bridge',

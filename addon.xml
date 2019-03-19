@@ -59,6 +59,7 @@
 [Fix] Replay - Cnews (FR)
 [Fix] Live TV - France TV - some mistmatchs on the json "France 4 have the broacast_Id of France 5" (FR)
 [Fix] Replay - Tele MB (BE)
+[Fix] Replay - Unis (CA)
     </news>
     <assets>
       <icon>icon.png</icon>
