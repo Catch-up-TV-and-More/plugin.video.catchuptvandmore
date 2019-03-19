@@ -30,8 +30,6 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
