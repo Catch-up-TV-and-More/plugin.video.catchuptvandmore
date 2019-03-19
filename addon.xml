@@ -45,7 +45,7 @@
 [Remove] Beautifulsoup - [BVN] (WO)
 [Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB, INA] (website)
 [Remove] Beautifulsoup - [CNews] (FR)
-[Remove] Beautifulsoup - [BRF Mediathek, RTC Télé Liege] (BE)
+[Remove] Beautifulsoup - [BRF Mediathek, RTC Télé Liege, Télé MB] (BE)
 [Remove] Beautifulsoup - [Atresplayer, Realmadrir TV, Mitele] (ES)
 [Add] Replay - RT (Contents {FR|EN}) (WO)
 [Add] Live TV - NPO Channels (NPO 1, NPO 2, NPO Nieuws, ....) (NL) - Thanks Forage !
@@ -57,6 +57,7 @@
 [Add] Replay - 関西テレビ (JP)
 [Fix] Replay - Cnews (FR)
 [Fix] Live TV - France TV - some mistmatchs on the json "France 4 have the broacast_Id of France 5" (FR)
+[Fix] Replay - Tele MB (BE)
     </news>
     <assets>
       <icon>icon.png</icon>
