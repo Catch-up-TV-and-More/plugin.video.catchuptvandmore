@@ -31,8 +31,6 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
-
-from bs4 import BeautifulSoup as bs
 from resources.lib import download
 
 import json
@@ -131,13 +129,12 @@ def list_programs(plugin, item_id, next_url):
     - Cash investigation
     """
     resp = urlquick.get(next_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all('div', class_='content')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('h2').text
-        program_image = program_datas.find('img')['src']
-        program_url = URL_ROOT + program_datas.find('a')['href']
+    for program_datas in root.iterfind(".//div[@class='content']"):
+        program_title = program_datas.find('.//h2').text
+        program_image = program_datas.find('.//img').get('src')
+        program_url = URL_ROOT + program_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = program_title
@@ -154,18 +151,16 @@ def list_programs(plugin, item_id, next_url):
 def list_videos_documentaires(plugin, item_id, next_url):
 
     resp = urlquick.get(next_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='col-md-3 col-sm-6 col-xs-12')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
+    for video_datas in root.iterfind(".//div[@class='col-md-3 col-sm-6 col-xs-12']"):
         video_title = video_datas.find(
-            'span', class_='rdf-meta element-hidden').get('content')
-        video_image = video_datas.find('img').get('src')
+            ".//span[@class='rdf-meta element-hidden']").get('content')
+        video_image = video_datas.find('.//img').get('src')
         video_duration = int(video_datas.find(
-            'div', class_='duration').find('div').text[:-3]) * 60
-        video_url = URL_ROOT + video_datas.find('a').get('href')
-        date_value = video_datas.find('span', class_='date').text
+            ".//div[@class='duration']").find('.//div').find('.//span').text) * 60
+        video_url = URL_ROOT + video_datas.find('.//a').get('href')
+        date_value = video_datas.find(".//span[@class='date']").text
         date = date_value.split(' ')
         day = date[0]
         try:
@@ -205,15 +200,14 @@ def list_videos_actualites(plugin, item_id, next_url, page):
         videos_actualites_url = next_url + '?page=' + page
 
     resp = urlquick.get(videos_actualites_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all('div', class_='col-md-6 col-sm-6 col-xs-12')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        if len(video_datas.find_all('svg', class_='icon icon-play2')) > 0:
-            video_title = video_datas.find('span', class_='rdf-meta element-hidden').get('content')
-            video_image = video_datas.find('img').get('src')
-            video_url = URL_ROOT + video_datas.find('a').get('href')
-            date_value = video_datas.find('div', class_='field field_submitted').text
+    for video_datas in root.iterfind(".//div[@class='col-md-6 col-sm-6 col-xs-12']"):
+        if len(video_datas.findall(".//svg[@class='icon icon-play2']")) > 0:
+            video_title = video_datas.find(".//span[@class='rdf-meta element-hidden']").get('content')
+            video_image = video_datas.find('.//img').get('src')
+            video_url = URL_ROOT + video_datas.find('.//a').get('href')
+            date_value = video_datas.find(".//div[@class='field field_submitted']").text
             date = date_value.split('/')
             date_value = date[2] + '-' + date[1] + '-' + date[0]
 
@@ -255,6 +249,7 @@ def list_videos_program(plugin, item_id, next_url, page):
     # 2ème page :
         # http://www.lcp.fr/emissions/en-voiture-citoyens/replay?page=1
         # ainsi de suite
+    # TODO fix some cases http://www.lcp.fr/emissions/questions-au-gouvernement/replay-2 http://www.lcp.fr/emissions/questions-au-gouvernement-2
 
     if page == '0' and '-0' not in next_url:
         video_program_url = next_url + '/replay'
@@ -266,19 +261,17 @@ def list_videos_program(plugin, item_id, next_url, page):
         video_program_url = next_url[:-2] + '/replay-0?page=' + page
 
     resp = urlquick.get(video_program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='col-md-3 col-sm-6 col-xs-12')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
+    for video_datas in root.iterfind(".//div[@class='col-md-3 col-sm-6 col-xs-12']"):
         video_title = video_datas.find(
-            'span', class_='rdf-meta element-hidden').get('content')
-        video_image = video_datas.find('img').get('src')
+            ".//span[@class='rdf-meta element-hidden']").get('content')
+        video_image = video_datas.find('.//img').get('src')
         video_duration = int(
             video_datas.find(
-                'div', class_='duration').find('div').text[:-3]) * 60
-        video_url = URL_ROOT + video_datas.find('a').get('href')
-        date_value = video_datas.find('span', class_='date').text
+                ".//div[@class='duration']").find('.//div').find('.//span').text) * 60
+        video_url = URL_ROOT + video_datas.find('.//a').get('href')
+        date_value = video_datas.find(".//span[@class='date']").text
         date = date_value.split(' ')
         day = date[0]
         try:
