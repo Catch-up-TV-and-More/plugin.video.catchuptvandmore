@@ -30,8 +30,8 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-5&item_m
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=m6&item_module=resources.lib.channels.fr.6play
 
 # 7
-# Arte
-# TODO: Mettre Arte en Fr ici ?
+#EXTINF:-1 tvg-id="111" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="France TNT",Arte
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=arte&item_dict=%7B%27language%27%3A+%27FR%27%7D&item_module=resources.lib.channels.wo.arte
 
 # 8
 #EXTINF:-1 tvg-id="445" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/c8.png" group-title="France TNT",C8

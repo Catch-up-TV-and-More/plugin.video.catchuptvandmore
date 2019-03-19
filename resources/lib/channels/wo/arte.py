@@ -336,9 +336,18 @@ def live_entry(plugin, item_id, item_dict):
 
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
+    final_language = DESIRED_LANGUAGE
+   
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        final_language = item_dict['language']
 
-    if DESIRED_LANGUAGE == 'FR' or DESIRED_LANGUAGE == 'DE':
-        resp = urlquick.get(URL_LIVE_ARTE % DESIRED_LANGUAGE.lower())
+    if final_language == 'FR' or final_language == 'DE':
+        resp = urlquick.get(URL_LIVE_ARTE % final_language.lower())
         json_parser = json.loads(resp.text)
         return json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
     # Add Notification (NOT available in this language)
