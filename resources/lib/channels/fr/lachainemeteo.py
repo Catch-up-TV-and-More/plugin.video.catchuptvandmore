@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -59,13 +57,12 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_VIDEOS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'div', class_='viewVideosSeries')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//div[@class='viewVideosSeries']"):
         program_title = program_datas.find(
-            'div', class_='title').text.strip()
+            ".//div[@class='title']").text.strip() + ' ' + program_datas.find(
+                ".//div[@class='title']").find('.//strong').text.strip()
 
         item = Listitem()
         item.label = program_title
@@ -80,19 +77,18 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_title_value):
 
     resp = urlquick.get(URL_VIDEOS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'div', class_='viewVideosSeries')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//div[@class='viewVideosSeries']"):
         program_title = program_datas.find(
-            'div', class_='title').text.strip()
+            ".//div[@class='title']").text.strip() + ' ' + program_datas.find(
+                ".//div[@class='title']").find('.//strong').text.strip()
 
         if program_title == program_title_value:
-            list_videos_datas = program_datas.find_all('a')
+            list_videos_datas = program_datas.findall('.//a')
             for video_datas in list_videos_datas:
-                video_title = video_datas.find('div', class_='txt').text
-                video_image = video_datas.find('img').get('data-src')
+                video_title = video_datas.find(".//div[@class='txt']").text
+                video_image = video_datas.find('.//img').get('data-src')
                 video_url = video_datas.get('href')
 
                 item = Listitem()
