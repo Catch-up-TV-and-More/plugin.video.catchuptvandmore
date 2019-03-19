@@ -44,7 +44,7 @@
 [DRM] Replay - BVN (WO)
 [Remove] Beautifulsoup - [BVN] (WO)
 [Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB, INA] (website)
-[Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion, BFM TV, Gulli, Canal 10, CultureBox, KTO, GameOne, La 1ere, La chaine Météo] (FR)
+[Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion, BFM TV, Gulli, Canal 10, CultureBox, KTO, GameOne, La 1ere, La chaine Météo, LCI] (FR)
 [Remove] Beautifulsoup - [BRF Mediathek, RTC Télé Liege, Télé MB] (BE)
 [Remove] Beautifulsoup - [Atresplayer, Realmadrir TV, Mitele] (ES)
 [Remove] Beautifulsoup - [ICI Télé, ICI TouTV, NTV, Téléquebec] (CA)
@@ -61,6 +61,7 @@
 [Fix] Live TV - France TV - some mistmatchs on the json "France 4 have the broacast_Id of France 5" (FR)
 [Fix] Replay - Tele MB (BE)
 [Fix] Replay - Unis (CA)
+[Fix] Replay - LCI (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
