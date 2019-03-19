@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import requests
@@ -41,13 +39,12 @@ import xbmcgui
 
 
 # TO DO
-# Fix Live TV
+# Add Paid contents ?
 
 
 URL_ROOT = 'http://www.abweb.com'
 
 URL_COMPTE_LOGIN = URL_ROOT + '/BIS-TV-Online/identification.aspx'
-# TO DO add account for using Live Direct
 
 URL_LIVES = URL_ROOT + '/BIS-TV-Online/bistvo-tele-universal.aspx'
 # channel (lucky jack, ...)
