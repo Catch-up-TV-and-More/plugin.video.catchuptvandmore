@@ -33,12 +33,9 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
-
 
 '''
 Channels:
@@ -67,11 +64,9 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_VIDEOS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find(
-        'nav').find_all('a')
+    root = resp.parse("nav")
 
-    for category_datas in list_categories_datas:
+    for category_datas in root.iterfind(".//a"):
         if '/videos/' in category_datas.get('href'):
             category_title = category_datas.text
             category_url = URL_ROOT + category_datas.get(
@@ -91,15 +86,13 @@ def list_categories(plugin, item_id):
 def list_videos(plugin, item_id, category_url, page):
 
     resp = urlquick.get(category_url % page)
-    root_soup = bs(resp.text, 'html.parser')
-    if root_soup.find('ul', class_="live-article-list"):
-        list_videos_datas = root_soup.find(
-            'ul', class_="live-article-list").find_all(
-                'div', class_="img")
-        for video_data in list_videos_datas:
-            video_title = video_data.find('img').get('alt')
-            video_image = video_data.find('img').get('data-frz-src')
-            video_url = URL_ROOT + video_data.find('a').get('href')
+    root = resp.parse()
+    if root.find(".//ul[@class='live-article-list']") is not None:
+        list_videos_datas = root.find(".//ul[@class='live-article-list']")
+        for video_data in list_videos_datas.findall(".//div[@class='img']"):
+            video_title = video_data.find('.//img').get('alt')
+            video_image = video_data.find('.//img').get('data-frz-src')
+            video_url = URL_ROOT + video_data.find('.//a').get('href')
 
             item = Listitem()
             item.label = video_title
