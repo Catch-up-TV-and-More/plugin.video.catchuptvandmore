@@ -48,6 +48,7 @@ URL_LIVE_QVC_DE_UK_US = 'http://www.qvc%s/content/shop-live-tv.qvc.html'
 URL_STREAM_LIMELIGHT = 'http://production-ps.lvp.llnw.net/r/PlaylistService/media/%s/getMobilePlaylistByMediaId'
 # MediaId
 
+DESIRED_LANGUAGE = Script.setting['qvc.language']
 
 def live_entry(plugin, item_id, item_dict):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
@@ -56,10 +57,18 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    desired_language = Script.setting[item_id + '.language']
+    final_language = DESIRED_LANGUAGE
+   
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        final_language = item_dict['language']
 
-    if desired_language == 'FR' or desired_language == 'IT':
-        resp = urlquick.get(URL_LIVE_QVC_FR_IT % desired_language.lower())
+    if final_language == 'FR' or final_language == 'IT':
+        resp = urlquick.get(URL_LIVE_QVC_FR_IT % final_language.lower())
         live_id = re.compile(
             r'data-media="(.*?)"').findall(resp.text)[0]
         live_datas_json = urlquick.get(
@@ -71,20 +80,20 @@ def get_live_url(plugin, item_id, video_id, item_dict):
             if live_datas["targetMediaPlatform"] == "HttpLiveStreaming":
                 stream_url = live_datas["mobileUrl"]
         return stream_url
-    elif desired_language == 'JP':
+    elif final_language == 'JP':
         resp = urlquick.get(URL_LIVE_QVC_JP)
         resp.encoding = "shift_jis"
         return 'https://cdn-live1.qvc.jp' + re.compile(
             r'cdn-live1\.qvc\.jp(.*?)\'').findall(
                 resp.text)[0] + '|referer=https://qvc.jp/cont/live/Main'
-    elif desired_language == 'DE' or\
-            desired_language == 'UK' or\
-            desired_language == 'US':
-        if desired_language == 'DE':
+    elif final_language == 'DE' or\
+            final_language == 'UK' or\
+            final_language == 'US':
+        if final_language == 'DE':
             resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % '.de')
-        elif desired_language == 'UK':
+        elif final_language == 'UK':
             resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % 'uk.com')
-        elif desired_language == 'US':
+        elif final_language == 'US':
             resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % '.com')
         live_datas_json = re.compile(
             r'oLiveStreams=(.*?)}},').findall(resp.text)[0] + '}}'

@@ -198,6 +198,12 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=euronews&item_d
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/rt.png" group-title="France Satellite/FAI",RT
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rt&item_dict=%7B%27language%27%3A+%27FR%27%7D&item_module=resources.lib.channels.wo.rt
 
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="France Satellite/FAI",QVC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_dict=%7B%27language%27%3A+%27FR%27%7D&item_module=resources.lib.channels.wo.qvc
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/cgtn.png" group-title="France Satellite/FAI",CGTN
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cgtn&item_dict=%7B%27language%27%3A+%27FR%27%7D&item_module=resources.lib.channels.wo.cgtn
+
 
 ## France Radios
 
