@@ -175,7 +175,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmparis&item_m
 ## France Satellite/FAI
 
 #EXTINF:-1 tvg-id="1073" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/bfmbusiness.png" group-title="France Satellite/FAI",BFM Business
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmbusiness&item_module=resources.lib.channels.fr.bfmbusiness
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmbusiness&item_module=resources.lib.channels.fr.bfmtv
 
 
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/gong.png" group-title="France Satellite/FAI",Gong
