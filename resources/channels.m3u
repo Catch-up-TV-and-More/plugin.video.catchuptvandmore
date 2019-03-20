@@ -165,8 +165,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/bfmparis.png" group-title="France Régionales",BFM Paris
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmparis&item_module=resources.lib.channels.fr.bfmparis
 
-
-# TODO: France 3 Régions
+# TODO: Ajotuer toutes les chaines France3Regions
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france3regions.png" group-title="France Régionales",France 3 Régions
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.france3regions
 
 # TODO Fance TV Sport
 
@@ -197,7 +198,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=luckyjack&item_
 #EXTINF:-1 tvg-id="184" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/mb.png" group-title="France Satellite/FAI",M6 Boutique
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=mb&item_module=resources.lib.channels.fr.6play
 
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/tv5mondefbs.png" group-title="France Satellite/FAI",TV5Monde France Belgique Suisse
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv5mondefbs&item_module=resources.lib.channels.wo.tv5monde
 
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/tv5mondeinfo.png" group-title="France Satellite/FAI",TV5Monde Info
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv5mondeinfo&item_module=resources.lib.channels.wo.tv5monde
 
 ## France Radios
 
