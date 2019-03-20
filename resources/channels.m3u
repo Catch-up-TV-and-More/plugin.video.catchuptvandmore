@@ -122,38 +122,29 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=franceinfo&item
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/viaoccitanie.png" group-title="France Régionales",viàOccitanie
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=viaoccitanie&item_module=resources.lib.channels.fr.via
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/viagrandparis.png" group-title="France Régionales",viàGrandParis
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=viagrandparis&item_module=resources.lib.channels.fr.via
-
 
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/viamirabelle.png" group-title="France Régionales",viàMirabelle
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=viamirabelle&item_module=resources.lib.channels.fr.via
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/viavosges.png" group-title="France Régionales",viàVosges
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=viavosges&item_module=resources.lib.channels.fr.via
-
 
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/vialmtv.png" group-title="France Régionales",viàLMTv Sarthe
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=vialmtv&item_module=resources.lib.channels.fr.via
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/viaatv.png" group-title="France Régionales",viàATV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=viaatv&item_module=resources.lib.channels.fr.via
-
 
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/antennereunion.png" group-title="France Régionales",Antenne Réunion
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=antennereunion&item_module=resources.lib.channels.fr.antennereunion
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/canal10.png" group-title="France Régionales",Canal 10
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=canal10&item_module=resources.lib.channels.fr.canal10
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tl7.png" group-title="France Régionales",Télévision Loire 7
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tl7&item_module=resources.lib.channels.fr.tl7
-
 
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tebeo.png" group-title="France Régionales",Tébéo
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tebeo&item_module=resources.lib.channels.fr.tebeo
@@ -172,28 +163,22 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_mo
 # TODO Fance TV Sport
 
 
-
 ## France Satellite/FAI
 
 #EXTINF:-1 tvg-id="1073" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/bfmbusiness.png" group-title="France Satellite/FAI",BFM Business
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmbusiness&item_module=resources.lib.channels.fr.bfmtv
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/gong.png" group-title="France Satellite/FAI",Gong
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=gong&item_module=resources.lib.channels.fr.gong
-
 
 #EXTINF:-1 tvg-id="110" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/kto.png" group-title="France Satellite/FAI",KTO
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=kto&item_module=resources.lib.channels.fr.kto
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/ouatchtv.png" group-title="France Satellite/FAI",Ouatch TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=ouatchtv&item_module=resources.lib.channels.fr.ouatchtv
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/luckyjack.png" group-title="France Satellite/FAI",Lucky Jack
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=luckyjack&item_module=resources.lib.channels.fr.abweb
-
 
 #EXTINF:-1 tvg-id="184" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/mb.png" group-title="France Satellite/FAI",M6 Boutique
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=mb&item_module=resources.lib.channels.fr.6play
@@ -204,33 +189,23 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv5mondefbs&ite
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/tv5mondeinfo.png" group-title="France Satellite/FAI",TV5Monde Info
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv5mondeinfo&item_module=resources.lib.channels.wo.tv5monde
 
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/france24.png" group-title="France Satellite/FAI",France 24
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france24&item_dict=%7B%27language%27%3A+%27FR%27%7D&item_module=resources.lib.channels.wo.france24
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/euronews.png" group-title="France Satellite/FAI",Euronews
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=euronews&item_dict=%7B%27language%27%3A+%27FR%27%7D&item_module=resources.lib.channels.wo.euronews
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/rt.png" group-title="France Satellite/FAI",RT
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rt&item_dict=%7B%27language%27%3A+%27FR%27%7D&item_module=resources.lib.channels.wo.rt
+
+
 ## France Radios
 
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/rtl2.png" group-title="France Radios",RTL 2
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl2&item_module=resources.lib.channels.fr.6play
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/fun_radio.png" group-title="France Radios",Fun Radio
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=fun_radio&item_module=resources.lib.channels.fr.6play
 
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/virginradiotv.png" group-title="France Radios",Virgin Radio TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=virginradiotv&item_module=resources.lib.channels.fr.virginradiotv
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

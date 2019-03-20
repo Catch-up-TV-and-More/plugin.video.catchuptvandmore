@@ -390,22 +390,32 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    if DESIRED_LANGUAGE == 'EN':
+    final_language = DESIRED_LANGUAGE
+   
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        final_language = item_dict['language']
+
+    if final_language == 'EN':
         url_live = URL_LIVE_EN
         resp = urlquick.get(url_live, max_age=-1)
         return re.compile(
             r'file\: \'(.*?)\'').findall(resp.text)[0]
-    elif DESIRED_LANGUAGE == 'AR':
+    elif final_language == 'AR':
         url_live = URL_LIVE_AR
         resp = urlquick.get(url_live, max_age=-1)
         return re.compile(
             r'file\'\: \'(.*?)\'').findall(resp.text)[0]
-    elif DESIRED_LANGUAGE == 'FR':
+    elif final_language == 'FR':
         url_live = URL_LIVE_FR
         resp = urlquick.get(url_live, max_age=-1)
         return re.compile(
             r'file\: \"(.*?)\"').findall(resp.text)[0]
-    elif DESIRED_LANGUAGE == 'ES':
+    elif final_language == 'ES':
         url_live = URL_LIVE_ES
         resp = urlquick.get(url_live, max_age=-1)
         live_id = re.compile(
