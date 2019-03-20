@@ -44,7 +44,7 @@
 [DRM] Replay - BVN (WO)
 [Remove] Beautifulsoup - [BVN] (WO)
 [Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB, INA] (website)
-[Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion, BFM TV, Gulli, Canal 10, CultureBox, KTO, GameOne, La 1ere, La chaine Météo, LCI, LCP] (FR)
+[Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion, BFM TV, Gulli, Canal 10, CultureBox, KTO, GameOne, La 1ere, La chaine Météo, LCI, LCP, RMC Decouverte] (FR)
 [Remove] Beautifulsoup - [BRF Mediathek, RTC Télé Liege, Télé MB] (BE)
 [Remove] Beautifulsoup - [Atresplayer, Realmadrir TV, Mitele] (ES)
 [Remove] Beautifulsoup - [ICI Télé, ICI TouTV, NTV, Téléquebec] (CA)
@@ -62,7 +62,7 @@
 [Fix] Replay - Tele MB (BE)
 [Fix] Replay - Unis (CA)
 [Fix] Replay - LCI (FR)
-[Add] Feature - Channels.m3u - see "README_LIVE_TV.md" to use it with IPTV Simple
+[Add] Feature - Channels.m3u - see "README_LIVE_TV.md" to use it with PVR IPTV Simple
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import urlquick
 
 # TODO
@@ -63,10 +61,9 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY_RMCDECOUVERTE)
-    root_soup = bs(resp.text, 'html.parser')
-    categories_datas = root_soup.find('div', class_='list_21XUu').find_all('a')
+    root = resp.parse("div", attrs={"class": "list_21XUu"})
 
-    for category_datas in categories_datas:
+    for category_datas in root.iterfind(".//a"):
         category_title = category_datas.text
         category_url = URL_ROOT + category_datas.get('href')
 
@@ -84,16 +81,15 @@ def list_categories(plugin, item_id):
 def list_videos(plugin, item_id, category_url):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all('div', class_='root_qT0Me')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        if video_datas.find('p', class_='subtitle_1hI_I'):
-            video_title = video_datas.find('p', class_='title_1APl2').text + ' - ' + video_datas.find('p', class_='subtitle_1hI_I').text
+    for video_datas in root.iterfind(".//div[@class='root_qT0Me']"):
+        if video_datas.find(".//p[@class='subtitle_1hI_I']") is not None:
+            video_title = video_datas.find(".//p[@class='title_1APl2']").text + ' - ' + video_datas.find(".//p[@class='subtitle_1hI_I']").text
         else:
-            video_title = video_datas.find('p', class_='title_1APl2').text
-        video_image = video_datas.find('img').get('src')
-        video_url = URL_ROOT + video_datas.find('a').get('href')
+            video_title = video_datas.find(".//p[@class='title_1APl2']").text
+        video_image = video_datas.find('.//img').get('src')
+        video_url = URL_ROOT + video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title
@@ -122,12 +118,12 @@ def get_video_url(
         video_url,
         headers={'User-Agent': web_utils.get_random_ua},
         max_age=-1)
-    video_datas_soup = bs(resp.text, 'html.parser')
-    video_datas = video_datas_soup.find('div', class_='next-player')
+    root = resp.parse()
+    video_datas = root.find(".//div[@class='next-player']")
 
-    data_account = video_datas['data-account']
-    data_video_id = video_datas['data-video-id']
-    data_player = video_datas['data-player']
+    data_account = video_datas.get('data-account')
+    data_video_id = video_datas.get('data-video-id')
+    data_player = video_datas.get('data-player')
 
     return resolver_proxy.get_brightcove_video_json(
         plugin,
@@ -150,12 +146,13 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         headers={'User-Agent': web_utils.get_random_ua},
         max_age=-1)
 
-    live_soup = bs(resp.text, 'html.parser')
-    data_live_soup = live_soup.find(
-        'div', class_='next-player')
-    data_account = data_live_soup['data-account']
-    data_video_id = data_live_soup['data-video-id']
-    data_player = data_live_soup['data-player']
+    root = resp.parse()
+    live_datas = root.find(".//div[@class='next-player']")
+
+    data_account = live_datas.get('data-account')
+    data_video_id = live_datas.get('data-video-id')
+    data_player = live_datas.get('data-player')
+
     return resolver_proxy.get_brightcove_video_json(
         plugin,
         data_account,
