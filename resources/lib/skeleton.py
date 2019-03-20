@@ -1815,7 +1815,8 @@ WO_REPLAY = {
         'callback': 'replay_bridge',
         'thumb': ['channels', 'wo', 'rt.png'],
         'fanart': ['channels', 'wo', 'rt_fanart.jpg'],
-        'module': 'resources.lib.channels.wo.rt'
+        'module': 'resources.lib.channels.wo.rt',
+        'available_languages': ['FR', 'EN']
     }
 }
 
