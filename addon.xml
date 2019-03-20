@@ -63,6 +63,7 @@
 [Fix] Replay - Unis (CA)
 [Fix] Replay - LCI (FR)
 [Add] Feature - Channels.m3u - see "README_LIVE_TV.md" to use it with PVR IPTV Simple
+[Remove] Live TV - QVC (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -1029,7 +1029,7 @@
                 <setting label="30156" type="labelenum" id="mtv.language" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" values="EN|DE|ES|AR" default="EN"/>
                 <setting label="30160" type="labelenum" id="beinsports.language" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
-                <setting label="30161" type="labelenum" id="qvc.language" values="FR|JP|DE|IT|UK|US" default="FR"/>
+                <setting label="30161" type="labelenum" id="qvc.language" values="JP|DE|IT|UK|US" default="UK"/>
                 <setting label="30162" type="labelenum" id="nhkworld.country" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" values="FR|EN|AR|ES|RU" default="FR"/>
                 <setting label="30164" type="labelenum" id="paramountchannel.language" values="ES|IT" default="ES"/>

@@ -37,7 +37,7 @@ import urlquick
 # TO DO
 
 # Live
-URL_LIVE_QVC_FR_IT = 'https://www.qvc.%s/tv/live.html'
+URL_LIVE_QVC_IT = 'https://www.qvc.%s/tv/live.html'
 # language
 
 URL_LIVE_QVC_JP = 'http://qvc.jp/cont/live/Main'
@@ -67,8 +67,8 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     if 'language' in item_dict:
         final_language = item_dict['language']
 
-    if final_language == 'FR' or final_language == 'IT':
-        resp = urlquick.get(URL_LIVE_QVC_FR_IT % final_language.lower())
+    if final_language == 'IT':
+        resp = urlquick.get(URL_LIVE_QVC_IT % final_language.lower())
         live_id = re.compile(
             r'data-media="(.*?)"').findall(resp.text)[0]
         live_datas_json = urlquick.get(
