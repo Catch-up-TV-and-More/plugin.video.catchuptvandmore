@@ -188,7 +188,7 @@ LABELS = {
     'bel_rtl': 'BEL RTL',
     'rtl_info': 'RTL INFO',
     'bx1': 'BX1',
-    'een': 'Eén',
+    'een': 'Één',
     'canvas': 'Canvas',
     'ketnet': 'Ketnet',
     'nrjhitstvbe': 'NRJ Hits TV',

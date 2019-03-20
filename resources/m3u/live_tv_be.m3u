@@ -1,0 +1,63 @@
+#EXTM3U tvg-shift=0
+
+# Live TV BE
+
+## Belgique communauté française
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/rtl_tvi.png" group-title="Belgique fr",RTL-TVI
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl_tvi&item_module=resources.lib.channels.be.rtlplaybe
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/club_rtl.png" group-title="Belgique fr",CLUB RTL
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=club_rtl&item_module=resources.lib.channels.be.rtlplaybe
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/plug_rtl.png" group-title="Belgique fr",PLUG RTL
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=plug_rtl&item_module=resources.lib.channels.be.rtlplaybe
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/rtl_info.png" group-title="Belgique fr",RTL INFO
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl_info&item_module=resources.lib.channels.be.rtlplaybe
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/bel_rtl.png" group-title="Belgique fr",BEL RTL
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bel_rtl&item_module=resources.lib.channels.be.rtlplaybe
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/rtl_sport.png" group-title="Belgique fr",RTL Sport
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl_sport&item_module=resources.lib.channels.be.rtlplaybe
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/nrjhitstvbe.png" group-title="Belgique fr",NRJ Hits TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=nrjhitstvbe&item_module=resources.lib.channels.be.nrjhitstvbe
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/auvio.png" group-title="Belgique fr",RTBF Auvio
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=auvio&item_module=resources.lib.channels.be.rtbf
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/bx1.png" group-title="Belgique fr",BX1
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bx1&item_module=resources.lib.channels.be.bx1
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/rtc.png" group-title="Belgique fr",RTC Télé Liège
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtc&item_module=resources.lib.channels.be.rtc
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/telemb.png" group-title="Belgique fr",Télé MB
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=telemb&item_module=resources.lib.channels.be.telemb
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/tvlux.png" group-title="Belgique fr",TV Lux
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvlux&item_module=resources.lib.channels.be.tvlux
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/tvcom.png" group-title="Belgique fr",TV Com
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvcom&item_module=resources.lib.channels.be.tvcom
+
+
+## Belgique ommunauté flamande
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/een.png" group-title="België fr",Één
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=een&item_module=resources.lib.channels.be.vrt
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/canvas.png" group-title="België fr",Canvas
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=canvas&item_module=resources.lib.channels.be.vrt
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/ketnet.png" group-title="België fr",Ketnet
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=ketnet&item_module=resources.lib.channels.be.vrt
+
+
+## Belgique Radios
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/contact.png" group-title="Belgique Radios",Contact
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=contact&item_module=resources.lib.channels.be.rtlplaybe
+
