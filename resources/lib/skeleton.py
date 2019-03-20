@@ -630,7 +630,8 @@ WO_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'wo', 'arte.png'],
         'fanart': ['channels', 'wo', 'arte_fanart.jpg'],
-        'module': 'resources.lib.channels.wo.arte'
+        'module': 'resources.lib.channels.wo.arte',
+        'available_languages': ['FR', 'DE']
     },
     'arirang': {
         'callback': 'live_bridge',
