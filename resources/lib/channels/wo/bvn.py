@@ -147,6 +147,10 @@ def get_video_url(
     if "html" in json_parser and "Deze video mag niet bekeken worden vanaf jouw locatie" in json_parser["html"]:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
+        
+    if "html" in json_parser and "Deze video is niet beschikbaar" in json_parser["html"]:
+        plugin.notify('ERROR', plugin.localize(30716))
+        return False
     
     licence_url = json_parser["stream"]["keySystemOptions"][0]["options"]["licenseUrl"]
     licence_url_header = json_parser["stream"]["keySystemOptions"][0]["options"]["httpRequestHeaders"]

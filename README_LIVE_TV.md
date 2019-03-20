@@ -31,7 +31,7 @@
 6. Choose "IPTV Recorder"
 7. Choose "Configure"
 8. Go in "Jobs and Rules" tab
-9. Choose "ffmeg exe" and put the path of the ffmpeg binary (depends of each OS) / Maybe need to be installed
+9. Choose "ffmeg exe" and put the path of the ffmpeg binary (depends of each OS) / Maybe need to be install if not present
 10. Restart Kodi
 11. Open the add-on "IPTV Recorder"
 12. Go to "Channel Groups"
