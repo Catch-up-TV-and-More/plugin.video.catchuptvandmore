@@ -81,43 +81,33 @@ def list_categories(plugin, item_id):
     - Informations
     - ...
     """
-    if DESIRED_LANGUAGE == 'FR' or DESIRED_LANGUAGE == 'EN':
-        CATEGORIES_VIDEOS = eval('CATEGORIES_VIDEOS_%s' % DESIRED_LANGUAGE)
-        for category_url, category_title in CATEGORIES_VIDEOS.iteritems():
-            if 'magazines' in category_url or 'shows' in category_url:
-                item = Listitem()
-                item.label = category_title
-                item.set_callback(
-                    list_programs,
-                    item_id=item_id,
-                    next_url=category_url)
-                yield item
-            elif 'documentaires' in category_url:
-                item = Listitem()
-                item.label = category_title
-                item.set_callback(
-                    list_videos_documentaries,
-                    item_id=item_id,
-                    next_url=category_url,
-                    page='0')
-                yield item
-            elif 'videos' in category_url:
-                item = Listitem()
-                item.label = category_title
-                item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    page='0')
-                yield item
-
-        # Search videos
-        # item = Listitem.search(
-        #     list_videos_search,
-        #     item_id=item_id,
-        #     page='0')
-        # yield item
-    else:
-        print 'TO_BE_IMPLEMENTED'
+    CATEGORIES_VIDEOS = eval('CATEGORIES_VIDEOS_%s' % DESIRED_LANGUAGE)
+    for category_url, category_title in CATEGORIES_VIDEOS.iteritems():
+        if 'magazines' in category_url or 'shows' in category_url:
+            item = Listitem()
+            item.label = category_title
+            item.set_callback(
+                list_programs,
+                item_id=item_id,
+                next_url=category_url)
+            yield item
+        elif 'documentaires' in category_url:
+            item = Listitem()
+            item.label = category_title
+            item.set_callback(
+                list_videos_documentaries,
+                item_id=item_id,
+                next_url=category_url,
+                page='0')
+            yield item
+        elif 'videos' in category_url:
+            item = Listitem()
+            item.label = category_title
+            item.set_callback(
+                list_videos,
+                item_id=item_id,
+                page='0')
+            yield item
 
 
 @Route.register

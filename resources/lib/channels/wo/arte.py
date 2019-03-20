@@ -346,9 +346,6 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     if 'language' in item_dict:
         final_language = item_dict['language']
 
-    if final_language == 'FR' or final_language == 'DE':
-        resp = urlquick.get(URL_LIVE_ARTE % final_language.lower())
-        json_parser = json.loads(resp.text)
-        return json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
-    # Add Notification (NOT available in this language)
-    return False
+    resp = urlquick.get(URL_LIVE_ARTE % final_language.lower())
+    json_parser = json.loads(resp.text)
+    return json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
