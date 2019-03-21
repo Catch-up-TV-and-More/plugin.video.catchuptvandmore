@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -77,22 +75,22 @@ def list_categories(plugin, item_id):
 def list_videos(plugin, item_id, category_url):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
+    root = resp.parse()
     if item_id == 'cx':
-        list_videos_datas = root_soup.find(
-            'div', class_='listinner').find_all(
-                'li')
+        list_videos_datas = root.find(
+            ".//div[@class='listinner']").findall(
+                './/li')
     else:
-        list_videos_datas = root_soup.find_all(
-            'li', class_='resumable')
+        list_videos_datas = root.findall(
+            ".//li[@class='resumable']")
 
     for video_data in list_videos_datas:
-        video_title = video_data.find('h3').get_text()
+        video_title = video_data.find('.//h3').text
         video_image = re.compile(
             r'url\((.*?)\);').findall(
-            video_data.find('div', class_='picinner').get('style'))[0]
-        video_plot = video_data.find('p', class_='summary').text
-        video_url = URL_ROOT + video_data.find('a').get('href')
+            video_data.find(".//div[@class='picinner']").get('style'))[0]
+        video_plot = video_data.find(".//p[@class='summary']").text
+        video_url = URL_ROOT + video_data.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title
