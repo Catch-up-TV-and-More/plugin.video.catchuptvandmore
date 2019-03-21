@@ -32,8 +32,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import base64
 import json
 import re
@@ -109,11 +107,9 @@ def list_categories(plugin, item_id):
         yield item
 
         resp = urlquick.get(URL_VIDEOS_SKYSPORTS)
-        root_soup = bs(resp.text, 'html.parser')
-        list_categories_datas = root_soup.find_all(
-            'a', class_='page-nav__link')
+        root = resp.parse()
 
-        for category_datas in list_categories_datas:
+        for category_datas in root.iterfind(".//a[@class='page-nav__link']"):
             category_title = category_datas.text
             category_url = URL_ROOT_SKYSPORTS + category_datas.get('href')
 
@@ -137,17 +133,15 @@ def list_videos_youtube(plugin, item_id, channel_youtube):
 def list_videos_sports(plugin, item_id, category_url, page):
 
     resp = urlquick.get(category_url + '/more/%s' % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='polaris-tile__inner')
+    root = resp.parse()
 
     at_least_one_item = False
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('h2').find('a').get_text().strip()
-        video_image = video_datas.find('img').get('data-src')
+    for video_datas in root.iterfind(".//div[@class='polaris-tile__inner']"):
+        video_title = video_datas.find('.//h2').find('.//a').text.strip()
+        video_image = video_datas.find('.//img').get('data-src')
         video_id = re.compile(r'216\/(.*?)\.jpg').findall(
-            video_datas.find('img').get('data-src'))[0]
+            video_datas.find('.//img').get('data-src'))[0]
 
         at_least_one_item = True
         item = Listitem()
