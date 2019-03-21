@@ -1,16 +1,57 @@
 #EXTM3U tvg-shift=0
 
+# Live TV All
+## A group per country (France, Belgium, United Kingdom, ...)
 
-# Live TV FR
 
-## France TNT
+# Tunisia
+# TN_LIVE
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/tn/watania1.png" group-title="Tunisia",التلفزة التونسية الوطنية 1
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=watania1&item_module=resources.lib.channels.tn.watania
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/tn/watania2.png" group-title="Tunisia",التلفزة التونسية الوطنية 1
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=watania2&item_module=resources.lib.channels.tn.watania
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/tn/nessma.png" group-title="Tunisia",نسمة تي في
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=nessma&item_module=resources.lib.channels.tn.nessma
+
+
+# Poland
+# PL_LIVE
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvp3.png" group-title="Poland",TVP 3
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvp3&item_module=resources.lib.channels.pl.tvp
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvpinfo.png" group-title="Poland",TVP Info
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvpinfo&item_module=resources.lib.channels.pl.tvp
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvppolonia.png" group-title="Poland",TVP Polonia
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvppolonia&item_module=resources.lib.channels.pl.tvp
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvppolandin.png" group-title="Poland",TVP Poland IN
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvppolandin&item_module=resources.lib.channels.pl.tvp
+
+
+# Spain
+# ES_LIVE
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/es/realmadridtv.png" group-title="Spain",Realmadrid TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=realmadridtv&item_module=resources.lib.channels.es.realmadridtv
+
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/es/antena3.png" group-title="Spain",Antena 3
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=antena3&item_module=resources.lib.channels.es.atresplayer
+
+
+
+# France
 
 # 1
-#EXTINF:-1 tvg-id="192" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tf1.png" group-title="France TNT",TF1
+#EXTINF:-1 tvg-id="192" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tf1.png" group-title="France",TF1
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tf1&item_module=resources.lib.channels.fr.mytf1
 
 # 2
-#EXTINF:-1 tvg-id="4" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-2.png" group-title="France TNT",France 2
+#EXTINF:-1 tvg-id="4" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france-2.png" group-title="France",France 2
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-2&item_module=resources.lib.channels.fr.francetv
 
 # 3
@@ -149,14 +190,12 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tl7&item_module
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/tebeo.png" group-title="France Régionales",Tébéo
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tebeo&item_module=resources.lib.channels.fr.tebeo
 
-# TODO: Ajotuer toutes les chaines La 1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/la_1ere.png" group-title="France Régionales",La 1ère
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere
 
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/bfmparis.png" group-title="France Régionales",BFM Paris
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmparis&item_module=resources.lib.channels.fr.bfmparis
 
-# TODO: Ajotuer toutes les chaines France3Regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france3regions.png" group-title="France Régionales",France 3 Régions
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.france3regions
 
