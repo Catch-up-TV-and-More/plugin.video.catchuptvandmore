@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -68,13 +66,11 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_EMISSION)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find(
-        'ul', class_='amenu_tab amenu_tab_3 amenu_tab_sub').find_all('li')
+    root = resp.parse("ul", attrs={"class": "amenu_tab amenu_tab_3 amenu_tab_sub"})
 
-    for category_datas in list_categories_datas:
-        category_title = category_datas.find('a').text
-        category_url = URL_ROOT + category_datas.find("a").get("href")
+    for category_datas in root.iterfind(".//li"):
+        category_title = category_datas.find('.//a').text
+        category_url = URL_ROOT + category_datas.find(".//a").get("href")
 
         item = Listitem()
         item.label = category_title
@@ -93,15 +89,13 @@ def list_programs(plugin, item_id, category_url):
     - ...
     """
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'dl', class_='alist amain_tv')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('img').get('alt')
-        program_image = program_datas.find('img').get('src')
+    for program_datas in root.iterfind(".//dl[@class='alist amain_tv']"):
+        program_title = program_datas.find('.//img').get('alt')
+        program_image = program_datas.find('.//img').get('src')
         program_url = URL_ROOT + program_datas.find(
-            "a").get("href")
+            ".//a").get("href")
 
         item = Listitem()
         item.label = program_title
@@ -117,14 +111,12 @@ def list_programs(plugin, item_id, category_url):
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'dl', class_='alist')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('img').get('alt')
-        video_image = video_datas.find('img').get('src')
-        video_url = video_datas.find('a').get('href')
+    for video_datas in root.iterfind(".//dl[@class='alist']"):
+        video_title = video_datas.find('.//img').get('alt')
+        video_image = video_datas.find('.//img').get('src')
+        video_url = video_datas.find('.//a').get('href')
         video_url = re.compile(
             r'\(\'(.*?)\'\)').findall(
                 video_url)[0]
