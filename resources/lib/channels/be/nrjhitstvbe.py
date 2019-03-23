@@ -31,13 +31,10 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
 # TO DO
-# Replay
 
 URL_ROOT = 'http://www.nrj.be'
 
@@ -59,15 +56,16 @@ def replay_entry(plugin, item_id):
 def list_categories(plugin, item_id):
 
     resp = urlquick.get(URL_VIDEOS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find_all(
-        'div', class_=re.compile('top_menu'))
+    root = resp.parse("div", attrs={"id": "top_menu"})
 
-    for category_datas in list_categories_datas:
+    for category_datas in root.iterfind(".//div"):
 
-        category_title = category_datas.text.strip()
-        if category_datas.find('a'):
-            category_url = URL_ROOT + category_datas.find('a').get('href')
+        if category_datas.text is not None:
+            category_title = category_datas.text.strip()
+        else:
+            category_title = category_datas.find('.//a').text.strip()
+        if category_datas.find('.//a'):
+            category_url = URL_ROOT + category_datas.find('.//a').get('href')
 
             item = Listitem()
             item.label = category_title
@@ -93,16 +91,14 @@ def list_categories(plugin, item_id):
 def list_videos_categories(plugin, item_id, category_url, page):
 
     resp = urlquick.get(category_url + '/%s' % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='col-xs-6 col-md-4 col-lg-3 col-centered')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('img').get('alt')
-        video_image = video_datas.find('img').get('src')
+    for video_datas in root.iterfind(".//div[@class='col-xs-6 col-md-4 col-lg-3 col-centered']"):
+        video_title = video_datas.find('.//img').get('alt')
+        video_image = video_datas.find('.//img').get('src')
         video_id = re.compile(
             r'changeVideoBrid\((.*?)\,').findall(
-                video_datas.find('div', class_='play_hover').get('onclick'))[0]
+                video_datas.find(".//div[@class='play_hover']").get('onclick'))[0]
 
         item = Listitem()
         item.label = video_title
@@ -132,16 +128,14 @@ def list_videos_categories(plugin, item_id, category_url, page):
 def list_videos_last_videos(plugin, item_id, category_url):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='col-xs-6 col-md-4 col-lg-3 col-centered')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('img').get('alt')
-        video_image = video_datas.find('img').get('src')
+    for video_datas in root.iterfind(".//div[@class='col-xs-6 col-md-4 col-lg-3 col-centered']"):
+        video_title = video_datas.find('.//img').get('alt')
+        video_image = video_datas.find('.//img').get('src')
         video_id = re.compile(
             r'changeVideoBrid\((.*?)\,').findall(
-                video_datas.find('div', class_='play_hover').get('onclick'))[0]
+                video_datas.find(".//div[@class='play_hover']").get('onclick'))[0]
 
         item = Listitem()
         item.label = video_title
@@ -167,8 +161,8 @@ def get_video_url(
         plugin, item_id, video_id, download_mode=False, video_label=None):
 
     resp = urlquick.get(URL_STREAM % video_id)
-    root_soup = bs(resp.text, 'html.parser')
-    final_video_url = root_soup.find(id='VideoPlayerDatas').get('data-filehd')
+    root = resp.parse()
+    final_video_url = root.find(".//input[@id='VideoPlayerDatas']").get('data-filehd')
 
     if download_mode:
         return download.download_video(final_video_url, video_label)
@@ -183,10 +177,9 @@ def live_entry(plugin, item_id, item_dict):
 def get_live_url(plugin, item_id, video_id, item_dict):
 
     resp = urlquick.get(URL_LIVE)
-    root_soup = bs(resp.text, 'html.parser')
-    list_streams_datas = root_soup.find(
-        'div', class_="col-md-12").find_all('a')
+    root = resp.parse("div", attrs={"class": "col-md-12"})
+
     stream_url = ''
-    for stream_datas in list_streams_datas:
+    for stream_datas in root.iterfind(".//a"):
         stream_url = stream_datas.get('href')
     return stream_url
