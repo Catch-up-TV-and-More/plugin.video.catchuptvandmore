@@ -31,9 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -59,15 +56,13 @@ def replay_entry(plugin, item_id):
 def list_programs(plugin, item_id):
 
     resp = urlquick.get(URL_EMISSIONS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'article', class_='news__article')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//article[@class='news__article']"):
 
-        program_title = program_datas.find('h3').text
-        program_image = program_datas.find('img').get('src')
-        program_url = program_datas.find("a").get("href")
+        program_title = program_datas.find('.//h3').text
+        program_image = program_datas.find('.//img').get('src')
+        program_url = program_datas.find(".//a").get("href")
 
         item = Listitem()
         item.label = program_title
@@ -84,14 +79,12 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url, page):
 
     resp = urlquick.get(program_url + 'page/%s/' % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'article', class_=re.compile("news__article"))
+    root = resp.parse("div", attrs={"class": "articles"})
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('h3').text
-        video_image = video_datas.find('img').get('src')
-        video_url = video_datas.find('a').get('href')
+    for video_datas in root.iterfind(".//article"):
+        video_title = video_datas.find('.//h3').text.strip() + ' - ' + video_datas.find('.//span').text
+        video_image = video_datas.find('.//img').get('src')
+        video_url = video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title
