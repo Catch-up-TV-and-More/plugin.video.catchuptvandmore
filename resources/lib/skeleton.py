@@ -463,6 +463,18 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'luckyjack.png'],
         'fanart': ['channels', 'fr', 'luckyjack_fanart.jpg'],
         'module': 'resources.lib.channels.fr.abweb'
+    },
+    'mblivetv': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'mblivetv.png'],
+        'fanart': ['channels', 'fr', 'mblivetv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.dailymotion'
+    },
+    'tv8montblanc': {
+        'callback': 'live_bridge',
+        'thumb': ['channels', 'fr', 'tv8montblanc.png'],
+        'fanart': ['channels', 'fr', 'tv8montblanc_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.dailymotion'
     }
 }
 
@@ -1595,6 +1607,18 @@ FR_REPLAY = {
         'thumb': ['channels', 'fr', 'tl7.png'],
         'fanart': ['channels', 'fr', 'tl7_fanart.jpg'],
         'module': 'resources.lib.channels.fr.tl7'
+    },
+    'mblivetv': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'mblivetv.png'],
+        'fanart': ['channels', 'fr', 'mblivetv_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.dailymotion'
+    },
+    'tv8montblanc': {
+        'callback': 'replay_bridge',
+        'thumb': ['channels', 'fr', 'tv8montblanc.png'],
+        'fanart': ['channels', 'fr', 'tv8montblanc_fanart.jpg'],
+        'module': 'resources.lib.channels.fr.dailymotion'
     }
 }
 
