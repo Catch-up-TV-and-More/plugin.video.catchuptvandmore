@@ -31,12 +31,12 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
+import htmlement
 import re
 import urlquick
 
 # TO DO
+# Get Title of each video
 
 URL_ROOT = 'https://a002-vod.nyc.gov'
 
@@ -66,14 +66,12 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        style='float:left; width:490px; height:180px')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find_all('a')[1].text
-        program_image = program_datas.find('img').get('src')
-        program_id = program_datas.find_all('a')[1].get('href').split('videos.php?id=')[1]
+    for program_datas in root.iterfind(".//div[@style='float:left; width:490px; height:180px']"):
+        program_title = program_datas.findall('.//a')[1].text
+        program_image = program_datas.find('.//img').get('src')
+        program_id = program_datas.findall('.//a')[1].get('href').split('videos.php?id=')[1]
 
         item = Listitem()
         item.label = program_title
@@ -90,15 +88,13 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_id, page):
 
     resp = urlquick.get(URL_VIDEOS % (program_id, page))
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        style='float:left; width:160px; height:220px; padding-left:4px; padding-right:31px')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('b').text + ' - ' + \
-            video_datas.text.replace(video_datas.find('b').text, '')[:-5]
-        video_image = video_datas.find('img', class_='thumb').get('src')
-        video_url = URL_STREAM % video_datas.find('a').get('href').replace('../', '')
+    for video_datas in root.iterfind(".//div[@style='float:left; width:160px; height:220px; padding-left:4px; padding-right:31px']"):
+
+        video_title = video_datas.find('.//b/a').text # TODO + ' - ' + repr(video_datas.text)
+        video_image = video_datas.find(".//img[@class='thumb']").get('src')
+        video_url = URL_STREAM % video_datas.find('.//a').get('href').replace('../', '')
 
         item = Listitem()
         item.label = video_title
