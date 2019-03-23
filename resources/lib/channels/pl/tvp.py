@@ -30,8 +30,6 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -73,26 +71,26 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    lives_html = urlquick.get(
+    resp = urlquick.get(
         URL_LIVE, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-    lives_soup = bs(lives_html.text, 'html.parser')
-    lives_datas = lives_soup.find_all(
-        'div', class_=re.compile("button"))
+    root = resp.parse()
+
     live_id = ''
-    for live_datas in lives_datas:
-        if item_id == 'tvpinfo':
-            if 'info' in live_datas.find('img').get('alt'):
-                live_id = live_datas.get('data-video-id')
-        elif item_id == 'tvppolonia':
-            if 'Polonia' in live_datas.get('data-title'):
-                live_id = live_datas.get('data-video-id')
-        elif item_id == 'tvppolandin':
-            if 'News and entertainment' in live_datas.get('data-title'):
-                live_id = live_datas.get('data-video-id')
-        elif item_id == 'tvp3':
-            if LIVE_TVP3_REGIONS[utils.ensure_unicode(
-                    Script.setting['tvp3.region'])] in live_datas.find('img').get('alt'):
-                live_id = live_datas.get('data-video-id')
+    for live_datas in root.findall(".//div"):
+        if live_datas.get('data-stationname') is not None:
+            if item_id == 'tvpinfo':
+                if 'info' in live_datas.find('.//img').get('alt'):
+                    live_id = live_datas.get('data-video-id')
+            elif item_id == 'tvppolonia':
+                if 'Polonia' in live_datas.get('data-title'):
+                    live_id = live_datas.get('data-video-id')
+            elif item_id == 'tvppolandin':
+                if 'News and entertainment' in live_datas.get('data-title'):
+                    live_id = live_datas.get('data-video-id')
+            elif item_id == 'tvp3':
+                if LIVE_TVP3_REGIONS[utils.ensure_unicode(
+                        Script.setting['tvp3.region'])] in live_datas.find('.//img').get('alt'):
+                    live_id = live_datas.get('data-video-id')
     if live_id == '':
         # Add Notification
         return False
