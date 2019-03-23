@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -74,17 +72,15 @@ def list_videos(plugin, item_id):
     resp = urlquick.get(
         URL_REPLAY_BFMPARIS,
         headers={'User-Agent': web_utils.get_random_ua})
-    videos_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = videos_soup.find_all(
-        'article',
-        class_=re.compile('art-c modulx3'))
-    for video_datas in list_videos_datas:
-        if 'https' not in video_datas.find('a')['href']:
-            video_url = 'https:' + video_datas.find('a')['href']
+    root = resp.parse()
+
+    for video_datas in root.iterfind(".//article[@class='art-c modulx3 no-border  bg-color-4 relative']"):
+        if 'https' not in video_datas.find('.//a').get('href'):
+            video_url = 'https:' + video_datas.find('.//a').get('href')
         else:
-            video_url = video_datas.find('a')['href']
-        video_image = video_datas.find('img')['data-original']
-        video_title = video_datas.find('img')['alt']
+            video_url = video_datas.find('.//a').get('href')
+        video_image = video_datas.find('.//img').get('data-original')
+        video_title = video_datas.find('.//img').get('alt')
 
         item = Listitem()
         item.label = video_title
@@ -139,12 +135,12 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         headers={'User-Agent': web_utils.get_random_ua},
         max_age=-1)
 
-    live_soup = bs(resp.text, 'html.parser')
-    data_live_soup = live_soup.find(
-        'div', class_='next-player')
-    data_account = data_live_soup['data-account']
-    data_video_id = data_live_soup['data-video-id']
-    data_player = data_live_soup['data-player']
+    root = resp.parse()
+    live_datas = root.find(
+        ".//div[@class='next-player']")
+    data_account = live_datas.get('data-account')
+    data_video_id = live_datas.get('data-video-id')
+    data_player = live_datas.get('data-player')
     return resolver_proxy.get_brightcove_video_json(
         plugin,
         data_account,
