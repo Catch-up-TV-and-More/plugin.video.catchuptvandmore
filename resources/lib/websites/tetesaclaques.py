@@ -21,7 +21,6 @@
 from __future__ import unicode_literals
 
 import re
-from bs4 import BeautifulSoup as bs
 
 from codequick import Route, Resolver, Listitem, utils
 import urlquick
