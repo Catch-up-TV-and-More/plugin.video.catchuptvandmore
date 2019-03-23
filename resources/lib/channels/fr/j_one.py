@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -76,17 +74,15 @@ def list_categories(plugin, item_id):
 def list_videos(plugin, item_id, page):
 
     resp = urlquick.get(URL_VIDEOS % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'article', class_=re.compile('item-list'))
+    root = resp.parse("div", attrs={"class": "post-listing archives_2col"})
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('h2').text
-        video_image = video_datas.find('img').get('src')
+    for video_datas in root.iterfind(".//article"):
+        video_title = video_datas.find('.//a').get('title').replace('Permalink to ', '')
+        video_image = video_datas.find('.//img').get('src')
         video_plot = ''
-        if video_datas.find('p'):
-            video_plot = video_datas.find('p').text
-        video_url = video_datas.find('a').get('href')
+        if video_datas.find('.//p') is not None:
+            video_plot = video_datas.find('.//p').text
+        video_url = video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title
