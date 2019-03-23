@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import os
@@ -88,22 +86,21 @@ def list_videos(plugin, item_id, page):
         resp = urlquick.get(URL_VIDEOS % item_id)
     else:
         resp = urlquick.get(URL_VIDEOS % item_id + '?page=%s' % page)
-    videos_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = videos_soup.find_all(
-        'div', class_=re.compile("views-row"))
-    for video_datas in list_videos_datas:
+    root = resp.parse("div", attrs={"class": "view-content"})
+
+    for video_datas in root.iterfind("./div"):
         video_title = video_datas.find(
-            'span', class_='field-content').find(
-            'a').get_text()
+            ".//span[@class='field-content']").find(
+            './/a').text
         video_plot = ''
         if video_datas.find(
-                'div', class_='field-resume'):
+                ".//div[@class='field-resume']") is not None:
             video_plot = video_datas.find(
-                'div', class_='field-resume').get_text().strip()
+                ".//div[@class='field-resume']").text.strip()
         video_image = URL_ROOT % item_id + \
-            video_datas.find('img').get('src')
+            video_datas.find('.//img').get('src')
         video_url = URL_ROOT % item_id + '/' + \
-            video_datas.find('a').get('href')
+            video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title
