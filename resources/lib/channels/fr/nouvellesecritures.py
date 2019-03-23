@@ -33,8 +33,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -66,12 +64,11 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_ROOT_NOUVELLES_ECRITURES % item_id)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find_all(
-        'li', class_='genre-item')
-    for category_datas in list_categories_datas:
+    root = resp.parse()
 
-        category_title = category_datas.find('a').get_text().strip()
+    for category_datas in root.iterfind(".//li[@class='genre-item']"):
+
+        category_title = category_datas.find('.//a').text.strip()
         category_data_panel = category_datas.get('data-panel')
 
         item = Listitem()
@@ -91,12 +88,10 @@ def list_programs(plugin, item_id, category_data_panel):
     - ...
     """
     resp = urlquick.get(URL_ROOT_NOUVELLES_ECRITURES % item_id)
-    root_soup = bs(resp.text, 'html.parser')
     class_panel_value = 'panel %s' % category_data_panel
-    list_programs_datas = root_soup.find(
-        'div', class_=class_panel_value).find_all('li')
+    root = resp.parse("div", attrs={"class": class_panel_value})
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//li"):
         program_title = program_datas.find('a').text
         program_image = program_datas.find('a').get('data-img')
         program_url = URL_ROOT_NOUVELLES_ECRITURES % item_id + \
@@ -116,24 +111,25 @@ def list_programs(plugin, item_id, category_data_panel):
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        "li", class_=re.compile("push type-episode"))
+    root = resp.parse()
+
+    list_videos_datas = root.findall(".//li[@class='push type-episode']")
+    list_videos_datas += root.findall(".//li[@class='push type-episode active seen']")
 
     for video_datas in list_videos_datas:
-        if video_datas.find('div', class_='description'):
+        if video_datas.find(".//div[@class='description']").text is not None:
             video_title = video_datas.find(
-                'div', class_='title').get_text().strip() + ' - ' + \
+                ".//div[@class='title']").text.strip() + ' - ' + \
                 video_datas.find(
-                    'div', class_='description').get_text().strip()
+                    ".//div[@class='description']").text.strip()
         else:
             video_title = video_datas.find(
-                'div', class_='title').get_text().strip()
+                ".//div[@class='title']").text.strip()
         video_url = URL_ROOT_NOUVELLES_ECRITURES % item_id + \
-            video_datas.find('a').get('href')
+            video_datas.find('.//a').get('href')
         video_image = ''
-        if video_datas.find('img'):
-            video_image = video_datas.find('img').get('src')
+        if video_datas.find('.//img') is not None:
+            video_image = video_datas.find('.//img').get('src')
 
         item = Listitem()
         item.label = video_title
@@ -160,18 +156,18 @@ def get_video_url(
         plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url)
-    root_soup = bs(resp.text, 'html.parser')
-    player_datas = root_soup.find(
-        'div', class_='player-wrapper')
+    root = resp.parse()
+    player_datas = root.find(
+        ".//div[@class='player-wrapper']")
 
-    if player_datas.find('a', class_='video_link'):
+    if player_datas.find(".//a[@class='video_link']") is not None:
         id_diffusion = player_datas.find(
-            'a', class_='video_link').get(
+            ".//a[@class='video_link']").get(
                 'href').split('video/')[1].split('@')[0]
         return resolver_proxy.get_francetv_video_stream(
             plugin, id_diffusion, item_dict, download_mode, video_label)
     else:
-        url_video_resolver = player_datas.find('iframe').get('src')
+        url_video_resolver = player_datas.find('.//iframe').get('src')
         # Case Youtube
         if 'youtube' in url_video_resolver:
             video_id = url_video_resolver.split(
