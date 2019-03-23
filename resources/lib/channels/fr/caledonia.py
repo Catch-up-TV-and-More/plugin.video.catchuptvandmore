@@ -31,14 +31,13 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
 
 # TO DO
 # Add Next Button
+# Readd date without beautiful soup
 
 
 URL_ROOT = 'https://www.caledonia.nc'
@@ -59,10 +58,9 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_ROOT)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all('a')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//a"):
         if program_datas.get('href'):
             if 'emission/' in program_datas.get('href'):
                 program_title = program_datas.text
@@ -81,23 +79,29 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_="block-yt-playlist col-lg-4 col-12 mb-4")
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('h3').text.strip()
+    for video_datas in root.iterfind(".//div[@class='block-yt-playlist col-lg-4 col-12 mb-4']"):
+        video_title = video_datas.find('.//h3').text.strip()
         video_image = video_datas.find(
-            'div', class_='bg-img rounded d-flex align-items-center justify-content-center position-relative').get('style')
+            ".//div[@class='bg-img rounded d-flex align-items-center justify-content-center position-relative']").get('style')
         video_image = re.compile(
             r'url\(\'(.*?)\'').findall(video_image)[0]
-        video_url = 'https:' + video_datas.find('a').get('href')
-        date_value = video_datas.find('div', class_='wrap-infos mt-3').text.strip()[-10:]
+        video_url = 'https:' + video_datas.find('.//a').get('href')
+        # date_value = utils.strip_tags(video_datas.find(".//div[@class='wrap-infos mt-3']")).text
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
-        item.info.date(date_value, '%d-%m-%Y')
+        # try:
+        #     item.info.date(date_value, '%d/%m/%Y')
+        # except:
+        #     pass
+        
+        # try:
+        #     item.info.date(date_value, '%d-%m-%Y')
+        # except:
+        #     pass
 
         item.context.script(
             get_video_url,
