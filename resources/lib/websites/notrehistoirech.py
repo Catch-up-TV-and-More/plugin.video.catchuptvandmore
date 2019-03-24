@@ -20,20 +20,31 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-import re
-from bs4 import BeautifulSoup as bs
-
 from codequick import Route, Resolver, Listitem
-import urlquick
 
 from resources.lib.labels import LABELS
 from resources.lib import download
 
+import re
+import urlquick
 
 # TO DO
 # Download Mode
 
 URL_ROOT = 'http://www.notrehistoire.ch'
+
+CATEGORIES = {
+    'culture et arts': '18396',
+    'société': '2888',
+    'suisse': '7339',
+    'vaud': '163',
+    'genève': '21393',
+    'autres arts': '18399',
+    'valais': '20173',
+    'enjeux de société': '18407',
+    'musique et variétés': '18397',
+    'culture': '450'
+}
 
 
 def website_entry(plugin, item_id):
@@ -57,17 +68,9 @@ def root(plugin, item_id):
     )
     yield item
 
-    categories_html = urlquick.get(
-        URL_ROOT + '/search?types=video').text
-    categories_soup = bs(categories_html, 'html.parser')
-    categories = categories_soup.find(
-        'div', class_='facet-group facet-group--tags open').find_all(
-            'label')
-
-    for category in categories:
+    for category_name, category_id in CATEGORIES.iteritems():
         item = Listitem()
-        item.label = category.get_text().strip()
-        category_id = category.find('input').get('value')
+        item.label = category_name
         category_url = URL_ROOT + '/search?types=video' + \
             '&tags=%s&sort=-origin_date' % category_id + \
             '&page=%s'
@@ -83,18 +86,16 @@ def root(plugin, item_id):
 @Route.register
 def list_videos(plugin, item_id, category_url, page):
     """Build videos listing"""
-    replay_episodes_html = urlquick.get(
-        category_url % page).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-    episodes = replay_episodes_soup.find_all(
-        'div', class_='media-item')
+    resp = urlquick.get(
+        category_url % page)
+    root = resp.parse()
 
-    for episode in episodes:
+    for episode in root.iterfind(".//div[@class='media-item']"):
         item = Listitem()
         item.label = episode.get('title')
-        video_url = URL_ROOT + episode.find('a').get('href')
+        video_url = URL_ROOT + episode.find('.//a').get('href')
         item.art['thumb'] = episode.find(
-            'img').get('src')
+            './/img').get('src')
 
         item.context.script(
             get_video_url,
