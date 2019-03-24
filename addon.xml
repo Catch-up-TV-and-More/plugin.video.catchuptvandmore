@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.5~beta13"
+       version="0.2.5~beta14"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="script.module.beautifulsoup4" version="4.3.2"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
     <import addon="script.module.requests" version="2.12.4"/>
     <import addon="script.module.codequick" version="0.9.5"/>
@@ -43,7 +42,7 @@
 [Fix] Subtitle - BVN (WO)
 [DRM] Replay - BVN (WO)
 [Remove] Beautifulsoup - [BVN, Afrique Media, Arirang, Channel News Asia, TV5Monde Afrique, Tivi5monde, TV5Monde] (WO)
-[Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB, INA, NotreHistoire.ch] (website)
+[Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB, INA, NotreHistoire.ch, Allocine] (website)
 [Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion, BFM TV, Gulli, Canal 10, CultureBox, KTO, GameOne, La 1ere, La chaine Météo, LCI, LCP, RMC Decouverte, RMC Story, Tébéo, Télé Loire 7, ViàChannels, BFM Paris, Caledonia, France 3 regions, France TV Education, Gong TV, J-One, MyTF1, Nouvelle Ecriture, NRJ, Onzeo, Ouatch TV, Public Sénat, TF1Thématiques] (FR)
 [Remove] Beautifulsoup - [BRF Mediathek, RTC Télé Liege, Télé MB, BX1, NRJHITSTVBE, TVCOM, TVLUX, RTBF, VRT] (BE)
 [Remove] Beautifulsoup - [Atresplayer, Realmadrir TV, Mitele] (ES)
@@ -55,6 +54,7 @@
 [Remove] Beautifulsoup - [ABC News, TBD, NYC Media] (US)
 [Remove] Beautifulsoup - [La7] (IT)
 [Remove] Beautifulsoup - [TVP] (PL)
+[Remove] Import Beautifulsoup from addon.xml
 [Add] Replay - RT (Contents {FR|EN}) (WO)
 [Add] Live TV - NPO Channels (NPO 1, NPO 2, NPO Nieuws, ....) (NL) - Thanks Forage !
 [Add] Dutch translation of this add-on

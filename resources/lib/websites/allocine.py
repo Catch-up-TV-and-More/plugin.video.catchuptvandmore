@@ -25,10 +25,9 @@ import json
 import re
 import requests
 
-from codequick import Route, Resolver, Listitem, Script
+from codequick import Route, Resolver, Listitem, Script, utils
 import urlquick
 import xbmcgui
-from bs4 import BeautifulSoup as bs
 
 from resources.lib import resolver_proxy
 from resources.lib import download
@@ -39,6 +38,7 @@ from resources.lib.labels import LABELS
 # Get Partner Id ?
 # Todo get Aired, Year, Date of the Video
 # News Videos - Need work
+# Fix some title in Emissions
 
 URL_ROOT = 'http://www.allocine.fr'
 
@@ -113,17 +113,12 @@ def root(plugin, item_id):
 @Route.register
 def list_shows_emissions_1(plugin, item_id, category_url):
     # Build Categories Emissions
-    replay_categories_programs_html = urlquick.get(
-        category_url).text
-    replay_categories_programs_soup = bs(
-        replay_categories_programs_html, 'html.parser')
-    root_categories_programs = replay_categories_programs_soup.find(
-        'li', class_='item_4 is_active ')
-    replay_categories_programs = root_categories_programs.find_all('a')
+    resp = urlquick.get(category_url)
+    root = resp.parse("li", attrs={"class": "item_4 is_active "})
 
-    for category_programs in replay_categories_programs:
+    for category_programs in root.iterfind(".//a"):
         item = Listitem()
-        categorie_programs_title = category_programs.get_text()
+        categorie_programs_title = category_programs.text
         item.label = categorie_programs_title.strip()
 
         categorie_programs_url = URL_ROOT + category_programs.get('href')
@@ -138,10 +133,6 @@ def list_shows_emissions_1(plugin, item_id, category_url):
 @Route.register
 def list_shows_emissions_2(plugin, item_id, categorie_programs_url):
     # Build sub categories if exists / add 'Les Programmes', 'Les Vidéos'
-    replay_subcategories_programs_html = urlquick.get(
-        categorie_programs_url).text
-    replay_subcategories_programs_soup = bs(
-        replay_subcategories_programs_html, 'html.parser')
 
     # Les vidéos
     item = Listitem()
@@ -171,14 +162,13 @@ def list_shows_emissions_2(plugin, item_id, categorie_programs_url):
 
     yield item
 
-    # Subcategories
-    subcategories = replay_subcategories_programs_soup.find(
-        'div', class_='nav-button-filter').find_all('a')
+    resp = urlquick.get(categorie_programs_url)
+    root = resp.parse("div", attrs={"class": "nav-button-filter"})
 
-    for subcategory in subcategories:
+    for subcategory in root.iterfind(".//a"):
         item = Listitem()
         item.label = subcategory.find(
-            'span', class_='label').get_text()
+            ".//span[@class='label']").text
         subcategorie_programs_url = URL_ROOT + subcategory.get('href')
 
         item.set_callback(
@@ -217,25 +207,23 @@ def list_shows_emissions_3(plugin, item_id, subcategorie_programs_url):
 
 @Route.register
 def list_shows_emissions_4(plugin, item_id, page, programs_url):
-    replay_programs_html = urlquick.get(
-        programs_url + '?page=%s' % page).text
-    replay_programs_soup = bs(replay_programs_html, 'html.parser')
-    replay_programs = replay_programs_soup.find_all(
-        'figure', class_='media-meta-fig')
+    resp = urlquick.get(
+        programs_url + '?page=%s' % page)
+    root = resp.parse()
 
-    for program in replay_programs:
+    for program in root.iterfind(".//figure[@class='media-meta-fig']"):
         item = Listitem()
         item.label = program.find(
-            'h2', class_='title '
-        ).find('span').find('a').get_text().strip()
-        if program.find('img').get('data-attr'):
-            image_json_parser = json.loads(program.find('img').get('data-attr'))
+            ".//h2[@class='title ']"
+        ).find('.//span').find('.//a').text.strip()
+        if program.find('.//img').get('data-attr') is not None:
+            image_json_parser = json.loads(program.find('.//img').get('data-attr'))
             item.art['thumb'] = image_json_parser['src']
         else:
-            item.art['thumb'] = program.find('img').get('src')
+            item.art['thumb'] = program.find('.//img').get('src')
         program_url = URL_ROOT + program.find(
-            'h2', class_='title '
-        ).find('span').find('a').get('href')
+            ".//h2[@class='title ']"
+        ).find('.//span').find('.//a').get('href')
 
         item.set_callback(
             list_shows_emissions_5,
@@ -243,7 +231,7 @@ def list_shows_emissions_4(plugin, item_id, page, programs_url):
             program_url=program_url)
         yield item
 
-    if replay_programs_soup.find('div', class_='pager pager margin_40t') \
+    if root.find(".//div[@class_='pager pager margin_40t']") \
             is not None:
         # More programs...
         yield Listitem.next_page(
@@ -254,19 +242,19 @@ def list_shows_emissions_4(plugin, item_id, page, programs_url):
 
 @Route.register
 def list_shows_emissions_5(plugin, item_id, program_url):
-    replay_seasons_html = urlquick.get(
-        program_url + 'saisons/').text
-    replay_seasons_soup = bs(replay_seasons_html, 'html.parser')
-    replay_seasons = replay_seasons_soup.find_all(
-        'h2', class_='fs18 d_inline_block margin_10r')
+    resp = urlquick.get(
+        program_url + 'saisons/')
+    root = resp.parse()
+    replay_seasons = root.findall(
+        ".//h2[@class='fs18 d_inline_block margin_10r']")
 
     if len(replay_seasons) > 0:
 
         for season in replay_seasons:
             item = Listitem()
-            item.label = season.find('a').find('span').get_text().strip()
+            item.label = season.find('.//a').find('.//span').text.strip()
             show_season_url = URL_ROOT + season.find(
-                'a', class_='no_underline').get('href')
+                ".//a[@class='no_underline']").get('href')
 
             # Get Last Page
             last_page = '0'
@@ -288,19 +276,19 @@ def list_shows_emissions_5(plugin, item_id, program_url):
     else:
         item = Listitem()
         try:
-            item.label = replay_seasons_soup.find(
-                'div', class_='margin_20t margin_40b'
-            ).find('a').get_text().strip()
-            show_season_url = URL_ROOT + replay_seasons_soup.find(
-                'div', class_='margin_20t margin_40b'
-            ).find('a').get('href')
+            item.label = root.find(
+                ".//div[@class='margin_20t margin_40b']"
+            ).find('.//a').text.strip()
+            show_season_url = URL_ROOT + root.find(
+                ".//div[@class='margin_20t margin_40b']"
+            ).find('.//a').get('href')
         except Exception:
-            item.label = replay_seasons_soup.find(
-                'h3', class_='title'
-            ).find('a').get_text().strip()
-            show_season_url = URL_ROOT + replay_seasons_soup.find(
-                'h3', class_='title'
-            ).find('a').get('href')
+            item.label = root.find(
+                ".//h3[@class='title']"
+            ).find('.//a').text.strip()
+            show_season_url = URL_ROOT + root.find(
+                ".//h3[@class='title']"
+            ).find('.//a').get('href')
 
         # Get Last Page
         last_page = '0'
@@ -323,12 +311,11 @@ def list_shows_emissions_5(plugin, item_id, program_url):
 @Route.register
 def list_shows_films_series_1(plugin, item_id, category_url):
     # Build All Types
-    replay_types_films_series_html = urlquick.get(
-        category_url).text
-    replay_types_films_series_soup = bs(
-        replay_types_films_series_html, 'html.parser')
-    replay_types_films_series = replay_types_films_series_soup.find_all(
-        'ul', class_='filter-entity-word')[0]
+    resp = urlquick.get(category_url)
+    root = resp.parse()
+
+    replay_types_films_series = root.findall(
+        ".//ul[@class='filter-entity-word']")[0]
 
     item = Listitem()
     item.label = '# Toutes les videos'
@@ -339,10 +326,10 @@ def list_shows_films_series_1(plugin, item_id, category_url):
         show_url=category_url)
     yield item
 
-    for all_types in replay_types_films_series.find_all('a'):
+    for all_types in replay_types_films_series.findall('.//a'):
         item = Listitem()
 
-        item.label = all_types.get_text()
+        item.label = all_types.text
         show_url = URL_ROOT + all_types.get('href')
 
         item.set_callback(
@@ -377,24 +364,22 @@ def list_shows_films_series_2(plugin, item_id, show_url):
 
 @Route.register
 def list_videos_films_series_1(plugin, item_id, page, show_url):
-    replay_episodes_html = urlquick.get(
-        show_url + '?page=%s' % page).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-    episodes = replay_episodes_soup.find_all(
-        'div', class_='card video-card video-card-row mdl-fixed')
+    resp = urlquick.get(
+        show_url + '?page=%s' % page)
+    root = resp.parse()
 
-    for episode in episodes:
+    for episode in root.iterfind(".//div[@class='card video-card video-card-row mdl-fixed']"):
         item = Listitem()
-        item.label = episode.find('img').get('alt')
+        item.label = episode.find('.//img').get('alt')
         try:
             video_id = re.compile(
-                'cmedia=(.*?)&').findall(episode.find('a', class_='meta-title-link').get('href'))[0]
+                'cmedia=(.*?)&').findall(episode.find(".//a[@class='meta-title-link']").get('href'))[0]
         except IndexError:
             continue
-        if episode.find('img').get('data-src'):
-            item.art['thumb'] = episode.find('img').get('data-src')
+        if episode.find('.//img').get('data-src') is not None:
+            item.art['thumb'] = episode.find('.//img').get('data-src')
         else:
-            item.art['thumb'] = episode.find('img').get('src')
+            item.art['thumb'] = episode.find('.//img').get('src')
 
         item.context.script(
             get_video_url,
@@ -420,50 +405,55 @@ def list_videos_films_series_1(plugin, item_id, page, show_url):
 
 @Route.register
 def list_videos_emissions_1(plugin, item_id, page, show_url, last_page):
-    replay_episodes_html = urlquick.get(
-        show_url + '?page=%s' % page).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
+    resp = urlquick.get(
+        show_url + '?page=%s' % page)
+    root = resp.parse()
 
-    if replay_episodes_soup.find(
-            'section', class_='media-meta-list by2 j_w') is not None:
-        root_episodes_soup = replay_episodes_soup.find(
-            'section', class_='media-meta-list by2 j_w')
-        episodes = root_episodes_soup.find_all(
-            'figure', class_='media-meta-fig')
+    if root.find(
+            ".//section[@class='media-meta-list by2 j_w']") is not None:
+        root_episodes = root.find(
+            ".//section[@class='media-meta-list by2 j_w']")
+        episodes = root_episodes.findall(
+            ".//figure[@class='media-meta-fig']")
     else:
-        episodes = replay_episodes_soup.find_all(
-            'figure', class_='media-meta-fig')
+        episodes = root.findall(
+            ".//figure[@class='media-meta-fig']")
 
     for episode in episodes:
         item = Listitem()
-        if episode.find('h3') is not None:
+        if episode.find('.//h3') is not None:
             item.label = episode.find(
-                'h3').find('span').find('a').get_text().strip()
+                './/h3').find('.//span').find('.//a').find('.//strong').text.strip() + ' - TODO' # Find a way to get text after </stron>
         else:
-            item.label = episode.find(
-                'h2').find('span').find('a').get_text().strip()
-        if '?cmedia=' in episode.find('a').get('href'):
-            video_id = episode.find('a').get('href').split('?cmedia=')[1]
-        elif 'cfilm=' in episode.find('a').get('href') or \
-                'cserie=' in episode.find('a').get('href'):
+            if episode.find(
+                './/h2').find('.//span').find('.//a').find('.//strong') is not None:
+                item.label = episode.find(
+                    './/h2').find('.//span').find('.//a').find('.//strong').text.strip() + ' - TODO' # Find a way to get text after </stron>
+            else:
+                item.label = episode.find(
+                    './/h2').find('.//span').find('.//a').text.strip()
+        if '?cmedia=' in episode.find('.//a').get('href'):
+            video_id = episode.find('.//a').get('href').split('?cmedia=')[1]
+        elif 'cfilm=' in episode.find('.//a').get('href') or \
+                'cserie=' in episode.find('.//a').get('href'):
             video_id = episode.find(
-                'h2').find('span').find(
-                    'a').get('href').split('_cmedia=')[1].split('&')[0]
+                './/h2').find('.//span').find(
+                    './/a').get('href').split('_cmedia=')[1].split('&')[0]
         else:
             video_id = episode.find(
-                'a').get('href').split('-')[1].replace('/', '')
+                './/a').get('href').split('-')[1].replace('/', '')
 
         for plot_value in episode.find(
-                'div', class_='media-meta-figcaption-inner').find_all('p'):
-            item.info['plot'] = plot_value.get_text().strip()
-        if episode.find('meta') is not None:
-            item.art['thumb'] = episode.find('meta').get('content')
+                ".//div[@class='media-meta-figcaption-inner']").findall('.//p'):
+            item.info['plot'] = plot_value.text.strip()
+        if episode.find('.//meta') is not None:
+            item.art['thumb'] = episode.find('.//meta').get('content')
         else:
-            if episode.find('img').get('data-attr'):
-                image_json_parser = json.loads(episode.find('img').get('data-attr'))
+            if episode.find('.//img').get('data-attr') is not None:
+                image_json_parser = json.loads(episode.find('.//img').get('data-attr'))
                 item.art['thumb'] = image_json_parser['src']
             else:
-                item.art['thumb'] = episode.find('img').get('src')
+                item.art['thumb'] = episode.find('.//img').get('src')
 
         item.context.script(
             get_video_url,
@@ -489,29 +479,25 @@ def list_videos_emissions_1(plugin, item_id, page, show_url, last_page):
 
 @Route.register
 def list_videos_search(plugin, item_id, page, search_query):
-    replay_episodes_html = urlquick.get(
-        URL_SEARCH_VIDEOS % (page, search_query)).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
+    resp = urlquick.get(
+        URL_SEARCH_VIDEOS % (page, search_query))
+    root = resp.parse("table", attrs={"class": "totalwidth noborder purehtml"})
 
-    episodes = replay_episodes_soup.find(
-        'table', class_='totalwidth noborder purehtml').find_all(
-            'tr')
-
-    for episode in episodes:
-        if episode.find('img'):
+    for episode in root.iterfind(".//tr"):
+        if episode.find('.//img') is not None:
             item = Listitem()
-            item.label = episode.find('img').get('alt')
+            item.label = episode.find('.//img').get('alt')
             video_id = ''
-            if '_cmedia=' in episode.find('a').get('href'):
+            if '_cmedia=' in episode.find('.//a').get('href'):
                 video_id = re.compile(
                     r'cmedia=(.*?)\&').findall(
-                        episode.find('a').get('href'))[0]
-            elif '?cmedia=' in episode.find('a').get('href'):
-                video_id = episode.find('a').get('href').split('?cmedia=')[1]
-            elif 'video-' in episode.find('a').get('href'):
+                        episode.find('.//a').get('href'))[0]
+            elif '?cmedia=' in episode.find('.//a').get('href'):
+                video_id = episode.find('.//a').get('href').split('?cmedia=')[1]
+            elif 'video-' in episode.find('.//a').get('href'):
                 video_id = episode.find(
-                    'a').get('href').split('-')[1].replace('/', '')
-            item.art['thumb'] = episode.find('img').get('src')
+                    './/a').get('href').split('-')[1].replace('/', '')
+            item.art['thumb'] = episode.find('.//img').get('src')
 
             item.context.script(
                 get_video_url,
@@ -643,36 +629,36 @@ def get_video_url(
 @Route.register
 def list_videos_news_videos(plugin, item_id, category_url, page):
 
-    replay_episodes_html = urlquick.get(
-        category_url + '?page=%s' % page).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-    episodes = replay_episodes_soup.find_all(
-        'div', class_=re.compile('card news-card'))
+    resp = urlquick.get(
+        category_url + '?page=%s' % page)
+    root = resp.parse("div", attrs={"class": "col-left"})
 
-    for episode in episodes:
-        if episode.find('a', class_='meta-title-link'):
-            item = Listitem()
-            item.label = episode.find('a', class_='meta-title-link').text
-            if episode.find('img').get('data-src'):
-                item.art['thumb'] = episode.find('img').get('data-src')
-            else:
-                item.art['thumb'] = episode.find('img').get('src')
-            video_url = URL_ROOT + episode.find('a', class_='meta-title-link').get('href')
-            if episode.find('div', class_='meta-body'):
-                item.info['plot'] = episode.find('div', class_='meta-body').text
-            item.context.script(
-                get_video_url_news_videos,
-                plugin.localize(LABELS['Download']),
-                video_url=video_url,
-                item_id=item_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
+    for episode in root.iterfind(".//div"):
+        if episode.get('class') is not None:
+            if 'card news-card' in episode.get('class'):
+                if episode.find(".//a[@class='meta-title-link']") is not None:
+                    item = Listitem()
+                    item.label = episode.find(".//a[@class='meta-title-link']").text
+                    if episode.find('.//img').get('data-src') is not None:
+                        item.art['thumb'] = episode.find('.//img').get('data-src')
+                    else:
+                        item.art['thumb'] = episode.find('.//img').get('src')
+                    video_url = URL_ROOT + episode.find(".//a[@class='meta-title-link']").get('href')
+                    if episode.find(".//div[@class='meta-body']") is not None:
+                        item.info['plot'] = episode.find(".//div[@class='meta-body']").text
+                    item.context.script(
+                        get_video_url_news_videos,
+                        plugin.localize(LABELS['Download']),
+                        video_url=video_url,
+                        item_id=item_id,
+                        video_label=LABELS[item_id] + ' - ' + item.label,
+                        download_mode=True)
 
-            item.set_callback(
-                get_video_url_news_videos,
-                item_id=item_id,
-                video_url=video_url)
-            yield item
+                    item.set_callback(
+                        get_video_url_news_videos,
+                        item_id=item_id,
+                        video_url=video_url)
+                    yield item
 
     # More videos...
     yield Listitem.next_page(
@@ -686,9 +672,9 @@ def get_video_url_news_videos(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url)
-    root_soup = bs(resp.text, 'html.parser')
-    url_video_resolver = root_soup.find(
-        'iframe', class_='js-frame-lazed').get('data-url')
+    root = resp.parse()
+    url_video_resolver = root.find(
+        ".//iframe[@class='js-frame-lazed']").get('data-url')
 
     # print 'url_video_resolver value : ' + url_video_resolver
 
