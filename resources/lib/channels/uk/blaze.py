@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
+import json
 import re
 import urlquick
 
@@ -46,11 +47,7 @@ URL_LIVE_JSON = 'http://dbxm993i42r09.cloudfront.net/' \
 URL_SHOWS = 'http://www.blaze.tv/series'
 # pageId
 
-URL_API_KEY = 'https://dbxm993i42r09.cloudfront.net/configs/config.blaze.js'
-
-URL_STREAM = 'https://d2q1b32gh59m9o.cloudfront.net/player/config?' \
-             'callback=ssmp&client=blaze&type=vod&apiKey=%s&videoId=%s&' \
-             'format=jsonp&callback=ssmp'
+URL_STREAM = 'https://www.blaze.tv/stream/replay/widevine/%s'
 # apiKey, videoId
 
 URL_ROOT = 'http://www.blaze.tv'
@@ -169,7 +166,17 @@ def list_videos(plugin, item_id, season_url):
 def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
-    return False
+    resp = urlquick.get(video_url)
+    stream_id = re.compile(
+        r'uvid\"\:\"(.*?)\"').findall(resp.text)[0]
+    resp2 = urlquick.get(URL_STREAM % stream_id, headers={"x-requested-with": "XMLHttpRequest"}, max_age=-1)
+    json_parser2 = json.loads(resp2.text)
+    stream_url = ''
+    for stream_datas in json_parser2["playerSource"]["sources"]:
+        stream_url = stream_datas["src"]
+    if download_mode:
+        return download.download_video(stream_url, video_label)
+    return stream_url
 
 
 def live_entry(plugin, item_id, item_dict):
