@@ -29,6 +29,7 @@ import sys
 sys.path.append('..')
 
 import mock_codequick
+import urllib
 
 import lib.skeleton as sk
 from lib.labels import LABELS
@@ -49,9 +50,13 @@ LOGO_URL = "https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmor
 # arg0: country_code (fr, nl, jp, ...)
 # arg1: channel_id (tf1, france2, ...)
 
-PLUGIN_PATH = "plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=%sitem_module=%s"
+PLUGIN_QUERY = "item_id=%s&item_module=%s&item_dict=%s"
 # arg0: item_id (tf1, france2, ...)
 # arg1: module (resources.lib.channels.fr.mytf1, ...)
+# arg2: item_dict ({'language': 'FR'})
+
+PLUGIN_LIVE_BRIDGE_PATH = "plugin://plugin.video.catchuptvandmore/main/live_bridge/"
+
 
 M3U_ENTRY = '#EXTINF:-1 tvg-id="%s" tvg-logo="%s" group-title="%s",%s\n%s'
 # arg0: tgv_id
@@ -120,52 +125,14 @@ def write_header(file):
 
 
 
-# Generate live_tv_all.m3u
-def generate_m3u_all():
-    print ("Generate m3u all in " + LIVE_TV_M3U_ALL_FILEPATH)
-    m3u_all = open(LIVE_TV_M3U_ALL_FILEPATH, "w") 
+# Generate m3u files
+def generation_m3u(is_m3u_all):
 
-    write_header(m3u_all)
+    if is_m3u_all:
+        print ("Generate m3u all in " + LIVE_TV_M3U_ALL_FILEPATH)
+        m3u = open(LIVE_TV_M3U_ALL_FILEPATH, "w") 
 
-    # Iterate over countries
-    for country_id, country_infos in eval('sk.LIVE_TV').items():
-        
-        country_label = get_label(country_id)
-
-        # print('\ncountry_id: ' + country_id)
-        # print('\ncountry_label: ' + country_label)
-        
-        m3u_all.write("# " + country_label + "\n")
-        m3u_all.write("# " + country_id + "\n\n")
-
-        # Iterate over channels
-        for channel_id, channel_infos in eval('sk.' + country_id.upper()).items():
-            
-            channel_label = get_label(channel_id)
-
-            # print('\n\tchannel_id: ' + channel_id)
-            # print('\t\tchannel_label: ' + channel_label)
-
-            m3u_all.write("##\t" + channel_label + "\n")
-            m3u_all.write("##\t" + channel_id + "\n")
-
-            
-            tvg_id = "" # TODO
-            tvg_logo = LOGO_URL % (channel_infos["thumb"][1], channel_infos["thumb"][2])
-            group_title = country_label
-            channel_url = PLUGIN_PATH % ( "", channel_infos["module"])
-
-            m3u_entry = M3U_ENTRY % (tvg_id, tvg_logo, group_title, channel_label, channel_url)
-            m3u_all.write(m3u_entry + "\n\n")
-
-        m3u_all.write("\n\n")
-            
-
-    m3u_all.close()
-
-
-# Generate m3u files for each individual countries
-def generation_m3u_individual_country():
+        write_header(m3u)
 
 
     # Iterate over countries
@@ -173,51 +140,96 @@ def generation_m3u_individual_country():
         
         country_label = get_label(country_id)
         country_code =  country_id.replace('_live', '')
-        print ("Generate m3u of " + country_label + " in " + (LIVE_TV_M3U_COUTRY_FILEPATH % country_code))
         
-        m3u_all = open((LIVE_TV_M3U_COUTRY_FILEPATH % country_code), "w") 
+        if not is_m3u_all:
+            print ("Generate m3u of " + country_label + " in " + (LIVE_TV_M3U_COUTRY_FILEPATH % country_code))
+            m3u = open((LIVE_TV_M3U_COUTRY_FILEPATH % country_code), "w") 
+            write_header(m3u)
 
-        write_header(m3u_all)
-
-        # print('\ncountry_id: ' + country_id)
-        # print('\ncountry_label: ' + country_label)
+        print('\ncountry_id: ' + country_id)
+        #print('\ncountry_label: ' + country_label)
         
-        m3u_all.write("# " + country_label + "\n")
-        m3u_all.write("# " + country_id + "\n\n")
+        m3u.write("# " + country_label + "\n")
+        m3u.write("# " + country_id + "\n\n")
+
+        channel_entries = []
+
 
         # Iterate over channels
         for channel_id, channel_infos in eval('sk.' + country_id.upper()).items():
             
             channel_label = get_label(channel_id)
-
-            # print('\n\tchannel_id: ' + channel_id)
+            print('\n\tchannel_id: ' + channel_id)
             # print('\t\tchannel_label: ' + channel_label)
 
-            m3u_all.write("##\t" + channel_label + "\n")
-            m3u_all.write("##\t" + channel_id + "\n")
+            languages = []
+            # Key: Label to append
+            # Value: item_dict value
 
+            if 'available_languages' in channel_infos:
+                for language in channel_infos['available_languages']:
+                    languages.append({
+                        'language_label': ' ' + language,
+                        'language_dict' : "{'language':'" + language + "'}"
+                        }
+                    )
+            else:
+                languages.append({
+                    'language_label': '',
+                    'language_dict' : '{}'
+                    }
+                )
+
+
+            for language in languages:
+                
+                m3u_group = country_label
+                if 'm3u_group' in channel_infos:
+                    m3u_group = m3u_group + " " + channel_infos['m3u_group']
+                m3u_order = channel_infos.get('m3u_order', 100)
+                xmltv_id = channel_infos.get('xmltv_id', '')
+
+                channel_logo = LOGO_URL % (channel_infos["thumb"][1], channel_infos["thumb"][2])
+                
+                channel_dict = language['language_dict']
+
+                query = PLUGIN_QUERY % (channel_id, channel_infos["module"], channel_dict)
+                channel_url = PLUGIN_LIVE_BRIDGE_PATH + "?" + query
+
+                m3u_entry = M3U_ENTRY % (xmltv_id, channel_logo, m3u_group, channel_label + language['language_label'], channel_url)
+
+                channel_entry = (m3u_order, channel_label + language['language_label'], channel_id, m3u_entry)
+                channel_entries.append(channel_entry)
+
+
+        # Insert each ordered channels
+        channel_entries = sorted(channel_entries, key=lambda x: x[0])
+
+        for index, (m3u_order, channel_label, channel_id, m3u_entry) in enumerate(channel_entries):
             
-            tvg_id = "" # TODO
-            tvg_logo = LOGO_URL % (channel_infos["thumb"][1], channel_infos["thumb"][2])
-            group_title = country_label
-            channel_url = PLUGIN_PATH % ( "", channel_infos["module"])
+            m3u.write("##\t" + channel_label + "\n")
+            m3u.write("##\t" + channel_id + "\n")
+            m3u.write(m3u_entry + "\n\n")
+             
 
-            m3u_entry = M3U_ENTRY % (tvg_id, tvg_logo, group_title, channel_label, channel_url)
-            m3u_all.write(m3u_entry + "\n\n")
+        if is_m3u_all:
+            m3u.write("\n\n")
+        else:
+            m3u.close()
 
-        m3u_all.write("\n\n")
-            
+    if is_m3u_all:
+        m3u.close()
 
-        m3u_all.close()
+
 
 
 
 
 def main():
 
-    generate_m3u_all()
+    generation_m3u(True)
 
-    generation_m3u_individual_country()
+    generation_m3u(False)
     
     print("\nM3U files generation done! :-D")
 

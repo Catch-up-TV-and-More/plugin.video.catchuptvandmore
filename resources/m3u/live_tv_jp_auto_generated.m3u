@@ -6,12 +6,10 @@
 ##	ジャパネットチャンネルDX
 ##	japanetshoppingdx
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/jp/japanetshoppingdx.png" group-title="Japan",ジャパネットチャンネルDX
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.jp.japanetshoppingdx
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=japanetshoppingdx&item_module=resources.lib.channels.jp.japanetshoppingdx&item_dict={}
 
 ##	日テレ News24
 ##	ntvnews24
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/jp/ntvnews24.png" group-title="Japan",日テレ News24
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.jp.ntvnews24
-
-
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=ntvnews24&item_module=resources.lib.channels.jp.ntvnews24&item_dict={}
 

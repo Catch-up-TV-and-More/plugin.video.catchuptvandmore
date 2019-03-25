@@ -6,22 +6,20 @@
 ##	TVP 3
 ##	tvp3
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvp3.png" group-title="Poland",TVP 3
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.pl.tvp
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvp3&item_module=resources.lib.channels.pl.tvp&item_dict={}
 
 ##	TVP Info
 ##	tvpinfo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvpinfo.png" group-title="Poland",TVP Info
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.pl.tvp
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvpinfo&item_module=resources.lib.channels.pl.tvp&item_dict={}
 
 ##	TVP Polonia
 ##	tvppolonia
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvppolonia.png" group-title="Poland",TVP Polonia
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.pl.tvp
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvppolonia&item_module=resources.lib.channels.pl.tvp&item_dict={}
 
 ##	TVP Poland IN
 ##	tvppolandin
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvppolandin.png" group-title="Poland",TVP Poland IN
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.pl.tvp
-
-
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvppolandin&item_module=resources.lib.channels.pl.tvp&item_dict={}
 
