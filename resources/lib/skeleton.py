@@ -422,7 +422,19 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'la_1ere.png'],
         'fanart': ['channels', 'fr', 'la_1ere_fanart.jpg'],
         'module': 'resources.lib.channels.fr.la_1ere',
-        'm3u_group': 'Région'
+        'm3u_group': 'Région',
+        'available_languages': [
+            "Guadeloupe",
+            "Guyane",
+            "Martinique",
+            "Mayotte",
+            "Nouvelle Calédonie",
+            "Polynésie",
+            "Réunion",
+            "St-Pierre et Miquelon",
+            "Wallis et Futuna",
+            "Outre-mer"
+            ]
     },
     'kto': {
         'callback': 'live_bridge',
@@ -477,7 +489,33 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'france3regions.png'],
         'fanart': ['channels', 'fr', 'france3regions_fanart.jpg'],
         'module': 'resources.lib.channels.fr.france3regions',
-        'm3u_group': 'Région'
+        'm3u_group': 'Région',
+        'available_languages': [
+            'Alpes',
+            'Alsace',
+            'Aquitaine',
+            'Auvergne',
+            'Bourgogne',
+            'Bretagne',
+            'Centre-Val de Loire',
+            'Chapagne-Ardenne',
+            'Corse',
+            "Côte d'Azur",
+            'Franche-Compté',
+            'Languedoc-Roussillon',
+            'Limousin',
+            'Lorraine',
+            'Midi-Pyrénées',
+            'Nord-Pas-de-Calais',
+            'Basse-Normandie',
+            'Haute-Normandie',
+            'Paris Île-de-France',
+            'Pays de la Loire',
+            'Picardie',
+            'Poitou-Charentes',
+            'Provence-Alpes',
+            'Rhône-Alpes'
+        ]
     },
     'viaatv': {
         'callback': 'live_bridge',
@@ -925,13 +963,15 @@ BE_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'bx1.png'],
         'fanart': ['channels', 'be', 'bx1_fanart.jpg'],
-        'module': 'resources.lib.channels.be.bx1'
+        'module': 'resources.lib.channels.be.bx1',
+        'm3u_group': 'Belgique fr'
     },
     'nrjhitstvbe': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'nrjhitstvbe.png'],
         'fanart': ['channels', 'be', 'nrjhitstvbe_fanart.jpg'],
-        'module': 'resources.lib.channels.be.nrjhitstvbe'
+        'module': 'resources.lib.channels.be.nrjhitstvbe',
+        'm3u_group': 'Belgique fr'
     },
     'auvio': {
         'callback': 'multi_live_bridge',
@@ -943,85 +983,104 @@ BE_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'rtc.png'],
         'fanart': ['channels', 'be', 'rtc_fanart.jpg'],
-        'module': 'resources.lib.channels.be.rtc'
+        'module': 'resources.lib.channels.be.rtc',
+        'm3u_group': 'Belgique fr'
     },
     'telemb': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'telemb.png'],
         'fanart': ['channels', 'be', 'telemb_fanart.jpg'],
-        'module': 'resources.lib.channels.be.telemb'
+        'module': 'resources.lib.channels.be.telemb',
+        'm3u_group': 'Belgique fr'
     },
     'tvlux': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'tvlux.png'],
         'fanart': ['channels', 'be', 'tvlux_fanart.jpg'],
-        'module': 'resources.lib.channels.be.tvlux'
+        'module': 'resources.lib.channels.be.tvlux',
+        'm3u_group': 'Belgique fr'
     },
     'een': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'een.png'],
         'fanart': ['channels', 'be', 'een_fanart.jpg'],
-        'module': 'resources.lib.channels.be.vrt'
+        'module': 'resources.lib.channels.be.vrt',
+        'xmltv_id': 'C23.api.telerama.fr',
+        'm3u_group': 'België nl'
     },
     'canvas': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'canvas.png'],
         'fanart': ['channels', 'be', 'canvas_fanart.jpg'],
-        'module': 'resources.lib.channels.be.vrt'
+        'module': 'resources.lib.channels.be.vrt',
+        'm3u_group': 'België nl'
     },
     'ketnet': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'ketnet.png'],
         'fanart': ['channels', 'be', 'ketnet_fanart.jpg'],
-        'module': 'resources.lib.channels.be.vrt'
+        'module': 'resources.lib.channels.be.vrt',
+        'xmltv_id': 'C1280.api.telerama.fr',
+        'm3u_group': 'België nl'
     },
     'tvcom': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'tvcom.png'],
         'fanart': ['channels', 'be', 'tvcom_fanart.jpg'],
-        'module': 'resources.lib.channels.be.tvcom'
+        'module': 'resources.lib.channels.be.tvcom',
+        'm3u_group': 'Belgique fr'
     },
     'rtl_tvi': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'rtl_tvi.png'],
         'fanart': ['channels', 'be', 'rtl_tvi_fanart.jpg'],
-        'module': 'resources.lib.channels.be.rtlplaybe'
+        'module': 'resources.lib.channels.be.rtlplaybe',
+        'xmltv_id': 'C168.api.telerama.fr',
+        'm3u_group': 'Belgique fr'
     },
     'plug_rtl': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'plug_rtl.png'],
         'fanart': ['channels', 'be', 'plug_rtl_fanart.jpg'],
-        'module': 'resources.lib.channels.be.rtlplaybe'
+        'module': 'resources.lib.channels.be.rtlplaybe',
+        'xmltv_id': 'C377.api.telerama.fr',
+        'm3u_group': 'Belgique fr'
     },
     'club_rtl': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'club_rtl.png'],
         'fanart': ['channels', 'be', 'club_rtl_fanart.jpg'],
-        'module': 'resources.lib.channels.be.rtlplaybe'
+        'module': 'resources.lib.channels.be.rtlplaybe',
+        'xmltv_id': 'C50.api.telerama.fr',
+        'm3u_group': 'Belgique fr'
     },
     'rtl_info': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'rtl_info.png'],
         'fanart': ['channels', 'be', 'rtl_info_fanart.jpg'],
-        'module': 'resources.lib.channels.be.rtlplaybe'
+        'module': 'resources.lib.channels.be.rtlplaybe',
+        'm3u_group': 'Belgique fr'
     },
     'bel_rtl': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'bel_rtl.png'],
         'fanart': ['channels', 'be', 'bel_rtl_fanart.jpg'],
-        'module': 'resources.lib.channels.be.rtlplaybe'
+        'module': 'resources.lib.channels.be.rtlplaybe',
+        'm3u_group': 'Belgique fr'
     },
     'contact': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'contact.png'],
         'fanart': ['channels', 'be', 'contact_fanart.jpg'],
-        'module': 'resources.lib.channels.be.rtlplaybe'
+        'module': 'resources.lib.channels.be.rtlplaybe',
+        'm3u_group': 'Belgique fr Radio'
     },
     'rtl_sport': {
         'callback': 'live_bridge',
         'thumb': ['channels', 'be', 'rtl_sport.png'],
         'fanart': ['channels', 'be', 'rtl_sport_fanart.jpg'],
-        'module': 'resources.lib.channels.be.rtlplaybe'
+        'module': 'resources.lib.channels.be.rtlplaybe',
+        'm3u_group': 'Belgique fr'
     }
 }
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
@@ -35,9 +36,9 @@ import lib.skeleton as sk
 from lib.labels import LABELS
 
 
-LIVE_TV_M3U_ALL_FILEPATH = "../m3u/live_tv_all_auto_generated.m3u"
+LIVE_TV_M3U_ALL_FILEPATH = "../m3u/live_tv_all.m3u"
 
-LIVE_TV_M3U_COUTRY_FILEPATH = "../m3u/live_tv_%s_auto_generated.m3u"
+LIVE_TV_M3U_COUTRY_FILEPATH = "../m3u/live_tv_%s.m3u"
 # arg0: country_code (fr, nl, jp, ...)
 
 
