@@ -13,11 +13,6 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bx1&item_module
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/nrjhitstvbe.png" group-title="Belgium",NRJ Hits TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=nrjhitstvbe&item_module=resources.lib.channels.be.nrjhitstvbe&item_dict={}
 
-##	RTBF Auvio
-##	auvio
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/auvio.png" group-title="Belgium",RTBF Auvio
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=auvio&item_module=resources.lib.channels.be.rtbf&item_dict={}
-
 ##	RTC Télé Liège
 ##	rtc
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/be/rtc.png" group-title="Belgium",RTC Télé Liège

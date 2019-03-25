@@ -33,6 +33,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-5&item_m
 #EXTINF:-1 tvg-id="C118.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/m6.png" group-title="France TNT",M6
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=m6&item_module=resources.lib.channels.fr.6play&item_dict={}
 
+##	Arte
+##	arte
+#EXTINF:-1 tvg-id="C118.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="France TNT",Arte
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=arte&item_module=resources.lib.channels.wo.arte&item_dict={'language':'FR'}
+
 ##	C8
 ##	c8
 #EXTINF:-1 tvg-id="C445.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/c8.png" group-title="France TNT",C8
@@ -198,11 +203,6 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=kto&item_module
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/ouatchtv.png" group-title="France Satellite/FAI",Ouatch TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=ouatchtv&item_module=resources.lib.channels.fr.ouatchtv&item_dict={}
 
-##	France TV Sport (francetv)
-##	francetvsport
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/francetvsport.png" group-title="France Satellite/FAI",France TV Sport (francetv)
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=francetvsport&item_module=resources.lib.channels.fr.francetvsport&item_dict={}
-
 ##	France 3 Régions
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france3regions.png" group-title="France Région",France 3 Régions
@@ -250,6 +250,26 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tl7&item_module
 
 ##	Lucky Jack
 ##	luckyjack
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/luckyjack.png" group-title="France Région",Lucky Jack
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/luckyjack.png" group-title="France Satellite/FAI",Lucky Jack
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=luckyjack&item_module=resources.lib.channels.fr.abweb&item_dict={}
+
+##	Euronews
+##	euronews
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/euronews.png" group-title="France",Euronews
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=euronews&item_module=resources.lib.channels.wo.euronews&item_dict={'language':'FR'}
+
+##	France 24
+##	france24
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/france24.png" group-title="France",France 24
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france24&item_module=resources.lib.channels.wo.france24&item_dict={'language':'FR'}
+
+##	CGTN
+##	cgtn
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/cgtn.png" group-title="France",CGTN
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cgtn&item_module=resources.lib.channels.wo.cgtn&item_dict={'language':'FR'}
+
+##	RT
+##	rt
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/rt.png" group-title="France",RT
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rt&item_module=resources.lib.channels.wo.rt&item_dict={'language':'FR'}
 

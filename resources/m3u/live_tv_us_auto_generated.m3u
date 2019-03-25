@@ -23,3 +23,8 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cbsnews&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/us/abcnews.png" group-title="United States of America",ABC News
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=abcnews&item_module=resources.lib.channels.us.abcnews&item_dict={}
 
+##	QVC
+##	qvc
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="United States of America",QVC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={'language':'US'}
+

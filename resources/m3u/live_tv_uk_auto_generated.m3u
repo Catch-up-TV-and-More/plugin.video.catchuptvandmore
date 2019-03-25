@@ -58,3 +58,8 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questtv&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/questred.png" group-title="United Kingdom",Quest RED
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questred&item_module=resources.lib.channels.uk.questod&item_dict={}
 
+##	QVC
+##	qvc
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="United Kingdom",QVC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={'language':'UK'}
+

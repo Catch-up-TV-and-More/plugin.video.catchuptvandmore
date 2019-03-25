@@ -569,7 +569,7 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'luckyjack.png'],
         'fanart': ['channels', 'fr', 'luckyjack_fanart.jpg'],
         'module': 'resources.lib.channels.fr.abweb',
-        'm3u_group': 'Région'
+        'm3u_group': 'Satellite/FAI'
     }
 }
 
@@ -739,7 +739,10 @@ WO_LIVE = {
         'thumb': ['channels', 'wo', 'arte.png'],
         'fanart': ['channels', 'wo', 'arte_fanart.jpg'],
         'module': 'resources.lib.channels.wo.arte',
-        'available_languages': ['FR', 'DE']
+        'available_languages': ['FR', 'DE'],
+        'xmltv_ids': {'fr': 'C118.api.telerama.fr'},
+        'm3u_groups': {'fr': 'France TNT'},
+        'm3u_orders': {'fr': 7}
     },
     'arirang': {
         'callback': 'live_bridge',

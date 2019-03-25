@@ -73,3 +73,18 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=raistoria&item_
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/it/raiscuola.png" group-title="Italia",Rai Scuola
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=raiscuola&item_module=resources.lib.channels.it.raiplay&item_dict={}
 
+##	Euronews
+##	euronews
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/euronews.png" group-title="Italia",Euronews
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=euronews&item_module=resources.lib.channels.wo.euronews&item_dict={'language':'IT'}
+
+##	QVC
+##	qvc
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="Italia",QVC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={'language':'IT'}
+
+##	Paramount Channel
+##	paramountchannel
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/paramountchannel.png" group-title="Italia",Paramount Channel
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel&item_module=resources.lib.channels.wo.paramountchannel&item_dict={'language':'IT'}
+
