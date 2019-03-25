@@ -1,0 +1,62 @@
+#EXTM3U tvg-shift=0
+
+# United Kingdom
+# uk_live
+
+##	Blaze
+##	blaze
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/blaze.png" group-title="United Kingdom",Blaze
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.blaze
+
+##	Sky News
+##	skynews
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/skynews.png" group-title="United Kingdom",Sky News
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.sky
+
+##	STV
+##	stv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/stv.png" group-title="United Kingdom",STV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.stv
+
+##	Kerrang
+##	kerrang
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/kerrang.png" group-title="United Kingdom",Kerrang
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.boxplus
+
+##	Magic
+##	magic
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/magic.png" group-title="United Kingdom",Magic
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.boxplus
+
+##	Kiss
+##	kiss
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/kiss.png" group-title="United Kingdom",Kiss
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.boxplus
+
+##	The Box
+##	the-box
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/the-box.png" group-title="United Kingdom",The Box
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.boxplus
+
+##	Box Upfront
+##	box-upfront
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/box-upfront.png" group-title="United Kingdom",Box Upfront
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.boxplus
+
+##	Box Hits
+##	box-hits
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/box-hits.png" group-title="United Kingdom",Box Hits
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.boxplus
+
+##	Quest TV
+##	questtv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/questtv.png" group-title="United Kingdom",Quest TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.questod
+
+##	Quest RED
+##	questred
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/questred.png" group-title="United Kingdom",Quest RED
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.uk.questod
+
+
+

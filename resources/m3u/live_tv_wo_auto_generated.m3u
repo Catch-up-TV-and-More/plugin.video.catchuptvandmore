@@ -1,0 +1,102 @@
+#EXTM3U tvg-shift=0
+
+# International
+# wo_live
+
+##	Tivi 5Monde
+##	tivi5monde
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/tivi5monde.png" group-title="International",Tivi 5Monde
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.tivi5monde
+
+##	TV5Monde France Belgique Suisse
+##	tv5mondefbs
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/tv5mondefbs.png" group-title="International",TV5Monde France Belgique Suisse
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.tv5monde
+
+##	TV5Monde Info
+##	tv5mondeinfo
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/tv5mondeinfo.png" group-title="International",TV5Monde Info
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.tv5monde
+
+##	Euronews
+##	euronews
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/euronews.png" group-title="International",Euronews
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.euronews
+
+##	Arte
+##	arte
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="International",Arte
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.arte
+
+##	Arirang (아리랑)
+##	arirang
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arirang.png" group-title="International",Arirang (아리랑)
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.arirang
+
+##	Afrique Media
+##	afriquemedia
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/afriquemedia.png" group-title="International",Afrique Media
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.afriquemedia
+
+##	DW
+##	dw
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/dw.png" group-title="International",DW
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.dw
+
+##	ICI RDI
+##	icirdi
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/icirdi.png" group-title="International",ICI RDI
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.icirdi
+
+##	BVN
+##	bvn
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/bvn.png" group-title="International",BVN
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.bvn
+
+##	France 24
+##	france24
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/france24.png" group-title="International",France 24
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.france24
+
+##	QVC
+##	qvc
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="International",QVC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.qvc
+
+##	NHK World
+##	nhkworld
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/nhkworld.png" group-title="International",NHK World
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.nhkworld
+
+##	ICI Télévision
+##	icitelevision
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/icitelevision.png" group-title="International",ICI Télévision
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.icitelevision
+
+##	Channel NewsAsia
+##	channelnewsasia
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/channelnewsasia.png" group-title="International",Channel NewsAsia
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.channelnewsasia
+
+##	CGTN
+##	cgtn
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/cgtn.png" group-title="International",CGTN
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.cgtn
+
+##	CGTN Documentary
+##	cgtndocumentary
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/cgtndocumentary.png" group-title="International",CGTN Documentary
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.cgtn
+
+##	Paramount Channel
+##	paramountchannel
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/paramountchannel.png" group-title="International",Paramount Channel
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.paramountchannel
+
+##	RT
+##	rt
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/rt.png" group-title="International",RT
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.rt
+
+
+

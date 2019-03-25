@@ -153,9 +153,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/gong.png" group-title="France",Gong
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.fr.gong
 
-##	MANUAL_TODO: la_1ere
+##	La 1ère
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/la_1ere.png" group-title="France",<MagicMock name='mock.utils.ensure_unicode().__radd__().__add__()' id='4475977456'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/la_1ere.png" group-title="France",La 1ère
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.fr.la_1ere
 
 ##	KTO
@@ -188,9 +188,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/franceinfo.png" group-title="France",France Info
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.fr.franceinfo
 
-##	MANUAL_TODO: france3regions
+##	France 3 Régions
 ##	france3regions
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france3regions.png" group-title="France",<MagicMock name='mock.utils.ensure_unicode().__radd__().__add__()' id='4475977456'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/france3regions.png" group-title="France",France 3 Régions
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.fr.france3regions
 
 ##	viàATV
@@ -538,14 +538,14 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/tv5mondeinfo.png" group-title="International",TV5Monde Info
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.tv5monde
 
-##	MANUAL_TODO: euronews
+##	Euronews
 ##	euronews
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/euronews.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/euronews.png" group-title="International",Euronews
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.euronews
 
-##	MANUAL_TODO: arte
+##	Arte
 ##	arte
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="International",Arte
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.arte
 
 ##	Arirang (아리랑)
@@ -558,9 +558,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/afriquemedia.png" group-title="International",Afrique Media
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.afriquemedia
 
-##	MANUAL_TODO: dw
+##	DW
 ##	dw
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/dw.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/dw.png" group-title="International",DW
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.dw
 
 ##	ICI RDI
@@ -573,19 +573,19 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/bvn.png" group-title="International",BVN
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.bvn
 
-##	MANUAL_TODO: france24
+##	France 24
 ##	france24
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/france24.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/france24.png" group-title="International",France 24
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.france24
 
-##	MANUAL_TODO: qvc
+##	QVC
 ##	qvc
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="International",QVC
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.qvc
 
-##	MANUAL_TODO: nhkworld
+##	NHK World
 ##	nhkworld
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/nhkworld.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/nhkworld.png" group-title="International",NHK World
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.nhkworld
 
 ##	ICI Télévision
@@ -598,9 +598,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/channelnewsasia.png" group-title="International",Channel NewsAsia
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.channelnewsasia
 
-##	MANUAL_TODO: cgtn
+##	CGTN
 ##	cgtn
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/cgtn.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/cgtn.png" group-title="International",CGTN
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.cgtn
 
 ##	CGTN Documentary
@@ -608,14 +608,14 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/cgtndocumentary.png" group-title="International",CGTN Documentary
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.cgtn
 
-##	MANUAL_TODO: paramountchannel
+##	Paramount Channel
 ##	paramountchannel
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/paramountchannel.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/paramountchannel.png" group-title="International",Paramount Channel
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.paramountchannel
 
-##	MANUAL_TODO: rt
+##	RT
 ##	rt
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/rt.png" group-title="International",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/rt.png" group-title="International",RT
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.wo.rt
 
 
@@ -648,9 +648,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 # Poland
 # pl_live
 
-##	MANUAL_TODO: tvp3
+##	TVP 3
 ##	tvp3
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvp3.png" group-title="Poland",<MagicMock name='mock.utils.ensure_unicode().__radd__().__add__()' id='4475977456'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/pl/tvp3.png" group-title="Poland",TVP 3
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.pl.tvp
 
 ##	TVP Info
@@ -673,9 +673,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=res
 # Spain
 # es_live
 
-##	MANUAL_TODO: realmadridtv
+##	Realmadrid TV
 ##	realmadridtv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/es/realmadridtv.png" group-title="Spain",<MagicMock name='mock.Script.setting.__getitem__().__radd__().__add__()' id='4476055904'>
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/es/realmadridtv.png" group-title="Spain",Realmadrid TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.es.realmadridtv
 
 ##	Antena 3

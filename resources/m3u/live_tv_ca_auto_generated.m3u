@@ -1,0 +1,32 @@
+#EXTM3U tvg-shift=0
+
+# Canada
+# ca_live
+
+##	NTV
+##	ntvca
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/ca/ntvca.png" group-title="Canada",NTV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.ca.ntvca
+
+##	TVA
+##	tva
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/ca/tva.png" group-title="Canada",TVA
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.ca.tva
+
+##	Télé-Québec
+##	telequebec
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/ca/telequebec.png" group-title="Canada",Télé-Québec
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.ca.telequebec
+
+##	ICI Télé
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/ca/icitele.png" group-title="Canada",ICI Télé
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.ca.icitele
+
+##	Télé-Mag
+##	telemag
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/ca/telemag.png" group-title="Canada",Télé-Mag
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=item_module=resources.lib.channels.ca.telemag
+
+
+
