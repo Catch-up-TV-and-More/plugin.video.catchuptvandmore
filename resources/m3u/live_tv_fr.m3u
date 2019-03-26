@@ -375,7 +375,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=viaatv&item_mod
 
 ##	viàGrandParis
 ##	viagrandparis
-#EXTINF:-1 tvg-id="C192.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/viagrandparis.png" group-title="France Région",viàGrandParis
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/fr/viagrandparis.png" group-title="France Région",viàGrandParis
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=viagrandparis&item_module=resources.lib.channels.fr.via&item_dict={}
 
 ##	Tébéo
