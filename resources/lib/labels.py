@@ -264,7 +264,7 @@ LABELS = {
     'rmcdecouverte': 'RMC Découverte',
     'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
-    'france3regions': 'France 3 Régions (' + utils.ensure_unicode(Script.setting['france3.region']) + ')',
+    'france3regions': 'France 3 Régions (' + utils.ensure_unicode(Script.setting['france3regions.language']) + ')',
     'francetvsport': 'France TV Sport (francetv)',
     'histoire': 'Histoire',
     'tvbreizh': 'TV Breizh',
