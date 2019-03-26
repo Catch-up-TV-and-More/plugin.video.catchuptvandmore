@@ -253,7 +253,7 @@ LABELS = {
     '6ter': '6ter',
     'rmcstory': 'RMC Story',
     'cherie25': 'Chérie 25',
-    'la_1ere': 'La 1ère (' + utils.ensure_unicode(Script.setting['la_1ere.region']) + ')',
+    'la_1ere': 'La 1ère (' + utils.ensure_unicode(Script.setting['la_1ere.language']) + ')',
     'franceinfo': 'France Info',
     'bfmbusiness': 'BFM Business',
     'rmc': 'RMC',

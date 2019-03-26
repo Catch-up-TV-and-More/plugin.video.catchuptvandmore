@@ -434,7 +434,7 @@ FR_LIVE = {
             "St-Pierre et Miquelon",
             "Wallis et Futuna",
             "Outre-mer"
-            ]
+        ]
     },
     'kto': {
         'callback': 'live_bridge',
