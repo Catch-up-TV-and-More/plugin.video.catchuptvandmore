@@ -348,7 +348,7 @@ LABELS = {
     'arte': 'Arte (' + Script.setting['arte.language'] + ')',
     'euronews': 'Euronews (' + Script.setting['euronews.language'] + ')',
     'france24': 'France 24 (' + Script.setting['france24.language'] + ')',
-    'nhkworld': 'NHK World (' + Script.setting['nhkworld.country'] + ')',
+    'nhkworld': 'NHK World (' + Script.setting['nhkworld.language'] + ')',
     'tv5monde': 'TV5Monde',
     'tivi5monde': 'Tivi 5Monde',
     'bvn': 'BVN',

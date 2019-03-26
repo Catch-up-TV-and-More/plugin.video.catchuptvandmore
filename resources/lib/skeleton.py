@@ -849,7 +849,8 @@ WO_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'wo', 'nhkworld.png'],
         'fanart': ['channels', 'wo', 'nhkworld_fanart.jpg'],
-        'module': 'resources.lib.channels.wo.nhkworld'
+        'module': 'resources.lib.channels.wo.nhkworld',
+        'available_languages': ['Outside Japan', 'In Japan']
     },
     'icitelevision': {
         'callback': 'live_bridge',

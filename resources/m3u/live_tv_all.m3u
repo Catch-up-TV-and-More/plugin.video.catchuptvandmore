@@ -843,10 +843,15 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="International",QVC US
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={'language':'US'}
 
-##	NHK World
+##	NHK World Outside Japan
 ##	nhkworld
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/nhkworld.png" group-title="International",NHK World
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=nhkworld&item_module=resources.lib.channels.wo.nhkworld&item_dict={}
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/nhkworld.png" group-title="International",NHK World Outside Japan
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=nhkworld&item_module=resources.lib.channels.wo.nhkworld&item_dict={'language':'Outside Japan'}
+
+##	NHK World In Japan
+##	nhkworld
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/nhkworld.png" group-title="International",NHK World In Japan
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=nhkworld&item_module=resources.lib.channels.wo.nhkworld&item_dict={'language':'In Japan'}
 
 ##	ICI Télévision
 ##	icitelevision
