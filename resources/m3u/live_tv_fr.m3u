@@ -35,7 +35,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=m6&item_module=
 
 ##	Arte
 ##	arte
-#EXTINF:-1 tvg-id="C118.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="France TNT",Arte
+#EXTINF:-1 tvg-id="C111.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="France TNT",Arte
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=arte&item_module=resources.lib.channels.wo.arte&item_dict={'language':'FR'}
 
 ##	C8

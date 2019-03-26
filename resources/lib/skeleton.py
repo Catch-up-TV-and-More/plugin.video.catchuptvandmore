@@ -778,7 +778,7 @@ WO_LIVE = {
         'fanart': ['channels', 'wo', 'arte_fanart.jpg'],
         'module': 'resources.lib.channels.wo.arte',
         'available_languages': ['FR', 'DE'],
-        'xmltv_ids': {'fr': 'C118.api.telerama.fr'},
+        'xmltv_ids': {'fr': 'C111.api.telerama.fr'},
         'm3u_groups': {'fr': 'France TNT'},
         'm3u_orders': {'fr': 7}
     },

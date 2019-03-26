@@ -750,7 +750,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=euronews&item_m
 
 ##	Arte FR
 ##	arte
-#EXTINF:-1 tvg-id="C118.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="International",Arte FR
+#EXTINF:-1 tvg-id="C111.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/arte.png" group-title="International",Arte FR
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=arte&item_module=resources.lib.channels.wo.arte&item_dict={'language':'FR'}
 
 ##	Arte DE
