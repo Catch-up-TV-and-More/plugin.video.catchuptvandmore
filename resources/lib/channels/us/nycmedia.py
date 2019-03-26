@@ -92,7 +92,7 @@ def list_videos(plugin, item_id, program_id, page):
 
     for video_datas in root.iterfind(".//div[@style='float:left; width:160px; height:220px; padding-left:4px; padding-right:31px']"):
 
-        video_title = video_datas.find('.//b/a').text # TODO + ' - ' + repr(video_datas.text)
+        video_title = video_datas.find('.//b/a').text + ' - ' + video_datas.findall('.//br')[1].tail.strip()
         video_image = video_datas.find(".//img[@class='thumb']").get('src')
         video_url = URL_STREAM % video_datas.find('.//a').get('href').replace('../', '')
 
