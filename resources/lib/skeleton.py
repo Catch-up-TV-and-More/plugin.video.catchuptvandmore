@@ -432,8 +432,7 @@ FR_LIVE = {
             "Polynésie",
             "Réunion",
             "St-Pierre et Miquelon",
-            "Wallis et Futuna",
-            "Outre-mer"
+            "Wallis et Futuna"
         ]
     },
     'kto': {
