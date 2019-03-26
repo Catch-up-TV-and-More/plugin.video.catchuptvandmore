@@ -36,7 +36,6 @@ import re
 import urlquick
 
 # TO DO
-# Get Title of each video
 
 URL_ROOT = 'https://a002-vod.nyc.gov'
 

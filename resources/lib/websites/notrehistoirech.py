@@ -33,19 +33,6 @@ import urlquick
 
 URL_ROOT = 'http://www.notrehistoire.ch'
 
-CATEGORIES = {
-    'culture et arts': '18396',
-    'société': '2888',
-    'suisse': '7339',
-    'vaud': '163',
-    'genève': '21393',
-    'autres arts': '18399',
-    'valais': '20173',
-    'enjeux de société': '18407',
-    'musique et variétés': '18397',
-    'culture': '450'
-}
-
 
 def website_entry(plugin, item_id):
     """
@@ -68,9 +55,14 @@ def root(plugin, item_id):
     )
     yield item
 
-    for category_name, category_id in CATEGORIES.iteritems():
+    resp = urlquick.get(
+        URL_ROOT + '/search?types=video')
+    root = resp.parse("div", attrs={"class": "facet-group facet-group--tags open"})
+
+    for category in root.iterfind(".//label"):
         item = Listitem()
-        item.label = category_name
+        item.label = category.find('input').tail.strip()
+        category_id = category.find('input').get('value')
         category_url = URL_ROOT + '/search?types=video' + \
             '&tags=%s&sort=-origin_date' % category_id + \
             '&page=%s'
