@@ -228,11 +228,6 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/fr/la_1ere.png" group-title="France",La 1ère Wallis et Futuna
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Wallis et Futuna'}
 
-##	La 1ère Outre-mer
-##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/fr/la_1ere.png" group-title="France",La 1ère Outre-mer
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Outre-mer'}
-
 ##	KTO
 ##	kto
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/fr/kto.png" group-title="France",KTO
@@ -1053,10 +1048,15 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvppolandin&ite
 # Spain
 # es_live
 
-##	Realmadrid TV
+##	Realmadrid TV EN
 ##	realmadridtv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/es/realmadridtv.png" group-title="Spain",Realmadrid TV
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=realmadridtv&item_module=resources.lib.channels.es.realmadridtv&item_dict={}
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/es/realmadridtv.png" group-title="Spain",Realmadrid TV EN
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=realmadridtv&item_module=resources.lib.channels.es.realmadridtv&item_dict={'language':'EN'}
+
+##	Realmadrid TV ES
+##	realmadridtv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/es/realmadridtv.png" group-title="Spain",Realmadrid TV ES
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=realmadridtv&item_module=resources.lib.channels.es.realmadridtv&item_dict={'language':'ES'}
 
 ##	Antena 3
 ##	antena3

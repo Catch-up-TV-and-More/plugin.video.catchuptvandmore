@@ -3,10 +3,15 @@
 # Spain
 # es_live
 
-##	Realmadrid TV
+##	Realmadrid TV EN
 ##	realmadridtv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/es/realmadridtv.png" group-title="Spain",Realmadrid TV
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=realmadridtv&item_module=resources.lib.channels.es.realmadridtv&item_dict={}
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/es/realmadridtv.png" group-title="Spain",Realmadrid TV EN
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=realmadridtv&item_module=resources.lib.channels.es.realmadridtv&item_dict={'language':'EN'}
+
+##	Realmadrid TV ES
+##	realmadridtv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/es/realmadridtv.png" group-title="Spain",Realmadrid TV ES
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=realmadridtv&item_module=resources.lib.channels.es.realmadridtv&item_dict={'language':'ES'}
 
 ##	Antena 3
 ##	antena3
