@@ -529,7 +529,6 @@ FR_LIVE = {
         'thumb': ['channels', 'fr', 'viagrandparis.png'],
         'fanart': ['channels', 'fr', 'viagrandparis_fanart.jpg'],
         'module': 'resources.lib.channels.fr.via',
-        'xmltv_id': 'C192.api.telerama.fr',
         'm3u_group': 'Région'
     },
     'tebeo': {
