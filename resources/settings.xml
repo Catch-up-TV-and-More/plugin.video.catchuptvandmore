@@ -1052,7 +1052,7 @@
             <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <!--<setting label="" type="bool" id="pl" default="true" visible="false"/>-->
 
-                <setting label="30167" type="labelenum" id="tvp3.region" values="Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław" default="Białystok"/>
+                <setting label="30167" type="labelenum" id="tvp3.language" values="Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław" default="Białystok"/>
 
     </category>
     <!-- Quality and Content -->

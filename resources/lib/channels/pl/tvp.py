@@ -70,6 +70,15 @@ def live_entry(plugin, item_id, item_dict):
 
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
+    final_language = Script.setting['tvp3.language']
+
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        final_language = item_dict['language']
 
     resp = urlquick.get(
         URL_LIVE, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
@@ -89,7 +98,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                     live_id = live_datas.get('data-video-id')
             elif item_id == 'tvp3':
                 if LIVE_TVP3_REGIONS[utils.ensure_unicode(
-                        Script.setting['tvp3.region'])] in live_datas.find('.//img').get('alt'):
+                        final_language)] in live_datas.find('.//img').get('alt'):
                     live_id = live_datas.get('data-video-id')
     if live_id == '':
         # Add Notification

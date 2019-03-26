@@ -377,7 +377,7 @@ LABELS = {
 
     # Poland channels / live TV
     'tvp': 'TVP',
-    'tvp3': 'TVP 3 (' + utils.ensure_unicode(Script.setting['tvp3.region']) + ')',
+    'tvp3': 'TVP 3 (' + utils.ensure_unicode(Script.setting['tvp3.language']) + ')',
     'tvpinfo': 'TVP Info',
     'tvppolonia': 'TVP Polonia',
     'tvppolandin': 'TVP Poland IN',

@@ -637,7 +637,25 @@ PL_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'pl', 'tvp3.png'],
         'fanart': ['channels', 'pl', 'tvp3_fanart.jpg'],
-        'module': 'resources.lib.channels.pl.tvp'
+        'module': 'resources.lib.channels.pl.tvp',
+        'available_languages': [
+            "Białystok",
+            "Bydgoszcz",
+            "Gdańsk",
+            "Gorzów Wielkopolski",
+            "Katowice",
+            "Kielce",
+            "Kraków",
+            "Lublin",
+            "Łódź",
+            "Olsztyn",
+            "Opole",
+            "Poznań",
+            "Rzeszów",
+            "Szczecin",
+            "Warszawa",
+            "Wrocław"
+        ]
     },
     'tvpinfo': {
         'callback': 'live_bridge',
