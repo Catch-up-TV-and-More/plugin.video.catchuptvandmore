@@ -681,7 +681,8 @@ ES_LIVE = {
         'callback': 'live_bridge',
         'thumb': ['channels', 'es', 'realmadridtv.png'],
         'fanart': ['channels', 'es', 'realmadridtv_fanart.jpg'],
-        'module': 'resources.lib.channels.es.realmadridtv'
+        'module': 'resources.lib.channels.es.realmadridtv',
+        'available_languages': ['EN', 'ES']
     },
     'antena3': {
         'callback': 'live_bridge',
