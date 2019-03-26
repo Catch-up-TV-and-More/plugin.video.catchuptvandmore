@@ -5,61 +5,61 @@
 
 ##	Blaze
 ##	blaze
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/blaze.png" group-title="United Kingdom",Blaze
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/blaze.png" group-title="United Kingdom",Blaze
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=blaze&item_module=resources.lib.channels.uk.blaze&item_dict={}
 
 ##	Sky News
 ##	skynews
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/skynews.png" group-title="United Kingdom",Sky News
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/skynews.png" group-title="United Kingdom",Sky News
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=skynews&item_module=resources.lib.channels.uk.sky&item_dict={}
 
 ##	STV
 ##	stv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/stv.png" group-title="United Kingdom",STV
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/stv.png" group-title="United Kingdom",STV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=stv&item_module=resources.lib.channels.uk.stv&item_dict={}
 
 ##	Kerrang
 ##	kerrang
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/kerrang.png" group-title="United Kingdom",Kerrang
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/kerrang.png" group-title="United Kingdom",Kerrang
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=kerrang&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	Magic
 ##	magic
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/magic.png" group-title="United Kingdom",Magic
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/magic.png" group-title="United Kingdom",Magic
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=magic&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	Kiss
 ##	kiss
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/kiss.png" group-title="United Kingdom",Kiss
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/kiss.png" group-title="United Kingdom",Kiss
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=kiss&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	The Box
 ##	the-box
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/the-box.png" group-title="United Kingdom",The Box
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/the-box.png" group-title="United Kingdom",The Box
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=the-box&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	Box Upfront
 ##	box-upfront
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/box-upfront.png" group-title="United Kingdom",Box Upfront
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/box-upfront.png" group-title="United Kingdom",Box Upfront
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=box-upfront&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	Box Hits
 ##	box-hits
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/box-hits.png" group-title="United Kingdom",Box Hits
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/box-hits.png" group-title="United Kingdom",Box Hits
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=box-hits&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	Quest TV
 ##	questtv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/questtv.png" group-title="United Kingdom",Quest TV
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/questtv.png" group-title="United Kingdom",Quest TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questtv&item_module=resources.lib.channels.uk.questod&item_dict={}
 
 ##	Quest RED
 ##	questred
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/uk/questred.png" group-title="United Kingdom",Quest RED
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/uk/questred.png" group-title="United Kingdom",Quest RED
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questred&item_module=resources.lib.channels.uk.questod&item_dict={}
 
 ##	QVC
 ##	qvc
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/wo/qvc.png" group-title="United Kingdom",QVC
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/resources/media/channels/wo/qvc.png" group-title="United Kingdom",QVC
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={'language':'UK'}
 

@@ -47,9 +47,10 @@ LIVE_TV_M3U_COUTRY_FILEPATH = "../m3u/live_tv_%s.m3u"
 EN_STRINGS_PO_FILEPATH = "../language/resource.language.en_gb/strings.po"
 
 
-LOGO_URL = "https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/resources/media/channels/%s/%s"
-# arg0: country_code (fr, nl, jp, ...)
-# arg1: channel_id (tf1, france2, ...)
+LOGO_URL = "https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/%s/resources/media/channels/%s/%s"
+# arg0: branch (dev or master)
+# arg1: country_code (fr, nl, jp, ...)
+# arg2: channel_id (tf1, france2, ...)
 
 PLUGIN_QUERY = "%s/?item_id=%s&item_module=%s&item_dict=%s"
 # arg0: callback
@@ -128,7 +129,7 @@ def write_header(file):
 
 
 # Generate m3u files
-def generate_m3u_files():
+def generate_m3u_files(current_branch):
 
     m3u_entries = {}
 
@@ -200,7 +201,7 @@ def generate_m3u_files():
                     continue
 
                 # channel_logo
-                channel_m3u_dict['channel_logo'] = LOGO_URL % (channel_infos["thumb"][1], channel_infos["thumb"][2])
+                channel_m3u_dict['channel_logo'] = LOGO_URL % (current_branch, channel_infos["thumb"][1], channel_infos["thumb"][2])
 
                 # channel_label
                 channel_m3u_dict['channel_label'] = channel_label + language['language_label']
@@ -257,7 +258,7 @@ def generate_m3u_files():
                     continue
 
                 # channel_logo
-                channel_m3u_dict['channel_logo'] = LOGO_URL % (channel_wo_infos["thumb"][1], channel_wo_infos["thumb"][2])
+                channel_m3u_dict['channel_logo'] = LOGO_URL % (current_branch, channel_wo_infos["thumb"][1], channel_wo_infos["thumb"][2])
 
                 # channel_label
                 channel_m3u_dict['channel_label'] = channel_wo_label
@@ -365,7 +366,13 @@ def generate_m3u_files():
 
 def main():
 
-    generate_m3u_files()    
+    if len(sys.argv) != 2:
+        print('You need give as first argument the current branch (dev or master)')
+        exit(-1)
+
+    current_branch = sys.argv[1]
+    print("Current branch: " + current_branch)
+    generate_m3u_files(current_branch)    
     print("\nM3U files generation done! :-D")
 
 
