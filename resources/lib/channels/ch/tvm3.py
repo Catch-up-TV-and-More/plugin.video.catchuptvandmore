@@ -45,7 +45,7 @@ URL_ROOT = 'http://www.tvm3.tv'
 # Replay
 URL_REPLAY = URL_ROOT + '/replay'
 
-URL_STREAM = 'https://livevideo.infomaniak.com/player_config/%s.json'
+URL_STREAM = 'https://livevideo.infomaniak.com/iframe.php?stream=tvm3&name=html5&player=%s'
 # player_id
 
 def replay_entry(plugin, item_id):
@@ -153,7 +153,14 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     resp = urlquick.get(URL_ROOT, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
     player_id = re.compile(
         r'\;player\=(.*?)\'').findall(resp.text)[0]
-    resp2 = urlquick.get(
+    session_urlquick = urlquick.Session(allow_redirects=False)
+    resp2 = session_urlquick.get(
         URL_STREAM % player_id, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-    json_parser = json.loads(resp2.text)
-    return 'https://' + json_parser["sPlaylist"]
+    location_url = resp2.headers['Location']
+    resp3 = urlquick.get(location_url.replace('infomaniak.com/', 'infomaniak.com/playerConfig.php'), max_age=-1)
+    json_parser = json.loads(resp3.text)
+    stream_url = ''
+    for stram_datas in json_parser['data']['integrations']:
+        if 'hls' in stram_datas['type']:
+            stream_url = stram_datas['url']
+    return stream_url
