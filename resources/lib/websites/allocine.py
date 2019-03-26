@@ -38,7 +38,6 @@ from resources.lib.labels import LABELS
 # Get Partner Id ?
 # Todo get Aired, Year, Date of the Video
 # News Videos - Need work
-# Fix some title in Emissions
 
 URL_ROOT = 'http://www.allocine.fr'
 
@@ -423,12 +422,14 @@ def list_videos_emissions_1(plugin, item_id, page, show_url, last_page):
         item = Listitem()
         if episode.find('.//h3') is not None:
             item.label = episode.find(
-                './/h3').find('.//span').find('.//a').find('.//strong').text.strip() + ' - TODO' # Find a way to get text after </stron>
+                './/h3').find('.//span').find('.//a').find('.//strong').text.strip() + ' - ' + episode.find(
+                    './/h3').find('.//span').find('.//a').find('.//strong').tail.strip()
         else:
             if episode.find(
                 './/h2').find('.//span').find('.//a').find('.//strong') is not None:
                 item.label = episode.find(
-                    './/h2').find('.//span').find('.//a').find('.//strong').text.strip() + ' - TODO' # Find a way to get text after </stron>
+                    './/h2').find('.//span').find('.//a').find('.//strong').text.strip() + ' - ' + episode.find(
+                        './/h2').find('.//span').find('.//a').find('.//strong').tail.strip()
             else:
                 item.label = episode.find(
                     './/h2').find('.//span').find('.//a').text.strip()
