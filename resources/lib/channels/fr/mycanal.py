@@ -215,6 +215,39 @@ def list_sub_programs(plugin, item_id, next_url):
                 next_url=season_url)
             yield item
 
+    elif 'episodes' in json_parser:
+
+        program_title = json_parser['currentPage']['displayName']
+
+        for video_datas in json_parser['episodes']['contents']:
+            if 'subtitle' in video_datas:
+                video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
+            else:
+                video_title = program_title + ' ' + video_datas['title']
+            video_image = video_datas['URLImage']
+            video_plot = video_datas['summary']
+            video_url = video_datas['URLMedias']
+
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
+            item.info['plot'] = video_plot
+
+            item.context.script(
+                get_video_url,
+                plugin.localize(LABELS['Download']),
+                item_id=item_id,
+                next_url=video_url,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                download_mode=True)
+
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                next_url=video_url,
+                item_dict=cqu.item2dict(item))
+            yield item
+
 
 @Route.register
 def list_videos_seasons(plugin, item_id, next_url):
