@@ -133,16 +133,20 @@ def list_contents(plugin, item_id, title_value):
                         else:
                             resp2 = urlquick.get(content["onClick"]["URLPage"])
                             json_parser2 = json.loads(resp2.text)
-                            video_url = json_parser2['detail']['informations']['URLMedias']
+                            if 'URLMedias' in json_parser2['detail']['informations']:
+                                video_url = json_parser2['detail']['informations']['URLMedias']
+                            else:
+                                video_url = ''
 
-                        item = Listitem()
-                        item.label = video_title
-                        item.art['thumb'] = video_image
-                        item.set_callback(
-                            get_video_url,
-                            item_id=item_id,
-                            next_url=video_url)
-                        yield item
+                        if video_url != '':
+                            item = Listitem()
+                            item.label = video_title
+                            item.art['thumb'] = video_image
+                            item.set_callback(
+                                get_video_url,
+                                item_id=item_id,
+                                next_url=video_url)
+                            yield item
                     elif content["type"] == 'article':
                         continue
                     else:
@@ -221,7 +225,10 @@ def list_videos_seasons(plugin, item_id, next_url):
     program_title = json_parser['currentPage']['displayName']
 
     for video_datas in json_parser['episodes']['contents']:
-        video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
+        if 'subtitle' in video_datas:
+            video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
+        else:
+            video_title = program_title + ' ' + video_datas['title']
         video_image = video_datas['URLImage']
         video_plot = video_datas['summary']
         video_url = video_datas['URLMedias']
