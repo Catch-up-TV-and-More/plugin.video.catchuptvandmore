@@ -47,7 +47,8 @@ LIVE_TV_M3U_COUTRY_FILEPATH = "../m3u/live_tv_%s.m3u"
 EN_STRINGS_PO_FILEPATH = "../language/resource.language.en_gb/strings.po"
 
 
-LOGO_URL = "https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/%s/resources/media/channels/%s/%s"
+# NOT USED ANYMORE
+# LOGO_URL = "https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/%s/resources/media/channels/%s/%s"
 # arg0: branch (dev or master)
 # arg1: country_code (fr, nl, jp, ...)
 # arg2: channel_id (tf1, france2, ...)
@@ -95,6 +96,27 @@ MANUAL_LABELS = {
 }
 
 
+# Get image path/url
+def get_item_media_path(item_media_path):
+    full_path = ''
+    
+    # Local image in ressources/media folder
+    if type(item_media_path) is list:
+        full_path = os.path.join(
+            "..", "media", *(item_media_path))
+    
+    # Remote image with complete URL
+    elif 'http' in item_media_path:
+        full_path = item_media_path
+    
+    # Remote image on our images repo
+    else:
+        full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
+    
+    return full_path
+
+
+
 # Return string label from item_id
 def get_label(item_id):
     label = LABELS[item_id]
@@ -129,7 +151,7 @@ def write_header(file):
 
 
 # Generate m3u files
-def generate_m3u_files(current_branch):
+def generate_m3u_files():
 
     m3u_entries = {}
 
@@ -201,8 +223,9 @@ def generate_m3u_files(current_branch):
                     continue
 
                 # channel_logo
-                channel_m3u_dict['channel_logo'] = LOGO_URL % (current_branch, channel_infos["thumb"][1], channel_infos["thumb"][2])
-
+                # channel_m3u_dict['channel_logo'] = LOGO_URL % (current_branch, channel_infos["thumb"][1], channel_infos["thumb"][2])
+                channel_m3u_dict['channel_logo'] = get_item_media_path(channel_infos["thumb"])
+                
                 # channel_label
                 channel_m3u_dict['channel_label'] = channel_label + language['language_label']
 
@@ -258,7 +281,8 @@ def generate_m3u_files(current_branch):
                     continue
 
                 # channel_logo
-                channel_m3u_dict['channel_logo'] = LOGO_URL % (current_branch, channel_wo_infos["thumb"][1], channel_wo_infos["thumb"][2])
+                # channel_m3u_dict['channel_logo'] = LOGO_URL % (current_branch, channel_wo_infos["thumb"][1], channel_wo_infos["thumb"][2])
+                channel_m3u_dict['channel_logo'] = get_item_media_path(channel_wo_infos["thumb"])
 
                 # channel_label
                 channel_m3u_dict['channel_label'] = channel_wo_label
@@ -366,13 +390,7 @@ def generate_m3u_files(current_branch):
 
 def main():
 
-    if len(sys.argv) != 2:
-        print('You need give as first argument the current branch (dev or master)')
-        exit(-1)
-
-    current_branch = sys.argv[1]
-    print("Current branch: " + current_branch)
-    generate_m3u_files(current_branch)    
+    generate_m3u_files()    
     print("\nM3U files generation done! :-D")
 
 

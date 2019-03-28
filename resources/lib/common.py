@@ -31,6 +31,19 @@ from codequick.utils import ensure_native_str
 
 
 def get_item_media_path(item_media_path):
-    full_path = os.path.join(
-        Script.get_info("path"), "resources", "media", *(item_media_path))
+    full_path = ''
+    
+    # Local image in ressources/media folder
+    if type(item_media_path) is list:
+        full_path = os.path.join(
+            Script.get_info("path"), "resources", "media", *(item_media_path))
+    
+    # Remote image with complete URL
+    elif 'http' in item_media_path:
+        full_path = item_media_path
+    
+    # Remote image on our images repo
+    else:
+        full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
+    
     return ensure_native_str(full_path)
