@@ -10,12 +10,12 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tf1&item_module
 
 ##	France 2
 ##	france-2
-#EXTINF:-1 tvg-id="C4.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france-2.png" group-title="France TNT",France 2
+#EXTINF:-1 tvg-id="C4.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france2.png" group-title="France TNT",France 2
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-2&item_module=resources.lib.channels.fr.francetv&item_dict={}
 
 ##	France 3
 ##	france-3
-#EXTINF:-1 tvg-id="C80.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france-3.png" group-title="France TNT",France 3
+#EXTINF:-1 tvg-id="C80.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3.png" group-title="France TNT",France 3
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-3&item_module=resources.lib.channels.fr.francetv&item_dict={}
 
 ##	Canal +
@@ -25,7 +25,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=canalplus&item_
 
 ##	France 5
 ##	france-5
-#EXTINF:-1 tvg-id="C47.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france-5.png" group-title="France TNT",France 5
+#EXTINF:-1 tvg-id="C47.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france5.png" group-title="France TNT",France 5
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-5&item_module=resources.lib.channels.fr.francetv&item_dict={}
 
 ##	M6
@@ -75,7 +75,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=lcp&item_module
 
 ##	France 4
 ##	france-4
-#EXTINF:-1 tvg-id="C78.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france-4.png" group-title="France TNT",France 4
+#EXTINF:-1 tvg-id="C78.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france4.png" group-title="France TNT",France 4
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-4&item_module=resources.lib.channels.fr.francetv&item_dict={}
 
 ##	BFM TV
@@ -100,12 +100,12 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=gulli&item_modu
 
 ##	France Ô
 ##	france-o
-#EXTINF:-1 tvg-id="C160.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france-o.png" group-title="France TNT",France Ô
+#EXTINF:-1 tvg-id="C160.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/franceo.png" group-title="France TNT",France Ô
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france-o&item_module=resources.lib.channels.fr.francetv&item_dict={}
 
 ##	TF1 Séries Films
 ##	tf1-series-films
-#EXTINF:-1 tvg-id="C1404.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tf1-series-films.png" group-title="France TNT",TF1 Séries Films
+#EXTINF:-1 tvg-id="C1404.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tf1seriesfilms.png" group-title="France TNT",TF1 Séries Films
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tf1-series-films&item_module=resources.lib.channels.fr.mytf1&item_dict={}
 
 ##	L'Équipe
@@ -150,7 +150,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl2&item_modul
 
 ##	Fun Radio
 ##	fun_radio
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/fun_radio.png" group-title="France Radio",Fun Radio
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/funradio.png" group-title="France Radio",Fun Radio
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=fun_radio&item_module=resources.lib.channels.fr.6play&item_dict={}
 
 ##	Virgin Radio TV
@@ -190,47 +190,47 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=gong&item_modul
 
 ##	La 1ère Guadeloupe
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère Guadeloupe
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Guadeloupe
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Guadeloupe'}
 
 ##	La 1ère Guyane
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère Guyane
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Guyane
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Guyane'}
 
 ##	La 1ère Martinique
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère Martinique
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Martinique
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Martinique'}
 
 ##	La 1ère Mayotte
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère Mayotte
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Mayotte
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Mayotte'}
 
 ##	La 1ère Nouvelle Calédonie
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère Nouvelle Calédonie
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Nouvelle Calédonie
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Nouvelle Calédonie'}
 
 ##	La 1ère Polynésie
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère Polynésie
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Polynésie
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Polynésie'}
 
 ##	La 1ère Réunion
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère Réunion
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Réunion
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Réunion'}
 
 ##	La 1ère St-Pierre et Miquelon
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère St-Pierre et Miquelon
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère St-Pierre et Miquelon
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'St-Pierre et Miquelon'}
 
 ##	La 1ère Wallis et Futuna
 ##	la_1ere
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la_1ere.png" group-title="France Région",La 1ère Wallis et Futuna
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Wallis et Futuna
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Wallis et Futuna'}
 
 ##	KTO

@@ -35,17 +35,17 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=kiss&item_modul
 
 ##	The Box
 ##	the-box
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/the-box.png" group-title="United Kingdom",The Box
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/thebox.png" group-title="United Kingdom",The Box
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=the-box&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	Box Upfront
 ##	box-upfront
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/box-upfront.png" group-title="United Kingdom",Box Upfront
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/boxupfront.png" group-title="United Kingdom",Box Upfront
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=box-upfront&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	Box Hits
 ##	box-hits
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/box-hits.png" group-title="United Kingdom",Box Hits
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/boxhits.png" group-title="United Kingdom",Box Hits
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=box-hits&item_module=resources.lib.channels.uk.boxplus&item_dict={}
 
 ##	Quest TV
