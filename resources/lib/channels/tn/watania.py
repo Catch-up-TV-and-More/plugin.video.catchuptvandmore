@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -52,10 +50,16 @@ def live_entry(plugin, item_id, item_dict):
 def get_live_url(plugin, item_id, video_id, item_dict):
 
     resp = urlquick.get(URL_ROOT % item_id)
-    root_soup = bs(resp.text, 'html.parser')
-    live_url = root_soup.find(
-        "section", class_=re.compile(
-            'strteamingBlc')).find_all('a')[0].get('href')
+    root = resp.parse()
+
+    if root.find(".//section[@id='block-block-2']") is not None:
+        live_url = root.find(
+            ".//section[@id='block-block-2']").findall(
+                './/a')[0].get('href')
+    else:
+        live_url = root.find(
+            ".//section[@id='block-block-4']").findall(
+                './/a')[0].get('href')
     live_html = urlquick.get(live_url)
     live_id_channel = re.compile(
         'www.youtube.com/embed/(.*?)\"').findall(live_html.text)[1]

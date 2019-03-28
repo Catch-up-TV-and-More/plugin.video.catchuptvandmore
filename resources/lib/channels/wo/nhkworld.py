@@ -191,8 +191,17 @@ def live_entry(plugin, item_id, item_dict):
 
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
+    desired_country = Script.setting[item_id + '.language']
 
-    desired_country = Script.setting[item_id + '.country']
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        desired_country = item_dict['language']
+    
+
     resp = urlquick.get(URL_LIVE_NHK % item_id)
     xmlElements = ET.XML(resp.text)
     stream_url = ''

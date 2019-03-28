@@ -110,7 +110,7 @@ def list_programs(plugin, item_id):
     - Informations
     - ...
     """
-    region = utils.ensure_unicode(Script.setting['france3.region'])
+    region = utils.ensure_unicode(Script.setting['france3regions.language'])
     region = LIVE_FR3_REGIONS[region]
     resp = urlquick.get(URL_EMISSIONS % region)
     root = resp.parse()
@@ -188,6 +188,15 @@ def live_entry(plugin, item_id, item_dict):
 
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
+    final_region = Script.setting['france3regions.language']
+
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        final_region = item_dict['language']
 
     resp = urlquick.get(
         URL_LIVES_JSON,
@@ -195,7 +204,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         max_age=-1)
     json_parser = json.loads(resp.text)
 
-    region = utils.ensure_unicode(Script.setting['france3.region'])
+    region = utils.ensure_unicode(final_region)
     id_sivideo = json_parser[LIVE_FR3_REGIONS[region]]["id_sivideo"]
     return resolver_proxy.get_francetv_live_stream(
         plugin, id_sivideo.split('@')[0])

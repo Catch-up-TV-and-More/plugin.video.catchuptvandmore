@@ -162,13 +162,24 @@ def get_brightcove_video_json(
     video_url = ''
     if 'sources' in json_parser:
         for url in json_parser["sources"]:
-            if 'src' in url:
-                if 'm3u8' in url["src"]:
-                    video_url = url["src"]
+            if 'type' in url:
+                if 'x-mpegURL' in url["type"]:
+                    if 'ext_x_version' in url:
+                        if url["ext_x_version"] == "3":
+                            video_url = url["src"]
+                    else:
+                        video_url = url["src"]
+            else:
+                if 'src' in url:
+                    if 'm3u8' in url["src"]:
+                        video_url = url["src"]
     else:
         if json_parser[0]['error_code'] == "ACCESS_DENIED":
             plugin.notify('ERROR', plugin.localize(30713))
             return False
+
+    if video_url == '':
+        return False
 
     if download_mode:
         return download.download_video(video_url, video_label)

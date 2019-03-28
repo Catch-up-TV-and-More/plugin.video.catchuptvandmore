@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -62,16 +60,18 @@ def list_programs(plugin, item_id):
         headers={'User-Agent': web_utils.get_random_ua,
                  'Host': 'www.onzeo.fr',
                  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'})
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'section', class_=re.compile('une2'))
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//section[@class='une2']"):
         if program_datas.get('style') is None:
             program_title = program_datas.find(
-                'h2', class_='titreBloc').text
-            program_id = program_datas.find(
-                'div', class_=re.compile("zoneb")).get('id')
+                ".//h2[@class='titreBloc']").text
+            if program_datas.find(".//div[@class='zoneb']") is not None:
+                program_id = program_datas.find(
+                    ".//div[@class='zoneb']").get('id')
+            else:
+                program_id = program_datas.find(
+                    ".//div[@class='zoneb flickity-enabled is-draggable']").get('id')
 
             item = Listitem()
             item.label = program_title
@@ -86,17 +86,18 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_id):
 
     resp = urlquick.get(URL_ROOT)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'div', class_=re.compile("zoneb"))
+    root = resp.parse()
+
+    list_programs_datas = root.findall(".//div[@class='zoneb']")
+    list_programs_datas += root.findall(".//div[@class='zoneb flickity-enabled is-draggable']")
 
     for program_datas in list_programs_datas:
         if program_id == program_datas.get('id'):
-            list_videos_datas = program_datas.find_all(
-                'div', class_='cell item')
+            list_videos_datas = program_datas.findall(
+                ".//div[@class='cell item']")
             for video_datas in list_videos_datas:
-                video_title = video_datas.find('h2').text
-                video_image = video_datas.find('img').get('src')
+                video_title = video_datas.find('.//h2').text
+                video_image = video_datas.find('.//img').get('src')
                 video_id = video_datas.get('iddm')
 
                 item = Listitem()

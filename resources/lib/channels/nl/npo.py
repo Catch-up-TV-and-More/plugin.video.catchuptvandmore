@@ -134,9 +134,12 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     item = Listitem()
     item.path = json_parser2["stream"]["src"]
-    item.label = item_dict['label']
-    item.info.update(item_dict['info'])
-    item.art.update(item_dict['art'])
+    if 'label' in item_dict:
+        item.label = item_dict['label']
+    if 'info' in item_dict:
+        item.info.update(item_dict['info'])
+    if 'art' in item_dict:
+        item.art.update(item_dict['art'])
     if plugin.setting.get_boolean('active_subtitle'):
         item.subtitles.append(URL_SUBTITLE % video_id)
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
