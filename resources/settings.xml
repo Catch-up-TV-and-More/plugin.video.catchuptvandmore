@@ -658,6 +658,12 @@
 
             <setting label="Lucky Jack" type="bool" id="luckyjack" default="true" visible="eq(-165,true)"/>
             <setting label="" type="number" visible="false" id="luckyjack.order" default="83"/>
+            
+            <setting label="Mont Blanc Live TV" type="bool" id="mblivetv" default="true" visible="eq(-167,true)"/>
+            <setting label="" type="number" visible="false" id="mblivetv.order" default="84"/>
+            
+            <setting label="8 Mont-Blanc" type="bool" id="tv8montblanc" default="true" visible="eq(-169,true)"/>
+            <setting label="" type="number" visible="false" id="tv8montblanc.order" default="85"/>
         <!-- France -->
 
 

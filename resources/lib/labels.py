@@ -306,7 +306,9 @@ LABELS = {
     'viavosges': 'viàVosges',
     'tl7': 'Télévision Loire 7',
     'luckyjack': 'Lucky Jack',
-
+    'mblivetv' : 'Mont Blanc Live TV',
+    'tv8montblanc' : '8 Mont-Blanc',
+    
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
     'nhklifestyle': 'NHKらいふ',
