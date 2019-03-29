@@ -191,47 +191,47 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=gong&item_modul
 ##	La 1ère Guadeloupe
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Guadeloupe
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Guadeloupe'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"Guadeloupe"}
 
 ##	La 1ère Guyane
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Guyane
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Guyane'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"Guyane"}
 
 ##	La 1ère Martinique
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Martinique
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Martinique'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"Martinique"}
 
 ##	La 1ère Mayotte
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Mayotte
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Mayotte'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"Mayotte"}
 
 ##	La 1ère Nouvelle Calédonie
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Nouvelle Calédonie
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Nouvelle Calédonie'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"Nouvelle Calédonie"}
 
 ##	La 1ère Polynésie
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Polynésie
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Polynésie'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"Polynésie"}
 
 ##	La 1ère Réunion
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Réunion
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Réunion'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"Réunion"}
 
 ##	La 1ère St-Pierre et Miquelon
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère St-Pierre et Miquelon
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'St-Pierre et Miquelon'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"St-Pierre et Miquelon"}
 
 ##	La 1ère Wallis et Futuna
 ##	la_1ere
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/la1ere.png" group-title="France Région",La 1ère Wallis et Futuna
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={'language':'Wallis et Futuna'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=la_1ere&item_module=resources.lib.channels.fr.la_1ere&item_dict={"language":"Wallis et Futuna"}
 
 ##	KTO
 ##	kto
@@ -246,122 +246,122 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=ouatchtv&item_m
 ##	France 3 Régions Alpes
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Alpes
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Alpes'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Alpes"}
 
 ##	France 3 Régions Alsace
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Alsace
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Alsace'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Alsace"}
 
 ##	France 3 Régions Aquitaine
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Aquitaine
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Aquitaine'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Aquitaine"}
 
 ##	France 3 Régions Auvergne
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Auvergne
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Auvergne'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Auvergne"}
 
 ##	France 3 Régions Bourgogne
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Bourgogne
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Bourgogne'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Bourgogne"}
 
 ##	France 3 Régions Bretagne
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Bretagne
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Bretagne'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Bretagne"}
 
 ##	France 3 Régions Centre-Val de Loire
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Centre-Val de Loire
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Centre-Val de Loire'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Centre-Val de Loire"}
 
 ##	France 3 Régions Chapagne-Ardenne
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Chapagne-Ardenne
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Chapagne-Ardenne'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Chapagne-Ardenne"}
 
 ##	France 3 Régions Corse
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Corse
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Corse'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Corse"}
 
 ##	France 3 Régions Côte d'Azur
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Côte d'Azur
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Côte d'Azur'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Côte d'Azur"}
 
 ##	France 3 Régions Franche-Compté
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Franche-Compté
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Franche-Compté'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Franche-Compté"}
 
 ##	France 3 Régions Languedoc-Roussillon
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Languedoc-Roussillon
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Languedoc-Roussillon'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Languedoc-Roussillon"}
 
 ##	France 3 Régions Limousin
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Limousin
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Limousin'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Limousin"}
 
 ##	France 3 Régions Lorraine
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Lorraine
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Lorraine'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Lorraine"}
 
 ##	France 3 Régions Midi-Pyrénées
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Midi-Pyrénées
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Midi-Pyrénées'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Midi-Pyrénées"}
 
 ##	France 3 Régions Nord-Pas-de-Calais
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Nord-Pas-de-Calais
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Nord-Pas-de-Calais'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Nord-Pas-de-Calais"}
 
 ##	France 3 Régions Basse-Normandie
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Basse-Normandie
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Basse-Normandie'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Basse-Normandie"}
 
 ##	France 3 Régions Haute-Normandie
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Haute-Normandie
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Haute-Normandie'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Haute-Normandie"}
 
 ##	France 3 Régions Paris Île-de-France
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Paris Île-de-France
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Paris Île-de-France'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Paris Île-de-France"}
 
 ##	France 3 Régions Pays de la Loire
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Pays de la Loire
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Pays de la Loire'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Pays de la Loire"}
 
 ##	France 3 Régions Picardie
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Picardie
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Picardie'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Picardie"}
 
 ##	France 3 Régions Poitou-Charentes
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Poitou-Charentes
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Poitou-Charentes'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Poitou-Charentes"}
 
 ##	France 3 Régions Provence-Alpes
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Provence-Alpes
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Provence-Alpes'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Provence-Alpes"}
 
 ##	France 3 Régions Rhône-Alpes
 ##	france3regions
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Rhône-Alpes
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={'language':'Rhône-Alpes'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Rhône-Alpes"}
 
 ##	viàATV
 ##	viaatv
@@ -410,12 +410,12 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=luckyjack&item_
 
 ##	Mont Blanc Live TV
 ##	mblivetv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/mblivetv.png" group-title="France",Mont Blanc Live TV
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/mblivetv.png" group-title="France Satellite/FAI",Mont Blanc Live TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=mblivetv&item_module=resources.lib.channels.fr.mblivetv&item_dict={}
 
 ##	8 Mont-Blanc
 ##	tv8montblanc
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tv8montblanc.png" group-title="France",8 Mont-Blanc
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tv8montblanc.png" group-title="France Région",8 Mont-Blanc
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv8montblanc&item_module=resources.lib.channels.fr.tv8montblanc&item_dict={}
 
 ##	Euronews

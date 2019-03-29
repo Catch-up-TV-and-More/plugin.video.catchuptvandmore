@@ -611,13 +611,15 @@ FR_LIVE = {
         'callback': 'live_bridge',
         'thumb': 'channels/fr/mblivetv.png',
         'fanart': 'channels/fr/mblivetv_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mblivetv'
+        'module': 'resources.lib.channels.fr.mblivetv',
+        'm3u_group': 'Satellite/FAI'
     },
     'tv8montblanc': {
         'callback': 'live_bridge',
         'thumb': 'channels/fr/tv8montblanc.png',
         'fanart': 'channels/fr/tv8montblanc_fanart.jpg',
-        'module': 'resources.lib.channels.fr.tv8montblanc'
+        'module': 'resources.lib.channels.fr.tv8montblanc',
+        'm3u_group': 'Région'
     }
 }
 

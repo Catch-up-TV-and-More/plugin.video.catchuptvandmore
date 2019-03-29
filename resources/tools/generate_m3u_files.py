@@ -193,7 +193,7 @@ def generate_m3u_files():
                         {
                             'language_code': language.lower(),
                             'language_label': ' ' + language,
-                            'language_dict' : "{'language':'" + language + "'}"
+                            'language_dict' : '{"language":"' + language + '"}'
                         }
                     )
             else:
