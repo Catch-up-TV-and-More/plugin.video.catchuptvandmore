@@ -1810,13 +1810,13 @@ FR_REPLAY = {
         'callback': 'replay_bridge',
         'thumb': ['channels', 'fr', 'mblivetv.png'],
         'fanart': ['channels', 'fr', 'mblivetv_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.dailymotion'
+        'module': 'resources.lib.channels.fr.mblivetv'
     },
     'tv8montblanc': {
         'callback': 'replay_bridge',
         'thumb': ['channels', 'fr', 'tv8montblanc.png'],
         'fanart': ['channels', 'fr', 'tv8montblanc_fanart.jpg'],
-        'module': 'resources.lib.channels.fr.dailymotion'
+        'module': 'resources.lib.channels.fr.tv8montblanc'
     }
 }
 
