@@ -59,10 +59,10 @@ def get_live_url(plugin, item_id):
 
 def replay_entry(plugin, item_id):
     url = URL_REPLAY % (item_id)
-    return list_videos(plugin, url)
+    return list_videos(plugin, item_id, url)
     
 @Route.register
-def list_videos(plugin, url):
+def list_videos(plugin, item_id, url):
     headers = {'User-Agent':'Android'}
     r = urlquick.get(url,headers=headers)
     json_parser = json.loads(r.text)
@@ -73,10 +73,21 @@ def list_videos(plugin, url):
         item.info['duration'] = video['duration']
         item.art["thumb"] = video['thumbnail_large_url']
         vid = video['id']
+
+        item.context.script(
+            get_video_url,
+            plugin.localize(LABELS['Download']),
+            item_id=item_id,
+            video_id=vid,
+            video_label=LABELS[item_id] + ' - ' + item.label,
+            download_mode=True)
+
         item.set_callback(
             get_video_url,
+            item_id=item_id,
             video_id=vid)
         yield item
+
     if json_parser['has_more']:
         currentPage = json_parser['page']
         nextPage = currentPage+1
@@ -85,5 +96,5 @@ def list_videos(plugin, url):
         callback=list_videos)
 
 @Resolver.register
-def get_video_url(plugin, video_id):
-    return resolver_proxy.get_stream_dailymotion(plugin, video_id)
+def get_video_url(plugin, item_id, video_id, download_mode=False, video_label=None):
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode, video_label)
