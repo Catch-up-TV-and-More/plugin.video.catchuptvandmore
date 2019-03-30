@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.5"
+       version="0.2.6~beta0"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -36,51 +36,7 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.5]
-[Update] Live TV - RTBF - Add avaibility / Remove Date / Add subtitle (BE) - Thanks Gaet81
-[Fix] Replay - Arte (WO)
-[Fix] Subtitle - BVN (WO)
-[DRM] Replay - BVN (WO)
-[Remove] Beautifulsoup - [BVN, Afrique Media, Arirang, Channel News Asia, TV5Monde Afrique, Tivi5monde, TV5Monde] (WO)
-[Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB, INA, NotreHistoire.ch, Allocine] (website)
-[Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion, BFM TV, Gulli, Canal 10, CultureBox, KTO, GameOne, La 1ere, La chaine Météo, LCI, LCP, RMC Decouverte, RMC Story, Tébéo, Télé Loire 7, ViàChannels, BFM Paris, Caledonia, France 3 regions, France TV Education, Gong TV, J-One, MyTF1, Nouvelle Ecriture, NRJ, Onzeo, Ouatch TV, Public Sénat, TF1Thématiques] (FR)
-[Remove] Beautifulsoup - [BRF Mediathek, RTC Télé Liege, Télé MB, BX1, NRJHITSTVBE, TVCOM, TVLUX, RTBF, VRT] (BE)
-[Remove] Beautifulsoup - [Atresplayer, Realmadrir TV, Mitele] (ES)
-[Remove] Beautifulsoup - [ICI Télé, ICI TouTV, NTV, Téléquebec, TéléMag, TV5.ca] (CA)
-[Remove] Beautifulsoup - [TVM 3, BeCuriousTV, Lemanbleu] (CH)
-[Remove] Beautifulsoup - [TBS News, TVER, NHK Lifestyle] (JP)
-[Remove] Beautifulsoup - [Nessma, Watania] (TN)
-[Remove] Beautifulsoup - [Blaze, Sky] (UK)
-[Remove] Beautifulsoup - [ABC News, TBD, NYC Media] (US)
-[Remove] Beautifulsoup - [La7] (IT)
-[Remove] Beautifulsoup - [TVP] (PL)
-[Remove] Import Beautifulsoup from addon.xml
-[Add] Replay - RT (Contents {FR|EN}) (WO)
-[Add] Live TV - NPO Channels (NPO 1, NPO 2, NPO Nieuws, ....) (NL) - Thanks Forage !
-[Add] Dutch translation of this add-on
-[Fix] Live TV - M6 Boutique (FR)
-[Add] Live TV - RTLPlay (RTL-TVI, RTL INFO, ...) (BE) - Thanks Gaet81
-[Fix] Live TV - NRJ 12 and Cherie 25 (FR)
-[Fix] Plugin - remove some warning log
-[Add] Replay - 関西テレビ (JP)
-[Fix] Replay - Cnews (FR)
-[Fix] Live TV - France TV - some mistmatchs on the json "France 4 have the broacast_Id of France 5" (FR)
-[Fix] Replay - Tele MB (BE)
-[Fix] Replay - Unis (CA)
-[Fix] Replay - LCI (FR)
-[Add] Feature - Bind Live TV to Kodi mode TV (see https://catch-up-tv-and-more.github.io/live_tv_installation/)
-[Remove] Live TV - QVC (FR)
-[Fix] Replay - Tébéo (FR)
-[Fix] Replay - TVLux (BE)
-[Fix] Replay - Blaze TV (UK)
-[Fix] Replay - TVER (JP)
-[Fix] Live TV - TVM3 (CH)
-[Fix] Replay - MyCanal (FR)
-[Remove] Images (Thumb/Fanart) of channels and websites => stored in this repo "https://github.com/Catch-up-TV-and-More/images"
-[Remove] Requests - [AstresPlayer] (ES)
-[Remove] Replay - [AstresPlayer] (ES)
-[Add] Replay / Live - 8 Mont blanc (FR) - Thanks Gaet81
-[Add] Replay / Live - Mont Blanc Live TV (FR) - Thanks Gaet81
+[Version 0.2.6]
     </news>
     <assets>
       <icon>icon.png</icon>
