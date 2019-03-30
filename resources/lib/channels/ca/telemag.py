@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -61,13 +59,12 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_EMISSIONS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find(
-        'section', class_='bloc1 emission_dispo').find_all('li')
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('a').text
+    root = resp.parse("section", attrs={"class": "bloc1 emission_dispo"})
+
+    for program_datas in root.iterfind(".//li"):
+        program_title = program_datas.find('.//a').text
         program_url = program_datas.find(
-            'a').get('href')
+            './/a').get('href')
 
         item = Listitem()
         item.label = program_title
@@ -82,14 +79,12 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='bloc1_element_listeVideo')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('a').get('title')
-        video_image = URL_ROOT + video_datas.find('img').get('src')
-        video_url = video_datas.find('a').get('href')
+    for video_datas in root.iterfind(".//div[@class='bloc1_element_listeVideo']"):
+        video_title = video_datas.find('.//a').get('title')
+        video_image = URL_ROOT + video_datas.find('.//img').get('src')
+        video_url = video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title
@@ -118,9 +113,9 @@ def get_video_url(
         video_url,
         headers={'User-Agent': web_utils.get_random_ua},
         max_age=-1)
-    root_soup = bs(resp.text, 'html.parser')
-    stream_url = root_soup.find(
-        id='main_video').get('src')
+    root = resp.parse()
+    stream_url = root.find(
+        ".//iframe[@id='main_video']").get('src')
     if 'player.vimeo.com' in stream_url:
         video_id = re.compile(
             r'player.vimeo.com\/video/(.*?)\?').findall(stream_url)[0]
@@ -138,9 +133,9 @@ def live_entry(plugin, item_id, item_dict):
 def get_live_url(plugin, item_id, video_id, item_dict):
 
     resp = urlquick.get(URL_ROOT)
-    root_soup = bs(resp.text, 'html.parser')
-    live_datas = root_soup.find('iframe')
-    live_html = urlquick.get(live_datas.get('src'))
+    root = resp.parse()
+    live_datas = root.find('.//iframe')
+    resp2 = urlquick.get(live_datas.get('src'))
     live_id = re.compile(
-        r'www.youtube.com\/watch\?v=(.*?)\"').findall(live_html.text)[0]
+        r'www.youtube.com\/watch\?v=(.*?)\"').findall(resp2.text)[0]
     return resolver_proxy.get_stream_youtube(plugin, live_id, False)

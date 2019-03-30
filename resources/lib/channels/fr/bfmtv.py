@@ -32,9 +32,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 
-
-from bs4 import BeautifulSoup as bs
-
 import json
 import time
 import re
@@ -233,12 +230,12 @@ def get_live_url(plugin, item_id, video_id, item_dict):
             headers={'User-Agent': web_utils.get_random_ua},
             max_age=-1)
 
-    live_soup = bs(resp.text, 'html.parser')
-    data_live_soup = live_soup.find(
-        'div', class_='next-player')
-    data_account = data_live_soup['data-account']
-    data_video_id = data_live_soup['data-video-id']
-    data_player = data_live_soup['data-player']
+    root = resp.parse()
+    live_datas = root.find(
+        ".//div[@class='next-player']")
+    data_account = live_datas.get('data-account')
+    data_video_id = live_datas.get('data-video-id')
+    data_player = live_datas.get('data-player')
     return resolver_proxy.get_brightcove_video_json(
         plugin,
         data_account,

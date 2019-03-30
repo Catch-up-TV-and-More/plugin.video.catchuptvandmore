@@ -31,9 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-
-from bs4 import BeautifulSoup as bs
-
 import base64
 import json
 import re
@@ -106,11 +103,9 @@ def list_programs_videos(plugin, item_id):
     resp = urlquick.get(URL_VIDEOS_DATAS)
     context_id = re.compile(
         'contextId\" value=\"(.*?)\"').findall(resp.text)[0]
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find(
-        'select', class_="filter__input i-arrow-select-small-red").find_all('option')
+    root = resp.parse("select", attrs={"class": "filter__input i-arrow-select-small-red"})
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//option"):
         program_title = program_datas.get('label')
         program_id = program_datas.get('value')
 

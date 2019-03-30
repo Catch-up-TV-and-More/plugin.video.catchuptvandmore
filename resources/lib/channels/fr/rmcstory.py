@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import urlquick
 
@@ -78,14 +76,11 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY)
-    root_soup = bs(resp.text, 'html.parser')
-    categories_soup = root_soup.find(
-        'div',
-        class_='nav-programs'
-    )
-    for category in categories_soup.find_all('a'):
+    root = resp.parse("div", attrs={"class": "nav-programs"})
+
+    for category in root.iterfind(".//a"):
         category_name = category.find(
-            'span').get_text().replace(
+            './/span').text.replace(
             '\n', ' ').replace('\r', ' ').rstrip('\r\n')
         category_url = category.get('href')
 
@@ -104,21 +99,19 @@ def list_videos(plugin, item_id, category_url, page):
 
     replay_paged_url = category_url + '&paged=' + page
     resp = urlquick.get(replay_paged_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='program sticky video')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        info_video = video_datas.find_all('p')
+    for video_datas in root.iterfind(".//div[@class='program sticky video']"):
 
         video_title = utils.ensure_unicode(
-            video_datas.find('p', class_="red").text)
+            video_datas.find(".//p[@class='red']").text)
         video_img = video_datas.find(
-            'img')['src']
+            ".//img").get('src')
         video_id = video_datas.find(
-            'div', class_="player")['data-id-video']
+            ".//div[@class='player']").get('data-id-video')
+        
         video_duration = 0
-        video_duration_list = utils.strip_tags(str(info_video[3])).split(':')
+        video_duration_list = video_datas.find(".//strong").text.split(':')
         if len(video_duration_list) > 2:
             video_duration = int(video_duration_list[0]) * 3600 + \
                 int(video_duration_list[1]) * 60 + \
@@ -127,10 +120,11 @@ def list_videos(plugin, item_id, category_url, page):
             video_duration = int(video_duration_list[0]) * 60 + \
                 int(video_duration_list[1])
 
+        info_video = video_datas.findall(".//p")
         # get month and day on the page
         date_list = ''
         try:
-            date_list = utils.strip_tags(str(info_video[2])).split(' ')
+            date_list = utils.strip_tags(str(info_video[2].text)).split(' ')
         except:
             pass
         day = '00'

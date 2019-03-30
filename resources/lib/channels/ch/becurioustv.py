@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -66,13 +64,13 @@ def list_categories(plugin, item_id):
     resp = urlquick.get(
         URL_ROOT,
         headers={'User-Agent': web_utils.get_random_ua})
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find(
-        'ul', class_='sub-menu').find_all('li')
-    for category_datas in list_categories_datas:
-        category_title = category_datas.text
+    root = resp.parse("ul", attrs={"class": "sub-menu"})
+
+    for category_datas in root.iterfind(".//li"):
+        category_title = category_datas.find(
+            './/a').text
         category_url = category_datas.find(
-            'a').get('href')
+            './/a').get('href')
 
         item = Listitem()
         item.label = category_title
@@ -87,13 +85,12 @@ def list_categories(plugin, item_id):
 def list_videos(plugin, item_id, category_url):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all('article')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('a').get('title')
-        video_url = video_datas.find('a').get('href')
-        video_image = video_datas.find('img').get('src')
+    for video_datas in root.iterfind(".//article"):
+        video_title = video_datas.find('.//a').get('title')
+        video_url = video_datas.find('.//a').get('href')
+        video_image = video_datas.find('.//img').get('src')
 
         item = Listitem()
         item.label = video_title
@@ -119,8 +116,8 @@ def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url)
-    root_soup = bs(resp.text, 'html.parser')
-    stream_datas = root_soup.find('iframe').get('src')
+    root = resp.parse()
+    stream_datas = root.find('.//iframe').get('src')
 
     # Case Youtube
     if 'youtube' in stream_datas:

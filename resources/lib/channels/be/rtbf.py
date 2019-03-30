@@ -32,8 +32,7 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
+import htmlement
 import re
 import json
 import time
@@ -143,14 +142,12 @@ def list_categories(plugin, item_id):
 def list_programs(plugin, item_id):
 
     resp = urlquick.get(URL_EMISSIONS_AUVIO)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'article', class_="rtbf-media-item col-xxs-12 col-xs-6 col-md-4 col-lg-3 ")
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('h4').text
+    for program_datas in root.iterfind(".//article[@class='rtbf-media-item col-xxs-12 col-xs-6 col-md-4 col-lg-3 ']"):
+        program_title = program_datas.find('.//a').get('title')
         program_image = ''
-        list_program_image_datas = program_datas.find('img').get('data-srcset').split(' ')
+        list_program_image_datas = program_datas.find('.//img').get('data-srcset').split(' ')
         for program_image_data in list_program_image_datas:
             if 'jpg' in program_image_data:
                 if ',' in program_image_data:
@@ -161,6 +158,7 @@ def list_programs(plugin, item_id):
 
         item = Listitem()
         item.label = program_title
+            
         item.art['thumb'] = program_image
         item.set_callback(
             list_videos_program,
@@ -216,13 +214,14 @@ def list_videos_program(plugin, item_id, program_id):
 def list_sub_categories(plugin, item_id, category_url):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_sub_categories_datas = root_soup.find_all(
-        'section', class_="js-item-container")
+    root = resp.parse()
 
-    for sub_category_datas in list_sub_categories_datas:
+    for sub_category_datas in root.iterfind(".//section[@class='js-item-container']"):
 
-        sub_category_title = " ".join(sub_category_datas.find('h2').text.split())
+        if sub_category_datas.find('.//h2').text is not None:
+            sub_category_title = sub_category_datas.find('.//h2').text.strip()
+        else:
+            sub_category_title = sub_category_datas.find('.//h2/a').text.strip()
         sub_category_id = sub_category_datas.get('id')
 
         item = Listitem()
@@ -234,23 +233,24 @@ def list_sub_categories(plugin, item_id, category_url):
             sub_category_id=sub_category_id)
         yield item
 
-    list_sub_categories_to_dl = root_soup.find_all(
-        'div', class_=re.compile("js-widget js-widget-"))
-
-    for sub_category_to_dl in list_sub_categories_to_dl:
-        sub_category_data_uuid = sub_category_to_dl.find('b').get('data-uuid')
+    list_data_uuid = re.compile(
+        r'data-uuid\=\"(.*?)\"').findall(resp.text)
+    for sub_category_data_uuid in list_data_uuid:
         resp2 = urlquick.get(
             URL_SUB_CATEGORIES % (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
         json_parser = json.loads(resp2.text)
         if sub_category_data_uuid in json_parser["blocks"]:
-            sub_category_dl_value = json_parser["blocks"][sub_category_data_uuid]
-            sub_category_dl_soup = bs(sub_category_dl_value, 'html.parser')
-            list_sub_category_dl_datas = sub_category_dl_soup.find_all(
-                'section', class_="js-item-container")
 
-            for sub_category_dl_data in list_sub_category_dl_datas:
+            parser = htmlement.HTMLement()
+            parser.feed(json_parser["blocks"][sub_category_data_uuid])
+            root_2 = parser.close()
 
-                sub_category_dl_title = " ".join(sub_category_dl_data.find('h2').text.split())
+            for sub_category_dl_data in root_2.iterfind(".//section[@class='js-item-container']"):
+
+                if sub_category_dl_data.find('.//h2').text is not None:
+                    sub_category_dl_title = sub_category_dl_data.find('.//h2').text.strip()
+                else:
+                    sub_category_dl_title = sub_category_dl_data.find('.//h2/a').text.strip()
                 sub_category_dl_id = sub_category_dl_data.get('id')
 
                 item = Listitem()
@@ -267,25 +267,23 @@ def list_sub_categories(plugin, item_id, category_url):
 def list_videos_sub_category(plugin, item_id, category_url, sub_category_id):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_sub_categories_datas = root_soup.find_all(
-        'section', class_="js-item-container")
+    root = resp.parse()
 
-    for sub_category_datas in list_sub_categories_datas:
+    for sub_category_datas in root.iterfind(".//section[@class='js-item-container']"):
         if sub_category_datas.get('id') == sub_category_id:
-            list_videos_datas = sub_category_datas.find_all('article')
+            list_videos_datas = sub_category_datas.findall('.//article')
 
             for video_datas in list_videos_datas:
 
                 if video_datas.get('data-type') == 'media':
-                    if video_datas.find('h4'):
-                        video_title = video_datas.find('h3').find(
-                            'a').get('title') + ' - ' + \
-                            video_datas.find('h4').text
+                    if video_datas.find('.//h4') is not None:
+                        video_title = video_datas.find('.//h3').find(
+                            './/a').get('title') + ' - ' + \
+                            video_datas.find('.//h4').text
                     else:
-                        video_title = video_datas.find('h3').find('a').get('title')
+                        video_title = video_datas.find('.//h3').find('.//a').get('title')
                     video_image = ''
-                    image_datas = video_datas.find('img').get(
+                    image_datas = video_datas.find('.//img').get(
                         'data-srcset').split(',')
                     for image_data in image_datas:
                         video_image = image_data.split(' ')[0]
@@ -316,26 +314,25 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid, sub_cat
     resp = urlquick.get(URL_SUB_CATEGORIES % (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
     json_parser = json.loads(resp.text)
 
-    sub_category_dl_value = json_parser["blocks"][sub_category_data_uuid]
-    sub_category_dl_soup = bs(sub_category_dl_value, 'html.parser')
-    list_sub_category_dl_datas = sub_category_dl_soup.find_all(
-        'section', class_="js-item-container")
+    parser = htmlement.HTMLement()
+    parser.feed(json_parser["blocks"][sub_category_data_uuid])
+    root = parser.close()
 
-    for sub_category_dl_datas in list_sub_category_dl_datas:
+    for sub_category_dl_datas in root.iterfind(".//section[@class='js-item-container']"):
         if sub_category_dl_datas.get('id') == sub_category_id:
-            list_videos_datas = sub_category_dl_datas.find_all('article')
+            list_videos_datas = sub_category_dl_datas.findall('.//article')
 
             for video_datas in list_videos_datas:
 
                 if video_datas.get('data-type') == 'media':
-                    if video_datas.find('h4'):
-                        video_title = video_datas.find('h3').find(
-                            'a').get('title') + ' - ' + \
-                            video_datas.find('h4').text
+                    if video_datas.find('.//h4') is not None:
+                        video_title = video_datas.find('.//h3').find(
+                            './/a').get('title') + ' - ' + \
+                            video_datas.find('.//h4').text
                     else:
-                        video_title = video_datas.find('h3').find('a').get('title')
+                        video_title = video_datas.find('.//h3').find('.//a').get('title')
                     video_image = ''
-                    image_datas = video_datas.find('img').get(
+                    image_datas = video_datas.find('.//img').get(
                         'data-srcset').split(',')
                     for image_data in image_datas:
                         video_image = image_data.split(' ')[0]
@@ -414,8 +411,11 @@ def list_lives(plugin, item_id):
         end_time_value = format_hours(live_datas["end_date"])
         date_value = format_day(live_datas["start_date"])
         live_title = live_channel_title + " - " + live_datas["title"]
+        if live_datas['subtitle']:
+            live_title += " - " + live_datas['subtitle']
         live_plot = 'Début le %s à %s (CET)' % (date_value, start_time_value) + \
             '\n\r' + 'Fin le %s à %s (CET)' % (date_value, end_time_value) + '\n\r' + \
+            'Accessibilité: ' + live_datas["geolock"]["title"] + '\n\r' + \
             live_datas["description"]
         live_image = live_datas["images"]["illustration"]["16x9"]["1248x702"]
 
@@ -423,7 +423,9 @@ def list_lives(plugin, item_id):
         item.label = live_title
         item.art['thumb'] = live_image
         item.info['plot'] = live_plot
-        item.info.date(date_value, '%Y/%m/%d')
+        #commented this line because othrewie sorting is made by date and then by title
+        #and doesn't help to find the direct
+        #item.info.date(date_time_value, '%Y/%m/%d')
         item.set_callback(
             get_live_url,
             item_id=item_id,

@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -60,13 +58,11 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'a', class_='show-item')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//a[@class='show-item']"):
         program_title = program_datas.get('href').replace('/shows/', '').replace('-', ' ')
-        program_image = program_datas.find('img').get('src')
+        program_image = program_datas.find('.//img').get('src')
         program_url = URL_ROOT + program_datas.get('href')
 
         item = Listitem()
@@ -83,20 +79,18 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='event-item episode')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('h3').text
+    for video_datas in root.iterfind(".//div[@class='event-item episode']"):
+        video_title = video_datas.find('.//h3').text + video_datas.find('.//h3/span').text
         video_image = ''
-        for image_datas in video_datas.find_all('img'):
+        for image_datas in video_datas.findall('.//img'):
             if 'jpg' in image_datas.get('src'):
                 video_image = image_datas.get('src')
         video_plot = ''
-        if video_datas.find('p', class_='synopsis'):
-            video_plot = video_datas.find('p', class_='synopsis').text
-        video_url = URL_ROOT + video_datas.find('a').get('href')
+        if video_datas.find(".//p[@class='synopsis']") is not None:
+            video_plot = video_datas.find(".//p[@class='synopsis']").text
+        video_url = URL_ROOT + video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title

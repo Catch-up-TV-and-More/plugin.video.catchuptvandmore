@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -64,13 +62,11 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find(
-        'div', class_='grid_12').find_all('li')
+    root = resp.parse("div", attrs={"class": "grid_12"})
 
-    for category_datas in list_categories_datas:
-        category_name = category_datas.find('a').text
-        category_url = category_datas.find('a').get('href')
+    for category_datas in root.iterfind(".//li"):
+        category_name = category_datas.find('.//a').text
+        category_url = category_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = category_name
@@ -85,17 +81,17 @@ def list_categories(plugin, item_id):
 def list_videos(plugin, item_id, category_url):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='grid_8 replay')
-    list_videos_datas += root_soup.find_all(
-        'div', class_='grid_4 replay')
+    root = resp.parse()
+    list_videos_datas = root.findall(
+        ".//div[@class='grid_8 replay']")
+    list_videos_datas += root.findall(
+        ".//div[@class='grid_4 replay']")
 
     for video_datas in list_videos_datas:
-        video_title = video_datas.find('h3').text
-        video_image = video_datas.find('img').get('src')
-        video_url = video_datas.find('a').get('href')
-        date_value = video_datas.find('p').text.split(' ')[0]
+        video_title = video_datas.find('.//h3').text
+        video_image = 'https:' + video_datas.find('.//img').get('src')
+        video_url = 'https:' + video_datas.find('.//a').get('href')
+        date_value = video_datas.find('.//p').text.split(' ')[0]
 
         item = Listitem()
         item.label = video_title
@@ -126,7 +122,7 @@ def get_video_url(
         r'idprogramme\=(.*?)\&autoplay').findall(resp.text)[0]
     resp2 = urlquick.get(URL_STREAM % video_id)
 
-    final_url = re.compile(
+    final_url = 'https:' + re.compile(
         r'source\: \"(.*?)\"').findall(resp2.text)[0]
     
     if download_mode:

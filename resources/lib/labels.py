@@ -74,6 +74,8 @@ LABELS = {
     'tn_live': 30060,
     'it_replay': 30061,
     'it_live': 30061,
+    'nl_replay': 30062,
+    'nl_live': 30062,
     'French channels': 30080,
     'Belgian channels': 30081,
     'Japanese channels': 30082,
@@ -86,6 +88,7 @@ LABELS = {
     'Spanish channels': 30089,
     'Tunisia channels': 30090,
     'Italian channels': 30091,
+    'Dutch channels': 30092,
     'Video quality': 30150,
     'Video quality (BEST|DEFAULT|DIALOG)': 30151,
     'Contents': 30152,
@@ -185,7 +188,7 @@ LABELS = {
     'bel_rtl': 'BEL RTL',
     'rtl_info': 'RTL INFO',
     'bx1': 'BX1',
-    'een': 'Eén',
+    'een': 'Één',
     'canvas': 'Canvas',
     'ketnet': 'Ketnet',
     'nrjhitstvbe': 'NRJ Hits TV',
@@ -250,7 +253,7 @@ LABELS = {
     '6ter': '6ter',
     'rmcstory': 'RMC Story',
     'cherie25': 'Chérie 25',
-    'la_1ere': 'La 1ère (' + utils.ensure_unicode(Script.setting['la_1ere.region']) + ')',
+    'la_1ere': 'La 1ère (' + utils.ensure_unicode(Script.setting['la_1ere.language']) + ')',
     'franceinfo': 'France Info',
     'bfmbusiness': 'BFM Business',
     'rmc': 'RMC',
@@ -261,7 +264,7 @@ LABELS = {
     'rmcdecouverte': 'RMC Découverte',
     'fun_radio': 'Fun Radio',
     'publicsenat': 'Public Sénat',
-    'france3regions': 'France 3 Régions (' + utils.ensure_unicode(Script.setting['france3.region']) + ')',
+    'france3regions': 'France 3 Régions (' + utils.ensure_unicode(Script.setting['france3regions.language']) + ')',
     'francetvsport': 'France TV Sport (francetv)',
     'histoire': 'Histoire',
     'tvbreizh': 'TV Breizh',
@@ -303,7 +306,9 @@ LABELS = {
     'viavosges': 'viàVosges',
     'tl7': 'Télévision Loire 7',
     'luckyjack': 'Lucky Jack',
-
+    'mblivetv' : 'Mont Blanc Live TV',
+    'tv8montblanc' : '8 Mont-Blanc',
+    
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',
     'nhklifestyle': 'NHKらいふ',
@@ -318,6 +323,7 @@ LABELS = {
     'ytv': '読売テレビ',
     'ntvnews24': '日テレ News24',
     'japanetshoppingdx': 'ジャパネットチャンネルDX',
+    'ktv': '関西テレビ',
 
     # United Kingdom channels / live TV
     'blaze': 'Blaze',
@@ -344,7 +350,7 @@ LABELS = {
     'arte': 'Arte (' + Script.setting['arte.language'] + ')',
     'euronews': 'Euronews (' + Script.setting['euronews.language'] + ')',
     'france24': 'France 24 (' + Script.setting['france24.language'] + ')',
-    'nhkworld': 'NHK World (' + Script.setting['nhkworld.country'] + ')',
+    'nhkworld': 'NHK World (' + Script.setting['nhkworld.language'] + ')',
     'tv5monde': 'TV5Monde',
     'tivi5monde': 'Tivi 5Monde',
     'bvn': 'BVN',
@@ -373,7 +379,7 @@ LABELS = {
 
     # Poland channels / live TV
     'tvp': 'TVP',
-    'tvp3': 'TVP 3 (' + utils.ensure_unicode(Script.setting['tvp3.region']) + ')',
+    'tvp3': 'TVP 3 (' + utils.ensure_unicode(Script.setting['tvp3.language']) + ')',
     'tvpinfo': 'TVP Info',
     'tvppolonia': 'TVP Polonia',
     'tvppolandin': 'TVP Poland IN',
@@ -417,6 +423,17 @@ LABELS = {
     'raiscuola': 'Rai Scuola',
     'la7d': 'La7d',
     'raiplay': 'Rai Play',
+
+    # Netherlands channels / live TV
+    'npo-1': 'NPO 1',
+    'npo-2': 'NPO 2',
+    'npo-zapp': 'NPO Zapp',
+    'npo-1-extra': 'NPO 1 Extra',
+    'npo-2-extra': 'NPO 2 Extra',
+    'npo-zappelin-extra': 'NPO Zappelin Extra',
+    'npo-nieuws': 'NPO Nieuws',
+    'npo-politiek': 'NPO Politiek',
+    'npo-start': 'NPO Start',
 
     # Websites
     'allocine': 'Allociné',

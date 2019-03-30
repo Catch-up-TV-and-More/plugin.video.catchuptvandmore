@@ -26,7 +26,6 @@ import urlquick
 
 import json
 import re
-from bs4 import BeautifulSoup as bs
 import xbmcgui
 import resources.lib.cq_utils as cqu
 
@@ -36,9 +35,6 @@ from resources.lib import resolver_proxy
 
 
 # TO DO
-# Download Video
-# Find a better solution to strip some text
-# remove YT_DL use API FTV
 # Fix Bonus
 
 URL_ROOT = utils.urljoin_partial('https://mytaratata.com')
@@ -61,14 +57,12 @@ def website_entry(plugin, item_id):
 @Route.register
 def root_taratata(plugin, item_id):
     """Add modes in the listing"""
-    list_categories_html = urlquick.get(URL_ROOT('')).text
-    list_categories_soup = bs(list_categories_html, 'html.parser')
-    list_categories = list_categories_soup.find(
-        'ul', class_='nav navbar-nav').find_all('a')
+    resp = urlquick.get(URL_ROOT(''))
+    root = resp.parse("ul", attrs={"class": "nav navbar-nav"})
 
-    for category in list_categories:
+    for category in root.iterfind(".//a"):
         item = Listitem()
-        item.label = category.get_text()
+        item.label = category.text
         category_url = URL_ROOT(category.get('href'))
 
         value_next = ''
@@ -92,18 +86,16 @@ def root_taratata(plugin, item_id):
 
 @Route.register
 def list_shows_taratata(plugin, item_id, category_url, page):
-    list_shows_html = urlquick.get(
-        category_url + '/page/%s' % str(page)).text
-    list_shows_soup = bs(list_shows_html, 'html.parser')
-    list_shows = list_shows_soup.find_all(
-        'div', class_='col-md-6')
+    resp = urlquick.get(
+        category_url + '/page/%s' % str(page))
+    root = resp.parse()
 
-    for live in list_shows:
+    for live in root.iterfind(".//div[@class='col-md-6']"):
         item = Listitem()
-        item.label = live.find('img').get('alt')
-        item.art['thumb'] = live.find('img').get('src')
+        item.label = live.find('.//img').get('alt')
+        item.art['thumb'] = live.find('.//img').get('src')
         show_url = URL_ROOT(live.find(
-            'a').get('href'))
+            './/a').get('href'))
 
         item.set_callback(
             list_videos,
@@ -122,14 +114,12 @@ def list_shows_taratata(plugin, item_id, category_url, page):
 @Route.register
 def list_shows_artistes_1(plugin, item_id, category_url, page):
     # Build categories alphabet artistes
-    list_alphabet_html = urlquick.get(category_url).text
-    list_alphabet_soup = bs(list_alphabet_html, 'html.parser')
-    list_alphabet = list_alphabet_soup.find(
-        'ul', class_='pagination pagination-artists').find_all('a')
+    resp = urlquick.get(category_url)
+    root = resp.parse("ul", attrs={"class": "pagination pagination-artists"})
 
-    for alphabet in list_alphabet:
+    for alphabet in root.iterfind(".//a"):
         item = Listitem()
-        item.label = alphabet.get_text()
+        item.label = alphabet.text
         alphabet_url = URL_ROOT(alphabet.get('href'))
 
         item.set_callback(
@@ -143,20 +133,14 @@ def list_shows_artistes_1(plugin, item_id, category_url, page):
 @Route.register
 def list_shows_artistes_2(plugin, item_id, category_url):
     # Build list artistes
-    list_artistes_html = urlquick.get(category_url).text
-    list_artistes_soup = bs(list_artistes_html, 'html.parser')
-    list_artistes = list_artistes_soup.find_all(
-        'div', class_='slot slot-artist')
+    resp = urlquick.get(category_url)
+    root = resp.parse()
 
-    if not list_artistes:
-        plugin.notify(plugin.localize(LABELS['No videos found']), '')
-        yield False
-
-    for artiste in list_artistes:
+    for artiste in root.iterfind(".//div[@class='slot slot-artist']"):
         item = Listitem()
-        item.label = artiste.find('img').get('alt')
-        artiste_url = URL_ROOT(artiste.find('a').get('href'))
-        item.art['thumb'] = 'https:' + artiste.find('img').get('src')
+        item.label = artiste.find('.//img').get('alt')
+        artiste_url = URL_ROOT(artiste.find('.//a').get('href'))
+        item.art['thumb'] = 'https:' + artiste.find('.//img').get('src')
 
         item.set_callback(
             list_shows_artistes_3,
@@ -169,19 +153,13 @@ def list_shows_artistes_2(plugin, item_id, category_url):
 @Route.register
 def list_shows_artistes_3(plugin, item_id, category_url):
     # Build Live and Bonus for an artiste
-    videos_artiste_html = urlquick.get(category_url).text
-    videos_artiste_soup = bs(videos_artiste_html, 'html.parser')
-    videos_artiste = videos_artiste_soup.find(
-        'ul', class_='nav nav-tabs').find_all('a')
+    resp = urlquick.get(category_url)
+    root = resp.parse("ul", attrs={"class": "nav nav-tabs"})
 
-    if not videos_artiste:
-        plugin.notify(plugin.localize(LABELS['No videos found']), '')
-        yield False
-
-    for videos in videos_artiste:
+    for videos in root.iterfind(".//a"):
         item = Listitem()
-        if 'Infos' not in videos.get_text():
-            item.label = videos.get_text()
+        if 'Infos' not in videos.text:
+            item.label = videos.text
             videos_url = URL_ROOT(videos.get('href'))
 
         item.set_callback(
@@ -195,18 +173,12 @@ def list_shows_artistes_3(plugin, item_id, category_url):
 @Route.register
 def list_shows_bonus(plugin, item_id, category_url, page):
     # Build categories bonus
-    list_bonus_html = urlquick.get(category_url).text
-    list_bonus_soup = bs(list_bonus_html, 'html.parser')
-    list_bonus = list_bonus_soup.find(
-        'ul', class_='nav nav-pills').find_all('a')
+    resp = urlquick.get(category_url)
+    root = resp.parse("ul", attrs={"class": "nav nav-pills"})
 
-    if not list_bonus:
-        plugin.notify(plugin.localize(LABELS['No videos found']), '')
-        yield False
-
-    for bonus in list_bonus:
+    for bonus in root.iterfind(".//a"):
         item = Listitem()
-        item.label = bonus.get_text()
+        item.label = bonus.text
         bonus_url = URL_ROOT(bonus.get('href'))
 
         item.set_callback(
@@ -221,20 +193,16 @@ def list_shows_bonus(plugin, item_id, category_url, page):
 @Route.register
 def list_videos(plugin, item_id, category_url):
 
-    replay_episodes_html = urlquick.get(
-        category_url).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-    video_integral = replay_episodes_soup.find(
-        'div', class_='col-md-6')
-    all_videos = replay_episodes_soup.find_all(
-        'div', class_='col-md-3')
+    resp = urlquick.get(category_url)
+    root = resp.parse()
 
+    video_integral = root.find(".//div[@class='col-md-6']")
     if video_integral is not None:
         item = Listitem()
-        item.label = video_integral.find('img').get('alt')
+        item.label = video_integral.find('.//img').get('alt')
         video_url = URL_ROOT(video_integral.find(
-            'a').get('href'))
-        item.art['thumb'] = video_integral.find('img').get('src')
+            './/a').get('href'))
+        item.art['thumb'] = video_integral.find('.//img').get('src')
 
         item.context.script(
             get_video_url,
@@ -252,12 +220,12 @@ def list_videos(plugin, item_id, category_url):
         )
         yield item
 
-    for video in all_videos:
+    for video in root.iterfind(".//div[@class='col-md-3']"):
 
         item = Listitem()
-        item.label = video.find('img').get('alt')
-        video_url = URL_ROOT(video.find('a').get('href'))
-        item.art['thumb'] = video.find('img').get('src')
+        item.label = video.find('.//img').get('alt')
+        video_url = URL_ROOT(video.find('.//a').get('href'))
+        item.art['thumb'] = video.find('.//img').get('src')
 
         item.context.script(
             get_video_url,
@@ -279,23 +247,20 @@ def list_videos(plugin, item_id, category_url):
 @Route.register
 def list_videos_bonus(plugin, item_id, category_url, page):
 
-    replay_episodes_html = urlquick.get(
-        category_url + '/page/%s' % str(page)).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-    video_integral = replay_episodes_soup.find(
-        'div', class_='col-md-6')
-    all_videos = replay_episodes_soup.find_all(
-        'div', class_='col-md-3')
+    resp = urlquick.get(
+        category_url + '/page/%s' % str(page))
+    root = resp.parse()
 
     at_least_one_item = False
 
+    video_integral = root.find(".//div[@class='col-md-6']")
     if video_integral is not None:
         at_least_one_item = True
         item = Listitem()
-        item.label = video_integral.find('img').get('alt')
+        item.label = video_integral.find('.//img').get('alt')
         video_url = URL_ROOT(video_integral.find(
-            'a').get('href'))
-        item.art['thumb'] = video_integral.find('img').get('src')
+            './/a').get('href'))
+        item.art['thumb'] = video_integral.find('.//img').get('src')
 
         item.context.script(
             get_video_url,
@@ -313,12 +278,12 @@ def list_videos_bonus(plugin, item_id, category_url, page):
         )
         yield item
 
-    for video in all_videos:
+    for video in root.iterfind(".//div[@class='col-md-3']"):
         at_least_one_item = True
         item = Listitem()
-        item.label = video.find('img').get('alt')
-        video_url = URL_ROOT(video.find('a').get('href'))
-        item.art['thumb'] = video.find('img').get('src')
+        item.label = video.find('.//img').get('alt')
+        video_url = URL_ROOT(video.find('.//a').get('href'))
+        item.art['thumb'] = video.find('.//img').get('src')
 
         item.context.script(
             get_video_url,
@@ -354,29 +319,29 @@ def get_video_url(
     url_selected = ''
     all_datas_videos_quality = []
     all_datas_videos_path = []
-    videos_html = urlquick.get(video_url).text
-    videos_soup = bs(videos_html, 'html.parser')
+    videos_html = urlquick.get(video_url)
+    root = videos_html.parse()
+    root_videos = videos_html.parse("ul", attrs={"class": "nav nav-tabs"})
 
-    list_videos = videos_soup.find(
-        'ul', class_='nav nav-tabs').find_all('a')
-
-    for video in list_videos:
+    for video in root_videos.iterfind(".//a"):
         if '#video-' in video.get('href'):
             # Find a better solution to strip
-            all_datas_videos_quality.append(video.get_text().strip())
+            if video.find('.//span') is not None:
+                all_datas_videos_quality.append(video.text.strip() + ' ' + video.find('.//span').text)
+            else:
+                all_datas_videos_quality.append(video.text)
             # Get link
             value_jwplayer_id = video.get('data-jwplayer-id')
             # Case mp4
+            url = ''
             if value_jwplayer_id != '':
-                list_streams = videos_soup.find_all(
-                    'div', class_='jwplayer')
-                for stream in list_streams:
+                for stream in root.iterfind(".//div[@class='jwplayer']"):
                     if stream.get('id') == value_jwplayer_id:
                         url = stream.get('data-source')
             # Cas Yt
             else:
                 video_id = re.compile(
-                    'youtube.com/embed/(.*?)\?').findall(videos_html)[0]
+                    'youtube.com/embed/(.*?)\?').findall(videos_html.text)[0]
                 url = resolver_proxy.get_stream_youtube(plugin, video_id, False)
 
             all_datas_videos_path.append(url + '|referer=%s' % video_url)
@@ -385,9 +350,7 @@ def get_video_url(
         elif '#ftv-player-' in video.get('href'):
             # Get link
             value_ftvlayer_id = video.get('data-ftvplayer-id')
-            list_streams = videos_soup.find_all(
-                'iframe', class_='embed-responsive-item')
-            for stream in list_streams:
+            for stream in root.iterfind(".//iframe[@class='embed-responsive-item']"):
                 if stream.get('id') == value_ftvlayer_id:
                     url_id = stream.get('src')
             id_embeded = url_id.split('akamaihd.net/')[1]

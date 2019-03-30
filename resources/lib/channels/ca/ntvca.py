@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -52,8 +50,8 @@ def live_entry(plugin, item_id, item_dict):
 def get_live_url(plugin, item_id, video_id, item_dict):
 
     resp = urlquick.get(URL_LIVE)
-    root_soup = bs(resp.text, 'html.parser')
-    live_datas = root_soup.find('iframe')
+    root = resp.parse()
+    live_datas = root.find('.//iframe')
     resp2 = urlquick.get('http:' + live_datas.get('src'))
     return re.compile(
         r'\"url\"\:\"(.*?)\"').findall(resp2.text)[0]

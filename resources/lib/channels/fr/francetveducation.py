@@ -33,8 +33,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -43,6 +41,8 @@ import urlquick
 Channels:
     * France TV Education
 '''
+
+# Add search button
 
 URL_ROOT_EDUCATION = 'http://education.francetv.fr'
 
@@ -99,18 +99,14 @@ def list_programs(plugin, item_id, next_url, page):
     - ...
     """
     resp = urlquick.get(next_url % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find(
-        'div', class_='center-block bloc-thumbnails').find_all(
-            'div', class_=re.compile("col-xs-3"))
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_data_content = program_datas.find(
-            'div', class_='ftve-thumbnail ').get('data-contenu')
+    for program_datas in root.iterfind(".//div[@class='ftve-thumbnail ']"):
+        program_data_content = program_datas.get('data-contenu')
         program_title = program_datas.find(
-            'h4').find('a').get('title')
+            './/h4').find('.//a').get('title')
         program_image = program_datas.find(
-            'div', class_='thumbnail-img lazy').get('data-original')
+            ".//div[@class='thumbnail-img lazy']").get('data-original')
         program_url = URL_SERIE_DATA_EDUCATION % (
             program_data_content, program_data_content) + '&page=%s'
 
@@ -134,18 +130,14 @@ def list_programs(plugin, item_id, next_url, page):
 def list_videos(plugin, item_id, next_url, page):
 
     resp = urlquick.get(next_url % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find(
-        'div', class_='center-block bloc-thumbnails').find_all(
-            'div', class_=re.compile("col-xs-3"))
+    root = resp.parse()
 
-    for video_data in list_videos_datas:
-        video_title = video_data.find('h4').find(
-            'a').get('title')
+    for video_data in root.iterfind(".//div[@class='ftve-thumbnail ']"):
+        video_title = video_data.find('.//h4').find(
+            './/a').get('title')
         video_image = video_data.find(
-            'div', class_='thumbnail-img lazy').get('data-original')
-        video_data_contenu = video_data.find(
-            'div', class_='ftve-thumbnail ').get('data-contenu')
+            ".//div[@class='thumbnail-img lazy']").get('data-original')
+        video_data_contenu = video_data.get('data-contenu')
 
         item = Listitem()
         item.label = video_title

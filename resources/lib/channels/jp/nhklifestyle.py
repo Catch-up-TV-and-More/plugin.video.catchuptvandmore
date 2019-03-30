@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -66,29 +64,31 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_NHK_LIFESTYLE)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find_all(
-        'a', class_=re.compile("text-color-"))
-    for category_datas in list_categories_datas:
-        category_title = category_datas.text
-        category_url = URL_NHK_LIFESTYLE + category_datas.get('href')
+    root = resp.parse()
 
-        item = Listitem()
-        item.label = category_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url)
-        yield item
+    for category_datas in root.iterfind(".//h2[@class='p-sliderSection__heading']"):
+        if category_datas.find('.//a') is not None:
+            if category_datas.find('.//a').get('class') is not None:
+                if 'text-color-' in category_datas.find('.//a').get('class'):
+                    category_title = category_datas.find('.//a').text
+                    category_url = URL_NHK_LIFESTYLE + category_datas.find('.//a').get('href')
+
+                    item = Listitem()
+                    item.label = category_title
+                    item.set_callback(
+                        list_videos,
+                        item_id=item_id,
+                        category_url=category_url)
+                    yield item
 
 
 @Route.register
 def list_videos(plugin, item_id, category_url):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas_json_value = root_soup.find(
-        'article').find_all('script')[0].text
+    root = resp.parse()
+    list_videos_datas_json_value = root.find(
+        './/article').findall('.//script')[0].text
 
     # TODO try to simplify it
     list_videos_datas_json_value = list_videos_datas_json_value.replace(']', '')

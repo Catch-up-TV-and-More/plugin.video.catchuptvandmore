@@ -31,13 +31,12 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
+import json
 import re
 import urlquick
 
 # TO DO
-# Fix Download Video
+# Fix Replay (DRM)
 
 
 # Live
@@ -45,14 +44,10 @@ URL_LIVE_JSON = 'http://dbxm993i42r09.cloudfront.net/' \
                 'configs/blaze.json?callback=blaze'
 
 # Replay
-URL_SHOWS = 'http://www.blaze.tv/series?page=%s'
+URL_SHOWS = 'http://www.blaze.tv/series'
 # pageId
 
-URL_API_KEY = 'https://dbxm993i42r09.cloudfront.net/configs/config.blaze.js'
-
-URL_STREAM = 'https://d2q1b32gh59m9o.cloudfront.net/player/config?' \
-             'callback=ssmp&client=blaze&type=vod&apiKey=%s&videoId=%s&' \
-             'format=jsonp&callback=ssmp'
+URL_STREAM = 'https://www.blaze.tv/stream/replay/widevine/%s'
 # apiKey, videoId
 
 URL_ROOT = 'http://www.blaze.tv'
@@ -76,26 +71,23 @@ def list_categories(plugin, item_id):
     item.label = plugin.localize(LABELS['All programs'])
     item.set_callback(
         list_programs,
-        item_id=item_id,
-        page='0')
+        item_id=item_id)
     yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, page):
+def list_programs(plugin, item_id):
     """
     Build programs listing
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(URL_SHOWS % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'div', class_='item')
+    resp = urlquick.get(URL_SHOWS)
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('a').find('img').get('alt')
-        program_image = program_datas.find('a').find('img').get('src')
+    for program_datas in root.iterfind(".//div[@class='col-sm-4']"):
+        program_title = program_datas.find('.//h3').get('title')
+        program_image = program_datas.find('.//img').get('data-src')
         program_url = URL_ROOT + program_datas.find('a').get('href')
 
         item = Listitem()
@@ -107,22 +99,28 @@ def list_programs(plugin, item_id, page):
             program_url=program_url)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        page=str(int(page) + 1))
-
 
 @Route.register
 def list_seasons(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_seasons_datas = root_soup.find(
-        'div', class_='pagination').find_all('a')
+    root = resp.parse("ul", attrs={"class": "nav nav-tabs"})
 
-    for season_datas in list_seasons_datas:
+    for season_datas in root.iterfind(".//h3"):
         season_title = 'Series %s' % season_datas.text.strip()
-        season_url = URL_ROOT + season_datas.get('href')
+        season_url = program_url + '#%s' % season_datas.text.split(' ')[2]
+
+        item = Listitem()
+        item.label = season_title
+        item.set_callback(
+            list_videos,
+            item_id=item_id,
+            season_url=season_url)
+        yield item
+    
+    if root.find('.//h2') is not None:
+        season_title = 'Series %s' % root.find('.//h2').text.strip()
+        season_url = program_url
 
         item = Listitem()
         item.label = season_title
@@ -137,33 +135,17 @@ def list_seasons(plugin, item_id, program_url):
 def list_videos(plugin, item_id, season_url):
 
     resp = urlquick.get(season_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='carousel-inner')[0].find_all(
-            'div', class_='col-md-4 wrapper-item season')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
+    for video_datas in root.iterfind(".//a[@class='thumbnail video vod-REPLAY']"):
 
-        value_episode = video_datas.find(
-            'span', class_='caption-description'
-        ).get_text().split(' | ')[1].split(' ')[1]
-        value_season = video_datas.find(
-            'span', class_='caption-description'
-        ).get_text().split(' | ')[0].split(' ')[1]
-        video_title = video_datas.find(
-            'span', class_='caption-title'
-        ).get_text() + ' S%sE%s' % (value_season, value_episode)
-        video_plot = video_datas.find(
-            'span', class_='caption-title').get_text() + ' '
-        video_plot = video_plot + video_datas.find(
-            'span', class_='caption-description').get_text()
-        video_image = video_datas.find('a').find('img').get('src')
-        video_url = URL_ROOT + video_datas.find('a').get('href')
+        video_title = video_datas.find('.//h3').get('title')
+        video_image = video_datas.find('.//img').get('data-src')
+        video_url = URL_ROOT + video_datas.get('href')
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
-        item.info['plot'] = video_plot
 
         item.context.script(
             get_video_url,
@@ -184,25 +166,17 @@ def list_videos(plugin, item_id, season_url):
 def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
-    resp = urlquick.get(
-        video_url,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-    videoId = re.compile('data-uvid="(.*?)"').findall(resp.text)[0]
-    resp_apikey = urlquick.get(
-        URL_API_KEY,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-    apikey = re.compile('"apiKey": "(.*?)"').findall(resp_apikey.text)[0]
-    resp_stream = urlquick.get(
-        URL_STREAM % (apikey, videoId),
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-
-    final_video_url = re.compile('"hls":"(.*?)"').findall(resp_stream.text)[0]
+    resp = urlquick.get(video_url)
+    stream_id = re.compile(
+        r'uvid\"\:\"(.*?)\"').findall(resp.text)[0]
+    resp2 = urlquick.get(URL_STREAM % stream_id, headers={"x-requested-with": "XMLHttpRequest"}, max_age=-1)
+    json_parser2 = json.loads(resp2.text)
+    stream_url = ''
+    for stream_datas in json_parser2["playerSource"]["sources"]:
+        stream_url = stream_datas["src"]
     if download_mode:
-        return download.download_video(final_video_url, video_label)
-    return final_video_url
+        return download.download_video(stream_url, video_label)
+    return stream_url
 
 
 def live_entry(plugin, item_id, item_dict):

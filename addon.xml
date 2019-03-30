@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.4"
+       version="0.2.5"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="script.module.beautifulsoup4" version="4.3.2"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
     <import addon="script.module.requests" version="2.12.4"/>
     <import addon="script.module.codequick" version="0.9.5"/>
@@ -21,38 +20,67 @@
     <description lang="fr_fr">Catch-Up TV &amp; More regroupe dans un même plugin Kodi l'ensemble des vidéos des différents services et chaînes de Replay TV (rattrapage TV) ainsi que l'accès au direct. De plus, cette extension vous permet d'accéder rapidement aux vidéos et contenus proposés par certains sites internet.</description>
     <disclaimer lang="fr_fr">Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.</disclaimer>
     <summary lang="en_gb">Catch-Up TV &amp; More: It's all in the title.</summary>
-    <description lang="en_gb">Catch-Up TV &amp; More brings together in one Kodi plugin all the videos of the various services and channels of catch-up TV and live TV. Furthermore, this addon allows you to quickly access the videos and content offered by certain websites.</description>
+    <description lang="en_gb">Catch-Up TV &amp; More brings together in one Kodi add-on all the videos of the various services and channels of catch-up TV and live TV. Furthermore, this add-on allows you to quickly access the videos and content offered by certain websites.</description>
     <disclaimer lang="en_gb">Bug reports, suggestions for improvements or content additions are welcome! GitHub or e-mail.</disclaimer>
     <description lang="he_il">ההרחבה מאפשרת לך להתעדכן בתוכן השידורים תוסף אחד של קודי מרכז את כל קטעי וידאו של שירותים שונים וערוצי תוכן משודר. בנוסף, תוספת זו מאפשרת לך לגשת במהירות לסרטונים ולתכנים המוצעים על ידי אתרים מסוימים.</description>
     <disclaimer lang="he_il">דוחות שגיאה, הצעות לשיפור או תוספות תוכן יתקבלו בברכה! ל-GitHub או אימייל.</disclaimer>
+    <summary lang="nl_nl">Catch-Up TV &amp; More: Replay tv, Live tv en meer.</summary>
+    <description lang="nl_nl">Catch-Up TV &amp; More brengt replay en live tv van verschikkende diensten en kanalen samen in één Kodi add-on. Bovendien stelt deze add-on u instaat video's van bepaalde websites makkelijk te benaderen.</description>
+    <disclaimer lang="nl_nl">Bug meldingen, suggesties ter verbetering of additionele inhouden zijn welkom! Via GitHub of e-mail.</disclaimer>
 
-    <language>fr</language>
+    <language></language>
     <platform>all</platform>
     <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-    <forum></forum>
-    <website></website>
-    <email>catch.up.tv.and.more [AT] gmail [DOT] com</email>
+    <forum>https://forum.kodi.tv/showthread.php?tid=307107</forum>
+    <website>https://catch-up-tv-and-more.github.io/</website>
+    <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.4]
-[Fix] Replay - Quest OD (UK)
-[Fix] Replay - VRT NU (BE)
-[Update] Live TV - myTF1 - better quality (FR) - Thanks chamchenko
-[Add] Replay - Télévision Loire 7 (FR)
-[Add] Replay and Live TV - TV Com (BE)
-[Fix] Replay - ICI Télé (CA)
-[Add] Live TV - TVP Poland IN (PL)
-[Add] Replay and Live TV - Léman Bleu (CH)
-[Fix] Website - Allociné (FR)
-[Add] Live TV - Lucky Jack (FR)
-[Fix] Live TV - RTS Info (CH)
-[Add] Live TV - TVM3 (CH)
-[Fix] Live TV - SRGSSR - HTTP 400 (CH)
-[DRM] Live TV - SRGSSR - First Work - it is DRM DASH (see TODO https://github.com/peak3d/inputstream.adaptive) (CH)
-[Fix] Replay - SRGSSR (CH)
-[Add] Replay - نسمة تي في (TN)
-[Fix] Live TV - Paramount Channel (ES|IT)
-[Add] Live TV - RT (Contents {FR|EN|AR|ES}) (WO)
+[Version 0.2.5]
+[Update] Live TV - RTBF - Add avaibility / Remove Date / Add subtitle (BE) - Thanks Gaet81
+[Fix] Replay - Arte (WO)
+[Fix] Subtitle - BVN (WO)
+[DRM] Replay - BVN (WO)
+[Remove] Beautifulsoup - [BVN, Afrique Media, Arirang, Channel News Asia, TV5Monde Afrique, Tivi5monde, TV5Monde] (WO)
+[Remove] Beautifulsoup - [30 millions d'Amis, Culturepub, Autoplus, Les Argonautes, Noob TV, Tête à claques, Taratata, ONF, NFB, INA, NotreHistoire.ch, Allocine] (website)
+[Remove] Beautifulsoup - [CNews, ABWeb, Antene Réunion, BFM TV, Gulli, Canal 10, CultureBox, KTO, GameOne, La 1ere, La chaine Météo, LCI, LCP, RMC Decouverte, RMC Story, Tébéo, Télé Loire 7, ViàChannels, BFM Paris, Caledonia, France 3 regions, France TV Education, Gong TV, J-One, MyTF1, Nouvelle Ecriture, NRJ, Onzeo, Ouatch TV, Public Sénat, TF1Thématiques] (FR)
+[Remove] Beautifulsoup - [BRF Mediathek, RTC Télé Liege, Télé MB, BX1, NRJHITSTVBE, TVCOM, TVLUX, RTBF, VRT] (BE)
+[Remove] Beautifulsoup - [Atresplayer, Realmadrir TV, Mitele] (ES)
+[Remove] Beautifulsoup - [ICI Télé, ICI TouTV, NTV, Téléquebec, TéléMag, TV5.ca] (CA)
+[Remove] Beautifulsoup - [TVM 3, BeCuriousTV, Lemanbleu] (CH)
+[Remove] Beautifulsoup - [TBS News, TVER, NHK Lifestyle] (JP)
+[Remove] Beautifulsoup - [Nessma, Watania] (TN)
+[Remove] Beautifulsoup - [Blaze, Sky] (UK)
+[Remove] Beautifulsoup - [ABC News, TBD, NYC Media] (US)
+[Remove] Beautifulsoup - [La7] (IT)
+[Remove] Beautifulsoup - [TVP] (PL)
+[Remove] Import Beautifulsoup from addon.xml
+[Add] Replay - RT (Contents {FR|EN}) (WO)
+[Add] Live TV - NPO Channels (NPO 1, NPO 2, NPO Nieuws, ....) (NL) - Thanks Forage !
+[Add] Dutch translation of this add-on
+[Fix] Live TV - M6 Boutique (FR)
+[Add] Live TV - RTLPlay (RTL-TVI, RTL INFO, ...) (BE) - Thanks Gaet81
+[Fix] Live TV - NRJ 12 and Cherie 25 (FR)
+[Fix] Plugin - remove some warning log
+[Add] Replay - 関西テレビ (JP)
+[Fix] Replay - Cnews (FR)
+[Fix] Live TV - France TV - some mistmatchs on the json "France 4 have the broacast_Id of France 5" (FR)
+[Fix] Replay - Tele MB (BE)
+[Fix] Replay - Unis (CA)
+[Fix] Replay - LCI (FR)
+[Add] Feature - Bind Live TV to Kodi mode TV (see https://catch-up-tv-and-more.github.io/live_tv_installation/)
+[Remove] Live TV - QVC (FR)
+[Fix] Replay - Tébéo (FR)
+[Fix] Replay - TVLux (BE)
+[Fix] Replay - Blaze TV (UK)
+[Fix] Replay - TVER (JP)
+[Fix] Live TV - TVM3 (CH)
+[Fix] Replay - MyCanal (FR)
+[Remove] Images (Thumb/Fanart) of channels and websites => stored in this repo "https://github.com/Catch-up-TV-and-More/images"
+[Remove] Requests - [AstresPlayer] (ES)
+[Remove] Replay - [AstresPlayer] (ES)
+[Add] Replay / Live - 8 Mont blanc (FR) - Thanks Gaet81
+[Add] Replay / Live - Mont Blanc Live TV (FR) - Thanks Gaet81
     </news>
     <assets>
       <icon>icon.png</icon>

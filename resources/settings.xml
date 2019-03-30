@@ -62,6 +62,9 @@
             <setting label="30061" type="bool" id="it_live" default="true"/>
             <setting label="" type="number" visible="false" id="it_live.order" default="12"/>
 
+            <setting label="30062" type="bool" id="nl_live" default="true"/>
+            <setting label="" type="number" visible="false" id="nl_live.order" default="13"/>
+
         <!-- Hide catch-up TV countries -->
         <setting label="30016" type="lsep"/>
 
@@ -100,6 +103,9 @@
 
             <setting label="30061" type="bool" id="it_replay" default="true"/>
             <setting label="" type="number" visible="false" id="it_replay.order" default="12"/>
+
+            <setting label="30062" type="bool" id="nl_replay" default="true"/>
+            <setting label="" type="number" visible="false" id="nl_replay.order" default="13"/>
     </category>
     <!-- Countries-->
 
@@ -652,6 +658,12 @@
 
             <setting label="Lucky Jack" type="bool" id="luckyjack" default="true" visible="eq(-165,true)"/>
             <setting label="" type="number" visible="false" id="luckyjack.order" default="83"/>
+            
+            <setting label="Mont Blanc Live TV" type="bool" id="mblivetv" default="true" visible="eq(-167,true)"/>
+            <setting label="" type="number" visible="false" id="mblivetv.order" default="84"/>
+            
+            <setting label="8 Mont-Blanc" type="bool" id="tv8montblanc" default="true" visible="eq(-169,true)"/>
+            <setting label="" type="number" visible="false" id="tv8montblanc.order" default="85"/>
         <!-- France -->
 
 
@@ -694,6 +706,9 @@
 
             <setting label="ジャパネットチャンネルDX" type="bool" id="japanetshoppingdx" default="true" visible="eq(-23,true)"/>
             <setting label="" type="number" visible="false" id="japanetshoppingdx.order" default="12"/>
+
+            <setting label="関西テレビ" type="bool" id="ktv" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="ktv.order" default="13"/>
 
             <!--<setting label="フジテレビ" type="bool" id="cx" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="cx.order" default="8"/>-->
@@ -891,6 +906,39 @@
             <setting label="" type="number" visible="false" id="raiplay.order" default="16"/>
         <!-- Italia -->
 
+        <!-- Netherlands -->
+        <setting label="30092" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <setting label="" type="bool" id="nl" default="true" visible="false"/>
+
+            <setting label="NPO 1" type="bool" id="npo-1" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="npo-1.order" default="1"/>
+
+            <setting label="NPO 2" type="bool" id="npo-2" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="npo-2.order" default="2"/>
+
+            <setting label="NPO Zapp" type="bool" id="npo-zapp" default="true" visible="eq(-5,true)"/>
+            <setting label="" type="number" visible="false" id="npo-zapp.order" default="3"/>
+
+            <setting label="NPO 1 Extra" type="bool" id="npo-1-extra" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="npo-1-extra.order" default="4"/>
+
+            <setting label="NPO 2 Extra" type="bool" id="npo-2-extra" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="npo-2-extra.order" default="5"/>
+
+            <setting label="NPO Zappelin Extra" type="bool" id="npo-zappelin-extra" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="npo-zappelin-extra.order" default="6"/>
+
+            <setting label="NPO Nieuws" type="bool" id="npo-nieuws" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="npo-nieuws.order" default="7"/>
+
+            <setting label="NPO Politiek" type="bool" id="npo-politiek" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="npo-politiek.order" default="8"/>
+
+            <setting label="NPO Start" type="bool" id="npo-start" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="npo-start.order" default="9"/>
+       <!-- Netherlands -->
+
+
     </category>
     <!-- Channels -->
 
@@ -903,55 +951,55 @@
         <setting label="30014" type="lsep" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="websites" default="true" visible="false"/>-->
 
-            <setting label="Allociné" type="bool" id="allocine" default="true" visible="eq(-1,true)"/>
+            <setting label="Allociné" type="bool" id="allocine" default="true"/>
             <setting label="" type="number" visible="false" id="allocine.order" default="1"/>
 
-            <setting label="Au pays des Têtes à claques" type="bool" id="tetesaclaques" default="true" visible="eq(-3,true)"/>
+            <setting label="Au pays des Têtes à claques" type="bool" id="tetesaclaques" default="true"/>
             <setting label="" type="number" visible="false" id="tetesaclaques.order" default="2"/>
 
-            <setting label="Taratata" type="bool" id="taratata" default="true" visible="eq(-5,true)"/>
+            <setting label="Taratata" type="bool" id="taratata" default="true"/>
             <setting label="" type="number" visible="false" id="taratata.order" default="3"/>
 
-            <setting label="Noob TV" type="bool" id="noob" default="true" visible="eq(-7,true)"/>
+            <setting label="Noob TV" type="bool" id="noob" default="true"/>
             <setting label="" type="number" visible="false" id="noob.order" default="4"/>
 
-            <setting label="Culturepub" type="bool" id="culturepub" default="true" visible="eq(-9,true)"/>
+            <setting label="Culturepub" type="bool" id="culturepub" default="true"/>
             <setting label="" type="number" visible="false" id="culturepub.order" default="5"/>
 
-            <setting label="Auto Plus" type="bool" id="autoplus" default="true" visible="eq(-11,true)"/>
+            <setting label="Auto Plus" type="bool" id="autoplus" default="true"/>
             <setting label="" type="number" visible="false" id="autoplus.order" default="6"/>
 
-            <setting label="Notre Histoire.ch" type="bool" id="notrehistoirech" default="true" visible="eq(-13,true)"/>
+            <setting label="Notre Histoire.ch" type="bool" id="notrehistoirech" default="true"/>
             <setting label="" type="number" visible="false" id="notrehistoirech.order" default="7"/>
 
-            <setting label="30 Millions d'Amis" type="bool" id="30millionsdamis" default="true" visible="eq(-15,true)"/>
+            <setting label="30 Millions d'Amis" type="bool" id="30millionsdamis" default="true"/>
             <setting label="" type="number" visible="false" id="30millionsdamis.order" default="8"/>
 
-            <setting label="Elle" type="bool" id="elle" default="true" visible="eq(-17,true)"/>
+            <setting label="Elle" type="bool" id="elle" default="true"/>
             <setting label="" type="number" visible="false" id="elle.order" default="9"/>
 
-            <setting label="New York Times" type="bool" id="nytimes" default="true" visible="eq(-19,true)"/>
+            <setting label="New York Times" type="bool" id="nytimes" default="true"/>
             <setting label="" type="number" visible="false" id="nytimes.order" default="10"/>
 
-            <setting label="Fosdem" type="bool" id="fosdem" default="true" visible="eq(-21,true)"/>
+            <setting label="Fosdem" type="bool" id="fosdem" default="true"/>
             <setting label="" type="number" visible="false" id="fosdem.order" default="11"/>
 
-            <setting label="Ina" type="bool" id="ina" default="true" visible="eq(-23,true)"/>
+            <setting label="Ina" type="bool" id="ina" default="true"/>
             <setting label="" type="number" visible="false" id="ina.order" default="12"/>
 
-            <setting label="Office National du Film du Canada" type="bool" id="onf" default="true" visible="eq(-25,true)"/>
+            <setting label="Office National du Film du Canada" type="bool" id="onf" default="true"/>
             <setting label="" type="number" visible="false" id="onf.order" default="13"/>
 
-            <setting label="National Film Board Of Canada" type="bool" id="nfb" default="true" visible="eq(-27,true)"/>
+            <setting label="National Film Board Of Canada" type="bool" id="nfb" default="true"/>
             <setting label="" type="number" visible="false" id="nfb.order" default="14"/>
 
-            <setting label="Marmiton" type="bool" id="marmiton" default="true" visible="eq(-29,true)"/>
+            <setting label="Marmiton" type="bool" id="marmiton" default="true"/>
             <setting label="" type="number" visible="false" id="marmiton.order" default="15"/>
 
-            <setting label="Les Argonautes" type="bool" id="lesargonautes" default="true" visible="eq(-31,true)"/>
+            <setting label="Les Argonautes" type="bool" id="lesargonautes" default="true"/>
             <setting label="" type="number" visible="false" id="lesargonautes.order" default="16"/>
 
-            <setting label="National FFF" type="bool" id="nationalfff" default="true" visible="eq(-33,true)"/>
+            <setting label="National FFF" type="bool" id="nationalfff" default="true"/>
             <setting label="" type="number" visible="false" id="nationalfff.order" default="17"/>
     </category>
     <!-- Websites -->
@@ -981,36 +1029,36 @@
             <setting label="30085" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <!--<setting label="" type="bool" id="wo" default="true" visible="false"/>-->
 
-                <setting label="30153" type="labelenum" id="arte.language" visible="eq(-1,true)" values="FR|DE|EN|ES|PL|IT" default="FR"/>
-                <setting label="30155" type="labelenum" id="euronews.language" visible="eq(-2,true)" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU" default="FR"/>
-                <setting label="30154" type="labelenum" id="france24.language" visible="eq(-3,true)" values="FR|EN|AR|ES" default="FR"/>
-                <setting label="30156" type="labelenum" id="mtv.language" visible="eq(-4,true)" values="FR" default="FR"/>
-                <setting label="30157" type="labelenum" id="dw.language" visible="eq(-5,true)" values="EN|DE|ES|AR" default="EN"/>
-                <setting label="30160" type="labelenum" id="beinsports.language" visible="eq(-6,true)" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
-                <setting label="30161" type="labelenum" id="qvc.language" visible="eq(-7,true)" values="FR|JP|DE|IT|UK|US" default="FR"/>
-                <setting label="30162" type="labelenum" id="nhkworld.country" visible="eq(-8,true)" values="Outside Japan|In Japan" default="Outside Japan"/>
-                <setting label="30163" type="labelenum" id="cgtn.language" visible="eq(-9,true)" values="FR|EN|AR|ES|RU" default="FR"/>
-                <setting label="30164" type="labelenum" id="paramountchannel.language" visible="eq(-10,true)" values="ES|IT" default="ES"/>
-                <setting label="30166" type="labelenum" id="rt.language" visible="eq(-11,true)" values="FR|EN|AR|ES" default="FR"/>
+                <setting label="30153" type="labelenum" id="arte.language" values="FR|DE|EN|ES|PL|IT" default="FR"/>
+                <setting label="30155" type="labelenum" id="euronews.language" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU" default="FR"/>
+                <setting label="30154" type="labelenum" id="france24.language" values="FR|EN|AR|ES" default="FR"/>
+                <setting label="30156" type="labelenum" id="mtv.language" values="FR" default="FR"/>
+                <setting label="30157" type="labelenum" id="dw.language" values="EN|DE|ES|AR" default="EN"/>
+                <setting label="30160" type="labelenum" id="beinsports.language" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
+                <setting label="30161" type="labelenum" id="qvc.language" values="JP|DE|IT|UK|US" default="UK"/>
+                <setting label="30162" type="labelenum" id="nhkworld.language" values="Outside Japan|In Japan" default="Outside Japan"/>
+                <setting label="30163" type="labelenum" id="cgtn.language" values="FR|EN|AR|ES|RU" default="FR"/>
+                <setting label="30164" type="labelenum" id="paramountchannel.language" values="ES|IT" default="ES"/>
+                <setting label="30166" type="labelenum" id="rt.language" values="FR|EN|AR|ES" default="FR"/>
 
             <!-- French channels -->
             <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
-                <setting label="30158" type="labelenum" id="france3.region" visible="eq(-1,true)" values="Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes" default="Alpes"/>
-                <setting label="30159" type="labelenum" id="la_1ere.region" visible="eq(-2,true)" values="Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer" default="Guadeloupe"/>
+                <setting label="30158" type="labelenum" id="france3regions.language" values="Alpes|Alsace|Aquitaine|Auvergne|Bourgogne|Bretagne|Centre-Val de Loire|Chapagne-Ardenne|Corse|Côte d'Azur|Franche-Compté|Languedoc-Roussillon|Limousin|Lorraine|Midi-Pyrénées|Nord-Pas-de-Calais|Basse-Normandie|Haute-Normandie|Paris Île-de-France|Pays de la Loire|Picardie|Poitou-Charentes|Provence-Alpes|Rhône-Alpes" default="Alpes"/>
+                <setting label="30159" type="labelenum" id="la_1ere.language" values="Guadeloupe|Guyane|Martinique|Mayotte|Nouvelle Calédonie|Polynésie|Réunion|St-Pierre et Miquelon|Wallis et Futuna|Outre-mer" default="Guadeloupe"/>
 
             <!-- Spain channels -->
             <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <!--<setting label="" type="bool" id="es" default="true" visible="false"/>-->
 
-                <setting label="30165" type="labelenum" id="realmadridtv.language" visible="eq(-1,true)" values="ES|EN" default="ES"/>
+                <setting label="30165" type="labelenum" id="realmadridtv.language" values="ES|EN" default="ES"/>
 
             <!-- Polish channels -->
             <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <!--<setting label="" type="bool" id="pl" default="true" visible="false"/>-->
 
-                <setting label="30167" type="labelenum" id="tvp3.region" visible="eq(-1,true)" values="Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław" default="Białystok"/>
+                <setting label="30167" type="labelenum" id="tvp3.language" values="Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław" default="Białystok"/>
 
     </category>
     <!-- Quality and Content -->
@@ -1037,23 +1085,23 @@
         <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
-            <setting label="30240" type="text" id="nrj.login" visible="eq(-1,true)" defaut=""/>
-            <setting label="30241" type="text" id="nrj.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+            <setting label="30240" type="text" id="nrj.login" defaut=""/>
+            <setting label="30241" type="text" id="nrj.password" option="hidden" defaut=""/>
 
-            <setting label="30244" type="text" id="6play.login" visible="eq(-3,true)" defaut=""/>
-            <setting label="30245" type="text" id="6play.password" option="hidden" visible="eq(-4,true)" defaut=""/>
+            <setting label="30244" type="text" id="6play.login" defaut=""/>
+            <setting label="30245" type="text" id="6play.password" option="hidden" defaut=""/>
 
-            <setting label="30248" type="text" id="abweb.login" visible="eq(-5,true)" defaut=""/>
-            <setting label="30249" type="text" id="abweb.password" option="hidden" visible="eq(-6,true)" defaut=""/>
+            <setting label="30248" type="text" id="abweb.login" defaut=""/>
+            <setting label="30249" type="text" id="abweb.password" option="hidden" defaut=""/>
 
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
-            <setting label="30242" type="text" id="vrt.login" visible="eq(-1,true)" defaut=""/>
-            <setting label="30243" type="text" id="vrt.password" option="hidden" visible="eq(-2,true)" defaut=""/>
+            <setting label="30242" type="text" id="vrt.login" defaut=""/>
+            <setting label="30243" type="text" id="vrt.password" option="hidden" defaut=""/>
 
-            <setting label="30246" type="text" id="rtlplaybe.login" visible="eq(-3,true)" defaut=""/>
-            <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" visible="eq(-4,true)" defaut=""/>
+            <setting label="30246" type="text" id="rtlplaybe.login" defaut=""/>
+            <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" defaut=""/>
 
     </category>
     <!-- Accounts -->

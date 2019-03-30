@@ -51,7 +51,10 @@ ID_CHANNELS = {
    392: 'tvlux',
    1280: 'ketnet',
    23: 'een',
-   385: 'tvcom'
+   385: 'tvcom',
+   168: 'rtl_tvi',
+   50: 'club_rtl',
+   377: 'plug_rtl'
 }
 
 GUIDE_TIMEZONE = pytz.timezone('UTC')

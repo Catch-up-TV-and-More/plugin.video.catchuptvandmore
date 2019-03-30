@@ -31,11 +31,8 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
-import requests
 import urlquick
 import xbmc
 
@@ -209,71 +206,6 @@ def list_video_more_infos(plugin, item_id, video_url_info):
 def get_video_url(
         plugin, item_id, video_url, item_dict, download_mode=False, video_label=None):
 
-    # # Create session
-    # # KO - session_urlquick = urlquick.Session()
-    # session_requests = requests.session()
-
-    # # headers = {
-    # #     'referer': 'https://www.atresplayer.com/',
-    # #     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36'
-    # # }
-
-    # # session_requests.get('https://account.atresmedia.com/login?origin=atresplayer&additionalData=eyJwcm9tb1NpZ251cCI6ImludC1yZWdpc3RybyIsInNraXBBY3RpdmF0aW9uIjp0cnVlfQ==', headers=headers)
-
-    # # Build PAYLOAD
-    # payload = {
-    #     "username": plugin.setting.get_string(
-    #         'atresplayer.login'),
-    #     "password": plugin.setting.get_string(
-    #         'atresplayer.password')
-    # }
-    # print 'Username ' + plugin.setting.get_string('atresplayer.login')
-    # print 'password ' + plugin.setting.get_string('atresplayer.password')
-
-    # headers = {
-    #     'origin': 'https://account.atresmedia.com',
-    #     # 'referer': 'https://account.atresmedia.com/login?origin=atresplayer&additionalData=eyJwcm9tb1NpZ251cCI6ImludC1yZWdpc3RybyIsInNraXBBY3RpdmF0aW9uIjp0cnVlfQ==',
-    #     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36'
-    # }
-
-    # # LOGIN
-    # # KO - resp2 = session_urlquick.post(
-    # #     URL_COMPTE_LOGIN, data=payload,
-    # #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
-    # resp2 = session_requests.post(
-    #     URL_COMPTE_LOGIN, data=payload, headers=headers)
-    # if resp2.status_code >= 400:
-    #     plugin.notify('ERROR ' + str(resp2.status_code), 'Atresplayer : ' + plugin.localize(30711))
-    #     return False
-    # cookies = resp2.cookies
-
-    # # headers = {
-    # #     'origin': 'https://api.atresplayer.com',
-    # #     # 'referer': 'https://account.atresmedia.com/login?origin=atresplayer&additionalData=eyJwcm9tb1NpZ251cCI6ImludC1yZWdpc3RybyIsInNraXBBY3RpdmF0aW9uIjp0cnVlfQ==',
-    # #     # 'referer': 'https://www.atresplayer.com/international-login?target=https://www.atresplayer.com/',
-    # #     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36'
-    # # }
-
-    # # session_requests.get(
-    # #     'https://account.atresmedia.com/api/oauth/authorize?client_id=atresplayer&redirect_uri=https://api.atresplayer.com/authCallback&response_type=code&scope=openid&state=BuI9tT&additionalData=eyJwcm9tb1NpZ251cCI6ImludC1yZWdpc3RybyIsInNraXBBY3RpdmF0aW9uIjp0cnVlfQ==', headers=headers)
-
-    # # # session_requests.get(
-    # # #     'https://api.atresplayer.com/client/v1/ipLocation', headers=headers)
-
-    # # session_requests.get(
-    # #     'https://api.atresplayer.com/purchases/v1/products/available', headers=headers)
-
-    # # session_requests.get(
-    # #     'https://api.atresplayer.com/purchases/v1/packages/acquired', headers=headers)
-
-    # headers = {
-    #     'origin': 'https://www.atresplayer.com',
-    #     # 'referer': 'https://account.atresmedia.com/login?origin=atresplayer&additionalData=eyJwcm9tb1NpZ251cCI6ImludC1yZWdpc3RybyIsInNraXBBY3RpdmF0aW9uIjp0cnVlfQ==',
-    #     'referer': 'https://www.atresplayer.com/antena3/series/presunto-culpable/temporada-1/capitulo-1_5b9f64067ed1a8176b10eb66/',
-    #     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36'
-    # }
-
-    # resp = session_requests.get(video_url, cookies=cookies, headers=headers)
     resp = urlquick.get(video_url)
     json_parser = json.loads(resp.text)
     
@@ -282,7 +214,7 @@ def get_video_url(
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
-    # TODO Add verification inputstream available Kodi 17.6
+    # TODO Add verification inputstream available Kodi 17.6 (use inputstream helper ?)
     xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
     if xbmc_version < 17:
         # Add Notification

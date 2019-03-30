@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import requests
@@ -120,15 +118,12 @@ def list_root(plugin, item_id):
 def list_programs(plugin, item_id, root_url):
 
     resp = urlquick.get(root_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'a', class_="nui-tile")
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('h3').text.strip()  # + ' - ' + \
-            # program_datas.find('p').text.strip()
+    for program_datas in root.iterfind(".//a[@class='nui-tile']"):
+        program_title = program_datas.find('.//h3').text.strip()
         program_image = 'https:' + program_datas.find(
-            'img').get('srcset').split('1x')[0].strip()
+            './/img').get('srcset').split('1x')[0].strip()
         program_url = URL_ROOT + program_datas.get('href')
 
         item = Listitem()
@@ -145,16 +140,14 @@ def list_programs(plugin, item_id, root_url):
 def list_categories(plugin, item_id, root_url):
 
     resp = urlquick.get(root_url, max_age=-1)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find_all(
-        attrs={'class': 'page-category page'})
+    root = resp.parse()
 
-    for category_datas in list_categories_datas:
-        category_title = category_datas.find('h2').text.strip()
+    for category_datas in root.iterfind(".//div[@class='page-category page']"):
+        category_title = category_datas.find('.//h2').text.strip()
         category_image = 'https:' + category_datas.find(
-            'div', class_='nui-tile--image nui-responsive-image').get(
+            ".//div[@class='nui-tile--image nui-responsive-image']").get(
                 'data-responsive-image')
-        category_url = URL_ROOT + category_datas.find('a').get('href')
+        category_url = URL_ROOT + category_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = category_title
@@ -194,19 +187,19 @@ def list_category_programs(plugin, item_id, next_url):
 def list_videos(plugin, item_id, next_url):
 
     resp = urlquick.get(next_url)
-    root_soup = bs(resp.text, 'html.parser')
+    root = resp.parse()
 
-    if root_soup.find('ul', class_='vrtnu-list'):
-        list_videos_datas = root_soup.find(
-            'ul', class_='vrtnu-list').find_all('li')
+    if root.find(".//ul[@class='vrtnu-list']") is not None:
+        list_videos_datas = root.find(
+            ".//ul[@class='vrtnu-list']").findall('.//li')
         for video_datas in list_videos_datas:
-            video_title = video_datas.find('h3').text.strip()
+            video_title = video_datas.find('.//h3').text.strip()
             video_image = 'https:' + video_datas.find(
-                'img').get('srcset').split('1x')[0].strip()
+                './/img').get('srcset').split('1x')[0].strip()
             video_plot = ''
-            if video_datas.find('p'):
-                video_plot = video_datas.find('p').text.strip()
-            video_url = URL_ROOT + video_datas.find('a').get('href')
+            if video_datas.find('.//p').text is not None:
+                video_plot = video_datas.find('.//p').text.strip()
+            video_url = URL_ROOT + video_datas.find('.//a').get('href')
 
             item = Listitem()
             item.label = video_title
@@ -227,16 +220,16 @@ def list_videos(plugin, item_id, next_url):
                 video_url=video_url)
             yield item
     else:
-        if root_soup.find(
-                'div', class_='content-container'):
-            video_datas = root_soup.find(
-                'div', class_='content-container')
+        if root.find(
+                ".//div[@class='nui-content-area']") is not None:
+            video_datas = root.find(
+                ".//div[@class='nui-content-area']")
             video_title = video_datas.find(
-                'h1').text.strip()
+                './/h1').text.strip()
             video_image = 'https:' + video_datas.find(
-                'img').get('srcset').strip()
+                './/img').get('srcset').strip()
             video_plot = video_datas.find(
-                'div', class_='content__shortdescription').text.strip()
+                ".//div[@class='content__shortdescription']").text.strip()
             video_url = re.compile(
                 r'page_url":"(.*?)"').findall(resp.text)[0]
 

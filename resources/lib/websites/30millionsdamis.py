@@ -21,14 +21,14 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-import re
+
 from codequick import Route, Resolver, Listitem
-import urlquick
-from bs4 import BeautifulSoup as bs
 
 from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
 
+import re
+import urlquick
 
 URL_ROOT = 'http://www.30millionsdamis.fr'
 
@@ -41,16 +41,14 @@ def website_entry(plugin, item_id):
 
 
 def root(plugin, item_id):
-    categories_html = urlquick.get(
-        URL_ROOT + '/actualites/videos').text
-    categories_soup = bs(categories_html, 'html.parser')
-    categories = categories_soup.find(
-        'select', class_='selecttourl').find_all(
-        'option')
 
-    for category in categories:
+    resp = urlquick.get(
+        URL_ROOT + '/actualites/videos')
+    root = resp.parse("select", attrs={"class": "selecttourl"})
+
+    for category in root.iterfind("option"):
         item = Listitem()
-        item.label = category.get_text().strip()
+        item.label = category.text.strip()
         category_url = category.get('value')
 
         item.set_callback(
@@ -65,27 +63,21 @@ def root(plugin, item_id):
 def list_videos(plugin, item_id, page, category_url):
     """Build videos listing"""
     if int(page) > 0:
-        replay_episodes_html = urlquick.get(
-            category_url + 'actu-page/%s/' % page).text
+        resp = urlquick.get(
+            category_url + 'actu-page/%s/' % page)
     else:
-        replay_episodes_html = urlquick.get(
-            category_url).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
-
-    episodes = replay_episodes_soup.find_all(
-        'div', class_='news-latest')
+        resp = urlquick.get(
+            category_url)
+    root = resp.parse("div", attrs={"class": "tt-news"})
 
     at_least_one_item = False
 
-    for episode in episodes:
+    for episode in root.iterfind(".//div[@class='news-latest']"):
         at_least_one_item = True
         item = Listitem()
-        item.label = episode.find(
-            'a').get('title')
-        video_url = URL_ROOT + episode.find('a').get('href')
-        item.art['thumb'] = URL_ROOT + episode.find('img').get('src')
-        item.info['plot'] = episode.find(
-            'p').get_text().strip()
+        item.label = episode.find('.//a').get('title')
+        video_url = URL_ROOT + episode.find('.//a').get('href')
+        item.art['thumb'] = URL_ROOT + episode.find('.//img').get('src')
 
         item.context.script(
             get_video_url,

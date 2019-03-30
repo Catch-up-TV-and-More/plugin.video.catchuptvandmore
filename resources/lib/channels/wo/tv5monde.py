@@ -31,9 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -78,11 +75,11 @@ def list_categories(plugin, item_id):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_TV5MONDE_ROOT + '/videos')
-    root_soup = bs(resp.text, 'html.parser')
-    category_title = root_soup.find(
-        'nav', class_='footer__emissions').find(
-            'div', class_='footer__title').text.strip()
+    resp = urlquick.get(URL_TV5MONDE_ROOT + '/toutes-les-emissions')
+    root = resp.parse()
+    category_title = root.find(
+        ".//nav[@class='footer__emissions']").find(
+            ".//div[@class='footer__title']").find('.//span').text.strip()
     item = Listitem()
     item.label = category_title
     item.set_callback(
@@ -109,13 +106,11 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_TV5MONDE_ROOT)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find(
-        'nav', class_='footer__emissions').find_all('li')
+    root = resp.parse("nav", attrs={"class": "footer__emissions"})
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('a').get_text().strip()
-        program_url = URL_TV5MONDE_ROOT + program_datas.find('a').get('href')
+    for program_datas in root.iterfind(".//li"):
+        program_title = program_datas.find('.//a').text.strip()
+        program_url = URL_TV5MONDE_ROOT + program_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = program_title
@@ -131,23 +126,21 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url, page):
 
     resp = urlquick.get(program_url + '?page=%s' % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all('article')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        if video_datas.find('p', class_='video-item__subtitle'):
-            video_title = video_datas.find('h3').text.strip() + \
-            ' - ' + video_datas.find('p',
-            class_='video-item__subtitle').get_text().strip()
+    for video_datas in root.iterfind(".//article"):
+        if video_datas.find(".//p[@class='video-item__subtitle']") is not None:
+            video_title = video_datas.find('.//h3').text.strip() + \
+            ' - ' + video_datas.find(".//p[@class='video-item__subtitle']").text.strip()
         else:
-            video_title = video_datas.find('h3').text.strip()
-        if 'http' in video_datas.find('img').get('src'):
-            video_image = video_datas.find('img').get('src')
+            video_title = video_datas.find('.//h3').text.strip()
+        if 'http' in video_datas.find('.//img').get('src'):
+            video_image = video_datas.find('.//img').get('src')
         else:
             video_image = URL_TV5MONDE_ROOT + video_datas.find(
-                'img').get('src')
+                './/img').get('src')
         video_url = URL_TV5MONDE_ROOT + video_datas.find(
-            'a').get('href')
+            './/a').get('href')
 
         item = Listitem()
         item.label = video_title
@@ -177,25 +170,23 @@ def list_videos(plugin, item_id, program_url, page):
 def list_videos_category(plugin, item_id, category_type, page):
     resp = urlquick.get(URL_TV5MONDE_ROOT +
         '/toutes-les-videos?order=1&type=%s&page=%s' % (category_type, page))
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all('article')
+    root = resp.parse()
 
     at_least_one_item = False
-    for video_datas in list_videos_datas:
-        if video_datas.find('a', class_='video-item__link').get('href') != '':
-            if video_datas.find('p', class_='video-item__subtitle'):
-                video_title = video_datas.find('h3').text.strip() + \
-                ' - ' + video_datas.find('p',
-                class_='video-item__subtitle').get_text().strip()
+    for video_datas in root.iterfind(".//article"):
+        if video_datas.find(".//a[@class='video-item__link']").get('href') != '':
+            if video_datas.find(".//p[@class_='video-item__subtitle']") is not None:
+                video_title = video_datas.find('.//h3').text.strip() + \
+                ' - ' + video_datas.find(".//p[@class_='video-item__subtitle']").text.strip()
             else:
-                video_title = video_datas.find('h3').text.strip()
-            if 'http' in video_datas.find('img').get('src'):
-                video_image = video_datas.find('img').get('src')
+                video_title = video_datas.find('.//h3').text.strip()
+            if 'http' in video_datas.find('.//img').get('src'):
+                video_image = video_datas.find('.//img').get('src')
             else:
                 video_image = URL_TV5MONDE_ROOT + video_datas.find(
-                    'img').get('src')
+                    './/img').get('src')
             video_url = URL_TV5MONDE_ROOT + video_datas.find(
-                'a').get('href')
+                './/a').get('href')
             at_least_one_item = True
             item = Listitem()
             item.label = video_title

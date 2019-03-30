@@ -21,7 +21,6 @@
 from __future__ import unicode_literals
 
 import re
-from bs4 import BeautifulSoup as bs
 import json
 
 from codequick import Route, Resolver, Listitem, Script
@@ -58,16 +57,16 @@ def root(plugin, item_id):
 @Route.register
 def list_videos(plugin, item_id, page):
     """Build videos listing"""
-    replay_episodes_html = urlquick.get(
-        URL_ROOT + '/?page=%s' % page).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
+    resp = urlquick.get(
+        URL_ROOT + '/?page=%s' % page)
 
     # Get Video First Page
-    if replay_episodes_soup.find('iframe'):
+    if page == 1:
         item = Listitem()
 
-        url_first_video = replay_episodes_soup.find(
-            'iframe').get('src')
+        video_id = re.compile(
+            r'video: \"(.*?)\"').findall(resp.text)[0]
+        url_first_video = 'https://www.dailymotion.com/embed/video/%s' % video_id
         info_first_video = urlquick.get(url_first_video).text
         info_first_video_json = re.compile(
             'config = (.*?)};').findall(info_first_video)[0]
@@ -76,7 +75,6 @@ def list_videos(plugin, item_id, page):
             info_first_video_json + '}')
 
         item.label = info_first_video_jsonparser["metadata"]["title"]
-        video_url = info_first_video_jsonparser["metadata"]["url"] + '?'
         item.art['thumb'] = info_first_video_jsonparser["metadata"]["poster_url"]
 
         item.context.script(
@@ -84,25 +82,23 @@ def list_videos(plugin, item_id, page):
             plugin.localize(LABELS['Download']),
             item_id=item_id,
             video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url,
+            video_id=video_id,
             download_mode=True)
 
         item.set_callback(
-            get_video_url,
+            get_video_url_first_video,
             item_id=item_id,
-            video_url=video_url)
+            video_id=video_id)
         yield item
 
-    episodes = replay_episodes_soup.find_all(
-        'div', class_='col-xs-6 col-sm-12')
-
-    for episode in episodes:
+    root = resp.parse()
+    for episode in root.iterfind(".//div[@class='col-xs-6 col-sm-12']"):
         item = Listitem()
 
-        item.label = episode.find('img').get('alt')
-        video_url = URL_ROOT + episode.find('a').get('href')
+        item.label = episode.find('.//img').get('alt')
+        video_url = URL_ROOT + episode.find('.//a').get('href')
         item.art['thumb'] = episode.find(
-            'img').get('src').replace('|', '%7C')
+            './/img').get('src').replace('|', '%7C')
 
         item.context.script(
             get_video_url,
@@ -134,6 +130,18 @@ def get_video_url(
     video_id = re.compile(
         r'video: \"(.*?)\"').findall(
         video_html)[0]
+
+    return resolver_proxy.get_stream_dailymotion(
+        plugin,
+        video_id,
+        download_mode,
+        video_label)
+
+
+@Resolver.register
+def get_video_url_first_video(
+        plugin, item_id, video_id, download_mode=False, video_label=None):
+    """Get video URL and start video player"""
 
     return resolver_proxy.get_stream_dailymotion(
         plugin,

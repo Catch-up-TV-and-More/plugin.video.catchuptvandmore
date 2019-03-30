@@ -33,8 +33,6 @@ from resources.lib import web_utils
 from resources.lib import download
 import resources.lib.cq_utils as cqu
 
-
-from bs4 import BeautifulSoup as bs
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
 # https://docs.python.org/3/library/hashlib.html
 from hashlib import md5
@@ -78,13 +76,11 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'))
-    root_soup = bs(resp.text, 'html.parser')
-    categories_soup = root_soup.find(
-        'ul',
-        attrs={'class': 'filters_2 contentopen'})
-    for category in categories_soup.find_all('a'):
-        category_name = category.get_text()
-        category_url = category['data-target']
+    root = resp.parse("ul", attrs={"class": "filters_2 contentopen"})
+
+    for category in root.iterfind(".//a"):
+        category_name = category.text
+        category_url = category.get('data-target')
 
         item = Listitem()
         item.label = category_name
@@ -106,30 +102,26 @@ def list_programs(plugin, item_id, category):
 
     if category == 'all':
         resp = urlquick.get(URL_ROOT('/programmes-tv/abecedaire/#'))
-        root_soup = bs(resp.text, 'html.parser')
-        list_programs = root_soup.find_all(
-            'div',
-            class_='program key-list-programs')
-        for program in list_programs:
+        root = resp.parse()
+
+        for program in root.iterfind(".//div[@class='program key-list-programs']"):
             is_channel_program = False
-            list_channels = program.find_all('div', class_=re.compile('channel'))
+            list_channels = program.findall(".//div")
             for channel in list_channels:
-                if item_id in channel.get('class'):
+                if channel.get('class') == 'channel %s' % item_id:
                     is_channel_program = True
             if is_channel_program:
                 item = Listitem()
                 program_url = program.find(
-                    'div',
-                    class_='description')
-                program_url = program_url.find('a')['href']
+                    ".//div[@class='description']")
+                program_url = program_url.find('.//a').get('href')
                 program_name = program.find(
-                    'p',
-                    class_='program').get_text()
-                img = program.find('img')
+                    ".//p[@class='program']").text
+                img = program.find('.//img')
                 try:
-                    img = img['data-srcset']
+                    img = img.get('data-srcset')
                 except Exception:
-                    img = img['srcset']
+                    img = img.get('srcset')
 
                 img = 'http:' + img.split(',')[-1].split(' ')[0]
 
@@ -154,28 +146,25 @@ def list_programs(plugin, item_id, category):
                     yield item
     else:
         resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'))
-        root_soup = bs(resp.text, 'html.parser')
-        programs_soup = root_soup.find(
-            'ul',
-            attrs={'id': 'js_filter_el_container'})
-        for program in programs_soup.find_all('li'):
-            current_category = program['data-type']
+        root = resp.parse("ul", attrs={"id": "js_filter_el_container"})
+
+        for program in root.iterfind('.//li'):
+            current_category = program.get('data-type')
             if category == current_category or category == 'all':
                 item = Listitem()
                 program_url = program.find(
-                    'div',
-                    class_='description')
-                program_url = program_url.find('a')['href']
+                    ".//div[@class='description']")
+                program_url = program_url.find('.//a').get('href')
                 program_name = program.find(
-                    'p',
-                    class_='program').get_text()
-                img = program.find('img')
+                    ".//p[@class='program']").text
+                img = program.find('.//img')
                 try:
-                    img = img['data-srcset']
+                    img = img.get('srcset')
                 except Exception:
-                    img = img['srcset']
+                    img = img.get('src')
 
-                img = 'http:' + img.split(',')[-1].split(' ')[0]
+                if img is not None:
+                    img = 'http:' + img.split(',')[-1].split(' ')[0]
 
                 if 'meteo.tf1.fr/meteo-france' in program_url:
                     item.label = program_name
@@ -232,13 +221,9 @@ def list_videos(plugin, item_id, program_category_url):
 
     if 'meteo.tf1.fr/meteo-france' in program_category_url:
         resp = urlquick.get(program_category_url)
-        program_soup = bs(resp.text, 'html.parser')
+        root = resp.parse("td", attrs={"class": "textbase"})
 
-        wat_info = program_soup.find(
-            'td',
-            class_='textbase')
-
-        title = wat_info.find('h3').get_text()
+        title = root.find('.//h3').text
 
         program_id = re.compile(
             r'\; src \= \'(.*?)\'').findall(resp.text)[0]
@@ -265,68 +250,58 @@ def list_videos(plugin, item_id, program_category_url):
     else:
 
         resp = urlquick.get(program_category_url)
-        program_soup = bs(resp.text, 'html.parser')
-
-        grid = program_soup.find(
-            'ul',
-            class_='grid')
+        grid = resp.parse("div", attrs={"class": "content"})
 
         if grid is not None:
-            for li in grid.find_all('li'):
+            for li in grid.findall('.//li'):
                 video_type_string = li.find(
-                    'div', class_='description'
-                ).find('a')['data-xiti-libelle']
+                    ".//div[@class='description']"
+                ).find('.//a').get('data-xiti-libelle')
                 video_type_string = video_type_string.split('-')[0]
 
                 if 'Playlist' not in video_type_string:
                     item = Listitem()
 
                     item.label = li.find(
-                        'p',
-                        class_='title').get_text()
+                        ".//p[@class='title']").text
 
                     try:
                         stitle = li.find(
-                            'p',
-                            class_='stitle').get_text()
+                            ".//p[@class='stitle']").text
                         item.info['plot'] = stitle
                     except Exception:
                         pass
 
                     try:
                         duration_soup = li.find(
-                            'p',
-                            class_='uptitle').find(
-                                'span',
-                                class_='momentDate')
+                            ".//p[@class='uptitle']").find(
+                                ".//span[@class='momentDate']")
                         duration = int(
-                            duration_soup.get_text())
+                            duration_soup.text)
                         item.info['duration'] = duration
                     except Exception:
                         pass
 
-                    img = li.find('img')
+                    img = li.find('.//img')
                     try:
-                        img = img['data-srcset']
+                        img = img.get('data-srcset')
                     except Exception:
-                        img = img['srcset']
+                        img = img.get('srcset')
 
                     item.art["thumb"] = 'http:' + \
                         img.split(',')[-1].split(' ')[0]
 
                     try:
-                        date_soup = li.find(
-                            'div',
-                            class_='text').find(
-                            'p',
-                            class_='uptitle').find('span')
+                        date_value = li.find(
+                            ".//div[@class='text']").find(
+                            ".//p[@class='uptitle']").find('.//span')
 
-                        aired = date_soup['data-date'].split('T')[0]
+                        aired = date_value.get('data-date').split('T')[0]
                         item.info.date(aired, '%Y-%m-%d')
                     except Exception:
                         pass
 
-                    program_id = li.find('a')['href']
+                    program_id = li.find('.//a').get('href')
 
                     item.context.script(
                         get_video_url,
@@ -348,9 +323,9 @@ def list_videos(plugin, item_id, program_category_url):
             pagination = resp.parse(
                 u"div", attrs={'class': 'clearfix list_pagination'})
 
-            ol = pagination.find('ol')
+            ol = pagination.find('.//ol')
             if ol is not None:
-                li_list = ol.findall('li')
+                li_list = ol.findall('.//li')
 
                 for i in range(len(li_list) - 1):
                     li = li_list[i]
@@ -376,20 +351,19 @@ def get_video_url(
     else:
         url = program_id
 
-    video_html = urlquick.get(url).text
+    video_html = urlquick.get(url)
+    root = video_html.parse()
 
     if 'www.wat.tv/embedframe' in program_id:
-        video_id = re.compile('UVID=(.*?)&').findall(video_html)[0]
+        video_id = re.compile('UVID=(.*?)&').findall(video_html.text)[0]
     else:
-        video_html_soup = bs(video_html, 'html.parser')
-        iframe_player_soup = video_html_soup.find(
-            'div',
-            class_='iframe_player')
-        if iframe_player_soup is not None:
-            video_id = iframe_player_soup['data-watid']
+        iframe_player = root.find(
+            ".//div[@class='iframe_player']")
+        if iframe_player is not None:
+            video_id = iframe_player.get('data-watid')
         else:
             video_id = re.compile(
-                r'\"data\"\:\{\"id\"\:\"(.*?)\"').findall(video_html)[0]
+                r'\"data\"\:\{\"id\"\:\"(.*?)\"').findall(video_html.text)[0]
 
     video_format = 'hls'
     url_json = URL_VIDEO_STREAM % (video_id, video_format)

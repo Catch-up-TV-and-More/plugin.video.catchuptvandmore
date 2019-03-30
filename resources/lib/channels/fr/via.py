@@ -32,8 +32,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -91,14 +89,12 @@ def list_categories(plugin, item_id):
 def list_videos(plugin, item_id, category_url):
 
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='vc_gitem-zone vc_gitem-zone-c')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('a', class_='vc_gitem-link').get('title')
+    for video_datas in root.iterfind(".//div[@class='vc_gitem-zone vc_gitem-zone-c']"):
+        video_title = video_datas.find(".//a[@class='vc_gitem-link']").get('title')
         video_image = '' # TODO video_datas.find_all('img', class_='vc_gitem-zone-img')[0].get('src')
-        video_url = video_datas.find('a', class_='vc_gitem-link').get('href')
+        video_url = video_datas.find(".//a[@class='vc_gitem-link']").get('href')
 
         item = Listitem()
         item.label = video_title
@@ -144,9 +140,9 @@ def get_live_url(plugin, item_id, video_id, item_dict):
             URL_LIVE_VIAVOSGES,
             headers={'User-Agent': web_utils.get_random_ua},
             max_age=-1)
-        live_soup = bs(live_html.text, 'html.parser')
-        url_live_datas = URL_ROOT_VIAVOSGES + live_soup.find(
-            'div', class_='HDR_VISIO').get('data-url') + '&mode=html'
+        root = live_html.parse()
+        url_live_datas = URL_ROOT_VIAVOSGES + root.find(
+            ".//div[@class='HDR_VISIO']").get('data-url') + '&mode=html'
 
         resp = urlquick.get(
             url_live_datas,
@@ -158,9 +154,12 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         item.path = json_parser["files"]["auto"]
         item.property['inputstreamaddon'] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.label = item_dict['label']
-        item.info.update(item_dict['info'])
-        item.art.update(item_dict['art'])
+        if 'label' in item_dict:
+            item.label = item_dict['label']
+        if 'info' in item_dict:
+            item.info.update(item_dict['info'])
+        if 'art' in item_dict:
+            item.art.update(item_dict['art'])
         return item
     else:
         if item_id == 'viamirabelle':
@@ -173,9 +172,9 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                 URL_LIVE % item_id,
                 headers={'User-Agent': web_utils.get_random_ua},
                 max_age=-1)
-        live_soup = bs(live_html.text, 'html.parser')
-        list_lives_datas = live_soup.find_all(
-            'iframe')
+        root = live_html.parse()
+        list_lives_datas = root.findall(
+            './/iframe')
         live_id = ''
         for live_datas in list_lives_datas:
             src_datas = live_datas.get('src')

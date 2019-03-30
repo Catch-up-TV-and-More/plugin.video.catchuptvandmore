@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import urlquick
 
@@ -65,42 +63,41 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_ROOT)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find(
-        'div', class_='shows-dropdown').find_all('li')
+    root = resp.parse("div", attrs={"class": "shows-dropdown"})
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('span', class_='link-text').text
-        program_url = program_datas.find('a').get('href')
+    for program_datas in root.iterfind(".//li"):
+        if 'View' in program_datas.find(".//span[@class='link-text']").text:
+            program_title = program_datas.find(".//span[@class='link-text']").text
+            program_url = program_datas.find('.//a').get('href')
 
-        item = Listitem()
-        item.label = program_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url)
-        yield item
+            item = Listitem()
+            item.label = program_title
+            item.set_callback(
+                list_videos,
+                item_id=item_id,
+                program_url=program_url)
+            yield item
 
 
 @Route.register
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
+    root = resp.parse()
     list_videos_datas = {}
-    if root_soup.find(
-            'article', class_='carousel-item row-item fe-top'):
-        list_videos_datas = root_soup.find(
-            'article', class_='carousel-item row-item fe-top').find_all(
-                'div', class_='item')
+    if root.find(
+            ".//article[@class='carousel-item row-item fe-top']") is not None:
+        list_videos_datas = root.find(
+            ".//article[@class='carousel-item row-item fe-top']").findall(
+                ".//div[@class='item']")
 
     for video_datas in list_videos_datas:
         video_title = ''
-        if video_datas.find('img').get('alt'):
+        if video_datas.find('.//img').get('alt'):
             video_title = video_datas.find(
-                'img').get('alt').replace('VIDEO: ', '')
-        video_image = video_datas.find('img').get('data-src')
-        video_id = video_datas.find('figure').get('data-id')
+                './/img').get('alt').replace('VIDEO: ', '')
+        video_image = video_datas.find('.//img').get('data-src')
+        video_id = video_datas.find('.//figure').get('data-id')
 
         item = Listitem()
         item.label = video_title

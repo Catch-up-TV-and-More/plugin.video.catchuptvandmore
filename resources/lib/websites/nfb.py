@@ -20,16 +20,15 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-import re
-import json
-from bs4 import BeautifulSoup as bs
-
 from codequick import Route, Resolver, Listitem
-import urlquick
-
 
 from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
+
+import htmlement
+import json
+import re
+import urlquick
 
 
 # TO DO
@@ -78,17 +77,20 @@ def list_videos(plugin, item_id, category_id, page):
     replay_episodes_json = urlquick.get(
         URL_VIDEOS % (category_id, page)).text
     replay_episodes_jsonparser = json.loads(replay_episodes_json)
+    at_least_one = False
     for replay_episodes_datas in replay_episodes_jsonparser["items_html"]:
-        list_episodes_soup = bs(replay_episodes_datas, 'html.parser')
-        list_episodes = list_episodes_soup.find_all('li')
+        parser = htmlement.HTMLement()
+        parser.feed(replay_episodes_datas)
+        root = parser.close()
 
-        for episode in list_episodes:
+        for episode in root.iterfind(".//li"):
+            at_least_one = True
             item = Listitem()
             item.label = episode.find(
-                'img').get('alt')
-            video_url = URL_ROOT + episode.find('a').get('href')
+                './/img').get('alt')
+            video_url = URL_ROOT + episode.find('.//a').get('href')
             item.art['thumb'] = episode.find(
-                'img').get('src')
+                './/img').get('src')
 
             item.context.script(
                 get_video_url,
@@ -104,11 +106,16 @@ def list_videos(plugin, item_id, category_id, page):
                 video_url=video_url)
             yield item
 
-    # More videos...
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_id=category_id,
-        page=page + 1)
+    if at_least_one:
+        # More videos...
+        yield Listitem.next_page(
+            item_id=item_id,
+            category_id=category_id,
+            page=page + 1)
+    else:
+        plugin.notify(plugin.localize(LABELS['No videos found']), '')
+        yield False
+
 
 
 @Resolver.register

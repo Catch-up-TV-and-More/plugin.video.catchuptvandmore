@@ -32,8 +32,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-
-from bs4 import BeautifulSoup as bs
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
 # https://docs.python.org/3/library/hashlib.html
 from hashlib import md5
@@ -77,22 +75,19 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_LCI_REPLAY)
-    root_soup = bs(resp.text, 'html.parser')
-    programs_soup = root_soup.find(
-        'ul',
-        attrs={'class': 'topic-chronology-milestone-component'})
-    for program in programs_soup.find_all('li'):
+    root = resp.parse("ul", attrs={"class": "topic-chronology-milestone-component"})
+
+    for program in root.iterfind(".//li"):
         item = Listitem()
         program_url = URL_LCI_ROOT + program.find(
-            'a')['href']
+            './/a').get('href')
         program_name = program.find(
-            'h2',
-            class_='text-block').get_text()
-        img = program.find_all('source')[0]
+            ".//h2[@class='text-block']").text
+        img = program.findall('.//source')[0]
         try:
-            img = img['data-srcset']
+            img = img.get('data-srcset')
         except Exception:
-            img = img['srcset']
+            img = img.get('srcset')
         img = img.split(',')[0].split(' ')[0]
         item.label = program_name
         item.art["thumb"] = img
@@ -109,31 +104,26 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url, page):
 
     if page == '1':
-        program_html = urlquick.get(program_url)
+        resp = urlquick.get(program_url)
     else:
-        program_html = urlquick.get(program_url + '/%s/' % page)
-    program_soup = bs(program_html.text, 'html.parser')
+        resp = urlquick.get(program_url + '/%s/' % page)
+    root = resp.parse()
 
-    list_replay = program_soup.find_all(
-        'a',
-        class_='medium-3col-article-block-article-link')
+    for replay in root.iterfind(".//article[@class='md-3col-art-blk__article']"):
 
-    for replay in list_replay:
-        if replay.find(
-                'span', class_='emission-infos-type'):
-            if 'Replay' in replay.find(
-                    'span', class_='emission-infos-type').get_text():
-                title = replay.find_all(
-                    'img')[0].get('alt')
+        if replay.find(".//span[@class='broadcast-infos-blk__type']") is not None:
+            if 'Replay' in replay.find(".//span[@class='broadcast-infos-blk__type']").text:
+                title = replay.find(
+                    './/img').get('alt')
                 img = ''
-                for img in replay.find_all('source'):
+                for img in replay.findall('.//source'):
                     try:
-                        img = img['data-srcset']
+                        img = img.get('data-srcset')
                     except Exception:
-                        img = img['srcset']
+                        img = img.get('srcset')
 
                 img = img.split(',')[0].split(' ')[0]
-                program_id = URL_LCI_ROOT + replay.get(
+                program_id = URL_LCI_ROOT + replay.find('.//a').get(
                     'href')
 
                 item = Listitem()
@@ -183,12 +173,11 @@ def get_video_url(
         video_id = re.compile(
             r'data-videoid="(.*?)"').findall(video_html)[0]
     else:
-        video_html_soup = bs(video_html, 'html.parser')
-        iframe_player_soup = video_html_soup.find(
-            'div',
-            class_='iframe_player')
-        if iframe_player_soup is not None:
-            video_id = iframe_player_soup['data-watid']
+        root = video_html.parse()
+        iframe_player = root.find(
+            ".//div[@class='iframe_player']")
+        if iframe_player is not None:
+            video_id = iframe_player.get('data-watid')
         else:
             video_id = re.compile(
                 r'www\.tf1\.fr\/embedplayer\/(.*?)\"').findall(video_html)[0]

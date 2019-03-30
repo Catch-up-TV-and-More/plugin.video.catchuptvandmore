@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import urlquick
 
 
@@ -85,13 +83,13 @@ def list_videos_news(plugin, item_id):
 
     for content in NEWS_CONTENT:
         resp = urlquick.get(URL_CONTENT % content)
-        root_soup = bs(resp.text, 'html.parser')
-        video_title = root_soup.find(
-            'article', class_='md-mainArticle').find_all(
-                'img', class_='lazy')[0].get('alt')
-        video_image = URL_ROOT + root_soup.find(
-            'article', class_='md-mainArticle').find_all(
-                'img', class_='lazy')[0].get('data-original')
+        root = resp.parse()
+        video_news_datas = root.find(".//article[@class='md-mainArticle']")
+
+        video_title = video_news_datas.findall(
+            ".//img[@class='lazy']")[0].get('alt')
+        video_image = URL_ROOT + video_news_datas.findall(
+            ".//img[@class='lazy']")[0].get('data-original')
         video_url = URL_STREAM % content
 
         item = Listitem()
@@ -117,13 +115,13 @@ def list_videos_news(plugin, item_id):
 def list_videos_weather(plugin, item_id):
 
     resp = urlquick.get(URL_CONTENT % 'weather')
-    root_soup = bs(resp.text, 'html.parser')
-    video_title = root_soup.find(
-        'article', class_='md-mainArticle').find_all(
-            'img', class_='lazy')[0].get('alt')
-    video_image = 'https:' + root_soup.find(
-        'article', class_='md-mainArticle').find_all(
-            'img', class_='lazy')[0].get('data-original')
+    root = resp.parse()
+    video_weather_datas = root.find(".//article[@class='md-mainArticle']")
+
+    video_title = video_weather_datas.findall(
+        ".//img[@class='lazy']")[0].get('alt')
+    video_image = URL_ROOT + video_weather_datas.findall(
+        ".//img[@class='lazy']")[0].get('data-original')
     video_url = URL_STREAM % 'weather'
 
     item = Listitem()

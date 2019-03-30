@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
 import re
 import urlquick
 
@@ -62,14 +60,12 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'li', class_='col-md-4 col-sm-4')
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('h2').find('a').text
-        program_image = program_datas.find('img').get('src')
-        program_url = program_datas.find('a').get('href')
+    for program_datas in root.iterfind(".//li[@class='col-md-4 col-sm-4']"):
+        program_title = program_datas.find('.//h2').find('a').text
+        program_image = program_datas.find('.//img').get('src')
+        program_url = program_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = program_title
@@ -87,14 +83,12 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url, page):
 
     resp = urlquick.get(program_url + '/page/%s' % (page))
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'li', class_='col-md-6 col-sm-6')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('img').get('alt')
-        video_image = video_datas.find('img').get('src')
-        video_url = video_datas.find('a').get('href')
+    for video_datas in root.iterfind(".//li[@class='col-md-6 col-sm-6']"):
+        video_title = video_datas.find('.//img').get('alt')
+        video_image = video_datas.find('.//img').get('src')
+        video_url = video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title

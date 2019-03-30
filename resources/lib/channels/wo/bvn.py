@@ -30,19 +30,15 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
-from resources.lib import download
+import resources.lib.cq_utils as cqu
 
-
-from bs4 import BeautifulSoup as bs
-
+import inputstreamhelper
 import json
 import re
-import time
 import urlquick
+import xbmc
+import xbmcgui
 
-
-# TO DO
-# Info DATE
 
 URL_ROOT = 'https://www.bvn.tv'
 
@@ -55,13 +51,10 @@ JSON_LIVE_TOKEN = 'https://services.dacast.com/token/i/b/%s/%s/%s'
 # Id in 3 part
 
 # REPLAY :
-URL_TOKEN = 'https://ida.omroep.nl/app.php/auth'
 URL_DAYS = URL_ROOT + '/uitzendinggemist/'
-URL_INFO_REPLAY = 'https://e.omroep.nl/metadata/%s'
-# Id Video, time
-URL_VIDEO_REPLAY = 'https://ida.omroep.nl/app.php/%s?adaptive=yes&token=%s'
-# Id Video, Token
-URL_SUBTITLE = 'https://tt888.omroep.nl/tt888/%s'
+URL_REPLAY_STREAM = 'https://start-player.npo.nl/video/%s/streams?profile=dash-widevine&quality=npo&tokenId=%s&streamType=broadcast&mobile=0&ios=0&isChromecast=0'
+# Id video, tokenId
+URL_SUBTITLE = 'https://rs.poms.omroep.nl/v1/api/subtitles/%s'
 # Id Video
 
 def replay_entry(plugin, item_id):
@@ -79,14 +72,13 @@ def list_days(plugin, item_id):
     - day 2
     - ...
     """
+    
     resp = urlquick.get(URL_DAYS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_days_datas = root_soup.find_all(
-        "h3", class_=re.compile("m-section__title"))
+    root = resp.parse("div", attrs={"id": "missed"})
+    
     day_id = 0
-
-    for day_datas in list_days_datas:
-        day_title = day_datas.text
+    for title in root.iterfind(".//h3[@class='m-section__title']"):
+        day_title = title.text
         day_id = day_id + 1
 
         item = Listitem()
@@ -100,75 +92,86 @@ def list_days(plugin, item_id):
 
 @Route.register
 def list_videos(plugin, item_id, day_id):
-
     resp = urlquick.get(URL_DAYS)
-    root_soup = bs(resp.text, 'html.parser')
-    slick_missed_day_id = 'slick-missed-day-%s' % (day_id)
-    list_videos_datas = root_soup.find_all(
-        id=slick_missed_day_id)[0].find_all('li')
-
-    for video_datas in list_videos_datas:
-        list_video_id = video_datas.find('a').get('href').rsplit('/')
-        video_id = list_video_id[len(list_video_id)-1]
-        video_title = ''
-        video_time = video_datas.find('time', class_="m-section__scroll__item__bottom__time").text.replace('.', ':')
-        if video_datas.find('span', class_="m-section__scroll__item__bottom__title--sub").string is not None:
-            video_title = video_time + ' - ' + video_datas.find('span', class_="m-section__scroll__item__bottom__title").text + \
-                ': ' + video_datas.find('span', class_="m-section__scroll__item__bottom__title--sub").text
-        else:
-            video_title = video_time + ' - ' + video_datas.find('span', class_="m-section__scroll__item__bottom__title").text
-        video_image = URL_ROOT + video_datas.find('img').get('data-src')
-
+    root = resp.parse("ul", attrs={"id": "slick-missed-day-%s" % (day_id)})
+    
+    for broadcast in root.iterfind(".//li"):
+        video_time = broadcast.find(".//time[@class='m-section__scroll__item__bottom__time']").text.replace('.', ':')
+        video_title = video_time + " - " + broadcast.find(".//span[@class='m-section__scroll__item__bottom__title']").text
+        
+        subtitle = broadcast.find("span[@class='m-section__scroll__item__bottom__title--sub']")
+        if subtitle is not None and subtitle.text is not None:
+            video_title += ": " + subtitle
+            
+        video_image = URL_ROOT + broadcast.find('.//img').get('data-src')
+        video_url = URL_ROOT + broadcast.find('.//a').get('href')
+        
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
-        
-        if plugin.setting.get_boolean('active_subtitle'):
-            item.subtitles.append(URL_SUBTITLE % video_id)
-
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            video_id=video_id)
+            video_url=video_url,
+            item_dict=cqu.item2dict(item))
         yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+        plugin, item_id, video_url, item_dict, download_mode=False, video_label=None):
 
-    # get token
-    resp = urlquick.get(URL_TOKEN, max_age = 3600)
-    token_json_parser = json.loads(resp.text)
-    token = token_json_parser["token"]
+    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
 
-    # get stream url
-    resp2 = urlquick.get(URL_VIDEO_REPLAY % (video_id, token), max_age = -1)
+    if xbmc_version < 18:
+        xbmcgui.Dialog().ok(
+            'Info',
+            plugin.localize(30602))
+        return False
+
+    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
+
+    resp = urlquick.get(video_url, max_age = -1)
+
+    token_id = re.compile(
+        r'start\-player\.npo\.nl\/embed\/(.*?)\"').findall(resp.text)[0]
+    video_id = re.compile(
+        r'\"iframe\-(.*?)\"').findall(resp.text)[0]
+
+    resp2 = urlquick.get(URL_REPLAY_STREAM % (video_id, token_id), max_age = -1)
     json_parser = json.loads(resp2.text)
-    stream_url = ''
-    if 'items' in json_parser:
-        for stream_url_datas in json_parser["items"][0]:
-            stream_url_json = stream_url_datas["url"]
-            break
-        resp3 = urlquick.get(stream_url_json + \
-            'jsonpCallback%s5910' % (str(time.time()).replace('.', '')))
-        json_value = re.compile(r'\((.*?)\)').findall(resp3.text)[0]
-        json_parser2 = json.loads(json_value)
+    
+    if "html" in json_parser and "Deze video mag niet bekeken worden vanaf jouw locatie" in json_parser["html"]:
+        plugin.notify('ERROR', plugin.localize(30713))
+        return False
+        
+    if "html" in json_parser and "Deze video is niet beschikbaar" in json_parser["html"]:
+        plugin.notify('ERROR', plugin.localize(30716))
+        return False
+    
+    licence_url = json_parser["stream"]["keySystemOptions"][0]["options"]["licenseUrl"]
+    licence_url_header = json_parser["stream"]["keySystemOptions"][0]["options"]["httpRequestHeaders"]
+    xcdata_value = licence_url_header["x-custom-data"]
 
-        if 'url' in json_parser2:
-            stream_url = json_parser2["url"]
 
-    if download_mode:
-        return download.download_video(stream_url, video_label)
-    return stream_url
+    item = Listitem()
+    item.path = json_parser["stream"]["src"]
+    item.label = item_dict['label']
+    item.info.update(item_dict['info'])
+    item.art.update(item_dict['art'])
+    
+    if plugin.setting.get_boolean('active_subtitle'):
+        item.subtitles.append(URL_SUBTITLE % video_id)
+    
+    item.property['inputstreamaddon'] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property['inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&x-custom-data=%s|R{SSM}|' % xcdata_value
+
+    return item
 
 
 def live_entry(plugin, item_id, item_dict):

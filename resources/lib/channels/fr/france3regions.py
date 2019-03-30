@@ -33,8 +33,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -112,18 +110,16 @@ def list_programs(plugin, item_id):
     - Informations
     - ...
     """
-    region = utils.ensure_unicode(Script.setting['france3.region'])
+    region = utils.ensure_unicode(Script.setting['france3regions.language'])
     region = LIVE_FR3_REGIONS[region]
-    resp2 = urlquick.get(URL_EMISSIONS % region)
-    root_soup = bs(resp2.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'div', class_=re.compile('little-column-style--content col-sm-6 col-md-4'))
+    resp = urlquick.get(URL_EMISSIONS % region)
+    root = resp.parse()
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('h2').get_text()
-        program_plot = program_datas.find('div', class_='column-style--text hidden-xs').get_text()
-        program_image = program_datas.find('img').get('data-srcset')
-        program_url = program_datas.find('a').get('href')
+    for program_datas in root.iterfind(".//div[@class='little-column-style--content col-sm-6 col-md-4 mobile-toggler-replace']"):
+        program_title = program_datas.find('.//h2').text
+        program_plot = program_datas.find(".//div[@class='column-style--text hidden-xs']").text
+        program_image = program_datas.find('.//img').get('data-srcset')
+        program_url = program_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = program_title
@@ -140,17 +136,15 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'a', class_=re.compile('video_mosaic'))
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
+    for video_datas in root.iterfind(".//a[@class='slider-inline-style--content video_mosaic']"):
         video_title = video_datas.get('title')
         video_plot = video_datas.get('description')
-        if video_datas.find('img').get('data-srcset'):
-            video_image = video_datas.find('img').get('data-srcset')
+        if video_datas.find('.//img').get('data-srcset'):
+            video_image = video_datas.find('.//img').get('data-srcset')
         else:
-            video_image = video_datas.find('img').get('src')
+            video_image = video_datas.find('.//img').get('src')
         id_diffusion = re.compile(
             r'video\/(.*?)\@Regions').findall(video_datas.get('href'))[0]
 
@@ -160,8 +154,8 @@ def list_videos(plugin, item_id, program_url):
         item.info['plot'] = video_plot
 
         date_value = ''
-        if video_datas.find('p', class_='slider-inline-style--text text-light m-t-0').get_text():
-            date_value = video_datas.find('p', class_='slider-inline-style--text text-light m-t-0').get_text().split(' du ')[1]
+        if video_datas.find(".//p[@class='slider-inline-style--text text-light m-t-0']").text is not None:
+            date_value = video_datas.find(".//p[@class='slider-inline-style--text text-light m-t-0']").text.split(' du ')[1]
             item.info.date(date_value, '%d/%m/%Y')
 
         item.context.script(
@@ -194,6 +188,15 @@ def live_entry(plugin, item_id, item_dict):
 
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
+    final_region = Script.setting['france3regions.language']
+
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        final_region = item_dict['language']
 
     resp = urlquick.get(
         URL_LIVES_JSON,
@@ -201,7 +204,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         max_age=-1)
     json_parser = json.loads(resp.text)
 
-    region = utils.ensure_unicode(Script.setting['france3.region'])
+    region = utils.ensure_unicode(final_region)
     id_sivideo = json_parser[LIVE_FR3_REGIONS[region]]["id_sivideo"]
     return resolver_proxy.get_francetv_live_stream(
         plugin, id_sivideo.split('@')[0])

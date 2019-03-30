@@ -32,9 +32,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick

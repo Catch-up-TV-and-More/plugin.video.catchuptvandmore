@@ -372,6 +372,17 @@ def get_video_url(
 
 
 def live_entry(plugin, item_id, item_dict):
+
+    final_language = LANG
+   
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        final_language = item_dict['language']
+
     root_json_url = 'products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13'
     root_json_r = urlquick.get(
         URL_API(root_json_url),
@@ -386,7 +397,7 @@ def live_entry(plugin, item_id, item_dict):
 
     # code in JSON: FR, EN, ES and AR
     for json_language in json_languages:
-        if json_language['code'] == LANG:
+        if json_language['code'] == final_language:
             json_tv = json_language['tv']
             if 'direct_tv' in json_tv:
                 guid = json_tv['direct_tv']['guid']

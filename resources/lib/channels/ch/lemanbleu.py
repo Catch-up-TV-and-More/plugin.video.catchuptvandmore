@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -73,14 +71,12 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = resp = urlquick.get(URL_REPLAY)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find(
-        id="itemFilters").find_all('li')
+    root = resp.parse("ul", attrs={"id": "itemFilters"})
 
-    for program_datas in list_programs_datas:
-        program_title = program_datas.find('a').text
+    for program_datas in root.iterfind(".//li"):
+        program_title = program_datas.find('.//a').text
         program_id = re.compile(
-            r'this\,(.*?)\)').findall(program_datas.find('a').get('onclick'))[0]
+            r'this\,(.*?)\)').findall(program_datas.find('.//a').get('onclick'))[0]
 
         item = Listitem()
         item.label = program_title
@@ -96,16 +92,14 @@ def list_programs(plugin, item_id):
 def list_videos(plugin, item_id, program_id, page):
 
     resp = resp = urlquick.get(URL_VIDEOS % (program_id, page))
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'li', class_='item')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('h3').text
-        video_image = URL_ROOT + video_datas.find('img').get('src')
-        video_plot = video_datas.find('p').text
-        video_url = URL_ROOT + video_datas.find('a').get('href')
-        date_value = video_datas.find('span', class_='date').text.split(' ')[1]
+    for video_datas in root.iterfind(".//li[@class='item']"):
+        video_title = video_datas.find('.//h3').text
+        video_image = URL_ROOT + video_datas.find('.//img').get('src')
+        video_plot = video_datas.find('.//p').text
+        video_url = URL_ROOT + video_datas.find('.//a').get('href')
+        date_value = video_datas.find(".//span[@class='date']").text.split(' ')[1]
 
         item = Listitem()
         item.label = video_title

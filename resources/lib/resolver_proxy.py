@@ -170,6 +170,9 @@ def get_brightcove_video_json(
             plugin.notify('ERROR', plugin.localize(30713))
             return False
 
+    if video_url == '':
+        return False
+
     if download_mode:
         return download.download_video(video_url, video_label)
     return video_url

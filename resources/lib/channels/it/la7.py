@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -63,16 +61,21 @@ def list_days(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_DAYS % item_id.upper())
-    root_soup = bs(resp.text, 'html.parser')
-    list_days_datas = root_soup.find_all(
-        'div', class_='giorno')
+    root = resp.parse("div", attrs={"class": "giorni clearfix"})
 
-    for day_datas in list_days_datas:
-        day_title = day_datas.find(
-            'div', class_='dateRowWeek').text + ' - ' + \
-                day_datas.find('div', class_='dateDay').text + ' - ' + \
-                    day_datas.find('div', class_='dateMonth').text
-        day_url = URL_ROOT + day_datas.find('a').get('href')
+    for day_datas in root.iterfind(".//a"):
+        day_title = ''
+        if day_datas.find(".//div[@class='dateRowWeek']") is not None:
+            day_title = day_datas.find(
+                ".//div[@class='dateRowWeek']").text + ' - ' + \
+                    day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
+                        day_datas.find(".//div[@class='dateMonth']").text
+        else:
+            day_title = day_datas.find(
+                ".//div[@class='dateRowWeek active']").text + ' - ' + \
+                    day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
+                        day_datas.find(".//div[@class='dateMonth']").text
+        day_url = URL_ROOT + day_datas.get('href')
 
         item = Listitem()
         item.label = day_title
@@ -87,16 +90,15 @@ def list_days(plugin, item_id):
 def list_videos(plugin, item_id, day_url):
 
     resp = urlquick.get(day_url)
-    print 'response : ' + repr(resp.text)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='palinsesto_row disponibile clearfix')
+    root = resp.parse()
 
-    for video_datas in list_videos_datas:
-        video_title = video_datas.find('img').get('title')
-        video_image = video_datas.find('img').get('src')
-        video_plot = video_datas.find('div', class_='descrizione').find('p').text
-        video_url = video_datas.find('a', class_="thumbVideo").get('href')
+    for video_datas in root.iterfind(".//div[@class='palinsesto_row             disponibile clearfix']"):
+        video_title = video_datas.find('.//img').get('title')
+        video_image = video_datas.find('.//img').get('src')
+        video_plot = ''
+        if video_datas.find('.//p') is not None:
+            video_plot = video_datas.find('.//p').text
+        video_url = video_datas.find(".//a[@class='thumbVideo']").get('href')
 
         item = Listitem()
         item.label = video_title

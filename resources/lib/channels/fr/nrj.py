@@ -31,8 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
+import htmlement
 import json
 import re
 import requests
@@ -48,6 +47,8 @@ URL_ROOT = 'http://www.nrj-play.fr'
 
 URL_REPLAY = URL_ROOT + '/%s/replay'
 # channel_name (nrj12, ...)
+
+URL_COMPTE_LOGIN_MODAL = URL_ROOT + '/compte/loginmodal'
 
 URL_COMPTE_LOGIN = URL_ROOT + '/compte/login'
 # TO DO add account for using Live Direct
@@ -74,11 +75,10 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY % item_id)
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find(
-        'ul', class_='subNav-menu hidden-xs').find_all('a')
-    for category_datas in list_categories_datas:
-        category_title = category_datas.get_text().strip()
+    root = resp.parse("ul", attrs={"class": "subNav-menu hidden-xs"})
+
+    for category_datas in root.iterfind(".//a"):
+        category_title = category_datas.text.strip()
         category_url = URL_ROOT + category_datas.get('href')
 
         item = Listitem()
@@ -98,20 +98,19 @@ def list_programs(plugin, item_id, category_url):
     - ...
     """
     resp = urlquick.get(category_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all(
-        'div', class_='linkProgram-visual')
-    for program_datas in list_programs_datas:
+    root = resp.parse()
+
+    for program_datas in root.iterfind(".//div[@class='linkProgram-visual']"):
 
         program_title = program_datas.find(
-            'img').get('alt')
+            './/img').get('alt')
         program_url = URL_ROOT + program_datas.find(
-            'a').get('href')
+            './/a').get('href')
         program_image = ''
-        if program_datas.find('source').get('data-srcset'):
-            program_image = program_datas.find('source').get('data-srcset')
+        if program_datas.find('.//source').get('data-srcset') is not None:
+            program_image = program_datas.find('.//source').get('data-srcset')
         else:
-            program_image = program_datas.find('source').get('srcset')
+            program_image = program_datas.find('.//source').get('srcset')
 
         item = Listitem()
         item.label = program_title
@@ -128,20 +127,18 @@ def list_programs(plugin, item_id, category_url):
 def list_videos(plugin, item_id, program_title, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'figure', class_='thumbnailReplay-visual')
+    root = resp.parse()
 
-    if len(list_videos_datas) > 0:
-        for video_datas in list_videos_datas:
+    if len(root.findall(".//figure[@class='thumbnailReplay-visual']")) > 0:
+        for video_datas in root.findall(".//figure[@class='thumbnailReplay-visual']"):
             video_title = program_title + ' - ' + video_datas.find(
-                'img').get('alt')
-            video_url = URL_ROOT + video_datas.find('a').get('href')
+                './/img').get('alt')
+            video_url = URL_ROOT + video_datas.find('.//a').get('href')
             video_image = ''
-            if video_datas.find('source').get('data-srcset'):
-                video_image = video_datas.find('source').get('data-srcset')
+            if video_datas.find('.//source').get('data-srcset') is not None:
+                video_image = video_datas.find('.//source').get('data-srcset')
             else:
-                video_image = video_datas.find('source').get('srcset')
+                video_image = video_datas.find('.//source').get('srcset')
 
             item = Listitem()
             item.label = video_title
@@ -161,11 +158,11 @@ def list_videos(plugin, item_id, program_title, program_url):
                 video_url=video_url)
             yield item
     else:
-        video_title = root_soup.find(
-            'div', class_='nrjVideo-player').find('meta').get('alt')
+        video_title = root.find(
+            ".//div[@class='nrjVideo-player']").find('.//meta').get('alt')
         video_url = program_url
-        video_image = root_soup.find(
-            'div', class_='nrjVideo-player').find('meta').get('content')
+        video_image = root.find(
+            ".//div[@class='nrjVideo-player']").find('.//meta').get('content')
 
         item = Listitem()
         item.label = video_title
@@ -191,11 +188,10 @@ def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
     # Just One format of each video (no need of QUALITY)
     resp = urlquick.get(video_url)
-    root_soup = bs(resp.text, 'html.parser')
-    stream_datas = root_soup.find(
-        'div', class_='nrjVideo-player').find_all('meta')
+    root = resp.parse("div", attrs={"class": "nrjVideo-player"})
+
     stream_url = ''
-    for stream in stream_datas:
+    for stream in root.iterfind(".//meta"):
         if 'mp4' in stream.get('content'):
             stream_url = stream.get('content')
 
@@ -219,7 +215,7 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     # Get Token
     # KO - resp = session_urlquick.get(URL_COMPTE_LOGIN)
-    resp = session_requests.get(URL_COMPTE_LOGIN)
+    resp = session_requests.get(URL_COMPTE_LOGIN_MODAL)
     token_form_login = re.compile(
         r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
         ).findall(resp.text)[0]
@@ -259,8 +255,10 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         headers=dict(
             referer=URL_LIVE_WITH_TOKEN % (item_id)))
 
-    root_soup = bs(resp3.text, 'html.parser')
-    live_data = root_soup.find('div', class_="player")
+    parser = htmlement.HTMLement()
+    parser.feed(resp3.text)
+    root = parser.close()
+    live_data = root.find(".//div[@class='player']")
 
     url_live_json = live_data.get('data-options')
     url_live_json_jsonparser = json.loads(url_live_json)

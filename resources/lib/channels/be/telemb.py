@@ -31,9 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -44,8 +41,6 @@ import urlquick
 # Fix Download Mode
 
 URL_ROOT = 'https://www.telemb.be'
-
-URL_PROGRAMS = URL_ROOT + '/emissions'
 
 URL_LIVE = URL_ROOT + '/direct'
 
@@ -63,47 +58,37 @@ def replay_entry(plugin, item_id):
 @Route.register
 def list_programs(plugin, item_id):
 
-    resp = resp = urlquick.get(URL_PROGRAMS)
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find_all('a')
+    resp = resp = urlquick.get(URL_ROOT)
+    root = resp.parse()
+    root2 = root.findall(".//li[@class='we-mega-menu-li dropdown-menu']")[3]
 
-    for program_datas in list_programs_datas:
+    for program_datas in root2.iterfind(".//li[@class='we-mega-menu-li']"):
 
-        if program_datas.get('href'):
-            if 'emission/' in program_datas.get('href'):
-                program_title = program_datas.find('div').text
-                program_image = 'https:' + program_datas.find('img').get('src')
-                program_url = URL_ROOT + program_datas.get('href')
+        program_title = program_datas.find('.//a').text.strip()
+        program_url = URL_ROOT + program_datas.find('.//a').get('href')
 
-                item = Listitem()
-                item.label = program_title
-                item.art['thumb'] = program_image
-                item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    program_url=program_url,
-                    page='0')
-                yield item
+        item = Listitem()
+        item.label = program_title
+        item.set_callback(
+            list_videos,
+            item_id=item_id,
+            program_url=program_url,
+            page='0')
+        yield item
 
 
 @Route.register
 def list_videos(plugin, item_id, program_url, page):
 
     resp = urlquick.get(program_url + '?page=%s' % page)
-    root_soup = bs(resp.text, 'html.parser')
-    list_videos_datas = root_soup.find_all('div', class_='video-block')
+    root = resp.parse()
+    root2 = root.findall(".//div[@class='view-content']")[1]
 
-    for video_datas in list_videos_datas:
-        video_title = ''
-        video_image = ''
-        if video_datas.find("img"):
-            video_image = 'https:' + video_datas.find("img").get('src')
-        video_url = ''
-        list_a_node_datas = video_datas.find_all('a')
-        for a_node_datas in list_a_node_datas:
-            if a_node_datas.get('href'):
-                video_title = a_node_datas.text
-                video_url = URL_ROOT + a_node_datas.get('href')
+    for video_datas in root2.iterfind(".//div[@class='views-row']"):
+        video_title = video_datas.find('.//a').text
+        video_image = URL_ROOT + video_datas.find('.//img').get('src')
+        video_url = URL_ROOT + video_datas.find('.//a').get('href')
+
 
         item = Listitem()
         item.label = video_title
@@ -134,8 +119,8 @@ def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url, max_age=-1)
-    root_soup = bs(resp.text, 'html.parser')
-    video_id_url = root_soup.find_all('iframe')[1].get('src')
+    root = resp.parse()
+    video_id_url = root.findall('.//iframe')[1].get('src')
 
     resp2 = urlquick.get(video_id_url, max_age=-1)
     final_video_url = 'https://tvl-vod.l3.freecaster.net' + re.compile(

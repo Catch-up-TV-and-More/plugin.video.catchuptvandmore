@@ -32,18 +32,18 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 ### Belgique — *Belgium*
 ##### TV Communauté française — *French Community TV*
 - RTBF Auvio *(Replay, Live)*
-- RTL-TVI *(Replay with RTLPlay account)*
-- PLUG RTL *(Replay with RTLPlay account)*
-- CLUB RTL *(Replay with RTLPlay account)*
+- RTL-TVI *(Replay, Live TV)* *(with RTLPlay account)*
+- PLUG RTL *(Replay, Live TV)* *(with RTLPlay account)*
+- CLUB RTL *(Replay, Live TV)* *(with RTLPlay account)*
 - Télé MB *(Replay, Live TV)*
 - RTC Télé Liège *(Replay, Live TV)*
 - TV Lux *(Replay, Live TV)*
-- RTL INFO *(Replay with RTLPlay account)*
-- BEL RTL *(Replay with RTLPlay account)*
-- Contact *(Replay with RTLPlay account)*
+- RTL INFO *(Replay, Live TV)* *(with RTLPlay account)*
+- BEL RTL *(Replay, Live TV)* *(with RTLPlay account)*
+- Contact *(Replay, Live TV)* *(with RTLPlay account)*
 - BX1 *(Replay, Live TV)*
 - NRJ Hits TV *(Replay, Live TV)*
-- RTL Sport *(Replay with RTLPlay account)*
+- RTL Sport *(Replay, Live TV)* *(with RTLPlay account)*
 - TV Com *(Replay, Live TV)*
 
 ##### TV Communauté flamande — *Flemish Community TV*
@@ -84,7 +84,6 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Nova *(Live TV)*
 - Mega *(Live TV)*
 - Atreseries *(Live TV)*
-- Atresplayer *(Replay)* - *(Kodi 17.6 and inputstream.adaptive "enable" are required)*
 
 ### Etat Unis d'Amérique — *United State of America*
 ##### TV
@@ -162,6 +161,8 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - viàVosges *(Live TV)*
 - Télévision Loire 7 *(Replay, Live TV)*
 - Lucky Jack *(Live TV)* *(with ABWeb account)*
+- Mont Blanc Live TV *(Replay, Live TV)*
+- 8 Mont-Blanc *(Replay, Live TV)*
 
 ##### Web TV
 - Tfou — MyTF1 *(Replay)*
@@ -191,14 +192,14 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - Arirang (아리랑) *(Replay, Live TV)*
 - DW *(Live TV)* *(Contents {EN|AR|DE|ES})*
 - Bein Sports *(Replay)* *(Contents {AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY})*
-- QVC *(Live TV)* *(Contents {FR|JP|DE|IT|UK|US})*
+- QVC *(Live TV)* *(Contents {JP|DE|IT|UK|US})*
 - ICI RDI *(Live TV)*
 - CGTN *(Live TV)* *(Contents {FR|EN|AR|ES|RU})*
 - CGTN Documentary *(Live TV)*
 - Paramount Channel *(Live TV)* *(Contents {ES|IT})*
 - Afrique Media *(Replay, Live TV)*
 - Channel NewsAsia *(Replay, Live TV)*
-- RT *(Live TV)* *(Contents {FR|EN|AR|ES})*
+- RT *(Replay)* *(Contents {FR|EN})* *(Live TV)* *(Contents {FR|EN|AR|ES})*
 
 ### Italie — *Italia*
 ##### TV
@@ -230,11 +231,23 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - 読売テレビ *(Replay)*
 - 日テレ News24 *(Live TV)*
 - ジャパネットチャンネルDX *(Live TV)*
+- 関西テレビ *(Replay)*
 
 ##### Web TV
 - NHK ニュース *(Replay)*
 - NHKらいふ *(Replay)*
 - TBS ニュース *(Replay)*
+
+### Pays-Bas — *Netherlands*
+##### TV
+- NPO 1 *(Live TV)*
+- NPO 2 *(Live TV)*
+- NPO Zapp *(Live TV)*
+- NPO 1 Extra *(Live TV)*
+- NPO 2 Extra *(Live TV)*
+- NPO Zappelin Extra *(Live TV)*
+- NPO Nieuws *(Live TV)*
+- NPO Politiek *(Live TV)*
 
 ### Pologne — *Poland*
 ##### TV

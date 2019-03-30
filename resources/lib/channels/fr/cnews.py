@@ -33,32 +33,25 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 
-from bs4 import BeautifulSoup as bs
-
+import htmlement
 import re
-import json
 import urlquick
 
 
 # TO DO
-# Fix some encodage (HTML not well formated)
 
 # URL :
-URL_ROOT_SITE = 'http://www.cnews.fr'
+URL_ROOT_SITE = 'https://www.cnews.fr'
 
 # Live :
 URL_LIVE_CNEWS = URL_ROOT_SITE + '/le-direct'
 
 # Replay CNews
 URL_REPLAY_CNEWS = URL_ROOT_SITE + '/replay'
-URL_EMISSIONS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_emissions/%s/10/0'
+URL_EMISSIONS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_emissions/%s/0'
 # num Page
-URL_VIDEOS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_sujets/%s/15/0'
+URL_VIDEOS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_sujets/%s/0'
 # num Page
-
-# Replay/Live => VideoId
-URL_INFO_CONTENT = 'https://secure-service.canal-plus.com/' \
-                   'video/rest/getVideosLiees/cplus/%s?format=json'
 
 
 def replay_entry(plugin, item_id):
@@ -78,12 +71,13 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_REPLAY_CNEWS)
-    root_soup = bs(resp.text, 'html.parser')
-    menu_soup = root_soup.find('menu', class_="index-emission-menu")
-    categories_soup = menu_soup.find_all('li')
+    root = resp.parse("menu", attrs={"class": "index-emission-menu"})
 
-    for category in categories_soup:
-        category_name = category.get_text()
+    for category in root.iterfind("ul/li"):
+        if category.find('a') is not None:
+            category_name = category.find('a').text
+        else:
+            category_name = category.text
         if 'mission' in category_name:
             category_url = URL_EMISSIONS_CNEWS
         else:
@@ -103,42 +97,19 @@ def list_categories(plugin, item_id):
 @Route.register
 def list_videos(plugin, item_id, category_url, page):
 
-    resp = urlquick.get(category_url % page).text
-    resp = resp.replace('\n\r','').replace(
-        '\\"','"').replace('\\/','/').replace(
-            '\\u00e9','é').replace('\\u00ea','ê').replace(
-                '&#039;','\'').replace('\\u00e8','è').replace(
-                    '\\u00e7','ç').replace('\\u00ab','\"').replace(
-                        '\\u00bb','\"').replace('\\u00e0','à').replace(
-                            '\\u00c9','É').replace('\\u00ef','ï').replace(
-                                '\\u00f9','ù').replace('\\u00c0','À').replace(
-                                    '\\u00c7','Ç').replace('\\u0153','œ').replace(
-                                        '\\u2019', '’').replace('\\u00a0',' ').replace(
-                                            '\\u2026', '...').replace('\\u00f4','ô').replace(
-                                                '\\u00e2', 'â')
-    root_soup = bs(resp, 'html.parser')
-    programs = root_soup.find_all('a', class_='video-item-wrapper')
-    programs += root_soup.find_all('a', class_='emission-item-wrapper')
+    resp = urlquick.get(category_url % page)
+    parser = htmlement.HTMLement()
+    parser.feed(resp.json())
+    data = parser.close()
 
-    for program in programs:
-        title = ''
-        if program.find('span', class_='emission-title'):
-            title = program.find(
-                'span', class_='emission-title').get_text()
-        elif program.find('span', class_='video-title'):
-            title = program.find(
-                'span', class_='video-title').get_text()
-        description = ''
-        if program.find('p'):
-            description = program.find(
-                'p').get_text()
-        thumb = program.find('img').get('data-src')
-        video_url = URL_ROOT_SITE + program.get('href')
+    for video_datas in data.iterfind(".//a"):
+        video_title = video_datas.find('.//img').get('title')
+        video_image = video_datas.find('.//img').get('data-src')
+        video_url = URL_ROOT_SITE + video_datas.get('href')
 
         item = Listitem()
-        item.label = title
-        item.art['thumb'] = thumb
-        item.info['plot'] = description
+        item.label = video_title
+        item.art['thumb'] = video_image
 
         item.context.script(
             get_video_url,

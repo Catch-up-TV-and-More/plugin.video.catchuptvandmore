@@ -20,15 +20,13 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-import re
-from bs4 import BeautifulSoup as bs
-
 from codequick import Route, Resolver, Listitem
-import urlquick
 
 from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
 
+import re
+import urlquick
 
 URL_ROOT = 'http://noob-tv.com'
 
@@ -65,43 +63,36 @@ def root(plugin, item_id):
 @Route.register
 def list_shows(plugin, item_id, category_url):
     """Build categories listing"""
-    list_shows_html = urlquick.get(category_url).text
-    list_shows_soup = bs(list_shows_html, 'html.parser')
-    list_shows = list_shows_soup.find(
-        'p', class_='mod-articles-category-introtext').find_all('a')
+    resp = urlquick.get(category_url)
+    root = resp.parse("p", attrs={"class": "mod-articles-category-introtext"})
 
-    for show in list_shows:
+    for show in root.iterfind(".//a"):
         item = Listitem()
-        item.label = show.get_text()
+        item.label = show.text
         show_url = URL_ROOT + '/' + show.get('href')
 
         item.set_callback(
             list_videos,
             item_id=item_id,
-            category_url=show_url)
+            show_url=show_url)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url):
+def list_videos(plugin, item_id, show_url):
     """Build videos listing"""
-    replay_episodes_html = urlquick.get(
-        category_url).text
-    replay_episodes_soup = bs(replay_episodes_html, 'html.parser')
+    resp = urlquick.get(show_url)
+    root = resp.parse()
 
-    episodes = replay_episodes_soup.find_all(
-        'div', class_='showcategory')
-
-    for episode in episodes:
+    for episode in root.iterfind(".//div[@class='showcategory']"):
         item = Listitem()
         item.label = episode.find(
-            'h5').find('a').get_text().strip()
-        video_url = URL_ROOT + '/' + episode.find('a').get('href')
-        item.art['thumb'] = URL_ROOT + '/' + episode.find('img').get('src')
-        item.info['plot'] = episode.find(
-            'p',
-            class_='mod-articles-category-introtext'
-        ).get_text().strip()
+            './/h5').find('a').text.strip()
+        video_url = URL_ROOT + '/' + episode.find('.//a').get('href')
+        item.art['thumb'] = URL_ROOT + '/' + episode.find('.//img').get('src')
+        item.info['plot'] = ''
+        if episode.find(".//span[@class='mod-articles-category-date']").text is not None:
+            item.info['plot'] = episode.find(".//span[@class='mod-articles-category-date']").text.strip()
 
         item.context.script(
             get_video_url,

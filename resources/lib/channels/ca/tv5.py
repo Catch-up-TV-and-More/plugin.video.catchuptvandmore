@@ -31,8 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
+import htmlement
 import json
 import re
 import urlquick
@@ -78,13 +77,9 @@ def list_categories(plugin, item_id):
     yield item
 
     resp = urlquick.get(URL_ROOT % item_id + '/videos')
-    root_soup = bs(resp.text, 'html.parser')
-    list_categories_datas = root_soup.find(
-        'select',
-        class_="js-form-data js-select_filter_video js-select_filter_video-theme"
-    ).find_all('option')
+    root = resp.parse("select", attrs={"class": "js-form-data js-select_filter_video js-select_filter_video-theme"})
 
-    for category_datas in list_categories_datas:
+    for category_datas in root.iterfind(".//option"):
         category_title = category_datas.text
         category_id = category_datas.get('value')
 
@@ -103,13 +98,9 @@ def list_categories(plugin, item_id):
 def list_programs(plugin, item_id):
 
     resp = urlquick.get(URL_ROOT % item_id + '/videos')
-    root_soup = bs(resp.text, 'html.parser')
-    list_programs_datas = root_soup.find(
-        'select',
-        class_="js-form-data js-select_filter_video js-select_filter_video-serie"
-    ).find_all('option')
+    root = resp.parse("select", attrs={"class": "js-form-data js-select_filter_video js-select_filter_video-serie"})
 
-    for program_datas in list_programs_datas:
+    for program_datas in root.iterfind(".//option"):
         program_title = program_datas.text
         program_id = program_datas.get('value')
 
@@ -134,19 +125,13 @@ def list_videos(plugin, item_id, next_id, page):
 
     resp = urlquick.get(
         URL_VIDEOS % (item_id, param_id, next_id, page))
-    part_page = re.split(
-        '<div class="listing-carousel-container">', resp.text)
-    part_page = re.split(
-        '<div class="pagination-block js-pagination-block">', part_page[1])
-    root_soup = bs(part_page[0], 'html.parser')
-    list_videos_datas = root_soup.find_all(
-        'div', class_='media-thumb ')
+    root = resp.parse("div", attrs={"class": "listing-carousel-inner"})
 
-    for video_datas in list_videos_datas:
+    for video_datas in root.iterfind(".//div[@class='media-thumb  ']"):
         if video_datas.find('a'):
-            video_title = video_datas.find('img').get('alt')
-            video_image = video_datas.find('img').get('data-src')
-            video_url = URL_ROOT % item_id +  video_datas.find('a').get('href')
+            video_title = video_datas.find('.//img').get('alt')
+            video_image = video_datas.find('.//img').get('data-src')
+            video_url = URL_ROOT % item_id +  video_datas.find('.//a').get('href')
 
             item = Listitem()
             item.label = video_title

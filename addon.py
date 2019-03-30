@@ -51,9 +51,20 @@ def get_sorted_menu(menu_id):
     menu = []
     for item_id, item_infos in current_menu.items():
 
-        # If the item is enable
-        if Script.setting.get_boolean(item_id):
+        add_item = True
 
+        # If the item is enable
+        if not Script.setting.get_boolean(item_id):
+            add_item = False
+
+        # If the desired language is not avaible
+        if 'available_languages' in item_infos:
+            desired_language = Script.setting[item_id + '.language']
+            if desired_language not in item_infos['available_languages']:
+                add_item = False
+
+        
+        if add_item:
             # Get order value in settings file
             item_order = Script.setting.get_int(item_id + '.order')
 

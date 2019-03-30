@@ -31,8 +31,6 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 
-from bs4 import BeautifulSoup as bs
-
 import json
 import re
 import urlquick
@@ -42,6 +40,7 @@ import urlquick
 # Add Region
 # Check different cases of getting videos
 # Add more button videos
+# Fix images in list videos
 
 URL_API = 'https://api.radio-canada.ca/validationMedia/v1/Validation.html'
 
@@ -92,51 +91,27 @@ def list_programs(plugin, item_id):
                 program_url=program_url)
             yield item
 
-    # All programs by region
-    # Find a way to set region ? (get list region in the canada)
-    # for programs_by_region_datas in json_parser["teleShowsList"]["pageModel"]["data"]["programmesForRegion"]:
-
-    #     if '/tele/' in programs_by_region_datas["link"]:
-    #         program_title = programs_by_region_datas["title"]
-    #         program_image = programs_by_region_datas["pictureUrl"].replace('{0}', '648').replace('{1}', '4x3')
-    #         if 'telejournal-22h' in programs_by_region_datas["link"] or \
-    #             'telejournal-18h' in programs_by_region_datas["link"]:
-    #             program_url = URL_ROOT + programs_by_region_datas["link"] + '/2016-2017/episodes'
-    #         else:
-    #             program_url = URL_ROOT + programs_by_region_datas["link"] + '/site/episodes'
-
-    #         item = Listitem()
-    #         item.label = program_title
-    #         item.art['thumb'] = program_image
-    #         item.set_callback(
-    #             list_videos,
-    #             item_id=item_id,
-    #             program_url=program_url)
-    #         yield item
-
 
 @Route.register
 def list_videos(plugin, item_id, program_url):
 
     resp = urlquick.get(program_url)
-    root_soup = bs(resp.text, 'html.parser')
-    if root_soup.find('ul', class_='episodes-container'):
-        list_videos_datas = root_soup.find(
-            'ul', class_='episodes-container').find_all('li')
+    root = resp.parse()
+    if root.find(".//ul[@class='episodes-container']") is not None:
 
-        for video_datas in list_videos_datas:
+        for video_datas in root.find(".//ul[@class='episodes-container']").iterfind('.//li'):
 
             # Check the IF maybe keep just icon-play?
-            if 'icon-play' in video_datas.find('a').get('class') or \
-                video_datas.find('div', class_='play medium'):
-                video_title = utils.strip_tags(video_datas.find('a').get('title'))
+            if 'icon-play' in video_datas.find('.//a').get('class') or \
+                video_datas.find(".//div[@class='play medium]'") is not None:
+                video_title = utils.strip_tags(video_datas.find('.//a').get('title'))
                 video_image = ''
-                if video_datas.find('img'):
-                    if 'http' in video_datas.find('img').get('src'):
-                        video_image = video_datas.find('img').get('src')
+                if video_datas.find('.//img') is not None:
+                    if 'http' in video_datas.find('.//img').get('src'):
+                        video_image = video_datas.find('.//img').get('src')
                     else:
-                        video_image = URL_ROOT + video_datas.find('img').get('src')
-                video_url = URL_ROOT + video_datas.find('a').get('href')
+                        video_image = URL_ROOT + video_datas.find('.//img').get('src')
+                video_url = URL_ROOT + video_datas.find('.//a').get('href')
 
                 item = Listitem()
                 item.label = video_title
@@ -162,9 +137,9 @@ def get_video_url(
         plugin, item_id, video_url, download_mode=False, video_label=None):
 
     resp = urlquick.get(video_url)
-    root_soup = bs(resp.text, 'html.parser')
-    video_id = root_soup.find(
-        'div', class_='Main-Player-Console').get('id').split('-')[0]
+    root = resp.parse()
+    video_id = root.find(
+        ".//div[@class='Main-Player-Console']").get('id').split('-')[0]
     resp2 = urlquick.get(URL_STREAM_REPLAY % video_id)
     json_parser = json.loads(resp2.text)
     final_video_url = json_parser["url"]

@@ -39,6 +39,7 @@ import urlquick
 URL_LIVE_API = 'http://%s.euronews.com/api/watchlive.json'
 # Language
 
+DESIRED_LANGUAGE = Script.setting['euronews.language']
 
 def live_entry(plugin, item_id, item_dict):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
@@ -47,14 +48,22 @@ def live_entry(plugin, item_id, item_dict):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict):
 
-    desired_language = Script.setting[item_id + '.language']
+    final_language = DESIRED_LANGUAGE
+   
+    # If we come from the M3U file and the language
+    # is set in the M3U URL, then we overwrite
+    # Catch Up TV & More language setting
+    if type(item_dict) is not dict:
+        item_dict = eval(item_dict)
+    if 'language' in item_dict:
+        final_language = item_dict['language']
 
-    if desired_language == 'EN':
+    if final_language == 'EN':
         url_live_json = URL_LIVE_API % 'www'
-    elif desired_language == 'AR':
+    elif final_language == 'AR':
         url_live_json = URL_LIVE_API % 'arabic'
     else:
-        url_live_json = URL_LIVE_API % desired_language.lower()
+        url_live_json = URL_LIVE_API % final_language.lower()
 
     resp = urlquick.get(url_live_json, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
     json_parser = json.loads(resp.text)
