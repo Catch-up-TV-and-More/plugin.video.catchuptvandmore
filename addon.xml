@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.5~beta19"
+       version="0.2.5"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -68,7 +68,7 @@
 [Fix] Replay - Tele MB (BE)
 [Fix] Replay - Unis (CA)
 [Fix] Replay - LCI (FR)
-[Add] Feature - Channels.m3u - see "README_LIVE_TV.md" to use it with PVR IPTV Simple
+[Add] Feature - Bind Live TV to Kodi mode TV (see https://catch-up-tv-and-more.github.io/live_tv_installation/)
 [Remove] Live TV - QVC (FR)
 [Fix] Replay - Tébéo (FR)
 [Fix] Replay - TVLux (BE)
@@ -76,10 +76,9 @@
 [Fix] Replay - TVER (JP)
 [Fix] Live TV - TVM3 (CH)
 [Fix] Replay - MyCanal (FR)
-[Remove] Images of channels and websites => stored in this repo "https://github.com/Catch-up-TV-and-More/images"
+[Remove] Images (Thumb/Fanart) of channels and websites => stored in this repo "https://github.com/Catch-up-TV-and-More/images"
 [Remove] Requests - [AstresPlayer] (ES)
 [Remove] Replay - [AstresPlayer] (ES)
-[Remove] Icon (channel/website) - Available now on the repo image of CU TV and More.
 [Add] Replay / Live - 8 Mont blanc (FR) - Thanks Gaet81
 [Add] Replay / Live - Mont Blanc Live TV (FR) - Thanks Gaet81
     </news>
