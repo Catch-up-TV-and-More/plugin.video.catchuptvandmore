@@ -158,6 +158,7 @@ def get_brightcove_video_json(
                 get_brightcove_policy_key(data_account, data_player))
         })
     json_parser = json.loads(resp.text)
+    print 'resp.text value : ' + repr(resp.text)
 
     video_url = ''
     if 'sources' in json_parser:
@@ -169,6 +170,10 @@ def get_brightcove_video_json(
                             video_url = url["src"]
                     else:
                         video_url = url["src"]
+                else:
+                    if 'src' in url:
+                        if 'm3u8' in url["src"]:
+                            video_url = url["src"]
             else:
                 if 'src' in url:
                     if 'm3u8' in url["src"]:
