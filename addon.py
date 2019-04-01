@@ -46,7 +46,7 @@ def get_sorted_menu(plugin, menu_id):
     current_menu = eval('sk.' + menu_id.upper())
 
     # Notify user for the new M3U Live TV feature
-    if menu_id == "live_tv":
+    if menu_id == "live_tv" and cqu.get_kodi_version() >= 18:
         if plugin.setting.get_boolean('show_live_tv_m3u_info'):
             r = xbmcgui.Dialog().yesno(
                 plugin.localize(LABELS['Information']),
