@@ -495,6 +495,15 @@ msgctxt "#30604"
 msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
 msgstr "Accèss à ce contenu nécessite un compte %s. Vous pouvez configurer votre identifiant et votre mot de passe dans la configuration de cette extension. Si vous n'avez pas de compte, vous pouvez le créer à cette URL %s."
 
+msgctxt "#30605"
+msgid "You can now use Kodi's TV feature to watch live TV channels from Catch-up TV & More, follow the tutorial at https://catch-up-tv-and-more.github.io/live_tv_installation/."
+msgstr "Vous pouvez maintenant utiliser la fonctionnalité TV de Kodi pour regarder les chaînes de TV en direct de Catch-up TV & More, suivez le tutoriel à l'adresse https://catch-up-tv-and-more.github.io/fr/live_tv_installation/."
+
+msgctxt "#30606"
+msgid "Do not see this message anymore?"
+msgstr "Ne plus voir ce message ?"
+
+
 # Others (from 30700 to 30799)
 msgctxt "#30700"
 msgid "More videos..."

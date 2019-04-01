@@ -39,11 +39,23 @@ import resources.lib.cq_utils as cqu
 from resources.lib import vpn
 
 
-def get_sorted_menu(menu_id):
+def get_sorted_menu(plugin, menu_id):
     # The current menu to build contains
     # all the items present in the 'menu_id'
     # dictionnary of the skeleton.py file
     current_menu = eval('sk.' + menu_id.upper())
+
+    # Notify user for the new M3U Live TV feature
+    if menu_id == "live_tv":
+        if plugin.setting.get_boolean('show_live_tv_m3u_info'):
+            r = xbmcgui.Dialog().yesno(
+                plugin.localize(LABELS['Information']),
+                plugin.localize(30605),
+                plugin.localize(30606)
+            )
+            if r:
+                plugin.setting['show_live_tv_m3u_info'] = False
+
 
     # First, we have to sort the current menu items
     # according to each item order and we have
@@ -149,7 +161,7 @@ def generic_menu(plugin, menu_id, item_module=None, item_dict=None):
     # TEMPO (waiting for the CodeQuick update)
     plugin.cache_to_disc = True
 
-    menu = get_sorted_menu(menu_id)
+    menu = get_sorted_menu(plugin, menu_id)
 
     if not menu:
         # If the selected menu is empty just reload the current menu
@@ -202,7 +214,7 @@ def tv_guide_menu(plugin, menu_id, item_module=None, item_dict=None):
     # Move up and move down action only work with this sort method
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
 
-    menu = get_sorted_menu(menu_id)
+    menu = get_sorted_menu(plugin, menu_id)
     channels_id = []
     for index, (channel_order,
                 channel_id,
@@ -391,7 +403,7 @@ def move_item(plugin, direction, item_id, menu_id):
     item_to_move_id = item_id
     item_to_move_order = plugin.setting.get_int(item_to_move_id + '.order')
 
-    menu = get_sorted_menu(menu_id)
+    menu = get_sorted_menu(plugin, menu_id)
 
     for k in range(0, len(menu)):
         item = menu[k]
