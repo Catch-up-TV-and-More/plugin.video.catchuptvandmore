@@ -434,6 +434,7 @@ LABELS = {
     'npo-nieuws': 'NPO Nieuws',
     'npo-politiek': 'NPO Politiek',
     'npo-start': 'NPO Start',
+    'at5': 'AT5',
 
     # Websites
     'allocine': 'Allociné',

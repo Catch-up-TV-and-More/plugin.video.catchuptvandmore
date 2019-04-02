@@ -936,6 +936,9 @@
 
             <setting label="NPO Start" type="bool" id="npo-start" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="npo-start.order" default="9"/>
+
+            <setting label="AT5" type="bool" id="at5" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="at5.order" default="10"/>
        <!-- Netherlands -->
 
 

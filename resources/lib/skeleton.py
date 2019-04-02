@@ -1412,6 +1412,12 @@ NL_LIVE = {
         'thumb': 'channels/nl/npopolitiek.png',
         'fanart': 'channels/nl/npopolitiek_fanart.jpg',
         'module': 'resources.lib.channels.nl.npo'
+    },
+    'at5': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/nl/at5.png',
+        'fanart': 'channels/nl/at5_fanart.jpg',
+        'module': 'resources.lib.channels.nl.at5'
     }
 }
 

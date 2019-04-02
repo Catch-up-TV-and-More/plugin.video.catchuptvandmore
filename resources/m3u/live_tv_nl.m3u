@@ -43,3 +43,8 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=npo-nieuws&item
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/nl/npopolitiek.png" group-title="Netherlands",NPO Politiek
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=npo-politiek&item_module=resources.lib.channels.nl.npo&item_dict={}
 
+##	AT5
+##	at5
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/nl/at5.png" group-title="Netherlands",AT5
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=at5&item_module=resources.lib.channels.nl.at5&item_dict={}
+
