@@ -53,9 +53,8 @@ def get_sorted_menu(plugin, menu_id):
                 plugin.localize(30605),
                 plugin.localize(30606)
             )
-            if r:
+            if not r:
                 plugin.setting['show_live_tv_m3u_info'] = False
-
 
     # First, we have to sort the current menu items
     # according to each item order and we have

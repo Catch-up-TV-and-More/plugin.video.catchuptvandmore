@@ -500,7 +500,7 @@ msgid "You can now use Kodi's TV feature to watch live TV channels from Catch-up
 msgstr ""
 
 msgctxt "#30606"
-msgid "Do not see this message anymore?"
+msgid "Do you want to see this information next time?"
 msgstr ""
 
 # Others (from 30700 to 30799)

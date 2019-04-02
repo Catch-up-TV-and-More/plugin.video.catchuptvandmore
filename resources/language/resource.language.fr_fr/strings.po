@@ -500,8 +500,8 @@ msgid "You can now use Kodi's TV feature to watch live TV channels from Catch-up
 msgstr "Vous pouvez maintenant utiliser la fonctionnalité TV de Kodi pour regarder les chaînes de TV en direct de Catch-up TV & More, suivez le tutoriel à l'adresse https://catch-up-tv-and-more.github.io/fr/live_tv_installation/."
 
 msgctxt "#30606"
-msgid "Do not see this message anymore?"
-msgstr "Ne plus voir ce message ?"
+msgid "Do you want to see this information next time?"
+msgstr "Voulez-vous voir cette information la prochaine fois ?"
 
 
 # Others (from 30700 to 30799)
