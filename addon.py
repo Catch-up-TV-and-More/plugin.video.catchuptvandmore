@@ -477,11 +477,12 @@ def add_item_to_favourites(plugin, item_id):
         return False
 
     # Add this item to favourite db
-    with storage.PersistentList("favourites.pickle") as db:
+    with storage.PersistentDict("favourites.pickle") as db:
         item_dict = {}
 
         item_dict['path'] = xbmc.getInfoLabel('ListItem.Path')
         item_dict['label'] = item_label
+        item_dict['order'] = len(db)
 
         db[item_id] = item_dict
     return False
@@ -511,45 +512,121 @@ def remove_favourite_item(plugin, item_id):
 
 
 @Route.register
+def move_favourite_item(plugin, direction, item_id):
+    # Callback function of move item conext menu
+    if direction == 'down':
+        offset = 1
+    elif direction == 'up':
+        offset = -1
+
+    with storage.PersistentDict("favourites.pickle") as db:
+        item_to_move_id = item_id
+        item_to_move_order = db[item_id]['order']
+
+        menu = []
+        for item_id, item_dict in db.items():
+            item = (
+                item_dict['order'],
+                item_id,
+                item_dict
+            )
+
+            menu.append(item)
+        menu = sorted(menu, key=lambda x: x[0])
+
+        for k in range(0, len(menu)):
+            item = menu[k]
+            item_id = item[1]
+            if item_to_move_id == item_id:
+                item_to_swap = menu[k + offset]
+                item_to_swap_order = item_to_swap[0]
+                item_to_swap_id = item_to_swap[1]
+                db[item_to_move_id]['order'] = item_to_swap_order
+                db[item_to_swap_id]['order'] = item_to_move_order
+                xbmc.executebuiltin('XBMC.Container.Refresh()')
+                break
+
+        return False
+
+
+@Route.register
 def favourites(plugin, item_id, item_module, item_dict={}):
     """
     Callback function called when the user enter in the
     favourites folder
     """
+    print('BUILD FAVOURITES LIST')
+
+    # Get sorted items
+    sorted_menu = []
     with storage.PersistentDict("favourites.pickle") as db:
-        print('BUILD FAVOURITES LIST')
+        menu = []
         for item_id, item_dict in db.items():
+            item = (
+                item_dict['order'],
+                item_id,
+                item_dict
+            )
 
-            item = Listitem()
+            menu.append(item)
 
-            print('\tCURRENT ITEM label: ', item_dict['label'])
-            print('\tCURRENT ITEM id: ', item_id)
-            print('\tCURRENT ITEM URL: ', item_dict['path'])
+        # We sort the menu according to the item_order values
+        sorted_menu = sorted(menu, key=lambda x: x[0])
+
+    # Add each item in the listing
+    for index, (item_order,
+                item_id,
+                item_dict
+                ) in enumerate(sorted_menu):
 
 
-            item.label = item_dict['label']
-            item_callback = cqu.get_callback_in_url(item_dict['path'])
-            item_module = cqu.get_module_in_url(item_dict['path'])
-            print('\tCURRENT ITEM callback: ', item_callback)
-            print('\tCURRENT ITEM module: ', item_module)
+        item = Listitem()
 
-            # Rename
+        print('\tCURRENT ITEM label: ', item_dict['label'])
+        print('\tCURRENT ITEM id: ', item_id)
+        print('\tCURRENT ITEM URL: ', item_dict['path'])
+        print('\tCURRENT ITEM order: ', str(item_dict['order']))
+
+
+        item.label = item_dict['label']
+        item_callback = cqu.get_callback_in_url(item_dict['path'])
+        item_module = cqu.get_module_in_url(item_dict['path'])
+        print('\tCURRENT ITEM callback: ', item_callback)
+        print('\tCURRENT ITEM module: ', item_module)
+
+        # Rename
+        item.context.script(
+            rename_favourite_item,
+            'rename',
+            item_id=item_id)
+
+        # Remove
+        item.context.script(
+            remove_favourite_item,
+            'remove',
+            item_id=item_id)
+
+        # Move up
+        if item_dict['order'] > 0:
             item.context.script(
-                rename_favourite_item,
-                'rename',
+                move_favourite_item,
+                plugin.localize(LABELS['Move up']),
+                direction='up',
                 item_id=item_id)
 
-            # Remove
+        # Move down
+        if item_dict['order'] < len(db) - 1:
             item.context.script(
-                remove_favourite_item,
-                'remove',
+                move_favourite_item,
+                plugin.localize(LABELS['Move down']),
+                direction='down',
                 item_id=item_id)
 
-            item.set_callback(
-                eval(item_callback),
-                item_id)
+        item.set_callback(
+            eval(item_callback),
+            item_id)
 
-            yield item
+        yield item
 
 
 def main():
