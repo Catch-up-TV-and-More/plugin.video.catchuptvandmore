@@ -47,15 +47,17 @@ def get_sorted_menu(plugin, menu_id):
     current_menu = eval('sk.' + menu_id.upper())
 
     # Notify user for the new M3U Live TV feature
-    if menu_id == "live_tv" and cqu.get_kodi_version() >= 18:
-        if plugin.setting.get_boolean('show_live_tv_m3u_info'):
-            r = xbmcgui.Dialog().yesno(
-                plugin.localize(LABELS['Information']),
-                plugin.localize(30605),
-                plugin.localize(30606)
-            )
-            if not r:
-                plugin.setting['show_live_tv_m3u_info'] = False
+    if menu_id == "live_tv" and \
+            cqu.get_kodi_version() >= 18 and \
+            plugin.setting.get_boolean('show_live_tv_m3u_info'):
+
+        r = xbmcgui.Dialog().yesno(
+            plugin.localize(LABELS['Information']),
+            plugin.localize(30605),
+            plugin.localize(30606)
+        )
+        if not r:
+            plugin.setting['show_live_tv_m3u_info'] = False
 
     # First, we have to sort the current menu items
     # according to each item order and we have
@@ -395,7 +397,7 @@ def favourites(plugin, item_id, item_module, item_dict={}):
             item = Listitem()
 
             print('\tCURRENT ITEM label: ', item_dict['label'])
-            print('\tCURRENT ITEM id: ', item_dict['label'])
+            print('\tCURRENT ITEM id: ', item_dict['item_id'])
             print('\tCURRENT ITEM URL: ', item_dict['path'])
 
 
@@ -403,13 +405,13 @@ def favourites(plugin, item_id, item_module, item_dict={}):
             item_callback = cqu.get_callback_in_url(item_dict['path'])
             item_module = cqu.get_module_in_url(item_dict['path'])
             print('\tCURRENT ITEM callback: ', item_callback)
-            print('\tCURRENT ITEM module: ', item_callback)
+            print('\tCURRENT ITEM module: ', item_module)
 
-            if 'main' not in item_module:
-                item_callback = eval(item_module + '.' + item_callback)
+            if item_module != '':
+                item_callback = item_module + '.' + item_callback
 
             item.set_callback(
-                item_callback,
+                eval(item_callback),
                 item_dict['item_id'])
 
             yield item
@@ -489,15 +491,23 @@ def vpn_connectdisconnect_setting(plugin):
 @Route.register
 def add_item_to_favourites(plugin, item_id):
     print('WANT TO ADD THE ITEM ', item_id, 'TO THE PLUGIN fAVOUTITES FOLDER')
-   
     print('ListItem path: ' + xbmc.getInfoLabel('ListItem.Path'))
 
+    # Ask the user if he wants to edit the label
+    item_label = utils.keyboard('Choose_your_favorite_title', xbmc.getInfoLabel('ListItem.Label'))
+
+    # If user aborded do not add this item to favourite
+    if item_label == '':
+        # TODO: Notify the user that the action aborded
+        return False
+
+    # Add this item to favourite db
     with storage.PersistentList("favourites.pickle") as db:
         item_dict = {}
 
         item_dict['path'] = xbmc.getInfoLabel('ListItem.Path')
         item_dict['item_id'] = item_id
-        item_dict['label'] = xbmc.getInfoLabel('ListItem.Label')
+        item_dict['label'] = item_label
 
         db.append(item_dict)
     return False
