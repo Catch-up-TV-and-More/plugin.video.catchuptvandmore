@@ -16,6 +16,9 @@
 
         <setting label="30032" type="bool" id="websites" default="true"/>
         <setting label="" type="number" visible="false" id="websites.order" default="3"/>
+
+        <setting label="30033" type="bool" id="favourites" default="true"/>
+        <setting label="" type="number" visible="false" id="favourites.order" default="4"/>
     </category>
     <!-- Main menu -->
 

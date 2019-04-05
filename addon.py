@@ -25,6 +25,7 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 import importlib
+import sys
 
 from codequick import Route, Resolver, Listitem, run, Script, utils, storage
 import urlquick
@@ -74,7 +75,6 @@ def get_sorted_menu(plugin, menu_id):
             if desired_language not in item_infos['available_languages']:
                 add_item = False
 
-        
         if add_item:
             # Get order value in settings file
             item_order = Script.setting.get_int(item_id + '.order')
@@ -132,6 +132,12 @@ def add_context_menus_to_item(
             vpn.vpn_item_callback,
             vpn_label)
 
+    # Add to plugin favourites
+    item.context.script(
+        add_item_to_favourites,
+        'add_item_to_favourites',
+        item_id=item_id)
+
     return
 
 
@@ -176,10 +182,13 @@ def generic_menu(plugin, menu_id, item_module=None, item_dict=None):
         add_context_menus_to_item(
             plugin, item, index, item_id, menu_id, len(menu))
 
-        label = LABELS[item_id]
-        if isinstance(label, int):
-            label = plugin.localize(label)
-        item.label = label
+        if item_id in LABELS:
+            label = LABELS[item_id]
+            if isinstance(label, int):
+                label = plugin.localize(label)
+            item.label = label
+        else:
+            item.label = item_id
 
         # Get item path of icon and fanart
         if 'thumb' in item_infos:
@@ -328,8 +337,6 @@ def replay_bridge(plugin, item_id, item_module, item_dict={}):
     # TEMPO (waiting for the CodeQuick update)
     plugin.cache_to_disc = True
 
-    plugin.setting['module_to_load'] = item_module
-
     # Let's go to the module file ...
     item_module = importlib.import_module(item_module)
     return item_module.replay_entry(plugin, item_id)
@@ -343,8 +350,6 @@ def website_bridge(plugin, item_id, item_module, item_dict={}):
 
     # TEMPO (waiting for the CodeQuick update)
     plugin.cache_to_disc = True
-
-    plugin.setting['module_to_load'] = item_module
 
     # Let's go to the module file ...
     item_module = importlib.import_module(item_module)
@@ -360,8 +365,6 @@ def multi_live_bridge(plugin, item_id, item_module, item_dict={}):
     # TEMPO (waiting for the CodeQuick update)
     plugin.cache_to_disc = True
 
-    plugin.setting['module_to_load'] = item_module
-
     # Let's go to the module file ...
     item_module = importlib.import_module(item_module)
     return item_module.multi_live_entry(plugin, item_id)
@@ -376,11 +379,40 @@ def live_bridge(plugin, item_id, item_module, item_dict={}):
     # TEMPO (waiting for the CodeQuick update)
     plugin.cache_to_disc = True
 
-    plugin.setting['module_to_load'] = item_module
-
     # Let's go to the module file ...
     item_module = importlib.import_module(item_module)
     return item_module.live_entry(plugin, item_id, item_dict)
+
+
+@Route.register
+def favourites(plugin, item_id, item_module, item_dict={}):
+    with storage.PersistentList("favourites.pickle") as db:
+        if not db:
+            yield False
+
+        print('BUILD FAVOURITES LIST')
+        for item_dict in db:
+            item = Listitem()
+
+            print('\tCURRENT ITEM label: ', item_dict['label'])
+            print('\tCURRENT ITEM id: ', item_dict['label'])
+            print('\tCURRENT ITEM URL: ', item_dict['path'])
+
+
+            item.label = item_dict['label']
+            item_callback = cqu.get_callback_in_url(item_dict['path'])
+            item_module = cqu.get_module_in_url(item_dict['path'])
+            print('\tCURRENT ITEM callback: ', item_callback)
+            print('\tCURRENT ITEM module: ', item_callback)
+
+            if 'main' not in item_module:
+                item_callback = eval(item_module + '.' + item_callback)
+
+            item.set_callback(
+                item_callback,
+                item_dict['item_id'])
+
+            yield item
 
 
 @Route.register
@@ -452,6 +484,23 @@ def vpn_delete_setting(plugin):
 def vpn_connectdisconnect_setting(plugin):
     # Callback function of OpenVPN connect/disconnect setting button
     return vpn.vpn_item_callback(plugin)
+
+
+@Route.register
+def add_item_to_favourites(plugin, item_id):
+    print('WANT TO ADD THE ITEM ', item_id, 'TO THE PLUGIN fAVOUTITES FOLDER')
+   
+    print('ListItem path: ' + xbmc.getInfoLabel('ListItem.Path'))
+
+    with storage.PersistentList("favourites.pickle") as db:
+        item_dict = {}
+
+        item_dict['path'] = xbmc.getInfoLabel('ListItem.Path')
+        item_dict['item_id'] = item_id
+        item_dict['label'] = xbmc.getInfoLabel('ListItem.Label')
+
+        db.append(item_dict)
+    return False
 
 
 def main():

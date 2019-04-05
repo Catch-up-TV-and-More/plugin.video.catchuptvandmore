@@ -50,6 +50,9 @@ ROOT = {
     'websites': {
         'callback': 'generic_menu',
         'thumb': 'websites.png'
+    },
+    'favourites': {
+        'callback': 'favourites'
     }
 }
 

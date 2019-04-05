@@ -45,8 +45,20 @@ def item2dict(item):
     return item_dict
 
 
-def find_module_in_url(base_url):
+def get_callback_in_url(base_url):
     # e.g. base_url = plugin://plugin.video.catchuptvandmore/resources/lib/websites/culturepub/list_shows
+    if base_url[-1] == '/':
+        base_url = base_url[:-1]
+    return base_url.split('/')[-1]
+
+
+def get_module_in_url(base_url):
+    # e.g. base_url = plugin://plugin.video.catchuptvandmore/resources/lib/websites/culturepub/list_shows
+    if 'resources' not in base_url:
+        return ''
+
+    if base_url[-1] == '/':
+        base_url = base_url[:-1]
     base_url_l = base_url.split('/')
     module_l = []
     addon_name_triggered = False
@@ -65,18 +77,17 @@ def find_module_in_url(base_url):
 def import_needed_module():
     # Import needed module according to the
     # base URL (Fix for Kodi favorite item)
-    module_to_import = find_module_in_url(sys.argv[0])
+    module_to_import = get_module_in_url(sys.argv[0])
+    if module_to_import == '':
+        print('NO ADDITIONNAL MODULE TO LOAD')
+        return
+
+    print('MODULE TO LOAD: ' + module_to_import)
     try:
         importlib.import_module(module_to_import)
     except Exception:
         pass
 
-    module_to_load_2 = Script.setting['module_to_load']
-    if module_to_load_2 != '':
-        try:
-            importlib.import_module(module_to_load_2)
-        except Exception:
-            pass
     return
 
 
