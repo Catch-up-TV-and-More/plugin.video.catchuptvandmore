@@ -79,14 +79,14 @@ def import_needed_module():
     # base URL (Fix for Kodi favorite item)
     module_to_import = get_module_in_url(sys.argv[0])
     if module_to_import == '':
-        print('NO ADDITIONNAL MODULE TO LOAD')
+        # No additionnal module to load
         return
 
-    print('MODULE TO LOAD: ' + module_to_import)
+    # Need to load additional module
     try:
         importlib.import_module(module_to_import)
     except Exception:
-        pass
+        Script.log('[cq_utils.import_needed_module] Failed to load module ' + module_to_import)
 
     return
 
