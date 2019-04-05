@@ -29,17 +29,105 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
-from resources.lib import resolver_proxy
+from resources.lib import download
 
+import json
 import re
 import urlquick
 
 # TO DO
-# Add Videos, Replays ?
+# get video Youtube in video_datas["text"]
 
 URL_ROOT = 'https://www.at5.nl'
 
 URL_LIVE = URL_ROOT + '/tv'
+
+URL_VIDEOS = 'https://at5news.vinsontv.com/api/news?source=web&slug=%s&page=%s'
+# slug, page
+
+def replay_entry(plugin, item_id):
+    """
+    First executed function after replay_bridge
+    """
+    return list_categories(plugin, item_id)
+
+
+@Route.register
+def list_categories(plugin, item_id):
+    """
+    Build categories listing
+    - Tous les programmes
+    - Séries
+    - Informations
+    - ...
+    """
+    resp = urlquick.get(URL_ROOT)
+    root = resp.parse("ul", attrs={"class": "nav-bar-mobile-submenu "})
+
+    for category_datas in root.iterfind(".//li"):
+
+        category_title = category_datas.find('a').text
+        category_slug = category_datas.find('a').get('href').replace('/', '')
+
+        item = Listitem()
+        item.label = category_title
+        item.set_callback(
+            list_videos,
+            item_id=item_id,
+            category_slug=category_slug,
+            page='0')
+        yield item
+
+
+@Route.register
+def list_videos(plugin, item_id, category_slug, page):
+
+    resp = urlquick.get(URL_VIDEOS % (category_slug, page))
+    json_parser = json.loads(resp.text)
+
+    for video_datas in json_parser["category"]["news"]:
+        if video_datas["video"]:
+            video_title = video_datas["title"]
+            video_image = video_datas["media"][0]["image"]
+            video_plot = utils.strip_tags(video_datas["text"])
+            video_url = ''
+            if 'url' in video_datas["media"][0]:
+                video_url = video_datas["media"][0]["url"]
+
+            if 'http' in video_url:
+                item = Listitem()
+                item.label = video_title
+                item.art['thumb'] = video_image
+                item.info['plot'] = video_plot
+
+                item.context.script(
+                    get_video_url,
+                    plugin.localize(LABELS['Download']),
+                    item_id=item_id,
+                    video_url=video_url,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
+                    download_mode=True)
+
+                item.set_callback(
+                    get_video_url,
+                    item_id=item_id,
+                    video_url=video_url)
+                yield item
+
+    # More videos...
+    yield Listitem.next_page(
+        item_id=item_id,
+        category_slug=category_slug,
+        page=str(int(page) + 1))
+
+
+@Resolver.register
+def get_video_url(
+        plugin, item_id, video_url, download_mode=False, video_label=None):
+
+    if download_mode:
+        return download.download_video(video_url, video_label)
+    return video_url
 
 
 def live_entry(plugin, item_id, item_dict):

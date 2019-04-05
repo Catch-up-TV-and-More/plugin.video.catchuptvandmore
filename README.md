@@ -248,7 +248,7 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 - NPO Zappelin Extra *(Live TV)*
 - NPO Nieuws *(Live TV)*
 - NPO Politiek *(Live TV)*
-- AT5 *(Live TV)*
+- AT5 *(Replay, Live TV)*
 
 ### Pologne — *Poland*
 ##### TV

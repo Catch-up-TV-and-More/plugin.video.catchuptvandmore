@@ -159,12 +159,11 @@ REPLAY = {
     'tn_replay': {
         'callback': 'generic_menu',
         'thumb': 'channels/tn.png'
+    },
+    'nl_replay': {
+        'callback': 'generic_menu',
+        'thumb': 'channels/nl.png'
     }
-    # ,
-    # 'nl_replay': {
-    #     'callback': 'generic_menu',
-    #     'thumb': 'channels/nl.png'
-    # }
 }
 
 
@@ -2238,12 +2237,6 @@ US_REPLAY = {
 }
 
 ES_REPLAY = {
-    'atresplayer': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/es/atresplayer.png',
-        'fanart': 'channels/es/atresplayer_fanart.jpg',
-        'module': 'resources.lib.channels.es.atresplayer'
-    }
 }
 
 IT_REPLAY = {
@@ -2277,12 +2270,12 @@ TN_REPLAY = {
 }
 
 NL_REPLAY = {
-    # 'npo-start': {
-    #     'callback': 'replay_bridge',
-    #     'thumb': 'channels/nl/npo-start.png',
-    #     'fanart': 'channels/nl/npo-start_fanart.jpg',
-    #     'module': 'resources.lib.channels.nl.npo'
-    # }
+    'at5': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/nl/at5.png',
+        'fanart': 'channels/nl/at5_fanart.jpg',
+        'module': 'resources.lib.channels.nl.at5'
+    }
 }
 
 WEBSITES = {
