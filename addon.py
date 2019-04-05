@@ -25,7 +25,6 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 import importlib
-import sys
 
 from codequick import Route, Resolver, Listitem, run, Script, utils, storage
 import urlquick
@@ -38,6 +37,7 @@ from resources.lib.labels import LABELS
 from resources.lib import common
 import resources.lib.cq_utils as cqu
 from resources.lib import vpn
+import resources.lib.favourites as fav
 
 
 def get_sorted_menu(plugin, menu_id):
@@ -136,7 +136,7 @@ def add_context_menus_to_item(
 
     # Add to plugin favourites
     item.context.script(
-        add_item_to_favourites,
+        fav.add_item_to_favourites,
         'add_item_to_favourites',
         item_id=item_id)
 
@@ -460,96 +460,6 @@ def vpn_connectdisconnect_setting(plugin):
 
 
 @Route.register
-def add_item_to_favourites(plugin, item_id):
-    """
-    Callback function called when the user click
-    on 'add item to favourite' from an item context menu
-    """
-    print('WANT TO ADD THE ITEM ', item_id, 'TO THE PLUGIN fAVOUTITES FOLDER')
-    print('ListItem path: ' + xbmc.getInfoLabel('ListItem.Path'))
-
-    # Ask the user if he wants to edit the label
-    item_label = utils.keyboard('Choose_your_favorite_title', xbmc.getInfoLabel('ListItem.Label'))
-
-    # If user aborded do not add this item to favourite
-    if item_label == '':
-        # TODO: Notify the user that the action aborded
-        return False
-
-    # Add this item to favourite db
-    with storage.PersistentDict("favourites.pickle") as db:
-        item_dict = {}
-
-        item_dict['path'] = xbmc.getInfoLabel('ListItem.Path')
-        item_dict['label'] = item_label
-        item_dict['order'] = len(db)
-
-        db[item_id] = item_dict
-    return False
-
-
-@Route.register
-def rename_favourite_item(plugin, item_id):
-    # Ask the user if he wants to edit the label
-    item_label = utils.keyboard('How_to_rename_your_item?', xbmc.getInfoLabel('ListItem.Label'))
-
-    # If user aborded do not add this item to favourite
-    if item_label == '':
-        # TODO: Notify the user that the action aborded
-        return False
-    with storage.PersistentDict("favourites.pickle") as db:
-        db[item_id]['label'] = item_label
-    xbmc.executebuiltin('XBMC.Container.Refresh()')
-    return False
-
-
-@Route.register
-def remove_favourite_item(plugin, item_id):
-    with storage.PersistentDict("favourites.pickle") as db:
-        del db[item_id]
-    xbmc.executebuiltin('XBMC.Container.Refresh()')
-    return False
-
-
-@Route.register
-def move_favourite_item(plugin, direction, item_id):
-    # Callback function of move item conext menu
-    if direction == 'down':
-        offset = 1
-    elif direction == 'up':
-        offset = -1
-
-    with storage.PersistentDict("favourites.pickle") as db:
-        item_to_move_id = item_id
-        item_to_move_order = db[item_id]['order']
-
-        menu = []
-        for item_id, item_dict in db.items():
-            item = (
-                item_dict['order'],
-                item_id,
-                item_dict
-            )
-
-            menu.append(item)
-        menu = sorted(menu, key=lambda x: x[0])
-
-        for k in range(0, len(menu)):
-            item = menu[k]
-            item_id = item[1]
-            if item_to_move_id == item_id:
-                item_to_swap = menu[k + offset]
-                item_to_swap_order = item_to_swap[0]
-                item_to_swap_id = item_to_swap[1]
-                db[item_to_move_id]['order'] = item_to_swap_order
-                db[item_to_swap_id]['order'] = item_to_move_order
-                xbmc.executebuiltin('XBMC.Container.Refresh()')
-                break
-
-        return False
-
-
-@Route.register
 def favourites(plugin, item_id, item_module, item_dict={}):
     """
     Callback function called when the user enter in the
@@ -596,20 +506,20 @@ def favourites(plugin, item_id, item_module, item_dict={}):
 
         # Rename
         item.context.script(
-            rename_favourite_item,
+            fav.rename_favourite_item,
             'rename',
             item_id=item_id)
 
         # Remove
         item.context.script(
-            remove_favourite_item,
+            fav.remove_favourite_item,
             'remove',
             item_id=item_id)
 
         # Move up
         if item_dict['order'] > 0:
             item.context.script(
-                move_favourite_item,
+                fav.move_favourite_item,
                 plugin.localize(LABELS['Move up']),
                 direction='up',
                 item_id=item_id)
@@ -617,7 +527,7 @@ def favourites(plugin, item_id, item_module, item_dict={}):
         # Move down
         if item_dict['order'] < len(db) - 1:
             item.context.script(
-                move_favourite_item,
+                fav.move_favourite_item,
                 plugin.localize(LABELS['Move down']),
                 direction='down',
                 item_id=item_id)
