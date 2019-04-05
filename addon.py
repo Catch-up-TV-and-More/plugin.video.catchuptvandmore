@@ -386,35 +386,6 @@ def live_bridge(plugin, item_id, item_module, item_dict={}):
     return item_module.live_entry(plugin, item_id, item_dict)
 
 
-@Route.register
-def favourites(plugin, item_id, item_module, item_dict={}):
-    with storage.PersistentList("favourites.pickle") as db:
-        if not db:
-            yield False
-
-        print('BUILD FAVOURITES LIST')
-        for item_dict in db:
-            item = Listitem()
-
-            print('\tCURRENT ITEM label: ', item_dict['label'])
-            print('\tCURRENT ITEM id: ', item_dict['item_id'])
-            print('\tCURRENT ITEM URL: ', item_dict['path'])
-
-
-            item.label = item_dict['label']
-            item_callback = cqu.get_callback_in_url(item_dict['path'])
-            item_module = cqu.get_module_in_url(item_dict['path'])
-            print('\tCURRENT ITEM callback: ', item_callback)
-            print('\tCURRENT ITEM module: ', item_module)
-
-            if item_module != '':
-                item_callback = item_module + '.' + item_callback
-
-            item.set_callback(
-                eval(item_callback),
-                item_dict['item_id'])
-
-            yield item
 
 
 @Route.register
@@ -490,6 +461,10 @@ def vpn_connectdisconnect_setting(plugin):
 
 @Route.register
 def add_item_to_favourites(plugin, item_id):
+    """
+    Callback function called when the user click
+    on 'add item to favourite' from an item context menu
+    """
     print('WANT TO ADD THE ITEM ', item_id, 'TO THE PLUGIN fAVOUTITES FOLDER')
     print('ListItem path: ' + xbmc.getInfoLabel('ListItem.Path'))
 
@@ -506,20 +481,82 @@ def add_item_to_favourites(plugin, item_id):
         item_dict = {}
 
         item_dict['path'] = xbmc.getInfoLabel('ListItem.Path')
-        item_dict['item_id'] = item_id
         item_dict['label'] = item_label
 
-        db.append(item_dict)
+        db[item_id] = item_dict
     return False
+
+
+@Route.register
+def rename_favourite_item(plugin, item_id):
+    # Ask the user if he wants to edit the label
+    item_label = utils.keyboard('How_to_rename_your_item?', xbmc.getInfoLabel('ListItem.Label'))
+
+    # If user aborded do not add this item to favourite
+    if item_label == '':
+        # TODO: Notify the user that the action aborded
+        return False
+    with storage.PersistentDict("favourites.pickle") as db:
+        db[item_id]['label'] = item_label
+    xbmc.executebuiltin('XBMC.Container.Refresh()')
+    return False
+
+
+@Route.register
+def remove_favourite_item(plugin, item_id):
+    with storage.PersistentDict("favourites.pickle") as db:
+        del db[item_id]
+    xbmc.executebuiltin('XBMC.Container.Refresh()')
+    return False
+
+
+@Route.register
+def favourites(plugin, item_id, item_module, item_dict={}):
+    """
+    Callback function called when the user enter in the
+    favourites folder
+    """
+    with storage.PersistentDict("favourites.pickle") as db:
+        print('BUILD FAVOURITES LIST')
+        for item_id, item_dict in db.items():
+
+            item = Listitem()
+
+            print('\tCURRENT ITEM label: ', item_dict['label'])
+            print('\tCURRENT ITEM id: ', item_id)
+            print('\tCURRENT ITEM URL: ', item_dict['path'])
+
+
+            item.label = item_dict['label']
+            item_callback = cqu.get_callback_in_url(item_dict['path'])
+            item_module = cqu.get_module_in_url(item_dict['path'])
+            print('\tCURRENT ITEM callback: ', item_callback)
+            print('\tCURRENT ITEM module: ', item_module)
+
+            # Rename
+            item.context.script(
+                rename_favourite_item,
+                'rename',
+                item_id=item_id)
+
+            # Remove
+            item.context.script(
+                remove_favourite_item,
+                'remove',
+                item_id=item_id)
+
+            item.set_callback(
+                eval(item_callback),
+                item_id)
+
+            yield item
 
 
 def main():
     """
-    Before running the plugin we need
-    to check if there is any module
-    to load on the fly (e.g. mytf1.py)
-    (To prevent error when coming from
-    a "favorite" Kodi item)
+    Before calling run() function of
+    codequick, we need to check if there
+    is any module to load on the fly
     """
     cqu.import_needed_module()
 
