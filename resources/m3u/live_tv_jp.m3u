@@ -16,5 +16,5 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=ntvnews24&item_
 ##	QVC
 ##	qvc
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/qvc.png" group-title="Japan",QVC
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={'language':'JP'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={"language":"JP"}
 

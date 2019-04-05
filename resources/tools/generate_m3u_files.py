@@ -288,7 +288,7 @@ def generate_m3u_files():
                 channel_m3u_dict['channel_label'] = channel_wo_label
 
                 # channel_dict
-                channel_m3u_dict['channel_item_dict'] = "{'language':'" + country_code.upper() + "'}"
+                channel_m3u_dict['channel_item_dict'] = '{"language":"' + country_code.upper() + '"}'
 
                 # channel_group_coutry
                 channel_m3u_dict['channel_group_country'] = country_label
@@ -376,16 +376,10 @@ def generate_m3u_files():
                 m3u_all.write("##\t" + channel_id + "\n")
                 m3u_all.write(channel_m3u_entry_all + "\n\n")
             
-        
         m3u_all.write("\n\n")
         m3u_country.close()
 
     m3u_all.close()
-
-
-
-
-
 
 
 def main():
@@ -396,12 +390,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
 

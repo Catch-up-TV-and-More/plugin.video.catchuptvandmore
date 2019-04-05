@@ -61,5 +61,5 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questred&item_m
 ##	QVC
 ##	qvc
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/qvc.png" group-title="United Kingdom",QVC
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={'language':'UK'}
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=qvc&item_module=resources.lib.channels.wo.qvc&item_dict={"language":"UK"}
 
