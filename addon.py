@@ -31,14 +31,13 @@ import urlquick
 import xbmcplugin
 import xbmc
 import xbmcgui
-import sys
 
 import resources.lib.skeleton as sk
 from resources.lib.labels import LABELS
 from resources.lib import common
 import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item2dict
-from resources.lib import vpn
+from resources.lib.vpn import vpn_item_callback, add_vpn_context, import_ovpn, delete_ovpn
 import resources.lib.favourites as fav
 
 
@@ -123,18 +122,7 @@ def add_context_menus_to_item(
         item_id=item.params['item_id'])
 
     # Connect/Disconnect VPN
-    with storage.PersistentDict('vpn') as db:
-        vpn_label = plugin.localize(LABELS['Connect VPN'])
-        if 'status' in db:
-            if db['status'] == 'connected':
-                vpn_label = plugin.localize(LABELS['Disconnect VPN'])
-        else:
-            db['status'] = 'disconnected'
-            db.flush()
-
-        item.context.script(
-            vpn.vpn_item_callback,
-            vpn_label)
+    add_vpn_context(item)
 
     # Add to add-on favourites
     fav.add_fav_context(item, item2dict(item))
@@ -425,25 +413,6 @@ def hide_item(plugin, item_id):
     return False
 
 
-@Route.register
-def vpn_import_setting(plugin):
-    # Callback function of OpenVPN import config file setting button
-    vpn.import_ovpn()
-    return False
-
-
-@Route.register
-def vpn_delete_setting(plugin):
-    # Callback function of OpenVPN delete config file setting button
-    vpn.delete_ovpn()
-    return False
-
-
-@Route.register
-def vpn_connectdisconnect_setting(plugin):
-    # Callback function of OpenVPN connect/disconnect setting button
-    return vpn.vpn_item_callback(plugin)
-
 
 @Route.register
 def favourites(plugin, **kwargs):
@@ -489,11 +458,6 @@ def favourites(plugin, **kwargs):
 
         # Hack for the rename feature
         item.label = item_dict['label']
-
-        # print('\tCURRENT ITEM hash: ', item_hash)
-        # print('\tCURRENT ITEM order: ', str(item.params['order']))
-        # print('\tCURRENT ITEM callback: ', item_dict['callback'])
-        # print('\tCURRENT ITEM PRAMS: ', item.params)
 
         # Rename
         item.context.script(

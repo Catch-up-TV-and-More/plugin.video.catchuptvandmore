@@ -112,7 +112,8 @@ def connect_openvpn(config, restart=False, sudopassword=None):
         db.flush()
 
 
-def import_ovpn():
+@Route.register
+def import_ovpn(*args, **kwargs):
     path = xbmcgui.Dialog().browse(
         1,
         Script.localize(LABELS['Import OpenVPN configuration file']),
@@ -188,7 +189,8 @@ def select_ovpn():
             return ''
 
 
-def delete_ovpn():
+@Route.register
+def delete_ovpn(*args, **kwargs):
     ovpnfiles = {}
     with storage.PersistentDict('vpn') as db:
         try:
@@ -254,3 +256,18 @@ def vpn_item_callback(plugin):
 
         # xbmc.executebuiltin('XBMC.Container.Refresh()')
     return False
+
+
+def add_vpn_context(item):
+    with storage.PersistentDict('vpn') as db:
+        vpn_label = Script.localize(LABELS['Connect VPN'])
+        if 'status' in db:
+            if db['status'] == 'connected':
+                vpn_label = Script.localize(LABELS['Disconnect VPN'])
+        else:
+            db['status'] = 'disconnected'
+            db.flush()
+
+        item.context.script(
+            vpn_item_callback,
+            vpn_label)

@@ -1123,10 +1123,10 @@
         <!-- OpenVPN -->
     <category label="OpenVPN">
         <setting label="30340" type="bool" id="vpn.hide" default="true"/>
-        <setting label="30361" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/vpn_connectdisconnect_setting)"  visible="eq(-1,true)"/>
+        <setting label="30361" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/vpn/vpn_item_callback/)"  visible="eq(-1,true)"/>
         <setting label="30341" type="file" id="vpn.openvpnfilepath" default="/usr/bin/openvpn" visible="eq(-2,true)"/>
-        <setting label="30342" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/vpn_import_setting)"  visible="eq(-3,true)"/>
-        <setting label="30343" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/vpn_delete_setting)"  visible="eq(-4,true)"/>
+        <setting label="30342" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/vpn/import_ovpn/)"  visible="eq(-3,true)"/>
+        <setting label="30343" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/vpn/delete_ovpn/)"  visible="eq(-4,true)"/>
         <setting label="30344" type="text" id="vpn.args" default="" visible="eq(-5,true)"/>
         <setting label="30345" type="bool" id="vpn.sudo" default="false" visible="eq(-6,true)"/>
         <setting label="30346" type="bool" id="vpn.sudopsw" default="false" enable="!eq(-1,false)" visible="eq(-7,true)"/>
