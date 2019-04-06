@@ -26,7 +26,7 @@
 from __future__ import unicode_literals
 import importlib
 
-from codequick import Route, Resolver, Listitem, run, Script, utils, storage
+from codequick import Route, Resolver, Listitem, run, Script, storage
 import urlquick
 import xbmcplugin
 import xbmc
@@ -362,15 +362,14 @@ def live_bridge(plugin, **kwargs):
 
 
 
-@Route.register
+@Script.register
 def clear_cache(plugin):
     # Callback function of clear cache setting button
     urlquick.cache_cleanup(-1)
     Script.notify(plugin.localize(30371), '')
-    return False
 
 
-@Route.register
+@Script.register
 def move_item(plugin, direction, item_id, menu_id):
     # Callback function of move item conext menu
     if direction == 'down':
@@ -395,10 +394,8 @@ def move_item(plugin, direction, item_id, menu_id):
             xbmc.executebuiltin('XBMC.Container.Refresh()')
             break
 
-    return False
 
-
-@Route.register
+@Script.register
 def hide_item(plugin, item_id):
     # Callback function of hide item context menu
     if plugin.setting.get_boolean('show_hidden_items_information'):
@@ -410,7 +407,6 @@ def hide_item(plugin, item_id):
 
     plugin.setting[item_id] = False
     xbmc.executebuiltin('XBMC.Container.Refresh()')
-    return False
 
 
 

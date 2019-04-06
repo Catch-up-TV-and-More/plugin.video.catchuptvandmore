@@ -33,7 +33,7 @@ from hashlib import md5
 from resources.lib.labels import LABELS
 
 
-@Route.register
+@Script.register
 def add_item_to_favourites(plugin, item_dict={}):
     """
     Callback function called when the user click
@@ -62,10 +62,9 @@ def add_item_to_favourites(plugin, item_dict={}):
         item_dict['params']['order'] = len(db)
 
         db[item_hash] = item_dict
-    return False
 
 
-@Route.register
+@Script.register
 def rename_favourite_item(plugin, item_hash):
     """
     Callback function called when the user click
@@ -80,10 +79,9 @@ def rename_favourite_item(plugin, item_hash):
     with storage.PersistentDict("favourites.pickle") as db:
         db[item_hash]['label'] = item_label
     xbmc.executebuiltin('XBMC.Container.Refresh()')
-    return False
 
 
-@Route.register
+@Script.register
 def remove_favourite_item(plugin, item_hash):
     """
     Callback function called when the user click
@@ -92,11 +90,28 @@ def remove_favourite_item(plugin, item_hash):
     """
     with storage.PersistentDict("favourites.pickle") as db:
         del db[item_hash]
+
+        # We need to fix the order param
+        # in order to not break the move up/down action
+        menu = []
+        for item_hash, item_dict in db.items():
+            item = (
+                item_dict['params']['order'],
+                item_hash
+            )
+
+            menu.append(item)
+        menu = sorted(menu, key=lambda x: x[0])
+
+        for k in range(0, len(menu)):
+            item = menu[k]
+            item_hash = item[1]
+            db[item_hash]['params']['order'] = k
+
     xbmc.executebuiltin('XBMC.Container.Refresh()')
-    return False
 
 
-@Route.register
+@Script.register
 def move_favourite_item(plugin, direction, item_hash):
     """
     Callback function called when the user click
