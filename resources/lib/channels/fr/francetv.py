@@ -32,6 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item2dict
 
 import json
 import time
@@ -206,7 +207,7 @@ def list_videos_last(plugin, item_id, page = 1):
             get_video_url,
             item_id = item_id,
             broadcast_id = broadcast_id,
-            item_dict = cqu.item2dict(item))
+            item_dict = item2dict(item))
         yield item
 
     # More videos...
@@ -246,7 +247,7 @@ def list_videos(plugin, item_id, program_part_url, page = 0):
             get_video_url,
             item_id = item_id,
             broadcast_id = broadcast_id,
-            item_dict = cqu.item2dict(item))
+            item_dict = item2dict(item))
         yield item
 
     # More videos...
@@ -369,7 +370,7 @@ def list_videos_search(plugin, item_id, search_query, page = 0):
                 get_video_url,
                 item_id = item_id,
                 id_yatta = show['id'],
-                item_dict = cqu.item2dict(item))
+                item_dict = item2dict(item))
             yield item
         page = page + 1
 

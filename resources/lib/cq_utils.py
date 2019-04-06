@@ -45,22 +45,6 @@ import binascii
 PY3 = sys.version_info[0] >= 3
 
 
-def item2dict(item):
-    # Need to use same keywords as
-    # https://scriptmodulecodequick.readthedocs.io/en/latest/_modules/codequick/listing.html#Listitem.from_dict
-    # in order to be able to directly use `Listitem.from_dict` later
-    item_dict = {}
-    item_dict['subtitles'] = item.subtitles
-    item_dict['art'] = dict(item.art)
-    item_dict['info'] = dict(item.info)
-    item_dict['stream'] = dict(item.stream)
-    item_dict['context'] = dict(item.context)
-    item_dict['properties'] = item.property
-    item_dict['params'] = item.params
-    item_dict['label'] = item.label
-    return item_dict
-
-
 def build_kodi_url(route_path, raw_params):
     # route_path: /resources/lib/channels/fr/mytf1/get_video_url/
     # raw_params: params dict
@@ -146,3 +130,4 @@ def get_quality_YTDL(download_mode=False):
 def get_kodi_version():
     xbmc_version = xbmc.getInfoLabel("System.BuildVersion")
     return int(xbmc_version.split('-')[0].split('.')[0])
+

@@ -33,6 +33,7 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item2dict
 
 
 import json
@@ -196,7 +197,7 @@ def list_videos(plugin, item_id, next_url, page):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
-            item_dict=cqu.item2dict(item))
+            item_dict=item2dict(item))
         yield item
 
     if at_least_one_item:

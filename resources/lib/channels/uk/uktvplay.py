@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item2dict
 
 
 import inputstreamhelper
@@ -162,7 +163,7 @@ def list_videos(plugin, item_id, serie_id):
             get_video_url,
             item_id=item_id,
             data_video_id=video_id,
-            item_dict=cqu.item2dict(item))
+            item_dict=item2dict(item))
         yield item
 
 

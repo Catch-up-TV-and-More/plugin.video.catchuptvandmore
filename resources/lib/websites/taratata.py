@@ -32,6 +32,7 @@ import resources.lib.cq_utils as cqu
 from resources.lib.labels import LABELS
 from resources.lib import download
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item2dict
 
 
 # TO DO
@@ -216,7 +217,7 @@ def list_videos(plugin, item_id, category_url):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
-            item_dict=cqu.item2dict(item)
+            item_dict=item2dict(item)
         )
         yield item
 
@@ -239,7 +240,7 @@ def list_videos(plugin, item_id, category_url):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
-            item_dict=cqu.item2dict(item)
+            item_dict=item2dict(item)
         )
         yield item
 
@@ -274,7 +275,7 @@ def list_videos_bonus(plugin, item_id, category_url, page):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
-            item_dict=cqu.item2dict(item)
+            item_dict=item2dict(item)
         )
         yield item
 
@@ -297,7 +298,7 @@ def list_videos_bonus(plugin, item_id, category_url, page):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
-            item_dict=cqu.item2dict(item)
+            item_dict=item2dict(item)
         )
         yield item
 

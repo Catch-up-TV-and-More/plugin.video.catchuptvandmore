@@ -31,7 +31,6 @@ from codequick import Route, utils, storage, Script
 from hashlib import md5
 
 from resources.lib.labels import LABELS
-import resources.lib.cq_utils as cqu
 
 
 @Route.register
@@ -139,13 +138,11 @@ def move_favourite_item(plugin, direction, item_hash):
         return False
 
 
-def add_fav_context(item, **kwargs):
+def add_fav_context(item, item_dict, **kwargs):
     """
     Add the 'Add to add-on favourites'
     context menu to item
     """
-    item_dict = cqu.item2dict(item)
-
     if kwargs.get('is_playable', False):
         item_dict['params']['is_folder'] = False
         item_dict['params']['is_playable'] = True

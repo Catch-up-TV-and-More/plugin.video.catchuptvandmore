@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item2dict
 
 import json
 import re
@@ -198,7 +199,7 @@ def list_video_more_infos(plugin, item_id, video_url_info):
         get_video_url,
         item_id=item_id,
         video_url=video_url,
-        item_dict=cqu.item2dict(item))
+        item_dict=item2dict(item))
     yield item
 
 

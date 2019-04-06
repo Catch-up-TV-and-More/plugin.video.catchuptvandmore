@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
+from resources.lib.listitem_utils import item2dict
 import resources.lib.cq_utils as cqu
 
 import inputstreamhelper
@@ -245,7 +246,7 @@ def list_sub_programs(plugin, item_id, next_url):
                 get_video_url,
                 item_id=item_id,
                 next_url=video_url,
-                item_dict=cqu.item2dict(item))
+                item_dict=item2dict(item))
             yield item
 
 
@@ -283,7 +284,7 @@ def list_videos_seasons(plugin, item_id, next_url):
             get_video_url,
             item_id=item_id,
             next_url=video_url,
-            item_dict=cqu.item2dict(item))
+            item_dict=item2dict(item))
         yield item
 
 
@@ -331,7 +332,7 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
                                 get_video_url,
                                 item_id=item_id,
                                 next_url=video_url,
-                                item_dict=cqu.item2dict(item))
+                                item_dict=item2dict(item))
                             yield item
         else:
             if sub_program_title == json_parser["currentPage"]["displayName"]:
@@ -370,7 +371,7 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
                                 get_video_url,
                                 item_id=item_id,
                                 next_url=video_url,
-                                item_dict=cqu.item2dict(item))
+                                item_dict=item2dict(item))
                             yield item
 
 

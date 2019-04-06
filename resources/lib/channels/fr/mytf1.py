@@ -31,8 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
-import resources.lib.cq_utils as cqu
-from resources.lib.favourites import add_fav_context
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
 # https://docs.python.org/3/library/hashlib.html
@@ -87,10 +86,9 @@ def list_categories(plugin, item_id):
         item.label = category_name
         item.params['item_id'] = item_id
         item.params['category'] = category_url
-
-        add_fav_context(item)
-
         item.set_callback(list_programs)
+        item_post_treatment(item)
+
         yield item
 
 
@@ -130,23 +128,23 @@ def list_programs(plugin, item_id, category, **kwargs):
                 if 'meteo.tf1.fr/meteo-france' in program_url:
                     item.label = program_name
                     item.art["thumb"] = img
-                    add_fav_context(item)
                     item.set_callback(
                         list_videos,
                         item_id=item_id,
                         program_category_url=program_url
                     )
+                    item_post_treatment(item)
                     yield item
 
                 else:
                     item.label = program_name
                     item.art["thumb"] = img
-                    add_fav_context(item)
                     item.set_callback(
                         list_program_categories,
                         item_id=item_id,
                         program_url=program_url
                     )
+                    item_post_treatment(item)
                     yield item
     else:
         resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'))
@@ -173,23 +171,23 @@ def list_programs(plugin, item_id, category, **kwargs):
                 if 'meteo.tf1.fr/meteo-france' in program_url:
                     item.label = program_name
                     item.art["thumb"] = img
-                    add_fav_context(item)
                     item.set_callback(
                         list_videos,
                         item_id=item_id,
                         program_category_url=program_url
                     )
+                    item_post_treatment(item)
                     yield item
 
                 else:
                     item.label = program_name
                     item.art["thumb"] = img
-                    add_fav_context(item)
                     item.set_callback(
                         list_program_categories,
                         item_id=item_id,
                         program_url=program_url
                     )
+                    item_post_treatment(item)
                     yield item
 
 
@@ -211,12 +209,12 @@ def list_program_categories(plugin, item_id, program_url, **kwargs):
             item = Listitem()
             item.label = "".join(li.itertext())
             category_id = li.find('a').get('data-filter')
-            add_fav_context(item)
             item.set_callback(
                 list_videos,
                 item_id=item_id,
                 program_category_url=program_url + '/videos?filter=' + category_id
             )
+            item_post_treatment(item)
             yield item
     except Exception:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
@@ -237,21 +235,15 @@ def list_videos(plugin, item_id, program_category_url, **kwargs):
 
         item = Listitem()
         item.label = title
+        item.params['video_label'] = LABELS[item_id] + ' - ' + item.label
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            program_id=program_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
         item.set_callback(
             get_video_url,
             item_id=item_id,
             program_id=program_id,
-            item_dict=cqu.item2dict(item)
+            item_dict=item2dict(item)
         )
-        add_fav_context(item, is_playable=True)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     else:
@@ -309,21 +301,14 @@ def list_videos(plugin, item_id, program_category_url, **kwargs):
                         pass
 
                     program_id = li.find('.//a').get('href')
-
-                    item.context.script(
-                        get_video_url,
-                        plugin.localize(LABELS['Download']),
-                        item_id=item_id,
-                        program_id=program_id,
-                        video_label=LABELS[item_id] + ' - ' + item.label,
-                        download_mode=True)
+                    item.params['video_label'] = LABELS[item_id] + ' - ' + item.label
                     item.set_callback(
                         get_video_url,
                         item_id=item_id,
                         program_id=program_id,
-                        item_dict=cqu.item2dict(item)
+                        item_dict=item2dict(item)
                     )
-                    add_fav_context(item, is_playable=True)
+                    item_post_treatment(item, is_playable=True, is_downloadable=True)
                     yield item
 
             # Check for any next page

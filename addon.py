@@ -37,6 +37,7 @@ import resources.lib.skeleton as sk
 from resources.lib.labels import LABELS
 from resources.lib import common
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item2dict
 from resources.lib import vpn
 import resources.lib.favourites as fav
 
@@ -136,7 +137,7 @@ def add_context_menus_to_item(
             vpn_label)
 
     # Add to add-on favourites
-    fav.add_fav_context(item)
+    fav.add_fav_context(item, item2dict(item))
 
     return
 
@@ -198,7 +199,7 @@ def generic_menu(plugin, **kwargs):
         item.params['item_module'] = item_infos.get('module')
 
         item.params['item_id'] = item_id
-        item.params['item_dict'] = cqu.item2dict(item)
+        item.params['item_dict'] = item2dict(item)
 
         add_context_menus_to_item(
             plugin, item, index, menu_id, len(menu))
@@ -310,7 +311,7 @@ def tv_guide_menu(plugin, **kwargs):
                 item.art["thumb"] = guide_infos['thumb']
 
         item.params['item_id'] = channel_id
-        item.params['item_dict'] = cqu.item2dict(item)
+        item.params['item_dict'] = item2dict(item)
 
         add_context_menus_to_item(
             plugin, item, index, menu_id, len(menu))

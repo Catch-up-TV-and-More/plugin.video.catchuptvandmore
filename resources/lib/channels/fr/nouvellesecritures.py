@@ -32,6 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item2dict
 
 import json
 import re
@@ -147,7 +148,7 @@ def list_videos(plugin, item_id, program_url):
             get_video_url,
             item_id=item_id,
             video_url=video_url,
-            item_dict=cqu.item2dict(item))
+            item_dict=item2dict(item))
         yield item
 
 
