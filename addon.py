@@ -137,7 +137,7 @@ def add_context_menus_to_item(
     # Add to plugin favourites
     item.context.script(
         fav.add_item_to_favourites,
-        'add_item_to_favourites',
+        plugin.localize(LABELS['Add to add-on favourites']),
         item_dict=item.params['item_dict'])
 
     return
@@ -494,13 +494,13 @@ def favourites(plugin, **kwargs):
         # Rename
         item.context.script(
             fav.rename_favourite_item,
-            'rename',
+            plugin.localize(LABELS['Rename']),
             item_hash=item_hash)
 
         # Remove
         item.context.script(
             fav.remove_favourite_item,
-            'remove',
+            plugin.localize(LABELS['Remove']),
             item_hash=item_hash)
 
         # Move up

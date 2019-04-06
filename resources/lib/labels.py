@@ -33,11 +33,12 @@ retrieve correct element in strings.po.
 If the item has no translation just use a string.
 """
 LABELS = {
-
+    
+    # Settings
     'Main menu': 30000,
     'Countries': 30001,
     'Quality and content': 30002,
-    'Download': 30003,
+    'Downloads': 30003,
     'Accounts': 30004,
     'Advanced settings': 30005,
     'Channels': 30006,
@@ -47,9 +48,13 @@ LABELS = {
     'To configure YTDL go settings of script.module.youtube.dl': 30012,
     'Hide countries': 30013,
     'Hide websites': 30014,
+    
+    # Root menu
     'live_tv': 30030,
     'replay': 30031,
     'websites': 30032,
+    
+    # Countries
     'fr_replay': 30050,
     'fr_live': 30050,
     'ch_replay': 30051,
@@ -76,6 +81,7 @@ LABELS = {
     'it_live': 30061,
     'nl_replay': 30062,
     'nl_live': 30062,
+
     'French channels': 30080,
     'Belgian channels': 30081,
     'Japanese channels': 30082,
@@ -89,6 +95,8 @@ LABELS = {
     'Tunisia channels': 30090,
     'Italian channels': 30091,
     'Dutch channels': 30092,
+
+    # Settings again
     'Video quality': 30150,
     'Video quality (BEST|DEFAULT|DIALOG)': 30151,
     'Contents': 30152,
@@ -118,6 +126,8 @@ LABELS = {
     '6play Password': 30245,
     'RTLplay Login': 30246,
     'RTLplay Password': 30247,
+    
+    # VPN
     'Enable VPN feature': 30340,
     'OpenVPN filepath': 30341,
     'Import OpenVPN configuration file': 30342,
@@ -140,12 +150,16 @@ LABELS = {
     'Disconnect VPN': 30359,
     'Select OpenVPN configuration to delete': 30360,
     'Connect/Disconnect VPN': 30361,
+    
+    # Context menu
     'Clear cache': 30370,
     'Cache cleared': 30371,
+    
     'Move down': 30500,
     'Move up': 30501,
     'Hide': 30502,
     'Download': 30503,
+    
     'Information': 30600,
     'To re-enable hidden items go to the plugin settings': 30601,
     'More videos...': 30700,
@@ -173,6 +187,13 @@ LABELS = {
     'No videos found': 30718,
     'Inputstream Adaptive is not enable': 30719,
     'Kodi 17.6 or > is required': 30720,
+
+    # Favourites
+    'Add to add-on favourites': 30800,
+    'Favorite name': 30801,
+    'Remove': 30802,
+    'favourites': 30803,
+    'Rename': 30804,
 
     # Belgium channels / live TV
     'auvio': 'RTBF Auvio',

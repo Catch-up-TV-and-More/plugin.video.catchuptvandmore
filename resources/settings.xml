@@ -1075,7 +1075,7 @@
 
 
 
-    <!-- Download -->
+    <!-- Downloads -->
     <category label="30003">
         <setting label="30012" type="lsep"/>
         <setting label="30200" type="folder" id="dl_folder" source="" option="writeable"/>
@@ -1083,7 +1083,7 @@
         <setting label="30202" type="bool" id="dl_background" default="false" visible="true"/>
         <setting label="30203" type="bool" id="dl_item_filename" default="false" visible="true"/>
     </category>
-    <!-- Download -->
+    <!-- Downloads -->
 
 
 

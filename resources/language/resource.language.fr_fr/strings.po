@@ -30,8 +30,8 @@ msgid "Quality and content"
 msgstr "Qualité et Contenu"
 
 msgctxt "#30003"
-msgid "Download"
-msgstr "Téléchargement"
+msgid "Downloads"
+msgstr "Téléchargements"
 
 msgctxt "#30004"
 msgid "Accounts"
@@ -588,3 +588,28 @@ msgstr "Inputstream Adaptive n'est pas activé"
 msgctxt "#30720"
 msgid "Kodi 17.6 or > is required"
 msgstr "Kodi 17.6 ou > est requis"
+
+
+# Favourites (from 30800 to 30859)
+
+msgctxt "#30800"
+msgid "Add to add-on favourites"
+msgstr "Ajouter aux favoris du plugin"
+
+msgctxt "#30801"
+msgid "Favorite name"
+msgstr "Nom du favori"
+
+msgctxt "#30802"
+msgid "Remove"
+msgstr "Supprimer"
+
+msgctxt "#30803"
+msgid "Favourites"
+msgstr "Favoris"
+
+msgctxt "#30804"
+msgid "Rename"
+msgstr "Renommer"
+
+

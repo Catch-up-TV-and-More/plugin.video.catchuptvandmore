@@ -30,7 +30,7 @@ msgid "Quality and content"
 msgstr "איכות ותוכן"
 
 msgctxt "#30003"
-msgid "Download"
+msgid "Downloads"
 msgstr "הורד"
 
 msgctxt "#30004"
@@ -587,4 +587,27 @@ msgstr ""
 
 msgctxt "#30720"
 msgid "Kodi 17.6 or > is required"
+msgstr ""
+
+
+# Favourites (from 30800 to 30859)
+
+msgctxt "#30800"
+msgid "Add to add-on favourites"
+msgstr ""
+
+msgctxt "#30801"
+msgid "Favorite name"
+msgstr ""
+
+msgctxt "#30802"
+msgid "Remove"
+msgstr ""
+
+msgctxt "#30803"
+msgid "Favourites"
+msgstr ""
+
+msgctxt "#30804"
+msgid "Rename"
 msgstr ""

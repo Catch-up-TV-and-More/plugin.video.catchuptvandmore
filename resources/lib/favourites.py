@@ -30,6 +30,8 @@ import xbmc
 from codequick import Route, utils, storage
 from hashlib import md5
 
+from resources.lib.labels import LABELS
+
 
 @Route.register
 def add_item_to_favourites(plugin, item_dict={}):
@@ -40,7 +42,7 @@ def add_item_to_favourites(plugin, item_dict={}):
     """
 
     # Ask the user to edit the label
-    item_dict['label'] = utils.keyboard('Choose_your_favorite_title', item_dict['label'])
+    item_dict['label'] = utils.keyboard(plugin.localize(LABELS['Favorite name']), item_dict['label'])
 
     # If user aborded do not add this item to favourite
     if item_dict['label'] == '':
@@ -51,11 +53,6 @@ def add_item_to_favourites(plugin, item_dict={}):
     with storage.PersistentDict("favourites.pickle") as db:
         item_path = xbmc.getInfoLabel('ListItem.Path')
         item_hash = md5(str(item_dict)).hexdigest()
-
-        if item_hash in db:
-            # Item already in favourites
-            # Abord this action and notify the user about that
-            return False
 
         if 'is_folder' not in item_dict:
             item_dict['params']['is_folder'] = True
@@ -73,7 +70,7 @@ def rename_favourite_item(plugin, item_hash):
     on 'rename' from a favourite item
     context menu
     """
-    item_label = utils.keyboard('How_to_rename_your_item?', xbmc.getInfoLabel('ListItem.Label'))
+    item_label = utils.keyboard(plugin.localize(LABELS['Favorite name']), xbmc.getInfoLabel('ListItem.Label'))
 
     # If user aborded do not edit this item
     if item_label == '':
