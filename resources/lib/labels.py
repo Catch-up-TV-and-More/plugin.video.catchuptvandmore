@@ -308,6 +308,7 @@ LABELS = {
     'luckyjack': 'Lucky Jack',
     'mblivetv' : 'Mont Blanc Live TV',
     'tv8montblanc' : '8 Mont-Blanc',
+    'luxetv': 'Luxe.TV',
     
     # Japan channels / live TV
     'nhknews': 'NHK ニュース',

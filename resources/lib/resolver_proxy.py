@@ -104,14 +104,20 @@ def get_stream_dailymotion(
 
 
 # Vimeo Part
-def get_stream_vimeo(plugin, video_id, download_mode=False, video_label=None):
+def get_stream_vimeo(plugin, video_id, download_mode=False, video_label=None, referer=None):
 
     url_vimeo = URL_VIMEO_BY_ID % (video_id)
 
-    html_vimeo = urlquick.get(
-        url_vimeo,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    if referer is not None:
+        html_vimeo = urlquick.get(
+            url_vimeo,
+            headers={'User-Agent': web_utils.get_random_ua, 'Referer': referer},
+            max_age=-1)
+    else:
+        html_vimeo = urlquick.get(
+            url_vimeo,
+            headers={'User-Agent': web_utils.get_random_ua},
+            max_age=-1)
     json_vimeo = json.loads('{' + re.compile('var config \= \{(.*?)\}\;').findall(
         html_vimeo.text)[0] + '}')
     hls_json = json_vimeo["request"]["files"]["hls"]

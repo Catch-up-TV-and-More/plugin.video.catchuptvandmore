@@ -52,7 +52,8 @@ ROOT = {
         'thumb': 'websites.png'
     },
     'favourites': {
-        'callback': 'favourites'
+        'callback': 'favourites',
+        'thumb': 'favourites.png'
     }
 }
 
@@ -159,12 +160,11 @@ REPLAY = {
     'tn_replay': {
         'callback': 'generic_menu',
         'thumb': 'channels/tn.png'
+    },
+    'nl_replay': {
+        'callback': 'generic_menu',
+        'thumb': 'channels/nl.png'
     }
-    # ,
-    # 'nl_replay': {
-    #     'callback': 'generic_menu',
-    #     'thumb': 'channels/nl.png'
-    # }
 }
 
 
@@ -1826,6 +1826,12 @@ FR_REPLAY = {
         'thumb': 'channels/fr/tv8montblanc.png',
         'fanart': 'channels/fr/tv8montblanc_fanart.jpg',
         'module': 'resources.lib.channels.fr.tv8montblanc'
+    },
+    'luxetv': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/luxetv.png',
+        'fanart': 'channels/fr/luxetv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.luxetv'
     }
 }
 
@@ -2238,12 +2244,6 @@ US_REPLAY = {
 }
 
 ES_REPLAY = {
-    'atresplayer': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/es/atresplayer.png',
-        'fanart': 'channels/es/atresplayer_fanart.jpg',
-        'module': 'resources.lib.channels.es.atresplayer'
-    }
 }
 
 IT_REPLAY = {
@@ -2277,12 +2277,12 @@ TN_REPLAY = {
 }
 
 NL_REPLAY = {
-    # 'npo-start': {
-    #     'callback': 'replay_bridge',
-    #     'thumb': 'channels/nl/npo-start.png',
-    #     'fanart': 'channels/nl/npo-start_fanart.jpg',
-    #     'module': 'resources.lib.channels.nl.npo'
-    # }
+    'at5': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/nl/at5.png',
+        'fanart': 'channels/nl/at5_fanart.jpg',
+        'module': 'resources.lib.channels.nl.at5'
+    }
 }
 
 WEBSITES = {
