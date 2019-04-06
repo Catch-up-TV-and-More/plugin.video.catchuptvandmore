@@ -31,6 +31,7 @@ import urlquick
 import xbmcplugin
 import xbmc
 import xbmcgui
+import sys
 
 import resources.lib.skeleton as sk
 from resources.lib.labels import LABELS
@@ -134,11 +135,7 @@ def add_context_menus_to_item(
             vpn.vpn_item_callback,
             vpn_label)
 
-    # Add to plugin favourites
-    item.context.script(
-        fav.add_item_to_favourites,
-        plugin.localize(LABELS['Add to add-on favourites']),
-        item_dict=item.params['item_dict'])
+    fav.add_fav_context(item)
 
     return
 
@@ -478,17 +475,19 @@ def favourites(plugin, **kwargs):
         item_dict.pop('subtitles')
         item_dict.pop('context')
 
-        print('ITEM_DICT: ' + str(item_dict))
-
+        url = cqu.build_kodi_url(item_dict['callback'], item_dict['params'])
+        
         item = Listitem.from_dict(**item_dict)
-
-        item.is_playable = False
+        
+        item.set_callback(url)
+        item.is_folder = item_dict['params']['is_folder']
+        item.is_playbale = item_dict['params']['is_playable']
 
         # Hack for the rename feature
         item.label = item_dict['label']
 
         print('\tCURRENT ITEM hash: ', item_hash)
-        print('\tCURRENT ITEM order: ', str(item.params['order']))
+        #print('\tCURRENT ITEM order: ', str(item.params['order']))
         print('\tCURRENT ITEM callback: ', item_dict['callback'])
         print('\tCURRENT ITEM PRAMS: ', item.params)
 
@@ -505,7 +504,7 @@ def favourites(plugin, **kwargs):
             item_hash=item_hash)
 
         # Move up
-        if item.params['order'] > 0:
+        if item_dict['params']['order'] > 0:
             item.context.script(
                 fav.move_favourite_item,
                 plugin.localize(LABELS['Move up']),
@@ -513,7 +512,7 @@ def favourites(plugin, **kwargs):
                 item_hash=item_hash)
 
         # Move down
-        if item.params['order'] < len(db) - 1:
+        if item_dict['params']['order'] < len(db) - 1:
             item.context.script(
                 fav.move_favourite_item,
                 plugin.localize(LABELS['Move down']),

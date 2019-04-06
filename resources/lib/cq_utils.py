@@ -30,13 +30,19 @@ import xbmc
 import sys
 
 try:
-    from urllib import urlencode
+    import urllib.parse as urlparse
 except ImportError:
-    from urllib.parse import urlencode
+    # noinspection PyUnresolvedReferences
+    import urlparse
 
 
 from codequick import Script
 from resources.lib.labels import LABELS
+
+import pickle
+import binascii
+
+PY3 = sys.version_info[0] >= 3
 
 
 def item2dict(item):
@@ -53,6 +59,17 @@ def item2dict(item):
     item_dict['params'] = item.params
     item_dict['label'] = item.label
     return item_dict
+
+
+def build_kodi_url(route_path, raw_params):
+    # route_path: /resources/lib/channels/fr/mytf1/get_video_url/
+    # raw_params: params dict
+    if raw_params:
+        pickled = binascii.hexlify(pickle.dumps(raw_params, protocol=pickle.HIGHEST_PROTOCOL))
+        query = "_pickle_={}".format(pickled.decode("ascii") if PY3 else pickled)
+
+    # Build kodi url
+    return urlparse.urlunsplit(("plugin", "plugin.video.catchuptvandmore", route_path, query, ""))
 
 
 def get_module_in_url(base_url):
