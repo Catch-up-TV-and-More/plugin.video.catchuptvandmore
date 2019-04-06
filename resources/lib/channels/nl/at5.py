@@ -30,13 +30,13 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib import resolver_proxy
 
 import json
 import re
 import urlquick
 
 # TO DO
-# get video Youtube in video_datas["text"]
 
 URL_ROOT = 'https://www.at5.nl'
 
@@ -90,11 +90,15 @@ def list_videos(plugin, item_id, category_slug, page):
             video_title = video_datas["title"]
             video_image = video_datas["media"][0]["image"]
             video_plot = utils.strip_tags(video_datas["text"])
-            video_url = ''
+            video_url = None
+            video_id = None
             if 'url' in video_datas["media"][0]:
                 video_url = video_datas["media"][0]["url"]
+            elif 'youtube.com/embed' in video_datas["text"]:
+                video_id = re.compile(
+                    r'youtube\.com\/embed\/(.*?)\"').findall(video_datas["text"])[0]
 
-            if 'http' in video_url:
+            if video_url is not None:
                 item = Listitem()
                 item.label = video_title
                 item.art['thumb'] = video_image
@@ -114,6 +118,26 @@ def list_videos(plugin, item_id, category_slug, page):
                     video_url=video_url)
                 yield item
 
+            if video_id is not None:
+                item = Listitem()
+                item.label = video_title
+                item.art['thumb'] = video_image
+                item.info['plot'] = video_plot
+
+                item.context.script(
+                    get_video_yt_url,
+                    plugin.localize(LABELS['Download']),
+                    item_id=item_id,
+                    video_id=video_id,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
+                    download_mode=True)
+
+                item.set_callback(
+                    get_video_yt_url,
+                    item_id=item_id,
+                    video_id=video_id)
+                yield item
+
     # More videos...
     yield Listitem.next_page(
         item_id=item_id,
@@ -128,6 +152,13 @@ def get_video_url(
     if download_mode:
         return download.download_video(video_url, video_label)
     return video_url
+
+
+@Resolver.register
+def get_video_yt_url(
+        plugin, item_id, video_id, download_mode=False, video_label=None):
+
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict):
