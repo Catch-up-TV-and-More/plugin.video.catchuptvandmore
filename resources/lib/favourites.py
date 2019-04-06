@@ -47,7 +47,7 @@ def add_item_to_favourites(plugin, item_dict={}):
 
     # If user aborded do not add this item to favourite
     if item_dict['label'] == '':
-        # TODO: Notify the user that the action aborded
+        # TODO: Notify the user that the action aborded?
         return False
 
     # Add this item to favourite db
@@ -140,7 +140,12 @@ def move_favourite_item(plugin, direction, item_hash):
 
 
 def add_fav_context(item, **kwargs):
+    """
+    Add the 'Add to add-on favourites'
+    context menu to item
+    """
     item_dict = cqu.item2dict(item)
+
     if kwargs.get('is_playable', False):
         item_dict['params']['is_folder'] = False
         item_dict['params']['is_playable'] = True

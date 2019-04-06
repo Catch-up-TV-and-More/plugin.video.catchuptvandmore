@@ -135,6 +135,7 @@ def add_context_menus_to_item(
             vpn.vpn_item_callback,
             vpn_label)
 
+    # Add to add-on favourites
     fav.add_fav_context(item)
 
     return
@@ -472,24 +473,26 @@ def favourites(plugin, **kwargs):
                 item_dict
                 ) in enumerate(sorted_menu):
 
+        
+        # Listitem.from_dict fails with this
         item_dict.pop('subtitles')
         item_dict.pop('context')
-
-        url = cqu.build_kodi_url(item_dict['callback'], item_dict['params'])
         
         item = Listitem.from_dict(**item_dict)
-        
+        url = cqu.build_kodi_url(item_dict['callback'], item_dict['params'])
+
         item.set_callback(url)
+        
         item.is_folder = item_dict['params']['is_folder']
         item.is_playbale = item_dict['params']['is_playable']
 
         # Hack for the rename feature
         item.label = item_dict['label']
 
-        print('\tCURRENT ITEM hash: ', item_hash)
-        #print('\tCURRENT ITEM order: ', str(item.params['order']))
-        print('\tCURRENT ITEM callback: ', item_dict['callback'])
-        print('\tCURRENT ITEM PRAMS: ', item.params)
+        # print('\tCURRENT ITEM hash: ', item_hash)
+        # print('\tCURRENT ITEM order: ', str(item.params['order']))
+        # print('\tCURRENT ITEM callback: ', item_dict['callback'])
+        # print('\tCURRENT ITEM PRAMS: ', item.params)
 
         # Rename
         item.context.script(
