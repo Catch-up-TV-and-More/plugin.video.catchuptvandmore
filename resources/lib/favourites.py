@@ -50,7 +50,7 @@ def add_item_to_favourites(plugin, item_dict={}):
     # Add this item to favourite db
     with storage.PersistentDict("favourites.pickle") as db:
         item_path = xbmc.getInfoLabel('ListItem.Path')
-        item_hash = md5(str(item_dict))
+        item_hash = md5(str(item_dict)).hexdigest()
 
         if item_hash in db:
             # Item already in favourites
