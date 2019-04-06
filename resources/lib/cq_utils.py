@@ -55,13 +55,6 @@ def item2dict(item):
     return item_dict
 
 
-def build_kodi_url(route_path, raw_params):
-    query = '?' + urlencode(raw_params) if raw_params else ''
-    url = route_path + query
-    # print('Built URL: ' + url)
-    return url
-
-
 def get_module_in_url(base_url):
     # e.g. base_url = plugin://plugin.video.catchuptvandmore/resources/lib/websites/culturepub/list_shows
     if 'resources' not in base_url:

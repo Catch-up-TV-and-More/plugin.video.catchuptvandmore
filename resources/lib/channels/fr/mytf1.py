@@ -32,7 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 import resources.lib.cq_utils as cqu
-import resources.lib.favourites as fav
+from resources.lib.favourites import add_fav_context
 
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
 # https://docs.python.org/3/library/hashlib.html
@@ -88,10 +88,7 @@ def list_categories(plugin, item_id):
         item.params['item_id'] = item_id
         item.params['category'] = category_url
 
-        item.context.script(
-            fav.add_item_to_favourites,
-            'add_item_to_favourites',
-            item_dict=cqu.item2dict(item))
+        add_fav_context(item)
 
         item.set_callback(list_programs)
         yield item
@@ -133,6 +130,7 @@ def list_programs(plugin, item_id, category, **kwargs):
                 if 'meteo.tf1.fr/meteo-france' in program_url:
                     item.label = program_name
                     item.art["thumb"] = img
+                    add_fav_context(item)
                     item.set_callback(
                         list_videos,
                         item_id=item_id,
@@ -143,6 +141,7 @@ def list_programs(plugin, item_id, category, **kwargs):
                 else:
                     item.label = program_name
                     item.art["thumb"] = img
+                    add_fav_context(item)
                     item.set_callback(
                         list_program_categories,
                         item_id=item_id,
@@ -174,6 +173,7 @@ def list_programs(plugin, item_id, category, **kwargs):
                 if 'meteo.tf1.fr/meteo-france' in program_url:
                     item.label = program_name
                     item.art["thumb"] = img
+                    add_fav_context(item)
                     item.set_callback(
                         list_videos,
                         item_id=item_id,
@@ -184,6 +184,7 @@ def list_programs(plugin, item_id, category, **kwargs):
                 else:
                     item.label = program_name
                     item.art["thumb"] = img
+                    add_fav_context(item)
                     item.set_callback(
                         list_program_categories,
                         item_id=item_id,
@@ -193,7 +194,7 @@ def list_programs(plugin, item_id, category, **kwargs):
 
 
 @Route.register
-def list_program_categories(plugin, item_id, program_url):
+def list_program_categories(plugin, item_id, program_url, **kwargs):
     """
     Build program categories
     - Toutes les vidéos
@@ -210,6 +211,7 @@ def list_program_categories(plugin, item_id, program_url):
             item = Listitem()
             item.label = "".join(li.itertext())
             category_id = li.find('a').get('data-filter')
+            add_fav_context(item)
             item.set_callback(
                 list_videos,
                 item_id=item_id,
@@ -222,7 +224,7 @@ def list_program_categories(plugin, item_id, program_url):
 
 
 @Route.register
-def list_videos(plugin, item_id, program_category_url):
+def list_videos(plugin, item_id, program_category_url, **kwargs):
 
     if 'meteo.tf1.fr/meteo-france' in program_category_url:
         resp = urlquick.get(program_category_url)
@@ -243,13 +245,13 @@ def list_videos(plugin, item_id, program_category_url):
             program_id=program_id,
             video_label=LABELS[item_id] + ' - ' + item.label,
             download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
             program_id=program_id,
             item_dict=cqu.item2dict(item)
         )
+        add_fav_context(item, is_playable=True)
         yield item
 
     else:
@@ -315,13 +317,13 @@ def list_videos(plugin, item_id, program_category_url):
                         program_id=program_id,
                         video_label=LABELS[item_id] + ' - ' + item.label,
                         download_mode=True)
-
                     item.set_callback(
                         get_video_url,
                         item_id=item_id,
                         program_id=program_id,
                         item_dict=cqu.item2dict(item)
                     )
+                    add_fav_context(item, is_playable=True)
                     yield item
 
             # Check for any next page
@@ -345,7 +347,7 @@ def list_videos(plugin, item_id, program_category_url):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, program_id, item_dict=None, download_mode=False, video_label=None):
+        plugin, item_id, program_id, item_dict=None, download_mode=False, video_label=None, **kwargs):
 
     if 'www.wat.tv/embedframe' in program_id:
         url = 'http:' + program_id
@@ -473,12 +475,12 @@ def get_video_url(
         return item
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     video_id = 'L_%s' % item_id.upper()
 

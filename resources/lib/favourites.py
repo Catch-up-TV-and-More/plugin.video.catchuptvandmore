@@ -27,10 +27,11 @@ from __future__ import unicode_literals
 
 import xbmc
 
-from codequick import Route, utils, storage
+from codequick import Route, utils, storage, Script
 from hashlib import md5
 
 from resources.lib.labels import LABELS
+import resources.lib.cq_utils as cqu
 
 
 @Route.register
@@ -51,12 +52,14 @@ def add_item_to_favourites(plugin, item_dict={}):
 
     # Add this item to favourite db
     with storage.PersistentDict("favourites.pickle") as db:
+        
+        # Extract the callback
         item_path = xbmc.getInfoLabel('ListItem.Path')
+        item_dict['callback'] = item_path.replace('plugin://plugin.video.catchuptvandmore', '')
+
+        # Compute hash value used as key in the DB
         item_hash = md5(str(item_dict)).hexdigest()
 
-        if 'is_folder' not in item_dict:
-            item_dict['params']['is_folder'] = True
-        item_dict['callback'] = item_path
         item_dict['params']['order'] = len(db)
 
         db[item_hash] = item_dict
@@ -135,3 +138,17 @@ def move_favourite_item(plugin, direction, item_hash):
 
         return False
 
+
+def add_fav_context(item, **kwargs):
+    item_dict = cqu.item2dict(item)
+    if kwargs.get('is_playable', False):
+        item_dict['params']['is_folder'] = False
+        item_dict['params']['is_playable'] = True
+    else:
+        item_dict['params']['is_folder'] = True
+        item_dict['params']['is_playable'] = False
+
+    item.context.script(
+        add_item_to_favourites,
+        Script.localize(LABELS['Add to add-on favourites']),
+        item_dict=item_dict)

@@ -476,15 +476,16 @@ def favourites(plugin, **kwargs):
                 ) in enumerate(sorted_menu):
 
         item_dict.pop('subtitles')
+        item_dict.pop('context')
+
+        print('ITEM_DICT: ' + str(item_dict))
 
         item = Listitem.from_dict(**item_dict)
 
-        url = cqu.build_kodi_url(item_dict['callback'], item.params)
+        item.is_playable = False
 
-        item.is_folder = item.params['is_folder']
+        # Hack for the rename feature
         item.label = item_dict['label']
-
-        item.set_callback(url)
 
         print('\tCURRENT ITEM hash: ', item_hash)
         print('\tCURRENT ITEM order: ', str(item.params['order']))
