@@ -28,40 +28,46 @@ from __future__ import unicode_literals
 import xbmc
 
 from codequick import Route, utils, storage
+from hashlib import md5
 
 
 @Route.register
-def add_item_to_favourites(plugin, item_id):
+def add_item_to_favourites(plugin, item_dict={}):
     """
     Callback function called when the user click
     on 'add item to favourite' from an item
     context menu
     """
-    print('WANT TO ADD THE ITEM ', item_id, 'TO THE PLUGIN fAVOUTITES FOLDER')
-    print('ListItem path: ' + xbmc.getInfoLabel('ListItem.Path'))
 
-    # Ask the user if he wants to edit the label
-    item_label = utils.keyboard('Choose_your_favorite_title', xbmc.getInfoLabel('ListItem.Label'))
+    # Ask the user to edit the label
+    item_dict['label'] = utils.keyboard('Choose_your_favorite_title', item_dict['label'])
 
     # If user aborded do not add this item to favourite
-    if item_label == '':
+    if item_dict['label'] == '':
         # TODO: Notify the user that the action aborded
         return False
 
     # Add this item to favourite db
     with storage.PersistentDict("favourites.pickle") as db:
-        item_dict = {}
+        item_path = xbmc.getInfoLabel('ListItem.Path')
+        item_hash = md5(str(item_dict))
 
-        item_dict['path'] = xbmc.getInfoLabel('ListItem.Path')
-        item_dict['label'] = item_label
-        item_dict['order'] = len(db)
+        if item_hash in db:
+            # Item already in favourites
+            # Abord this action and notify the user about that
+            return False
 
-        db[item_id] = item_dict
+        if 'is_folder' not in item_dict:
+            item_dict['params']['is_folder'] = True
+        item_dict['callback'] = item_path
+        item_dict['params']['order'] = len(db)
+
+        db[item_hash] = item_dict
     return False
 
 
 @Route.register
-def rename_favourite_item(plugin, item_id):
+def rename_favourite_item(plugin, item_hash):
     """
     Callback function called when the user click
     on 'rename' from a favourite item
@@ -73,26 +79,26 @@ def rename_favourite_item(plugin, item_id):
     if item_label == '':
         return False
     with storage.PersistentDict("favourites.pickle") as db:
-        db[item_id]['label'] = item_label
+        db[item_hash]['label'] = item_label
     xbmc.executebuiltin('XBMC.Container.Refresh()')
     return False
 
 
 @Route.register
-def remove_favourite_item(plugin, item_id):
+def remove_favourite_item(plugin, item_hash):
     """
     Callback function called when the user click
     on 'remove' from a favourite item
     context menu
     """
     with storage.PersistentDict("favourites.pickle") as db:
-        del db[item_id]
+        del db[item_hash]
     xbmc.executebuiltin('XBMC.Container.Refresh()')
     return False
 
 
 @Route.register
-def move_favourite_item(plugin, direction, item_id):
+def move_favourite_item(plugin, direction, item_hash):
     """
     Callback function called when the user click
     on 'Move up/down' from a favourite item
@@ -104,14 +110,14 @@ def move_favourite_item(plugin, direction, item_id):
         offset = -1
 
     with storage.PersistentDict("favourites.pickle") as db:
-        item_to_move_id = item_id
-        item_to_move_order = db[item_id]['order']
+        item_to_move_id = item_hash
+        item_to_move_order = db[item_hash]['params']['order']
 
         menu = []
-        for item_id, item_dict in db.items():
+        for item_hash, item_dict in db.items():
             item = (
-                item_dict['order'],
-                item_id,
+                item_dict['params']['order'],
+                item_hash,
                 item_dict
             )
 
@@ -120,14 +126,15 @@ def move_favourite_item(plugin, direction, item_id):
 
         for k in range(0, len(menu)):
             item = menu[k]
-            item_id = item[1]
-            if item_to_move_id == item_id:
+            item_hash = item[1]
+            if item_to_move_id == item_hash:
                 item_to_swap = menu[k + offset]
                 item_to_swap_order = item_to_swap[0]
                 item_to_swap_id = item_to_swap[1]
-                db[item_to_move_id]['order'] = item_to_swap_order
-                db[item_to_swap_id]['order'] = item_to_move_order
+                db[item_to_move_id]['params']['order'] = item_to_swap_order
+                db[item_to_swap_id]['params']['order'] = item_to_move_order
                 xbmc.executebuiltin('XBMC.Container.Refresh()')
                 break
 
         return False
+

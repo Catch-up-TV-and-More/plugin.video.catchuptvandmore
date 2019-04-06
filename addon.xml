@@ -7,7 +7,7 @@
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
     <import addon="script.module.requests" version="2.12.4"/>
-    <import addon="script.module.codequick" version="0.9.5"/>
+    <import addon="script.module.codequick" version="0.9.8"/>
     <import addon="script.module.pytz" version="2014.2"/>
     <import addon="script.module.inputstreamhelper" version="0.3.3"/>
   </requires>

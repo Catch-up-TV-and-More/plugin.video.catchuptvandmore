@@ -639,12 +639,19 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                 item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
                 item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
 
-                if 'label' in item_dict:
-                    item.label = item_dict['label']
-                if 'info' in item_dict:
-                    item.info.update(item_dict['info'])
-                if 'art' in item_dict:
-                    item.art.update(item_dict['art'])
+                if item_dict is None:
+                    item.label = ""
+                    item.art["thumb"] = ""
+                    item.art["icon"] = ""
+                    item.art["fanart"] = ""
+                    item.info["plot"] = ""
+                else:
+                    if 'label' in item_dict:
+                        item.label = item_dict['label']
+                    if 'info' in item_dict:
+                        item.info.update(item_dict['info'])
+                    if 'art' in item_dict:
+                        item.art.update(item_dict['art'])
 
                 return item
         return False

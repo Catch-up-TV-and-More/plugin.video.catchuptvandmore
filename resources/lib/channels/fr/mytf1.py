@@ -32,6 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 import resources.lib.cq_utils as cqu
+import resources.lib.favourites as fav
 
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
 # https://docs.python.org/3/library/hashlib.html
@@ -84,16 +85,20 @@ def list_categories(plugin, item_id):
 
         item = Listitem()
         item.label = category_name
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            category=category_url
-        )
+        item.params['item_id'] = item_id
+        item.params['category'] = category_url
+
+        item.context.script(
+            fav.add_item_to_favourites,
+            'add_item_to_favourites',
+            item_dict=cqu.item2dict(item))
+
+        item.set_callback(list_programs)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category):
+def list_programs(plugin, item_id, category, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour

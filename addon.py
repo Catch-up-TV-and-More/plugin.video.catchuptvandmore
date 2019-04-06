@@ -94,7 +94,7 @@ def get_sorted_menu(plugin, menu_id):
 
 
 def add_context_menus_to_item(
-        plugin, item, index, item_id, menu_id, menu_len):
+        plugin, item, index, menu_id, menu_len):
 
     # Move up
     if index > 0:
@@ -102,7 +102,7 @@ def add_context_menus_to_item(
             move_item,
             plugin.localize(LABELS['Move up']),
             direction='up',
-            item_id=item_id,
+            item_id=item.params['item_id'],
             menu_id=menu_id)
 
     # Move down
@@ -111,14 +111,14 @@ def add_context_menus_to_item(
             move_item,
             plugin.localize(LABELS['Move down']),
             direction='down',
-            item_id=item_id,
+            item_id=item.params['item_id'],
             menu_id=menu_id)
 
     # Hide
     item.context.script(
         hide_item,
         plugin.localize(LABELS['Hide']),
-        item_id=item_id)
+        item_id=item.params['item_id'])
 
     # Connect/Disconnect VPN
     with storage.PersistentDict('vpn') as db:
@@ -138,7 +138,7 @@ def add_context_menus_to_item(
     item.context.script(
         fav.add_item_to_favourites,
         'add_item_to_favourites',
-        item_id=item_id)
+        item_dict=item.params['item_dict'])
 
     return
 
@@ -152,22 +152,17 @@ def root(plugin):
     # First menu to build is the root menu
     # (see ROOT dictionnary in skeleton.py)
 
-    # TEMPO (waiting for the CodeQuick update)
-    plugin.cache_to_disc = True
-
-    return generic_menu(plugin, 'ROOT')
+    return generic_menu(plugin, item_id='ROOT')
 
 
 @Route.register
-def generic_menu(plugin, menu_id, item_module=None, item_dict=None):
+def generic_menu(plugin, **kwargs):
     """
     Build a generic addon menu
     with all not hidden items
     """
 
-    # TEMPO (waiting for the CodeQuick update)
-    plugin.cache_to_disc = True
-
+    menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
 
     if not menu:
@@ -181,9 +176,7 @@ def generic_menu(plugin, menu_id, item_module=None, item_dict=None):
 
         item = Listitem()
 
-        add_context_menus_to_item(
-            plugin, item, index, item_id, menu_id, len(menu))
-
+        # Set item label
         if item_id in LABELS:
             label = LABELS[item_id]
             if isinstance(label, int):
@@ -192,7 +185,7 @@ def generic_menu(plugin, menu_id, item_module=None, item_dict=None):
         else:
             item.label = item_id
 
-        # Get item path of icon and fanart
+        # Set item art
         if 'thumb' in item_infos:
             item.art["thumb"] = common.get_item_media_path(
                 item_infos['thumb'])
@@ -201,29 +194,31 @@ def generic_menu(plugin, menu_id, item_module=None, item_dict=None):
             item.art["fanart"] = common.get_item_media_path(
                 item_infos['fanart'])
 
-        # If this item requires a module to work, get
-        # the module path to be loaded
+        # Set item params
+            # If this item requires a module to work, get
+            # the module path to be loaded
         item.params['item_module'] = item_infos.get('module')
+
+        item.params['item_id'] = item_id
+        item.params['item_dict'] = cqu.item2dict(item)
+
+        add_context_menus_to_item(
+            plugin, item, index, menu_id, len(menu))
 
         # Get the next action to trigger if this
         # item will be selected by the user
-        item.set_callback(
-            eval(item_infos['callback']),
-            item_id,
-            item_dict=cqu.item2dict(item))
+        item.set_callback(eval(item_infos['callback']))
 
         yield item
 
 
 @Route.register
-def tv_guide_menu(plugin, menu_id, item_module=None, item_dict=None):
-
-    # TEMPO (waiting for the CodeQuick update)
-    plugin.cache_to_disc = True
+def tv_guide_menu(plugin, **kwargs):
 
     # Move up and move down action only work with this sort method
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
 
+    menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
     channels_id = []
     for index, (channel_order,
@@ -247,15 +242,16 @@ def tv_guide_menu(plugin, menu_id, item_module=None, item_dict=None):
 
         item = Listitem()
 
-        add_context_menus_to_item(
-            plugin, item, index, channel_id, menu_id, len(menu))
+        # Set item label
+        if channel_id in LABELS:
+            label = LABELS[channel_id]
+            if isinstance(label, int):
+                label = plugin.localize(label)
+            item.label = label
+        else:
+            item.label = channel_id
 
-        label = LABELS[channel_id]
-        if isinstance(label, int):
-            label = plugin.localize(label)
-        item.label = label
-
-        # Get item path of icon and fanart
+        # Set item art
         if 'thumb' in channel_infos:
             item.art["thumb"] = common.get_item_media_path(
                 channel_infos['thumb'])
@@ -315,18 +311,21 @@ def tv_guide_menu(plugin, menu_id, item_module=None, item_dict=None):
             if 'thumb' in guide_infos:
                 item.art["thumb"] = guide_infos['thumb']
 
+        item.params['item_id'] = channel_id
+        item.params['item_dict'] = cqu.item2dict(item)
+
+        add_context_menus_to_item(
+            plugin, item, index, menu_id, len(menu))
+
         # Get the next action to trigger if this
         # item will be selected by the user
-        item.set_callback(
-            eval(channel_infos['callback']),
-            channel_id,
-            item_dict=cqu.item2dict(item))
+        item.set_callback(eval(channel_infos['callback']))
 
         yield item
 
 
 @Route.register
-def replay_bridge(plugin, item_id, item_module, item_dict={}):
+def replay_bridge(plugin, **kwargs):
     """
     replay_bridge is the bridge between the
     addon.py file and each channel modules files.
@@ -336,55 +335,43 @@ def replay_bridge(plugin, item_id, item_module, item_dict={}):
     So we have to load on the fly the corresponding
     module of the channel.
     """
-    # TEMPO (waiting for the CodeQuick update)
-    plugin.cache_to_disc = True
 
     # Let's go to the module file ...
-    item_module = importlib.import_module(item_module)
-    return item_module.replay_entry(plugin, item_id)
+    item_module = importlib.import_module(kwargs.get('item_module'))
+    return item_module.replay_entry(plugin, kwargs.get('item_id'))
 
 
 @Route.register
-def website_bridge(plugin, item_id, item_module, item_dict={}):
+def website_bridge(plugin, **kwargs):
     """
     Like replay_bridge
     """
 
-    # TEMPO (waiting for the CodeQuick update)
-    plugin.cache_to_disc = True
-
     # Let's go to the module file ...
-    item_module = importlib.import_module(item_module)
-    return item_module.website_entry(plugin, item_id)
+    item_module = importlib.import_module(kwargs.get('item_module'))
+    return item_module.website_entry(plugin, kwargs.get('item_id'))
 
 
 @Route.register
-def multi_live_bridge(plugin, item_id, item_module, item_dict={}):
+def multi_live_bridge(plugin, **kwargs):
     """
     Like replay_bridge
     """
 
-    # TEMPO (waiting for the CodeQuick update)
-    plugin.cache_to_disc = True
-
     # Let's go to the module file ...
-    item_module = importlib.import_module(item_module)
-    return item_module.multi_live_entry(plugin, item_id)
+    item_module = importlib.import_module(kwargs.get('item_module'))
+    return item_module.multi_live_entry(plugin, kwargs.get('item_id'))
 
 
 @Resolver.register
-def live_bridge(plugin, item_id, item_module, item_dict={}):
+def live_bridge(plugin, **kwargs):
     """
     Like replay_bridge
     """
 
-    # TEMPO (waiting for the CodeQuick update)
-    plugin.cache_to_disc = True
-
     # Let's go to the module file ...
-    item_module = importlib.import_module(item_module)
-    return item_module.live_entry(plugin, item_id, item_dict)
-
+    item_module = importlib.import_module(kwargs.get('item_module'))
+    return item_module.live_entry(plugin, kwargs.get('item_id'), kwargs.get('item_dict', {}))
 
 
 
@@ -460,21 +447,20 @@ def vpn_connectdisconnect_setting(plugin):
 
 
 @Route.register
-def favourites(plugin, item_id, item_module, item_dict={}):
+def favourites(plugin, **kwargs):
     """
     Callback function called when the user enter in the
     favourites folder
     """
-    print('BUILD FAVOURITES LIST')
 
     # Get sorted items
     sorted_menu = []
     with storage.PersistentDict("favourites.pickle") as db:
         menu = []
-        for item_id, item_dict in db.items():
+        for item_hash, item_dict in db.items():
             item = (
-                item_dict['order'],
-                item_id,
+                item_dict['params']['order'],
+                item_hash,
                 item_dict
             )
 
@@ -485,56 +471,53 @@ def favourites(plugin, item_id, item_module, item_dict={}):
 
     # Add each item in the listing
     for index, (item_order,
-                item_id,
+                item_hash,
                 item_dict
                 ) in enumerate(sorted_menu):
 
+        item_dict.pop('subtitles')
 
-        item = Listitem()
+        item = Listitem.from_dict(**item_dict)
 
-        print('\tCURRENT ITEM label: ', item_dict['label'])
-        print('\tCURRENT ITEM id: ', item_id)
-        print('\tCURRENT ITEM URL: ', item_dict['path'])
-        print('\tCURRENT ITEM order: ', str(item_dict['order']))
+        url = cqu.build_kodi_url(item_dict['callback'], item.params)
 
-
+        item.is_folder = item.params['is_folder']
         item.label = item_dict['label']
-        item_callback = cqu.get_callback_in_url(item_dict['path'])
-        item_module = cqu.get_module_in_url(item_dict['path'])
-        print('\tCURRENT ITEM callback: ', item_callback)
-        print('\tCURRENT ITEM module: ', item_module)
+
+        item.set_callback(url)
+
+        print('\tCURRENT ITEM hash: ', item_hash)
+        print('\tCURRENT ITEM order: ', str(item.params['order']))
+        print('\tCURRENT ITEM callback: ', item_dict['callback'])
+        print('\tCURRENT ITEM PRAMS: ', item.params)
 
         # Rename
         item.context.script(
             fav.rename_favourite_item,
             'rename',
-            item_id=item_id)
+            item_hash=item_hash)
 
         # Remove
         item.context.script(
             fav.remove_favourite_item,
             'remove',
-            item_id=item_id)
+            item_hash=item_hash)
 
         # Move up
-        if item_dict['order'] > 0:
+        if item.params['order'] > 0:
             item.context.script(
                 fav.move_favourite_item,
                 plugin.localize(LABELS['Move up']),
                 direction='up',
-                item_id=item_id)
+                item_hash=item_hash)
 
         # Move down
-        if item_dict['order'] < len(db) - 1:
+        if item.params['order'] < len(db) - 1:
             item.context.script(
                 fav.move_favourite_item,
                 plugin.localize(LABELS['Move down']),
                 direction='down',
-                item_id=item_id)
-
-        item.set_callback(
-            eval(item_callback),
-            item_id)
+                item_hash=item_hash)
 
         yield item
 

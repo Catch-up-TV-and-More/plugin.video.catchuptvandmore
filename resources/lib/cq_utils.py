@@ -29,27 +29,37 @@ import xbmcgui
 import xbmc
 import sys
 
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
+
+
 from codequick import Script
 from resources.lib.labels import LABELS
 
 
 def item2dict(item):
+    # Need to use same keywords as
+    # https://scriptmodulecodequick.readthedocs.io/en/latest/_modules/codequick/listing.html#Listitem.from_dict
+    # in order to be able to directly use `Listitem.from_dict` later
     item_dict = {}
+    item_dict['subtitles'] = item.subtitles
     item_dict['art'] = dict(item.art)
     item_dict['info'] = dict(item.info)
     item_dict['stream'] = dict(item.stream)
     item_dict['context'] = dict(item.context)
-    item_dict['property'] = item.property
+    item_dict['properties'] = item.property
     item_dict['params'] = item.params
     item_dict['label'] = item.label
     return item_dict
 
 
-def get_callback_in_url(base_url):
-    # e.g. base_url = plugin://plugin.video.catchuptvandmore/resources/lib/websites/culturepub/list_shows
-    if base_url[-1] == '/':
-        base_url = base_url[:-1]
-    return base_url.split('/')[-1]
+def build_kodi_url(route_path, raw_params):
+    query = '?' + urlencode(raw_params) if raw_params else ''
+    url = route_path + query
+    # print('Built URL: ' + url)
+    return url
 
 
 def get_module_in_url(base_url):
@@ -86,7 +96,7 @@ def import_needed_module():
     try:
         importlib.import_module(module_to_import)
     except Exception:
-        Script.log('[cq_utils.import_needed_module] Failed to load module ' + module_to_import)
+        Script.log('[cq_utils.import_needed_module] Failed to import module ' + module_to_import)
 
     return
 
