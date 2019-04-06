@@ -52,7 +52,8 @@ ROOT = {
         'thumb': 'websites.png'
     },
     'favourites': {
-        'callback': 'favourites'
+        'callback': 'favourites',
+        'thumb': 'favourites.png'
     }
 }
 
