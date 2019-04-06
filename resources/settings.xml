@@ -667,6 +667,9 @@
             
             <setting label="8 Mont-Blanc" type="bool" id="tv8montblanc" default="true" visible="eq(-169,true)"/>
             <setting label="" type="number" visible="false" id="tv8montblanc.order" default="85"/>
+
+            <setting label="Luxe.TV" type="bool" id="luxetv" default="true" visible="eq(-171,true)"/>
+            <setting label="" type="number" visible="false" id="luxetv.order" default="86"/>
         <!-- France -->
 
 

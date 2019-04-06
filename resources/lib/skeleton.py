@@ -1826,6 +1826,12 @@ FR_REPLAY = {
         'thumb': 'channels/fr/tv8montblanc.png',
         'fanart': 'channels/fr/tv8montblanc_fanart.jpg',
         'module': 'resources.lib.channels.fr.tv8montblanc'
+    },
+    'luxetv': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/luxetv.png',
+        'fanart': 'channels/fr/luxetv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.luxetv'
     }
 }
 
