@@ -36,7 +36,7 @@ import resources.lib.skeleton as sk
 from resources.lib.labels import LABELS
 from resources.lib import common
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item2dict, get_item_label
 from resources.lib.vpn import vpn_item_callback, add_vpn_context, import_ovpn, delete_ovpn
 import resources.lib.favourites as fav
 
@@ -164,13 +164,7 @@ def generic_menu(plugin, **kwargs):
         item = Listitem()
 
         # Set item label
-        if item_id in LABELS:
-            label = LABELS[item_id]
-            if isinstance(label, int):
-                label = plugin.localize(label)
-            item.label = label
-        else:
-            item.label = item_id
+        item.label = get_item_label(item_id)
 
         # Set item art
         if 'thumb' in item_infos:
@@ -184,7 +178,8 @@ def generic_menu(plugin, **kwargs):
         # Set item params
             # If this item requires a module to work, get
             # the module path to be loaded
-        item.params['item_module'] = item_infos.get('module')
+        if 'module' in item_infos:
+            item.params['item_module'] = item_infos['module']
 
         item.params['item_id'] = item_id
         item.params['item_dict'] = item2dict(item)
@@ -230,13 +225,7 @@ def tv_guide_menu(plugin, **kwargs):
         item = Listitem()
 
         # Set item label
-        if channel_id in LABELS:
-            label = LABELS[channel_id]
-            if isinstance(label, int):
-                label = plugin.localize(label)
-            item.label = label
-        else:
-            item.label = channel_id
+        item.label = get_item_label(channel_id)
 
         # Set item art
         if 'thumb' in channel_infos:
@@ -249,7 +238,8 @@ def tv_guide_menu(plugin, **kwargs):
 
         # If this item requires a module to work, get
         # the module path to be loaded
-        item.params['item_module'] = channel_infos.get('module')
+        if 'module' in channel_infos:
+            item.params['item_module'] = channel_infos['module']
 
         # If we have program infos from the grabber
         if channel_id in tv_guide:

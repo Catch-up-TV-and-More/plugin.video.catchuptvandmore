@@ -31,6 +31,15 @@ from resources.lib.favourites import add_fav_context
 from resources.lib.labels import LABELS
 
 
+def get_item_label(item_id):
+    label = item_id
+    if item_id in LABELS:
+        label = LABELS[item_id]
+        if isinstance(label, int):
+            label = Script.localize(label)
+    return label
+
+
 def item2dict(item):
     # Need to use same keywords as
     # https://scriptmodulecodequick.readthedocs.io/en/latest/_modules/codequick/listing.html#Listitem.from_dict

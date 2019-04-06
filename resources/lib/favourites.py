@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 
 import xbmc
 
-from codequick import Route, utils, storage, Script
+from codequick import utils, storage, Script
 from hashlib import md5
 
 from resources.lib.labels import LABELS

@@ -61,17 +61,18 @@ def get_module_in_url(base_url):
     if 'resources' not in base_url:
         return ''
 
+    # Remove last '/'
     if base_url[-1] == '/':
         base_url = base_url[:-1]
+    
+    # Remove plugin_id
+    base_url = base_url.replace('plugin://plugin.video.catchuptvandmore/', '')
+
     base_url_l = base_url.split('/')
     module_l = []
-    addon_name_triggered = False
-    for name in base_url_l:
-        if addon_name_triggered:
-            module_l.append(name)
-            continue
-        if name == 'plugin.video.catchuptvandmore':
-            addon_name_triggered = True
+    for word in base_url_l:
+        module_l.append(word)
+
     module_l.pop()  # Pop the function name (e.g. list_shows)
     module = '.'.join(module_l)
     # Returned module: resources.lib.websites.culturepub
