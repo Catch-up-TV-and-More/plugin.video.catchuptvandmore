@@ -336,6 +336,9 @@
 
             <setting label="RT" type="bool" id="rt" default="true" visible="eq(-47,true)"/>
             <setting label="" type="number" visible="false" id="rt.order" default="24"/>
+
+            <setting label="Africa 24" type="bool" id="africa24" default="true" visible="eq(-49,true)"/>
+            <setting label="" type="number" visible="false" id="africa24.order" default="25"/>
         <!-- International -->
 
 

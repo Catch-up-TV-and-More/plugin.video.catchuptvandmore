@@ -35,7 +35,6 @@ import re
 import urlquick
 
 # TO DO
-# Add Replay
 
 
 URL_ROOT = 'http://www.afriquemedia.tv'

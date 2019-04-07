@@ -391,6 +391,7 @@ LABELS = {
     'tv5mondeinfo': 'TV5Monde Info',
     'channelnewsasia': 'Channel NewsAsia',
     'rt': 'RT (' + Script.setting['rt.language'] + ')',
+    'africa24': 'Africa 24',
 
     # United State of America channels / live TV
     'cbsnews': 'CBS News',
