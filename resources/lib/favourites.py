@@ -67,8 +67,35 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
 
         item_dict['info'] = {}
 
+    # Extract the callback
+    item_path = xbmc.getInfoLabel('ListItem.Path')
+    item_dict['callback'] = item_path.replace('plugin://plugin.video.catchuptvandmore', '')
+
+
+    print('ITEM_DICT :' + str(item_dict))
+    # Try to guess the item type (Live TV, Replay, Website, Main menu?)
+    item_type = ''
+    if 'item_id' in item_dict['params']:        
+        item_id = item_dict['params']['item_id']
+        if '_live' in item_id:
+            item_type = Script.localize(LABELS['live_tv'])
+        elif '_replay' in item_id:
+            item_type = Script.localize(LABELS['replay'])
+
+    if item_type == '':
+        if 'live' in item_dict['callback']:
+            item_type = Script.localize(LABELS['live_tv'])
+        elif 'replay' in item_dict['callback']:
+            item_type = Script.localize(LABELS['replay'])
+        elif 'website':
+            item_type = Script.localize(LABELS['websites'])
+
+    label_proposal = item_dict['label']
+    if item_type != '':
+        label_proposal = item_type + ' - ' + label_proposal
+
     # Ask the user to edit the label
-    item_dict['label'] = utils.keyboard(plugin.localize(LABELS['Favorite name']), item_dict['label'])
+    item_dict['label'] = utils.keyboard(plugin.localize(LABELS['Favorite name']), label_proposal)
 
     # If user aborded do not add this item to favourite
     if item_dict['label'] == '':
@@ -77,10 +104,6 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
 
     # Add this item to favourite db
     with storage.PersistentDict("favourites.pickle") as db:
-        
-        # Extract the callback
-        item_path = xbmc.getInfoLabel('ListItem.Path')
-        item_dict['callback'] = item_path.replace('plugin://plugin.video.catchuptvandmore', '')
 
         # Compute hash value used as key in the DB
         item_hash = md5(str(item_dict)).hexdigest()
