@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
@@ -45,7 +46,7 @@ URL_ROOT = 'https://becurious.ch'
 URL_VIDEOS = URL_ROOT + '/?infinity=scrolling'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -53,7 +54,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -78,11 +79,12 @@ def list_categories(plugin, item_id):
             list_videos,
             item_id=item_id,
             category_url=category_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url):
+def list_videos(plugin, item_id, category_url, **kwargs):
 
     resp = urlquick.get(category_url)
     root = resp.parse()
@@ -96,24 +98,18 @@ def list_videos(plugin, item_id, category_url):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(video_url)
     root = resp.parse()

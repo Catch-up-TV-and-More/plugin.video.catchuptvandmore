@@ -97,7 +97,7 @@ LIVE_LIVE_CHANNEL_NAME = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -105,7 +105,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -148,7 +148,7 @@ def list_categories(plugin, item_id):
 
 
 @Route.register
-def list_programs(plugin, item_id, category_url):
+def list_programs(plugin, item_id, category_url, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -182,7 +182,7 @@ def list_programs(plugin, item_id, category_url):
 
 
 @Route.register
-def list_videos_category(plugin, item_id, category_url):
+def list_videos_category(plugin, item_id, category_url, **kwargs):
 
     resp = urlquick.get(category_url)
     json_value = re.compile(
@@ -224,7 +224,7 @@ def list_videos_category(plugin, item_id, category_url):
 
 
 @Route.register
-def list_videos_program(plugin, item_id, program_id):
+def list_videos_program(plugin, item_id, program_id, **kwargs):
 
     date = datetime.datetime.now()
     actual_month = str(date).split(' ')[0].split('-')[1] + '-' + \
@@ -268,7 +268,7 @@ def list_videos_program(plugin, item_id, program_id):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     video_id = video_url.split('=')[1]
     if item_id == 'swissinfo':
@@ -306,12 +306,12 @@ def get_video_url(
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE_JSON % item_id[:3])
     json_parser = json.loads(resp.text)
