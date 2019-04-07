@@ -31,8 +31,8 @@ sys.path.append('..')
 
 import mock_codequick
 import urllib
+import importlib
 
-import lib.skeleton as sk
 from lib.labels import LABELS
 
 
@@ -116,7 +116,6 @@ def get_item_media_path(item_media_path):
     return full_path
 
 
-
 # Return string label from item_id
 def get_label(item_id):
     label = LABELS[item_id]
@@ -143,11 +142,9 @@ def get_label(item_id):
         exit(-1)
 
 
-
 # Write M3U header in file
 def write_header(file):
     file.write("#EXTM3U tvg-shift=0\n\n")
-
 
 
 # Generate m3u files
@@ -156,7 +153,8 @@ def generate_m3u_files():
     m3u_entries = {}
 
     # Iterate over countries
-    for country_id, country_infos in eval('sk.LIVE_TV').items():
+    live_tv = importlib.import_module('lib.skeletons.live_tv').menu
+    for country_id, country_infos in live_tv.items():
         
         country_label = get_label(country_id)
         country_code =  country_id.replace('_live', '')
@@ -173,7 +171,8 @@ def generate_m3u_files():
 
 
         # Iterate over channels
-        for channel_id, channel_infos in eval('sk.' + country_id.upper()).items():
+        country_channels = importlib.import_module('lib.skeletons.' + country_id).menu
+        for channel_id, channel_infos in country_channels.items():
             
             channel_label = get_label(channel_id)
             print('\n\tchannel_id: ' + channel_id)
@@ -257,7 +256,8 @@ def generate_m3u_files():
 
 
         # Add WO channels if needed (e.g. Arte FR in the French M3U)
-        for channel_wo_id, channel_wo_infos in eval('sk.WO_LIVE').items():
+        wo_live = importlib.import_module('lib.skeletons.wo_live').menu
+        for channel_wo_id, channel_wo_infos in wo_live.items():
             channel_can_be_added = False
             if 'available_languages' in channel_wo_infos:
                 if country_code.upper() in channel_wo_infos['available_languages']:
@@ -390,4 +390,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

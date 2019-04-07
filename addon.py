@@ -24,15 +24,18 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
+
+# Core imports
 import importlib
 
+# Kodi imports
 from codequick import Route, Resolver, Listitem, run, Script, storage
 import urlquick
-import xbmcplugin
 import xbmc
 import xbmcgui
+import xbmcplugin
 
-import resources.lib.skeleton as sk
+# Local imports
 from resources.lib.labels import LABELS
 from resources.lib import common
 import resources.lib.cq_utils as cqu
@@ -44,8 +47,9 @@ import resources.lib.favourites as fav
 def get_sorted_menu(plugin, menu_id):
     # The current menu to build contains
     # all the items present in the 'menu_id'
-    # dictionnary of the skeleton.py file
-    current_menu = eval('sk.' + menu_id.upper())
+    # skeleton file
+    current_menu = importlib.import_module(
+        'resources.lib.skeletons.' + menu_id).menu
 
     # Notify user for the new M3U Live TV feature
     if menu_id == "live_tv" and \
@@ -139,7 +143,7 @@ def root(plugin):
     # First menu to build is the root menu
     # (see ROOT dictionnary in skeleton.py)
 
-    return generic_menu(plugin, item_id='ROOT')
+    return generic_menu(plugin, item_id='root')
 
 
 @Route.register
