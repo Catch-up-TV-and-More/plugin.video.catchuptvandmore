@@ -99,7 +99,7 @@ def get_sorted_menu(plugin, menu_id):
 
 
 def add_context_menus_to_item(
-        plugin, item, index, menu_id, menu_len):
+        plugin, item, index, menu_id, menu_len, **kwargs):
 
     # Move up
     if index > 0:
@@ -129,7 +129,17 @@ def add_context_menus_to_item(
     add_vpn_context(item)
 
     # Add to add-on favourites
-    fav.add_fav_context(item, item2dict(item))
+    is_playable = False
+    if 'is_playable' in kwargs:
+        is_playable = kwargs['is_playable']
+    elif 'item_infos' in kwargs and \
+            kwargs['item_infos']['callback'] == 'live_bridge':
+        is_playable = True
+    
+    fav.add_fav_context(
+        item,
+        item2dict(item),
+        is_playable=is_playable)
 
     return
 
@@ -188,12 +198,12 @@ def generic_menu(plugin, **kwargs):
         item.params['item_id'] = item_id
         item.params['item_dict'] = item2dict(item)
 
-        add_context_menus_to_item(
-            plugin, item, index, menu_id, len(menu))
-
         # Get the next action to trigger if this
         # item will be selected by the user
         item.set_callback(eval(item_infos['callback']))
+
+        add_context_menus_to_item(
+            plugin, item, index, menu_id, len(menu), item_infos=item_infos)
 
         yield item
 
@@ -295,12 +305,12 @@ def tv_guide_menu(plugin, **kwargs):
         item.params['item_id'] = channel_id
         item.params['item_dict'] = item2dict(item)
 
-        add_context_menus_to_item(
-            plugin, item, index, menu_id, len(menu))
-
         # Get the next action to trigger if this
         # item will be selected by the user
         item.set_callback(eval(channel_infos['callback']))
+
+        add_context_menus_to_item(
+            plugin, item, index, menu_id, len(menu), is_playable=True)
 
         yield item
 
