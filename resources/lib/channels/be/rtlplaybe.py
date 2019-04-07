@@ -32,8 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item2dict
-
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 import inputstreamhelper
 import json
 import re
@@ -109,7 +108,7 @@ URL_LIVE_JSON = 'https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/s
 DESIRED_QUALITY = Script.setting['quality']
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -117,7 +116,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -143,11 +142,12 @@ def list_categories(plugin, item_id):
             item_id=item_id,
             category_id=category_id
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category_id):
+def list_programs(plugin, item_id, category_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -185,11 +185,12 @@ def list_programs(plugin, item_id, category_id):
             item_id=item_id,
             program_id=program_id
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_program_categories(plugin, item_id, program_id):
+def list_program_categories(plugin, item_id, program_id, **kwargs):
     """
     Build program categories
     - Toutes les vidéos
@@ -216,6 +217,7 @@ def list_program_categories(plugin, item_id, program_id):
             program_id=program_id,
             sub_category_id=sub_category_id
         )
+        item_post_treatment(item)
         yield item
 
     item = Listitem()
@@ -230,7 +232,7 @@ def list_program_categories(plugin, item_id, program_id):
 
 
 @Route.register
-def list_videos(plugin, item_id, program_id, sub_category_id):
+def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
 
     url = ''
     if sub_category_id is None:
@@ -275,9 +277,9 @@ def list_videos(plugin, item_id, program_id, sub_category_id):
         program_imgs = video['clips'][0]['images']
         program_img = ''
         for img in program_imgs:
-                if img['role'] == 'vignette':
-                    external_key = img['external_key']
-                    program_img = URL_IMG % (external_key)
+            if img['role'] == 'vignette':
+                external_key = img['external_key']
+                program_img = URL_IMG % (external_key)
 
         item = Listitem()
         at_least_one_item = True
@@ -292,21 +294,18 @@ def list_videos(plugin, item_id, program_id, sub_category_id):
             pass
 
         xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
+        is_downloadable = False
         if xbmc_version < 18:
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_id=video_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
-
+            is_downloadable = True
+            
         item.set_callback(
             get_video_url,
             item_id=item_id,
             video_id=video_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             item_dict=item2dict(item)
         )
+        item_post_treatment(item, is_playable=True, is_downloadable=is_downloadable)
         yield item
 
     if not at_least_one_item:
@@ -316,7 +315,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, item_dict=None, download_mode=False, video_label=None):
+        plugin, item_id, video_id, item_dict=None, download_mode=False, video_label=None, **kwargs):
 
     xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
     if xbmc_version < 18:
@@ -480,12 +479,12 @@ def get_video_url(
         return False
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
     if xbmc_version < 18:
         xbmcgui.Dialog().ok(

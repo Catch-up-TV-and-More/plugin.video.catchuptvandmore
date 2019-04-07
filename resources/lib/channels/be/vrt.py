@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -81,7 +82,7 @@ def get_api_key():
     return '3_qhEcPa5JGFROVwu5SWKqJ4mVOIkwlFNMSKwzPDAh8QZOtHqu6L4nD5Q7lk0eXOOG'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -89,7 +90,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_root(plugin, item_id):
+def list_root(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -111,11 +112,12 @@ def list_root(plugin, item_id):
             eval(next_value),
             item_id=item_id,
             root_url=root_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, root_url):
+def list_programs(plugin, item_id, root_url, **kwargs):
 
     resp = urlquick.get(root_url)
     root = resp.parse()
@@ -133,11 +135,12 @@ def list_programs(plugin, item_id, root_url):
             list_videos,
             item_id=item_id,
             next_url=program_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_categories(plugin, item_id, root_url):
+def list_categories(plugin, item_id, root_url, **kwargs):
 
     resp = urlquick.get(root_url, max_age=-1)
     root = resp.parse()
@@ -156,11 +159,12 @@ def list_categories(plugin, item_id, root_url):
             list_category_programs,
             item_id=item_id,
             next_url=category_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_category_programs(plugin, item_id, next_url):
+def list_category_programs(plugin, item_id, next_url, **kwargs):
 
     category_id = re.compile(
         'categorieen/(.*?)/').findall(next_url)[0]
@@ -180,11 +184,12 @@ def list_category_programs(plugin, item_id, next_url):
             list_videos,
             item_id=item_id,
             next_url=category_program_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, next_url):
+def list_videos(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     root = resp.parse()
@@ -206,18 +211,13 @@ def list_videos(plugin, item_id, next_url):
             item.art['thumb'] = video_image
             item.info['plot'] = video_plot
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
 
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 video_url=video_url)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
     else:
         if root.find(
@@ -238,29 +238,23 @@ def list_videos(plugin, item_id, next_url):
             item.art['thumb'] = video_image
             item.info['plot'] = video_plot
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
-
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 video_url=video_url)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     session_requests = requests.session()
 
     if plugin.setting.get_string('vrt.login') == '' or\
-        plugin.setting.get_string('vrt.password') == '':
+            plugin.setting.get_string('vrt.password') == '':
         xbmcgui.Dialog().ok(
             'Info',
             plugin.localize(30604) % ('VRT NU', 'https://www.vrt.be/vrtnu/'))
@@ -287,7 +281,7 @@ def get_video_url(
         return False
     # Request Token
     headers = {'Content-Type': 'application/json',
-        'Referer': URL_ROOT + '/vrtnu/'}
+               'Referer': URL_ROOT + '/vrtnu/'}
     data = '{"uid": "%s", ' \
         '"uidsig": "%s", ' \
         '"ts": "%s", ' \
@@ -321,12 +315,12 @@ def get_video_url(
     return stream_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.post(URL_TOKEN_LIVE, max_age=-1)
     json_parser_token = json.loads(resp.text)

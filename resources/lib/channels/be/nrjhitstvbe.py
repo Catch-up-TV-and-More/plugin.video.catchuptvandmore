@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
@@ -45,7 +46,8 @@ URL_VIDEOS = URL_ROOT + '/videos'
 URL_STREAM = URL_ROOT + '/utils/videos/embed/internal/%s'
 #videoId
 
-def replay_entry(plugin, item_id):
+
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -53,7 +55,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_VIDEOS)
     root = resp.parse("div", attrs={"id": "top_menu"})
@@ -74,6 +76,7 @@ def list_categories(plugin, item_id):
                 item_id=item_id,
                 category_url=category_url,
                 page='1')
+            item_post_treatment(item)
             yield item
         else:
             category_url = URL_VIDEOS
@@ -84,11 +87,12 @@ def list_categories(plugin, item_id):
                 list_videos_last_videos,
                 item_id=item_id,
                 category_url=category_url)
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_videos_categories(plugin, item_id, category_url, page):
+def list_videos_categories(plugin, item_id, category_url, page, **kwargs):
 
     resp = urlquick.get(category_url + '/%s' % page)
     root = resp.parse()
@@ -104,18 +108,12 @@ def list_videos_categories(plugin, item_id, category_url, page):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     yield Listitem.next_page(
@@ -125,7 +123,7 @@ def list_videos_categories(plugin, item_id, category_url, page):
 
 
 @Route.register
-def list_videos_last_videos(plugin, item_id, category_url):
+def list_videos_last_videos(plugin, item_id, category_url, **kwargs):
 
     resp = urlquick.get(category_url)
     root = resp.parse()
@@ -141,24 +139,18 @@ def list_videos_last_videos(plugin, item_id, category_url):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(URL_STREAM % video_id)
     root = resp.parse()
@@ -169,12 +161,12 @@ def get_video_url(
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
     root = resp.parse("div", attrs={"class": "col-md-12"})
