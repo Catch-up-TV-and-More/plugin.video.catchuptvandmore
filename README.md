@@ -9,6 +9,13 @@ Catch-Up TV & More est compatible avec la dernière version de Kodi (Kodi 17 Kry
 *[Catch-Up TV & More](https://kodi.tv/addon/plugins-video-add-ons/catch-tv-more) is a video addon for the Kodi media center (former XBMC).*
 *This plugin brings together all the videos of the various services and channels of catch-up TV. Furthermore, this addon allows you to quickly access the videos and content offered by certain websites.*
 
+## Tutoriel pour installer Catch-up TV & More — *Tutorial to install Catch-up TV & More*
+### Français — *French*
+<https://catch-up-tv-and-more.github.io/fr/installation/>
+
+### Anglais — *English*
+<https://catch-up-tv-and-more.github.io/installation/>
+
 ## Chaînes disponibles — *Available channels*
 ### Français — *French*
 <https://catch-up-tv-and-more.github.io/fr/channels/>
