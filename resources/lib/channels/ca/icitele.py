@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -54,7 +55,7 @@ URL_STREAM_REPLAY = URL_API + '?connectionType=broadband&output=json&multibitrat
 # VideoId
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -62,7 +63,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_EMISSION)
     json_value = re.compile(
@@ -89,11 +90,12 @@ def list_programs(plugin, item_id):
                 list_videos,
                 item_id=item_id,
                 program_url=program_url)
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url):
+def list_videos(plugin, item_id, program_url, **kwargs):
 
     resp = urlquick.get(program_url)
     root = resp.parse()
@@ -103,7 +105,7 @@ def list_videos(plugin, item_id, program_url):
 
             # Check the IF maybe keep just icon-play?
             if 'icon-play' in video_datas.find('.//a').get('class') or \
-                video_datas.find(".//div[@class='play medium]'") is not None:
+                    video_datas.find(".//div[@class='play medium]'") is not None:
                 video_title = utils.strip_tags(video_datas.find('.//a').get('title'))
                 video_image = ''
                 if video_datas.find('.//img') is not None:
@@ -117,24 +119,18 @@ def list_videos(plugin, item_id, program_url):
                 item.label = video_title
                 item.art['thumb'] = video_image
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    video_url=video_url,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
                 item.set_callback(
                     get_video_url,
                     item_id=item_id,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
                     video_url=video_url)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
                 yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(video_url)
     root = resp.parse()
@@ -149,12 +145,12 @@ def get_video_url(
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
     json_parser = json.loads(resp.text)
