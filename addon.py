@@ -139,7 +139,8 @@ def add_context_menus_to_item(
     fav.add_fav_context(
         item,
         item2dict(item),
-        is_playable=is_playable)
+        is_playable=is_playable,
+        channel_infos=kwargs.get('channel_infos', None))
 
     return
 
@@ -310,7 +311,13 @@ def tv_guide_menu(plugin, **kwargs):
         item.set_callback(eval(channel_infos['callback']))
 
         add_context_menus_to_item(
-            plugin, item, index, menu_id, len(menu), is_playable=True)
+            plugin,
+            item,
+            index,
+            menu_id,
+            len(menu),
+            is_playable=True,
+            channel_infos=channel_infos)
 
         yield item
 

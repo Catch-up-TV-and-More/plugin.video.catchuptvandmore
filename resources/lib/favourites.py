@@ -31,15 +31,41 @@ from codequick import utils, storage, Script
 from hashlib import md5
 
 from resources.lib.labels import LABELS
+from resources.lib import common
 
 
 @Script.register
-def add_item_to_favourites(plugin, item_dict={}):
+def add_item_to_favourites(plugin, item_dict={}, **kwargs):
     """
     Callback function called when the user click
     on 'add item to favourite' from an item
     context menu
     """
+
+    if 'channel_infos' in kwargs and \
+            kwargs['channel_infos'] is not None:
+
+        # This item come from tv_guide_menu
+        # We need to remove guide TV related
+        # elements
+
+        item_id = item_dict['params']['item_id']
+        label = item_id
+        if item_id in LABELS:
+            label = LABELS[item_id]
+            if isinstance(label, int):
+                label = Script.localize(label)
+        item_dict['label'] = label
+
+        if 'thumb' in kwargs['channel_infos']:
+            item_dict['art']["thumb"] = common.get_item_media_path(
+                kwargs['channel_infos']['thumb'])
+
+        if 'fanart' in kwargs['channel_infos']:
+            item_dict['art']["fanart"] = common.get_item_media_path(
+                kwargs['channel_infos']['fanart'])
+
+        item_dict['info'] = {}
 
     # Ask the user to edit the label
     item_dict['label'] = utils.keyboard(plugin.localize(LABELS['Favorite name']), item_dict['label'])
@@ -165,7 +191,9 @@ def add_fav_context(item, item_dict, **kwargs):
         item_dict['params']['is_folder'] = True
         item_dict['params']['is_playable'] = False
 
+
     item.context.script(
         add_item_to_favourites,
         Script.localize(LABELS['Add to add-on favourites']),
-        item_dict=item_dict)
+        item_dict=item_dict,
+        **kwargs)
