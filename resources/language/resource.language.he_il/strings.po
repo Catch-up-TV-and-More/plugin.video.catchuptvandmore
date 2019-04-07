@@ -94,6 +94,9 @@ msgctxt "#30032"
 msgid "Websites"
 msgstr "אתרי רשת"
 
+msgctxt "#30033"
+msgid "Favourites"
+msgstr ""
 
 
 # Countries (from 30050 to 30079)

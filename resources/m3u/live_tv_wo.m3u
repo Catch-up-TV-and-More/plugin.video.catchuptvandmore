@@ -253,3 +253,8 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rt&item_module=
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/rt.png" group-title="International",RT ES
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rt&item_module=resources.lib.channels.wo.rt&item_dict={"language":"ES"}
 
+##	Africa 24
+##	africa24
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/africa24.png" group-title="International",Africa 24
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=africa24&item_module=resources.lib.channels.wo.africa24&item_dict={}
+
