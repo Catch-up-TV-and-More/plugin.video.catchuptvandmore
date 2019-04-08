@@ -30,7 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -58,7 +58,7 @@ LIVE_ATRES_PLAYER = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -66,7 +66,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_ROOT)
     json_value = re.compile(
@@ -85,11 +85,12 @@ def list_categories(plugin, item_id):
                 item_id=item_id,
                 category_url=category_url,
                 page='0')
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category_url, page):
+def list_programs(plugin, item_id, category_url, page, **kwargs):
 
     resp = urlquick.get(category_url)
     json_parser = json.loads(resp.text)
@@ -109,6 +110,7 @@ def list_programs(plugin, item_id, category_url, page):
             list_sub_programs,
             item_id=item_id,
             program_url=program_url)
+        item_post_treatment(item)
         yield item
 
     if json_parser2["pageInfo"]["hasNext"]:
@@ -119,14 +121,14 @@ def list_programs(plugin, item_id, category_url, page):
 
 
 @Route.register
-def list_sub_programs(plugin, item_id, program_url):
+def list_sub_programs(plugin, item_id, program_url, **kwargs):
 
     resp = urlquick.get(program_url)
     json_parser = json.loads(resp.text)
 
     for sub_program_datas in json_parser["rows"]:
         if 'EPISODE' in sub_program_datas["type"] or \
-            'VIDEO' in sub_program_datas["type"]:
+                'VIDEO' in sub_program_datas["type"]:
             sub_program_title = sub_program_datas["title"]
             sub_program_url = sub_program_datas["href"]
 
@@ -137,11 +139,12 @@ def list_sub_programs(plugin, item_id, program_url):
                 item_id=item_id,
                 sub_program_url=sub_program_url,
                 page='0')
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, sub_program_url, page):
+def list_videos(plugin, item_id, sub_program_url, page, **kwargs):
 
     resp = urlquick.get(sub_program_url + '&page=%s' % page)
     json_parser = json.loads(resp.text)
@@ -160,6 +163,7 @@ def list_videos(plugin, item_id, sub_program_url, page):
                 list_video_more_infos,
                 item_id=item_id,
                 video_url_info=video_url_info)
+            item_post_treatment(item)
             yield item
 
         if json_parser["pageInfo"]["hasNext"]:
@@ -170,7 +174,7 @@ def list_videos(plugin, item_id, sub_program_url, page):
 
 
 @Route.register
-def list_video_more_infos(plugin, item_id, video_url_info):
+def list_video_more_infos(plugin, item_id, video_url_info, **kwargs):
 
     resp = urlquick.get(video_url_info)
     json_parser = json.loads(resp.text)
@@ -187,25 +191,19 @@ def list_video_more_infos(plugin, item_id, video_url_info):
     item.info['duration'] = video_duration
     item.info['plot'] = video_plot
 
-    item.context.script(
-        get_video_url,
-        plugin.localize(LABELS['Download']),
-        item_id=item_id,
-        video_url=video_url,
-        video_label=LABELS[item_id] + ' - ' + item.label,
-        download_mode=True)
-
     item.set_callback(
         get_video_url,
         item_id=item_id,
         video_url=video_url,
+        video_label=LABELS[item_id] + ' - ' + item.label,
         item_dict=item2dict(item))
+    item_post_treatment(item, is_playable=True, is_downloadable=True)
     yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, item_dict, download_mode=False, video_label=None):
+        plugin, item_id, video_url, item_dict, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(video_url)
     json_parser = json.loads(resp.text)
@@ -256,12 +254,12 @@ def get_video_url(
     
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(
         URL_ROOT,
