@@ -31,3 +31,7 @@ Temporary Items
 # VSCode
 /.vscode
 
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
