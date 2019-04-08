@@ -29,6 +29,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -44,12 +45,12 @@ URL_STREAM = 'https://livevideo.infomaniak.com/player_config/%s.json'
 # player_id
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_ROOT, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
     player_id = re.compile(

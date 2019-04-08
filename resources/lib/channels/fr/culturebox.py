@@ -33,6 +33,7 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -48,7 +49,7 @@ URL_ROOT = 'https://culturebox.francetvinfo.fr'
 URL_VIDEOS = URL_ROOT + '/videos/'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -56,7 +57,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -80,11 +81,12 @@ def list_categories(plugin, item_id):
                 item_id=item_id,
                 category_url=category_url,
                 page='0')
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url, page):
+def list_videos(plugin, item_id, category_url, page, **kwargs):
 
     resp = urlquick.get(category_url % page)
     root = resp.parse()
@@ -99,19 +101,13 @@ def list_videos(plugin, item_id, category_url, page):
             item.label = video_title
             item.art['thumb'] = video_image
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
-
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
                 video_url=video_url,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 item_dict=item2dict(item))
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
     yield Listitem.next_page(
@@ -122,7 +118,7 @@ def list_videos(plugin, item_id, category_url, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
+        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
     if re.compile(r'videos.francetv.fr\/video\/(.*?)\@').findall(resp.text):

@@ -31,6 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
 # https://docs.python.org/3/library/hashlib.html
@@ -60,7 +61,7 @@ URL_VIDEO_STREAM = 'https://www.wat.tv/get/webhtml/%s'
 DESIRED_QUALITY = Script.setting['quality']
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -68,7 +69,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -97,11 +98,12 @@ def list_programs(plugin, item_id):
             program_url=program_url,
             page='1'
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url, page):
+def list_videos(plugin, item_id, program_url, page, **kwargs):
 
     if page == '1':
         resp = urlquick.get(program_url)
@@ -130,19 +132,13 @@ def list_videos(plugin, item_id, program_url, page):
                 item.label = title
                 item.art["thumb"] = img
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    program_id=program_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
                 item.set_callback(
                     get_video_url,
                     item_id=item_id,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
                     program_id=program_id
                 )
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
                 yield item
 
     # More videos...
@@ -154,7 +150,7 @@ def list_videos(plugin, item_id, program_url, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, program_id, download_mode=False, video_label=None):
+        plugin, item_id, program_id, download_mode=False, video_label=None, **kwargs):
 
     if 'www.wat.tv/embedframe' in program_id:
         url = 'http:' + program_id
@@ -239,12 +235,12 @@ def get_video_url(
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     video_id = 'L_%s' % item_id.upper()
 

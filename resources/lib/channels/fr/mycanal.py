@@ -31,7 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
-from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 import resources.lib.cq_utils as cqu
 
 import inputstreamhelper
@@ -70,7 +70,7 @@ LIVE_DAILYMOTION_ID = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -78,7 +78,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -105,11 +105,12 @@ def list_categories(plugin, item_id):
                 list_contents,
                 item_id=item_id,
                 title_value=title)
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_contents(plugin, item_id, title_value):
+def list_contents(plugin, item_id, title_value, **kwargs):
 
     resp = urlquick.get(URL_REPLAY % item_id)
     json_replay = re.compile(
@@ -147,6 +148,7 @@ def list_contents(plugin, item_id, title_value):
                                 get_video_url,
                                 item_id=item_id,
                                 next_url=video_url)
+                            item_post_treatment(item)
                             yield item
                     elif content["type"] == 'article':
                         continue
@@ -162,11 +164,12 @@ def list_contents(plugin, item_id, title_value):
                             list_sub_programs,
                             item_id=item_id,
                             next_url=program_url)
+                        item_post_treatment(item)
                         yield item
 
 
 @Route.register
-def list_sub_programs(plugin, item_id, next_url):
+def list_sub_programs(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     json_parser = json.loads(resp.text)
@@ -190,6 +193,7 @@ def list_sub_programs(plugin, item_id, next_url):
                     item_id=item_id,
                     next_url=next_url,
                     sub_program_title=sub_program_title)
+                item_post_treatment(item)
                 yield item
             else:
                 sub_program_title = json_parser["currentPage"]["displayName"]
@@ -201,6 +205,7 @@ def list_sub_programs(plugin, item_id, next_url):
                     item_id=item_id,
                     next_url=next_url,
                     sub_program_title=sub_program_title)
+                item_post_treatment(item)
                 yield item
 
     elif 'seasons' in json_parser['detail']:
@@ -214,6 +219,7 @@ def list_sub_programs(plugin, item_id, next_url):
                 list_videos_seasons,
                 item_id=item_id,
                 next_url=season_url)
+            item_post_treatment(item)
             yield item
 
     elif 'episodes' in json_parser:
@@ -234,24 +240,18 @@ def list_sub_programs(plugin, item_id, next_url):
             item.art['thumb'] = video_image
             item.info['plot'] = video_plot
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                next_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
-
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
                 next_url=video_url,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 item_dict=item2dict(item))
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
 
 @Route.register
-def list_videos_seasons(plugin, item_id, next_url):
+def list_videos_seasons(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     json_parser = json.loads(resp.text)
@@ -272,24 +272,18 @@ def list_videos_seasons(plugin, item_id, next_url):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            next_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
             next_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, next_url, sub_program_title):
+def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
 
     resp = urlquick.get(next_url)
     json_parser = json.loads(resp.text)
@@ -320,19 +314,13 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
                             item.label = video_title
                             item.art['thumb'] = video_image
 
-                            item.context.script(
-                                get_video_url,
-                                plugin.localize(LABELS['Download']),
-                                item_id=item_id,
-                                next_url=video_url,
-                                video_label=LABELS[item_id] + ' - ' + item.label,
-                                download_mode=True)
-
                             item.set_callback(
                                 get_video_url,
                                 item_id=item_id,
                                 next_url=video_url,
+                                video_label=LABELS[item_id] + ' - ' + item.label,
                                 item_dict=item2dict(item))
+                            item_post_treatment(item, is_playable=True, is_downloadable=True)
                             yield item
         else:
             if sub_program_title == json_parser["currentPage"]["displayName"]:
@@ -359,25 +347,19 @@ def list_videos(plugin, item_id, next_url, sub_program_title):
                             item.label = video_title
                             item.art['thumb'] = video_image
 
-                            item.context.script(
-                                get_video_url,
-                                plugin.localize(LABELS['Download']),
-                                item_id=item_id,
-                                next_url=video_url,
-                                video_label=LABELS[item_id] + ' - ' + item.label,
-                                download_mode=True)
-
                             item.set_callback(
                                 get_video_url,
                                 item_id=item_id,
+                                video_label=LABELS[item_id] + ' - ' + item.label,
                                 next_url=video_url,
                                 item_dict=item2dict(item))
+                            item_post_treatment(item, is_playable=True, is_downloadable=True)
                             yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, next_url, item_dict=None, download_mode=False, video_label=None):
+        plugin, item_id, next_url, item_dict=None, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(
         next_url,
@@ -435,12 +417,12 @@ def get_video_url(
     return stream_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     return resolver_proxy.get_stream_dailymotion(
         plugin, LIVE_DAILYMOTION_ID[item_id], False)

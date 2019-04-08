@@ -32,7 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import time
@@ -75,7 +75,7 @@ URL_VIDEOS = URL_API + "/standard/publish/taxonomies/%s/contents"
 """
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -83,7 +83,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - actualités & société
@@ -106,8 +106,9 @@ def list_categories(plugin, item_id):
 
         item.set_callback(
             list_programs,
-            item_id = item_id,
-            category_part_url = category_part_url)
+            item_id=item_id,
+            category_part_url=category_part_url)
+        item_post_treatment(item)
         yield item
 
     """
@@ -120,17 +121,19 @@ def list_categories(plugin, item_id):
     item.label = "Recent"
     item.set_callback(
         list_videos_last,
-        item_id = item_id)
+        item_id=item_id)
+    item_post_treatment(item)
     yield item
 
     item = Listitem.search(
         list_videos_search,
-        item_id = item_id)
+        item_id=item_id)
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category_part_url, page = 0):
+def list_programs(plugin, item_id, category_part_url, page = 0, **kwargs):
     """
     Build programs listing
     - Journal de 20H
@@ -142,7 +145,7 @@ def list_programs(plugin, item_id, category_part_url, page = 0):
         category_part_url, item_id)
     resp = urlquick.get(
         URL_API(url_programs),
-        params = {
+        params={
             'size': 20,
             'page': page,
             'filter': "with-no-vod,only-visible",
@@ -167,24 +170,25 @@ def list_programs(plugin, item_id, category_part_url, page = 0):
 
         item.set_callback(
             list_videos,
-            item_id = item_id,
-            program_part_url = program_part_url)
+            item_id=item_id,
+            program_part_url=program_part_url)
+        item_post_treatment(item)
         yield item
 
     # Next page
     if json_parser['cursor']['next'] is not None:
         yield Listitem.next_page(
-            item_id = item_id,
-            category_part_url = category_part_url,
-            page = json_parser['cursor']['next'])
+            item_id=item_id,
+            category_part_url=category_part_url,
+            page=json_parser['cursor']['next'])
 
 
 @Route.register
-def list_videos_last(plugin, item_id, page = 1):
+def list_videos_last(plugin, item_id, page = 1, **kwargs):
     url_last = "standard/publish/channels/%s/contents/" % item_id
     resp = urlquick.get(
         URL_API(url_last),
-        params = {
+        params={
             'size': 20,
             'page': page,
             'filter': "with-no-vod,only-visible",
@@ -195,36 +199,30 @@ def list_videos_last(plugin, item_id, page = 1):
         item = Listitem()
         broadcast_id = populate_item(item, video, True)
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id = item_id,
-            broadcast_id = broadcast_id,
-            video_label = LABELS[item_id] + " - " + item.label,
-            download_mode = True)
-
         item.set_callback(
             get_video_url,
-            item_id = item_id,
-            broadcast_id = broadcast_id,
-            item_dict = item2dict(item))
+            item_id=item_id,
+            broadcast_id=broadcast_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
+            item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
     if json_parser['cursor']['next'] is not None:
         yield Listitem.next_page(
-            item_id = item_id,
-            page = json_parser['cursor']['next'])
+            item_id=item_id,
+            page=json_parser['cursor']['next'])
 
 
 @Route.register
-def list_videos(plugin, item_id, program_part_url, page = 0):
+def list_videos(plugin, item_id, program_part_url, page = 0, **kwargs):
 
     # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
     url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
     resp = urlquick.get(
         URL_API(url_program),
-        params = {
+        params={
             'size': 20,
             'page': page,
             'filter': "with-no-vod,only-visible",
@@ -238,28 +236,28 @@ def list_videos(plugin, item_id, program_part_url, page = 0):
         item.context.script(
             get_video_url,
             plugin.localize(LABELS['Download']),
-            item_id = item_id,
-            broadcast_id = broadcast_id,
-            video_label = LABELS[item_id] + " - " + item.label,
+            item_id=item_id,
+            broadcast_id=broadcast_id,
+            video_label=LABELS[item_id] + " - " + item.label,
             download_mode = True)
 
         item.set_callback(
             get_video_url,
-            item_id = item_id,
-            broadcast_id = broadcast_id,
-            item_dict = item2dict(item))
+            item_id=item_id,
+            broadcast_id=broadcast_id,
+            item_dict=item2dict(item))
         yield item
 
     # More videos...
     if json_parser['cursor']['next'] is not None:
         yield Listitem.next_page(
-            item_id = item_id,
-            program_part_url = program_part_url,
-            page = json_parser['cursor']['next'])
+            item_id=item_id,
+            program_part_url=program_part_url,
+            page=json_parser['cursor']['next'])
 
 
 @Route.register
-def list_videos_search(plugin, item_id, search_query, page = 0):
+def list_videos_search(plugin, item_id, search_query, page = 0, **kwargs):
     has_item = False
 
     while not has_item:
@@ -368,9 +366,9 @@ def list_videos_search(plugin, item_id, search_query, page = 0):
 
             item.set_callback(
                 get_video_url,
-                item_id = item_id,
-                id_yatta = show['id'],
-                item_dict = item2dict(item))
+                item_id=item_id,
+                id_yatta=show['id'],
+                item_dict=item2dict(item))
             yield item
         page = page + 1
 
@@ -378,15 +376,15 @@ def list_videos_search(plugin, item_id, search_query, page = 0):
     # More videos...
     if page != nb_pages - 1:
         yield Listitem.next_page(
-            search_query = search_query,
-            item_id = item_id,
-            page = page + 1)
+            search_query=search_query,
+            item_id=item_id,
+            page=page + 1)
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, broadcast_id = None,
-        id_yatta = None, item_dict = None, download_mode = False, video_label = None):
+        plugin, item_id, broadcast_id=None,
+        id_yatta=None, item_dict=None, download_mode=False, video_label=None, **kwargs):
 
     if id_yatta is not None:
         url_yatta_video = "standard/publish/contents/%s" % id_yatta
@@ -401,18 +399,18 @@ def get_video_url(
         plugin, broadcast_id, item_dict, download_mode, video_label)
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     broadcast_id = 'SIM_France%s'
     return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id % item_id.split('-')[1])
 
 
-def populate_item(item, video, include_program_name = False): 
+def populate_item(item, video, include_program_name = False, **kwargs): 
     program_name = ""
     for taxonomy in video['content_has_taxonomys']:
         if taxonomy['type'] == "program":
@@ -435,7 +433,7 @@ def populate_item(item, video, include_program_name = False):
     # It's too bad item.info['title'] overrules item.label everywhere
     # so there's no difference between what is shown in the video list 
     # and what is shown in the video details
-    #item.info['title'] = video['title']
+    # item.info['title'] = video['title']
     item.info['title'] = item.label
     
     image_url = ""
@@ -496,4 +494,3 @@ def populate_item(item, video, include_program_name = False):
     item.art['thumb'] = image_url
 
     return broadcast_id
-

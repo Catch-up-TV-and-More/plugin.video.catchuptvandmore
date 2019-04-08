@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -50,12 +51,12 @@ URL_LIVES = URL_ROOT + '/BIS-TV-Online/bistvo-tele-universal.aspx'
 # channel (lucky jack, ...)
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     # Live TV Not working / find a way to dump html received
 
@@ -73,8 +74,8 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     event_validation_value = re.compile(
         r'id\=\"\_\_EVENTVALIDATION\" value\=\"(.*?)\"').findall(resp.text)[0]
 
-    if plugin.setting.get_string('abweb.login') == '' or\
-        plugin.setting.get_string('abweb.password') == '':
+    if plugin.setting.get_string('abweb.login') == '' or \
+            plugin.setting.get_string('abweb.password') == '':
         xbmcgui.Dialog().ok(
             'Info',
             plugin.localize(30604) % ('ABWeb', 'http://www.abweb.com/BIS-TV-Online/abonnement.aspx'))
@@ -116,9 +117,11 @@ def get_live_url(plugin, item_id, video_id, item_dict):
             r'luckyjack\'\,\'(.*?)\'').findall(resp3.text)[0]
 
         payload = {'chn': 'luckyjack', 'chnid': chnid_value}
-        resp4 = session_requests.post(URL_LIVES, params=payload,
+        resp4 = session_requests.post(
+            URL_LIVES,
+            params=payload,
             headers=dict(
-                referer='http://www.abweb.com/BIS-TV-Online/bistvo-tele-universal.aspx'))        
+                referer='http://www.abweb.com/BIS-TV-Online/bistvo-tele-universal.aspx'))
         stream_datas_url = 'http:' + re.compile(
             r'id\=\"ifr_stream\" src\=\"(.*?)\"').findall(resp4.text)[0]
         resp5 = session_requests.get(stream_datas_url)

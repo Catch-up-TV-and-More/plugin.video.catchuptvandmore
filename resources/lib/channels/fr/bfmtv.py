@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import time
@@ -70,7 +71,7 @@ URL_LIVE_BFMBUSINESS = 'http://bfmbusiness.bfmtv.com/mediaplayer/live-video/'
 DESIRED_QUALITY = Script.setting['quality']
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -85,7 +86,7 @@ def get_token(item_id):
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_REPLAY % (item_id, get_token(item_id)))
     json_parser = json.loads(resp.text)
@@ -105,11 +106,12 @@ def list_programs(plugin, item_id):
             item_id=item_id,
             program_category=program_category,
             page='1')
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_category, page):
+def list_videos(plugin, item_id, program_category, page, **kwargs):
 
     resp = urlquick.get(
         URL_SHOW % (item_id, get_token(item_id), program_category, page))
@@ -145,20 +147,13 @@ def list_videos(plugin, item_id, program_category, page):
         item.info['year'] = year
         item.info['date'] = date
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_id_ext=video_id_ext,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
             video_id=video_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id_ext=video_id_ext)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     yield Listitem.next_page(
@@ -170,7 +165,7 @@ def list_videos(plugin, item_id, program_category, page):
 @Resolver.register
 def get_video_url(
         plugin, item_id, video_id, video_id_ext,
-        download_mode=False, video_label=None):
+        download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(URL_VIDEO % (item_id, get_token(item_id), video_id))
     json_parser = json.loads(resp.text)
@@ -212,12 +207,12 @@ def get_video_url(
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     if item_id == 'bfmtv':
         resp = urlquick.get(

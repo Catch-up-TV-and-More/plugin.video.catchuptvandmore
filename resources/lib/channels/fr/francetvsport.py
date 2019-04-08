@@ -33,6 +33,7 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import json
@@ -52,7 +53,7 @@ URL_FRANCETV_SPORT = 'https://api-sport-events.webservices.' \
                      'francetelevisions.fr/%s'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -60,7 +61,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -76,6 +77,7 @@ def list_categories(plugin, item_id):
         item_id=item_id,
         mode='videos',
         page='1')
+    item_post_treatment(item)
     yield item
 
     category_title = 'Replay'
@@ -86,11 +88,12 @@ def list_categories(plugin, item_id):
         item_id=item_id,
         mode='replay',
         page='1')
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, mode, page):
+def list_videos(plugin, item_id, mode, page, **kwargs):
 
     resp = urlquick.get(URL_FRANCETV_SPORT % mode + '?page=%s' % page)
     json_parser = json.loads(resp.text)
@@ -113,19 +116,13 @@ def list_videos(plugin, item_id, mode, page):
         item.art['thumb'] = video_image
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     yield Listitem.next_page(
@@ -136,7 +133,7 @@ def list_videos(plugin, item_id, mode, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
+        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(video_url)
     id_diffusion = ''
@@ -150,7 +147,7 @@ def get_video_url(
         plugin, id_diffusion, item_dict, download_mode, video_label)
 
 
-def multi_live_entry(plugin, item_id):
+def multi_live_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -158,7 +155,7 @@ def multi_live_entry(plugin, item_id):
 
 
 @Route.register
-def list_lives(plugin, item_id):
+def list_lives(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_FRANCETV_SPORT % 'directs')
     json_parser = json.loads(resp.text)
@@ -214,6 +211,6 @@ def list_lives(plugin, item_id):
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, id_diffusion):
+def get_live_url(plugin, item_id, id_diffusion, **kwargs):
 
     return resolver_proxy.get_francetv_live_stream(plugin, id_diffusion)
