@@ -32,6 +32,8 @@ import xbmcgui
 from resources.lib import resolver_proxy
 from resources.lib import download
 from resources.lib.labels import LABELS
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 # TO DO
 # Get Last_Page (for Programs, Videos) / Fix Last_page
@@ -50,7 +52,7 @@ URL_SEARCH_VIDEOS = URL_ROOT + '/recherche/18/?p=%s&q=%s'
 # Page, Query
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
@@ -72,7 +74,7 @@ CATEGORIES_LANGUAGE = {
 }
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     for category_name, category_url in CATEGORIES.iteritems():
 
@@ -91,6 +93,7 @@ def root(plugin, item_id):
                 item_id=item_id,
                 category_url=category_url,
                 page=1)
+            item_post_treatment(item)
             yield item
         else:
             item = Listitem()
@@ -99,6 +102,7 @@ def root(plugin, item_id):
                 eval(next_value),
                 item_id=item_id,
                 category_url=category_url)
+            item_post_treatment(item)
             yield item
 
     # Search videos
@@ -106,11 +110,12 @@ def root(plugin, item_id):
         list_videos_search,
         item_id=item_id,
         page=1)
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_shows_emissions_1(plugin, item_id, category_url):
+def list_shows_emissions_1(plugin, item_id, category_url, **kwargs):
     # Build Categories Emissions
     resp = urlquick.get(category_url)
     root = resp.parse("li", attrs={"class": "item_4 is_active "})
@@ -126,11 +131,12 @@ def list_shows_emissions_1(plugin, item_id, category_url):
             list_shows_emissions_2,
             item_id=item_id,
             categorie_programs_url=categorie_programs_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_shows_emissions_2(plugin, item_id, categorie_programs_url):
+def list_shows_emissions_2(plugin, item_id, categorie_programs_url, **kwargs):
     # Build sub categories if exists / add 'Les Programmes', 'Les Vidéos'
 
     # Les vidéos
@@ -144,6 +150,7 @@ def list_shows_emissions_2(plugin, item_id, categorie_programs_url):
         page=1,
         last_page=100,
         show_url=show_url)
+    item_post_treatment(item)
 
     yield item
 
@@ -158,6 +165,7 @@ def list_shows_emissions_2(plugin, item_id, categorie_programs_url):
         item_id=item_id,
         programs_url=programs_url,
         page=1)
+    item_post_treatment(item)
 
     yield item
 
@@ -174,11 +182,12 @@ def list_shows_emissions_2(plugin, item_id, categorie_programs_url):
             list_shows_emissions_3,
             item_id=item_id,
             subcategorie_programs_url=subcategorie_programs_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_shows_emissions_3(plugin, item_id, subcategorie_programs_url):
+def list_shows_emissions_3(plugin, item_id, subcategorie_programs_url, **kwargs):
     # Les vidéos
     item = Listitem()
     item.label = '# Les videos'
@@ -188,6 +197,7 @@ def list_shows_emissions_3(plugin, item_id, subcategorie_programs_url):
         page=1,
         last_page=100,
         show_url=subcategorie_programs_url)
+    item_post_treatment(item)
     yield item
 
     # Les programmes
@@ -201,11 +211,12 @@ def list_shows_emissions_3(plugin, item_id, subcategorie_programs_url):
         item_id=item_id,
         page=1,
         programs_url=programs_url)
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_shows_emissions_4(plugin, item_id, page, programs_url):
+def list_shows_emissions_4(plugin, item_id, page, programs_url, **kwargs):
     resp = urlquick.get(
         programs_url + '?page=%s' % page)
     root = resp.parse()
@@ -228,6 +239,7 @@ def list_shows_emissions_4(plugin, item_id, page, programs_url):
             list_shows_emissions_5,
             item_id=item_id,
             program_url=program_url)
+        item_post_treatment(item)
         yield item
 
     if root.find(".//div[@class_='pager pager margin_40t']") \
@@ -240,7 +252,7 @@ def list_shows_emissions_4(plugin, item_id, page, programs_url):
 
 
 @Route.register
-def list_shows_emissions_5(plugin, item_id, program_url):
+def list_shows_emissions_5(plugin, item_id, program_url, **kwargs):
     resp = urlquick.get(
         program_url + 'saisons/')
     root = resp.parse()
@@ -270,6 +282,7 @@ def list_shows_emissions_5(plugin, item_id, program_url):
                 page=1,
                 last_page=last_page,
                 show_url=show_season_url)
+            item_post_treatment(item)
             yield item
 
     else:
@@ -304,11 +317,12 @@ def list_shows_emissions_5(plugin, item_id, program_url):
             page=1,
             last_page=last_page,
             show_url=show_season_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_shows_films_series_1(plugin, item_id, category_url):
+def list_shows_films_series_1(plugin, item_id, category_url, **kwargs):
     # Build All Types
     resp = urlquick.get(category_url)
     root = resp.parse()
@@ -323,6 +337,7 @@ def list_shows_films_series_1(plugin, item_id, category_url):
         item_id=item_id,
         page=1,
         show_url=category_url)
+    item_post_treatment(item)
     yield item
 
     for all_types in replay_types_films_series.findall('.//a'):
@@ -335,11 +350,12 @@ def list_shows_films_series_1(plugin, item_id, category_url):
             list_shows_films_series_2,
             item_id=item_id,
             show_url=show_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_shows_films_series_2(plugin, item_id, show_url):
+def list_shows_films_series_2(plugin, item_id, show_url, **kwargs):
     # Build All Languages
     item = Listitem()
     item.label = '# Toutes les videos'
@@ -348,6 +364,7 @@ def list_shows_films_series_2(plugin, item_id, show_url):
         item_id=item_id,
         show_url=show_url,
         page=1)
+    item_post_treatment(item)
     yield item
 
     for language, language_url in CATEGORIES_LANGUAGE.iteritems():
@@ -358,11 +375,12 @@ def list_shows_films_series_2(plugin, item_id, show_url):
             item_id=item_id,
             page=1,
             show_url=show_url + language_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos_films_series_1(plugin, item_id, page, show_url):
+def list_videos_films_series_1(plugin, item_id, page, show_url, **kwargs):
     resp = urlquick.get(
         show_url + '?page=%s' % page)
     root = resp.parse()
@@ -380,19 +398,13 @@ def list_videos_films_series_1(plugin, item_id, page, show_url):
         else:
             item.art['thumb'] = episode.find('.//img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            video_id=video_id,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
-
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
@@ -403,7 +415,7 @@ def list_videos_films_series_1(plugin, item_id, page, show_url):
 
 
 @Route.register
-def list_videos_emissions_1(plugin, item_id, page, show_url, last_page):
+def list_videos_emissions_1(plugin, item_id, page, show_url, last_page, **kwargs):
     resp = urlquick.get(
         show_url + '?page=%s' % page)
     root = resp.parse()
@@ -456,18 +468,13 @@ def list_videos_emissions_1(plugin, item_id, page, show_url, last_page):
             else:
                 item.art['thumb'] = episode.find('.//img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            video_id=video_id,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
@@ -479,7 +486,7 @@ def list_videos_emissions_1(plugin, item_id, page, show_url, last_page):
 
 
 @Route.register
-def list_videos_search(plugin, item_id, page, search_query):
+def list_videos_search(plugin, item_id, page, search_query, **kwargs):
     resp = urlquick.get(
         URL_SEARCH_VIDEOS % (page, search_query))
     root = resp.parse("table", attrs={"class": "totalwidth noborder purehtml"})
@@ -500,18 +507,13 @@ def list_videos_search(plugin, item_id, page, search_query):
                     './/a').get('href').split('-')[1].replace('/', '')
             item.art['thumb'] = episode.find('.//img').get('src')
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                video_id=video_id,
-                item_id=item_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
 
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
     # More videos...
@@ -523,7 +525,7 @@ def list_videos_search(plugin, item_id, page, search_query):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
     """Get video URL and start video player"""
 
     video_json = urlquick.get(
@@ -628,7 +630,7 @@ def get_video_url(
 
 
 @Route.register
-def list_videos_news_videos(plugin, item_id, category_url, page):
+def list_videos_news_videos(plugin, item_id, category_url, page, **kwargs):
 
     resp = urlquick.get(
         category_url + '?page=%s' % page)
@@ -670,7 +672,7 @@ def list_videos_news_videos(plugin, item_id, category_url, page):
 
 @Resolver.register
 def get_video_url_news_videos(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(video_url)
     root = resp.parse()

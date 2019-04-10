@@ -29,6 +29,8 @@ import json
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 
 # TO DO
@@ -43,14 +45,14 @@ URL_STREAM_DATAS = 'https://mnmedias.api.telequebec.tv/api/v2/media/mediaUid/%s'
 URL_STREAM = 'https://mnmedias.api.telequebec.tv/m3u8/%s.m3u8'
 # VideoId
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     resp = urlquick.get(URL_VIDEOS)
     list_seasons_datas = re.compile(
@@ -65,11 +67,12 @@ def root(plugin, item_id):
             list_videos,
             item_id=item_id,
             season_title=season_title)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, season_title):
+def list_videos(plugin, item_id, season_title, **kwargs):
 
     resp = urlquick.get(URL_VIDEOS)
     root = resp.parse("li", attrs={"path": season_title})
@@ -88,24 +91,19 @@ def list_videos(plugin, item_id, season_title):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
     """Get video URL and start video player"""
 
     if video_id == '':

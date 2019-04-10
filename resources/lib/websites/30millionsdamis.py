@@ -26,6 +26,8 @@ from codequick import Route, Resolver, Listitem
 
 from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 import re
 import urlquick
@@ -33,14 +35,14 @@ import urlquick
 URL_ROOT = 'http://www.30millionsdamis.fr'
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
 
     resp = urlquick.get(
         URL_ROOT + '/actualites/videos')
@@ -56,11 +58,12 @@ def root(plugin, item_id):
             item_id=item_id,
             page=0,
             category_url=category_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, page, category_url):
+def list_videos(plugin, item_id, page, category_url, **kwargs):
     """Build videos listing"""
     if int(page) > 0:
         resp = urlquick.get(
@@ -79,18 +82,12 @@ def list_videos(plugin, item_id, page, category_url):
         video_url = URL_ROOT + episode.find('.//a').get('href')
         item.art['thumb'] = URL_ROOT + episode.find('.//img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            video_url=video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
@@ -106,7 +103,7 @@ def list_videos(plugin, item_id, page, category_url):
 
 @Resolver.register
 def get_video_url(
-        plugin, video_url, item_id, download_mode=False, video_label=None):
+        plugin, video_url, item_id, download_mode=False, video_label=None, **kwargs):
     """Get video URL and start video player"""
     video_html = urlquick.get(video_url).text
     video_id = re.compile(

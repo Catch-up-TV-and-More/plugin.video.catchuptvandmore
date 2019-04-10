@@ -24,12 +24,15 @@ from codequick import Route, Resolver, Listitem, utils
 
 from resources.lib import download
 from resources.lib.labels import LABELS
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 import htmlement
 import json
 import re
 import urlquick
 import xml.etree.ElementTree as ET
+
 
 # TO DO
 # Add Premium Account (purchase an account to test)
@@ -52,7 +55,7 @@ URL_STREAM = 'https://player.ina.fr/notices/%s'
 # VideoId
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
@@ -65,7 +68,7 @@ CATEGORIES = {
 }
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     for category_name, category_mode in CATEGORIES.iteritems():
         item = Listitem()
@@ -76,6 +79,7 @@ def root(plugin, item_id):
             item_id=item_id,
             category_mode=category_mode,
             page=1)
+        item_post_treatment(item)
         yield item
 
     # Search videos
@@ -83,11 +87,12 @@ def root(plugin, item_id):
         list_videos_search,
         item_id=item_id,
         nb_videos=0)
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_shows(plugin, item_id, category_mode, page):
+def list_shows(plugin, item_id, category_mode, page, **kwargs):
     """Build categories listing"""
     list_programs_json = urlquick.get(
         URL_PROGRAMS % (page, category_mode))
@@ -107,6 +112,7 @@ def list_shows(plugin, item_id, category_mode, page):
             item_id=item_id,
             program_url=program_url,
             nb_videos=0)
+        item_post_treatment(item)
         yield item
 
     # More programs...
@@ -117,7 +123,7 @@ def list_shows(plugin, item_id, category_mode, page):
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url, nb_videos):
+def list_videos(plugin, item_id, program_url, nb_videos, **kwargs):
     """Build videos listing"""
     replay_episodes_html = urlquick.get(program_url).text
     program_title = re.compile(
@@ -160,18 +166,13 @@ def list_videos(plugin, item_id, program_url, nb_videos):
             video_date = episode.find(".//span[@class='broadcast']").text
             item.info.date(video_date, '%d/%m/%Y')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if at_least_one_item:
@@ -186,7 +187,7 @@ def list_videos(plugin, item_id, program_url, nb_videos):
 
 
 @Route.register
-def list_videos_search(plugin, item_id, nb_videos, search_query):
+def list_videos_search(plugin, item_id, nb_videos, search_query, **kwargs):
     replay_episodes_json = urlquick.get(
         URL_VIDEOS_SEARCH % (search_query, nb_videos)).text
     list_episodes_jsonparser = json.loads(replay_episodes_json)
@@ -224,18 +225,13 @@ def list_videos_search(plugin, item_id, nb_videos, search_query):
             video_date = episode.find(".//span[@class='broadcast']").text
             item.info.date(video_date, '%d/%m/%Y')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
@@ -247,7 +243,7 @@ def list_videos_search(plugin, item_id, nb_videos, search_query):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
     """Get video URL and start video player"""
     stream_xml = urlquick.get(URL_STREAM % video_id).text
     stream_xml = utils.ensure_native_str(stream_xml)

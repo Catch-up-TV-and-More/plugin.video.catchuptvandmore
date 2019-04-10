@@ -24,6 +24,8 @@ from codequick import Route, Resolver, Listitem
 
 from resources.lib.labels import LABELS
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 import re
 import urlquick
@@ -34,14 +36,14 @@ import urlquick
 URL_ROOT = 'http://www.notrehistoire.ch'
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     item = Listitem()
     item.label = plugin.localize(LABELS['All videos'])
@@ -53,6 +55,7 @@ def root(plugin, item_id):
         category_url=category_url,
         page=1
     )
+    item_post_treatment(item)
     yield item
 
     resp = urlquick.get(
@@ -72,11 +75,12 @@ def root(plugin, item_id):
             item_id=item_id,
             category_url=category_url,
             page=1)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url, page):
+def list_videos(plugin, item_id, category_url, page, **kwargs):
     """Build videos listing"""
     resp = urlquick.get(
         category_url % page)
@@ -89,18 +93,13 @@ def list_videos(plugin, item_id, category_url, page):
         item.art['thumb'] = episode.find(
             './/img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
@@ -112,7 +111,7 @@ def list_videos(plugin, item_id, category_url, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
     """Get video URL and start video player"""
 
     video_html = urlquick.get(video_url).text

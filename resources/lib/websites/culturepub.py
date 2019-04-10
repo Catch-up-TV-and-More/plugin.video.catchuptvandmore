@@ -30,6 +30,8 @@ import xbmcgui
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 
 # TO DO
@@ -47,14 +49,14 @@ INFO_STREAM = 'http://cbnews.ondemand.flumotion.com/video/mp4/%s/%s.mp4'
 QUALITIES_STREAM = ['low', 'hd']
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     
     resp = urlquick.get(URL_ROOT)
@@ -71,6 +73,7 @@ def root(plugin, item_id):
                 list_shows,
                 item_id=item_id,
                 category_url=category_url)
+            item_post_treatment(item)
             yield item
 
         elif 'videos' in category.get('href'):
@@ -83,11 +86,12 @@ def root(plugin, item_id):
                 item_id=item_id,
                 category_url=category_url,
                 page=1)
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_shows(plugin, item_id, category_url):
+def list_shows(plugin, item_id, category_url, **kwargs):
     """Build categories listing"""
     resp = urlquick.get(category_url)
     root = resp.parse()
@@ -102,11 +106,12 @@ def list_shows(plugin, item_id, category_url):
             item_id=item_id,
             page=1,
             category_url=show_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, page, category_url):
+def list_videos(plugin, item_id, page, category_url, **kwargs):
     """Build videos listing"""
     resp = urlquick.get(
         category_url + '?paged=%s' % page)
@@ -125,18 +130,12 @@ def list_videos(plugin, item_id, page, category_url):
 
         # TO DO Playlist
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
@@ -148,7 +147,7 @@ def list_videos(plugin, item_id, page, category_url):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
     """Get video URL and start video player"""
 
     info_video_html = urlquick.get(video_url,

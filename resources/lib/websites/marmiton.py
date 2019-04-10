@@ -24,26 +24,27 @@ from __future__ import unicode_literals
 from codequick import Route, Resolver, Listitem, youtube
 
 from resources.lib.labels import LABELS
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
     return root(plugin)
 
 
-def root(plugin):
+def root(plugin, **kwargs):
     item = Listitem()
     item.label = 'Marmiton (youtube)'
     item.set_callback(
         list_videos_youtube,
         channel_youtube='UCmKCpHH5ATFMURHTRC2jLyA')
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_videos_youtube(plugin, channel_youtube):
+def list_videos_youtube(plugin, channel_youtube, **kwargs):
 
     yield Listitem.youtube(channel_youtube)
-

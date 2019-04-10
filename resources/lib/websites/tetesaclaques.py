@@ -27,6 +27,8 @@ import urlquick
 
 from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 
 # TO DO
@@ -35,14 +37,14 @@ from resources.lib import resolver_proxy
 URL_ROOT = utils.urljoin_partial('https://www.tetesaclaques.tv')
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     resp = urlquick.get(URL_ROOT(''))
     root = resp.parse("li", attrs={"id": "menu-videos"})
@@ -64,11 +66,12 @@ def root(plugin, item_id):
                 category_url=category_url,
                 page=1
             )
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_shows(plugin, item_id, category_url, page):
+def list_shows(plugin, item_id, category_url, page, **kwargs):
     """Build categories listing"""
 
     resp = urlquick.get(category_url)
@@ -85,11 +88,12 @@ def list_shows(plugin, item_id, category_url, page):
             item_id=item_id,
             category_url=show_url
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos_1(plugin, item_id, category_url, page):
+def list_videos_1(plugin, item_id, category_url, page, **kwargs):
     """Build videos listing"""
     resp = urlquick.get(
         category_url + '/par_date/%s' % str(page))
@@ -109,19 +113,13 @@ def list_videos_1(plugin, item_id, category_url, page):
                 video_url = URL_ROOT(episode.find('.//a').get('href'))
                 item.art['thumb'] = URL_ROOT(episode.find('.//img').get('src'))
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    video_url=video_url,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
                 item.set_callback(
                     get_video_url,
                     item_id=item_id,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
                     video_url=video_url
                 )
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
                 yield item
 
     else:
@@ -137,17 +135,12 @@ def list_videos_1(plugin, item_id, category_url, page):
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 video_url=video_url
             )
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
 
     if at_least_one_item:
         # More videos...
@@ -161,7 +154,7 @@ def list_videos_1(plugin, item_id, category_url, page):
 
 
 @Route.register
-def list_videos_2(plugin, item_id, category_url):
+def list_videos_2(plugin, item_id, category_url, **kwargs):
     """Build videos listing"""
     resp = urlquick.get(category_url)
     root = resp.parse()
@@ -172,25 +165,20 @@ def list_videos_2(plugin, item_id, category_url):
         video_url = URL_ROOT(episode.get('href'))
         item.art['thumb'] = URL_ROOT(episode.find('.//img').get('src'))
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url
         )
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
     """Get video URL and start video player"""
 
     video_html = urlquick.get(video_url).text

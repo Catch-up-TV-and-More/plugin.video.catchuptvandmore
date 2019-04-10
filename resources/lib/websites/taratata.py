@@ -32,7 +32,7 @@ import resources.lib.cq_utils as cqu
 from resources.lib.labels import LABELS
 from resources.lib import download
 from resources.lib import resolver_proxy
-from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 
 # TO DO
@@ -48,7 +48,7 @@ SHOW_INFO_FTV = 'https://api-embed.webservices.francetelevisions.fr/v2/key/%s'
 # idEmbeded
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
@@ -56,7 +56,7 @@ def website_entry(plugin, item_id):
 
 
 @Route.register
-def root_taratata(plugin, item_id):
+def root_taratata(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     resp = urlquick.get(URL_ROOT(''))
     root = resp.parse("ul", attrs={"class": "nav navbar-nav"})
@@ -82,11 +82,12 @@ def root_taratata(plugin, item_id):
             category_url=category_url,
             page=1
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_shows_taratata(plugin, item_id, category_url, page):
+def list_shows_taratata(plugin, item_id, category_url, page, **kwargs):
     resp = urlquick.get(
         category_url + '/page/%s' % str(page))
     root = resp.parse()
@@ -103,6 +104,7 @@ def list_shows_taratata(plugin, item_id, category_url, page):
             item_id=item_id,
             category_url=show_url
         )
+        item_post_treatment(item)
         yield item
 
     # More videos...
@@ -113,7 +115,7 @@ def list_shows_taratata(plugin, item_id, category_url, page):
 
 
 @Route.register
-def list_shows_artistes_1(plugin, item_id, category_url, page):
+def list_shows_artistes_1(plugin, item_id, category_url, page, **kwargs):
     # Build categories alphabet artistes
     resp = urlquick.get(category_url)
     root = resp.parse("ul", attrs={"class": "pagination pagination-artists"})
@@ -128,11 +130,12 @@ def list_shows_artistes_1(plugin, item_id, category_url, page):
             item_id=item_id,
             category_url=alphabet_url
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_shows_artistes_2(plugin, item_id, category_url):
+def list_shows_artistes_2(plugin, item_id, category_url, **kwargs):
     # Build list artistes
     resp = urlquick.get(category_url)
     root = resp.parse()
@@ -148,11 +151,12 @@ def list_shows_artistes_2(plugin, item_id, category_url):
             item_id=item_id,
             category_url=artiste_url,
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_shows_artistes_3(plugin, item_id, category_url):
+def list_shows_artistes_3(plugin, item_id, category_url, **kwargs):
     # Build Live and Bonus for an artiste
     resp = urlquick.get(category_url)
     root = resp.parse("ul", attrs={"class": "nav nav-tabs"})
@@ -168,11 +172,12 @@ def list_shows_artistes_3(plugin, item_id, category_url):
             item_id=item_id,
             category_url=videos_url
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_shows_bonus(plugin, item_id, category_url, page):
+def list_shows_bonus(plugin, item_id, category_url, page, **kwargs):
     # Build categories bonus
     resp = urlquick.get(category_url)
     root = resp.parse("ul", attrs={"class": "nav nav-pills"})
@@ -188,11 +193,12 @@ def list_shows_bonus(plugin, item_id, category_url, page):
             category_url=bonus_url,
             page=1
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url):
+def list_videos(plugin, item_id, category_url, **kwargs):
 
     resp = urlquick.get(category_url)
     root = resp.parse()
@@ -205,20 +211,15 @@ def list_videos(plugin, item_id, category_url):
             './/a').get('href'))
         item.art['thumb'] = video_integral.find('.//img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             item_dict=item2dict(item)
         )
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     for video in root.iterfind(".//div[@class='col-md-3']"):
@@ -228,25 +229,20 @@ def list_videos(plugin, item_id, category_url):
         video_url = URL_ROOT(video.find('.//a').get('href'))
         item.art['thumb'] = video.find('.//img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             item_dict=item2dict(item)
         )
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Route.register
-def list_videos_bonus(plugin, item_id, category_url, page):
+def list_videos_bonus(plugin, item_id, category_url, page, **kwargs):
 
     resp = urlquick.get(
         category_url + '/page/%s' % str(page))
@@ -263,20 +259,14 @@ def list_videos_bonus(plugin, item_id, category_url, page):
             './/a').get('href'))
         item.art['thumb'] = video_integral.find('.//img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             item_dict=item2dict(item)
         )
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     for video in root.iterfind(".//div[@class='col-md-3']"):
@@ -286,20 +276,15 @@ def list_videos_bonus(plugin, item_id, category_url, page):
         video_url = URL_ROOT(video.find('.//a').get('href'))
         item.art['thumb'] = video.find('.//img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
             video_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             item_dict=item2dict(item)
         )
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if page is not None and at_least_one_item:
@@ -315,7 +300,7 @@ def list_videos_bonus(plugin, item_id, category_url, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
+        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None, **kwargs):
     """Get video URL and start video player"""
     url_selected = ''
     all_datas_videos_quality = []
