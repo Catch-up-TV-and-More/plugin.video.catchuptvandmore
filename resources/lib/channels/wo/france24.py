@@ -32,6 +32,8 @@ import urlquick
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 import json
 
 LANG = Script.setting['france24.language']
@@ -39,14 +41,14 @@ TOKEN_APP = '66b85dad-3ad5-40f3-ab32-2305fc2357ea'
 URL_API = utils.urljoin_partial('http://apis.france24.com')
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     # http://apis.france24.com/products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13?token_application=66b85dad-3ad5-40f3-ab32-2305fc2357ea
     root_json_url = 'products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13'
     root_json_r = urlquick.get(
@@ -74,6 +76,7 @@ def root(plugin, item_id):
                     list_direct_tv_jts,
                     item_id=item_id,
                     guid=guid)
+                item_post_treatment(item)
                 yield item
 
             if 'videos' in json_tv:
@@ -85,6 +88,7 @@ def root(plugin, item_id):
                     list_videos,
                     item_id=item_id,
                     guid=guid)
+                item_post_treatment(item)
                 yield item
 
             if 'shows' in json_tv:
@@ -98,6 +102,7 @@ def root(plugin, item_id):
                         list_last_edition,
                         item_id=item_id,
                         guid=guid)
+                    item_post_treatment(item)
                     yield item
 
                 if 'shows_all' in json_shows:
@@ -112,6 +117,7 @@ def root(plugin, item_id):
                             item_id=item_id,
                             guid=guid,
                             guid_program=json_shows['show_editions']['guid'])
+                        item_post_treatment(item)
                         yield item
 
                 '''
@@ -122,7 +128,7 @@ def root(plugin, item_id):
 
 
 @Route.register
-def list_direct_tv_jts(plugin, item_id, guid):
+def list_direct_tv_jts(plugin, item_id, guid, **kwargs):
     json_url = 'products/get_product/%s' % guid
     json_r = urlquick.get(
         URL_API(json_url),
@@ -163,7 +169,7 @@ def list_direct_tv_jts(plugin, item_id, guid):
 
 
 @Route.register
-def list_videos(plugin, item_id, guid, page=1):
+def list_videos(plugin, item_id, guid, page=1, **kwargs):
     json_url = 'products/get_product/%s' % guid
     json_r = urlquick.get(
         URL_API(json_url),
@@ -189,18 +195,13 @@ def list_videos(plugin, item_id, guid, page=1):
         except Exception:
             pass
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            youtube_id=youtube_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             youtube_id=youtube_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     last_page = json_v['result']['last_page']
@@ -212,7 +213,7 @@ def list_videos(plugin, item_id, guid, page=1):
 
 
 @Route.register
-def list_last_edition(plugin, item_id, guid):
+def list_last_edition(plugin, item_id, guid, **kwargs):
     json_url = 'products/get_product/%s' % guid
     json_r = urlquick.get(
         URL_API(json_url),
@@ -242,23 +243,18 @@ def list_last_edition(plugin, item_id, guid):
         except Exception:
             pass
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            youtube_id=youtube_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
 
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             youtube_id=youtube_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Route.register
-def list_all_programs(plugin, item_id, guid, guid_program, page=1):
+def list_all_programs(plugin, item_id, guid, guid_program, page=1, **kwargs):
     json_url = 'products/get_product/%s' % guid
     json_r = urlquick.get(
         URL_API(json_url),
@@ -294,6 +290,7 @@ def list_all_programs(plugin, item_id, guid, guid_program, page=1):
             item_id=item_id,
             nid=nid,
             guid_program=guid_program)
+        item_post_treatment(item)
         yield item
 
     last_page = json_v['result']['last_page']
@@ -305,7 +302,7 @@ def list_all_programs(plugin, item_id, guid, guid_program, page=1):
 
 
 @Route.register
-def list_program_video(plugin, item_id, nid, guid_program, page=1):
+def list_program_video(plugin, item_id, nid, guid_program, page=1, **kwargs):
     json_url = 'products/get_product/%s' % guid_program
     json_r = urlquick.get(
         URL_API(json_url),
@@ -338,18 +335,12 @@ def list_program_video(plugin, item_id, nid, guid_program, page=1):
         except Exception:
             pass
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            youtube_id=youtube_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             youtube_id=youtube_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     last_page = json_v['result']['last_page']
@@ -363,7 +354,7 @@ def list_program_video(plugin, item_id, nid, guid_program, page=1):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, youtube_id, download_mode=False, video_label=None):
+        plugin, item_id, youtube_id, download_mode=False, video_label=None, **kwargs):
     return resolver_proxy.get_stream_youtube(
         plugin,
         youtube_id,
@@ -371,7 +362,7 @@ def get_video_url(
         video_label)
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
 
     final_language = LANG
    

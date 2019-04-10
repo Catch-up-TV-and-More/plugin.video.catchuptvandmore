@@ -30,6 +30,8 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 import json
 import re
@@ -59,7 +61,7 @@ CATEGORIES_VIDEOS_TV5MONDE = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -67,7 +69,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -85,6 +87,7 @@ def list_categories(plugin, item_id):
     item.set_callback(
         list_programs,
         item_id=item_id)
+    item_post_treatment(item)
     yield item
 
     for category_title, category_type in CATEGORIES_VIDEOS_TV5MONDE.iteritems():
@@ -95,11 +98,12 @@ def list_categories(plugin, item_id):
             item_id=item_id,
             category_type=category_type,
             page='1')
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -119,11 +123,12 @@ def list_programs(plugin, item_id):
             item_id=item_id,
             program_url=program_url,
             page='1')
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url, page):
+def list_videos(plugin, item_id, program_url, page, **kwargs):
 
     resp = urlquick.get(program_url + '?page=%s' % page)
     root = resp.parse()
@@ -131,7 +136,7 @@ def list_videos(plugin, item_id, program_url, page):
     for video_datas in root.iterfind(".//article"):
         if video_datas.find(".//p[@class='video-item__subtitle']") is not None:
             video_title = video_datas.find('.//h3').text.strip() + \
-            ' - ' + video_datas.find(".//p[@class='video-item__subtitle']").text.strip()
+                ' - ' + video_datas.find(".//p[@class='video-item__subtitle']").text.strip()
         else:
             video_title = video_datas.find('.//h3').text.strip()
         if 'http' in video_datas.find('.//img').get('src'):
@@ -146,18 +151,12 @@ def list_videos(plugin, item_id, program_url, page):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     yield Listitem.next_page(
@@ -167,7 +166,7 @@ def list_videos(plugin, item_id, program_url, page):
 
 
 @Route.register
-def list_videos_category(plugin, item_id, category_type, page):
+def list_videos_category(plugin, item_id, category_type, page, **kwargs):
     resp = urlquick.get(URL_TV5MONDE_ROOT +
         '/toutes-les-videos?order=1&type=%s&page=%s' % (category_type, page))
     root = resp.parse()
@@ -177,7 +176,7 @@ def list_videos_category(plugin, item_id, category_type, page):
         if video_datas.find(".//a[@class='video-item__link']").get('href') != '':
             if video_datas.find(".//p[@class_='video-item__subtitle']") is not None:
                 video_title = video_datas.find('.//h3').text.strip() + \
-                ' - ' + video_datas.find(".//p[@class_='video-item__subtitle']").text.strip()
+                    ' - ' + video_datas.find(".//p[@class_='video-item__subtitle']").text.strip()
             else:
                 video_title = video_datas.find('.//h3').text.strip()
             if 'http' in video_datas.find('.//img').get('src'):
@@ -192,18 +191,12 @@ def list_videos_category(plugin, item_id, category_type, page):
             item.label = video_title
             item.art['thumb'] = video_image
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
-
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 video_url=video_url)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
     if at_least_one_item:
@@ -218,7 +211,7 @@ def list_videos_category(plugin, item_id, category_type, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(
         video_url, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
@@ -234,12 +227,12 @@ def get_video_url(
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     live_id = ''
     for channel_name, live_id_value in LIST_LIVE_TV5MONDE.iteritems():

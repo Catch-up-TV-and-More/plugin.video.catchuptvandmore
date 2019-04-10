@@ -30,6 +30,8 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 import re
 import urlquick
@@ -67,6 +69,7 @@ def list_categories(plugin, item_id, **kwargs):
         list_videos,
         item_id=item_id,
         page='1')
+    item_post_treatment(item)
     yield item
 
 
@@ -85,18 +88,12 @@ def list_videos(plugin, item_id, page, **kwargs):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
 
         yield item
 

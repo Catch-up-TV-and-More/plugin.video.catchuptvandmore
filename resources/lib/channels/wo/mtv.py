@@ -30,6 +30,8 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 import json
 import re
@@ -50,7 +52,7 @@ URL_EMISSION = URL_ROOT + '/emissions/'
 URL_VIDEOS = URL_ROOT + '/dernieres-videos'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -58,7 +60,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
 
     # Prepare All videos
     resp = urlquick.get(URL_JSON_MTV % URL_VIDEOS)
@@ -72,6 +74,7 @@ def list_categories(plugin, item_id):
         list_videos,
         item_id=item_id,
         next_url=category_url)
+    item_post_treatment(item)
     yield item
 
     # Get Letters
@@ -90,11 +93,12 @@ def list_categories(plugin, item_id):
             list_programs,
             item_id=item_id,
             letter_title=letter_title)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, letter_title):
+def list_programs(plugin, item_id, letter_title, **kwargs):
 
     resp2 = urlquick.get(URL_JSON_MTV % URL_EMISSION)
     json_parser2 = json.loads(resp2.text)
@@ -116,11 +120,12 @@ def list_programs(plugin, item_id, letter_title):
                     list_videos,
                     item_id=item_id,
                     next_url=program_url)
+                item_post_treatment(item)
                 yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, next_url):
+def list_videos(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     json_parser = json.loads(resp.text)
@@ -140,18 +145,13 @@ def list_videos(plugin, item_id, next_url):
             item.art['thumb'] = video_image
             item.info['plot'] = video_plot
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
 
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 video_url=video_url)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
         if 'nextPageURL' in json_parser["result"]:
@@ -162,7 +162,7 @@ def list_videos(plugin, item_id, next_url):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(video_url)
     video_id = re.compile(

@@ -30,6 +30,8 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 
 import base64
 import json
@@ -83,7 +85,7 @@ def get_api_key(item_id):
     return list_apikey[0]
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -91,7 +93,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -103,6 +105,7 @@ def list_categories(plugin, item_id):
         list_videos,
         item_id=item_id,
         category_id=0)
+    item_post_treatment(item)
     yield item
 
     resp = urlquick.get(URL_CATEGORIES_NHK % (item_id, get_api_key(item_id)))
@@ -118,11 +121,12 @@ def list_categories(plugin, item_id):
             list_videos,
             item_id=item_id,
             category_id=category_id)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_id):
+def list_videos(plugin, item_id, category_id, **kwargs):
 
     resp = urlquick.get(URL_ALL_VOD_NHK % (item_id, get_api_key(item_id)))
     json_parser = json.loads(resp.text)
@@ -154,24 +158,18 @@ def list_videos(plugin, item_id, category_id):
             item.info['plot'] = video_plot
             item.info.date(date_value, '%Y-%m-%d')
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_id=video_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
-
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
                 video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(URL_VIDEO_VOD % (get_pcode(item_id), video_id))
     json_parser = json.loads(resp.text)
@@ -185,12 +183,12 @@ def get_video_url(
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     desired_country = Script.setting[item_id + '.language']
 
     # If we come from the M3U file and the language
