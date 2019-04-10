@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import base64
 import json
@@ -41,6 +42,7 @@ import urlquick
 # TO DO
 # Add More Buttons for videos youtube
 # Some video Sky sports required account (add account)
+# Add favoris for youtube channel?
 
 URL_LIVE_SKYNEWS = 'https://news.sky.com/watch-live'
 
@@ -61,7 +63,7 @@ URL_OOYALA_VOD = 'https://player.ooyala.com/sas/player_api/v2/authorization/' \
 URL_PCODE_EMBED_TOKEN = 'http://www.skysports.com/watch/video/auth/v4/23'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -69,7 +71,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
 
     if item_id == 'skynews':
         item = Listitem()
@@ -78,6 +80,7 @@ def list_categories(plugin, item_id):
             list_videos_youtube,
             item_id=item_id,
             channel_youtube='UCoMdktPbSTixAyNGwb-UYkQ')
+        item_post_treatment(item)
         yield item
 
     elif item_id == 'skysports':
@@ -88,6 +91,7 @@ def list_categories(plugin, item_id):
             list_videos_youtube,
             item_id=item_id,
             channel_youtube='UCE97AW7eR8VVbVPBy4cCLKg')
+        item_post_treatment(item)
         yield item
 
         item = Listitem()
@@ -96,6 +100,7 @@ def list_categories(plugin, item_id):
             list_videos_youtube,
             item_id=item_id,
             channel_youtube='UCNAf1k0yIjyGu3k9BwAg3lg')
+        item_post_treatment(item)
         yield item
 
         item = Listitem()
@@ -104,6 +109,7 @@ def list_categories(plugin, item_id):
             list_videos_youtube,
             item_id=item_id,
             channel_youtube='UCTU_wC79Dgi9rh4e9-baTqA')
+        item_post_treatment(item)
         yield item
 
         resp = urlquick.get(URL_VIDEOS_SKYSPORTS)
@@ -120,17 +126,19 @@ def list_categories(plugin, item_id):
                 item_id=item_id,
                 category_url=category_url,
                 page='1')
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_videos_youtube(plugin, item_id, channel_youtube):
+def list_videos_youtube(plugin, item_id, channel_youtube, **kwargs):
 
+    # TODO add favoris ?
     yield Listitem.youtube(channel_youtube)
 
 
 @Route.register
-def list_videos_sports(plugin, item_id, category_url, page):
+def list_videos_sports(plugin, item_id, category_url, page, **kwargs):
 
     resp = urlquick.get(category_url + '/more/%s' % page)
     root = resp.parse()
@@ -148,18 +156,12 @@ def list_videos_sports(plugin, item_id, category_url, page):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if at_least_one_item:
@@ -175,7 +177,7 @@ def list_videos_sports(plugin, item_id, category_url, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
 
     data_embed_token = urlquick.get(URL_PCODE_EMBED_TOKEN).text
     pcode = re.compile(
@@ -199,12 +201,12 @@ def get_video_url(
     return False
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE_SKYNEWS)
     live_id = re.compile(

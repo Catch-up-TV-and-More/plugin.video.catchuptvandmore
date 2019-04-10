@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -45,7 +46,7 @@ URL_LIVE = URL_ROOT + '/tv'
 URL_VIDEOS = 'https://at5news.vinsontv.com/api/news?source=web&slug=%s&page=%s'
 # slug, page
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -53,7 +54,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -76,11 +77,12 @@ def list_categories(plugin, item_id):
             item_id=item_id,
             category_slug=category_slug,
             page='0')
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_slug, page):
+def list_videos(plugin, item_id, category_slug, page, **kwargs):
 
     resp = urlquick.get(URL_VIDEOS % (category_slug, page))
     json_parser = json.loads(resp.text)
@@ -104,18 +106,12 @@ def list_videos(plugin, item_id, category_slug, page):
                 item.art['thumb'] = video_image
                 item.info['plot'] = video_plot
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    video_url=video_url,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
                 item.set_callback(
                     get_video_url,
                     item_id=item_id,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
                     video_url=video_url)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
                 yield item
 
             if video_id is not None:
@@ -124,18 +120,12 @@ def list_videos(plugin, item_id, category_slug, page):
                 item.art['thumb'] = video_image
                 item.info['plot'] = video_plot
 
-                item.context.script(
-                    get_video_yt_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    video_id=video_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
                 item.set_callback(
                     get_video_yt_url,
                     item_id=item_id,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
                     video_id=video_id)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
                 yield item
 
     # More videos...
@@ -147,7 +137,7 @@ def list_videos(plugin, item_id, category_slug, page):
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     if download_mode:
         return download.download_video(video_url, video_label)
@@ -156,17 +146,17 @@ def get_video_url(
 
 @Resolver.register
 def get_video_yt_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
 
     return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode, video_label)
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
     return re.compile(

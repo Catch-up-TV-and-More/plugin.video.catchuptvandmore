@@ -31,7 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
 from resources.lib import download
-from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import inputstreamhelper
 import json
@@ -73,7 +73,7 @@ CATEGORIES_MODE_AZ = {
     'A-Z': '-az'
 }
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -81,7 +81,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -98,6 +98,7 @@ def list_categories(plugin, item_id):
             item_id=item_id,
             category_name_value=category_name_value
         )
+        item_post_treatment(item)
         yield item
 
     for category_name_title, category_name_value in CATEGORIES_MODE_AZ.iteritems():
@@ -109,11 +110,12 @@ def list_categories(plugin, item_id):
             item_id=item_id,
             category_name_value=category_name_value
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs_mode(plugin, item_id, category_name_value):
+def list_programs_mode(plugin, item_id, category_name_value, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -137,11 +139,12 @@ def list_programs_mode(plugin, item_id, category_name_value):
             item_id=item_id,
             program_id=program_id
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs_mode_az(plugin, item_id, category_name_value):
+def list_programs_mode_az(plugin, item_id, category_name_value, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -162,11 +165,12 @@ def list_programs_mode_az(plugin, item_id, category_name_value):
                 item_id=item_id,
                 program_id=program_id
             )
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_program_seasons(plugin, item_id, program_id):
+def list_program_seasons(plugin, item_id, program_id, **kwargs):
     """
     Build programs listing
     - Season 1
@@ -187,11 +191,12 @@ def list_program_seasons(plugin, item_id, program_id):
             program_id=program_id,
             program_season_number=program_season_number
         )
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_id, program_season_number):
+def list_videos(plugin, item_id, program_id, program_season_number, **kwargs):
 
     resp = urlquick.get(URL_VIDEOS % program_id)
     json_parser = json.loads(resp.text)
@@ -215,23 +220,14 @@ def list_videos(plugin, item_id, program_id, program_season_number):
                 item.info["plot"] = video_plot
                 item.info["duration"] = video_duration
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    video_id=video_id,
-                    video_title=video_title,
-                    video_plot=video_plot,
-                    video_image=video_image,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
                 item.set_callback(
                     get_video_url,
                     item_id=item_id,
                     video_id=video_id,
+                    video_label=LABELS[item_id] + ' - ' + item.label,
                     item_dict=item2dict(item)
                 )
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
                 yield item
 
     if not at_least_one_item:
@@ -242,7 +238,7 @@ def list_videos(plugin, item_id, program_id, program_season_number):
 @Resolver.register
 def get_video_url(
         plugin, item_id, video_id, item_dict,
-        download_mode=False, video_label=None):
+        download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(URL_STREAM % video_id, max_age=-1)
     json_parser = json.loads(resp.text)
@@ -257,9 +253,7 @@ def get_video_url(
 
     if 'drmToken' in json_parser["playback"]:
 
-        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-
-        if xbmc_version < 18:
+        if cqu.get_kodi_version() < 18:
             xbmcgui.Dialog().ok(
                 'Info',
                 plugin.localize(30602))
@@ -297,16 +291,14 @@ def get_video_url(
         return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-
-    if xbmc_version < 18:
+    if cqu.get_kodi_version() < 18:
         xbmcgui.Dialog().ok(
             'Info',
             plugin.localize(30602))

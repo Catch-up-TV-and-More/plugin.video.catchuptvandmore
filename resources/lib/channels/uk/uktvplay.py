@@ -31,7 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item2dict
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 
 import inputstreamhelper
@@ -44,7 +44,7 @@ import xbmcgui
 
 
 # TO DO
-# Replay protected by SAMPLE-AES (keep code - desactivate channel for the moment)
+# Mode code brightcove protected by DRM in resolver_proxy
 
 
 URL_ROOT = 'https://uktvplay.uktv.co.uk'
@@ -74,7 +74,7 @@ URL_VIDEOS = URL_API + '/vod/series/?id=%s'
 # Serie_ID
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -82,7 +82,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_letters(plugin, item_id):
+def list_letters(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -95,11 +95,12 @@ def list_letters(plugin, item_id):
             list_programs,
             item_id=item_id,
             letter_value=letter_value)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, letter_value):
+def list_programs(plugin, item_id, letter_value, **kwargs):
 
     resp = urlquick.get(URL_PROGRAMS % (letter_value.replace('0-9', '0'), letter_value))
     json_parser = json.loads(resp.text)
@@ -118,11 +119,12 @@ def list_programs(plugin, item_id, letter_value):
             list_seasons,
             item_id=item_id,
             program_slug=program_slug)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_seasons(plugin, item_id, program_slug):
+def list_seasons(plugin, item_id, program_slug, **kwargs):
 
     resp = urlquick.get(URL_INFO_PROGRAM % program_slug)
     json_parser = json.loads(resp.text)
@@ -137,11 +139,12 @@ def list_seasons(plugin, item_id, program_slug):
             list_videos,
             item_id=item_id,
             serie_id=serie_id)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, serie_id):
+def list_videos(plugin, item_id, serie_id, **kwargs):
 
     resp = urlquick.get(URL_VIDEOS % serie_id)
     json_parser = json.loads(resp.text)
@@ -164,6 +167,7 @@ def list_videos(plugin, item_id, serie_id):
             item_id=item_id,
             data_video_id=video_id,
             item_dict=item2dict(item))
+        item_post_treatment(item)
         yield item
 
 
@@ -176,11 +180,9 @@ def get_brightcove_policy_key(data_account, data_player):
 
 
 @Resolver.register
-def get_video_url(plugin, item_id, data_video_id, item_dict):
+def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
 
-    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-
-    if xbmc_version < 18:
+    if cqu.get_kodi_version() < 18:
         xbmcgui.Dialog().ok(
             'Info',
             plugin.localize(30602))

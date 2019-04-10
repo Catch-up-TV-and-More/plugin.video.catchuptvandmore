@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -53,7 +54,7 @@ URL_STREAM = 'https://www.blaze.tv/stream/replay/widevine/%s'
 URL_ROOT = 'http://www.blaze.tv'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -61,7 +62,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -72,11 +73,12 @@ def list_categories(plugin, item_id):
     item.set_callback(
         list_programs,
         item_id=item_id)
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -97,11 +99,12 @@ def list_programs(plugin, item_id):
             list_seasons,
             item_id=item_id,
             program_url=program_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_seasons(plugin, item_id, program_url):
+def list_seasons(plugin, item_id, program_url, **kwargs):
 
     resp = urlquick.get(program_url)
     root = resp.parse("ul", attrs={"class": "nav nav-tabs"})
@@ -116,6 +119,7 @@ def list_seasons(plugin, item_id, program_url):
             list_videos,
             item_id=item_id,
             season_url=season_url)
+        item_post_treatment(item)
         yield item
     
     if root.find('.//h2') is not None:
@@ -128,11 +132,12 @@ def list_seasons(plugin, item_id, program_url):
             list_videos,
             item_id=item_id,
             season_url=season_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, season_url):
+def list_videos(plugin, item_id, season_url, **kwargs):
 
     resp = urlquick.get(season_url)
     root = resp.parse()
@@ -147,24 +152,18 @@ def list_videos(plugin, item_id, season_url):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
 def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
 
     resp = urlquick.get(video_url)
     stream_id = re.compile(
@@ -179,12 +178,12 @@ def get_video_url(
     return stream_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE_JSON)
     return re.compile('"url": "(.*?)"').findall(resp.text)[0]
