@@ -64,6 +64,11 @@ def get_sorted_menu(plugin, menu_id):
         if not r:
             plugin.setting['show_live_tv_m3u_info'] = False
 
+    # Keep in memory the first menu taken
+    # in order to provide a prefix when the user
+    # add a favourite
+    fav.guess_fav_prefix(menu_id)
+
     # First, we have to sort the current menu items
     # according to each item order and we have
     # to hide each disabled item

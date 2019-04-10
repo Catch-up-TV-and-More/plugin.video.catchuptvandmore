@@ -25,6 +25,7 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
+
 import xbmc
 
 from codequick import utils, storage, Script
@@ -32,6 +33,24 @@ from hashlib import md5
 
 from resources.lib.labels import LABELS
 from resources.lib import common
+import resources.lib.mem_storage as mem_storage
+
+
+
+def guess_fav_prefix(item_id):
+    prefix = 'empty'
+    if item_id == 'live_tv':
+        prefix = Script.localize(LABELS['live_tv'])
+    elif item_id == 'replay':
+        prefix = Script.localize(LABELS['replay'])
+    elif item_id == 'websites':
+        prefix = Script.localize(LABELS['websites'])
+    elif item_id == 'root':
+        prefix = ''
+    if prefix != 'empty':
+        s = mem_storage.MemStorage('fav')
+        s['prefix'] = prefix
+
 
 
 @Script.register
@@ -72,27 +91,16 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
     item_dict['callback'] = item_path.replace('plugin://plugin.video.catchuptvandmore', '')
 
 
-    print('ITEM_DICT :' + str(item_dict))
-    # Try to guess the item type (Live TV, Replay, Website, Main menu?)
-    item_type = ''
-    if 'item_id' in item_dict['params']:        
-        item_id = item_dict['params']['item_id']
-        if '_live' in item_id:
-            item_type = Script.localize(LABELS['live_tv'])
-        elif '_replay' in item_id:
-            item_type = Script.localize(LABELS['replay'])
-
-    if item_type == '':
-        if 'live' in item_dict['callback']:
-            item_type = Script.localize(LABELS['live_tv'])
-        elif 'replay' in item_dict['callback']:
-            item_type = Script.localize(LABELS['replay'])
-        elif 'website':
-            item_type = Script.localize(LABELS['websites'])
+    s = mem_storage.MemStorage('fav')
+    prefix = ''
+    try:
+        prefix = s['prefix']
+    except KeyError:
+        pass
 
     label_proposal = item_dict['label']
-    if item_type != '':
-        label_proposal = item_type + ' - ' + label_proposal
+    if prefix != '':
+        label_proposal = prefix + ' - ' + label_proposal
 
     # Ask the user to edit the label
     item_dict['label'] = utils.keyboard(plugin.localize(LABELS['Favorite name']), label_proposal)
