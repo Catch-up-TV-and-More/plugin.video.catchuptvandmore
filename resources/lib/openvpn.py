@@ -30,8 +30,8 @@ class OpenVPNManagementInterface:
         self.openvpn = openvpn
         self.ip = ip
         self.port = port
-        #self.openvpn._log_debug('OpenVPNManagementInterface: IP: [%s]' % ip)
-        #self.openvpn._log_debug(
+        # self.openvpn._log_debug('OpenVPNManagementInterface: IP: [%s]' % ip)
+        # self.openvpn._log_debug(
         #    'OpenVPNManagementInterface: Port: [%s]' % port)
         self.buf = ''
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,9 +43,9 @@ class OpenVPNManagementInterface:
         self.sock.close()
 
     def send(self, msg):
-        #self.openvpn._log_debug('Sending: [%s]' % msg)
+        # self.openvpn._log_debug('Sending: [%s]' % msg)
         sent = self.sock.send(msg)
-        #self.openvpn._log_debug('Sent: [%d]' % sent)
+        # self.openvpn._log_debug('Sent: [%d]' % sent)
 
     def receive(self):
         buf = ''
@@ -161,10 +161,10 @@ class OpenVPN:
 
     def _log_debug(self, msg):
         if self.debug:
-            print 'OpenVPN: DEBUG: %s' % msg
+            print('OpenVPN: DEBUG: %s' % msg)
 
     def _log_error(self, msg):
-        print 'OpenVPN: ERROR: %s' % msg
+        print('OpenVPN: ERROR: %s' % msg)
 
     def connect_to_interface(self, logerror):
         if self.interface is None:
