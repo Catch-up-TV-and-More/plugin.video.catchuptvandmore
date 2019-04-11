@@ -213,13 +213,6 @@ def get_video_url(
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
-    # TODO Add verification inputstream available Kodi 17.6 (use inputstream helper ?)
-    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-    if xbmc_version < 17:
-        # Add Notification
-        plugin.notify('ERROR', plugin.localize(30720))
-        return False
-
     # Code from here : https://github.com/asciidisco/plugin.video.telekom-sport/blob/master/resources/lib/Utils.py
     # Thank you asciidisco
     payload = {

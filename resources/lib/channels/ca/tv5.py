@@ -168,15 +168,9 @@ def get_video_url(
 
     stream_url = ''
     if 'mediaList' in json_parser:
-        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-        if xbmc_version < 17:
-            for stream_datas in json_parser["mediaList"][0]["mobileUrls"]:
-                if 'MobileH264' in stream_datas["targetMediaPlatform"]:
-                    stream_url = stream_datas["mobileUrl"]
-        else:
-            for stream_datas in json_parser["mediaList"][0]["mobileUrls"]:
-                if 'HttpLiveStreaming' in stream_datas["targetMediaPlatform"]:
-                    stream_url = stream_datas["mobileUrl"]
+        for stream_datas in json_parser["mediaList"][0]["mobileUrls"]:
+            if 'HttpLiveStreaming' in stream_datas["targetMediaPlatform"]:
+                stream_url = stream_datas["mobileUrl"]
 
     if download_mode:
         return download.download_video(stream_url, video_label)

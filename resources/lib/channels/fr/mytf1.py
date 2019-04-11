@@ -31,6 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
@@ -376,8 +377,7 @@ def get_video_url(
         max_age=-1).text
     if 'drm' in manifest:
 
-        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-        if xbmc_version < 18:
+        if cqu.get_kodi_version() < 18:
             xbmcgui.Dialog().ok(
                 'Info',
                 plugin.localize(30602))

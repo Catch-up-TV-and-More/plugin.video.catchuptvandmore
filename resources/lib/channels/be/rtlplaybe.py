@@ -293,9 +293,8 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
         except:
             pass
 
-        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
         is_downloadable = False
-        if xbmc_version < 18:
+        if cqu.get_kodi_version() < 18:
             is_downloadable = True
             
         item.set_callback(
@@ -317,8 +316,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
 def get_video_url(
         plugin, item_id, video_id, item_dict=None, download_mode=False, video_label=None, **kwargs):
 
-    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-    if xbmc_version < 18:
+    if cqu.get_kodi_version() < 18:
         video_json = urlquick.get(
             URL_JSON_VIDEO % video_id,
             headers={
@@ -485,8 +483,8 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
-    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-    if xbmc_version < 18:
+
+    if cqu.get_kodi_version() < 18:
         xbmcgui.Dialog().ok(
             'Info',
             plugin.localize(30602))

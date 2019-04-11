@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+import resources.lib.cq_utils as cqu
 
 import inputstreamhelper
 import datetime
@@ -335,8 +336,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                     is_drm = True
 
     if is_drm:
-        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-        if xbmc_version < 18:
+        if cqu.get_kodi_version() < 18:
             xbmcgui.Dialog().ok(
                 'Info',
                 plugin.localize(30602))

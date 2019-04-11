@@ -126,9 +126,7 @@ def list_videos(plugin, item_id, day_id, **kwargs):
 def get_video_url(
         plugin, item_id, video_url, item_dict, download_mode=False, video_label=None, **kwargs):
 
-    xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-
-    if xbmc_version < 18:
+    if cqu.get_kodi_version() < 18:
         xbmcgui.Dialog().ok(
             'Info',
             plugin.localize(30602))
