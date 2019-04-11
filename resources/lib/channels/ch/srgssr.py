@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import inputstreamhelper
 import datetime
@@ -124,6 +125,7 @@ def list_categories(plugin, item_id, **kwargs):
             list_programs,
             item_id=item_id,
             category_url=category_url)
+        item_post_treatment(item)
         yield item
 
     if 'swissinfo' in item_id:
@@ -145,6 +147,7 @@ def list_categories(plugin, item_id, **kwargs):
             list_videos_category,
             item_id=item_id,
             category_url=category_url)
+        item_post_treatment(item)
         yield item
 
 
@@ -179,6 +182,7 @@ def list_programs(plugin, item_id, category_url, **kwargs):
                 list_videos_program,
                 item_id=item_id,
                 program_id=program_id)
+            item_post_treatment(item)
             yield item
 
 
@@ -209,18 +213,12 @@ def list_videos_category(plugin, item_id, category_url, **kwargs):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
@@ -252,18 +250,12 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
+            video_label=LABELS[item_id] + ' - ' + item.label,
             video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
