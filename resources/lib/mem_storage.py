@@ -6,7 +6,10 @@ SimplePlugin micro-framework for Kodi content plugins
 **License**: `GPL v.3 <https://www.gnu.org/copyleft/gpl.html>`_
 """
 
-import cPickle as pickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 from collections import MutableMapping
 import xbmcgui
 
