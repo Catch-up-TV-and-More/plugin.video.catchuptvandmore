@@ -664,10 +664,10 @@
 
             <setting label="Lucky Jack" type="bool" id="luckyjack" default="true" visible="eq(-165,true)"/>
             <setting label="" type="number" visible="false" id="luckyjack.order" default="83"/>
-            
+
             <setting label="Mont Blanc Live TV" type="bool" id="mblivetv" default="true" visible="eq(-167,true)"/>
             <setting label="" type="number" visible="false" id="mblivetv.order" default="84"/>
-            
+
             <setting label="8 Mont-Blanc" type="bool" id="tv8montblanc" default="true" visible="eq(-169,true)"/>
             <setting label="" type="number" visible="false" id="tv8montblanc.order" default="85"/>
 
@@ -1097,23 +1097,23 @@
         <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
-            <setting label="30240" type="text" id="nrj.login" defaut=""/>
-            <setting label="30241" type="text" id="nrj.password" option="hidden" defaut=""/>
+            <setting label="30240" type="text" id="nrj.login" default=""/>
+            <setting label="30241" type="text" id="nrj.password" option="hidden" default=""/>
 
-            <setting label="30244" type="text" id="6play.login" defaut=""/>
-            <setting label="30245" type="text" id="6play.password" option="hidden" defaut=""/>
+            <setting label="30244" type="text" id="6play.login" default=""/>
+            <setting label="30245" type="text" id="6play.password" option="hidden" default=""/>
 
-            <setting label="30248" type="text" id="abweb.login" defaut=""/>
-            <setting label="30249" type="text" id="abweb.password" option="hidden" defaut=""/>
+            <setting label="30248" type="text" id="abweb.login" default=""/>
+            <setting label="30249" type="text" id="abweb.password" option="hidden" default=""/>
 
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
-            <setting label="30242" type="text" id="vrt.login" defaut=""/>
-            <setting label="30243" type="text" id="vrt.password" option="hidden" defaut=""/>
+            <setting label="30242" type="text" id="vrt.login" default=""/>
+            <setting label="30243" type="text" id="vrt.password" option="hidden" default=""/>
 
-            <setting label="30246" type="text" id="rtlplaybe.login" defaut=""/>
-            <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" defaut=""/>
+            <setting label="30246" type="text" id="rtlplaybe.login" default=""/>
+            <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" default=""/>
 
     </category>
     <!-- Accounts -->
