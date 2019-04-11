@@ -12,6 +12,7 @@ except ImportError:
     import pickle
 from collections import MutableMapping
 import xbmcgui
+from six import string_types
 
 
 class MemStorage(MutableMapping):
@@ -53,7 +54,7 @@ class MemStorage(MutableMapping):
         """
         :type key: str
         """
-        if isinstance(key, str) or isinstance(key, unicode):
+        if isinstance(key, string_types):
             pass
         else:
             raise TypeError('Storage key must be of str type!')

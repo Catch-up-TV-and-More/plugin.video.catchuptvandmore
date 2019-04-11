@@ -36,6 +36,7 @@ import json
 import re
 import urlquick
 import xbmc
+from six import text_type
 
 # TO DO
 # Add Account
@@ -225,7 +226,7 @@ def get_video_url(plugin,
     }
     # execute the request
     response = xbmc.executeJSONRPC(json.dumps(payload))
-    responses_uni = unicode(response, 'utf-8', errors='ignore')
+    responses_uni = text_type(response, 'utf-8', errors='ignore')
     response_serialized = json.loads(responses_uni)
     if 'error' not in response_serialized.keys():
         result = response_serialized.get('result', {})
