@@ -48,19 +48,17 @@ def get_sorted_menu(plugin, menu_id):
     # The current menu to build contains
     # all the items present in the 'menu_id'
     # skeleton file
-    current_menu = importlib.import_module(
-        'resources.lib.skeletons.' + menu_id).menu
+    current_menu = importlib.import_module('resources.lib.skeletons.' +
+                                           menu_id).menu
 
     # Notify user for the new M3U Live TV feature
     if menu_id == "live_tv" and \
             cqu.get_kodi_version() >= 18 and \
             plugin.setting.get_boolean('show_live_tv_m3u_info'):
 
-        r = xbmcgui.Dialog().yesno(
-            plugin.localize(LABELS['Information']),
-            plugin.localize(30605),
-            plugin.localize(30606)
-        )
+        r = xbmcgui.Dialog().yesno(plugin.localize(LABELS['Information']),
+                                   plugin.localize(30605),
+                                   plugin.localize(30606))
         if not r:
             plugin.setting['show_live_tv_m3u_info'] = False
 
@@ -91,11 +89,7 @@ def get_sorted_menu(plugin, menu_id):
             # Get order value in settings file
             item_order = Script.setting.get_int(item_id + '.order')
 
-            item = (
-                item_order,
-                item_id,
-                item_infos
-            )
+            item = (item_order, item_id, item_infos)
 
             menu.append(item)
 
@@ -103,32 +97,29 @@ def get_sorted_menu(plugin, menu_id):
     return sorted(menu, key=lambda x: x[0])
 
 
-def add_context_menus_to_item(
-        plugin, item, index, menu_id, menu_len, **kwargs):
+def add_context_menus_to_item(plugin, item, index, menu_id, menu_len,
+                              **kwargs):
 
     # Move up
     if index > 0:
-        item.context.script(
-            move_item,
-            plugin.localize(LABELS['Move up']),
-            direction='up',
-            item_id=item.params['item_id'],
-            menu_id=menu_id)
+        item.context.script(move_item,
+                            plugin.localize(LABELS['Move up']),
+                            direction='up',
+                            item_id=item.params['item_id'],
+                            menu_id=menu_id)
 
     # Move down
     if index < menu_len - 1:
-        item.context.script(
-            move_item,
-            plugin.localize(LABELS['Move down']),
-            direction='down',
-            item_id=item.params['item_id'],
-            menu_id=menu_id)
+        item.context.script(move_item,
+                            plugin.localize(LABELS['Move down']),
+                            direction='down',
+                            item_id=item.params['item_id'],
+                            menu_id=menu_id)
 
     # Hide
-    item.context.script(
-        hide_item,
-        plugin.localize(LABELS['Hide']),
-        item_id=item.params['item_id'])
+    item.context.script(hide_item,
+                        plugin.localize(LABELS['Hide']),
+                        item_id=item.params['item_id'])
 
     # Connect/Disconnect VPN
     add_vpn_context(item)
@@ -140,12 +131,11 @@ def add_context_menus_to_item(
     elif 'item_infos' in kwargs and \
             kwargs['item_infos']['callback'] == 'live_bridge':
         is_playable = True
-    
-    fav.add_fav_context(
-        item,
-        item2dict(item),
-        is_playable=is_playable,
-        channel_infos=kwargs.get('channel_infos', None))
+
+    fav.add_fav_context(item,
+                        item2dict(item),
+                        is_playable=is_playable,
+                        channel_infos=kwargs.get('channel_infos', None))
 
     return
 
@@ -176,10 +166,7 @@ def generic_menu(plugin, **kwargs):
         # If the selected menu is empty just reload the current menu
         yield False
 
-    for index, (item_order,
-                item_id,
-                item_infos
-                ) in enumerate(menu):
+    for index, (item_order, item_id, item_infos) in enumerate(menu):
 
         item = Listitem()
 
@@ -188,16 +175,15 @@ def generic_menu(plugin, **kwargs):
 
         # Set item art
         if 'thumb' in item_infos:
-            item.art["thumb"] = common.get_item_media_path(
-                item_infos['thumb'])
+            item.art["thumb"] = common.get_item_media_path(item_infos['thumb'])
 
         if 'fanart' in item_infos:
             item.art["fanart"] = common.get_item_media_path(
                 item_infos['fanart'])
 
         # Set item params
-            # If this item requires a module to work, get
-            # the module path to be loaded
+        # If this item requires a module to work, get
+        # the module path to be loaded
         if 'module' in item_infos:
             item.params['item_module'] = item_infos['module']
 
@@ -208,8 +194,12 @@ def generic_menu(plugin, **kwargs):
         # item will be selected by the user
         item.set_callback(eval(item_infos['callback']))
 
-        add_context_menus_to_item(
-            plugin, item, index, menu_id, len(menu), item_infos=item_infos)
+        add_context_menus_to_item(plugin,
+                                  item,
+                                  index,
+                                  menu_id,
+                                  len(menu),
+                                  item_infos=item_infos)
 
         yield item
 
@@ -223,10 +213,7 @@ def tv_guide_menu(plugin, **kwargs):
     menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
     channels_id = []
-    for index, (channel_order,
-                channel_id,
-                channel_infos
-                ) in enumerate(menu):
+    for index, (channel_order, channel_id, channel_infos) in enumerate(menu):
         channels_id.append(channel_id)
 
     # Load the graber module accroding to the country
@@ -237,10 +224,7 @@ def tv_guide_menu(plugin, **kwargs):
     # For each channel grab the current program according to the current time
     tv_guide = tv_guide_module.grab_tv_guide(channels_id)
 
-    for index, (channel_order,
-                channel_id,
-                channel_infos
-                ) in enumerate(menu):
+    for index, (channel_order, channel_id, channel_infos) in enumerate(menu):
 
         item = Listitem()
 
@@ -285,7 +269,8 @@ def tv_guide_menu(plugin, **kwargs):
 
             # start_time and stop_time must be a string
             if 'start_time' in guide_infos and 'stop_time' in guide_infos:
-                plot.append(guide_infos['start_time'] + ' - ' + guide_infos['stop_time'])
+                plot.append(guide_infos['start_time'] + ' - ' +
+                            guide_infos['stop_time'])
             elif 'start_time' in guide_infos:
                 plot.append(guide_infos['start_time'])
 
@@ -315,14 +300,13 @@ def tv_guide_menu(plugin, **kwargs):
         # item will be selected by the user
         item.set_callback(eval(channel_infos['callback']))
 
-        add_context_menus_to_item(
-            plugin,
-            item,
-            index,
-            menu_id,
-            len(menu),
-            is_playable=True,
-            channel_infos=channel_infos)
+        add_context_menus_to_item(plugin,
+                                  item,
+                                  index,
+                                  menu_id,
+                                  len(menu),
+                                  is_playable=True,
+                                  channel_infos=channel_infos)
 
         yield item
 
@@ -374,8 +358,8 @@ def live_bridge(plugin, **kwargs):
 
     # Let's go to the module file ...
     item_module = importlib.import_module(kwargs.get('item_module'))
-    return item_module.live_entry(plugin, kwargs.get('item_id'), kwargs.get('item_dict', {}))
-
+    return item_module.live_entry(plugin, kwargs.get('item_id'),
+                                  kwargs.get('item_dict', {}))
 
 
 @Script.register
@@ -425,7 +409,6 @@ def hide_item(plugin, item_id):
     xbmc.executebuiltin('XBMC.Container.Refresh()')
 
 
-
 @Route.register
 def favourites(plugin, **kwargs):
     """
@@ -438,11 +421,7 @@ def favourites(plugin, **kwargs):
     with storage.PersistentDict("favourites.pickle") as db:
         menu = []
         for item_hash, item_dict in db.items():
-            item = (
-                item_dict['params']['order'],
-                item_hash,
-                item_dict
-            )
+            item = (item_dict['params']['order'], item_hash, item_dict)
 
             menu.append(item)
 
@@ -450,21 +429,17 @@ def favourites(plugin, **kwargs):
         sorted_menu = sorted(menu, key=lambda x: x[0])
 
     # Add each item in the listing
-    for index, (item_order,
-                item_hash,
-                item_dict
-                ) in enumerate(sorted_menu):
+    for index, (item_order, item_hash, item_dict) in enumerate(sorted_menu):
 
-        
         # Listitem.from_dict fails with this
         item_dict.pop('subtitles')
         item_dict.pop('context')
-        
+
         item = Listitem.from_dict(**item_dict)
         url = cqu.build_kodi_url(item_dict['callback'], item_dict['params'])
 
         item.set_callback(url)
-        
+
         item.is_folder = item_dict['params']['is_folder']
         item.is_playbale = item_dict['params']['is_playable']
 
@@ -472,32 +447,28 @@ def favourites(plugin, **kwargs):
         item.label = item_dict['label']
 
         # Rename
-        item.context.script(
-            fav.rename_favourite_item,
-            plugin.localize(LABELS['Rename']),
-            item_hash=item_hash)
+        item.context.script(fav.rename_favourite_item,
+                            plugin.localize(LABELS['Rename']),
+                            item_hash=item_hash)
 
         # Remove
-        item.context.script(
-            fav.remove_favourite_item,
-            plugin.localize(LABELS['Remove']),
-            item_hash=item_hash)
+        item.context.script(fav.remove_favourite_item,
+                            plugin.localize(LABELS['Remove']),
+                            item_hash=item_hash)
 
         # Move up
         if item_dict['params']['order'] > 0:
-            item.context.script(
-                fav.move_favourite_item,
-                plugin.localize(LABELS['Move up']),
-                direction='up',
-                item_hash=item_hash)
+            item.context.script(fav.move_favourite_item,
+                                plugin.localize(LABELS['Move up']),
+                                direction='up',
+                                item_hash=item_hash)
 
         # Move down
         if item_dict['params']['order'] < len(db) - 1:
-            item.context.script(
-                fav.move_favourite_item,
-                plugin.localize(LABELS['Move down']),
-                direction='down',
-                item_hash=item_hash)
+            item.context.script(fav.move_favourite_item,
+                                plugin.localize(LABELS['Move down']),
+                                direction='down',
+                                item_hash=item_hash)
 
         yield item
 
@@ -509,7 +480,6 @@ def main():
     is any module to load on the fly
     """
     cqu.import_needed_module()
-
     """
     Then we let CodeQuick check for
     functions to register and call

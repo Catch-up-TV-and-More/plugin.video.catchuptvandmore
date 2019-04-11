@@ -68,15 +68,15 @@ def list_programs(plugin, item_id, **kwargs):
 
     for program_datas in root.iterfind(".//li"):
         if 'View' in program_datas.find(".//span[@class='link-text']").text:
-            program_title = program_datas.find(".//span[@class='link-text']").text
+            program_title = program_datas.find(
+                ".//span[@class='link-text']").text
             program_url = program_datas.find('.//a').get('href')
 
             item = Listitem()
             item.label = program_title
-            item.set_callback(
-                list_videos,
-                item_id=item_id,
-                program_url=program_url)
+            item.set_callback(list_videos,
+                              item_id=item_id,
+                              program_url=program_url)
             item_post_treatment(item)
             yield item
 
@@ -96,8 +96,8 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     for video_datas in list_videos_datas:
         video_title = ''
         if video_datas.find('.//img').get('alt'):
-            video_title = video_datas.find(
-                './/img').get('alt').replace('VIDEO: ', '')
+            video_title = video_datas.find('.//img').get('alt').replace(
+                'VIDEO: ', '')
         video_image = video_datas.find('.//img').get('data-src')
         video_id = video_datas.find('.//figure').get('data-id')
 
@@ -105,23 +105,27 @@ def list_videos(plugin, item_id, program_url, **kwargs):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(URL_REPLAY_STREAM % video_id)
     json_parser = json.loads(resp.text)
     stream_url = ''
-    for stream_datas in json_parser["channel"]["item"]["media-group"]["media-content"]:
+    for stream_datas in json_parser["channel"]["item"]["media-group"][
+            "media-content"]:
         if stream_datas["@attributes"]["type"] == 'application/x-mpegURL':
             stream_url = stream_datas["@attributes"]["url"]
 
@@ -140,7 +144,8 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     resp = urlquick.get(URL_LIVE_STREAM)
     json_parser = json.loads(resp.text)
     stream_url = ''
-    for live_datas in json_parser["channel"]["item"]["media-group"]["media-content"]:
+    for live_datas in json_parser["channel"]["item"]["media-group"][
+            "media-content"]:
         if 'application/x-mpegURL' in live_datas["@attributes"]["type"]:
             if 'preview' not in live_datas["@attributes"]["url"]:
                 stream_url = live_datas["@attributes"]["url"]

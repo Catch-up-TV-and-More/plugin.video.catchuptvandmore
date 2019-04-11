@@ -62,17 +62,18 @@ def list_programs(plugin, item_id, **kwargs):
     root = resp.parse()
 
     for program_datas in root.iterfind(".//a[@class='show-item']"):
-        program_title = program_datas.get('href').replace('/shows/', '').replace('-', ' ')
+        program_title = program_datas.get('href').replace('/shows/',
+                                                          '').replace(
+                                                              '-', ' ')
         program_image = program_datas.find('.//img').get('src')
         program_url = URL_ROOT + program_datas.get('href')
 
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url)
         item_post_treatment(item)
         yield item
 
@@ -84,7 +85,8 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     root = resp.parse()
 
     for video_datas in root.iterfind(".//div[@class='event-item episode']"):
-        video_title = video_datas.find('.//h3').text + video_datas.find('.//h3/span').text
+        video_title = video_datas.find('.//h3').text + video_datas.find(
+            './/h3/span').text
         video_image = ''
         for image_datas in video_datas.findall('.//img'):
             if 'jpg' in image_datas.get('src'):
@@ -99,25 +101,27 @@ def list_videos(plugin, item_id, program_url, **kwargs):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    final_video_url = re.compile(
-        r'file\': "(.*?)"').findall(resp.text)[0]
+    final_video_url = re.compile(r'file\': "(.*?)"').findall(resp.text)[0]
 
     if download_mode:
-            return download.download_video(final_video_url, video_label)
+        return download.download_video(final_video_url, video_label)
     return final_video_url
 
 
@@ -129,5 +133,4 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_ROOT)
-    return re.compile(
-        r'file\': "(.*?)"').findall(resp.text)[0]
+    return re.compile(r'file\': "(.*?)"').findall(resp.text)[0]

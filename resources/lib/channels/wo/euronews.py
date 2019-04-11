@@ -50,7 +50,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     final_language = DESIRED_LANGUAGE
-   
+
     # If we come from the M3U file and the language
     # is set in the M3U URL, then we overwrite
     # Catch Up TV & More language setting
@@ -66,13 +66,17 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     else:
         url_live_json = URL_LIVE_API % final_language.lower()
 
-    resp = urlquick.get(url_live_json, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+    resp = urlquick.get(url_live_json,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     json_parser = json.loads(resp.text)
     if 'http' in json_parser["url"]:
         url2_live_json = json_parser["url"]
     else:
         url2_live_json = 'https:' + json_parser["url"]
 
-    resp2 = urlquick.get(url2_live_json, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+    resp2 = urlquick.get(url2_live_json,
+                         headers={'User-Agent': web_utils.get_random_ua},
+                         max_age=-1)
     json_parser_2 = json.loads(resp2.text)
     return json_parser_2["primary"]

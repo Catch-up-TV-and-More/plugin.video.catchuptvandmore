@@ -40,7 +40,6 @@ import xbmcgui
 # TO DO
 # Add replay
 
-
 URL_ROOT = 'http://www.lemanbleu.ch'
 
 # Live
@@ -76,16 +75,15 @@ def list_programs(plugin, item_id, **kwargs):
 
     for program_datas in root.iterfind(".//li"):
         program_title = program_datas.find('.//a').text
-        program_id = re.compile(
-            r'this\,(.*?)\)').findall(program_datas.find('.//a').get('onclick'))[0]
+        program_id = re.compile(r'this\,(.*?)\)').findall(
+            program_datas.find('.//a').get('onclick'))[0]
 
         item = Listitem()
         item.label = program_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_id=program_id,
-            page='1')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_id=program_id,
+                          page='1')
         item_post_treatment(item)
         yield item
 
@@ -101,7 +99,8 @@ def list_videos(plugin, item_id, program_id, page, **kwargs):
         video_image = URL_ROOT + video_datas.find('.//img').get('src')
         video_plot = video_datas.find('.//p').text
         video_url = URL_ROOT + video_datas.find('.//a').get('href')
-        date_value = video_datas.find(".//span[@class='date']").text.split(' ')[1]
+        date_value = video_datas.find(".//span[@class='date']").text.split(
+            ' ')[1]
 
         item = Listitem()
         item.label = video_title
@@ -109,27 +108,29 @@ def list_videos(plugin, item_id, program_id, page, **kwargs):
         item.info['plot'] = video_plot
         item.info.date(date_value, '%d.%m.%Y')
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        program_id=program_id,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             program_id=program_id,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
-    stream_url = re.compile(
-        r'og\:video\" content\=\"(.*?)\"').findall(resp.text)[0]
+    stream_url = re.compile(r'og\:video\" content\=\"(.*?)\"').findall(
+        resp.text)[0]
 
     desired_quality = Script.setting.get_string('quality')
     all_datas_videos_quality = []
@@ -146,8 +147,7 @@ def get_video_url(
             all_datas_videos_path.append(
                 stream_url.replace('mp4-231', 'mp4-12'))
         else:
-            all_datas_videos_path.append(
-                stream_url)
+            all_datas_videos_path.append(stream_url)
 
     url = ''
     if desired_quality == "DIALOG":
@@ -178,12 +178,13 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    player_id = re.compile(
-        r'\&player\=(.*?)\"').findall(resp.text)[0]
+    player_id = re.compile(r'\&player\=(.*?)\"').findall(resp.text)[0]
     session_urlquick = urlquick.Session(allow_redirects=False)
     resp2 = session_urlquick.get(URL_INFOMANIAK_LIVE % player_id)
     location_url = resp2.headers['Location']
-    resp3 = urlquick.get(location_url.replace('infomaniak.com/', 'infomaniak.com/playerConfig.php'), max_age=-1)
+    resp3 = urlquick.get(location_url.replace(
+        'infomaniak.com/', 'infomaniak.com/playerConfig.php'),
+                         max_age=-1)
     json_parser = json.loads(resp3.text)
     stream_url = ''
     for stram_datas in json_parser['data']['integrations']:

@@ -36,7 +36,6 @@ import json
 import re
 import urlquick
 
-
 # TO DO
 # Token (live) maybe more work todo
 # Fix Download Mode
@@ -70,11 +69,10 @@ def list_programs(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = program_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url,
-            page='0')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url,
+                          page='0')
         item_post_treatment(item)
         yield item
 
@@ -91,28 +89,29 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
         video_image = URL_ROOT + video_datas.find('.//img').get('src')
         video_url = URL_ROOT + video_datas.find('.//a').get('href')
 
-
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        program_url=program_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             program_url=program_url,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
     root = resp.parse()
@@ -134,8 +133,8 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    live_id = re.compile(
-         r'telemb.fcst.tv/player/embed\/(.*?)[\?\"]').findall(resp.text)[0]
+    live_id = re.compile(r'telemb.fcst.tv/player/embed\/(.*?)[\?\"]').findall(
+        resp.text)[0]
     resp2 = urlquick.get(URL_STREAM_LIVE % live_id, max_age=-1)
     return 'https://tvl-live.l3.freecaster.net' + re.compile(
         r'freecaster\.net(.*?)\"').findall(resp2.text)[0]

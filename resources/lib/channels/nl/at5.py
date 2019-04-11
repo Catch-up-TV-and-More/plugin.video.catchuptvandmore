@@ -46,6 +46,7 @@ URL_LIVE = URL_ROOT + '/tv'
 URL_VIDEOS = 'https://at5news.vinsontv.com/api/news?source=web&slug=%s&page=%s'
 # slug, page
 
+
 def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
@@ -72,11 +73,10 @@ def list_categories(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_slug=category_slug,
-            page='0')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_slug=category_slug,
+                          page='0')
         item_post_treatment(item)
         yield item
 
@@ -97,8 +97,8 @@ def list_videos(plugin, item_id, category_slug, page, **kwargs):
             if 'url' in video_datas["media"][0]:
                 video_url = video_datas["media"][0]["url"]
             elif 'youtube.com/embed' in video_datas["text"]:
-                video_id = re.compile(
-                    r'youtube\.com\/embed\/(.*?)\"').findall(video_datas["text"])[0]
+                video_id = re.compile(r'youtube\.com\/embed\/(.*?)\"').findall(
+                    video_datas["text"])[0]
 
             if video_url is not None:
                 item = Listitem()
@@ -106,12 +106,14 @@ def list_videos(plugin, item_id, category_slug, page, **kwargs):
                 item.art['thumb'] = video_image
                 item.info['plot'] = video_plot
 
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    video_url=video_url)
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' +
+                                  item.label,
+                                  video_url=video_url)
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
                 yield item
 
             if video_id is not None:
@@ -120,24 +122,29 @@ def list_videos(plugin, item_id, category_slug, page, **kwargs):
                 item.art['thumb'] = video_image
                 item.info['plot'] = video_plot
 
-                item.set_callback(
-                    get_video_yt_url,
-                    item_id=item_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    video_id=video_id)
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                item.set_callback(get_video_yt_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' +
+                                  item.label,
+                                  video_id=video_id)
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
                 yield item
 
     # More videos...
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_slug=category_slug,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             category_slug=category_slug,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     if download_mode:
         return download.download_video(video_url, video_label)
@@ -145,10 +152,15 @@ def get_video_url(
 
 
 @Resolver.register
-def get_video_yt_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_yt_url(plugin,
+                     item_id,
+                     video_id,
+                     download_mode=False,
+                     video_label=None,
+                     **kwargs):
 
-    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode, video_label)
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode,
+                                             video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -158,6 +170,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_LIVE, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-    return re.compile(
-        r'videoStream\"\:\"(.*?)\"').findall(resp.text)[0]
+    resp = urlquick.get(URL_LIVE,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
+    return re.compile(r'videoStream\"\:\"(.*?)\"').findall(resp.text)[0]

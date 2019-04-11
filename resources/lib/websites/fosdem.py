@@ -28,7 +28,6 @@ from resources.lib.labels import LABELS
 from resources.lib import download
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
 # TO DO
 # YEARS BEFORE 2012 (VIDEO in different format and accessible differently)
 
@@ -54,10 +53,9 @@ def root(plugin, item_id, **kwargs):
         item.label = year_label
         category_url = URL_SCHEDULE_XML % year_label
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url)
         item_post_treatment(item)
         yield item
 
@@ -65,8 +63,7 @@ def root(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, category_url, **kwargs):
     """Build videos listing"""
-    videos_datas_xml = urlquick.get(
-        category_url).text
+    videos_datas_xml = urlquick.get(category_url).text
     videos_datas_xml = utils.ensure_native_str(videos_datas_xml)
     xml_elements = ET.XML(videos_datas_xml)
 
@@ -83,20 +80,24 @@ def list_videos(plugin, item_id, category_url, **kwargs):
             item.label = video.find("title").text
 
             if video.find("abstract").text:
-                item.info['plot'] = utils.strip_tags(video.find("abstract").text)
+                item.info['plot'] = utils.strip_tags(
+                    video.find("abstract").text)
 
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                video_url=video_url)
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
     if download_mode:
         return download.download_video(video_url, video_label)

@@ -76,10 +76,9 @@ def list_categories(plugin, item_id, **kwargs):
     if item_id == 'skynews':
         item = Listitem()
         item.label = 'Skynews (youtube)'
-        item.set_callback(
-            list_videos_youtube,
-            item_id=item_id,
-            channel_youtube='UCoMdktPbSTixAyNGwb-UYkQ')
+        item.set_callback(list_videos_youtube,
+                          item_id=item_id,
+                          channel_youtube='UCoMdktPbSTixAyNGwb-UYkQ')
         item_post_treatment(item)
         yield item
 
@@ -87,28 +86,25 @@ def list_categories(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = 'Soccer AM (youtube)'
-        item.set_callback(
-            list_videos_youtube,
-            item_id=item_id,
-            channel_youtube='UCE97AW7eR8VVbVPBy4cCLKg')
+        item.set_callback(list_videos_youtube,
+                          item_id=item_id,
+                          channel_youtube='UCE97AW7eR8VVbVPBy4cCLKg')
         item_post_treatment(item)
         yield item
 
         item = Listitem()
         item.label = 'Sky Sports Football (youtube)'
-        item.set_callback(
-            list_videos_youtube,
-            item_id=item_id,
-            channel_youtube='UCNAf1k0yIjyGu3k9BwAg3lg')
+        item.set_callback(list_videos_youtube,
+                          item_id=item_id,
+                          channel_youtube='UCNAf1k0yIjyGu3k9BwAg3lg')
         item_post_treatment(item)
         yield item
 
         item = Listitem()
         item.label = 'Sky Sports (youtube)'
-        item.set_callback(
-            list_videos_youtube,
-            item_id=item_id,
-            channel_youtube='UCTU_wC79Dgi9rh4e9-baTqA')
+        item.set_callback(list_videos_youtube,
+                          item_id=item_id,
+                          channel_youtube='UCTU_wC79Dgi9rh4e9-baTqA')
         item_post_treatment(item)
         yield item
 
@@ -121,11 +117,10 @@ def list_categories(plugin, item_id, **kwargs):
 
             item = Listitem()
             item.label = category_title
-            item.set_callback(
-                list_videos_sports,
-                item_id=item_id,
-                category_url=category_url,
-                page='1')
+            item.set_callback(list_videos_sports,
+                              item_id=item_id,
+                              category_url=category_url,
+                              page='1')
             item_post_treatment(item)
             yield item
 
@@ -156,36 +151,37 @@ def list_videos_sports(plugin, item_id, category_url, page, **kwargs):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if at_least_one_item:
         # More videos...
-        yield Listitem.next_page(
-            item_id=item_id,
-            category_url=category_url,
-            page=str(int(page) + 1))
+        yield Listitem.next_page(item_id=item_id,
+                                 category_url=category_url,
+                                 page=str(int(page) + 1))
     else:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
         yield False
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     data_embed_token = urlquick.get(URL_PCODE_EMBED_TOKEN).text
-    pcode = re.compile(
-        'sas/embed_token/(.*?)/all').findall(data_embed_token)[0]
-    data_embed_token = urllib.quote_plus(
-        data_embed_token.replace('"', ''))
-    video_vod = urlquick.get(
-        URL_OOYALA_VOD % (pcode, video_id, data_embed_token)).text
+    pcode = re.compile('sas/embed_token/(.*?)/all').findall(
+        data_embed_token)[0]
+    data_embed_token = urllib.quote_plus(data_embed_token.replace('"', ''))
+    video_vod = urlquick.get(URL_OOYALA_VOD %
+                             (pcode, video_id, data_embed_token)).text
     json_parser = json.loads(video_vod)
     if 'streams' in json_parser["authorization_data"][video_id]:
         for stream in json_parser["authorization_data"][video_id]["streams"]:
@@ -209,6 +205,6 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE_SKYNEWS)
-    live_id = re.compile(
-        r'www.youtube.com/embed/(.*?)\?').findall(resp.text)[0]
+    live_id = re.compile(r'www.youtube.com/embed/(.*?)\?').findall(
+        resp.text)[0]
     return resolver_proxy.get_stream_youtube(plugin, live_id, False)

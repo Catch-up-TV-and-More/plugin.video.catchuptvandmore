@@ -20,7 +20,6 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-
 from codequick import Route, Resolver, Listitem, utils
 import urlquick
 
@@ -33,7 +32,6 @@ from resources.lib.labels import LABELS
 from resources.lib import download
 from resources.lib import resolver_proxy
 from resources.lib.listitem_utils import item_post_treatment, item2dict
-
 
 # TO DO
 # Fix Bonus
@@ -76,42 +74,33 @@ def root_taratata(plugin, item_id, **kwargs):
         else:
             continue
 
-        item.set_callback(
-            eval(value_next),
-            item_id=item_id,
-            category_url=category_url,
-            page=1
-        )
+        item.set_callback(eval(value_next),
+                          item_id=item_id,
+                          category_url=category_url,
+                          page=1)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
 def list_shows_taratata(plugin, item_id, category_url, page, **kwargs):
-    resp = urlquick.get(
-        category_url + '/page/%s' % str(page))
+    resp = urlquick.get(category_url + '/page/%s' % str(page))
     root = resp.parse()
 
     for live in root.iterfind(".//div[@class='col-md-6']"):
         item = Listitem()
         item.label = live.find('.//img').get('alt')
         item.art['thumb'] = live.find('.//img').get('src')
-        show_url = URL_ROOT(live.find(
-            './/a').get('href'))
+        show_url = URL_ROOT(live.find('.//a').get('href'))
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=show_url
-        )
+        item.set_callback(list_videos, item_id=item_id, category_url=show_url)
         item_post_treatment(item)
         yield item
 
     # More videos...
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=category_url,
-        page=page + 1)
+    yield Listitem.next_page(item_id=item_id,
+                             category_url=category_url,
+                             page=page + 1)
 
 
 @Route.register
@@ -125,11 +114,9 @@ def list_shows_artistes_1(plugin, item_id, category_url, page, **kwargs):
         item.label = alphabet.text
         alphabet_url = URL_ROOT(alphabet.get('href'))
 
-        item.set_callback(
-            list_shows_artistes_2,
-            item_id=item_id,
-            category_url=alphabet_url
-        )
+        item.set_callback(list_shows_artistes_2,
+                          item_id=item_id,
+                          category_url=alphabet_url)
         item_post_treatment(item)
         yield item
 
@@ -167,11 +154,9 @@ def list_shows_artistes_3(plugin, item_id, category_url, **kwargs):
             item.label = videos.text
             videos_url = URL_ROOT(videos.get('href'))
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=videos_url
-        )
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=videos_url)
         item_post_treatment(item)
         yield item
 
@@ -187,12 +172,10 @@ def list_shows_bonus(plugin, item_id, category_url, page, **kwargs):
         item.label = bonus.text
         bonus_url = URL_ROOT(bonus.get('href'))
 
-        item.set_callback(
-            list_videos_bonus,
-            item_id=item_id,
-            category_url=bonus_url,
-            page=1
-        )
+        item.set_callback(list_videos_bonus,
+                          item_id=item_id,
+                          category_url=bonus_url,
+                          page=1)
         item_post_treatment(item)
         yield item
 
@@ -207,18 +190,14 @@ def list_videos(plugin, item_id, category_url, **kwargs):
     if video_integral is not None:
         item = Listitem()
         item.label = video_integral.find('.//img').get('alt')
-        video_url = URL_ROOT(video_integral.find(
-            './/a').get('href'))
+        video_url = URL_ROOT(video_integral.find('.//a').get('href'))
         item.art['thumb'] = video_integral.find('.//img').get('src')
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            item_dict=item2dict(item)
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_url=video_url,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -229,14 +208,11 @@ def list_videos(plugin, item_id, category_url, **kwargs):
         video_url = URL_ROOT(video.find('.//a').get('href'))
         item.art['thumb'] = video.find('.//img').get('src')
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            item_dict=item2dict(item)
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_url=video_url,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -244,8 +220,7 @@ def list_videos(plugin, item_id, category_url, **kwargs):
 @Route.register
 def list_videos_bonus(plugin, item_id, category_url, page, **kwargs):
 
-    resp = urlquick.get(
-        category_url + '/page/%s' % str(page))
+    resp = urlquick.get(category_url + '/page/%s' % str(page))
     root = resp.parse()
 
     at_least_one_item = False
@@ -255,17 +230,14 @@ def list_videos_bonus(plugin, item_id, category_url, page, **kwargs):
         at_least_one_item = True
         item = Listitem()
         item.label = video_integral.find('.//img').get('alt')
-        video_url = URL_ROOT(video_integral.find(
-            './/a').get('href'))
+        video_url = URL_ROOT(video_integral.find('.//a').get('href'))
         item.art['thumb'] = video_integral.find('.//img').get('src')
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            item_dict=item2dict(item)
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_url=video_url,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -276,31 +248,32 @@ def list_videos_bonus(plugin, item_id, category_url, page, **kwargs):
         video_url = URL_ROOT(video.find('.//a').get('href'))
         item.art['thumb'] = video.find('.//img').get('src')
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            item_dict=item2dict(item)
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_url=video_url,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if page is not None and at_least_one_item:
         # More videos...
-        yield Listitem.next_page(
-            item_id=item_id,
-            category_url=category_url,
-            page=page + 1)
+        yield Listitem.next_page(item_id=item_id,
+                                 category_url=category_url,
+                                 page=page + 1)
     else:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
         yield False
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  item_dict=None,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
     url_selected = ''
     all_datas_videos_quality = []
@@ -313,7 +286,8 @@ def get_video_url(
         if '#video-' in video.get('href'):
             # Find a better solution to strip
             if video.find('.//span') is not None:
-                all_datas_videos_quality.append(video.text.strip() + ' ' + video.find('.//span').text)
+                all_datas_videos_quality.append(video.text.strip() + ' ' +
+                                                video.find('.//span').text)
             else:
                 all_datas_videos_quality.append(video.text)
             # Get link
@@ -326,9 +300,10 @@ def get_video_url(
                         url = stream.get('data-source')
             # Cas Yt
             else:
-                video_id = re.compile(
-                    'youtube.com/embed/(.*?)\?').findall(videos_html.text)[0]
-                url = resolver_proxy.get_stream_youtube(plugin, video_id, False)
+                video_id = re.compile('youtube.com/embed/(.*?)\?').findall(
+                    videos_html.text)[0]
+                url = resolver_proxy.get_stream_youtube(
+                    plugin, video_id, False)
 
             all_datas_videos_path.append(url + '|referer=%s' % video_url)
 
@@ -336,14 +311,16 @@ def get_video_url(
         elif '#ftv-player-' in video.get('href'):
             # Get link
             value_ftvlayer_id = video.get('data-ftvplayer-id')
-            for stream in root.iterfind(".//iframe[@class='embed-responsive-item']"):
+            for stream in root.iterfind(
+                    ".//iframe[@class='embed-responsive-item']"):
                 if stream.get('id') == value_ftvlayer_id:
                     url_id = stream.get('src')
             id_embeded = url_id.split('akamaihd.net/')[1]
             json_value = urlquick.get(SHOW_INFO_FTV % id_embeded)
             json_value_parser = json.loads(json_value.text)
             id_diffusion = json_value_parser["video_id"]
-            return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion, item_dict, download_mode=download_mode)
+            return resolver_proxy.get_francetv_video_stream(
+                plugin, id_diffusion, item_dict, download_mode=download_mode)
 
     final_url = ''
     if len(all_datas_videos_quality) > 1:

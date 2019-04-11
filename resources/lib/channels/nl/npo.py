@@ -82,54 +82,50 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     if cqu.get_kodi_version() < 18:
-        xbmcgui.Dialog().ok(
-            'Info',
-            plugin.localize(30602))
+        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
         return False
 
     is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
     if not is_helper.check_inputstream():
         return False
 
-    headers = {
-        'X-Requested-With': 'XMLHttpRequest'
-    }
+    headers = {'X-Requested-With': 'XMLHttpRequest'}
 
     resp_token = urlquick.get(URL_TOKEN_API, headers=headers, max_age=-1)
     session_token = resp_token.cookies['npo_session']
-    
+
     json_parser_token = json.loads(resp_token.text)
     api_token = json_parser_token['token']
-    
+
     resp = urlquick.get(URL_LIVE_ID % item_id, max_age=-1)
 
-    video_id = re.compile(
-        r'\"iframe\-(.*?)\"').findall(resp.text)[0]
-    
-    # Build PAYLOAD
-    payload = {
-        "_token": api_token
-    }
-    
-    cookies = {
-    	"npo_session": session_token
-    }
+    video_id = re.compile(r'\"iframe\-(.*?)\"').findall(resp.text)[0]
 
-    resp2 = urlquick.post(URL_TOKEN_ID % video_id, cookies=cookies, data=payload, max_age=-1)
+    # Build PAYLOAD
+    payload = {"_token": api_token}
+
+    cookies = {"npo_session": session_token}
+
+    resp2 = urlquick.post(URL_TOKEN_ID % video_id,
+                          cookies=cookies,
+                          data=payload,
+                          max_age=-1)
     json_parser = json.loads(resp2.text)
     token_id = json_parser['token']
 
-    resp3 = urlquick.get(URL_STREAM % (video_id, token_id), max_age = -1)
+    resp3 = urlquick.get(URL_STREAM % (video_id, token_id), max_age=-1)
     json_parser2 = json.loads(resp3.text)
 
-    if "html" in json_parser2 and "Vanwege uitzendrechten is het niet mogelijk om deze uitzending buiten Nederland te bekijken." in json_parser2["html"]:
+    if "html" in json_parser2 and "Vanwege uitzendrechten is het niet mogelijk om deze uitzending buiten Nederland te bekijken." in json_parser2[
+            "html"]:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
-    licence_url = json_parser2["stream"]["keySystemOptions"][0]["options"]["licenseUrl"]
-    licence_url_header = json_parser2["stream"]["keySystemOptions"][0]["options"]["httpRequestHeaders"]
+    licence_url = json_parser2["stream"]["keySystemOptions"][0]["options"][
+        "licenseUrl"]
+    licence_url_header = json_parser2["stream"]["keySystemOptions"][0][
+        "options"]["httpRequestHeaders"]
     xcdata_value = licence_url_header["x-custom-data"]
-
 
     item = Listitem()
     item.path = json_parser2["stream"]["src"]
@@ -144,7 +140,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property['inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&x-custom-data=%s|R{SSM}|' % xcdata_value
+    item.property[
+        'inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&x-custom-data=%s|R{SSM}|' % xcdata_value
 
     return item
-

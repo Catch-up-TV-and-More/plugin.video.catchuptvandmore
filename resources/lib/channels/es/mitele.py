@@ -20,7 +20,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-
 # The unicode_literals import only has
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
@@ -37,7 +36,6 @@ import re
 import requests
 import urlquick
 import xbmcgui
-
 
 # TO DO
 # Add Replay
@@ -76,7 +74,10 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         lives_hash_json = session_requests.post(
             URL_LIVE_HASH,
             data='{"gcp": "%s"}' % (json_parser["locations"][0]["gcp"]),
-            headers={'Connection': 'keep-alive', 'Content-type': 'application/json'})
+            headers={
+                'Connection': 'keep-alive',
+                'Content-type': 'application/json'
+            })
         lives_hash_jsonparser = json.loads(lives_hash_json.text)
 
         if 'message' in lives_hash_jsonparser:
@@ -84,12 +85,16 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                 plugin.notify('ERROR', plugin.localize(30713))
             return False
 
-        m3u8_video_auto = session_requests.get(url_stream_without_hash + '&' + lives_hash_jsonparser["suffix"])
+        m3u8_video_auto = session_requests.get(url_stream_without_hash + '&' +
+                                               lives_hash_jsonparser["suffix"])
     else:
         lives_stream_json = session_requests.post(
             URL_LIVE_HASH,
             data='{"gcp": "%s"}' % (json_parser["locations"][0]["gcp"]),
-            headers={'Connection': 'keep-alive', 'Content-type': 'application/json'})
+            headers={
+                'Connection': 'keep-alive',
+                'Content-type': 'application/json'
+            })
         lives_stream_jsonparser = json.loads(lives_stream_json.text)
 
         if 'message' in lives_stream_jsonparser:
@@ -97,7 +102,8 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                 plugin.notify('ERROR', plugin.localize(30713))
             return False
 
-        m3u8_video_auto = session_requests.get(lives_stream_jsonparser["stream"])
+        m3u8_video_auto = session_requests.get(
+            lives_stream_jsonparser["stream"])
         root = lives_stream_jsonparser["stream"].split('master.m3u8')[0]
 
     lines = m3u8_video_auto.text.splitlines()
@@ -109,14 +115,12 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                 all_datas_videos_quality.append(
                     lines[k].split('RESOLUTION=')[1])
                 if 'http' in lines[k + 1]:
-                    all_datas_videos_path.append(
-                        lines[k + 1])
+                    all_datas_videos_path.append(lines[k + 1])
                 else:
-                    all_datas_videos_path.append(
-                        root + '/' + lines[k + 1])
+                    all_datas_videos_path.append(root + '/' + lines[k + 1])
         seleted_item = xbmcgui.Dialog().select(
             plugin.localize(LABELS['choose_video_quality']),
-                all_datas_videos_quality)
+            all_datas_videos_quality)
         if seleted_item > -1:
             return all_datas_videos_path[seleted_item]
         else:

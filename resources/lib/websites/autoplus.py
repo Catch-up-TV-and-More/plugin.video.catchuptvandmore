@@ -30,8 +30,6 @@ from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
-
 # TO DO
 
 URL_ROOT = 'https://www.autoplus.fr/video/'
@@ -49,10 +47,7 @@ def root(plugin, item_id, **kwargs):
     item = Listitem()
     item.label = plugin.localize(LABELS['All videos'])
 
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        page=1)
+    item.set_callback(list_videos, item_id=item_id, page=1)
     item_post_treatment(item)
     yield item
 
@@ -60,31 +55,28 @@ def root(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, page, **kwargs):
     """Build videos listing"""
-    resp = urlquick.get(
-        URL_ROOT + '/?page=%s' % page)
+    resp = urlquick.get(URL_ROOT + '/?page=%s' % page)
 
     # Get Video First Page
     if page == 1:
         item = Listitem()
 
-        video_id = re.compile(
-            r'video: \"(.*?)\"').findall(resp.text)[0]
+        video_id = re.compile(r'video: \"(.*?)\"').findall(resp.text)[0]
         url_first_video = 'https://www.dailymotion.com/embed/video/%s' % video_id
         info_first_video = urlquick.get(url_first_video).text
-        info_first_video_json = re.compile(
-            'config = (.*?)};').findall(info_first_video)[0]
+        info_first_video_json = re.compile('config = (.*?)};').findall(
+            info_first_video)[0]
         # print 'info_first_video_json : ' + info_first_video_json + '}'
-        info_first_video_jsonparser = json.loads(
-            info_first_video_json + '}')
+        info_first_video_jsonparser = json.loads(info_first_video_json + '}')
 
         item.label = info_first_video_jsonparser["metadata"]["title"]
-        item.art['thumb'] = info_first_video_jsonparser["metadata"]["poster_url"]
+        item.art['thumb'] = info_first_video_jsonparser["metadata"][
+            "poster_url"]
 
-        item.set_callback(
-            get_video_url_first_video,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url_first_video,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -94,48 +86,45 @@ def list_videos(plugin, item_id, page, **kwargs):
 
         item.label = episode.find('.//img').get('alt')
         video_url = URL_ROOT + episode.find('.//a').get('href')
-        item.art['thumb'] = episode.find(
-            './/img').get('src').replace('|', '%7C')
+        item.art['thumb'] = episode.find('.//img').get('src').replace(
+            '|', '%7C')
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
-    yield Listitem.next_page(
-        item_id=item_id,
-        page=page + 1)
+    yield Listitem.next_page(item_id=item_id, page=page + 1)
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
 
     video_html = urlquick.get(video_url).text
     # Get DailyMotion Id Video
-    video_id = re.compile(
-        r'video: \"(.*?)\"').findall(
-        video_html)[0]
+    video_id = re.compile(r'video: \"(.*?)\"').findall(video_html)[0]
 
-    return resolver_proxy.get_stream_dailymotion(
-        plugin,
-        video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)
 
 
 @Resolver.register
-def get_video_url_first_video(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url_first_video(plugin,
+                              item_id,
+                              video_id,
+                              download_mode=False,
+                              video_label=None,
+                              **kwargs):
     """Get video URL and start video player"""
 
-    return resolver_proxy.get_stream_dailymotion(
-        plugin,
-        video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)

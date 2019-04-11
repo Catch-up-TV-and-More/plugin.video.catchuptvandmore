@@ -57,7 +57,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     final_language = DESIRED_LANGUAGE
-   
+
     # If we come from the M3U file and the language
     # is set in the M3U URL, then we overwrite
     # Catch Up TV & More language setting
@@ -68,19 +68,20 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     if final_language.lower() == 'es':
         resp = urlquick.get(URL_LIVE_ES)
-        video_uri = re.compile(
-            r'\"config"\:\{\"uri\"\:\"(.*?)\"').findall(resp.text)[0]
+        video_uri = re.compile(r'\"config"\:\{\"uri\"\:\"(.*?)\"').findall(
+            resp.text)[0]
     # elif DESIRED_LANGUAGE.lower() == 'us':
     #     resp = urlquick.get(URL_LIVE_US)
     #     video_uri = re.compile(
     #         r'\"config"\:\{\"uri\"\:\"(.*?)\"').findall(resp.text)[0]
     elif final_language.lower() == 'it':
         resp = urlquick.get(URL_LIVE_IT)
-        video_uri_1 = re.compile(
-            r'data-mtv-uri="(.*?)"').findall(resp.text)[0]
-        headers = {'Content-Type': 'application/json', 'referer': 'http://www.paramountchannel.it/tv/diretta'}
-        resp2 = urlquick.get(
-            URL_LIVE_URI % video_uri_1, headers=headers)
+        video_uri_1 = re.compile(r'data-mtv-uri="(.*?)"').findall(resp.text)[0]
+        headers = {
+            'Content-Type': 'application/json',
+            'referer': 'http://www.paramountchannel.it/tv/diretta'
+        }
+        resp2 = urlquick.get(URL_LIVE_URI % video_uri_1, headers=headers)
         json_parser = json.loads(resp2.text)
         if 'items' not in json_parser["feed"]:
             plugin.notify('ERROR', plugin.localize(30713))

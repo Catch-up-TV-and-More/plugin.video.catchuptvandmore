@@ -25,8 +25,6 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 from codequick import Script
-
-
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -38,6 +36,4 @@ the addon's tree architecture.
     - module: Item module to load in order to work (like 6play.py)
 """
 
-menu = {
-
-}
+menu = {}

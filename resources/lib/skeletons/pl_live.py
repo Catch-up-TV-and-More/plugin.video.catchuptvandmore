@@ -25,8 +25,6 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 from codequick import Script
-
-
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -40,27 +38,18 @@ the addon's tree architecture.
 
 menu = {
     'tvp3': {
-        'callback': 'live_bridge',
-        'thumb': 'channels/pl/tvp3.png',
-        'fanart': 'channels/pl/tvp3_fanart.jpg',
-        'module': 'resources.lib.channels.pl.tvp',
+        'callback':
+        'live_bridge',
+        'thumb':
+        'channels/pl/tvp3.png',
+        'fanart':
+        'channels/pl/tvp3_fanart.jpg',
+        'module':
+        'resources.lib.channels.pl.tvp',
         'available_languages': [
-            "Białystok",
-            "Bydgoszcz",
-            "Gdańsk",
-            "Gorzów Wielkopolski",
-            "Katowice",
-            "Kielce",
-            "Kraków",
-            "Lublin",
-            "Łódź",
-            "Olsztyn",
-            "Opole",
-            "Poznań",
-            "Rzeszów",
-            "Szczecin",
-            "Warszawa",
-            "Wrocław"
+            "Białystok", "Bydgoszcz", "Gdańsk", "Gorzów Wielkopolski",
+            "Katowice", "Kielce", "Kraków", "Lublin", "Łódź", "Olsztyn",
+            "Opole", "Poznań", "Rzeszów", "Szczecin", "Warszawa", "Wrocław"
         ]
     },
     'tvpinfo': {

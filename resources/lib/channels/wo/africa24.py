@@ -37,7 +37,6 @@ import urlquick
 # TO DO
 # Add Replay
 
-
 URL_ROOT = 'https://www.africa24tv.com/'
 
 
@@ -49,6 +48,5 @@ def live_entry(plugin, item_id, item_dict):
 def get_live_url(plugin, item_id, video_id, item_dict):
 
     resp = urlquick.get(URL_ROOT)
-    live_id = re.compile(
-        r'youtube\.com\/embed\/(.*?)\"').findall(resp.text)[0]
+    live_id = re.compile(r'youtube\.com\/embed\/(.*?)\"').findall(resp.text)[0]
     return resolver_proxy.get_stream_youtube(plugin, live_id, False)

@@ -32,16 +32,13 @@ from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
 import base64
 import json
 import re
 import urlquick
 
-
 # TO DO
 # Add info Video (duration, ...)
-
 
 URL_ROOT = 'https://www.channelnewsasia.com'
 
@@ -81,17 +78,14 @@ def list_categories(plugin, item_id, **kwargs):
     """
     item = Listitem()
     item.label = 'Videos'
-    item.set_callback(
-        list_programs_videos,
-        item_id=item_id)
+    item.set_callback(list_programs_videos, item_id=item_id)
     yield item
 
     item = Listitem()
     item.label = 'Video On Demand'
-    item.set_callback(
-        list_programs_videos_on_demand,
-        item_id=item_id,
-        page='1')
+    item.set_callback(list_programs_videos_on_demand,
+                      item_id=item_id,
+                      page='1')
     item_post_treatment(item)
     yield item
 
@@ -104,9 +98,10 @@ def list_programs_videos(plugin, item_id, **kwargs):
     - ...
     """
     resp = urlquick.get(URL_VIDEOS_DATAS)
-    context_id = re.compile(
-        'contextId\" value=\"(.*?)\"').findall(resp.text)[0]
-    root = resp.parse("select", attrs={"class": "filter__input i-arrow-select-small-red"})
+    context_id = re.compile('contextId\" value=\"(.*?)\"').findall(
+        resp.text)[0]
+    root = resp.parse(
+        "select", attrs={"class": "filter__input i-arrow-select-small-red"})
 
     for program_datas in root.iterfind(".//option"):
         program_title = program_datas.get('label')
@@ -114,12 +109,11 @@ def list_programs_videos(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = program_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            context_id=context_id,
-            program_id=program_id,
-            page='1')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          context_id=context_id,
+                          program_id=program_id,
+                          page='1')
         item_post_treatment(item)
         yield item
 
@@ -132,8 +126,8 @@ def list_programs_videos_on_demand(plugin, item_id, page, **kwargs):
     - ...
     """
     resp = urlquick.get(URL_SHOWS_DATAS)
-    context_id = re.compile(
-        'contextId\" value=\"(.*?)\"').findall(resp.text)[0]
+    context_id = re.compile('contextId\" value=\"(.*?)\"').findall(
+        resp.text)[0]
     resp2 = urlquick.get(URL_SHOWS % (context_id, page))
     json_parser = json.loads(resp2.text)
 
@@ -147,17 +141,14 @@ def list_programs_videos_on_demand(plugin, item_id, page, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos_on_demand,
-            item_id=item_id,
-            program_url=program_url,
-            page='1')
+        item.set_callback(list_videos_on_demand,
+                          item_id=item_id,
+                          program_url=program_url,
+                          page='1')
         item_post_treatment(item)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
 
 
 @Route.register
@@ -175,27 +166,25 @@ def list_videos(plugin, item_id, context_id, program_id, page, **kwargs):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        context_id=context_id,
-        program_id=program_id,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             context_id=context_id,
+                             program_id=program_id,
+                             page=str(int(page) + 1))
 
 
 @Route.register
 def list_videos_on_demand(plugin, item_id, program_url, page, **kwargs):
 
     resp = urlquick.get(program_url)
-    context_id = re.compile(
-        'contextId\" value=\"(.*?)\"').findall(resp.text)[0]
+    context_id = re.compile('contextId\" value=\"(.*?)\"').findall(
+        resp.text)[0]
     resp2 = urlquick.get(URL_SHOWS % (context_id, page))
     json_parser = json.loads(resp2.text)
 
@@ -213,37 +202,40 @@ def list_videos_on_demand(plugin, item_id, program_url, page, **kwargs):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        program_url=program_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             program_url=program_url,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    list_stream_id = re.compile(
-        'video-asset-id="(.*?)"').findall(resp.text)
+    list_stream_id = re.compile('video-asset-id="(.*?)"').findall(resp.text)
 
     if len(list_stream_id) > 0:
         pcode_datas = urlquick.get(URL_GET_JS_PCODE)
-        pcode = re.compile(
-            r'ooyalaPCode\:"(.*?)"').findall(pcode_datas.text)[0]
-        reps_stream_datas = urlquick.get(URL_VIDEO_VOD % (pcode, list_stream_id[0]))
+        pcode = re.compile(r'ooyalaPCode\:"(.*?)"').findall(
+            pcode_datas.text)[0]
+        reps_stream_datas = urlquick.get(URL_VIDEO_VOD %
+                                         (pcode, list_stream_id[0]))
         json_parser = json.loads(reps_stream_datas.text)
         # Get Value url encodebase64
         if 'streams' in json_parser["authorization_data"][list_stream_id[0]]:
-            for stream_datas in json_parser["authorization_data"][list_stream_id[0]]["streams"]:
+            for stream_datas in json_parser["authorization_data"][
+                    list_stream_id[0]]["streams"]:
                 if stream_datas["delivery_type"] == 'hls':
                     stream_url_base64 = stream_datas["url"]["data"]
 
@@ -264,18 +256,19 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE_ID)
-    list_stream_id = re.compile(
-        'video-asset-id="(.*?)"').findall(resp.text)
+    list_stream_id = re.compile('video-asset-id="(.*?)"').findall(resp.text)
 
     if len(list_stream_id) > 0:
         pcode_datas = urlquick.get(URL_GET_JS_PCODE)
-        pcode = re.compile(
-            r'ooyalaPCode\:"(.*?)"').findall(pcode_datas.text)[0]
-        reps_stream_datas = urlquick.get(URL_VIDEO_VOD % (pcode, list_stream_id[0]))
+        pcode = re.compile(r'ooyalaPCode\:"(.*?)"').findall(
+            pcode_datas.text)[0]
+        reps_stream_datas = urlquick.get(URL_VIDEO_VOD %
+                                         (pcode, list_stream_id[0]))
         json_parser = json.loads(reps_stream_datas.text)
         # Get Value url encodebase64
         if 'streams' in json_parser["authorization_data"][list_stream_id[0]]:
-            for stream_datas in json_parser["authorization_data"][list_stream_id[0]]["streams"]:
+            for stream_datas in json_parser["authorization_data"][
+                    list_stream_id[0]]["streams"]:
                 if stream_datas["delivery_type"] == 'hls':
                     stream_url_base64 = stream_datas["url"]["data"]
             return base64.standard_b64decode(stream_url_base64)

@@ -32,8 +32,6 @@ from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
-
 # TO DO
 # Playlist
 
@@ -44,7 +42,6 @@ INFO_VIDEO = 'http://api.cbnews.webtv.flumotion.com/videos/%s'
 
 INFO_STREAM = 'http://cbnews.ondemand.flumotion.com/video/mp4/%s/%s.mp4'
 # Quality, IdStream
-
 
 QUALITIES_STREAM = ['low', 'hd']
 
@@ -58,7 +55,7 @@ def website_entry(plugin, item_id, **kwargs):
 
 def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
-    
+
     resp = urlquick.get(URL_ROOT)
     root = resp.parse("ul", attrs={"class": "nav"})
 
@@ -69,10 +66,9 @@ def root(plugin, item_id, **kwargs):
             item.label = category.text.strip()
             category_url = URL_ROOT + category.get('href')
 
-            item.set_callback(
-                list_shows,
-                item_id=item_id,
-                category_url=category_url)
+            item.set_callback(list_shows,
+                              item_id=item_id,
+                              category_url=category_url)
             item_post_treatment(item)
             yield item
 
@@ -81,11 +77,10 @@ def root(plugin, item_id, **kwargs):
             item.label = category.text.strip()
             category_url = URL_ROOT + category.get('href')
 
-            item.set_callback(
-                list_videos,
-                item_id=item_id,
-                category_url=category_url,
-                page=1)
+            item.set_callback(list_videos,
+                              item_id=item_id,
+                              category_url=category_url,
+                              page=1)
             item_post_treatment(item)
             yield item
 
@@ -101,11 +96,10 @@ def list_shows(plugin, item_id, category_url, **kwargs):
         item.label = show.find('h3').text
         show_url = show.find('a').get('href')
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            page=1,
-            category_url=show_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          page=1,
+                          category_url=show_url)
         item_post_treatment(item)
         yield item
 
@@ -113,55 +107,54 @@ def list_shows(plugin, item_id, category_url, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, page, category_url, **kwargs):
     """Build videos listing"""
-    resp = urlquick.get(
-        category_url + '?paged=%s' % page)
+    resp = urlquick.get(category_url + '?paged=%s' % page)
     root = resp.parse()
 
     for video in root.iterfind(".//article"):
         item = Listitem()
-        item.label = video.find('.//h2').find(
-            'a').get('title')
+        item.label = video.find('.//h2').find('a').get('title')
         if video.find('.//img').get('data-src'):
             item.art['thumb'] = video.find('.//img').get('data-src')
         else:
             item.art['thumb'] = video.find('.//img').get('src')
-        video_url = URL_ROOT + video.find('.//h2').find(
-            'a').get('href')
+        video_url = URL_ROOT + video.find('.//h2').find('a').get('href')
 
         # TO DO Playlist
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=category_url,
-        page=page + 1)
+    yield Listitem.next_page(item_id=item_id,
+                             category_url=category_url,
+                             page=page + 1)
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
 
     info_video_html = urlquick.get(video_url,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1).text
-    video_id = re.compile(
-        'player=7&pod=(.*?)[\"\&]').findall(
+                                   headers={
+                                       'User-Agent': web_utils.get_random_ua
+                                   },
+                                   max_age=-1).text
+    video_id = re.compile('player=7&pod=(.*?)[\"\&]').findall(
         info_video_html)[0]
 
     info_video_json = urlquick.get(INFO_VIDEO % video_id).text
     info_video_json = json.loads(info_video_json)
 
-    stream_id = re.compile(
-        'images/(.*).jpg').findall(
+    stream_id = re.compile('images/(.*).jpg').findall(
         info_video_json["thumbnail_url_static"])[0].split('/')[1]
 
     desired_quality = Script.setting.get_string('quality')
@@ -169,8 +162,7 @@ def get_video_url(
     all_datas_videos_path = []
     for quality in QUALITIES_STREAM:
         all_datas_videos_quality.append(quality)
-        all_datas_videos_path.append(
-            INFO_STREAM % (quality, stream_id))
+        all_datas_videos_path.append(INFO_STREAM % (quality, stream_id))
 
     url = ''
     if desired_quality == "DIALOG":

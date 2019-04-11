@@ -35,16 +35,13 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import re
 import urlquick
 
-
 URL_ROOT = 'http://www.ouatch.tv'
 
 URL_EMISSIONS = URL_ROOT + '/emissions'
 
 # # Dailymotion Id get from these pages below
 # # - https://www.dailymotion.com/ouatchtv
-LIVE_DAILYMOTION_ID = {
-    'ouatchtv': 'xuw47s'
-}
+LIVE_DAILYMOTION_ID = {'ouatchtv': 'xuw47s'}
 
 
 def replay_entry(plugin, item_id, **kwargs):
@@ -72,10 +69,9 @@ def list_programs(plugin, item_id, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url)
         item_post_treatment(item)
         yield item
 
@@ -97,27 +93,28 @@ def list_videos(plugin, item_id, program_url, **kwargs):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    resp = urlquick.get(
-        video_url,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-    video_id = re.compile(
-        r'video: "(.*?)"').findall(resp.text)[0]
-    return resolver_proxy.get_stream_dailymotion(
-        plugin, video_id, download_mode, video_label)
+    resp = urlquick.get(video_url,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
+    video_id = re.compile(r'video: "(.*?)"').findall(resp.text)[0]
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -127,5 +124,6 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    return resolver_proxy.get_stream_dailymotion(
-        plugin, LIVE_DAILYMOTION_ID[item_id], False)
+    return resolver_proxy.get_stream_dailymotion(plugin,
+                                                 LIVE_DAILYMOTION_ID[item_id],
+                                                 False)

@@ -39,13 +39,10 @@ import re
 import json
 import time
 import urlquick
-
-
 '''
 Channels:
     * France TV Sport
 '''
-
 
 URL_ROOT_SPORT = 'https://sport.francetvinfo.fr'
 
@@ -72,22 +69,14 @@ def list_categories(plugin, item_id, **kwargs):
     category_title = 'Videos'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        mode='videos',
-        page='1')
+    item.set_callback(list_videos, item_id=item_id, mode='videos', page='1')
     item_post_treatment(item)
     yield item
 
     category_title = 'Replay'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        mode='replay',
-        page='1')
+    item.set_callback(list_videos, item_id=item_id, mode='replay', page='1')
     item_post_treatment(item)
     yield item
 
@@ -107,8 +96,8 @@ def list_videos(plugin, item_id, mode, page, **kwargs):
         if 'duration' in video_datas:
             video_duration = int(video_datas["duration"])
         video_url = URL_ROOT_SPORT + video_datas["url"]
-        date_value = time.strftime(
-            '%Y-%m-%d', time.localtime(video_datas["updated"]))
+        date_value = time.strftime('%Y-%m-%d',
+                                   time.localtime(video_datas["updated"]))
 
         item = Listitem()
         item.label = video_title
@@ -116,35 +105,38 @@ def list_videos(plugin, item_id, mode, page, **kwargs):
         item.art['thumb'] = video_image
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            item_dict=item2dict(item))
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_url=video_url,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        mode=mode,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             mode=mode,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  item_dict=None,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
     id_diffusion = ''
-    list_id_diffusion = re.compile(
-        r'data-video="(.*?)"').findall(resp.text)
+    list_id_diffusion = re.compile(r'data-video="(.*?)"').findall(resp.text)
     for id_diffusion_value in list_id_diffusion:
         id_diffusion = id_diffusion_value
         break
 
-    return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, item_dict, download_mode, video_label)
+    return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
+                                                    item_dict, download_mode,
+                                                    video_label)
 
 
 def multi_live_entry(plugin, item_id, **kwargs):
@@ -168,8 +160,8 @@ def list_lives(plugin, item_id, **kwargs):
             try:
                 live_date_plot = time.strftime(
                     '%d/%m/%Y %H:%M', time.localtime(live_datas["start"]))
-                date_value = time.strftime(
-                    '%Y-%m-%d', time.localtime(live_datas["start"]))
+                date_value = time.strftime('%Y-%m-%d',
+                                           time.localtime(live_datas["start"]))
             except Exception:
                 live_date_plot = ''
                 date_value = ''
@@ -180,10 +172,9 @@ def list_lives(plugin, item_id, **kwargs):
             item.art['thumb'] = live_image
             item.info['plot'] = live_plot
             item.info.date(date_value, '%Y-%m-%d')
-            item.set_callback(
-                get_live_url,
-                item_id=item_id,
-                id_diffusion=id_diffusion)
+            item.set_callback(get_live_url,
+                              item_id=item_id,
+                              id_diffusion=id_diffusion)
             yield item
 
     for live_datas in json_parser["page"]["upcoming-lives"]:
@@ -193,10 +184,10 @@ def list_lives(plugin, item_id, **kwargs):
         except KeyError:
             live_image = ''
         try:
-            live_date_plot = time.strftime(
-                '%d/%m/%Y %H:%M', time.localtime(live_datas["start"]))
-            date_value = time.strftime(
-                '%Y-%m-%d', time.localtime(live_datas["start"]))
+            live_date_plot = time.strftime('%d/%m/%Y %H:%M',
+                                           time.localtime(live_datas["start"]))
+            date_value = time.strftime('%Y-%m-%d',
+                                       time.localtime(live_datas["start"]))
         except Exception:
             live_date_plot = ''
             date_value = ''

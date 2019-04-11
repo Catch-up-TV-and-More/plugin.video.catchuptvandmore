@@ -42,7 +42,6 @@ import xbmcgui
 
 # TO DO
 
-
 URL_ROOT = 'https://www.questod.co.uk'
 
 URL_SHOWS = URL_ROOT + '/api/shows/%s'
@@ -69,9 +68,8 @@ CATEGORIES_MODE = {
     'LEAVING SOON': 'last-chance'
 }
 
-CATEGORIES_MODE_AZ = {
-    'A-Z': '-az'
-}
+CATEGORIES_MODE_AZ = {'A-Z': '-az'}
+
 
 def replay_entry(plugin, item_id, **kwargs):
     """
@@ -89,27 +87,25 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    for category_name_title, category_name_value in CATEGORIES_MODE.iteritems():
+    for category_name_title, category_name_value in CATEGORIES_MODE.iteritems(
+    ):
 
         item = Listitem()
         item.label = category_name_title
-        item.set_callback(
-            list_programs_mode,
-            item_id=item_id,
-            category_name_value=category_name_value
-        )
+        item.set_callback(list_programs_mode,
+                          item_id=item_id,
+                          category_name_value=category_name_value)
         item_post_treatment(item)
         yield item
 
-    for category_name_title, category_name_value in CATEGORIES_MODE_AZ.iteritems():
+    for category_name_title, category_name_value in CATEGORIES_MODE_AZ.iteritems(
+    ):
 
         item = Listitem()
         item.label = category_name_title
-        item.set_callback(
-            list_programs_mode_az,
-            item_id=item_id,
-            category_name_value=category_name_value
-        )
+        item.set_callback(list_programs_mode_az,
+                          item_id=item_id,
+                          category_name_value=category_name_value)
         item_post_treatment(item)
         yield item
 
@@ -134,11 +130,9 @@ def list_programs_mode(plugin, item_id, category_name_value, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art["thumb"] = program_image
-        item.set_callback(
-            list_program_seasons,
-            item_id=item_id,
-            program_id=program_id
-        )
+        item.set_callback(list_program_seasons,
+                          item_id=item_id,
+                          program_id=program_id)
         item_post_treatment(item)
         yield item
 
@@ -160,11 +154,9 @@ def list_programs_mode_az(plugin, item_id, category_name_value, **kwargs):
 
             item = Listitem()
             item.label = program_title
-            item.set_callback(
-                list_program_seasons,
-                item_id=item_id,
-                program_id=program_id
-            )
+            item.set_callback(list_program_seasons,
+                              item_id=item_id,
+                              program_id=program_id)
             item_post_treatment(item)
             yield item
 
@@ -185,12 +177,10 @@ def list_program_seasons(plugin, item_id, program_id, **kwargs):
 
         item = Listitem()
         item.label = program_season_name
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_id=program_id,
-            program_season_number=program_season_number
-        )
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_id=program_id,
+                          program_season_number=program_season_number)
         item_post_treatment(item)
         yield item
 
@@ -205,10 +195,12 @@ def list_videos(plugin, item_id, program_id, program_season_number, **kwargs):
 
     if 'episode' in json_parser["videos"]:
         if str(program_season_number) in json_parser["videos"]["episode"]:
-            for video_datas in json_parser["videos"]["episode"][str(program_season_number)]:
+            for video_datas in json_parser["videos"]["episode"][str(
+                    program_season_number)]:
                 at_least_one_item = True
                 video_title = video_datas["title"]
-                video_duration = int(str(int(video_datas["videoDuration"]) / 1000))
+                video_duration = int(
+                    str(int(video_datas["videoDuration"]) / 1000))
                 video_plot = video_datas["description"]
                 video_image = video_datas["image"]["src"]
                 video_id = video_datas["path"]
@@ -220,14 +212,15 @@ def list_videos(plugin, item_id, program_id, program_season_number, **kwargs):
                 item.info["plot"] = video_plot
                 item.info["duration"] = video_duration
 
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_id=video_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    item_dict=item2dict(item)
-                )
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_id=video_id,
+                                  video_label=LABELS[item_id] + ' - ' +
+                                  item.label,
+                                  item_dict=item2dict(item))
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
                 yield item
 
     if not at_least_one_item:
@@ -236,9 +229,13 @@ def list_videos(plugin, item_id, program_id, program_season_number, **kwargs):
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, item_dict,
-        download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  item_dict,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(URL_STREAM % video_id, max_age=-1)
     json_parser = json.loads(resp.text)
@@ -254,9 +251,7 @@ def get_video_url(
     if 'drmToken' in json_parser["playback"]:
 
         if cqu.get_kodi_version() < 18:
-            xbmcgui.Dialog().ok(
-                'Info',
-                plugin.localize(30602))
+            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
             return False
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
@@ -264,9 +259,7 @@ def get_video_url(
             return False
 
         if download_mode:
-            xbmcgui.Dialog().ok(
-                'Info',
-                plugin.localize(30603))
+            xbmcgui.Dialog().ok('Info', plugin.localize(30603))
             return False
 
         token = json_parser["playback"]["drmToken"]
@@ -278,8 +271,10 @@ def get_video_url(
         item.art.update(item_dict['art'])
         item.property['inputstreamaddon'] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
+        item.property[
+            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property[
+            'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
 
         return item
     else:
@@ -299,9 +294,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     if cqu.get_kodi_version() < 18:
-        xbmcgui.Dialog().ok(
-            'Info',
-            plugin.localize(30602))
+        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
         return False
 
     is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
@@ -313,14 +306,12 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     elif item_id == 'questred':
         resp = urlquick.get(URL_LIVE % 'quest-red', max_age=-1)
 
-    if len(re.compile(
-        r'drmToken\"\:\"(.*?)\"').findall(resp.text)) > 0:
-        token = re.compile(
-            r'drmToken\"\:\"(.*?)\"').findall(resp.text)[0]
-        if len(re.compile(
-            r'streamUrlDash\"\:\"(.*?)\"').findall(resp.text)) > 0:
-            live_url = re.compile(
-                r'streamUrlDash\"\:\"(.*?)\"').findall(resp.text)[0]
+    if len(re.compile(r'drmToken\"\:\"(.*?)\"').findall(resp.text)) > 0:
+        token = re.compile(r'drmToken\"\:\"(.*?)\"').findall(resp.text)[0]
+        if len(re.compile(r'streamUrlDash\"\:\"(.*?)\"').findall(
+                resp.text)) > 0:
+            live_url = re.compile(r'streamUrlDash\"\:\"(.*?)\"').findall(
+                resp.text)[0]
 
             item = Listitem()
             item.path = live_url
@@ -332,8 +323,10 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                 item.art.update(item_dict['art'])
             item.property['inputstreamaddon'] = 'inputstream.adaptive'
             item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
+            item.property[
+                'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            item.property[
+                'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
             return item
     plugin.notify('ERROR', plugin.localize(30713))
     return False

@@ -59,7 +59,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     final_language = DESIRED_LANGUAGE
-   
+
     # If we come from the M3U file and the language
     # is set in the M3U URL, then we overwrite
     # Catch Up TV & More language setting
@@ -70,10 +70,8 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     if final_language == 'IT':
         resp = urlquick.get(URL_LIVE_QVC_IT % final_language.lower())
-        live_id = re.compile(
-            r'data-media="(.*?)"').findall(resp.text)[0]
-        live_datas_json = urlquick.get(
-            URL_STREAM_LIMELIGHT % live_id)
+        live_id = re.compile(r'data-media="(.*?)"').findall(resp.text)[0]
+        live_datas_json = urlquick.get(URL_STREAM_LIMELIGHT % live_id)
         json_parser = json.loads(live_datas_json.text)
 
         stream_url = ''
@@ -96,7 +94,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
             resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % 'uk.com')
         elif final_language == 'US':
             resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % '.com')
-        live_datas_json = re.compile(
-            r'oLiveStreams=(.*?)}},').findall(resp.text)[0] + '}}'
+        live_datas_json = re.compile(r'oLiveStreams=(.*?)}},').findall(
+            resp.text)[0] + '}}'
         json_parser = json.loads(live_datas_json)
         return 'http:' + json_parser["QVC"]["url"]

@@ -38,8 +38,6 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import json
 import re
 import urlquick
-
-
 '''
 Channels:
     * La 1ère (JT, Météo, Live TV)
@@ -116,10 +114,9 @@ def list_programs(plugin, item_id, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url)
         item_post_treatment(item)
         yield item
 
@@ -134,12 +131,14 @@ def list_videos(plugin, item_id, program_url, **kwargs):
         video_title = video_datas.get('title')
         video_plot = video_datas.get('description')
         video_image = video_datas.find('.//img').get('src')
-        id_diffusion = re.compile(
-            r'video\/(.*?)\@Regions').findall(video_datas.get('href'))[0]
+        id_diffusion = re.compile(r'video\/(.*?)\@Regions').findall(
+            video_datas.get('href'))[0]
         video_duration = 0
         if video_datas.find(".//p[@class='length']").text is not None:
-            duration_values = video_datas.find(".//p[@class='length']").text.split(' : ')[1].split(':')
-            video_duration = int(duration_values[0]) * 3600 + int(duration_values[1]) * 60 + int(duration_values[2])
+            duration_values = video_datas.find(
+                ".//p[@class='length']").text.split(' : ')[1].split(':')
+            video_duration = int(duration_values[0]) * 3600 + int(
+                duration_values[1]) * 60 + int(duration_values[2])
 
         item = Listitem()
         item.label = video_title
@@ -149,25 +148,31 @@ def list_videos(plugin, item_id, program_url, **kwargs):
 
         date_value = ''
         if video_datas.find(".//p[@class='date']").text is not None:
-            date_value = video_datas.find(".//p[@class='date']").text.split(' : ')[1]
+            date_value = video_datas.find(".//p[@class='date']").text.split(
+                ' : ')[1]
             item.info.date(date_value, '%d/%m/%Y')
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            id_diffusion=id_diffusion,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            item_dict=item2dict(item))
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          id_diffusion=id_diffusion,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, id_diffusion, item_dict=None, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  id_diffusion,
+                  item_dict=None,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, item_dict, download_mode, video_label)
+    return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
+                                                    item_dict, download_mode,
+                                                    video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -186,13 +191,12 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     if 'language' in item_dict:
         final_region = item_dict['language']
 
-    resp = urlquick.get(
-        URL_LIVES_JSON,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(URL_LIVES_JSON,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     json_parser = json.loads(resp.text)
 
     region = utils.ensure_unicode(final_region)
     id_sivideo = json_parser[LIVE_LA1ERE_REGIONS[region]]["id_sivideo"]
-    return resolver_proxy.get_francetv_live_stream(
-        plugin, id_sivideo.split('@')[0])
+    return resolver_proxy.get_francetv_live_stream(plugin,
+                                                   id_sivideo.split('@')[0])

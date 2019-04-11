@@ -83,11 +83,10 @@ def list_programs(plugin, item_id, **kwargs):
 
                 item = Listitem()
                 item.label = program_name
-                item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    program_url=program_url,
-                    page='1')
+                item.set_callback(list_videos,
+                                  item_id=item_id,
+                                  program_url=program_url,
+                                  page='1')
                 item_post_treatment(item)
                 yield item
 
@@ -121,27 +120,29 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
             item.info.date(date_value, '%Y-%m-%d')
         item.info['duration'] = duration
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if int(page) < int(json_parser['nb_total_pages']):
-        yield Listitem.next_page(
-            item_id=item_id,
-            program_url=program_url,
-            page=str(int(page) + 1))
+        yield Listitem.next_page(item_id=item_id,
+                                 program_url=program_url,
+                                 page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    return resolver_proxy.get_stream_dailymotion(
-        plugin, video_id, download_mode, video_label)
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -151,11 +152,9 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-    live_id = re.compile(
-        r'dailymotion.com/embed/video/(.*?)[\?\"]',
-        re.DOTALL).findall(resp.text)[0]
+    resp = urlquick.get(URL_LIVE,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
+    live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]',
+                         re.DOTALL).findall(resp.text)[0]
     return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)

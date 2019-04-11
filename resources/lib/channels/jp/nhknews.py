@@ -35,7 +35,6 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import json
 import urlquick
 
-
 URL_ROOT = 'https://www3.nhk.or.jp/'
 
 URL_WEATHER_NHK_NEWS = URL_ROOT + '/news/weather/weather_movie.json'
@@ -81,19 +80,14 @@ def list_categories(plugin, item_id, **kwargs):
     category_title = 'NHK ニュース'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos_news,
-        item_id=item_id,
-        page='1')
+    item.set_callback(list_videos_news, item_id=item_id, page='1')
     item_post_treatment(item)
     yield item
 
     category_title = 'NHK ニュース - 気象'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos_weather,
-        item_id=item_id)
+    item.set_callback(list_videos_weather, item_id=item_id)
     item_post_treatment(item)
     yield item
 
@@ -111,17 +105,20 @@ def list_videos_weather(plugin, item_id, **kwargs):
     item = Listitem()
     item.label = video_title
     item.art['thumb'] = video_image
-    item.set_callback(
-        get_video_weather_url,
-        item_id=item_id,
-        video_label=LABELS[item_id] + ' - ' + item.label,
-        video_url=video_url)
+    item.set_callback(get_video_weather_url,
+                      item_id=item_id,
+                      video_label=LABELS[item_id] + ' - ' + item.label,
+                      video_url=video_url)
     item_post_treatment(item, is_playable=True, is_downloadable=True)
     yield item
 
 
 @Resolver.register
-def get_video_weather_url(plugin, item_id, video_url, download_mode=False, **kwargs):
+def get_video_weather_url(plugin,
+                          item_id,
+                          video_url,
+                          download_mode=False,
+                          **kwargs):
     return video_url
 
 
@@ -163,23 +160,25 @@ def list_videos_news(plugin, item_id, page, **kwargs):
         item.info['duration'] = video_duration
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.set_callback(
-            get_video_news_url,
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_date=video_date)
+        item.set_callback(get_video_news_url,
+                          item_id=item_id,
+                          video_id=video_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_date=video_date)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_news_url(
-        plugin, item_id, video_id, video_date, download_mode=False, video_label=None, **kwargs):
+def get_video_news_url(plugin,
+                       item_id,
+                       video_id,
+                       video_date,
+                       download_mode=False,
+                       video_label=None,
+                       **kwargs):
 
     resp = urlquick.get(URL_STREAM_NHK_NEWS % (video_date, video_id))
     json_parser = json.loads(resp.text)

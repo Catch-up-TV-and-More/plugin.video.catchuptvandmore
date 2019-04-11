@@ -26,19 +26,16 @@ from resources.lib import download
 from resources.lib.labels import LABELS
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
 import htmlement
 import json
 import re
 import urlquick
 import xml.etree.ElementTree as ET
 
-
 # TO DO
 # Add Premium Account (purchase an account to test)
 # Add last videos
 # Fix Info add Premium Content
-
 
 URL_ROOT = 'http://www.ina.fr'
 
@@ -62,10 +59,7 @@ def website_entry(plugin, item_id, **kwargs):
     return root(plugin, item_id)
 
 
-CATEGORIES = {
-    'Toutes les Emissions': 'classic',
-    'Toutes les séries': 'serie'
-}
+CATEGORIES = {'Toutes les Emissions': 'classic', 'Toutes les séries': 'serie'}
 
 
 def root(plugin, item_id, **kwargs):
@@ -74,19 +68,15 @@ def root(plugin, item_id, **kwargs):
         item = Listitem()
 
         item.label = category_name
-        item.set_callback(
-            list_shows,
-            item_id=item_id,
-            category_mode=category_mode,
-            page=1)
+        item.set_callback(list_shows,
+                          item_id=item_id,
+                          category_mode=category_mode,
+                          page=1)
         item_post_treatment(item)
         yield item
 
     # Search videos
-    item = Listitem.search(
-        list_videos_search,
-        item_id=item_id,
-        nb_videos=0)
+    item = Listitem.search(list_videos_search, item_id=item_id, nb_videos=0)
     item_post_treatment(item)
     yield item
 
@@ -94,8 +84,7 @@ def root(plugin, item_id, **kwargs):
 @Route.register
 def list_shows(plugin, item_id, category_mode, page, **kwargs):
     """Build categories listing"""
-    list_programs_json = urlquick.get(
-        URL_PROGRAMS % (page, category_mode))
+    list_programs_json = urlquick.get(URL_PROGRAMS % (page, category_mode))
     list_programs_jsonparser = json.loads(list_programs_json.text)
     parser = htmlement.HTMLement()
     parser.feed(list_programs_jsonparser["html"])
@@ -107,48 +96,45 @@ def list_shows(plugin, item_id, category_mode, page, **kwargs):
         item.art['thumb'] = URL_ROOT + program_datas.find('.//img').get('src')
         program_url = URL_ROOT + program_datas.find('.//a').get('href')
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url,
-            nb_videos=0)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url,
+                          nb_videos=0)
         item_post_treatment(item)
         yield item
 
     # More programs...
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_mode=category_mode,
-        page=page + 1)
+    yield Listitem.next_page(item_id=item_id,
+                             category_mode=category_mode,
+                             page=page + 1)
 
 
 @Route.register
 def list_videos(plugin, item_id, program_url, nb_videos, **kwargs):
     """Build videos listing"""
     replay_episodes_html = urlquick.get(program_url).text
-    program_title = re.compile(
-        r'&q=(.*?)&auto').findall(replay_episodes_html)[0]
-    replay_episodes_json = urlquick.get(
-        URL_VIDEOS % (program_title, nb_videos)).text
+    program_title = re.compile(r'&q=(.*?)&auto').findall(
+        replay_episodes_html)[0]
+    replay_episodes_json = urlquick.get(URL_VIDEOS %
+                                        (program_title, nb_videos)).text
     list_episodes_jsonparser = json.loads(replay_episodes_json)
     parser = htmlement.HTMLement()
     parser.feed(list_episodes_jsonparser["content"])
     root = parser.close()
     at_least_one_item = False
-    for episode in root.iterfind(".//div[@class='media zoomarticle afficheNotices']"):
+    for episode in root.iterfind(
+            ".//div[@class='media zoomarticle afficheNotices']"):
         at_least_one_item = True
         item = Listitem()
         item.label = 'No title'
         if episode.find(".//div[@class='media-inapremium-slide']") is not None:
-            item.label = '[Ina Premium] ' + episode.find(
-                './/img').get('alt')
+            item.label = '[Ina Premium] ' + episode.find('.//img').get('alt')
         else:
-            item.label = episode.find(
-                './/img').get('alt')
+            item.label = episode.find('.//img').get('alt')
         video_id = episode.find('.//a').get('href').split('/')[2]
-        item.art['thumb'] = URL_ROOT + episode.find(
-            './/img').get('src')
-        video_duration_text_datas = episode.find(".//span[@class='duration']").text.split(' ')
+        item.art['thumb'] = URL_ROOT + episode.find('.//img').get('src')
+        video_duration_text_datas = episode.find(
+            ".//span[@class='duration']").text.split(' ')
         video_duration = 0
         for video_duration_datas in video_duration_text_datas:
             if 's' in video_duration_datas:
@@ -156,31 +142,30 @@ def list_videos(plugin, item_id, program_url, nb_videos, **kwargs):
                 video_duration = video_duration + int(video_duration_datas)
             elif 'm' in video_duration_datas:
                 video_duration_datas = video_duration_datas.replace('m', '')
-                video_duration = video_duration + (int(video_duration_datas) * 60)
+                video_duration = video_duration + (int(video_duration_datas) *
+                                                   60)
             elif 'h' in video_duration_datas:
                 video_duration_datas = video_duration_datas.replace('h', '')
-                video_duration = video_duration + (int(video_duration_datas) * 3600)
+                video_duration = video_duration + (int(video_duration_datas) *
+                                                   3600)
         item.info['duration'] = video_duration
 
         if episode.find(".//span[@class='broadcast']") is not None:
             video_date = episode.find(".//span[@class='broadcast']").text
             item.info.date(video_date, '%d/%m/%Y')
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if at_least_one_item:
         # More videos...
-        yield Listitem.next_page(
-            item_id=item_id,
-            program_url=program_url,
-            nb_videos=nb_videos + 48)
+        yield Listitem.next_page(item_id=item_id,
+                                 program_url=program_url,
+                                 nb_videos=nb_videos + 48)
     else:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
         yield False
@@ -188,8 +173,8 @@ def list_videos(plugin, item_id, program_url, nb_videos, **kwargs):
 
 @Route.register
 def list_videos_search(plugin, item_id, nb_videos, search_query, **kwargs):
-    replay_episodes_json = urlquick.get(
-        URL_VIDEOS_SEARCH % (search_query, nb_videos)).text
+    replay_episodes_json = urlquick.get(URL_VIDEOS_SEARCH %
+                                        (search_query, nb_videos)).text
     list_episodes_jsonparser = json.loads(replay_episodes_json)
     parser = htmlement.HTMLement()
     parser.feed(list_episodes_jsonparser["content"])
@@ -198,16 +183,15 @@ def list_videos_search(plugin, item_id, nb_videos, search_query, **kwargs):
     for episode in root.iterfind(".//div[@class='media zoomarticle']"):
         item = Listitem()
         item.label = 'No title'
-        if episode.find(".//div[@class='media-inapremium-search']") is not None:
-            item.label = '[Ina Premium] ' + episode.find(
-                './/img').get('alt')
+        if episode.find(
+                ".//div[@class='media-inapremium-search']") is not None:
+            item.label = '[Ina Premium] ' + episode.find('.//img').get('alt')
         else:
-            item.label = episode.find(
-                './/img').get('alt')
+            item.label = episode.find('.//img').get('alt')
         video_id = episode.find('.//a').get('href').split('/')[2]
-        item.art['thumb'] = URL_ROOT + episode.find(
-            './/img').get('src')
-        video_duration_text_datas = episode.find(".//span[@class='duration']").text.split(' ')
+        item.art['thumb'] = URL_ROOT + episode.find('.//img').get('src')
+        video_duration_text_datas = episode.find(
+            ".//span[@class='duration']").text.split(' ')
         video_duration = 0
         for video_duration_datas in video_duration_text_datas:
             if 's' in video_duration_datas:
@@ -215,35 +199,38 @@ def list_videos_search(plugin, item_id, nb_videos, search_query, **kwargs):
                 video_duration = video_duration + int(video_duration_datas)
             elif 'm' in video_duration_datas:
                 video_duration_datas = video_duration_datas.replace('m', '')
-                video_duration = video_duration + (int(video_duration_datas) * 60)
+                video_duration = video_duration + (int(video_duration_datas) *
+                                                   60)
             elif 'h' in video_duration_datas:
                 video_duration_datas = video_duration_datas.replace('h', '')
-                video_duration = video_duration + (int(video_duration_datas) * 3600)
+                video_duration = video_duration + (int(video_duration_datas) *
+                                                   3600)
         item.info['duration'] = video_duration
 
         if episode.find(".//span[@class='broadcast']") is not None:
             video_date = episode.find(".//span[@class='broadcast']").text
             item.info.date(video_date, '%d/%m/%Y')
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
-    yield Listitem.next_page(
-        item_id=item_id,
-        nb_videos=nb_videos + 48,
-        search_query=search_query)
+    yield Listitem.next_page(item_id=item_id,
+                             nb_videos=nb_videos + 48,
+                             search_query=search_query)
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
     stream_xml = urlquick.get(URL_STREAM % video_id).text
     stream_xml = utils.ensure_native_str(stream_xml)

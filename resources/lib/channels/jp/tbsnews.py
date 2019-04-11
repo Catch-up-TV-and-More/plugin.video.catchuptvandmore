@@ -34,7 +34,6 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import urlquick
 
-
 URL_ROOT = 'http://news.tbs.co.jp'
 
 URL_CONTENT = URL_ROOT + '/digest/%s.html'
@@ -65,18 +64,14 @@ def list_categories(plugin, item_id, **kwargs):
     category_title = 'TBS ニュース'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos_news,
-        item_id=item_id)
+    item.set_callback(list_videos_news, item_id=item_id)
     item_post_treatment(item)
     yield item
 
     category_title = 'TBS ニュース - 気象'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos_weather,
-        item_id=item_id)
+    item.set_callback(list_videos_weather, item_id=item_id)
     item_post_treatment(item)
     yield item
 
@@ -89,8 +84,8 @@ def list_videos_news(plugin, item_id, **kwargs):
         root = resp.parse()
         video_news_datas = root.find(".//article[@class='md-mainArticle']")
 
-        video_title = video_news_datas.findall(
-            ".//img[@class='lazy']")[0].get('alt')
+        video_title = video_news_datas.findall(".//img[@class='lazy']")[0].get(
+            'alt')
         video_image = URL_ROOT + video_news_datas.findall(
             ".//img[@class='lazy']")[0].get('data-original')
         video_url = URL_STREAM % content
@@ -99,11 +94,10 @@ def list_videos_news(plugin, item_id, **kwargs):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -115,8 +109,8 @@ def list_videos_weather(plugin, item_id, **kwargs):
     root = resp.parse()
     video_weather_datas = root.find(".//article[@class='md-mainArticle']")
 
-    video_title = video_weather_datas.findall(
-        ".//img[@class='lazy']")[0].get('alt')
+    video_title = video_weather_datas.findall(".//img[@class='lazy']")[0].get(
+        'alt')
     video_image = URL_ROOT + video_weather_datas.findall(
         ".//img[@class='lazy']")[0].get('data-original')
     video_url = URL_STREAM % 'weather'
@@ -125,18 +119,21 @@ def list_videos_weather(plugin, item_id, **kwargs):
     item.label = video_title
     item.art['thumb'] = video_image
 
-    item.set_callback(
-        get_video_url,
-        item_id=item_id,
-        video_label=LABELS[item_id] + ' - ' + item.label,
-        video_url=video_url)
+    item.set_callback(get_video_url,
+                      item_id=item_id,
+                      video_label=LABELS[item_id] + ' - ' + item.label,
+                      video_url=video_url)
     item_post_treatment(item, is_playable=True, is_downloadable=True)
     yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     if download_mode:
         return download.download_video(video_url, video_label)
     return video_url

@@ -32,7 +32,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
 import json
 import re
 import urlquick
@@ -70,17 +69,15 @@ def list_categories(plugin, item_id, **kwargs):
 
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        next_url=category_url)
+    item.set_callback(list_videos, item_id=item_id, next_url=category_url)
     item_post_treatment(item)
     yield item
 
     # Get Letters
     resp2 = urlquick.get(URL_JSON_MTV % URL_EMISSION)
     json_parser2 = json.loads(resp2.text)
-    list_letter_datas_url = json_parser2["manifest"]["zones"]["t5_lc_promo1"]["feed"]
+    list_letter_datas_url = json_parser2["manifest"]["zones"]["t5_lc_promo1"][
+        "feed"]
     resp3 = urlquick.get(list_letter_datas_url)
     json_parser3 = json.loads(resp3.text)
 
@@ -89,10 +86,9 @@ def list_categories(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = letter_title
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            letter_title=letter_title)
+        item.set_callback(list_programs,
+                          item_id=item_id,
+                          letter_title=letter_title)
         item_post_treatment(item)
         yield item
 
@@ -102,7 +98,8 @@ def list_programs(plugin, item_id, letter_title, **kwargs):
 
     resp2 = urlquick.get(URL_JSON_MTV % URL_EMISSION)
     json_parser2 = json.loads(resp2.text)
-    list_letter_datas_url = json_parser2["manifest"]["zones"]["t5_lc_promo1"]["feed"]
+    list_letter_datas_url = json_parser2["manifest"]["zones"]["t5_lc_promo1"][
+        "feed"]
     resp3 = urlquick.get(list_letter_datas_url)
     json_parser3 = json.loads(resp3.text)
 
@@ -112,14 +109,14 @@ def list_programs(plugin, item_id, letter_title, **kwargs):
                 program_title = program_datas["title"]
                 resp4 = urlquick.get(URL_JSON_MTV % program_datas["url"])
                 json_parser4 = json.loads(resp4.text)
-                program_url = json_parser4["manifest"]["zones"]["t5_lc_promo1"]["feed"]
+                program_url = json_parser4["manifest"]["zones"][
+                    "t5_lc_promo1"]["feed"]
 
                 item = Listitem()
                 item.label = program_title
-                item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    next_url=program_url)
+                item.set_callback(list_videos,
+                                  item_id=item_id,
+                                  next_url=program_url)
                 item_post_treatment(item)
                 yield item
 
@@ -145,31 +142,28 @@ def list_videos(plugin, item_id, next_url, **kwargs):
             item.art['thumb'] = video_image
             item.info['plot'] = video_plot
 
-
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                video_url=video_url)
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
         if 'nextPageURL' in json_parser["result"]:
             yield Listitem.next_page(
-                item_id=item_id,
-                next_url=json_parser["result"]["nextPageURL"])
+                item_id=item_id, next_url=json_parser["result"]["nextPageURL"])
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    video_id = re.compile(
-        r'itemId":"(.*?)"').findall(resp.text)[0]
+    video_id = re.compile(r'itemId":"(.*?)"').findall(resp.text)[0]
     video_uri = 'mgid:arc:video:mtv.fr:' + video_id
-    return resolver_proxy.get_mtvnservices_stream(
-        plugin,
-        video_uri,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_mtvnservices_stream(plugin, video_uri,
+                                                  download_mode, video_label)

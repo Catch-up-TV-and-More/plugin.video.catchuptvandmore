@@ -56,7 +56,6 @@ def item2dict(item):
     return item_dict
 
 
-
 def item_post_treatment(item, **kwargs):
     """
     Optional keyworded arguments:
@@ -65,19 +64,15 @@ def item_post_treatment(item, **kwargs):
     
     """
 
-
     # Add `Add to favourites` context menu to the item
     add_fav_context(item, item2dict(item), **kwargs)
-
 
     # Add `Download` context menu to the item
     # if is_downloadable is given and True
     if kwargs.get('is_downloadable', False):
-        item.context.script(
-            item.path,
-            Script.localize(LABELS['Download']),
-            download_mode=True,
-            **item.params)
+        item.context.script(item.path,
+                            Script.localize(LABELS['Download']),
+                            download_mode=True,
+                            **item.params)
 
     return
-

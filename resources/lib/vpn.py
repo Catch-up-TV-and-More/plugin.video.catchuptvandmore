@@ -28,7 +28,6 @@ from resources.lib import openvpn as vpnlib
 from resources.lib.labels import LABELS
 from codequick import Route, utils, Script, storage
 
-
 ip = "127.0.0.1"
 port = 1337
 
@@ -50,7 +49,8 @@ def disconnect_openvpn():
         except vpnlib.OpenVPNError as exception:
             xbmcgui.Dialog().ok(
                 'OpenVPN',
-                Script.localize(LABELS['An error has occurred whilst trying to connect OpenVPN']))
+                Script.localize(LABELS[
+                    'An error has occurred whilst trying to connect OpenVPN']))
             Script.log('OpenVPN: OpenVPN error: ' + str(exception))
             db['status'] = "failed"
         db.flush()
@@ -63,10 +63,10 @@ def connect_openvpn(config, restart=False, sudopassword=None):
         if Script.setting.get_boolean('vpn.sudo') and \
                 Script.setting.get_boolean('vpn.sudopsw') and sudopassword is None:
 
-            keyboard = xbmc.Keyboard(
-                default='',
-                heading=Script.localize(LABELS['Enter your sudo password']),
-                hidden=True)
+            keyboard = xbmc.Keyboard(default='',
+                                     heading=Script.localize(
+                                         LABELS['Enter your sudo password']),
+                                     hidden=True)
             keyboard.doModal()
             if keyboard.isConfirmed():
                 sudopassword = keyboard.getText()
@@ -86,8 +86,10 @@ def connect_openvpn(config, restart=False, sudopassword=None):
                 openvpn.disconnect()
                 db['status'] = "disconnected"
             openvpn.connect()
-            utils.send_notification(
-                Script.localize(LABELS['Started VPN connection']), title="OpenVPN", time=3000)
+            utils.send_notification(Script.localize(
+                LABELS['Started VPN connection']),
+                                    title="OpenVPN",
+                                    time=3000)
 
             db['status'] = "connected"
         except vpnlib.OpenVPNError as exception:
@@ -96,7 +98,9 @@ def connect_openvpn(config, restart=False, sudopassword=None):
 
                 if xbmcgui.Dialog().yesno(
                         'OpenVPN',
-                        Script.localize(LABELS['An existing OpenVPN instance appears to be running.']),
+                        Script.localize(LABELS[
+                            'An existing OpenVPN instance appears to be running.']
+                                        ),
                         Script.localize(LABELS['Disconnect it?'])):
 
                     Script.log('OpenVPN: User has decided to restart OpenVPN')
@@ -107,7 +111,9 @@ def connect_openvpn(config, restart=False, sudopassword=None):
             else:
                 xbmcgui.Dialog().ok(
                     'OpenVPN',
-                    Script.localize(LABELS['An error has occurred whilst trying to connect OpenVPN']))
+                    Script.localize(LABELS[
+                        'An error has occurred whilst trying to connect OpenVPN']
+                                    ))
                 db['status'] = "failed"
         db.flush()
 
@@ -119,15 +125,15 @@ def import_ovpn(*args, **kwargs):
         Script.localize(LABELS['Import OpenVPN configuration file']),
         'files',
         mask='.ovpn|.conf',
-        enableMultiple=False
-    )
+        enableMultiple=False)
 
     if path and os.path.exists(path) and os.path.isfile(path):
         Script.log('OpenVPN: Import: [%s]' % path)
 
         keyboard = xbmc.Keyboard(
             default='',
-            heading=Script.localize(LABELS['Choose a name for OpenVPN configuration']),
+            heading=Script.localize(
+                LABELS['Choose a name for OpenVPN configuration']),
             hidden=False)
         keyboard.doModal()
         if keyboard.isConfirmed() and len(keyboard.getText()) > 0:
@@ -140,8 +146,11 @@ def import_ovpn(*args, **kwargs):
 
             if name in ovpnfiles and not xbmcgui.Dialog().yesno(
                     'OpenVPN',
-                    Script.localize(LABELS['This OpenVPN configuration name already exists. Overwrite?'])):
-                xbmcgui.Dialog().ok('OpenVPN', Script.localize(LABELS['Import cancelled']))
+                    Script.localize(LABELS[
+                        'This OpenVPN configuration name already exists. Overwrite?']
+                                    )):
+                xbmcgui.Dialog().ok(
+                    'OpenVPN', Script.localize(LABELS['Import cancelled']))
 
             else:
                 ovpnfiles[name] = path
@@ -151,7 +160,9 @@ def import_ovpn(*args, **kwargs):
         else:
             xbmcgui.Dialog().ok(
                 'OpenVPN',
-                Script.localize(LABELS['Import failed. You must specify a name for the OpenVPN configuration']))
+                Script.localize(LABELS[
+                    'Import failed. You must specify a name for the OpenVPN configuration']
+                                ))
 
 
 def select_ovpn():
@@ -168,8 +179,8 @@ def select_ovpn():
 
     else:
         response = vpnlib.is_running(ip, port)
-        Script.log('OpenVPN: Response from is_running: [%s] [%s] [%s]' % (
-            response[0], response[1], response[2]))
+        Script.log('OpenVPN: Response from is_running: [%s] [%s] [%s]' %
+                   (response[0], response[1], response[2]))
         if response[0]:
             # Le VPN est connecté
             disconnect_openvpn()
@@ -181,7 +192,8 @@ def select_ovpn():
             ovpnfileslist.append(configfilepath)
 
         idx = xbmcgui.Dialog().select(
-            Script.localize(LABELS['Select OpenVPN configuration to run']), configs)
+            Script.localize(LABELS['Select OpenVPN configuration to run']),
+            configs)
         if idx >= 0:
             Script.log('OpenVPN: Select conf: [%s]' % ovpnfileslist[idx])
             return ovpnfileslist[idx]
@@ -204,8 +216,8 @@ def delete_ovpn(*args, **kwargs):
 
     else:
         response = vpnlib.is_running(ip, port)
-        Script.log('OpenVPN: Response from is_running: [%s] [%s] [%s]' % (
-            response[0], response[1], response[2]))
+        Script.log('OpenVPN: Response from is_running: [%s] [%s] [%s]' %
+                   (response[0], response[1], response[2]))
         if response[0]:
             # Le VPN est connecté
             Script.log('OpenVPN: VPN still connected, we disconnect it')
@@ -218,7 +230,8 @@ def delete_ovpn(*args, **kwargs):
             ovpnfileslist.append(configfilepath)
 
         idx = xbmcgui.Dialog().select(
-            Script.localize(LABELS['Select OpenVPN configuration to delete']), configs)
+            Script.localize(LABELS['Select OpenVPN configuration to delete']),
+            configs)
         if idx >= 0:
             Script.log('Select: [%s]' % ovpnfileslist[idx])
             new_ovpnfiles = {}
@@ -268,6 +281,4 @@ def add_vpn_context(item):
             db['status'] = 'disconnected'
             db.flush()
 
-        item.context.script(
-            vpn_item_callback,
-            vpn_label)
+        item.context.script(vpn_item_callback, vpn_label)

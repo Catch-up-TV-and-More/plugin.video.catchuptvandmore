@@ -39,7 +39,6 @@ import urlquick
 
 # TO DO
 
-
 # Live
 URL_LIVE_JSON = 'https://player.api.stv.tv/v1/streams/%s/'
 # channel name
@@ -79,11 +78,9 @@ def list_programs(plugin, item_id, **kwargs):
         item.label = program_title
         item.art["thumb"] = program_image
         item.info['plot'] = program_plot
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_guid=program_guid
-        )
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_guid=program_guid)
         item_post_treatment(item)
         yield item
 
@@ -91,18 +88,17 @@ def list_programs(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, program_guid, **kwargs):
 
-    payload = {
-        'programme_guid': program_guid,
-        'limit': '300'
-    }
+    payload = {'programme_guid': program_guid, 'limit': '300'}
     resp = urlquick.get(URL_VIDEOS_JSON, params=payload)
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["results"]:
-        video_title = video_datas["programme"]["name"] + ' - ' + video_datas["title"]
+        video_title = video_datas["programme"]["name"] + ' - ' + video_datas[
+            "title"]
         video_image = video_datas["images"][0]["_filepath"]
         video_plot = video_datas["summary"]
-        video_duration = 60 * int(video_datas["video"]["_duration"].split(' ')[0])
+        video_duration = 60 * int(
+            video_datas["video"]["_duration"].split(' ')[0])
         video_id = video_datas["video"]["id"]
 
         item = Listitem()
@@ -126,24 +122,22 @@ def list_videos(plugin, item_id, program_guid, **kwargs):
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(URL_BRIGHTCOVE_DATAS)
 
-    data_account = re.compile(
-        r'ACCOUNT_ID\:\"(.*?)\"').findall(resp.text)[0]
-    data_player = re.compile(
-        r'PLAYER_ID\:\"(.*?)\"').findall(resp.text)[0]
+    data_account = re.compile(r'ACCOUNT_ID\:\"(.*?)\"').findall(resp.text)[0]
+    data_player = re.compile(r'PLAYER_ID\:\"(.*?)\"').findall(resp.text)[0]
     data_video_id = video_id
 
-    return resolver_proxy.get_brightcove_video_json(
-        plugin,
-        data_account,
-        data_player,
-        data_video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id,
+                                                    download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):

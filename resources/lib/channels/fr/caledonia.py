@@ -35,11 +35,9 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import re
 import urlquick
 
-
 # TO DO
 # Add Next Button
 # Readd date without beautiful soup
-
 
 URL_ROOT = 'https://www.caledonia.nc'
 
@@ -69,10 +67,9 @@ def list_programs(plugin, item_id, **kwargs):
 
                 item = Listitem()
                 item.label = program_title
-                item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    program_url=program_url)
+                item.set_callback(list_videos,
+                                  item_id=item_id,
+                                  program_url=program_url)
                 item_post_treatment(item)
                 yield item
 
@@ -83,12 +80,13 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     resp = urlquick.get(program_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='block-yt-playlist col-lg-4 col-12 mb-4']"):
+    for video_datas in root.iterfind(
+            ".//div[@class='block-yt-playlist col-lg-4 col-12 mb-4']"):
         video_title = video_datas.find('.//h3').text.strip()
         video_image = video_datas.find(
-            ".//div[@class='bg-img rounded d-flex align-items-center justify-content-center position-relative']").get('style')
-        video_image = re.compile(
-            r'url\(\'(.*?)\'').findall(video_image)[0]
+            ".//div[@class='bg-img rounded d-flex align-items-center justify-content-center position-relative']"
+        ).get('style')
+        video_image = re.compile(r'url\(\'(.*?)\'').findall(video_image)[0]
         video_url = 'https:' + video_datas.find('.//a').get('href')
         # date_value = utils.strip_tags(video_datas.find(".//div[@class='wrap-infos mt-3']")).text
 
@@ -99,28 +97,29 @@ def list_videos(plugin, item_id, program_url, **kwargs):
         #     item.info.date(date_value, '%d/%m/%Y')
         # except:
         #     pass
-        
+
         # try:
         #     item.info.date(date_value, '%d-%m-%Y')
         # except:
         #     pass
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    video_id = re.compile(
-        r'youtube\.com\/embed\/(.*)\"').findall(resp.text)[0]
-    return resolver_proxy.get_stream_youtube(
-        plugin, video_id, download_mode, video_label)
+    video_id = re.compile(r'youtube\.com\/embed\/(.*)\"').findall(resp.text)[0]
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode,
+                                             video_label)

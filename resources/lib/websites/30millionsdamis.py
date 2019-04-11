@@ -21,13 +21,11 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-
 from codequick import Route, Resolver, Listitem
 
 from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
 from resources.lib.listitem_utils import item_post_treatment, item2dict
-
 
 import re
 import urlquick
@@ -44,8 +42,7 @@ def website_entry(plugin, item_id, **kwargs):
 
 def root(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(
-        URL_ROOT + '/actualites/videos')
+    resp = urlquick.get(URL_ROOT + '/actualites/videos')
     root = resp.parse("select", attrs={"class": "selecttourl"})
 
     for category in root.iterfind("option"):
@@ -53,11 +50,10 @@ def root(plugin, item_id, **kwargs):
         item.label = category.text.strip()
         category_url = category.get('value')
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            page=0,
-            category_url=category_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          page=0,
+                          category_url=category_url)
         item_post_treatment(item)
         yield item
 
@@ -66,11 +62,9 @@ def root(plugin, item_id, **kwargs):
 def list_videos(plugin, item_id, page, category_url, **kwargs):
     """Build videos listing"""
     if int(page) > 0:
-        resp = urlquick.get(
-            category_url + 'actu-page/%s/' % page)
+        resp = urlquick.get(category_url + 'actu-page/%s/' % page)
     else:
-        resp = urlquick.get(
-            category_url)
+        resp = urlquick.get(category_url)
     root = resp.parse("div", attrs={"class": "tt-news"})
 
     at_least_one_item = False
@@ -82,35 +76,34 @@ def list_videos(plugin, item_id, page, category_url, **kwargs):
         video_url = URL_ROOT + episode.find('.//a').get('href')
         item.art['thumb'] = URL_ROOT + episode.find('.//img').get('src')
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
     if at_least_one_item:
-        yield Listitem.next_page(
-            item_id=item_id,
-            category_url=category_url,
-            page=page + 1)
+        yield Listitem.next_page(item_id=item_id,
+                                 category_url=category_url,
+                                 page=page + 1)
     else:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
         yield False
 
 
 @Resolver.register
-def get_video_url(
-        plugin, video_url, item_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  video_url,
+                  item_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
     video_html = urlquick.get(video_url).text
-    video_id = re.compile(
-        r'www.youtube.com/embed/(.*?)[\?\"]').findall(video_html)[0]
+    video_id = re.compile(r'www.youtube.com/embed/(.*?)[\?\"]').findall(
+        video_html)[0]
 
-    return resolver_proxy.get_stream_youtube(
-        plugin,
-        video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode,
+                                             video_label)

@@ -35,10 +35,8 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import json
 import urlquick
 
-
 # TO DO
 # Get year from Replay
-
 
 URL_REPLAY = 'http://www.numero23.fr/replay/'
 
@@ -80,18 +78,16 @@ def list_categories(plugin, item_id, **kwargs):
     root = resp.parse("div", attrs={"class": "nav-programs"})
 
     for category in root.iterfind(".//a"):
-        category_name = category.find(
-            './/span').text.replace(
+        category_name = category.find('.//span').text.replace(
             '\n', ' ').replace('\r', ' ').rstrip('\r\n')
         category_url = category.get('href')
 
         item = Listitem()
         item.label = category_name
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url,
-            page='1')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url,
+                          page='1')
         item_post_treatment(item)
         yield item
 
@@ -107,11 +103,10 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
 
         video_title = utils.ensure_unicode(
             video_datas.find(".//p[@class='red']").text)
-        video_img = video_datas.find(
-            ".//img").get('src')
-        video_id = video_datas.find(
-            ".//div[@class='player']").get('data-id-video')
-        
+        video_img = video_datas.find(".//img").get('src')
+        video_id = video_datas.find(".//div[@class='player']").get(
+            'data-id-video')
+
         video_duration = 0
         video_duration_list = video_datas.find(".//strong").text.split(':')
         if len(video_duration_list) > 2:
@@ -151,25 +146,27 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
         except:
             pass
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=category_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             category_url=category_url,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
-    return resolver_proxy.get_stream_dailymotion(
-        plugin, video_id, download_mode, video_label)
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -179,10 +176,9 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_INFO_LIVE_JSON,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(URL_INFO_LIVE_JSON,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     json_parser = json.loads(resp.text)
     video_id = json_parser["video"]
     return resolver_proxy.get_stream_dailymotion(plugin, video_id, False)

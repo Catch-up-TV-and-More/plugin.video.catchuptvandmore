@@ -20,7 +20,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-
 # The unicode_literals import only has
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
@@ -36,10 +35,8 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import re
 import urlquick
 
-
 # TO DO
 # Add info LIVE TV, Replay
-
 
 URL_ROOT = 'http://zonevideo.telequebec.tv'
 
@@ -72,18 +69,15 @@ def list_programs(plugin, item_id, **kwargs):
 
     for program_datas in root.iterfind(".//li"):
         program_title = program_datas.find('.//a').text
-        program_url = URL_ROOT + program_datas.find(
-            './/a').get('href')
+        program_url = URL_ROOT + program_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = program_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url)
         item_post_treatment(item)
         yield item
-
 
 
 @Route.register
@@ -93,7 +87,8 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     root = resp.parse()
 
     for video_datas in root.iterfind(".//div[@class='item']"):
-        video_title = video_datas.find('.//p').text.split(' / ')[0] + ' - ' + video_datas.find('.//h4').find('.//a').text
+        video_title = video_datas.find('.//p').text.split(
+            ' / ')[0] + ' - ' + video_datas.find('.//h4').find('.//a').text
         video_plot = video_datas.find('.//p').text
         video_image = video_datas.find('.//img').get('src')
         video_id = video_datas.get('data-mediaid')
@@ -103,18 +98,21 @@ def list_videos(plugin, item_id, program_url, **kwargs):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     final_video_url = URL_STREAM % video_id
 
@@ -131,5 +129,4 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    return 'https:' + re.compile(
-        r'm3U8Url:"(.*?)"').findall(resp.text)[0]
+    return 'https:' + re.compile(r'm3U8Url:"(.*?)"').findall(resp.text)[0]

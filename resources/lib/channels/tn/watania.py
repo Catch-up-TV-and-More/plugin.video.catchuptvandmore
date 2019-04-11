@@ -54,18 +54,16 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     root = resp.parse()
 
     if root.find(".//section[@id='block-block-2']") is not None:
-        live_url = root.find(
-            ".//section[@id='block-block-2']").findall(
-                './/a')[0].get('href')
+        live_url = root.find(".//section[@id='block-block-2']").findall(
+            './/a')[0].get('href')
     else:
-        live_url = root.find(
-            ".//section[@id='block-block-4']").findall(
-                './/a')[0].get('href')
+        live_url = root.find(".//section[@id='block-block-4']").findall(
+            './/a')[0].get('href')
     live_html = urlquick.get(live_url)
-    live_id_channel = re.compile(
-        'www.youtube.com/embed/(.*?)\"').findall(live_html.text)[1]
-    live_youtube_html = urlquick.get(
-        'https://www.youtube.com/embed/' + live_id_channel)
-    live_id = re.compile(
-        '\'VIDEO_ID\'\: \"(.*?)\"').findall(live_youtube_html.text)[0]
+    live_id_channel = re.compile('www.youtube.com/embed/(.*?)\"').findall(
+        live_html.text)[1]
+    live_youtube_html = urlquick.get('https://www.youtube.com/embed/' +
+                                     live_id_channel)
+    live_id = re.compile('\'VIDEO_ID\'\: \"(.*?)\"').findall(
+        live_youtube_html.text)[0]
     return resolver_proxy.get_stream_youtube(plugin, live_id, False)

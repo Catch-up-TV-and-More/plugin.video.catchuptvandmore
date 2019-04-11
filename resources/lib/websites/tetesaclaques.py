@@ -29,8 +29,6 @@ from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
-
 # TO DO
 # Play Spanish Videos
 
@@ -60,12 +58,10 @@ def root(plugin, item_id, **kwargs):
 
             category_url = URL_ROOT(category.find('.//a').get('href'))
 
-            item.set_callback(
-                eval(value_next),
-                item_id=item_id,
-                category_url=category_url,
-                page=1
-            )
+            item.set_callback(eval(value_next),
+                              item_id=item_id,
+                              category_url=category_url,
+                              page=1)
             item_post_treatment(item)
             yield item
 
@@ -83,11 +79,9 @@ def list_shows(plugin, item_id, category_url, page, **kwargs):
         item.art['thumb'] = URL_ROOT(personnage.find('.//img').get('src'))
         show_url = URL_ROOT(personnage.get('href'))
 
-        item.set_callback(
-            list_videos_2,
-            item_id=item_id,
-            category_url=show_url
-        )
+        item.set_callback(list_videos_2,
+                          item_id=item_id,
+                          category_url=show_url)
         item_post_treatment(item)
         yield item
 
@@ -95,9 +89,8 @@ def list_shows(plugin, item_id, category_url, page, **kwargs):
 @Route.register
 def list_videos_1(plugin, item_id, category_url, page, **kwargs):
     """Build videos listing"""
-    resp = urlquick.get(
-        category_url + '/par_date/%s' % str(page))
- 
+    resp = urlquick.get(category_url + '/par_date/%s' % str(page))
+
     at_least_one_item = False
     if 'serietele' in category_url:
         root = resp.parse("div", attrs={"class": "serieTele"})
@@ -109,17 +102,20 @@ def list_videos_1(plugin, item_id, category_url, page, **kwargs):
                 at_least_one_item = True
                 item = Listitem()
 
-                item.label = episode.find(".//span[@class='saison-episode']").text.strip() + ' ' + episode.find('.//img').get('alt')
+                item.label = episode.find(".//span[@class='saison-episode']"
+                                          ).text.strip() + ' ' + episode.find(
+                                              './/img').get('alt')
                 video_url = URL_ROOT(episode.find('.//a').get('href'))
                 item.art['thumb'] = URL_ROOT(episode.find('.//img').get('src'))
 
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    video_url=video_url
-                )
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' +
+                                  item.label,
+                                  video_url=video_url)
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
                 yield item
 
     else:
@@ -132,22 +128,18 @@ def list_videos_1(plugin, item_id, category_url, page, **kwargs):
             video_url = URL_ROOT(episode.get('href'))
             item.art['thumb'] = URL_ROOT(episode.find('.//img').get('src'))
 
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                video_url=video_url
-            )
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-
     if at_least_one_item:
         # More videos...
-        yield Listitem.next_page(
-            item_id=item_id,
-            category_url=category_url,
-            page=page + 1)
+        yield Listitem.next_page(item_id=item_id,
+                                 category_url=category_url,
+                                 page=page + 1)
     else:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
         yield False
@@ -165,33 +157,31 @@ def list_videos_2(plugin, item_id, category_url, **kwargs):
         video_url = URL_ROOT(episode.get('href'))
         item.art['thumb'] = URL_ROOT(episode.find('.//img').get('src'))
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
 
     video_html = urlquick.get(video_url).text
     if re.compile('AtedraVideo.video_id = "(.*?)"').findall(video_html):
-        video_id = re.compile(
-            'AtedraVideo.video_id = "(.*?)"').findall(video_html)[0]
+        video_id = re.compile('AtedraVideo.video_id = "(.*?)"').findall(
+            video_html)[0]
 
     else:
         # TO DO Espagnol Video / Return 404 (TO REMOVE)
         return False
 
-    return resolver_proxy.get_stream_youtube(
-        plugin,
-        video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode,
+                                             video_label)

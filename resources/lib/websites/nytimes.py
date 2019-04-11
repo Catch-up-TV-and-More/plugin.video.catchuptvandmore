@@ -29,8 +29,6 @@ from resources.lib import download
 from resources.lib.labels import LABELS
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
-
 # TO DO
 # Get sub-playlist
 # Add video info (date, duration)
@@ -56,10 +54,9 @@ def website_entry(plugin, item_id, **kwargs):
 
 def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
-    categories_html = urlquick.get(
-        URL_VIDEOS).text
-    categories_datas = re.compile(
-        r'var navData =(.*?)\;').findall(categories_html)[0]
+    categories_html = urlquick.get(URL_VIDEOS).text
+    categories_datas = re.compile(r'var navData =(.*?)\;').findall(
+        categories_html)[0]
     # print 'categories_datas value : ' + categories_datas
     categories_jsonparser = json.loads(categories_datas)
 
@@ -69,11 +66,9 @@ def root(plugin, item_id, **kwargs):
         item.label = category["display_name"]
         category_playlist = category["knews_id"]
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_playlist=category_playlist
-        )
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_playlist=category_playlist)
         item_post_treatment(item)
         yield item
 
@@ -82,8 +77,7 @@ def root(plugin, item_id, **kwargs):
 def list_videos(plugin, item_id, category_playlist, **kwargs):
     """Build videos listing"""
 
-    videos_json = urlquick.get(
-        URL_PLAYLIST % category_playlist).text
+    videos_json = urlquick.get(URL_PLAYLIST % category_playlist).text
     videos_jsonparser = json.loads(videos_json)
 
     for video_data in videos_jsonparser["videos"]:
@@ -94,20 +88,21 @@ def list_videos(plugin, item_id, category_playlist, **kwargs):
             item.art['thumb'] = URL_ROOT + '/' + image["url"]
         item.info['plot'] = video_data["summary"]
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
     video_json = urlquick.get(URL_STREAM % video_id).text
     video_jsonparser = json.loads(video_json)

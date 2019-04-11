@@ -33,7 +33,6 @@ from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
 import inputstreamhelper
 import json
 import re
@@ -42,10 +41,8 @@ import urlquick
 import xbmc
 import xbmcgui
 
-
 # TO DO
 # Mode code brightcove protected by DRM in resolver_proxy
-
 
 URL_ROOT = 'https://uktvplay.uktv.co.uk'
 
@@ -62,7 +59,10 @@ URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/'\
 
 URL_API = 'https://vschedules.uktv.co.uk'
 
-LETTER_LIST = ["0-9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+LETTER_LIST = [
+    "0-9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+    "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+]
 
 URL_PROGRAMS = URL_API + '/vod/brand_list/?starts_with=%s&letter_name=%s&is_watchable=True'
 # Letter
@@ -91,10 +91,9 @@ def list_letters(plugin, item_id, **kwargs):
     for letter_value in LETTER_LIST:
         item = Listitem()
         item.label = letter_value
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            letter_value=letter_value)
+        item.set_callback(list_programs,
+                          item_id=item_id,
+                          letter_value=letter_value)
         item_post_treatment(item)
         yield item
 
@@ -102,7 +101,8 @@ def list_letters(plugin, item_id, **kwargs):
 @Route.register
 def list_programs(plugin, item_id, letter_value, **kwargs):
 
-    resp = urlquick.get(URL_PROGRAMS % (letter_value.replace('0-9', '0'), letter_value))
+    resp = urlquick.get(URL_PROGRAMS %
+                        (letter_value.replace('0-9', '0'), letter_value))
     json_parser = json.loads(resp.text)
 
     for program_datas in json_parser:
@@ -115,10 +115,9 @@ def list_programs(plugin, item_id, letter_value, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_seasons,
-            item_id=item_id,
-            program_slug=program_slug)
+        item.set_callback(list_seasons,
+                          item_id=item_id,
+                          program_slug=program_slug)
         item_post_treatment(item)
         yield item
 
@@ -135,10 +134,7 @@ def list_seasons(plugin, item_id, program_slug, **kwargs):
 
         item = Listitem()
         item.label = season_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            serie_id=serie_id)
+        item.set_callback(list_videos, item_id=item_id, serie_id=serie_id)
         item_post_treatment(item)
         yield item
 
@@ -162,11 +158,10 @@ def list_videos(plugin, item_id, serie_id, **kwargs):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
         item.info['duration'] = video_duration
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            data_video_id=video_id,
-            item_dict=item2dict(item))
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          data_video_id=video_id,
+                          item_dict=item2dict(item))
         item_post_treatment(item)
         yield item
 
@@ -174,8 +169,8 @@ def list_videos(plugin, item_id, serie_id, **kwargs):
 # BRIGHTCOVE Part
 def get_brightcove_policy_key(data_account, data_player):
     """Get policy key"""
-    file_js = urlquick.get(
-        URL_BRIGHTCOVE_POLICY_KEY % (data_account, data_player))
+    file_js = urlquick.get(URL_BRIGHTCOVE_POLICY_KEY %
+                           (data_account, data_player))
     return re.compile('policyKey:"(.+?)"').findall(file_js.text)[0]
 
 
@@ -183,9 +178,7 @@ def get_brightcove_policy_key(data_account, data_player):
 def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
 
     if cqu.get_kodi_version() < 18:
-        xbmcgui.Dialog().ok(
-            'Info',
-            plugin.localize(30602))
+        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
         return False
 
     is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
@@ -197,13 +190,16 @@ def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
 
     # Get data_account / data_player
     resp = session_requests.get(URL_ROOT)
-    js_id_all = re.compile(
-        r'uktv\-static\/prod\/play\/(.*?)\.js').findall(resp.text)
+    js_id_all = re.compile(r'uktv\-static\/prod\/play\/(.*?)\.js').findall(
+        resp.text)
     for js_id in js_id_all:
         resp2 = session_requests.get(URL_BRIGHTCOVE_DATAS % js_id)
-        if len(re.compile(r'VUE_APP_BRIGHTCOVE_ACCOUNT\:\"(.*?)\"').findall(resp2.text)) > 0:
+        if len(
+                re.compile(r'VUE_APP_BRIGHTCOVE_ACCOUNT\:\"(.*?)\"').findall(
+                    resp2.text)) > 0:
             data_account = re.compile(
-                r'VUE_APP_BRIGHTCOVE_ACCOUNT\:\"(.*?)\"').findall(resp2.text)[0]
+                r'VUE_APP_BRIGHTCOVE_ACCOUNT\:\"(.*?)\"').findall(
+                    resp2.text)[0]
             data_player = re.compile(
                 r'VUE_APP_BRIGHTCOVE_PLAYER\:\"(.*?)\"').findall(resp2.text)[0]
             break
@@ -211,8 +207,13 @@ def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
     # Method to get JSON from 'edge.api.brightcove.com'
     resp3 = session_requests.get(
         URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
-        headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36',
-            'Accept': 'application/json;pk=%s' % (get_brightcove_policy_key(data_account, data_player))})
+        headers={
+            'User-Agent':
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36',
+            'Accept':
+            'application/json;pk=%s' %
+            (get_brightcove_policy_key(data_account, data_player))
+        })
 
     json_parser = json.loads(resp3.text)
 
@@ -223,7 +224,8 @@ def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
             if 'src' in url:
                 if 'com.widevine.alpha' in url["key_systems"]:
                     video_url = url["src"]
-                    licence_key = url["key_systems"]['com.widevine.alpha']['license_url']
+                    licence_key = url["key_systems"]['com.widevine.alpha'][
+                        'license_url']
 
     item = Listitem()
     item.path = video_url
@@ -233,6 +235,7 @@ def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property['inputstream.adaptive.license_key'] = licence_key + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=manifest.prod.boltdns.net|R{SSM}|'
+    item.property[
+        'inputstream.adaptive.license_key'] = licence_key + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=manifest.prod.boltdns.net|R{SSM}|'
 
     return item

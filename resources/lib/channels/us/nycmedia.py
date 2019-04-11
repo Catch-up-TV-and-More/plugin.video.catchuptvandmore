@@ -68,19 +68,20 @@ def list_programs(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_REPLAY)
     root = resp.parse()
 
-    for program_datas in root.iterfind(".//div[@style='float:left; width:490px; height:180px']"):
+    for program_datas in root.iterfind(
+            ".//div[@style='float:left; width:490px; height:180px']"):
         program_title = program_datas.findall('.//a')[1].text
         program_image = program_datas.find('.//img').get('src')
-        program_id = program_datas.findall('.//a')[1].get('href').split('videos.php?id=')[1]
+        program_id = program_datas.findall('.//a')[1].get('href').split(
+            'videos.php?id=')[1]
 
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_id=program_id,
-            page='1')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_id=program_id,
+                          page='1')
         item_post_treatment(item)
         yield item
 
@@ -91,37 +92,43 @@ def list_videos(plugin, item_id, program_id, page, **kwargs):
     resp = urlquick.get(URL_VIDEOS % (program_id, page))
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@style='float:left; width:160px; height:220px; padding-left:4px; padding-right:31px']"):
+    for video_datas in root.iterfind(
+            ".//div[@style='float:left; width:160px; height:220px; padding-left:4px; padding-right:31px']"
+    ):
 
-        video_title = video_datas.find('.//b/a').text + ' - ' + video_datas.findall('.//br')[1].tail.strip()
+        video_title = video_datas.find(
+            './/b/a').text + ' - ' + video_datas.findall(
+                './/br')[1].tail.strip()
         video_image = video_datas.find(".//img[@class='thumb']").get('src')
-        video_url = URL_STREAM % video_datas.find('.//a').get('href').replace('../', '')
+        video_url = URL_STREAM % video_datas.find('.//a').get('href').replace(
+            '../', '')
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        program_id=program_id,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             program_id=program_id,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    list_stream_datas = re.compile(
-        'source src="(.*?)"').findall(resp.text)
+    list_stream_datas = re.compile('source src="(.*?)"').findall(resp.text)
     stream_url = ''
     for stream_datas in list_stream_datas:
         if 'mp4' in stream_datas:

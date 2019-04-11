@@ -39,11 +39,9 @@ import json
 import time
 import urlquick
 
-
 # TO DO
 # Add geoblock (info in JSON)
 # Add Quality Mode
-
 
 URL_EMISSIONS_AUVIO = 'https://www.rtbf.be/auvio/emissions'
 
@@ -73,15 +71,14 @@ def get_partener_key():
     # Get partener key
     resp = urlquick.get(URL_ROOT_LIVE)
     list_js_files = re.compile(
-         r'<script type="text\/javascript" src="(.*?)">'
-         ).findall(resp.text)
+        r'<script type="text\/javascript" src="(.*?)">').findall(resp.text)
 
     # Brute force :)
     partener_key_value = ''
     for js_file in list_js_files:
         resp2 = urlquick.get(js_file)
-        partener_key_datas = re.compile(
-            'partner_key: \'(.+?)\'').findall(resp2.text)
+        partener_key_datas = re.compile('partner_key: \'(.+?)\'').findall(
+            resp2.text)
         if len(partener_key_datas) > 0:
             partener_key_value = partener_key_datas[0]
             break
@@ -115,9 +112,7 @@ def list_categories(plugin, item_id, **kwargs):
 
     item = Listitem()
     item.label = plugin.localize(LABELS['All programs'])
-    item.set_callback(
-        list_programs,
-        item_id=item_id)
+    item.set_callback(list_programs, item_id=item_id)
     item_post_treatment(item)
     yield item
 
@@ -133,10 +128,9 @@ def list_categories(plugin, item_id, **kwargs):
 
                     item = Listitem()
                     item.label = category_title
-                    item.set_callback(
-                        list_sub_categories,
-                        item_id=item_id,
-                        category_url=category_url)
+                    item.set_callback(list_sub_categories,
+                                      item_id=item_id,
+                                      category_url=category_url)
                     item_post_treatment(item)
                     yield item
 
@@ -147,10 +141,13 @@ def list_programs(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_EMISSIONS_AUVIO)
     root = resp.parse()
 
-    for program_datas in root.iterfind(".//article[@class='rtbf-media-item col-xxs-12 col-xs-6 col-md-4 col-lg-3 ']"):
+    for program_datas in root.iterfind(
+            ".//article[@class='rtbf-media-item col-xxs-12 col-xs-6 col-md-4 col-lg-3 ']"
+    ):
         program_title = program_datas.find('.//a').get('title')
         program_image = ''
-        list_program_image_datas = program_datas.find('.//img').get('data-srcset').split(' ')
+        list_program_image_datas = program_datas.find('.//img').get(
+            'data-srcset').split(' ')
         for program_image_data in list_program_image_datas:
             if 'jpg' in program_image_data:
                 if ',' in program_image_data:
@@ -161,12 +158,11 @@ def list_programs(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = program_title
-            
+
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos_program,
-            item_id=item_id,
-            program_id=program_id)
+        item.set_callback(list_videos_program,
+                          item_id=item_id,
+                          program_id=program_id)
         item_post_treatment(item)
         yield item
 
@@ -183,13 +179,14 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
             video_title = video_datas["title"] + ' - ' + video_datas["subtitle"]
         else:
             video_title = video_datas["title"]
-        video_image = URL_ROOT_IMAGE_RTBF + video_datas["thumbnail"]["full_medium"]
+        video_image = URL_ROOT_IMAGE_RTBF + video_datas["thumbnail"][
+            "full_medium"]
         video_plot = ''
         if video_datas["description"]:
             video_plot = video_datas["description"]
         video_duration = video_datas["durations"]
-        date_value = time.strftime(
-            '%d-%m-%Y', time.localtime(video_datas["liveFrom"]))
+        date_value = time.strftime('%d-%m-%Y',
+                                   time.localtime(video_datas["liveFrom"]))
         video_id = video_datas["id"]
 
         item = Listitem()
@@ -199,11 +196,10 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         item.info['duration'] = video_duration
         item.info.date(date_value, '%d-%m-%Y')
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -214,29 +210,30 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
     resp = urlquick.get(category_url)
     root = resp.parse()
 
-    for sub_category_datas in root.iterfind(".//section[@class='js-item-container']"):
+    for sub_category_datas in root.iterfind(
+            ".//section[@class='js-item-container']"):
 
         if sub_category_datas.find('.//h2').text is not None:
             sub_category_title = sub_category_datas.find('.//h2').text.strip()
         else:
-            sub_category_title = sub_category_datas.find('.//h2/a').text.strip()
+            sub_category_title = sub_category_datas.find(
+                './/h2/a').text.strip()
         sub_category_id = sub_category_datas.get('id')
 
         item = Listitem()
         item.label = sub_category_title
-        item.set_callback(
-            list_videos_sub_category,
-            item_id=item_id,
-            category_url=category_url,
-            sub_category_id=sub_category_id)
+        item.set_callback(list_videos_sub_category,
+                          item_id=item_id,
+                          category_url=category_url,
+                          sub_category_id=sub_category_id)
         item_post_treatment(item)
         yield item
 
-    list_data_uuid = re.compile(
-        r'data-uuid\=\"(.*?)\"').findall(resp.text)
+    list_data_uuid = re.compile(r'data-uuid\=\"(.*?)\"').findall(resp.text)
     for sub_category_data_uuid in list_data_uuid:
         resp2 = urlquick.get(
-            URL_SUB_CATEGORIES % (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
+            URL_SUB_CATEGORIES %
+            (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
         json_parser = json.loads(resp2.text)
         if sub_category_data_uuid in json_parser["blocks"]:
 
@@ -244,12 +241,15 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
             parser.feed(json_parser["blocks"][sub_category_data_uuid])
             root_2 = parser.close()
 
-            for sub_category_dl_data in root_2.iterfind(".//section[@class='js-item-container']"):
+            for sub_category_dl_data in root_2.iterfind(
+                    ".//section[@class='js-item-container']"):
 
                 if sub_category_dl_data.find('.//h2').text is not None:
-                    sub_category_dl_title = sub_category_dl_data.find('.//h2').text.strip()
+                    sub_category_dl_title = sub_category_dl_data.find(
+                        './/h2').text.strip()
                 else:
-                    sub_category_dl_title = sub_category_dl_data.find('.//h2/a').text.strip()
+                    sub_category_dl_title = sub_category_dl_data.find(
+                        './/h2/a').text.strip()
                 sub_category_dl_id = sub_category_dl_data.get('id')
 
                 item = Listitem()
@@ -264,12 +264,14 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
 
 
 @Route.register
-def list_videos_sub_category(plugin, item_id, category_url, sub_category_id, **kwargs):
+def list_videos_sub_category(plugin, item_id, category_url, sub_category_id,
+                             **kwargs):
 
     resp = urlquick.get(category_url)
     root = resp.parse()
 
-    for sub_category_datas in root.iterfind(".//section[@class='js-item-container']"):
+    for sub_category_datas in root.iterfind(
+            ".//section[@class='js-item-container']"):
         if sub_category_datas.get('id') == sub_category_id:
             list_videos_datas = sub_category_datas.findall('.//article')
 
@@ -281,7 +283,8 @@ def list_videos_sub_category(plugin, item_id, category_url, sub_category_id, **k
                             './/a').get('title') + ' - ' + \
                             video_datas.find('.//h4').text
                     else:
-                        video_title = video_datas.find('.//h3').find('.//a').get('title')
+                        video_title = video_datas.find('.//h3').find(
+                            './/a').get('title')
                     video_image = ''
                     image_datas = video_datas.find('.//img').get(
                         'data-srcset').split(',')
@@ -293,26 +296,32 @@ def list_videos_sub_category(plugin, item_id, category_url, sub_category_id, **k
                     item.label = video_title
                     item.art['thumb'] = video_image
 
-                    item.set_callback(
-                        get_video_url,
-                        item_id=item_id,
-                        video_label=LABELS[item_id] + ' - ' + item.label,
-                        video_id=video_id)
-                    item_post_treatment(item, is_playable=True, is_downloadable=True)
+                    item.set_callback(get_video_url,
+                                      item_id=item_id,
+                                      video_label=LABELS[item_id] + ' - ' +
+                                      item.label,
+                                      video_id=video_id)
+                    item_post_treatment(item,
+                                        is_playable=True,
+                                        is_downloadable=True)
                     yield item
 
 
 @Route.register
-def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid, sub_category_id, **kwargs):
+def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
+                                sub_category_id, **kwargs):
 
-    resp = urlquick.get(URL_SUB_CATEGORIES % (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
+    resp = urlquick.get(
+        URL_SUB_CATEGORIES %
+        (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
     json_parser = json.loads(resp.text)
 
     parser = htmlement.HTMLement()
     parser.feed(json_parser["blocks"][sub_category_data_uuid])
     root = parser.close()
 
-    for sub_category_dl_datas in root.iterfind(".//section[@class='js-item-container']"):
+    for sub_category_dl_datas in root.iterfind(
+            ".//section[@class='js-item-container']"):
         if sub_category_dl_datas.get('id') == sub_category_id:
             list_videos_datas = sub_category_dl_datas.findall('.//article')
 
@@ -324,7 +333,8 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid, sub_cat
                             './/a').get('title') + ' - ' + \
                             video_datas.find('.//h4').text
                     else:
-                        video_title = video_datas.find('.//h3').find('.//a').get('title')
+                        video_title = video_datas.find('.//h3').find(
+                            './/a').get('title')
                     video_image = ''
                     image_datas = video_datas.find('.//img').get(
                         'data-srcset').split(',')
@@ -336,28 +346,36 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid, sub_cat
                     item.label = video_title
                     item.art['thumb'] = video_image
 
-                    item.set_callback(
-                        get_video_url,
-                        item_id=item_id,
-                        video_label=LABELS[item_id] + ' - ' + item.label,
-                        video_id=video_id)
-                    item_post_treatment(item, is_playable=True, is_downloadable=True)
+                    item.set_callback(get_video_url,
+                                      item_id=item_id,
+                                      video_label=LABELS[item_id] + ' - ' +
+                                      item.label,
+                                      video_id=video_id)
+                    item_post_treatment(item,
+                                        is_playable=True,
+                                        is_downloadable=True)
                     yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(URL_VIDEO_BY_ID % video_id, max_age=-1)
-    json_parser = json.loads(re.compile('data-media=\"(.*?)\"').findall(
-        resp.text)[0].replace('&quot;', '"'))
+    json_parser = json.loads(
+        re.compile('data-media=\"(.*?)\"').findall(resp.text)[0].replace(
+            '&quot;', '"'))
 
     if json_parser["urlHls"] is None:
         if 'youtube.com' in json_parser["url"]:
             video_id = json_parser["url"].rsplit('/', 1)[1]
-            return resolver_proxy.get_stream_youtube(
-                plugin, video_id, download_mode, video_label)
+            return resolver_proxy.get_stream_youtube(plugin, video_id,
+                                                     download_mode,
+                                                     video_label)
         else:
             return json_parser["url"]
     else:
@@ -384,7 +402,6 @@ def list_lives(plugin, item_id, **kwargs):
     json_parser = json.loads(resp.text)
 
     for live_datas in json_parser:
-
 
         if "url_streaming" in live_datas:
             # check if we can add prochainnement if stream is not present
@@ -414,10 +431,7 @@ def list_lives(plugin, item_id, **kwargs):
         #commented this line because othrewie sorting is made by date and then by title
         #and doesn't help to find the direct
         #item.info.date(date_time_value, '%Y/%m/%d')
-        item.set_callback(
-            get_live_url,
-            item_id=item_id,
-            live_url=live_url)
+        item.set_callback(get_live_url, item_id=item_id, live_url=live_url)
         item_post_treatment(item, is_playable=True)
         yield item
 

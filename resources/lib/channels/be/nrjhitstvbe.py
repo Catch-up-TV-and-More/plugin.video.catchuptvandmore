@@ -71,11 +71,10 @@ def list_categories(plugin, item_id, **kwargs):
 
             item = Listitem()
             item.label = category_title
-            item.set_callback(
-                list_videos_categories,
-                item_id=item_id,
-                category_url=category_url,
-                page='1')
+            item.set_callback(list_videos_categories,
+                              item_id=item_id,
+                              category_url=category_url,
+                              page='1')
             item_post_treatment(item)
             yield item
         else:
@@ -83,10 +82,9 @@ def list_categories(plugin, item_id, **kwargs):
 
             item = Listitem()
             item.label = category_title
-            item.set_callback(
-                list_videos_last_videos,
-                item_id=item_id,
-                category_url=category_url)
+            item.set_callback(list_videos_last_videos,
+                              item_id=item_id,
+                              category_url=category_url)
             item_post_treatment(item)
             yield item
 
@@ -97,29 +95,27 @@ def list_videos_categories(plugin, item_id, category_url, page, **kwargs):
     resp = urlquick.get(category_url + '/%s' % page)
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='col-xs-6 col-md-4 col-lg-3 col-centered']"):
+    for video_datas in root.iterfind(
+            ".//div[@class='col-xs-6 col-md-4 col-lg-3 col-centered']"):
         video_title = video_datas.find('.//img').get('alt')
         video_image = video_datas.find('.//img').get('src')
-        video_id = re.compile(
-            r'changeVideoBrid\((.*?)\,').findall(
-                video_datas.find(".//div[@class='play_hover']").get('onclick'))[0]
+        video_id = re.compile(r'changeVideoBrid\((.*?)\,').findall(
+            video_datas.find(".//div[@class='play_hover']").get('onclick'))[0]
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=category_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             category_url=category_url,
+                             page=str(int(page) + 1))
 
 
 @Route.register
@@ -128,33 +124,37 @@ def list_videos_last_videos(plugin, item_id, category_url, **kwargs):
     resp = urlquick.get(category_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='col-xs-6 col-md-4 col-lg-3 col-centered']"):
+    for video_datas in root.iterfind(
+            ".//div[@class='col-xs-6 col-md-4 col-lg-3 col-centered']"):
         video_title = video_datas.find('.//img').get('alt')
         video_image = video_datas.find('.//img').get('src')
-        video_id = re.compile(
-            r'changeVideoBrid\((.*?)\,').findall(
-                video_datas.find(".//div[@class='play_hover']").get('onclick'))[0]
+        video_id = re.compile(r'changeVideoBrid\((.*?)\,').findall(
+            video_datas.find(".//div[@class='play_hover']").get('onclick'))[0]
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(URL_STREAM % video_id)
     root = resp.parse()
-    final_video_url = root.find(".//input[@id='VideoPlayerDatas']").get('data-filehd')
+    final_video_url = root.find(".//input[@id='VideoPlayerDatas']").get(
+        'data-filehd')
 
     if download_mode:
         return download.download_video(final_video_url, video_label)

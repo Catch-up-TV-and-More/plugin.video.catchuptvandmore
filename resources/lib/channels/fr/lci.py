@@ -43,7 +43,6 @@ import re
 import urlquick
 import xbmcgui
 
-
 # TO DO
 # Add aired, date, duration etc...
 # Rework get_video_url (remove code not needed)
@@ -76,14 +75,13 @@ def list_programs(plugin, item_id, **kwargs):
     - ...
     """
     resp = urlquick.get(URL_LCI_REPLAY)
-    root = resp.parse("ul", attrs={"class": "topic-chronology-milestone-component"})
+    root = resp.parse("ul",
+                      attrs={"class": "topic-chronology-milestone-component"})
 
     for program in root.iterfind(".//li"):
         item = Listitem()
-        program_url = URL_LCI_ROOT + program.find(
-            './/a').get('href')
-        program_name = program.find(
-            ".//h2[@class='text-block']").text
+        program_url = URL_LCI_ROOT + program.find('.//a').get('href')
+        program_name = program.find(".//h2[@class='text-block']").text
         img = program.findall('.//source')[0]
         try:
             img = img.get('data-srcset')
@@ -92,12 +90,10 @@ def list_programs(plugin, item_id, **kwargs):
         img = img.split(',')[0].split(' ')[0]
         item.label = program_name
         item.art["thumb"] = img
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url,
-            page='1'
-        )
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url,
+                          page='1')
         item_post_treatment(item)
         yield item
 
@@ -111,12 +107,14 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
         resp = urlquick.get(program_url + '/%s/' % page)
     root = resp.parse()
 
-    for replay in root.iterfind(".//article[@class='md-3col-art-blk__article']"):
+    for replay in root.iterfind(
+            ".//article[@class='md-3col-art-blk__article']"):
 
-        if replay.find(".//span[@class='broadcast-infos-blk__type']") is not None:
-            if 'Replay' in replay.find(".//span[@class='broadcast-infos-blk__type']").text:
-                title = replay.find(
-                    './/img').get('alt')
+        if replay.find(
+                ".//span[@class='broadcast-infos-blk__type']") is not None:
+            if 'Replay' in replay.find(
+                    ".//span[@class='broadcast-infos-blk__type']").text:
+                title = replay.find('.//img').get('alt')
                 img = ''
                 for img in replay.findall('.//source'):
                     try:
@@ -125,32 +123,35 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
                         img = img.get('srcset')
 
                 img = img.split(',')[0].split(' ')[0]
-                program_id = URL_LCI_ROOT + replay.find('.//a').get(
-                    'href')
+                program_id = URL_LCI_ROOT + replay.find('.//a').get('href')
 
                 item = Listitem()
                 item.label = title
                 item.art["thumb"] = img
 
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    program_id=program_id
-                )
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' +
+                                  item.label,
+                                  program_id=program_id)
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
                 yield item
 
     # More videos...
-    yield Listitem.next_page(
-        item_id=item_id,
-        program_url=program_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             program_url=program_url,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, program_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  program_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     if 'www.wat.tv/embedframe' in program_id:
         url = 'http:' + program_id
@@ -166,12 +167,10 @@ def get_video_url(
     if 'www.wat.tv/embedframe' in program_id:
         video_id = re.compile('UVID=(.*?)&').findall(video_html)[0]
     elif item_id == 'lci':
-        video_id = re.compile(
-            r'data-videoid="(.*?)"').findall(video_html)[0]
+        video_id = re.compile(r'data-videoid="(.*?)"').findall(video_html)[0]
     else:
         root = video_html.parse()
-        iframe_player = root.find(
-            ".//div[@class='iframe_player']")
+        iframe_player = root.find(".//div[@class='iframe_player']")
         if iframe_player is not None:
             video_id = iframe_player.get('data-watid')
         else:
@@ -179,31 +178,27 @@ def get_video_url(
                 r'www\.tf1\.fr\/embedplayer\/(.*?)\"').findall(video_html)[0]
 
     url_json = URL_VIDEO_STREAM % video_id
-    htlm_json = urlquick.get(
-        url_json,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    htlm_json = urlquick.get(url_json,
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
     # Check DRM in the m3u8 file
-    manifest = urlquick.get(
-        json_parser["hls"],
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1).text
+    manifest = urlquick.get(json_parser["hls"],
+                            headers={
+                                'User-Agent': web_utils.get_random_ua
+                            },
+                            max_age=-1).text
     if 'drm' in manifest:
-        Script.notify(
-            "TEST",
-            plugin.localize(LABELS['drm_notification']),
-            Script.NOTIFY_INFO)
+        Script.notify("TEST", plugin.localize(LABELS['drm_notification']),
+                      Script.NOTIFY_INFO)
         return False
 
     root = os.path.dirname(json_parser["hls"])
 
-    manifest = urlquick.get(
-        json_parser["hls"].split(
-            '&max_bitrate=')[0],
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    manifest = urlquick.get(json_parser["hls"].split('&max_bitrate=')[0],
+                            headers={'User-Agent': web_utils.get_random_ua},
+                            max_age=-1)
 
     final_video_url = ''
     lines = manifest.text.splitlines()
@@ -212,11 +207,8 @@ def get_video_url(
     for k in range(0, len(lines) - 1):
         if 'RESOLUTION=' in lines[k]:
             all_datas_videos_quality.append(
-                re.compile(
-                    r'RESOLUTION=(.*?),').findall(
-                    lines[k])[0])
-            all_datas_videos_path.append(
-                root + '/' + lines[k + 1])
+                re.compile(r'RESOLUTION=(.*?),').findall(lines[k])[0])
+            all_datas_videos_path.append(root + '/' + lines[k + 1])
     if DESIRED_QUALITY == "DIALOG":
         seleted_item = xbmcgui.Dialog().select(
             plugin.localize(LABELS['choose_video_quality']),
@@ -246,10 +238,9 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     video_format = 'hls'
     url_json = URL_VIDEO_STREAM_2 % (video_id, video_format)
-    htlm_json = urlquick.get(
-        url_json,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    htlm_json = urlquick.get(url_json,
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
     return json_parser['url']

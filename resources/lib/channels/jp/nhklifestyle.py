@@ -36,7 +36,6 @@ import json
 import re
 import urlquick
 
-
 URL_ROOT = 'http://www.nhk.or.jp'
 
 URL_NHK_LIFESTYLE = URL_ROOT + '/lifestyle/'
@@ -67,19 +66,20 @@ def list_categories(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_NHK_LIFESTYLE)
     root = resp.parse()
 
-    for category_datas in root.iterfind(".//h2[@class='p-sliderSection__heading']"):
+    for category_datas in root.iterfind(
+            ".//h2[@class='p-sliderSection__heading']"):
         if category_datas.find('.//a') is not None:
             if category_datas.find('.//a').get('class') is not None:
                 if 'text-color-' in category_datas.find('.//a').get('class'):
                     category_title = category_datas.find('.//a').text
-                    category_url = URL_NHK_LIFESTYLE + category_datas.find('.//a').get('href')
+                    category_url = URL_NHK_LIFESTYLE + category_datas.find(
+                        './/a').get('href')
 
                     item = Listitem()
                     item.label = category_title
-                    item.set_callback(
-                        list_videos,
-                        item_id=item_id,
-                        category_url=category_url)
+                    item.set_callback(list_videos,
+                                      item_id=item_id,
+                                      category_url=category_url)
                     item_post_treatment(item)
                     yield item
 
@@ -89,18 +89,23 @@ def list_videos(plugin, item_id, category_url, **kwargs):
 
     resp = urlquick.get(category_url)
     root = resp.parse()
-    list_videos_datas_json_value = root.find(
-        './/article').findall('.//script')[0].text
+    list_videos_datas_json_value = root.find('.//article').findall(
+        './/script')[0].text
 
     # TODO try to simplify it
-    list_videos_datas_json_value = list_videos_datas_json_value.replace(']', '')
+    list_videos_datas_json_value = list_videos_datas_json_value.replace(
+        ']', '')
     list_videos_datas_json_value = list_videos_datas_json_value.replace(
         'var NHKLIFE_LISTDATA = [', '')
     list_videos_datas_json_value = list_videos_datas_json_value.strip()
-    list_videos_datas_json_value = list_videos_datas_json_value.replace('{', '{"')
-    list_videos_datas_json_value = list_videos_datas_json_value.replace(': ', '": ')
-    list_videos_datas_json_value = list_videos_datas_json_value.replace(',', ',"')
-    list_videos_datas_json_value = list_videos_datas_json_value.replace(',"{', ',{')
+    list_videos_datas_json_value = list_videos_datas_json_value.replace(
+        '{', '{"')
+    list_videos_datas_json_value = list_videos_datas_json_value.replace(
+        ': ', '": ')
+    list_videos_datas_json_value = list_videos_datas_json_value.replace(
+        ',', ',"')
+    list_videos_datas_json_value = list_videos_datas_json_value.replace(
+        ',"{', ',{')
     json_parser = json.loads('[' + list_videos_datas_json_value + ']')
 
     for video_datas in json_parser:
@@ -113,7 +118,8 @@ def list_videos(plugin, item_id, category_url, **kwargs):
                 video_image = URL_ROOT + video_datas["image_src"]
             video_duration = 60 * int(video_datas["videoInfo"]["duration"].split(':')[0]) + \
                 int(video_datas["videoInfo"]["duration"].split(':')[1])
-            video_url = URL_NHK_LIFESTYLE + video_datas["href"].replace('../', '')
+            video_url = URL_NHK_LIFESTYLE + video_datas["href"].replace(
+                '../', '')
 
             item = Listitem()
             item.label = video_title
@@ -121,31 +127,35 @@ def list_videos(plugin, item_id, category_url, **kwargs):
             item.info['plot'] = video_plot
             item.info['duration'] = video_duration
 
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                video_url=video_url)
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
     if re.compile('player.php\?v=(.*?)&').findall(resp.text):
         video_id = re.compile('player.php\?v=(.*?)&').findall(resp.text)[0]
     else:
-        video_id = re.compile(
-            'movie-s.nhk.or.jp/v/(.*?)\?').findall(resp.text)[0]
+        video_id = re.compile('movie-s.nhk.or.jp/v/(.*?)\?').findall(
+            resp.text)[0]
     resp2 = urlquick.get(URL_API_KEY_NHK % video_id)
-    api_key_value = re.compile(
-        'data-de-api-key="(.*?)"').findall(resp2.text)[0]
+    api_key_value = re.compile('data-de-api-key="(.*?)"').findall(
+        resp2.text)[0]
     resp3 = urlquick.get(URL_API_STREAM_NHK % (api_key_value, video_id))
     json_parser = json.loads(resp3.text)
-    final_video_url = json_parser["response"]["WsProgramResponse"]["program"]["asset"]["ipadM3u8Url"]
+    final_video_url = json_parser["response"]["WsProgramResponse"]["program"][
+        "asset"]["ipadM3u8Url"]
     if download_mode:
         return download.download_video(final_video_url, video_label)
     return final_video_url

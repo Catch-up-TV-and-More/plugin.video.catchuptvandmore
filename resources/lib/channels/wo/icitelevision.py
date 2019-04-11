@@ -34,9 +34,7 @@ from resources.lib import resolver_proxy
 import re
 import urlquick
 
-
 # TO DO
-
 
 URL_ROOT = 'http://icitelevision.ca'
 
@@ -51,5 +49,4 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    return re.compile(
-        'source src=\"(.*?)\"').findall(resp.text)[0]
+    return re.compile('source src=\"(.*?)\"').findall(resp.text)[0]

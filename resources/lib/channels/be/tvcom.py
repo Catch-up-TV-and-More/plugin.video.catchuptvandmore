@@ -35,7 +35,6 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import re
 import urlquick
 
-
 # TO DO
 # Add infos videos
 
@@ -66,19 +65,16 @@ def list_categories(plugin, item_id, **kwargs):
     """
     item = Listitem()
     item.label = plugin.localize(LABELS['All videos'])
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        next_url=URL_VIDEOS,
-        page='0')
+    item.set_callback(list_videos,
+                      item_id=item_id,
+                      next_url=URL_VIDEOS,
+                      page='0')
     item_post_treatment(item)
     yield item
 
     item = Listitem()
     item.label = plugin.localize(LABELS['All programs'])
-    item.set_callback(
-        list_programs,
-        item_id=item_id)
+    item.set_callback(list_programs, item_id=item_id)
     item_post_treatment(item)
     yield item
 
@@ -92,18 +88,17 @@ def list_programs(plugin, item_id, **kwargs):
     for program_datas in root.iterfind(".//div[@class='col-sm-4']"):
 
         program_title = program_datas.find('.//h3').text
-        program_image = URL_ROOT + '/' + program_datas.find('.//img').get('src')
-        program_url = URL_ROOT + '/' + program_datas.find(
-            ".//a").get("href")
+        program_image = URL_ROOT + '/' + program_datas.find('.//img').get(
+            'src')
+        program_url = URL_ROOT + '/' + program_datas.find(".//a").get("href")
 
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            next_url=program_url,
-            page='0')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          next_url=program_url,
+                          page='0')
         item_post_treatment(item)
         yield item
 
@@ -123,27 +118,28 @@ def list_videos(plugin, item_id, next_url, page, **kwargs):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        next_url=next_url,
-        page=str(int(page) + 12))
+    yield Listitem.next_page(item_id=item_id,
+                             next_url=next_url,
+                             page=str(int(page) + 12))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
-    list_streams_datas = re.compile(
-        r'source src="(.*?)"').findall(resp.text)
+    list_streams_datas = re.compile(r'source src="(.*?)"').findall(resp.text)
     stream_url = ''
     for stream_datas in list_streams_datas:
         if 'm3u8' in stream_datas or \
@@ -163,5 +159,4 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    return re.compile(
-        r'sourceURL\"\:\"(.*?)\"').findall(resp.text)[0]
+    return re.compile(r'sourceURL\"\:\"(.*?)\"').findall(resp.text)[0]

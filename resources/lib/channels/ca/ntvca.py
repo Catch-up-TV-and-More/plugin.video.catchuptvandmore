@@ -53,5 +53,4 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     root = resp.parse()
     live_datas = root.find('.//iframe')
     resp2 = urlquick.get('http:' + live_datas.get('src'))
-    return re.compile(
-        r'\"url\"\:\"(.*?)\"').findall(resp2.text)[0]
+    return re.compile(r'\"url\"\:\"(.*?)\"').findall(resp2.text)[0]

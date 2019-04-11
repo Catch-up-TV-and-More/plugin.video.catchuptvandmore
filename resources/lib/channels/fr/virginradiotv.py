@@ -34,7 +34,6 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
-
 '''
 TODO Add Replay
 '''
@@ -51,12 +50,9 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    live_html = urlquick.get(
-        URL_LIVE,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-    video_id = re.compile(
-        r'dailymotion.com/embed/video/(.*?)[\"\?]').findall(
-            live_html.text)[0]
-    return resolver_proxy.get_stream_dailymotion(
-        plugin, video_id, False)
+    live_html = urlquick.get(URL_LIVE,
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
+    video_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\"\?]').findall(
+        live_html.text)[0]
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id, False)

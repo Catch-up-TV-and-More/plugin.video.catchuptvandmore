@@ -32,7 +32,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
 import json
 import urlquick
 
@@ -95,10 +94,9 @@ def list_categories(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url)
         item_post_treatment(item)
         yield item
 
@@ -112,32 +110,32 @@ def list_videos(plugin, item_id, category_url, **kwargs):
     for video_datas in json_parser['hydra:member']:
         video_title = video_datas['headline']
         video_id = video_datas['media'][0]['media']['context']['private_id']
-        video_image = video_datas['media'][0]['media']['context']['thumbnail_url']
+        video_image = video_datas['media'][0]['media']['context'][
+            'thumbnail_url']
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=URL_API_ROOT + json_parser["hydra:nextPage"])
+    yield Listitem.next_page(item_id=item_id,
+                             category_url=URL_API_ROOT +
+                             json_parser["hydra:nextPage"])
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    return resolver_proxy.get_stream_dailymotion(
-        plugin,
-        video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)

@@ -36,7 +36,6 @@ import urlquick
 # TO DO
 # Add Replay
 
-
 URL_ROOT = 'http://teleticino.ch'
 
 # Live
@@ -51,8 +50,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    list_lives = re.compile(
-        r'file":  "(.*?)"').findall(resp.text)
+    list_lives = re.compile(r'file":  "(.*?)"').findall(resp.text)
     stream_url = ''
     for stream_datas in list_lives:
         if 'm3u8' in stream_datas:

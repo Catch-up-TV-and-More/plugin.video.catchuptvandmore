@@ -41,10 +41,8 @@ import json
 import time
 import urlquick
 
-
 # TO DO
 # Improve Live TV (Title, picture, plot)
-
 
 SECRET_KEY = '19nBVBxv791Xs'
 
@@ -105,11 +103,9 @@ def list_categories(plugin, item_id, **kwargs):
     for category_title, program_url in CATEGORIES.iteritems():
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            program_url=program_url % get_api_key()
-        )
+        item.set_callback(list_programs,
+                          item_id=item_id,
+                          program_url=program_url % get_api_key())
         item_post_treatment(item)
         yield item
 
@@ -121,8 +117,8 @@ def list_programs(plugin, item_id, program_url, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(
-        program_url, headers={'User-Agent': web_utils.get_random_ua})
+    resp = urlquick.get(program_url,
+                        headers={'User-Agent': web_utils.get_random_ua})
     json_parser = json.loads(resp.text)
 
     for program in json_parser['res']:
@@ -134,11 +130,7 @@ def list_programs(plugin, item_id, program_url, **kwargs):
         item.label = program_title
         item.art["thumb"] = program_image
         item.art["fanart"] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_id=program_id
-        )
+        item.set_callback(list_videos, item_id=item_id, program_id=program_id)
         item_post_treatment(item)
         yield item
 
@@ -146,9 +138,8 @@ def list_programs(plugin, item_id, program_url, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, program_id, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIST_SHOW % (get_api_key(), program_id),
-        headers={'User-Agent': web_utils.get_random_ua})
+    resp = urlquick.get(URL_LIST_SHOW % (get_api_key(), program_id),
+                        headers={'User-Agent': web_utils.get_random_ua})
     json_parser = json.loads(resp.text)
 
     for show in json_parser['res']:
@@ -186,19 +177,21 @@ def list_videos(plugin, item_id, program_id, **kwargs):
         item.art["thumb"] = thumb
         item.art["fanart"] = fanart
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     url_root = video_url.replace('playlist.m3u8', '')
     m3u8_content = urlquick.get(
         video_url, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
@@ -221,12 +214,17 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     url_live = ''
-    live_html = urlquick.get(URL_LIVE_TV, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-    url_live_embeded = re.compile(
-        '<iframe src=\"(.*?)\"').findall(live_html.text)[0]
-    root_live_embeded_html = urlquick.get(url_live_embeded, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-    all_url_video = re.compile(
-        r'file: \'(.*?)\'').findall(root_live_embeded_html.text)
+    live_html = urlquick.get(URL_LIVE_TV,
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
+    url_live_embeded = re.compile('<iframe src=\"(.*?)\"').findall(
+        live_html.text)[0]
+    root_live_embeded_html = urlquick.get(
+        url_live_embeded,
+        headers={'User-Agent': web_utils.get_random_ua},
+        max_age=-1)
+    all_url_video = re.compile(r'file: \'(.*?)\'').findall(
+        root_live_embeded_html.text)
 
     for url_video in all_url_video:
         if url_video.count('m3u8') > 0:

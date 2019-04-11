@@ -37,9 +37,8 @@ def website_entry(plugin, item_id, **kwargs):
 def root(plugin, **kwargs):
     item = Listitem()
     item.label = 'Marmiton (youtube)'
-    item.set_callback(
-        list_videos_youtube,
-        channel_youtube='UCmKCpHH5ATFMURHTRC2jLyA')
+    item.set_callback(list_videos_youtube,
+                      channel_youtube='UCmKCpHH5ATFMURHTRC2jLyA')
     item_post_treatment(item)
     yield item
 

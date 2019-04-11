@@ -38,7 +38,6 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import json
 import re
 import urlquick
-
 '''
 Channels:
     * France TV CultureBox
@@ -72,15 +71,15 @@ def list_categories(plugin, item_id, **kwargs):
         if '/videos/' in category_datas.get('href'):
             category_title = category_datas.text
             category_url = URL_ROOT + category_datas.get(
-                'href') + '?sort_by=field_live_published_date_value&sort_order=DESC&page=%s'
+                'href'
+            ) + '?sort_by=field_live_published_date_value&sort_order=DESC&page=%s'
 
             item = Listitem()
             item.label = category_title
-            item.set_callback(
-                list_videos,
-                item_id=item_id,
-                category_url=category_url,
-                page='0')
+            item.set_callback(list_videos,
+                              item_id=item_id,
+                              category_url=category_url,
+                              page='0')
             item_post_treatment(item)
             yield item
 
@@ -101,24 +100,27 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
             item.label = video_title
             item.art['thumb'] = video_image
 
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                item_dict=item2dict(item))
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_url=video_url,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              item_dict=item2dict(item))
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=category_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             category_url=category_url,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  item_dict=None,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
     if re.compile(r'videos.francetv.fr\/video\/(.*?)\@').findall(resp.text):
@@ -127,5 +129,6 @@ def get_video_url(
     else:
         plugin.notify('ERROR', plugin.localize(30716))
         return False
-    return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, item_dict, download_mode, video_label)
+    return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
+                                                    item_dict, download_mode,
+                                                    video_label)

@@ -39,7 +39,6 @@ import re
 import urlquick
 import xbmcgui
 
-
 # TO DO
 
 # BFMTV, RMC, ONENET, etc ...
@@ -101,11 +100,10 @@ def list_programs(plugin, item_id, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_category=program_category,
-            page='1')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_category=program_category,
+                          page='1')
         item_post_treatment(item)
         yield item
 
@@ -113,8 +111,8 @@ def list_programs(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, program_category, page, **kwargs):
 
-    resp = urlquick.get(
-        URL_SHOW % (item_id, get_token(item_id), program_category, page))
+    resp = urlquick.get(URL_SHOW %
+                        (item_id, get_token(item_id), program_category, page))
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser['videos']:
@@ -127,8 +125,8 @@ def list_videos(plugin, item_id, program_category, page, **kwargs):
         image = video_datas['image']
         duration = video_datas['video_duration_ms'] / 1000
 
-        value_date = time.strftime(
-            '%d %m %Y', time.localtime(video_datas["begin_date"]))
+        value_date = time.strftime('%d %m %Y',
+                                   time.localtime(video_datas["begin_date"]))
         date = str(value_date).split(' ')
         day = date[0]
         mounth = date[1]
@@ -147,25 +145,27 @@ def list_videos(plugin, item_id, program_category, page, **kwargs):
         item.info['year'] = year
         item.info['date'] = date
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id_ext=video_id_ext)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_id=video_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id_ext=video_id_ext)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        program_category=program_category,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             program_category=program_category,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, video_id_ext,
-        download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  video_id_ext,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(URL_VIDEO % (item_id, get_token(item_id), video_id))
     json_parser = json.loads(resp.text)
@@ -177,10 +177,10 @@ def get_video_url(
         all_datas_videos_path = []
 
         for datas in video_streams:
-            all_datas_videos_quality.append(
-                "Video Height : " + str(datas['frame_height']) +
-                " (Encoding : " + str(datas['encoding_rate']) + ")"
-            )
+            all_datas_videos_quality.append("Video Height : " +
+                                            str(datas['frame_height']) +
+                                            " (Encoding : " +
+                                            str(datas['encoding_rate']) + ")")
             all_datas_videos_path.append(datas['video_url'])
 
         seleted_item = xbmcgui.Dialog().select(
@@ -215,24 +215,18 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     if item_id == 'bfmtv':
-        resp = urlquick.get(
-            URL_LIVE_BFMTV,
-            headers={'User-Agent': web_utils.get_random_ua},
-            max_age=-1)
+        resp = urlquick.get(URL_LIVE_BFMTV,
+                            headers={'User-Agent': web_utils.get_random_ua},
+                            max_age=-1)
     elif item_id == 'bfmbusiness':
-        resp = urlquick.get(
-            URL_LIVE_BFMBUSINESS,
-            headers={'User-Agent': web_utils.get_random_ua},
-            max_age=-1)
+        resp = urlquick.get(URL_LIVE_BFMBUSINESS,
+                            headers={'User-Agent': web_utils.get_random_ua},
+                            max_age=-1)
 
     root = resp.parse()
-    live_datas = root.find(
-        ".//div[@class='next-player']")
+    live_datas = root.find(".//div[@class='next-player']")
     data_account = live_datas.get('data-account')
     data_video_id = live_datas.get('data-video-id')
     data_player = live_datas.get('data-player')
-    return resolver_proxy.get_brightcove_video_json(
-        plugin,
-        data_account,
-        data_player,
-        data_video_id)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id)

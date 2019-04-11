@@ -40,7 +40,6 @@ import urlquick
 # Add info LIVE TV
 # Get geoblocked video info
 
-
 URL_ROOT = 'https://videos.tva.ca'
 
 URL_LIVE = URL_ROOT + '/page/direct'
@@ -68,18 +67,13 @@ def list_categories(plugin, item_id, **kwargs):
     """
     item = Listitem()
     item.label = plugin.localize(LABELS['All videos'])
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        next_url=URL_VIDEOS)
+    item.set_callback(list_videos, item_id=item_id, next_url=URL_VIDEOS)
     item_post_treatment(item)
     yield item
 
     item = Listitem()
     item.label = plugin.localize(LABELS['All programs'])
-    item.set_callback(
-        list_programs,
-        item_id=item_id)
+    item.set_callback(list_programs, item_id=item_id)
     item_post_treatment(item)
     yield item
 
@@ -89,21 +83,21 @@ def list_programs(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_EMISSIONS)
     json_parser = json.loads(
-        re.compile(r'__INITIAL_STATE__ = (.*?)\}\;').findall(
-            resp.text)[0] + '}')
+        re.compile(r'__INITIAL_STATE__ = (.*?)\}\;').findall(resp.text)[0] +
+        '}')
 
     for program_datas in json_parser['items']:
-        program_title = json_parser['items'][str(program_datas)]["content"]["attributes"]["title"]
-        program_image = json_parser['items'][str(program_datas)]["content"]["attributes"]["image-landscape-medium"]
-        program_url = URL_ROOT + '/page/' + json_parser['items'][str(program_datas)]["content"]["attributes"]["pageId"]
+        program_title = json_parser['items'][str(
+            program_datas)]["content"]["attributes"]["title"]
+        program_image = json_parser['items'][str(
+            program_datas)]["content"]["attributes"]["image-landscape-medium"]
+        program_url = URL_ROOT + '/page/' + json_parser['items'][str(
+            program_datas)]["content"]["attributes"]["pageId"]
 
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            next_url=program_url)
+        item.set_callback(list_videos, item_id=item_id, next_url=program_url)
         item_post_treatment(item)
         yield item
 
@@ -113,8 +107,8 @@ def list_videos(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     json_parser = json.loads(
-        re.compile(r'__INITIAL_STATE__ = (.*?)\}\;').findall(
-            resp.text)[0] + '}')
+        re.compile(r'__INITIAL_STATE__ = (.*?)\}\;').findall(resp.text)[0] +
+        '}')
 
     data_account = json_parser["configurations"]["accountId"]
     data_player = json_parser["configurations"]["playerId"]
@@ -122,44 +116,49 @@ def list_videos(plugin, item_id, next_url, **kwargs):
     for video_datas in json_parser['items']:
 
         if '_' in video_datas:
-            video_title = json_parser['items'][str(video_datas)]["content"]["attributes"]["title"]
+            video_title = json_parser['items'][str(
+                video_datas)]["content"]["attributes"]["title"]
             video_plot = ''
-            if 'description' in json_parser['items'][str(video_datas)]["content"]["attributes"]:
-                video_plot = json_parser['items'][str(video_datas)]["content"]["attributes"]["description"]
+            if 'description' in json_parser['items'][str(
+                    video_datas)]["content"]["attributes"]:
+                video_plot = json_parser['items'][str(
+                    video_datas)]["content"]["attributes"]["description"]
             video_image = ''
-            if 'image-landscape-medium' in json_parser['items'][str(video_datas)]["content"]["attributes"]:
-                video_image = json_parser['items'][str(video_datas)]["content"]["attributes"]["image-landscape-medium"]
-            video_id = json_parser['items'][str(video_datas)]["content"]["attributes"]["assetId"]
+            if 'image-landscape-medium' in json_parser['items'][str(
+                    video_datas)]["content"]["attributes"]:
+                video_image = json_parser['items'][str(video_datas)][
+                    "content"]["attributes"]["image-landscape-medium"]
+            video_id = json_parser['items'][str(
+                video_datas)]["content"]["attributes"]["assetId"]
 
             item = Listitem()
             item.label = video_title
             item.art['thumb'] = video_image
             item.art['plot'] = video_plot
 
-            
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                data_account=data_account,
-                data_player=data_player,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                data_video_id=video_id)
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              data_account=data_account,
+                              data_player=data_player,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              data_video_id=video_id)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, data_account, data_player,
-        data_video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  data_account,
+                  data_player,
+                  data_video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    return resolver_proxy.get_brightcove_video_json(
-        plugin,
-        data_account,
-        data_player,
-        data_video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id,
+                                                    download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -170,14 +169,8 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    data_account = re.compile(
-        r'accountId":"(.*?)"').findall(resp.text)[0]
-    data_player = re.compile(
-        r'playerId":"(.*?)"').findall(resp.text)[0]
-    data_video_id = re.compile(
-        r'assetId":"(.*?)"').findall(resp.text)[0]
-    return resolver_proxy.get_brightcove_video_json(
-        plugin,
-        data_account,
-        data_player,
-        data_video_id)
+    data_account = re.compile(r'accountId":"(.*?)"').findall(resp.text)[0]
+    data_player = re.compile(r'playerId":"(.*?)"').findall(resp.text)[0]
+    data_video_id = re.compile(r'assetId":"(.*?)"').findall(resp.text)[0]
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id)

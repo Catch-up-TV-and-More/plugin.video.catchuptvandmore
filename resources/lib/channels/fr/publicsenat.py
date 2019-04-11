@@ -40,14 +40,12 @@ import urlquick
 # Get First-diffusion (date of replay Video)
 # Add search button
 
-
 URL_ROOT = 'https://www.publicsenat.fr'
 
 URL_LIVE_SITE = URL_ROOT + '/direct'
 
 URL_CATEGORIES = URL_ROOT + '/recherche/type/episode/field_theme/%s?sort_by=pse_search_date_publication'
 # categoriesId
-
 
 CATEGORIES = {
     'politique-4127': 'Politique',
@@ -78,11 +76,10 @@ def list_categories(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = category_name
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url,
-            page='1')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url,
+                          page='1')
         item_post_treatment(item)
         yield item
 
@@ -96,18 +93,21 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
 
     for video_datas in root.iterfind(".//article"):
         if len(video_datas.findall(".//div[@class='wrapper-duree']")) > 0:
-            list_texts = video_datas.findall(".//div[@class='field-item even']")
-            if len(list_texts)>2:
+            list_texts = video_datas.findall(
+                ".//div[@class='field-item even']")
+            if len(list_texts) > 2:
                 video_title = list_texts[1].text + ' - ' + list_texts[2].text
-            elif len(list_texts)>1:
+            elif len(list_texts) > 1:
                 video_title = list_texts[1].text
             else:
                 video_title = ''
             video_image = video_datas.find('.//img').get('src')
             video_plot = ''
-            if len(list_texts)>3:
+            if len(list_texts) > 3:
                 video_plot = list_texts[3].text
-            video_duration = int(video_datas.findall(".//div[@class='wrapper-duree']")[0].text) * 60
+            video_duration = int(
+                video_datas.findall(".//div[@class='wrapper-duree']")
+                [0].text) * 60
             video_url = URL_ROOT + video_datas.findall('.//a')[1].get('href')
 
             item = Listitem()
@@ -116,32 +116,33 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
             item.info['duration'] = video_duration
             item.info['plot'] = video_plot
 
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                video_url=video_url)
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=category_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             category_url=category_url,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    resp = urlquick.get(
-        video_url,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(video_url,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     video_id = re.compile(
         r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
-    return resolver_proxy.get_stream_dailymotion(
-        plugin, video_id, download_mode, video_label)
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -151,10 +152,9 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE_SITE,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(URL_LIVE_SITE,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     video_id = re.compile(
         r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
     return resolver_proxy.get_stream_dailymotion(plugin, video_id, False)

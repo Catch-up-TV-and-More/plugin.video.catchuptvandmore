@@ -71,10 +71,9 @@ def list_categories(plugin, item_id, **kwargs):
         item = Listitem()
         item.label = category_title
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url)
         item_post_treatment(item)
         yield item
 
@@ -87,7 +86,9 @@ def list_videos(plugin, item_id, category_url, **kwargs):
 
     for video_datas in root.iterfind(".//div[@class='root_qT0Me']"):
         if video_datas.find(".//p[@class='subtitle_1hI_I']") is not None:
-            video_title = video_datas.find(".//p[@class='title_1APl2']").text + ' - ' + video_datas.find(".//p[@class='subtitle_1hI_I']").text
+            video_title = video_datas.find(
+                ".//p[@class='title_1APl2']").text + ' - ' + video_datas.find(
+                    ".//p[@class='subtitle_1hI_I']").text
         else:
             video_title = video_datas.find(".//p[@class='title_1APl2']").text
         video_image = video_datas.find('.//img').get('src')
@@ -97,23 +98,25 @@ def list_videos(plugin, item_id, category_url, **kwargs):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    resp = urlquick.get(
-        video_url,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(video_url,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     root = resp.parse()
     video_datas = root.find(".//div[@class='next-player']")
 
@@ -121,13 +124,9 @@ def get_video_url(
     data_video_id = video_datas.get('data-video-id')
     data_player = video_datas.get('data-player')
 
-    return resolver_proxy.get_brightcove_video_json(
-        plugin,
-        data_account,
-        data_player,
-        data_video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id,
+                                                    download_mode, video_label)
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -137,10 +136,9 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE_RMCDECOUVERTE,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(URL_LIVE_RMCDECOUVERTE,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
 
     root = resp.parse()
     live_datas = root.find(".//div[@class='next-player']")
@@ -149,8 +147,5 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     data_video_id = live_datas.get('data-video-id')
     data_player = live_datas.get('data-player')
 
-    return resolver_proxy.get_brightcove_video_json(
-        plugin,
-        data_account,
-        data_player,
-        data_video_id)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id)

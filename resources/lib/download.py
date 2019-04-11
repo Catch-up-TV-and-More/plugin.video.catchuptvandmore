@@ -41,8 +41,7 @@ def download_video(video_url, video_name=None):
     vid = YDStreamExtractor.getVideoInfo(
         video_url,
         quality=cq_utils.get_quality_YTDL(download_mode=True),
-        resolve_redirects=True
-    )
+        resolve_redirects=True)
 
     path = Script.setting.get_string('dl_folder')
     download_ok = False
@@ -50,10 +49,7 @@ def download_video(video_url, video_name=None):
         try:
             YDStreamExtractor.setOutputCallback(prog)
             result = YDStreamExtractor.handleDownload(
-                vid,
-                bg=Script.setting.get_boolean('dl_background'),
-                path=path
-            )
+                vid, bg=Script.setting.get_boolean('dl_background'), path=path)
             if result:
                 if result.status == 'canceled':
                     error_message = result.message

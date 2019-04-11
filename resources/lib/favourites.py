@@ -25,7 +25,6 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-
 import xbmc
 
 from codequick import utils, storage, Script
@@ -34,7 +33,6 @@ from hashlib import md5
 from resources.lib.labels import LABELS
 from resources.lib import common
 import resources.lib.mem_storage as mem_storage
-
 
 
 def guess_fav_prefix(item_id):
@@ -50,7 +48,6 @@ def guess_fav_prefix(item_id):
     if prefix != 'empty':
         s = mem_storage.MemStorage('fav')
         s['prefix'] = prefix
-
 
 
 @Script.register
@@ -88,8 +85,8 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
 
     # Extract the callback
     item_path = xbmc.getInfoLabel('ListItem.Path')
-    item_dict['callback'] = item_path.replace('plugin://plugin.video.catchuptvandmore', '')
-
+    item_dict['callback'] = item_path.replace(
+        'plugin://plugin.video.catchuptvandmore', '')
 
     s = mem_storage.MemStorage('fav')
     prefix = ''
@@ -103,7 +100,8 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
         label_proposal = prefix + ' - ' + label_proposal
 
     # Ask the user to edit the label
-    item_dict['label'] = utils.keyboard(plugin.localize(LABELS['Favorite name']), label_proposal)
+    item_dict['label'] = utils.keyboard(
+        plugin.localize(LABELS['Favorite name']), label_proposal)
 
     # If user aborded do not add this item to favourite
     if item_dict['label'] == '':
@@ -128,7 +126,8 @@ def rename_favourite_item(plugin, item_hash):
     on 'rename' from a favourite item
     context menu
     """
-    item_label = utils.keyboard(plugin.localize(LABELS['Favorite name']), xbmc.getInfoLabel('ListItem.Label'))
+    item_label = utils.keyboard(plugin.localize(LABELS['Favorite name']),
+                                xbmc.getInfoLabel('ListItem.Label'))
 
     # If user aborded do not edit this item
     if item_label == '':
@@ -152,10 +151,7 @@ def remove_favourite_item(plugin, item_hash):
         # in order to not break the move up/down action
         menu = []
         for item_hash, item_dict in db.items():
-            item = (
-                item_dict['params']['order'],
-                item_hash
-            )
+            item = (item_dict['params']['order'], item_hash)
 
             menu.append(item)
         menu = sorted(menu, key=lambda x: x[0])
@@ -186,11 +182,7 @@ def move_favourite_item(plugin, direction, item_hash):
 
         menu = []
         for item_hash, item_dict in db.items():
-            item = (
-                item_dict['params']['order'],
-                item_hash,
-                item_dict
-            )
+            item = (item_dict['params']['order'], item_hash, item_dict)
 
             menu.append(item)
         menu = sorted(menu, key=lambda x: x[0])
@@ -222,9 +214,7 @@ def add_fav_context(item, item_dict, **kwargs):
         item_dict['params']['is_folder'] = True
         item_dict['params']['is_playable'] = False
 
-
-    item.context.script(
-        add_item_to_favourites,
-        Script.localize(LABELS['Add to add-on favourites']),
-        item_dict=item_dict,
-        **kwargs)
+    item.context.script(add_item_to_favourites,
+                        Script.localize(LABELS['Add to add-on favourites']),
+                        item_dict=item_dict,
+                        **kwargs)

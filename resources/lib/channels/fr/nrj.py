@@ -32,7 +32,6 @@ from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
 import htmlement
 import json
 import re
@@ -40,10 +39,8 @@ import requests
 import urlquick
 import xbmcgui
 
-
 # TO DO
 # Fix Live TV
-
 
 URL_ROOT = 'http://www.nrj-play.fr'
 
@@ -85,10 +82,9 @@ def list_categories(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_programs,
+                          item_id=item_id,
+                          category_url=category_url)
         item_post_treatment(item)
         yield item
 
@@ -105,10 +101,8 @@ def list_programs(plugin, item_id, category_url, **kwargs):
 
     for program_datas in root.iterfind(".//div[@class='linkProgram-visual']"):
 
-        program_title = program_datas.find(
-            './/img').get('alt')
-        program_url = URL_ROOT + program_datas.find(
-            './/a').get('href')
+        program_title = program_datas.find('.//img').get('alt')
+        program_url = URL_ROOT + program_datas.find('.//a').get('href')
         program_image = ''
         if program_datas.find('.//source').get('data-srcset') is not None:
             program_image = program_datas.find('.//source').get('data-srcset')
@@ -118,11 +112,10 @@ def list_programs(plugin, item_id, category_url, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_title=program_title,
-            program_url=program_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_title=program_title,
+                          program_url=program_url)
         item_post_treatment(item)
         yield item
 
@@ -134,7 +127,8 @@ def list_videos(plugin, item_id, program_title, program_url, **kwargs):
     root = resp.parse()
 
     if len(root.findall(".//figure[@class='thumbnailReplay-visual']")) > 0:
-        for video_datas in root.findall(".//figure[@class='thumbnailReplay-visual']"):
+        for video_datas in root.findall(
+                ".//figure[@class='thumbnailReplay-visual']"):
             video_title = program_title + ' - ' + video_datas.find(
                 './/img').get('alt')
             video_url = URL_ROOT + video_datas.find('.//a').get('href')
@@ -148,35 +142,37 @@ def list_videos(plugin, item_id, program_title, program_url, **kwargs):
             item.label = video_title
             item.art['thumb'] = video_image
 
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                video_url=video_url)
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
             yield item
     else:
-        video_title = root.find(
-            ".//div[@class='nrjVideo-player']").find('.//meta').get('alt')
+        video_title = root.find(".//div[@class='nrjVideo-player']").find(
+            './/meta').get('alt')
         video_url = program_url
-        video_image = root.find(
-            ".//div[@class='nrjVideo-player']").find('.//meta').get('content')
+        video_image = root.find(".//div[@class='nrjVideo-player']").find(
+            './/meta').get('content')
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     # Just One format of each video (no need of QUALITY)
     resp = urlquick.get(video_url)
     root = resp.parse("div", attrs={"class": "nrjVideo-player"})
@@ -208,8 +204,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     # KO - resp = session_urlquick.get(URL_COMPTE_LOGIN)
     resp = session_requests.get(URL_COMPTE_LOGIN_MODAL)
     token_form_login = re.compile(
-        r'name=\"login_form\[_token\]\" value=\"(.*?)\"'
-        ).findall(resp.text)[0]
+        r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(resp.text)[0]
 
     if plugin.setting.get_string('nrj.login') == '' or\
         plugin.setting.get_string('nrj.password') == '':
@@ -220,10 +215,8 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     # Build PAYLOAD
     payload = {
-        "login_form[email]": plugin.setting.get_string(
-            'nrj.login'),
-        "login_form[password]": plugin.setting.get_string(
-            'nrj.password'),
+        "login_form[email]": plugin.setting.get_string('nrj.login'),
+        "login_form[password]": plugin.setting.get_string('nrj.password'),
         "login_form[_token]": token_form_login
     }
 
@@ -231,8 +224,9 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     # KO - resp2 = session_urlquick.post(
     #     URL_COMPTE_LOGIN, data=payload,
     #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
-    resp2 = session_requests.post(
-        URL_COMPTE_LOGIN, data=payload, headers=dict(referer=URL_COMPTE_LOGIN))
+    resp2 = session_requests.post(URL_COMPTE_LOGIN,
+                                  data=payload,
+                                  headers=dict(referer=URL_COMPTE_LOGIN))
     if 'error alert alert-danger' in repr(resp2.text):
         plugin.notify('ERROR', 'NRJ : ' + plugin.localize(30711))
         return False
@@ -241,10 +235,9 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     # KO - resp3 = session_urlquick.get(
     #     URL_LIVE_WITH_TOKEN % item_id,
     #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_LIVE_WITH_TOKEN % item_id})
-    resp3 = session_requests.get(
-        URL_LIVE_WITH_TOKEN % (item_id),
-        headers=dict(
-            referer=URL_LIVE_WITH_TOKEN % (item_id)))
+    resp3 = session_requests.get(URL_LIVE_WITH_TOKEN % (item_id),
+                                 headers=dict(referer=URL_LIVE_WITH_TOKEN %
+                                              (item_id)))
 
     parser = htmlement.HTMLement()
     parser.feed(resp3.text)

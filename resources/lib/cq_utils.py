@@ -35,7 +35,6 @@ except ImportError:
     # noinspection PyUnresolvedReferences
     import urlparse
 
-
 from codequick import Script
 from resources.lib.labels import LABELS
 
@@ -49,11 +48,14 @@ def build_kodi_url(route_path, raw_params):
     # route_path: /resources/lib/channels/fr/mytf1/get_video_url/
     # raw_params: params dict
     if raw_params:
-        pickled = binascii.hexlify(pickle.dumps(raw_params, protocol=pickle.HIGHEST_PROTOCOL))
-        query = "_pickle_={}".format(pickled.decode("ascii") if PY3 else pickled)
+        pickled = binascii.hexlify(
+            pickle.dumps(raw_params, protocol=pickle.HIGHEST_PROTOCOL))
+        query = "_pickle_={}".format(
+            pickled.decode("ascii") if PY3 else pickled)
 
     # Build kodi url
-    return urlparse.urlunsplit(("plugin", "plugin.video.catchuptvandmore", route_path, query, ""))
+    return urlparse.urlunsplit(
+        ("plugin", "plugin.video.catchuptvandmore", route_path, query, ""))
 
 
 def get_module_in_url(base_url):
@@ -64,7 +66,7 @@ def get_module_in_url(base_url):
     # Remove last '/'
     if base_url[-1] == '/':
         base_url = base_url[:-1]
-    
+
     # Remove plugin_id
     base_url = base_url.replace('plugin://plugin.video.catchuptvandmore/', '')
 
@@ -91,7 +93,8 @@ def import_needed_module():
     try:
         importlib.import_module(module_to_import)
     except Exception:
-        Script.log('[cq_utils.import_needed_module] Failed to import module ' + module_to_import)
+        Script.log('[cq_utils.import_needed_module] Failed to import module ' +
+                   module_to_import)
 
     return
 
@@ -131,4 +134,3 @@ def get_quality_YTDL(download_mode=False):
 def get_kodi_version():
     xbmc_version = xbmc.getInfoLabel("System.BuildVersion")
     return int(xbmc_version.split('-')[0].split('.')[0])
-

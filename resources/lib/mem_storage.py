@@ -33,6 +33,7 @@ class MemStorage(MutableMapping):
         will be stored.
     :type window_id: int
     """
+
     def __init__(self, storage_id, window_id=10000):
         """
         :type storage_id: str
@@ -67,7 +68,8 @@ class MemStorage(MutableMapping):
         return '<MemStorage {{{0}}}>'.format(self._format_contents())
 
     def __repr__(self):
-        return '<simpleplugin.MemStorage object {{{0}}}'.format(self._format_contents())
+        return '<simpleplugin.MemStorage object {{{0}}}'.format(
+            self._format_contents())
 
     def __getitem__(self, key):
         self._check_key(key)

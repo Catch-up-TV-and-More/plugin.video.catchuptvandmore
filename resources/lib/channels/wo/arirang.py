@@ -32,15 +32,12 @@ from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-
 import re
 import urlquick
-
 
 # TO DO
 # Find a way to get M3U8 (live)
 # Get Info Replay And Live (date, duration, etc ...)
-
 
 URL_ROOT = 'http://www.arirang.com/mobile/'
 
@@ -68,7 +65,8 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
     resp = urlquick.get(URL_EMISSION)
-    root = resp.parse("ul", attrs={"class": "amenu_tab amenu_tab_3 amenu_tab_sub"})
+    root = resp.parse("ul",
+                      attrs={"class": "amenu_tab amenu_tab_3 amenu_tab_sub"})
 
     for category_datas in root.iterfind(".//li"):
         category_title = category_datas.find('.//a').text
@@ -76,10 +74,9 @@ def list_categories(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_programs,
+                          item_id=item_id,
+                          category_url=category_url)
         item_post_treatment(item)
         yield item
 
@@ -97,16 +94,14 @@ def list_programs(plugin, item_id, category_url, **kwargs):
     for program_datas in root.iterfind(".//dl[@class='alist amain_tv']"):
         program_title = program_datas.find('.//img').get('alt')
         program_image = program_datas.find('.//img').get('src')
-        program_url = URL_ROOT + program_datas.find(
-            ".//a").get("href")
+        program_url = URL_ROOT + program_datas.find(".//a").get("href")
 
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url)
         item_post_treatment(item)
         yield item
 
@@ -121,31 +116,30 @@ def list_videos(plugin, item_id, program_url, **kwargs):
         video_title = video_datas.find('.//img').get('alt')
         video_image = video_datas.find('.//img').get('src')
         video_url = video_datas.find('.//a').get('href')
-        video_url = re.compile(
-            r'\(\'(.*?)\'\)').findall(
-                video_url)[0]
+        video_url = re.compile(r'\(\'(.*?)\'\)').findall(video_url)[0]
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
 
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    list_streams_datas = re.compile(
-        r'mediaurl: \'(.*?)\'').findall(resp.text)
+    list_streams_datas = re.compile(r'mediaurl: \'(.*?)\'').findall(resp.text)
     for stream_datas in list_streams_datas:
         if 'm3u8' in stream_datas:
             stream_url = stream_datas

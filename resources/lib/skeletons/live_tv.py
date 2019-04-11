@@ -25,8 +25,6 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 from codequick import Script
-
-
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -40,11 +38,13 @@ the addon's tree architecture.
 
 menu = {
     'fr_live': {
-        'callback': 'tv_guide_menu' if Script.setting.get_boolean('tv_guide') else 'generic_menu',
+        'callback': 'tv_guide_menu'
+        if Script.setting.get_boolean('tv_guide') else 'generic_menu',
         'thumb': 'channels/fr.png'
     },
     'be_live': {
-        'callback': 'tv_guide_menu' if Script.setting.get_boolean('tv_guide') else 'generic_menu',
+        'callback': 'tv_guide_menu'
+        if Script.setting.get_boolean('tv_guide') else 'generic_menu',
         'thumb': 'channels/be.png'
     },
     'ca_live': {

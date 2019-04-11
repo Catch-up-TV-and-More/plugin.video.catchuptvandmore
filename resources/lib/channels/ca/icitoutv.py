@@ -20,7 +20,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-
 # The unicode_literals import only has
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
@@ -36,7 +35,6 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import json
 import re
 import urlquick
-
 
 # TO DO
 # Add emissions
@@ -76,9 +74,7 @@ def list_days(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_CLIENT_KEY_JS)
     client_key_value = 'client-key %s' % re.compile(
         r'scope\:\{clientId\:\"(.*?)\"').findall(resp.text)[0]
-    headers = {
-        'Authorization': client_key_value
-    }
+    headers = {'Authorization': client_key_value}
     resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
     json_parser = json.loads(resp2.text)
 
@@ -88,10 +84,7 @@ def list_days(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = day_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            day_id=day_id)
+        item.set_callback(list_videos, item_id=item_id, day_id=day_id)
         item_post_treatment(item)
         yield item
 
@@ -102,9 +95,7 @@ def list_videos(plugin, item_id, day_id, **kwargs):
     resp = urlquick.get(URL_CLIENT_KEY_JS)
     client_key_value = 'client-key %s' % re.compile(
         r'scope\:\{clientId\:\"(.*?)\"').findall(resp.text)[0]
-    headers = {
-        'Authorization': client_key_value
-    }
+    headers = {'Authorization': client_key_value}
     resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
     json_parser = json.loads(resp2.text)
 
@@ -112,10 +103,13 @@ def list_videos(plugin, item_id, day_id, **kwargs):
 
         if day_datas["Name"] == day_id:
             for video_datas in day_datas["LineupItems"]:
-                if video_datas["IsFree"] is True and video_datas["IsDrm"] is False:
-                    video_title = video_datas["ProgramTitle"] + ' ' + video_datas["HeadTitle"]
+                if video_datas["IsFree"] is True and video_datas[
+                        "IsDrm"] is False:
+                    video_title = video_datas[
+                        "ProgramTitle"] + ' ' + video_datas["HeadTitle"]
                     video_plot = video_datas["Description"]
-                    video_image = video_datas["ImageUrl"].replace('w_200,h_300', 'w_300,h_200')
+                    video_image = video_datas["ImageUrl"].replace(
+                        'w_200,h_300', 'w_300,h_200')
                     video_id = video_datas["IdMedia"]
 
                     item = Listitem()
@@ -123,25 +117,29 @@ def list_videos(plugin, item_id, day_id, **kwargs):
                     item.art['thumb'] = video_image
                     item.info['plot'] = video_plot
 
-                    item.set_callback(
-                        get_video_url,
-                        item_id=item_id,
-                        video_label=LABELS[item_id] + ' - ' + item.label,
-                        video_id=video_id)
-                    item_post_treatment(item, is_playable=True, is_downloadable=True)
+                    item.set_callback(get_video_url,
+                                      item_id=item_id,
+                                      video_label=LABELS[item_id] + ' - ' +
+                                      item.label,
+                                      video_id=video_id)
+                    item_post_treatment(item,
+                                        is_playable=True,
+                                        is_downloadable=True)
                     yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None, **kwargs):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(URL_CLIENT_KEY_VIDEO_JS)
     client_key_value = 'client-key %s' % re.compile(
         r'prod\"\,clientKey\:\"(.*?)\"').findall(resp.text)[0]
-    headers = {
-        'Authorization': client_key_value
-    }
+    headers = {'Authorization': client_key_value}
     resp2 = urlquick.get(URL_STREAM_REPLAY % video_id, headers=headers)
     json_parser = json.loads(resp2.text)
     final_video_url = json_parser["url"]

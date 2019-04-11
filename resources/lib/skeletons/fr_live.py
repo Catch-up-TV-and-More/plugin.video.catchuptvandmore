@@ -25,8 +25,6 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 from codequick import Script
-
-
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -37,7 +35,6 @@ the addon's tree architecture.
     - fanart: Item fanart path relative to "meia" folder
     - module: Item module to load in order to work (like 6play.py)
 """
-
 
 menu = {
     'tf1': {
@@ -294,21 +291,20 @@ menu = {
         'm3u_group': 'Satellite/FAI'
     },
     'la_1ere': {
-        'callback': 'live_bridge',
-        'thumb': 'channels/fr/la1ere.png',
-        'fanart': 'channels/fr/la1ere_fanart.jpg',
-        'module': 'resources.lib.channels.fr.la_1ere',
-        'm3u_group': 'Région',
+        'callback':
+        'live_bridge',
+        'thumb':
+        'channels/fr/la1ere.png',
+        'fanart':
+        'channels/fr/la1ere_fanart.jpg',
+        'module':
+        'resources.lib.channels.fr.la_1ere',
+        'm3u_group':
+        'Région',
         'available_languages': [
-            "Guadeloupe",
-            "Guyane",
-            "Martinique",
-            "Mayotte",
-            "Nouvelle Calédonie",
-            "Polynésie",
-            "Réunion",
-            "St-Pierre et Miquelon",
-            "Wallis et Futuna"
+            "Guadeloupe", "Guyane", "Martinique", "Mayotte",
+            "Nouvelle Calédonie", "Polynésie", "Réunion",
+            "St-Pierre et Miquelon", "Wallis et Futuna"
         ]
     },
     'kto': {
@@ -360,36 +356,24 @@ menu = {
         'm3u_order': 27
     },
     'france3regions': {
-        'callback': 'live_bridge',
-        'thumb': 'channels/fr/france3regions.png',
-        'fanart': 'channels/fr/france3regions_fanart.jpg',
-        'module': 'resources.lib.channels.fr.france3regions',
-        'm3u_group': 'Région',
+        'callback':
+        'live_bridge',
+        'thumb':
+        'channels/fr/france3regions.png',
+        'fanart':
+        'channels/fr/france3regions_fanart.jpg',
+        'module':
+        'resources.lib.channels.fr.france3regions',
+        'm3u_group':
+        'Région',
         'available_languages': [
-            'Alpes',
-            'Alsace',
-            'Aquitaine',
-            'Auvergne',
-            'Bourgogne',
-            'Bretagne',
-            'Centre-Val de Loire',
-            'Chapagne-Ardenne',
-            'Corse',
-            "Côte d'Azur",
-            'Franche-Compté',
-            'Languedoc-Roussillon',
-            'Limousin',
-            'Lorraine',
-            'Midi-Pyrénées',
-            'Nord-Pas-de-Calais',
-            'Basse-Normandie',
-            'Haute-Normandie',
-            'Paris Île-de-France',
-            'Pays de la Loire',
-            'Picardie',
-            'Poitou-Charentes',
-            'Provence-Alpes',
-            'Rhône-Alpes'
+            'Alpes', 'Alsace', 'Aquitaine', 'Auvergne', 'Bourgogne',
+            'Bretagne', 'Centre-Val de Loire', 'Chapagne-Ardenne', 'Corse',
+            "Côte d'Azur", 'Franche-Compté', 'Languedoc-Roussillon',
+            'Limousin', 'Lorraine', 'Midi-Pyrénées', 'Nord-Pas-de-Calais',
+            'Basse-Normandie', 'Haute-Normandie', 'Paris Île-de-France',
+            'Pays de la Loire', 'Picardie', 'Poitou-Charentes',
+            'Provence-Alpes', 'Rhône-Alpes'
         ]
     },
     'viaatv': {

@@ -25,8 +25,6 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 from codequick import Script
-
-
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -58,11 +56,18 @@ menu = {
         'module': 'resources.lib.channels.wo.tv5monde'
     },
     'euronews': {
-        'callback': 'live_bridge',
-        'thumb': 'channels/wo/euronews.png',
-        'fanart': 'channels/wo/euronews_fanart.jpg',
-        'module': 'resources.lib.channels.wo.euronews',
-        'available_languages': ['FR', 'EN', 'AR', 'DE', 'IT', 'ES', 'PT', 'RU', 'TR', 'FA', 'GR', 'HU']
+        'callback':
+        'live_bridge',
+        'thumb':
+        'channels/wo/euronews.png',
+        'fanart':
+        'channels/wo/euronews_fanart.jpg',
+        'module':
+        'resources.lib.channels.wo.euronews',
+        'available_languages': [
+            'FR', 'EN', 'AR', 'DE', 'IT', 'ES', 'PT', 'RU', 'TR', 'FA', 'GR',
+            'HU'
+        ]
     },
     'arte': {
         'callback': 'live_bridge',
@@ -70,9 +75,15 @@ menu = {
         'fanart': 'channels/wo/arte_fanart.jpg',
         'module': 'resources.lib.channels.wo.arte',
         'available_languages': ['FR', 'DE'],
-        'xmltv_ids': {'fr': 'C111.api.telerama.fr'},
-        'm3u_groups': {'fr': 'France TNT'},
-        'm3u_orders': {'fr': 7}
+        'xmltv_ids': {
+            'fr': 'C111.api.telerama.fr'
+        },
+        'm3u_groups': {
+            'fr': 'France TNT'
+        },
+        'm3u_orders': {
+            'fr': 7
+        }
     },
     'arirang': {
         'callback': 'live_bridge',
