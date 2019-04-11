@@ -33,7 +33,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item2dict
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json

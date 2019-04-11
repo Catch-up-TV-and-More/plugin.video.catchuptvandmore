@@ -200,8 +200,7 @@ def list_program_categories(plugin, item_id, program_url, **kwargs):
             category_id = li.find('a').get('data-filter')
             item.set_callback(list_videos,
                               item_id=item_id,
-                              program_category_url=program_url +
-                              '/videos?filter=' + category_id)
+                              program_category_url=program_url + '/videos?filter=' + category_id)
             item_post_treatment(item)
             yield item
     except Exception:
@@ -356,8 +355,7 @@ def get_video_url(plugin,
     # Check DRM in the m3u8 file
     manifest = urlquick.get(json_parser["url"],
                             headers={
-                                'User-Agent': web_utils.get_random_ua
-                            },
+                                'User-Agent': web_utils.get_random_ua},
                             max_age=-1).text
     if 'drm' in manifest:
 

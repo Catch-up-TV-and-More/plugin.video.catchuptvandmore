@@ -298,8 +298,7 @@ def list_videos_sub_category(plugin, item_id, category_url, sub_category_id,
 
                     item.set_callback(get_video_url,
                                       item_id=item_id,
-                                      video_label=LABELS[item_id] + ' - ' +
-                                      item.label,
+                                      video_label=LABELS[item_id] + ' - ' + item.label,
                                       video_id=video_id)
                     item_post_treatment(item,
                                         is_playable=True,
@@ -348,8 +347,7 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
 
                     item.set_callback(get_video_url,
                                       item_id=item_id,
-                                      video_label=LABELS[item_id] + ' - ' +
-                                      item.label,
+                                      video_label=LABELS[item_id] + ' - ' + item.label,
                                       video_id=video_id)
                     item_post_treatment(item,
                                         is_playable=True,
@@ -428,9 +426,9 @@ def list_lives(plugin, item_id, **kwargs):
         item.label = live_title
         item.art['thumb'] = live_image
         item.info['plot'] = live_plot
-        #commented this line because othrewie sorting is made by date and then by title
-        #and doesn't help to find the direct
-        #item.info.date(date_time_value, '%Y/%m/%d')
+        # commented this line because othrewie sorting is made by date and then by title
+        # and doesn't help to find the direct
+        # item.info.date(date_time_value, '%Y/%m/%d')
         item.set_callback(get_live_url, item_id=item_id, live_url=live_url)
         item_post_treatment(item, is_playable=True)
         yield item

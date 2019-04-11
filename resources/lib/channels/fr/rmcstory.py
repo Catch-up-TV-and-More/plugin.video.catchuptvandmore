@@ -122,7 +122,7 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
         date_list = ''
         try:
             date_list = utils.strip_tags(str(info_video[2].text)).split(' ')
-        except:
+        except Exception:
             pass
         day = '00'
         month = '00'
@@ -143,7 +143,7 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
         item.info['duration'] = video_duration
         try:
             item.info.date(date_value, '%Y-%m-%d')
-        except:
+        except Exception:
             pass
 
         item.set_callback(get_video_url,

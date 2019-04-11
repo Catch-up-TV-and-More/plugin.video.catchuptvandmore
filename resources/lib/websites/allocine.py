@@ -402,8 +402,8 @@ def list_videos_emissions_1(plugin, item_id, page, show_url, last_page,
             if episode.find('.//h2').find('.//span').find('.//a').find(
                     './/strong') is not None:
                 item.label = episode.find('.//h2').find('.//span').find(
-                    './/a').find('.//strong').text.strip(
-                    ) + ' - ' + episode.find('.//h2').find('.//span').find(
+                    './/a').find('.//strong').text.strip() \
+                    + ' - ' + episode.find('.//h2').find('.//span').find(
                         './/a').find('.//strong').tail.strip()
             else:
                 item.label = episode.find('.//h2').find('.//span').find(

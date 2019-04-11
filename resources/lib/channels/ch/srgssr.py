@@ -273,7 +273,7 @@ def get_video_url(plugin,
         if video_id in stream_datas["id"]:
             for stream_datas_url in stream_datas["resourceList"]:
                 if 'HD' in stream_datas_url["quality"] and \
-                    'mpegURL' in stream_datas_url["mimeType"]:
+                        'mpegURL' in stream_datas_url["mimeType"]:
                     stream_url = stream_datas_url["url"]
                     break
                 else:

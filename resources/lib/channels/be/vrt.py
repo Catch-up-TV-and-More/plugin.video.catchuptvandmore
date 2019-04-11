@@ -260,19 +260,19 @@ def get_video_url(plugin,
         plugin.notify('ERROR', 'VRT NU : ' + plugin.localize(30711))
         return False
     # Request Token
-    headers = {
-        'Content-Type': 'application/json',
-        'Referer': URL_ROOT + '/vrtnu/'
-    }
-    data = '{"uid": "%s", ' \
-        '"uidsig": "%s", ' \
-        '"ts": "%s", ' \
-        '"email": "%s"}' % (
-            json_parser['UID'],
-            json_parser['UIDSignature'],
-            json_parser['signatureTimestamp'],
-            plugin.setting.get_string('vrt.login'))
-    resp2 = session_requests.post(URL_TOKEN, data=data, headers=headers)
+    # headers = {
+    #     'Content-Type': 'application/json',
+    #     'Referer': URL_ROOT + '/vrtnu/'
+    # }
+    # data = '{"uid": "%s", ' \
+    #     '"uidsig": "%s", ' \
+    #     '"ts": "%s", ' \
+    #     '"email": "%s"}' % (
+    #         json_parser['UID'],
+    #         json_parser['UIDSignature'],
+    #         json_parser['signatureTimestamp'],
+    #         plugin.setting.get_string('vrt.login'))
+    # resp2 = session_requests.post(URL_TOKEN, data=data, headers=headers)
     # Video ID
     video_id_datas_url = video_url[:-1] + '.mssecurevideo.json'
     resp3 = session_requests.get(video_id_datas_url)

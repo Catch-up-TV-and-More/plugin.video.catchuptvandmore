@@ -44,7 +44,7 @@ class OpenVPNManagementInterface:
 
     def send(self, msg):
         # self.openvpn._log_debug('Sending: [%s]' % msg)
-        sent = self.sock.send(msg)
+        self.sock.send(msg)
         # self.openvpn._log_debug('Sent: [%d]' % sent)
 
     def receive(self):
@@ -93,7 +93,7 @@ def is_running(ip, port):
             data = interface.receive().split(',')
             if len(data) > 1:
                 state = data[1]
-    except socket.error as exception:
+    except socket.error:
         return False, None, None
     return True, config, state
 
@@ -104,7 +104,7 @@ def disconnect(ip, port):
         interface.connect()
         interface.send('signal SIGTERM\n')
         interface.disconnect()
-    except socket.error as exception:
+    except socket.error:
         raise OpenVPNError(3, 'Unable to disconnect OpenVPN')
 
 

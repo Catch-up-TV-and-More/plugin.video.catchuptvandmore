@@ -132,8 +132,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
             URL_LIVES,
             params=payload,
             headers=dict(
-                referer=
-                'http://www.abweb.com/BIS-TV-Online/bistvo-tele-universal.aspx'
+                referer='http://www.abweb.com/BIS-TV-Online/bistvo-tele-universal.aspx'
             ))
         stream_datas_url = 'http:' + re.compile(
             r'id\=\"ifr_stream\" src\=\"(.*?)\"').findall(resp4.text)[0]

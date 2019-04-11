@@ -169,8 +169,7 @@ def list_videos_programs(plugin, item_id, next_url, page, **kwargs):
 
     if DESIRED_LANGUAGE == 'FR':
         resp2 = urlquick.get(
-            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) +
-            '/listing/program.%s/prepare/idi-listing/10/%s' %
+            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/idi-listing/10/%s' %
             (program_id, page))
         root = resp2.parse("div", attrs={"data-role": "content"})
 
@@ -199,8 +198,7 @@ def list_videos_programs(plugin, item_id, next_url, page, **kwargs):
 
     elif DESIRED_LANGUAGE == 'EN':
         resp2 = urlquick.get(
-            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) +
-            '/listing/program.%s/prepare/latestepisodes/10/%s' %
+            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/latestepisodes/10/%s' %
             (program_id, page))
 
         root = resp2.parse("ul", attrs={"class": "card-rows js-listing__list"})
@@ -238,8 +236,7 @@ def list_videos_documentaries(plugin, item_id, next_url, page, **kwargs):
     program_id = re.compile(r'\/program\.(.*?)\/prepare').findall(resp.text)[0]
 
     resp2 = urlquick.get(
-        eval('URL_ROOT_%s' % DESIRED_LANGUAGE) +
-        '/listing/program.%s/prepare/telecasts/10/%s' % (program_id, page))
+        eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/telecasts/10/%s' % (program_id, page))
 
     root = resp2.parse("ul", attrs={"class": "telecast-list js-listing__list"})
 
@@ -274,8 +271,7 @@ def list_videos_documentaries(plugin, item_id, next_url, page, **kwargs):
 def list_videos(plugin, item_id, page, **kwargs):
 
     resp = urlquick.get(
-        eval('URL_ROOT_%s' % DESIRED_LANGUAGE) +
-        '/listing/type.Videoclub.category.videos/noprepare/video-rows/10/%s' %
+        eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/type.Videoclub.category.videos/noprepare/video-rows/10/%s' %
         (page))
 
     root = resp.parse("ul", attrs={"class": "media-rows js-listing__list"})
@@ -305,10 +301,11 @@ def list_videos(plugin, item_id, page, **kwargs):
 def list_videos_search(plugin, search_query, item_id, page, **kwargs):
 
     if DESIRED_LANGUAGE == 'FR':
-        resp = urlquick.get(
-            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) +
-            '/recherche?search_api_views_fulltext=%s&page=%s' %
-            (search_query, page))
+        # resp = urlquick.get(
+        #     eval('URL_ROOT_%s' % DESIRED_LANGUAGE) +
+        #     '/recherche?search_api_views_fulltext=%s&page=%s' %
+        #     (search_query, page))
+        pass
     else:
         return False
     # resp = urlquick.get(URL_TIVI5MONDE_ROOT + '/recherche?search_api_views_fulltext=%s&page=%s' % (search_query, page))

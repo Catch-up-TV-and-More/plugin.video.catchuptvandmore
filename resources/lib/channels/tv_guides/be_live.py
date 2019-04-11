@@ -90,7 +90,7 @@ def grab_tv_guide(channels):
 
             try:
                 local_tz = get_localzone()
-            except:
+            except Exception:
                 # Hotfix issue #102
                 local_tz = pytz.timezone('Europe/Brussels')
 

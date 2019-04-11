@@ -165,8 +165,7 @@ def list_videos(plugin, item_id, guid, page=1, **kwargs):
     json_r = urlquick.get(URL_API(json_url),
                           params={
                               'token_application': TOKEN_APP,
-                              'page': page
-                          },
+                              'page': page},
                           headers={'User-agent': web_utils.get_ua()})
     json_v = json.loads(json_r.text)
     try:
@@ -286,8 +285,7 @@ def list_program_video(plugin, item_id, nid, guid_program, page=1, **kwargs):
                           params={
                               'token_application': TOKEN_APP,
                               'nid': nid,
-                              'page': page
-                          },
+                              'page': page},
                           headers={'User-agent': web_utils.get_ua()})
     json_v = json.loads(json_r.text)
 

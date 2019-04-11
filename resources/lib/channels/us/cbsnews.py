@@ -53,6 +53,6 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     resp = urlquick.get(URL_LIVE)
     jsonparser = json.loads('{' + re.compile(
         r'CBSNEWS\.defaultPayload \= \{(.*?)\}\]\}').findall(resp.text)[0] +
-                            '}]}')
+        '}]}')
 
     return jsonparser["items"][0]["video2"]

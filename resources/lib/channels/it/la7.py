@@ -69,13 +69,13 @@ def list_days(plugin, item_id, **kwargs):
         if day_datas.find(".//div[@class='dateRowWeek']") is not None:
             day_title = day_datas.find(
                 ".//div[@class='dateRowWeek']").text + ' - ' + \
-                    day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
-                        day_datas.find(".//div[@class='dateMonth']").text
+                day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
+                day_datas.find(".//div[@class='dateMonth']").text
         else:
             day_title = day_datas.find(
                 ".//div[@class='dateRowWeek active']").text + ' - ' + \
-                    day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
-                        day_datas.find(".//div[@class='dateMonth']").text
+                day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
+                day_datas.find(".//div[@class='dateMonth']").text
         day_url = URL_ROOT + day_datas.get('href')
 
         item = Listitem()

@@ -67,13 +67,12 @@ menu = {
     'us_replay': {
         'callback': 'generic_menu',
         'thumb': 'channels/us.png'
-    }
-    #,
-    #'es_replay': {
+    },
+    # ,
+    # 'es_replay': {
     #    'callback': 'generic_menu',
     #    'thumb': 'channels/es.png'
-    #}
-    ,
+    # }
     'it_replay': {
         'callback': 'generic_menu',
         'thumb': 'channels/it.png'

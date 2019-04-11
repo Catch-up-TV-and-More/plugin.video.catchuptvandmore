@@ -44,7 +44,7 @@ URL_LIVE = URL_ROOT + '/nrjhitstv'
 URL_VIDEOS = URL_ROOT + '/videos'
 
 URL_STREAM = URL_ROOT + '/utils/videos/embed/internal/%s'
-#videoId
+# videoId
 
 
 def replay_entry(plugin, item_id, **kwargs):

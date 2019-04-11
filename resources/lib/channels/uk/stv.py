@@ -46,7 +46,7 @@ URL_LIVE_JSON = 'https://player.api.stv.tv/v1/streams/%s/'
 URL_PROGRAMS_JSON = 'https://player.api.stv.tv/v1/programmes/?limit=300&orderBy=name'
 
 URL_VIDEOS_JSON = 'https://player.api.stv.tv/v1/episodes'
-#guidProgramm
+# guidProgramm
 
 URL_BRIGHTCOVE_DATAS = 'https://player.stv.tv/assets/build/sites/playerv3/js/script.js'
 

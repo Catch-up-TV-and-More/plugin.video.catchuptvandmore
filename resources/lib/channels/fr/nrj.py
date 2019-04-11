@@ -207,7 +207,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(resp.text)[0]
 
     if plugin.setting.get_string('nrj.login') == '' or\
-        plugin.setting.get_string('nrj.password') == '':
+            plugin.setting.get_string('nrj.password') == '':
         xbmcgui.Dialog().ok(
             'Info',
             plugin.localize(30604) % ('NRJ', 'http://www.nrj-play.fr'))

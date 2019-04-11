@@ -61,7 +61,6 @@ def item_post_treatment(item, **kwargs):
     Optional keyworded arguments:
     - is_playable (bool) (default: False)
     - is_downloadable (bool) (default: False)
-    
     """
 
     # Add `Add to favourites` context menu to the item

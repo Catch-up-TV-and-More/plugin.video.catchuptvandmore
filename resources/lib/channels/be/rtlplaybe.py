@@ -95,7 +95,7 @@ URL_API_KEY = 'https://www.rtlplay.be/client-%s.bundle.js'
 
 URL_TOKEN_DRM = 'https://6play-users.6play.fr/v2/platforms/m6group_web/services/rtlbe_rtl_play/users/%s/videos/%s/upfront-token'
 
-#URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&Origin=https://www.6play.fr&Referer=%s&x-dt-auth-token=%s|R{SSM}|JBlicense'
+# URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&Origin=https://www.6play.fr&Referer=%s&x-dt-auth-token=%s|R{SSM}|JBlicense'
 URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&x-dt-auth-token=%s&x-customer-name=rtlbe|R{SSM}|JBlicense'
 # Referer, Token
 
@@ -124,8 +124,7 @@ def list_categories(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_ROOT % ('rtlbe_' + item_id),
                         headers={
                             'User-Agent': web_utils.get_random_ua,
-                            'x-customer-name': 'rtlbe'
-                        })
+                            'x-customer-name': 'rtlbe'})
     json_parser = json.loads(resp.text)
 
     for array in json_parser:
@@ -249,18 +248,18 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
             aired = video['clips'][0]['product']['last_diffusion']
             aired = aired
             aired = aired[:10]
-            year = aired[:4]
+            # year = aired[:4]
             # date : string (%d.%m.%Y / 01.01.2009)
             # aired : string (2008-12-07)
-            day = aired.split('-')[2]
-            mounth = aired.split('-')[1]
-            year = aired.split('-')[0]
-            date = '.'.join((day, mounth, year))
+            # day = aired.split('-')[2]
+            # mounth = aired.split('-')[1]
+            # year = aired.split('-')[0]
+            # date = '.'.join((day, mounth, year))
 
         except Exception:
             aired = ''
-            year = ''
-            date = ''
+            # year = ''
+            # date = ''
         img = ''
 
         program_imgs = video['clips'][0]['images']
@@ -279,7 +278,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
         item.art["fanart"] = program_img
         try:
             item.info.date(aired, '%Y-%m-%d')
-        except:
+        except Exception:
             pass
 
         is_downloadable = False
@@ -391,7 +390,7 @@ def get_video_url(plugin,
             resp.text)[0]
 
         if plugin.setting.get_string('rtlplaybe.login') == '' or\
-            plugin.setting.get_string('rtlplaybe.password') == '':
+                plugin.setting.get_string('rtlplaybe.password') == '':
             xbmcgui.Dialog().ok(
                 'Info',
                 plugin.localize(30604) %
@@ -496,7 +495,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         resp.text)[0]
 
     if plugin.setting.get_string('rtlplaybe.login') == '' or\
-        plugin.setting.get_string('rtlplaybe.password') == '':
+            plugin.setting.get_string('rtlplaybe.password') == '':
         xbmcgui.Dialog().ok(
             'Info',
             plugin.localize(30604) %
@@ -551,8 +550,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     video_json = urlquick.get(URL_LIVE_JSON % (channel),
                               headers={
                                   'User-Agent': web_utils.get_random_ua,
-                                  'x-customer-name': 'rtlbe'
-                              },
+                                  'x-customer-name': 'rtlbe'},
                               max_age=-1)
     json_parser = json.loads(video_json.text)
     if not json_parser[channel]:

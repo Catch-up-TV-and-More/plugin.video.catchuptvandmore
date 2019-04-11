@@ -40,7 +40,7 @@ import urlquick
 
 try:
     from itertools import zip_longest as zip_longest
-except:
+except Exception:
     from itertools import izip_longest as zip_longest
 """
 Channels:
@@ -139,8 +139,7 @@ def list_programs(plugin, item_id, category_part_url, page=0, **kwargs):
                             'size': 20,
                             'page': page,
                             'filter': "with-no-vod,only-visible",
-                            'sort': "begin_date:desc"
-                        })
+                            'sort': "begin_date:desc"})
     json_parser = json.loads(resp.text)
 
     for program in json_parser['result']:
@@ -179,8 +178,7 @@ def list_videos_last(plugin, item_id, page=1, **kwargs):
                             'size': 20,
                             'page': page,
                             'filter': "with-no-vod,only-visible",
-                            'sort': "begin_date:desc"
-                        })
+                            'sort': "begin_date:desc"})
     json_parser = json.loads(resp.text)
 
     for video in json_parser['result']:
@@ -211,8 +209,7 @@ def list_videos(plugin, item_id, program_part_url, page=0, **kwargs):
                             'size': 20,
                             'page': page,
                             'filter': "with-no-vod,only-visible",
-                            'sort': "sort = begin_date:desc"
-                        })
+                            'sort': "sort = begin_date:desc"})
     json_parser = json.loads(resp.text)
 
     for video in json_parser['result']:

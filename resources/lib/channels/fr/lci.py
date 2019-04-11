@@ -131,8 +131,7 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
 
                 item.set_callback(get_video_url,
                                   item_id=item_id,
-                                  video_label=LABELS[item_id] + ' - ' +
-                                  item.label,
+                                  video_label=LABELS[item_id] + ' - ' + item.label,
                                   program_id=program_id)
                 item_post_treatment(item,
                                     is_playable=True,
@@ -186,8 +185,7 @@ def get_video_url(plugin,
     # Check DRM in the m3u8 file
     manifest = urlquick.get(json_parser["hls"],
                             headers={
-                                'User-Agent': web_utils.get_random_ua
-                            },
+                                'User-Agent': web_utils.get_random_ua},
                             max_age=-1).text
     if 'drm' in manifest:
         Script.notify("TEST", plugin.localize(LABELS['drm_notification']),

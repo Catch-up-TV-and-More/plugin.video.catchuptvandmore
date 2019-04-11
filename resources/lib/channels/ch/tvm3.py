@@ -154,7 +154,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     location_url = resp2.headers['Location']
     resp3 = urlquick.get(location_url.replace(
         'infomaniak.com/', 'infomaniak.com/playerConfig.php'),
-                         max_age=-1)
+        max_age=-1)
     json_parser = json.loads(resp3.text)
     stream_url = ''
     for stram_datas in json_parser['data']['integrations']:

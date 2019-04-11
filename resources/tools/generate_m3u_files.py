@@ -32,6 +32,7 @@ sys.path.append('..')
 import mock_codequick
 import urllib
 import importlib
+import os
 
 from lib.labels import LABELS
 
@@ -151,7 +152,7 @@ def generate_m3u_files():
         country_code = country_id.replace('_live', '')
 
         print('\ncountry_id: ' + country_id)
-        #print('\ncountry_label: ' + country_label)
+        # print('\ncountry_label: ' + country_label)
 
         if country_id not in m3u_entries:
             m3u_entries[country_id] = {}
@@ -206,7 +207,7 @@ def generate_m3u_files():
                 # Is the call back is not live_bridge we skip :-/
                 channel_m3u_dict['channel_callback'] = channel_infos[
                     'callback']
-                if channel_m3u_dict['channel_callback'] is not 'live_bridge':
+                if channel_m3u_dict['channel_callback'] != 'live_bridge':
                     continue
 
                 # channel_logo
@@ -275,7 +276,7 @@ def generate_m3u_files():
                 # Is the call back is not live_bridge we skip :-/
                 channel_m3u_dict['channel_callback'] = channel_wo_infos[
                     'callback']
-                if channel_m3u_dict['channel_callback'] is not 'live_bridge':
+                if channel_m3u_dict['channel_callback'] != 'live_bridge':
                     continue
 
                 # channel_logo
@@ -288,8 +289,7 @@ def generate_m3u_files():
 
                 # channel_dict
                 channel_m3u_dict[
-                    'channel_item_dict'] = '{"language":"' + country_code.upper(
-                    ) + '"}'
+                    'channel_item_dict'] = '{"language":"' + country_code.upper() + '"}'
 
                 # channel_group_coutry
                 channel_m3u_dict['channel_group_country'] = country_label

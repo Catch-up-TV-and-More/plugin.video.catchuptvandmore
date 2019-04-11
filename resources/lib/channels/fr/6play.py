@@ -242,18 +242,18 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
             aired = video['clips'][0]['product']['last_diffusion']
             aired = aired
             aired = aired[:10]
-            year = aired[:4]
+            # year = aired[:4]
             # date : string (%d.%m.%Y / 01.01.2009)
             # aired : string (2008-12-07)
-            day = aired.split('-')[2]
-            mounth = aired.split('-')[1]
-            year = aired.split('-')[0]
-            date = '.'.join((day, mounth, year))
+            # day = aired.split('-')[2]
+            # mounth = aired.split('-')[1]
+            # year = aired.split('-')[0]
+            # date = '.'.join((day, mounth, year))
 
         except Exception:
             aired = ''
-            year = ''
-            date = ''
+            # year = ''
+            # date = ''
         img = ''
 
         program_imgs = video['clips'][0]['images']
@@ -271,7 +271,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
         item.art["fanart"] = program_img
         try:
             item.info.date(aired, '%Y-%m-%d')
-        except:
+        except Exception:
             pass
 
         is_downloadable = False
@@ -368,7 +368,7 @@ def get_video_url(plugin,
             resp.text)[0]
 
         if plugin.setting.get_string('6play.login') == '' or\
-            plugin.setting.get_string('6play.password') == '':
+                plugin.setting.get_string('6play.password') == '':
             xbmcgui.Dialog().ok(
                 'Info',
                 plugin.localize(30604) % ('6play', 'https://www.6play.fr'))

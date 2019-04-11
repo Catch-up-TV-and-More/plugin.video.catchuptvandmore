@@ -78,7 +78,7 @@ def list_programs(plugin, item_id, **kwargs):
                 '{0}', '648').replace('{1}', '4x3')
             program_url = ''
             if 'telejournal-22h' in programs_datas["url"] or \
-                'telejournal-18h' in programs_datas["url"]:
+                    'telejournal-18h' in programs_datas["url"]:
                 program_url = URL_ROOT + programs_datas[
                     "url"] + '/2016-2017/episodes'
             else:

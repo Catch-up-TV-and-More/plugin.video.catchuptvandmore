@@ -173,7 +173,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     stream_datas_url = re.compile(r'data-video-url\=\"(.*?)\"').findall(
         resp.text)[0]
     if item_id == 'rai1' or item_id == 'rai2' or item_id == 'rai3' or \
-        item_id == 'rai4' or item_id == 'rai5':
+            item_id == 'rai4' or item_id == 'rai5':
         resp2 = urlquick.get(stream_datas_url + '&output=45', max_age=-1)
     else:
         resp2 = urlquick.get(stream_datas_url + '&output=44', max_age=-1)

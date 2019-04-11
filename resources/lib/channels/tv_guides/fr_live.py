@@ -161,7 +161,7 @@ class TeleramaXMLTVGrabber:
         # Horaire
         try:
             local_tz = get_localzone()
-        except:
+        except Exception:
             # Hotfix issue #102
             local_tz = pytz.timezone('Europe/Paris')
 
@@ -222,8 +222,7 @@ class TeleramaXMLTVGrabber:
 
         # Episode/season
         if program['serie'] and program['serie']['numero_episode']:
-            program_dict['season'] = (program['serie'].get('saison', 1)
-                                      or 1) - 1
+            program_dict['season'] = (program['serie'].get('saison', 1) or 1) - 1
             program_dict['episode'] = program['serie']['numero_episode'] - 1
 
         # Video format
@@ -270,8 +269,7 @@ class TeleramaXMLTVGrabber:
 
         # Star rating
         if program['note_telerama'] > 0:
-            program_dict['rating'] = float(program['note_telerama'] *
-                                           2)  # Pour avoir sur 10 pour Kodi
+            program_dict['rating'] = float(program['note_telerama'] * 2)  # Pour avoir sur 10 pour Kodi
 
         return program_dict
 

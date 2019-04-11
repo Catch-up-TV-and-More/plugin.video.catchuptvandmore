@@ -2,8 +2,17 @@ language: python
 python:
   - "3.6"
 install:
-  - "pip install flake8"
+  - "pip install flake8 urlquick polib"
 script:
+  # Check PEP8 and syntax error in python files
   - flake8 .
+
+  # Git clone catchuptvandmore-test framework
+  - cd ..
+  - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test
+  - cd catchuptvandmore-test
+
+  # Apply root.json test config
+  - python3 main.py -c configs/root.json
 notifications:
   email: false
