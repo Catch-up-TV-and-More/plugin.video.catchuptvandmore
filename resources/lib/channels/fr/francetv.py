@@ -233,19 +233,13 @@ def list_videos(plugin, item_id, program_part_url, page = 0, **kwargs):
         item = Listitem()
         broadcast_id = populate_item(item, video)
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            broadcast_id=broadcast_id,
-            video_label=LABELS[item_id] + " - " + item.label,
-            download_mode = True)
-
         item.set_callback(
             get_video_url,
             item_id=item_id,
             broadcast_id=broadcast_id,
+            video_label=LABELS[item_id] + " - " + item.label,
             item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
@@ -356,19 +350,13 @@ def list_videos_search(plugin, item_id, search_query, page = 0, **kwargs):
                 if len(actors) > 0 and len(characters) > 0:
                     item.info['castandrole'] = list(zip_longest(actors, characters))
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id = item_id,
-                id_yatta = show['id'],
-                video_label = LABELS[item_id] + " - " + item.label,
-                download_mode = True)
-
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
                 id_yatta=show['id'],
+                video_label = LABELS[item_id] + " - " + item.label,
                 item_dict=item2dict(item))
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
         page = page + 1
 
