@@ -87,12 +87,13 @@ def list_videos(plugin, item_id, category_url, **kwargs):
         video_id = str(video_datas)
 
         video_title = json_parser["video_set"][video_id]["name"]
-        # video_plot = json_parser["video_set"][video_id]["description"]
+        video_plot = json_parser["video_set"][video_id]["description"]
         video_image = json_parser["video_set"][video_id]["thumbnail_large"]
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
+        item.info['plot'] = video_plot
 
         item.set_callback(get_video_url,
                           item_id=item_id,
