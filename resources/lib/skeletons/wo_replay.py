@@ -115,5 +115,11 @@ menu = {
         'fanart': 'channels/wo/rt_fanart.jpg',
         'module': 'resources.lib.channels.wo.rt',
         'available_languages': ['FR', 'EN']
+    },
+    'africa24': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/wo/africa24.png',
+        'fanart': 'channels/wo/africa24_fanart.jpg',
+        'module': 'resources.lib.channels.wo.africa24'
     }
 }
