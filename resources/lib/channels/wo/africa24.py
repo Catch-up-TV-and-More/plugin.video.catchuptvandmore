@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2018  SylvainCecchetto
+    Copyright (C) 2019  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -57,8 +57,9 @@ def list_categories(plugin, item_id, **kwargs):
     item = Listitem()
     item.label = "Emissions"
     item.set_callback(
-        list_programs, item_id=item_id, category_emission_url=category_emission_url
-    )
+        list_programs,
+        item_id=item_id,
+        category_emission_url=category_emission_url)
     item_post_treatment(item)
     yield item
 
@@ -72,8 +73,10 @@ def list_categories(plugin, item_id, **kwargs):
         item = Listitem()
         item.label = category_title
         item.set_callback(
-            list_videos_category, item_id=item_id, category_url=category_url, page="0"
-        )
+            list_videos_category,
+            item_id=item_id,
+            category_url=category_url,
+            page="0")
         item_post_treatment(item)
         yield item
 
@@ -89,7 +92,8 @@ def list_programs(plugin, item_id, category_emission_url, **kwargs):
 
     for program_datas in root.iterfind(".//div"):
         if program_datas.get("class") is not None:
-            if "col-xs-12 col-md-12 col-sm-12 col-lg-12" in program_datas.get("class"):
+            if "col-xs-12 col-md-12 col-sm-12 col-lg-12" in program_datas.get(
+                    "class"):
                 program_title = program_datas.findall(".//span/a")[1].text
                 program_image = program_datas.find(".//img").get("src")
                 program_url = URL_ROOT + program_datas.find(".//a").get("href")
@@ -102,8 +106,10 @@ def list_programs(plugin, item_id, category_emission_url, **kwargs):
                 item.art["thumb"] = program_image
                 item.info["plot"] = program_plot
                 item.set_callback(
-                    list_videos, item_id=item_id, program_url=program_url, page="0"
-                )
+                    list_videos,
+                    item_id=item_id,
+                    program_url=program_url,
+                    page="0")
                 item_post_treatment(item)
                 yield item
 
@@ -117,8 +123,7 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
     for video_datas in root.iterfind(".//div"):
         if video_datas.get("class") is not None:
             if "col-xs-omar col-xs-6 col-md-4 col-sm-4 col-lg-4" in video_datas.get(
-                "class"
-            ):
+                    "class"):
                 video_title = video_datas.findall(".//span/a")[1].text
                 video_image = video_datas.find(".//img").get("src")
                 video_url = URL_ROOT + video_datas.find(".//a").get("href")
@@ -133,12 +138,12 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
                     video_label=LABELS[item_id] + " - " + item.label,
                     video_url=video_url,
                 )
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                item_post_treatment(
+                    item, is_playable=True, is_downloadable=True)
                 yield item
 
     yield Listitem.next_page(
-        item_id=item_id, program_url=program_url, page=str(int(page) + 1)
-    )
+        item_id=item_id, program_url=program_url, page=str(int(page) + 1))
 
 
 @Route.register
@@ -168,24 +173,27 @@ def list_videos_category(plugin, item_id, category_url, page, **kwargs):
                     video_label=LABELS[item_id] + " - " + item.label,
                     video_url=video_url,
                 )
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                item_post_treatment(
+                    item, is_playable=True, is_downloadable=True)
                 yield item
 
     yield Listitem.next_page(
-        item_id=item_id, category_url=category_url, page=str(int(page) + 1)
-    )
+        item_id=item_id, category_url=category_url, page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-    plugin, item_id, video_url, download_mode=False, video_label=None, **kwargs
-):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    video_id = re.compile(r"youtube\.com\/embed\/(.*?)\"").findall(resp.text)[0]
-    return resolver_proxy.get_stream_youtube(
-        plugin, video_id, download_mode, video_label
-    )
+    video_id = re.compile(r"youtube\.com\/embed\/(.*?)\"").findall(
+        resp.text)[0]
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode,
+                                             video_label)
 
 
 def live_entry(plugin, item_id, item_dict):
