@@ -120,9 +120,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 
         for program_datas in root.iterfind("li"):
             program_title = program_datas.find('.//img').get('alt')
-            program_url = eval(
-                'URL_ROOT_%s' %
-                DESIRED_LANGUAGE) + program_datas.find('.//a').get('href')
+            program_url = program_datas.find('.//a').get('href')
             program_image = program_datas.find('.//img').get('data-src')
             program_plot = program_datas.find('.//p').text
 
