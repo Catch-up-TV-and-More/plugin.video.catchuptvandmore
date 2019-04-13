@@ -480,5 +480,12 @@ menu = {
         'fanart': 'channels/fr/tv8montblanc_fanart.jpg',
         'module': 'resources.lib.channels.fr.tv8montblanc',
         'm3u_group': 'Région'
+    },
+    'alsace20': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/alsace20.png',
+        'fanart': 'channels/fr/alsace20_fanart.jpg',
+        'module': 'resources.lib.channels.fr.alsace20',
+        'm3u_group': 'Région'
     }
 }

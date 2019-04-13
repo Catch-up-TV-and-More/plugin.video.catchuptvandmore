@@ -673,6 +673,9 @@
 
             <setting label="Luxe.TV" type="bool" id="luxetv" default="true" visible="eq(-171,true)"/>
             <setting label="" type="number" visible="false" id="luxetv.order" default="86"/>
+
+            <setting label="Alsace 20" type="bool" id="alsace20" default="true" visible="eq(-173,true)"/>
+            <setting label="" type="number" visible="false" id="alsace20.order" default="87"/>
         <!-- France -->
 
 

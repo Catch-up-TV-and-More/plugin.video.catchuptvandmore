@@ -418,6 +418,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=mblivetv&item_m
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tv8montblanc.png" group-title="France Région",8 Mont-Blanc
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv8montblanc&item_module=resources.lib.channels.fr.tv8montblanc&item_dict={}
 
+##	Alsace 20
+##	alsace20
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/alsace20.png" group-title="France Région",Alsace 20
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=alsace20&item_module=resources.lib.channels.fr.alsace20&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/euronews.png" group-title="France",Euronews

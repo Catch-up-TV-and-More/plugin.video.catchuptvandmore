@@ -598,6 +598,8 @@ LABELS = {
     '8 Mont-Blanc',
     'luxetv':
     'Luxe.TV',
+    'alsace20':
+    'Alsace 20',
 
     # Japan channels / live TV
     'nhknews':
