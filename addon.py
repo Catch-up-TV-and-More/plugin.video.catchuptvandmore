@@ -148,7 +148,6 @@ def root(plugin):
     """
     # First menu to build is the root menu
     # (see ROOT dictionnary in skeleton.py)
-
     return generic_menu(plugin, item_id='root')
 
 
