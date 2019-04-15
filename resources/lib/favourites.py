@@ -105,7 +105,6 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
 
     # If user aborded do not add this item to favourite
     if item_dict['label'] == '':
-        # TODO: Notify the user that the action aborded?
         return False
 
     # Add this item to favourite db
@@ -117,6 +116,8 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
         item_dict['params']['order'] = len(db)
 
         db[item_hash] = item_dict
+
+    Script.notify(Script.localize(30033), Script.localize(30805), display_time=7000)
 
 
 @Script.register

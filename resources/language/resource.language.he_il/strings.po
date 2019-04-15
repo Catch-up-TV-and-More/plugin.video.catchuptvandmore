@@ -600,7 +600,7 @@ msgid "Add to add-on favourites"
 msgstr ""
 
 msgctxt "#30801"
-msgid "Favorite name"
+msgid "Favourite name"
 msgstr ""
 
 msgctxt "#30802"
@@ -614,3 +614,12 @@ msgstr ""
 msgctxt "#30804"
 msgid "Rename"
 msgstr ""
+
+msgctxt "#30805"
+msgid "The item has been added to the favourites of the add-on"
+msgstr ""
+
+msgctxt "#30806"
+msgid "Add at least one favourite to access this menu"
+msgstr ""
+
