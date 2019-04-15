@@ -81,7 +81,7 @@ def list_categories(plugin, item_id, **kwargs):
     item_post_treatment(item)
     yield item
 
-    for category_title, category_type in CATEGORIES_VIDEOS_TV5MONDE.iteritems(
+    for category_title, category_type in CATEGORIES_VIDEOS_TV5MONDE.items(
     ):
         item = Listitem()
         item.label = category_title

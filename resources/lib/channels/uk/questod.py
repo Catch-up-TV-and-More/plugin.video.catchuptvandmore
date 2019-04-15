@@ -87,7 +87,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    for category_name_title, category_name_value in CATEGORIES_MODE.iteritems(
+    for category_name_title, category_name_value in CATEGORIES_MODE.items(
     ):
 
         item = Listitem()
@@ -98,7 +98,7 @@ def list_categories(plugin, item_id, **kwargs):
         item_post_treatment(item)
         yield item
 
-    for category_name_title, category_name_value in CATEGORIES_MODE_AZ.iteritems(
+    for category_name_title, category_name_value in CATEGORIES_MODE_AZ.items(
     ):
 
         item = Listitem()

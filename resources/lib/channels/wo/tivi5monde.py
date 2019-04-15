@@ -69,7 +69,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    for category_context, category_title in CATEGORIES_VIDEOS_TIVI5MONDE.iteritems(
+    for category_context, category_title in CATEGORIES_VIDEOS_TIVI5MONDE.items(
     ):
         category_url = URL_TIVI5MONDE_ROOT + category_context
         if 'REPLAY' in category_title:
