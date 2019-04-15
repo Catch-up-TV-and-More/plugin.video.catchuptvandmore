@@ -70,8 +70,8 @@ def list_videos(plugin, item_id, url, **kwargs):
     json_parser = json.loads(r.text)
     for video in json_parser['list']:
         item = Listitem()
-        item.label = video['title'].encode('utf-8')
-        item.info['plot'] = video['description'].encode('utf-8')
+        item.label = video['title']
+        item.info['plot'] = video['description']
         item.info['duration'] = video['duration']
         item.art["thumb"] = video['thumbnail_large_url']
         vid = video['id']
@@ -88,7 +88,8 @@ def list_videos(plugin, item_id, url, **kwargs):
         nextPage = currentPage + 1
         yield Listitem.next_page(url=url.replace("page=" + str(currentPage),
                                                  "page=" + str(nextPage)),
-                                 callback=list_videos)
+                                 callback=list_videos,
+                                 item_id=item_id)
 
 
 @Resolver.register

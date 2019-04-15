@@ -86,7 +86,7 @@ def get_api_key():
     """Compute the API key"""
     date = time.strftime("%Y%m%d")
     key = SECRET_KEY + date
-    key = md5(key).hexdigest()
+    key = md5(key.encode('utf-8')).hexdigest()
     return 'iphoner_' + key
 
 
