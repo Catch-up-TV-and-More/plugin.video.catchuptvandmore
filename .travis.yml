@@ -20,5 +20,6 @@ script:
   - ./main.py -c configs/0_open_root_and_exit.json
   - ./main.py -c configs/1_open_replay_menu_and_exit.json
   - ./main.py -c configs/2_open_each_replay_country_root_menu_and_exit.json
+  - ./main.py -c configs/3_open_each_french_replay_channel_menu_and_exit.json
 notifications:
   email: false
