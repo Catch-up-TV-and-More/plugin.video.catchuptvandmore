@@ -5,7 +5,7 @@ python:
 
 install:
   # Install dependencies
-  - "pip install flake8 urlquick polib mock htmlement colorama"
+  - "pip install flake8 urlquick polib mock htmlement colorama requests"
 
 script:
   # Check PEP8 and syntax error in python files
