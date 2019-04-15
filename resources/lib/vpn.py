@@ -183,7 +183,7 @@ def select_ovpn():
 
         configs = []
         ovpnfileslist = []
-        for name, configfilepath in ovpnfiles.iteritems():
+        for name, configfilepath in ovpnfiles.items():
             configs.append(name)
             ovpnfileslist.append(configfilepath)
 
@@ -221,7 +221,7 @@ def delete_ovpn(*args, **kwargs):
 
         configs = []
         ovpnfileslist = []
-        for name, configfilepath in ovpnfiles.iteritems():
+        for name, configfilepath in ovpnfiles.items():
             configs.append(name)
             ovpnfileslist.append(configfilepath)
 
@@ -231,7 +231,7 @@ def delete_ovpn(*args, **kwargs):
         if idx >= 0:
             Script.log('Select: [%s]' % ovpnfileslist[idx])
             new_ovpnfiles = {}
-            for name, configfilepath in ovpnfiles.iteritems():
+            for name, configfilepath in ovpnfiles.items():
                 if configfilepath != ovpnfileslist[idx]:
                     new_ovpnfiles[name] = configfilepath
             with storage.PersistentDict('vpn') as db:

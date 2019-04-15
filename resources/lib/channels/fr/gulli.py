@@ -104,7 +104,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    for category_title, program_url in CATEGORIES.iteritems():
+    for category_title, program_url in CATEGORIES.items():
         item = Listitem()
         item.label = category_title
         item.set_callback(list_programs,

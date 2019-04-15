@@ -209,7 +209,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     live_id = ''
-    for channel_name, live_id_value in LIST_LIVE_TV5MONDE.iteritems():
+    for channel_name, live_id_value in LIST_LIVE_TV5MONDE.items():
         if item_id == channel_name:
             live_id = live_id_value
     resp = urlquick.get(URL_TV5MONDE_LIVE + '%s.html' % live_id,

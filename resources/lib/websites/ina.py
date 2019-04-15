@@ -64,7 +64,7 @@ CATEGORIES = {'Toutes les Emissions': 'classic', 'Toutes les séries': 'serie'}
 
 def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
-    for category_name, category_mode in CATEGORIES.iteritems():
+    for category_name, category_mode in CATEGORIES.items():
         item = Listitem()
 
         item.label = category_name

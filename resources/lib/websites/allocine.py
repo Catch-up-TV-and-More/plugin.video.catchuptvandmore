@@ -72,7 +72,7 @@ CATEGORIES_LANGUAGE = {'VF': 'version-0/', 'VO': 'version-1/'}
 
 def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
-    for category_name, category_url in CATEGORIES.iteritems():
+    for category_name, category_url in CATEGORIES.items():
 
         if 'series' in category_url or 'films' in category_url:
             next_value = 'list_shows_films_series_1'
@@ -337,7 +337,7 @@ def list_shows_films_series_2(plugin, item_id, show_url, **kwargs):
     item_post_treatment(item)
     yield item
 
-    for language, language_url in CATEGORIES_LANGUAGE.iteritems():
+    for language, language_url in CATEGORIES_LANGUAGE.items():
         item = Listitem()
         item.label = language
         item.set_callback(list_videos_films_series_1,

@@ -74,7 +74,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    for category_title, category_url in CATEGORIES_EDUCATION.iteritems():
+    for category_title, category_url in CATEGORIES_EDUCATION.items():
 
         if category_title == 'Séries':
             next_value = 'list_programs'

@@ -71,7 +71,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    for category_id, category_name in CATEGORIES.iteritems():
+    for category_id, category_name in CATEGORIES.items():
         category_url = URL_CATEGORIES % category_id
 
         item = Listitem()

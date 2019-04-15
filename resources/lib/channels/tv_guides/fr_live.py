@@ -140,7 +140,7 @@ class TeleramaXMLTVGrabber:
     }
 
     def __init__(self):
-        self.CHANNELS_ID = {v: k for k, v in self.ID_CHANNELS.iteritems()}
+        self.CHANNELS_ID = {v: k for k, v in self.ID_CHANNELS.items()}
 
     def _fix_xml_unicode_string(self, text):
         """Replace in a string all Windows-1252 specific chars to UTF-8 and delete non

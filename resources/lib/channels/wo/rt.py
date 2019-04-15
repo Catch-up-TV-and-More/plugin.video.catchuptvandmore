@@ -81,7 +81,7 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
     CATEGORIES_VIDEOS = eval('CATEGORIES_VIDEOS_%s' % DESIRED_LANGUAGE)
-    for category_url, category_title in CATEGORIES_VIDEOS.iteritems():
+    for category_url, category_title in CATEGORIES_VIDEOS.items():
         if 'magazines' in category_url or 'shows' in category_url:
             item = Listitem()
             item.label = category_title

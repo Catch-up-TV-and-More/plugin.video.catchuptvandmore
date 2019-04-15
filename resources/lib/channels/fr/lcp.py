@@ -91,7 +91,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    for category_url, category_name in CATEGORIES.iteritems():
+    for category_url, category_name in CATEGORIES.items():
 
         if 'actualites' in category_url:
             item = Listitem()

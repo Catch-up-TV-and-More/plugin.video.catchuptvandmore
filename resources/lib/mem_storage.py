@@ -64,7 +64,7 @@ class MemStorage(MutableMapping):
         :rtype: str
         """
         lines = []
-        for key, val in self.iteritems():
+        for key, val in self.items():
             lines.append('{0}: {1}'.format(repr(key), repr(val)))
         return ', '.join(lines)
 
