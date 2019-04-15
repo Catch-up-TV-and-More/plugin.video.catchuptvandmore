@@ -409,7 +409,7 @@ def hide_item(plugin, item_id):
 
 
 @Route.register
-def favourites(plugin, **kwargs):
+def favourites(plugin, start=0, **kwargs):
     """
     Callback function called when the user enter in the
     favourites folder
@@ -433,8 +433,17 @@ def favourites(plugin, **kwargs):
         yield False
 
     # Add each item in the listing
+    cnt = 0
     for index, (item_order, item_hash, item_dict) in enumerate(sorted_menu):
+        if index < start:
+            continue
 
+        # If more thant 30 items add a new page
+        if cnt == 30:
+            yield Listitem().next_page(start=index)
+            break
+
+        cnt += 1
         # Listitem.from_dict fails with this
         item_dict.pop('subtitles')
         item_dict.pop('context')
