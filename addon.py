@@ -427,12 +427,10 @@ def favourites(plugin, **kwargs):
         # We sort the menu according to the item_order values
         sorted_menu = sorted(menu, key=lambda x: x[0])
 
-
     # Notify the user if there is not item in favourites
     if len(sorted_menu) == 0:
         Script.notify(Script.localize(30033), Script.localize(30806), display_time=7000)
         yield False
-
 
     # Add each item in the listing
     for index, (item_order, item_hash, item_dict) in enumerate(sorted_menu):
