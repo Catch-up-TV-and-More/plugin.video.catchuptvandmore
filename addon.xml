@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.6~beta05"
+       version="0.2.6~beta06"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -45,6 +45,7 @@
 [Add] Catch-Up TV and Live TV - Africa 24 (WO)
 [Fix] Catch-Up TV - RT (WO) - programme videos
 [Add] Live TV - Alsace 20 (FR)
+[Fix] Catch-Up TV - Ici TouvTV (CA)
     </news>
     <assets>
       <icon>icon.png</icon>

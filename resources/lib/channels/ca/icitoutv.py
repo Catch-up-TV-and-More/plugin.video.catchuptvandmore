@@ -73,7 +73,7 @@ def list_days(plugin, item_id, **kwargs):
     """
     resp = urlquick.get(URL_CLIENT_KEY_JS)
     client_key_value = 'client-key %s' % re.compile(
-        r'scope\:\{clientId\:\"(.*?)\"').findall(resp.text)[0]
+        r'Scope\:\{clientId\:\"(.*?)\"').findall(resp.text)[0]
     headers = {'Authorization': client_key_value}
     resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
     json_parser = json.loads(resp2.text)
@@ -94,7 +94,7 @@ def list_videos(plugin, item_id, day_id, **kwargs):
 
     resp = urlquick.get(URL_CLIENT_KEY_JS)
     client_key_value = 'client-key %s' % re.compile(
-        r'scope\:\{clientId\:\"(.*?)\"').findall(resp.text)[0]
+        r'Scope\:\{clientId\:\"(.*?)\"').findall(resp.text)[0]
     headers = {'Authorization': client_key_value}
     resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
     json_parser = json.loads(resp2.text)
