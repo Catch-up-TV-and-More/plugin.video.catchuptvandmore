@@ -361,11 +361,11 @@ menu = {
         'fanart': 'channels/fr/france3regions_fanart.jpg',
         'module': 'resources.lib.channels.fr.france3regions'
     },
-    'culturebox': {
+    'francetvspectaclesetculture': {
         'callback': 'replay_bridge',
-        'thumb': 'channels/fr/culturebox.png',
-        'fanart': 'channels/fr/culturebox_fanart.jpg',
-        'module': 'resources.lib.channels.fr.culturebox'
+        'thumb': 'channels/fr/francetvspectaclesetculture.png',
+        'fanart': 'channels/fr/francetvspectaclesetculture_fanart.jpg',
+        'module': 'resources.lib.channels.fr.francetvspectaclesetculture'
     },
     'francetveducation': {
         'callback': 'replay_bridge',

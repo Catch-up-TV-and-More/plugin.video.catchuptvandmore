@@ -550,8 +550,8 @@ LABELS = {
     'Polar+',
     'virginradiotv':
     'Virgin Radio TV',
-    'culturebox':
-    'Culturebox (francetv)',
+    'francetvspectaclesetculture':
+    'Spectacles et Culture (francetv)',
     'kto':
     'KTO',
     'antennereunion':

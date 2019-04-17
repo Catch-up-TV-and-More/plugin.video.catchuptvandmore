@@ -602,7 +602,8 @@
             <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
             <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
 
-            <setting label="Culturebox (francetv)" type="bool" id="culturebox" default="true" visible="eq(-125,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Culturebox (francetv)" type="bool" id="culturebox" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="culturebox.order" default="63"/>
 
             <setting label="KTO" type="bool" id="kto" default="true" visible="eq(-127,true)"/>
@@ -676,6 +677,9 @@
 
             <setting label="Alsace 20" type="bool" id="alsace20" default="true" visible="eq(-173,true)"/>
             <setting label="" type="number" visible="false" id="alsace20.order" default="87"/>
+
+            <setting label="Spectacles et Culture (francetv)" type="bool" id="francetvspectaclesetculture" default="true" visible="eq(-175,true)"/>
+            <setting label="" type="number" visible="false" id="francetvspectaclesetculture.order" default="88"/>
         <!-- France -->
 
 
