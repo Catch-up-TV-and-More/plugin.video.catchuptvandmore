@@ -17,6 +17,7 @@ env:
   - JOB=simul_replay_french_depth
 
 script:
+  - set -o pipefail
   - if [ $JOB == 'flake' ]; then flake8 . 2>&1|tee ${JOB}.log; fi
   # - if [ $JOB == 'simul_root' ]; then cd ../simul && ./main.py -c configs/0_open_root_and_exit.json 2>&1|tee "${JOB}.log"; fi
   # - if [ $JOB == 'simul_replay' ]; then cd ../simul && ./main.py -c configs/1_open_replay_menu_and_exit.json 2>&1|tee "${JOB}.log"; fi
