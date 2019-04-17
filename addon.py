@@ -34,6 +34,7 @@ import urlquick
 import xbmc
 import xbmcgui
 import xbmcplugin
+from six import string_types
 
 # Local imports
 from resources.lib.labels import LABELS
@@ -354,6 +355,13 @@ def live_bridge(plugin, **kwargs):
     """
     Like replay_bridge
     """
+
+    # If we come from a M3U file, we need to
+    # convert the string dict
+    # to the real dict object
+    if 'item_dict' in kwargs and \
+            isinstance(kwargs['item_dict'], string_types):
+        kwargs['item_dict'] = eval(kwargs['item_dict'])
 
     # Let's go to the module file ...
     item_module = importlib.import_module(kwargs.get('item_module'))
