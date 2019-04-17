@@ -110,8 +110,6 @@ def list_videos(plugin, item_id, program_title, **kwargs):
                             date_value = video_datas["publishedAt"].split('T')[
                                 0]
 
-                            print 'video_image url : ' + repr(video_image)
-
                             item = Listitem()
                             item.label = video_title
                             item.art['thumb'] = video_image
