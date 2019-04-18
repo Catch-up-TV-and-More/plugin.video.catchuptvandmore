@@ -29,7 +29,7 @@ from __future__ import unicode_literals
 import importlib
 
 # Kodi imports
-from codequick import Route, Resolver, Listitem, run, Script, storage
+from codequick import Route, Resolver, Listitem, run, Script, utils, storage
 import urlquick
 import xbmc
 import xbmcgui
@@ -82,7 +82,7 @@ def get_sorted_menu(plugin, menu_id):
 
         # If the desired language is not avaible
         if 'available_languages' in item_infos:
-            desired_language = Script.setting[item_id + '.language']
+            desired_language = utils.ensure_unicode(Script.setting[item_id + '.language'])
             if desired_language not in item_infos['available_languages']:
                 add_item = False
 

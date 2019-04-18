@@ -53,6 +53,7 @@
 [Fix] Catch-up TV - MyTF1 (FR) - Some DALS contents
 [Add] Live TV - CanalC (BE)
 [Python2/3] Add compatibility for urllib (sky.py, canalc.py, ...)
+[Fix] Live TV - TVP 3 (PL) - Not shown in the plugin because of encoding issue
     </news>
     <assets>
       <icon>icon.png</icon>
