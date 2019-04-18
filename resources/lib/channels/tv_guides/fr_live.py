@@ -33,7 +33,11 @@ import pytz
 import hashlib
 import hmac
 import re
-import urllib
+# Working for Python 2/3
+try:
+    import urllib.parse as urllib
+except ImportError:
+    import urllib
 import datetime
 import time
 from resources.lib.tzlocal import get_localzone
