@@ -32,7 +32,11 @@ from resources.lib import web_utils
 
 import re
 import urlquick
-import urllib
+# Working for Python 2/3
+try:
+    import urllib.parse as urllib
+except ImportError:
+    import urllib
 
 # TO DO
 # Add Replay
