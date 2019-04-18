@@ -350,13 +350,19 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         item.property[
             'inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
 
-        if 'label' in item_dict:
-            item.label = item_dict['label']
-        if 'info' in item_dict:
-            item.info.update(item_dict['info'])
-        if 'art' in item_dict:
-            item.art.update(item_dict['art'])
-
+        if item_dict:
+            if 'label' in item_dict:
+                item.label = item_dict['label']
+            if 'info' in item_dict:
+                item.info.update(item_dict['info'])
+            if 'art' in item_dict:
+                item.art.update(item_dict['art'])
+        else:
+            item.label = ""
+            item.art["thumb"] = ""
+            item.art["icon"] = ""
+            item.art["fanart"] = ""
+            item.info["plot"] = ""
         return item
 
     else:
