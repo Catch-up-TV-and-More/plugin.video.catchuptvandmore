@@ -233,7 +233,11 @@ def list_videos(plugin, item_id, program_category_url, **kwargs):
     else:
 
         resp = urlquick.get(program_category_url)
-        grid = resp.parse("div", attrs={"class": "content"})
+        root = resp.parse()
+        if root.find(".//div[@class='content']") is not None:
+            grid = resp.parse("div", attrs={"class": "content"})
+        else:
+            grid = resp.parse("div", attrs={"class": "content withPub"})
 
         if grid is not None:
             for li in grid.findall('.//li'):
