@@ -36,13 +36,15 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import base64
 import json
 import re
-import urllib
+# Working for Python 2/3
+try:
+    import urllib.parse as urllib
+except ImportError:
+    import urllib
 import urlquick
 
 # TO DO
-# Add More Buttons for videos youtube
 # Some video Sky sports required account (add account)
-# Add favoris for youtube channel?
 
 URL_LIVE_SKYNEWS = 'https://news.sky.com/watch-live'
 

@@ -52,6 +52,7 @@
 [Fix] Live TV - RTLPlay (BE)
 [Fix] Catch-up TV - MyTF1 (FR) - Some DALS contents
 [Add] Live TV - CanalC (BE)
+[Python2/3] Add compatibility for urllib (sky.py, canalc.py, ...)
     </news>
     <assets>
       <icon>icon.png</icon>
