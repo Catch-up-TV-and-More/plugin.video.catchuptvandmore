@@ -129,12 +129,19 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     item = Listitem()
     item.path = json_parser2["stream"]["src"]
-    if 'label' in item_dict:
-        item.label = item_dict['label']
-    if 'info' in item_dict:
-        item.info.update(item_dict['info'])
-    if 'art' in item_dict:
-        item.art.update(item_dict['art'])
+    if item_dict:
+        if 'label' in item_dict:
+            item.label = item_dict['label']
+        if 'info' in item_dict:
+            item.info.update(item_dict['info'])
+        if 'art' in item_dict:
+            item.art.update(item_dict['art'])
+    else:
+        item.label = ""
+        item.art["thumb"] = ""
+        item.art["icon"] = ""
+        item.art["fanart"] = ""
+        item.info["plot"] = ""
     if plugin.setting.get_boolean('active_subtitle'):
         item.subtitles.append(URL_SUBTITLE % video_id)
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
