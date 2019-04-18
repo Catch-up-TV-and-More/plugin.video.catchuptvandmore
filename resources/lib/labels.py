@@ -372,6 +372,8 @@ LABELS = {
     'RTL Sport',
     'tvcom':
     'TV Com',
+    'canalc':
+    'CanalC',
 
     # Canadian channels / live TV
     'tv5':

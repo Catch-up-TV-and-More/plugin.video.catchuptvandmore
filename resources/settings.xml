@@ -402,6 +402,9 @@
 
             <setting label="TV Com" type="bool" id="tvcom" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="tvcom.order" default="19"/>
+
+            <setting label="CanalC" type="bool" id="canalc" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="canalc.order" default="20"/>
         <!-- Belgium -->
 
 

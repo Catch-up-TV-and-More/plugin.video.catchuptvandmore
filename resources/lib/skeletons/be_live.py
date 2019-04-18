@@ -159,5 +159,12 @@ menu = {
         'fanart': 'channels/be/rtlsport_fanart.jpg',
         'module': 'resources.lib.channels.be.rtlplaybe',
         'm3u_group': 'Belgique fr'
+    },
+    'canalc': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/canalc.png',
+        'fanart': 'channels/be/canalc_fanart.jpg',
+        'module': 'resources.lib.channels.be.canalc',
+        'm3u_group': 'Belgique fr'
     }
 }

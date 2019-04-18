@@ -51,6 +51,7 @@
 [Fix] Icon channel in Kodi Live TV (inpustream live TV case)
 [Fix] Live TV - RTLPlay (BE)
 [Fix] Catch-up TV - MyTF1 (FR) - Some DALS contents
+[Add] Live TV - CanalC (BE)
     </news>
     <assets>
       <icon>icon.png</icon>
