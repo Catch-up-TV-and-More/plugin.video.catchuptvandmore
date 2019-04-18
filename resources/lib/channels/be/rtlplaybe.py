@@ -491,8 +491,9 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         resp_js_id.text)[0]
     resp = urlquick.get(URL_API_KEY % js_id)
 
-    api_key = re.compile(r'\"sso-login.rtl.be\"\,key\:\"(.*?)\"').findall(
-        resp.text)[0]
+    api_key = re.compile(
+        r'\"sso-login.rtl.be\"\,cdn\:\"eu1.gigya.com\"\,key\:\"(.*?)\"').findall(
+            resp.text)[0]
 
     if plugin.setting.get_string('rtlplaybe.login') == '' or\
             plugin.setting.get_string('rtlplaybe.password') == '':
