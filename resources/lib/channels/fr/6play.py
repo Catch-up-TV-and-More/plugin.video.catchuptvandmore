@@ -628,7 +628,6 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                 item.property[
                     'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
 
-
                 if item_dict:
                     if 'label' in item_dict:
                         item.label = item_dict['label']
