@@ -302,8 +302,9 @@ def list_program_video(plugin, item_id, nid, guid_program, page=1, **kwargs):
                 item.label = item.label + ' — ' + json_video['subtitle']
 
             if 'intro':
-                item.info['plot'] = json_video['intro'].replace('<p>', '').replace(
-                    '</p>', '')
+                item.info['plot'] = json_video['intro'].replace('<p>',
+                                                                '').replace(
+                                                                    '</p>', '')
             youtube_id = json_video['main_video'][0]['youtube_id']
 
             try:
@@ -313,10 +314,11 @@ def list_program_video(plugin, item_id, nid, guid_program, page=1, **kwargs):
             except Exception:
                 pass
 
-            item.set_callback(get_video_url,
-                            item_id=item_id,
-                            video_label=LABELS[item_id] + ' - ' + item.label,
-                            youtube_id=youtube_id)
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                youtube_id=youtube_id)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
