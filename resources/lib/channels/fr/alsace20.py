@@ -225,9 +225,9 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         if "art" in item_dict:
             item.art.update(item_dict["art"])
     else:
-        item.label = ""
+        item.label = LABELS[item_id]
         item.art["thumb"] = ""
         item.art["icon"] = ""
         item.art["fanart"] = ""
-        item.info["plot"] = ""
+        item.info["plot"] = LABELS[item_id]
     return item

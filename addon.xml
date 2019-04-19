@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.6~beta08"
+       version="0.2.6~beta09"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -54,6 +54,7 @@
 [Add] Live TV - CanalC (BE)
 [Python2/3] Add compatibility for urllib (sky.py, canalc.py, ...)
 [Fix] Live TV - TVP 3 (PL) - Not shown in the plugin because of encoding issue
+[Fix] title UNKNOWN for channels in Kodi Live TV (inpustream live TV case)
     </news>
     <assets>
       <icon>icon.png</icon>
