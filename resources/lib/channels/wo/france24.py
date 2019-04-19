@@ -295,29 +295,30 @@ def list_program_video(plugin, item_id, nid, guid_program, page=1, **kwargs):
         yield False
 
     for json_video in json_list:
-        item = Listitem()
-        item.label = json_video['title']
-        if 'subtitle' in json_video:
-            item.label = item.label + ' — ' + json_video['subtitle']
+        if len(json_video['main_video']) > 0:
+            item = Listitem()
+            item.label = json_video['title']
+            if 'subtitle' in json_video:
+                item.label = item.label + ' — ' + json_video['subtitle']
 
-        if 'intro':
-            item.info['plot'] = json_video['intro'].replace('<p>', '').replace(
-                '</p>', '')
-        youtube_id = json_video['main_video'][0]['youtube_id']
+            if 'intro':
+                item.info['plot'] = json_video['intro'].replace('<p>', '').replace(
+                    '</p>', '')
+            youtube_id = json_video['main_video'][0]['youtube_id']
 
-        try:
-            for json_image in json_video['images']['formats']:
-                item.art['fanart'] = json_image['url']
-                item.art['thumb'] = json_image['url']
-        except Exception:
-            pass
+            try:
+                for json_image in json_video['images']['formats']:
+                    item.art['fanart'] = json_image['url']
+                    item.art['thumb'] = json_image['url']
+            except Exception:
+                pass
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
-                          youtube_id=youtube_id)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+            item.set_callback(get_video_url,
+                            item_id=item_id,
+                            video_label=LABELS[item_id] + ' - ' + item.label,
+                            youtube_id=youtube_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
     last_page = json_v['result']['last_page']
     if page != last_page:
