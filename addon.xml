@@ -57,6 +57,7 @@
 [Fix] title UNKNOWN for channels in Kodi Live TV (inpustream live TV case)
 [Fix] Catch-up TV - France 24 (WO) - bypass videos program without youtube-video-id
 [Imporvement] Catch-up TV - BX1 (BE) - Verify in the next page exists
+[Fix] Catch-up TV - TVM3 (CH) - bypass videos program without video_id
     </news>
     <assets>
       <icon>icon.png</icon>

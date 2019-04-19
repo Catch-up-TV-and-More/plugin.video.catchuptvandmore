@@ -105,17 +105,21 @@ def list_videos(plugin, item_id, program_url, **kwargs):
             video_id = re.compile(
                 r'player.vimeo.com/video/(.*?)[\?\"]').findall(
                     video_datas.find('.//iframe').get('src'))[0]
+        else:
+            video_id = None
 
-        item = Listitem()
-        item.label = video_title
+        if video_id is not None:
+            item = Listitem()
+            item.label = video_title
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_id=video_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
-                          is_youtube=is_youtube)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_id=video_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                is_youtube=is_youtube)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
 
 @Resolver.register
