@@ -56,6 +56,7 @@
 [Fix] Live TV - TVP 3 (PL) - Not shown in the plugin because of encoding issue
 [Fix] title UNKNOWN for channels in Kodi Live TV (inpustream live TV case)
 [Fix] Catch-up TV - France 24 (WO) - bypass videos program without youtube-video-id
+[Imporvement] Catch-up TV - BX1 (BE) - Verify in the next page exists
     </news>
     <assets>
       <icon>icon.png</icon>
