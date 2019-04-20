@@ -132,7 +132,6 @@ def list_videos(plugin, item_id, category_url, **kwargs):
         category_url=URL_API_ROOT + json_parser["hydra:nextPage"])
 
 
-
 @Resolver.register
 def get_video_url(plugin,
                   item_id,

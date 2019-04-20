@@ -61,6 +61,7 @@
 [Python2/3] Fix if condition for Live TV - 日テレ News24 (JP)
 [Fix] Catch-up TV - Lequipe TV (FR) - Remove Date (format change all the times)
 [Fix] Catch-up TV - BeinSport (WO) - bypass videos program without video_id
+[Fix] Catch-up TV - Rai Play (IT) - Video without video duration
     </news>
     <assets>
       <icon>icon.png</icon>

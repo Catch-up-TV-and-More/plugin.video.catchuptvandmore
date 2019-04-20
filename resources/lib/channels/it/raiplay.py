@@ -127,8 +127,10 @@ def list_videos(plugin, item_id, program_url, **kwargs):
         video_image = video_datas["images"]["landscape"].replace(
             '/resizegd/[RESOLUTION]', '')
         duration_value = video_datas['duration'].split(':')
-        video_duration = int(duration_value[0]) * 3600 + int(
-            duration_value[1]) * 60 + int(duration_value[2])
+        video_duration = 0
+        if len(duration_value) > 1:
+            video_duration = int(duration_value[0]) * 3600 + int(
+                duration_value[1]) * 60 + int(duration_value[2])
         video_url = URL_ROOT + video_datas['pathID']
 
         item = Listitem()
