@@ -46,21 +46,6 @@ URL_LIVE = URL_ROOT + '/lachainelequipe/'
 
 URL_API_LEQUIPE = URL_ROOT + '/equipehd/applis/filtres/videosfiltres.json'
 
-CORRECT_MONTH = {
-    'Jan.': '01',
-    'Feb.': '02',
-    'Mar.': '03',
-    'Apr.': '04',
-    'May.': '05',
-    'Jun.': '06',
-    'Jul.': '07',
-    'Aug.': '08',
-    'Sep.': '09',
-    'Oct.': '10',
-    'Nov.': '11',
-    'Dec.': '12'
-}
-
 
 def replay_entry(plugin, item_id, **kwargs):
     """
@@ -104,20 +89,9 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
         duration = video_datas['duree']
         video_id = video_datas['lien_dm'].split('//')[1]
 
-        date_list = video_datas['date'].split(' ')
-
         item = Listitem()
         item.label = title
         item.art['thumb'] = img
-        if len(date_list) > 2:
-            day = date_list[0]
-            try:
-                month = CORRECT_MONTH[date_list[1]]
-            except Exception:
-                month = '00'
-            year = date_list[2]
-            date_value = '-'.join((year, month, day))
-            item.info.date(date_value, '%Y-%m-%d')
         item.info['duration'] = duration
 
         item.set_callback(get_video_url,
