@@ -56,7 +56,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     data_account = ''
     data_player = ''
     data_video_id = ''
-    if re.compile(r'data-account="(.*?)"').findall(resp.text) > 0:
+    if len(re.compile(r'data-account="(.*?)"').findall(resp.text)) > 0:
         data_account = re.compile(r'data-account="(.*?)"').findall(
             resp.text)[0]
         data_player = re.compile(r'data-player="(.*?)"').findall(resp.text)[0]

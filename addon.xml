@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.6~beta09"
+       version="0.2.6~beta10"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -58,6 +58,7 @@
 [Fix] Catch-up TV - France 24 (WO) - bypass videos program without youtube-video-id
 [Imporvement] Catch-up TV - BX1 (BE) - Verify in the next page exists
 [Fix] Catch-up TV - TVM3 (CH) - bypass videos program without video_id
+[Python2/3] Fix if condition for Live TV - 日テレ News24 (JP)
     </news>
     <assets>
       <icon>icon.png</icon>
