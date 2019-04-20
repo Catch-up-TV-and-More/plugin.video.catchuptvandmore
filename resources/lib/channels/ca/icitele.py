@@ -107,7 +107,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
 
             # Check the IF maybe keep just icon-play?
             if 'icon-play' in video_datas.find('.//a').get('class') or \
-                    video_datas.find(".//div[@class='play medium]'") is not None:
+                    video_datas.find(".//div[@class='play medium']") is not None:
                 video_title = utils.strip_tags(
                     video_datas.find('.//a').get('title'))
                 video_image = ''

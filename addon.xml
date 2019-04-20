@@ -62,6 +62,7 @@
 [Fix] Catch-up TV - Lequipe TV (FR) - Remove Date (format change all the times)
 [Fix] Catch-up TV - BeinSport (WO) - bypass videos program without video_id
 [Fix] Catch-up TV - Rai Play (IT) - Video without video duration
+[Fix] Catch-up TV - ICI Télé (CA)
     </news>
     <assets>
       <icon>icon.png</icon>
