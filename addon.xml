@@ -49,7 +49,7 @@
 [Add/Remove] Catch-Up TV - Culturebox change name to Spectacles et Culture (France TV) (FR)
 [Fix] Catch-up TV - Jack (mycanal) (FR)
 [Fix] Icon channel in Kodi Live TV (inpustream live TV case)
-[Fix] Live TV - RTLPlay (BE)
+[Fix] Catch-up TV and Live TV - RTLPlay (BE) - get apikey
 [Fix] Catch-up TV - MyTF1 (FR) - Some DALS contents
 [Add] Live TV - CanalC (BE)
 [Python2/3] Add compatibility for urllib (sky.py, canalc.py, ...)
