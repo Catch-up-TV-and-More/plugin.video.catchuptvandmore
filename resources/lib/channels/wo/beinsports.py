@@ -108,25 +108,29 @@ def list_videos(plugin, item_id, category_url, **kwargs):
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser['hydra:member']:
-        video_title = video_datas['headline']
-        video_id = video_datas['media'][0]['media']['context']['private_id']
-        video_image = video_datas['media'][0]['media']['context'][
-            'thumbnail_url']
+        if video_datas['media'][0]['media'] is not None:
+            video_title = video_datas['headline']
+            video_id = video_datas['media'][0]['media']['context'][
+                'private_id']
+            video_image = video_datas['media'][0]['media']['context'][
+                'thumbnail_url']
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = video_image
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
-                          video_id=video_id)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
-    yield Listitem.next_page(item_id=item_id,
-                             category_url=URL_API_ROOT +
-                             json_parser["hydra:nextPage"])
+    yield Listitem.next_page(
+        item_id=item_id,
+        category_url=URL_API_ROOT + json_parser["hydra:nextPage"])
+
 
 
 @Resolver.register

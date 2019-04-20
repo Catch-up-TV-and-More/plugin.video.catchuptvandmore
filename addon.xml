@@ -60,6 +60,7 @@
 [Fix] Catch-up TV - TVM3 (CH) - bypass videos program without video_id
 [Python2/3] Fix if condition for Live TV - 日テレ News24 (JP)
 [Fix] Catch-up TV - Lequipe TV (FR) - Remove Date (format change all the times)
+[Fix] Catch-up TV - BeinSport (WO) - bypass videos program without video_id
     </news>
     <assets>
       <icon>icon.png</icon>
