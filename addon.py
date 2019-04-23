@@ -158,50 +158,57 @@ def generic_menu(plugin, **kwargs):
     Build a generic addon menu
     with all not hidden items
     """
-
     menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
+    items = []
 
     if not menu:
         # If the selected menu is empty just reload the current menu
-        yield False
+        return False
 
-    for index, (item_order, item_id, item_infos) in enumerate(menu):
+    else:
+        for index, (item_order, item_id, item_infos) in enumerate(menu):
 
-        item = Listitem()
+            item = Listitem()
 
-        # Set item label
-        item.label = get_item_label(item_id)
+            # Set item label
+            item.label = get_item_label(item_id)
 
-        # Set item art
-        if 'thumb' in item_infos:
-            item.art["thumb"] = common.get_item_media_path(item_infos['thumb'])
+            # Set item art
+            if 'thumb' in item_infos:
+                item.art["thumb"] = common.get_item_media_path(item_infos['thumb'])
 
-        if 'fanart' in item_infos:
-            item.art["fanart"] = common.get_item_media_path(
-                item_infos['fanart'])
+            if 'fanart' in item_infos:
+                item.art["fanart"] = common.get_item_media_path(
+                    item_infos['fanart'])
 
-        # Set item params
-        # If this item requires a module to work, get
-        # the module path to be loaded
-        if 'module' in item_infos:
-            item.params['item_module'] = item_infos['module']
+            # Set item params
+            # If this item requires a module to work, get
+            # the module path to be loaded
+            if 'module' in item_infos:
+                item.params['item_module'] = item_infos['module']
 
-        item.params['item_id'] = item_id
-        item.params['item_dict'] = item2dict(item)
+            item.params['item_id'] = item_id
+            item.params['item_dict'] = item2dict(item)
 
-        # Get the next action to trigger if this
-        # item will be selected by the user
-        item.set_callback(eval(item_infos['callback']))
+            # Get the next action to trigger if this
+            # item will be selected by the user
+            item_callback = eval(item_infos['callback'])
+            item.set_callback(item_callback)
 
-        add_context_menus_to_item(plugin,
-                                  item,
-                                  index,
-                                  menu_id,
-                                  len(menu),
-                                  item_infos=item_infos)
+            add_context_menus_to_item(plugin,
+                                      item,
+                                      index,
+                                      menu_id,
+                                      len(menu),
+                                      item_infos=item_infos)
 
-        yield item
+            if len(menu) == 1:
+                return item_callback(plugin, **(item.params))
+            else:
+                items.append(item)
+
+        return items
 
 
 @Route.register
