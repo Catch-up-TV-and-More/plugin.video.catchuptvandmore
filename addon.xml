@@ -64,6 +64,7 @@
 [Fix] Catch-up TV - Rai Play (IT) - Video without video duration
 [Fix] Catch-up TV - ICI Télé (CA)
 [Add] Live TV - 株式会社ウェザーニューズ (JP)
+[Improvement] If only one item in the menu, directly open this item
     </news>
     <assets>
       <icon>icon.png</icon>
