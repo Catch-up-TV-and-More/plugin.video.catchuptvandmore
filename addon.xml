@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.6~beta10"
+       version="0.2.6~beta11"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -63,6 +63,7 @@
 [Fix] Catch-up TV - BeinSport (WO) - bypass videos program without video_id
 [Fix] Catch-up TV - Rai Play (IT) - Video without video duration
 [Fix] Catch-up TV - ICI Télé (CA)
+[Add] Live TV - 株式会社ウェザーニューズ (JP)
     </news>
     <assets>
       <icon>icon.png</icon>

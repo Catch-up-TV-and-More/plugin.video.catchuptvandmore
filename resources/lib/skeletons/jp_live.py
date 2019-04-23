@@ -48,5 +48,11 @@ menu = {
         'thumb': 'channels/jp/ntvnews24.png',
         'fanart': 'channels/jp/ntvnews24_fanart.jpg',
         'module': 'resources.lib.channels.jp.ntvnews24'
+    },
+    'weathernewsjp': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/jp/weathernewsjp.png',
+        'fanart': 'channels/jp/weathernewsjp_fanart.jpg',
+        'module': 'resources.lib.channels.jp.weathernewsjp'
     }
 }

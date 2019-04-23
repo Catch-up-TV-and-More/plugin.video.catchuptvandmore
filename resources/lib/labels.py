@@ -631,6 +631,8 @@ LABELS = {
     'ジャパネットチャンネルDX',
     'ktv':
     '関西テレビ',
+    'weathernewsjp':
+    '株式会社ウェザーニューズ',
 
     # United Kingdom channels / live TV
     'blaze':
