@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.6~beta11"
+       version="0.2.6~beta12"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -65,6 +65,7 @@
 [Fix] Catch-up TV - ICI Télé (CA)
 [Add] Live TV - 株式会社ウェザーニューズ (JP)
 [Improvement] If only one item in the menu, directly open this item
+[Fix] Live TV - Télé-Quebec (CA)
     </news>
     <assets>
       <icon>icon.png</icon>
