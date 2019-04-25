@@ -768,6 +768,9 @@
 
             <setting label="Télé-Mag" type="bool" id="telemag" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="telemag.order" default="9"/>
+
+            <setting label="NOOVO" type="bool" id="noovo" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="noovo.order" default="10"/>
         <!-- Canada -->
 
 

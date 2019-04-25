@@ -78,5 +78,11 @@ menu = {
         'thumb': 'channels/ca/telemag.png',
         'fanart': 'channels/ca/telemag_fanart.jpg',
         'module': 'resources.lib.channels.ca.telemag'
+    },
+    'noovo': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/ca/noovo.png',
+        'fanart': 'channels/ca/noovo_fanart.jpg',
+        'module': 'resources.lib.channels.ca.noovo'
     }
 }

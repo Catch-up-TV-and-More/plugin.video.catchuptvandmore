@@ -392,6 +392,8 @@ LABELS = {
     'ICI Tou.tv',
     'telemag':
     'Télé-Mag',
+    'noovo':
+    'NOOVO',
 
     # Switzerland channels / live TV
     'rts':

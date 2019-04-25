@@ -67,6 +67,7 @@
 [Improvement] If only one item in the menu, directly open this item
 [Fix] Live TV - Télé-Quebec (CA)
 [Fix] Catch-up TV - TVA (CA)
+[Add] Catch-up TV - NOOVO (CA)
     </news>
     <assets>
       <icon>icon.png</icon>
