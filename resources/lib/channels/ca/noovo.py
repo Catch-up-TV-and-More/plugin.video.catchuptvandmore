@@ -45,7 +45,9 @@ URL_ROOT = 'https://noovo.ca'
 URL_EMISSIONS = URL_ROOT + '/emissions'
 
 URL_VIDEOS = 'https://noovo.ca/index.php/actions/noovo/show/getPaginatedEpisodes/p%s?seasonId=%s'
+
 # Page, SeasonId
+
 
 def replay_entry(plugin, item_id, **kwargs):
     """
@@ -71,9 +73,8 @@ def list_programs(plugin, item_id, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art["thumb"] = program_image
-        item.set_callback(list_seasons,
-                        item_id=item_id,
-                        program_url=program_url)
+        item.set_callback(
+            list_seasons, item_id=item_id, program_url=program_url)
         item_post_treatment(item)
         yield item
 
@@ -93,10 +94,8 @@ def list_seasons(plugin, item_id, program_url, **kwargs):
             item = Listitem()
             item.label = season_title
 
-            item.set_callback(list_videos,
-                            item_id=item_id,
-                            season_url=season_url,
-                            page='1')
+            item.set_callback(
+                list_videos, item_id=item_id, season_url=season_url, page='1')
             item_post_treatment(item)
             yield item
 
@@ -105,8 +104,7 @@ def list_seasons(plugin, item_id, program_url, **kwargs):
 def list_videos(plugin, item_id, season_url, page, **kwargs):
 
     resp = urlquick.get(season_url)
-    list_season_id = re.compile(
-        r'\?seasonId\=(.*?)\"').findall(resp.text)
+    list_season_id = re.compile(r'\?seasonId\=(.*?)\"').findall(resp.text)
 
     if len(list_season_id) > 0:
         resp2 = urlquick.get(URL_VIDEOS % (page, list_season_id[0]))
@@ -114,12 +112,15 @@ def list_videos(plugin, item_id, season_url, page, **kwargs):
     else:
         root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='card card--video card--sm u-shadow-1']"):
+    for video_datas in root.iterfind(
+            ".//div[@class='card card--video card--sm u-shadow-1']"):
         video_title = video_datas.find(".//img").get('alt')
         video_image = video_datas.find(".//img").get('src')
         video_plot = ''
-        if video_datas.find(".//p[@class='card__description']").find(".//p") is not None:
-            video_plot = video_datas.find(".//p[@class='card__description']").find(".//p").text
+        if video_datas.find(".//p[@class='card__description']").find(
+                ".//p") is not None:
+            video_plot = video_datas.find(
+                ".//p[@class='card__description']").find(".//p").text
         video_url = video_datas.find(".//a").get('href')
         video_date = video_datas.find(".//time").text
         video_duration = 0
@@ -131,16 +132,17 @@ def list_videos(plugin, item_id, season_url, page, **kwargs):
         item.info['duration'] = video_duration
         item.info.date(video_date, "%Y-%m-%d")
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_url=video_url,
-                          video_label=LABELS[item_id] + ' - ' + item.label)
+        item.set_callback(
+            get_video_url,
+            item_id=item_id,
+            video_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(item_id=item_id,
-                             season_url=season_url,
-                             page=str(int(page) + 1))
+    if len(list_season_id) > 0:
+        yield Listitem.next_page(
+            item_id=item_id, season_url=season_url, page=str(int(page) + 1))
 
 
 @Resolver.register
@@ -151,15 +153,12 @@ def get_video_url(plugin,
                   video_label=None,
                   **kwargs):
 
-    resp = urlquick.get(video_url,
-                        headers={'User-Agent': web_utils.get_random_ua},
-                        max_age=-1)
-    data_account = re.compile(
-        r'data-account\=\"(.*?)\"').findall(resp.text)[0]
-    data_player = re.compile(
-        r'data-player\=\"(.*?)\"').findall(resp.text)[0]
-    data_video_id = re.compile(
-        r'data-video-id\=\"(.*?)\"').findall(resp.text)[0]
+    resp = urlquick.get(
+        video_url, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+    data_account = re.compile(r'data-account\=\"(.*?)\"').findall(resp.text)[0]
+    data_player = re.compile(r'data-player\=\"(.*?)\"').findall(resp.text)[0]
+    data_video_id = re.compile(r'data-video-id\=\"(.*?)\"').findall(
+        resp.text)[0]
     return resolver_proxy.get_brightcove_video_json(plugin, data_account,
                                                     data_player, data_video_id,
                                                     download_mode, video_label)
