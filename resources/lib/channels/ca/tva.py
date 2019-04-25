@@ -88,18 +88,23 @@ def list_programs(plugin, item_id, **kwargs):
 
     for program_datas in json_parser['items']:
         program_title = json_parser['items'][str(
-            program_datas)]["content"]["attributes"]["title"]
+            program_datas)]["content"]["attributes"]["name"].replace(
+                ' - Navigation', '')
         program_image = json_parser['items'][str(
             program_datas)]["content"]["attributes"]["image-landscape-medium"]
-        program_url = URL_ROOT + '/page/' + json_parser['items'][str(
-            program_datas)]["content"]["attributes"]["pageId"]
+        program_url = None
+        if 'pageId' in json_parser['items'][str(
+            program_datas)]["content"]["attributes"]:
+            program_url = URL_ROOT + '/page/' + json_parser['items'][str(
+                program_datas)]["content"]["attributes"]["pageId"]
 
-        item = Listitem()
-        item.label = program_title
-        item.art['thumb'] = program_image
-        item.set_callback(list_videos, item_id=item_id, next_url=program_url)
-        item_post_treatment(item)
-        yield item
+        if program_url is not None:
+            item = Listitem()
+            item.label = program_title
+            item.art['thumb'] = program_image
+            item.set_callback(list_videos, item_id=item_id, next_url=program_url)
+            item_post_treatment(item)
+            yield item
 
 
 @Route.register
