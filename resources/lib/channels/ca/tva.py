@@ -129,10 +129,10 @@ def list_videos(plugin, item_id, next_url, **kwargs):
                 video_plot = json_parser['items'][str(
                     video_datas)]["content"]["attributes"]["description"]
             video_image = ''
-            if 'image-landscape-medium' in json_parser['items'][str(
+            if 'image-background' in json_parser['items'][str(
                     video_datas)]["content"]["attributes"]:
                 video_image = json_parser['items'][str(video_datas)][
-                    "content"]["attributes"]["image-landscape-medium"]
+                    "content"]["attributes"]["image-background"]
             video_id = json_parser['items'][str(
                 video_datas)]["content"]["attributes"]["assetId"]
 
