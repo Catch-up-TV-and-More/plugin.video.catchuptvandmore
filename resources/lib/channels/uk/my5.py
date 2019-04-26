@@ -56,6 +56,7 @@ URL_VIDEOS = URL_ROOT + "/isl/api/v1/dataservice/Items('%s')/ChildItems?$expand=
 URL_VIDEO_DATAS = URL_ROOT + "/isl/api/v1/dataservice/Items('%s')?$expand=Offers,Metadata,Images,Rating,Trailers,Trailers/Images&$select=CustomId,Id,Title&device=my5desktop&$format=json"
 
 URL_IMAGES = URL_ROOT + "/isl/api/v1/dataservice/ResizeImage/$value?ImageId='%s'&EntityId='%s'&EntityType='Item'"
+
 #ImageId, EntityId
 
 
@@ -155,10 +156,11 @@ def list_videos(plugin, item_id, season_id, **kwargs):
 @Resolver.register
 def get_video_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_VIDEO_DATAS % video_id)
-    json_parser = json.loads(resp.text)
+    # TO UNCOMMENT
+    # resp = urlquick.get(URL_VIDEO_DATAS % video_id)
+    # json_parser = json.loads(resp.text)
 
-    stream_id = json_parser["CustomId"]
+    # stream_id = json_parser["CustomId"]
 
     return False
     # TODO get information of MPD and DRM
@@ -172,7 +174,7 @@ def get_video_url(plugin, item_id, video_id, item_dict, **kwargs):
     # Subtitle
     # https://akasubs.akamaized.net/webvtt/C5266140007/C5266140007A.vtt
     # StreamId + StreamId+"A"
-    
+
     # Stream video
     # https://akadash0.akamaized.net/cenc/C5266140007/C5266140007A/20190423155330/C5266140007A.mpd
     # StreamId + StreamId+"A"
