@@ -673,6 +673,8 @@ LABELS = {
     'Box Hits',
     'uktvplay':
     'UKTV Play',
+    'fiveusa':
+    '5USA',
 
     # International channels / live TV
     'tv5mondeafrique':

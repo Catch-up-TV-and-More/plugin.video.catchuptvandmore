@@ -257,6 +257,9 @@
 
             <setting label="Quest Red" type="bool" id="questred" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="questred.order" default="19"/>
+
+            <setting label="5USA" type="bool" id="fiveusa" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="fiveusa.order" default="20"/>
         <!-- United Kingdom -->
 
 

@@ -73,4 +73,11 @@ menu = {
         'fanart': 'channels/uk/uktvplay_fanart.jpg',
         'module': 'resources.lib.channels.uk.uktvplay'
     }
+    # ,
+    # 'fiveusa': {
+    #     'callback': 'replay_bridge',
+    #     'thumb': 'channels/uk/fiveusa.png',
+    #     'fanart': 'channels/uk/fiveusa_fanart.jpg',
+    #     'module': 'resources.lib.channels.uk.my5'
+    # }
 }
