@@ -161,21 +161,25 @@ def get_video_url(plugin, item_id, video_id, item_dict, **kwargs):
     stream_id = json_parser["CustomId"]
 
     return False
-    # TODO get information of MPD probably protected by DRM
+    # TODO get information of MPD and DRM
 
     # https://cassie.channel5.com/api/v2/media/my5desktop/C5266140007.json?timestamp=1556276765&auth=T94kIINU2_4yHswfsXfzzyD6IYjCOGr8DvLXQ_q1QkQ
     # StreamId C5266140007
-    # Generate timestamp
-    # Find Auth
+    # Get/Generate timestamp
+    # Get/Generate Auth
+    # Try to understand the response (maybe cypher) - already test to decode base64
 
+    # Subtitle
     # https://akasubs.akamaized.net/webvtt/C5266140007/C5266140007A.vtt
     # StreamId + StreamId+"A"
     
+    # Stream video
     # https://akadash0.akamaized.net/cenc/C5266140007/C5266140007A/20190423155330/C5266140007A.mpd
     # StreamId + StreamId+"A"
-    # Find the value (20190423155330)
+    # Get/Generate the value (20190423155330)
 
+    # DRM Licence
     # https://cassie.channel5.com/api/v2/licences/widevine/75/C5266140007?expiry=1556363165&tag=66616664383363653633396536393661366238333864333036396435306664343639306139303930
     # StreamId
-    # Generate Expiry
-    # Get Tag
+    # Get/Generate Expiry
+    # Get/Generate Tag
