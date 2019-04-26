@@ -199,8 +199,7 @@ def list_videos(plugin, item_id, program_id, program_season_number, **kwargs):
                     program_season_number)]:
                 at_least_one_item = True
                 video_title = video_datas["title"]
-                video_duration = int(
-                    str(int(video_datas["videoDuration"]) / 1000))
+                video_duration = int(video_datas["videoDuration"]) / 1000
                 video_plot = video_datas["description"]
                 video_image = video_datas["image"]["src"]
                 video_id = video_datas["path"]
