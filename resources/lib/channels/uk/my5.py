@@ -42,10 +42,10 @@ URL_ROOT = 'https://d349g9zuie06uo.cloudfront.net'
 URL_LIST_CHANNELS = URL_ROOT + '/isl/api/v1/dataservice/SiteMap?device=my5desktop&$format=json'
 
 URL_LIST_ITEMS_OF_CHANNEL = URL_ROOT + "/isl/api/v1/dataservice/Pages('%s')?device=my5desktop&$format=json"
-#channelId
+# channelId
 
 URL_PROGRAMS = URL_ROOT + "/isl/api/v1/dataservice/ItemLists('%s')/Items?$expand=Metadata,Images,Ratings,Offers&$select=Slug,CustomId,Id,Title,ShortTitle,ShortDescription,CreatedDate,Images/Id,Images/ImageClass&device=my5desktop&$inlinecount=allpages&$format=json"
-#ListItemId
+# ListItemId
 
 URL_SEASONS = URL_ROOT + "/isl/api/v1/dataservice/Items('%s')/ChildItems?$expand=Metadata,Images,Ratings,Offers&$select=Slug,CustomId,Id,Title,ShortTitle,ShortDescription,ItemType,ParentId,CreatedDate&device=my5desktop&$format=json"
 # ProgramId
@@ -56,8 +56,7 @@ URL_VIDEOS = URL_ROOT + "/isl/api/v1/dataservice/Items('%s')/ChildItems?$expand=
 URL_VIDEO_DATAS = URL_ROOT + "/isl/api/v1/dataservice/Items('%s')?$expand=Offers,Metadata,Images,Rating,Trailers,Trailers/Images&$select=CustomId,Id,Title&device=my5desktop&$format=json"
 
 URL_IMAGES = URL_ROOT + "/isl/api/v1/dataservice/ResizeImage/$value?ImageId='%s'&EntityId='%s'&EntityType='Item'"
-
-#ImageId, EntityId
+# ImageId, EntityId
 
 
 def replay_entry(plugin, item_id, **kwargs):
