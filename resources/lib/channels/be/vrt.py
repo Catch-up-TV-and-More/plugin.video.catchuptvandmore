@@ -118,7 +118,7 @@ def list_programs(plugin, item_id, root_url, **kwargs):
     for program_datas in root.iterfind(".//a[@class='nui-tile']"):
         program_title = program_datas.find('.//h3').text.strip()
         program_image = 'https:' + program_datas.find('.//img').get(
-            'srcset').split('1x')[0].strip()
+            'data-responsive-image')
         program_url = URL_ROOT + program_datas.get('href')
 
         item = Listitem()
@@ -135,12 +135,11 @@ def list_categories(plugin, item_id, root_url, **kwargs):
     resp = urlquick.get(root_url, max_age=-1)
     root = resp.parse()
 
-    for category_datas in root.iterfind(".//div[@class='page-category page']"):
-        category_title = category_datas.find('.//h2').text.strip()
+    for category_datas in root.iterfind(".//a[@class='nui-tile']"):
+        category_title = category_datas.find('.//h3').text.strip()
         category_image = 'https:' + category_datas.find(
-            ".//div[@class='nui-tile--image nui-responsive-image']").get(
-                'data-responsive-image')
-        category_url = URL_ROOT + category_datas.find('.//a').get('href')
+            ".//img").get('data-responsive-image')
+        category_url = URL_ROOT + category_datas.get('href')
 
         item = Listitem()
         item.label = category_title

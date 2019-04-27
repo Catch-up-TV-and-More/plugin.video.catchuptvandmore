@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.6~beta14"
+       version="0.2.6~beta15"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -69,6 +69,7 @@
 [Fix] Catch-up TV - TVA (CA)
 [Add] Catch-up TV - NOOVO (CA)
 [Python2/3] Add compatibility for Catch-up TV - Quest OD (UK) - remove double cast
+[Fix] Catch-up TV - VRT NU (BE)
     </news>
     <assets>
       <icon>icon.png</icon>
