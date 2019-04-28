@@ -258,7 +258,8 @@
             <setting label="Quest Red" type="bool" id="questred" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="questred.order" default="19"/>
 
-            <setting label="5USA" type="bool" id="fiveusa" default="true" visible="eq(-39,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="5USA" type="bool" id="fiveusa" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="fiveusa.order" default="20"/>
         <!-- United Kingdom -->
 
@@ -406,7 +407,7 @@
             <setting label="TV Com" type="bool" id="tvcom" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="tvcom.order" default="19"/>
 
-            <setting label="CanalC" type="bool" id="canalc" default="true" visible="eq(-39,true)"/>
+            <setting label="Canal C" type="bool" id="canalc" default="true" visible="eq(-39,true)"/>
             <setting label="" type="number" visible="false" id="canalc.order" default="20"/>
         <!-- Belgium -->
 
@@ -801,7 +802,8 @@
         <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="" type="bool" id="pl" default="true" visible="false"/>
 
-            <setting label="TVP" type="bool" id="tvp" default="true" visible="eq(-1,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="TVP" type="bool" id="tvp" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="tvp.order" default="1"/>
 
             <setting label="TVP 3" type="bool" id="tvp3" default="true" visible="eq(-3,true)"/>
@@ -962,7 +964,8 @@
             <setting label="NPO Politiek" type="bool" id="npo-politiek" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="npo-politiek.order" default="8"/>
 
-            <setting label="NPO Start" type="bool" id="npo-start" default="true" visible="eq(-17,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="NPO Start" type="bool" id="npo-start" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="npo-start.order" default="9"/>
 
             <setting label="AT5" type="bool" id="at5" default="true" visible="eq(-19,true)"/>

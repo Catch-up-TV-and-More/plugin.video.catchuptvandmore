@@ -373,7 +373,7 @@ LABELS = {
     'tvcom':
     'TV Com',
     'canalc':
-    'CanalC',
+    'Canal C',
 
     # Canadian channels / live TV
     'tv5':
