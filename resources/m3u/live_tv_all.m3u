@@ -503,9 +503,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=contact&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/rtlsport.png" group-title="Belgium",RTL Sport
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl_sport&item_module=resources.lib.channels.be.rtlplaybe&item_dict={}
 
-##	CanalC
+##	Canal C
 ##	canalc
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/canalc.png" group-title="Belgium",CanalC
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/canalc.png" group-title="Belgium",Canal C
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=canalc&item_module=resources.lib.channels.be.canalc&item_dict={}
 
 

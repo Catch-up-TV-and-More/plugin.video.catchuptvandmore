@@ -5,7 +5,7 @@ python:
 
 install:
   # Install dependencies
-  - pip install flake8 urlquick polib mock htmlement colorama requests youtube_dl
+  - pip install flake8 git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
   - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
 
 env:
