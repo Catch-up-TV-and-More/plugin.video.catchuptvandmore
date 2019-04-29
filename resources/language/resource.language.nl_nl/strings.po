@@ -590,6 +590,9 @@ msgctxt "#30720"
 msgid "Kodi 17.6 or > is required"
 msgstr "Kodi 17.6 of > is vereist"
 
+msgctxt "#30721"
+msgid "Content requiring a subscription"
+msgstr ""
 
 # Favourites (from 30800 to 30859)
 

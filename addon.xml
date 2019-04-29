@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.7~beta0"
+       version="0.2.7~beta01"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -38,6 +38,7 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.2.7]
+[Improvements] Update message of content requiring a subscription for Catch-up TV - 6play (FR) and RTLPlay (BE)
     </news>
     <assets>
       <icon>icon.png</icon>
