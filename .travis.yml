@@ -1,0 +1,44 @@
+language: python
+
+python:
+  - "3.6"
+
+install:
+  # Install dependencies
+  - pip install flake8 urlquick polib mock htmlement colorama requests youtube_dl
+  - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
+
+env:
+  - JOB=flake
+  # - JOB=simul_root
+  # - JOB=simul_replay
+  # - JOB=simul_replay_country
+  # - JOB=simul_replay_french
+  # - JOB=simul_replay_french_depth
+  - JOB=replay_random_channel_1
+  - JOB=replay_random_channel_2
+  - JOB=replay_random_channel_3
+  - JOB=replay_random_channel_4
+
+script:
+  - if [ $JOB == 'flake' ]; then flake8 .; fi
+  # - if [ $JOB == 'simul_root' ]; then cd ../simul && ./main.py -c configs/0_open_root_and_exit.json &> "${JOB}.log"; fi
+  # - if [ $JOB == 'simul_replay' ]; then cd ../simul && ./main.py -c configs/1_open_replay_menu_and_exit.json &> "${JOB}.log"; fi
+  # - if [ $JOB == 'simul_replay_country' ]; then cd ../simul && ./main.py -c configs/2_open_each_replay_country_root_menu_and_exit.json &> ${JOB}.log; fi
+  # - if [ $JOB == 'simul_replay_french' ]; then cd ../simul && ./main.py -c configs/3_open_each_french_replay_channel_menu_and_exit.json &> "${JOB}.log"; fi
+  # - if [ $JOB == 'simul_replay_french_depth' ]; then cd ../simul && ./main.py -c configs/4_open_each_french_replay_channel_in_depth.json &> ${JOB}.log; fi
+  - if [ $JOB == 'replay_random_channel_1' ]; then cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> ${JOB}.log; fi
+  - if [ $JOB == 'replay_random_channel_2' ]; then cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> ${JOB}.log; fi
+  - if [ $JOB == 'replay_random_channel_3' ]; then cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> ${JOB}.log; fi
+  - if [ $JOB == 'replay_random_channel_4' ]; then cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> ${JOB}.log; fi
+
+# We upload the log in hastebin and print the log URL
+#after_failure:
+after_script:
+  #- curl -L https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/raw/master/utils/haste > haste_${JOB} && chmod 755 haste_${JOB} && echo "* Truncated log file can be found here:" && tail -n 3000 ${JOB}.log|./haste_${JOB}
+  - if [ $JOB != 'flake' ]; then tail -n 1000 ${JOB}.log; fi
+
+notifications:
+  email:
+    on_success: always
+    on_failure: always

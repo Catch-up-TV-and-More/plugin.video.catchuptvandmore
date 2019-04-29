@@ -33,7 +33,11 @@ import pytz
 import hashlib
 import hmac
 import re
-import urllib
+# Working for Python 2/3
+try:
+    import urllib.parse as urllib
+except ImportError:
+    import urllib
 import datetime
 import time
 from resources.lib.tzlocal import get_localzone
@@ -140,7 +144,7 @@ class TeleramaXMLTVGrabber:
     }
 
     def __init__(self):
-        self.CHANNELS_ID = {v: k for k, v in self.ID_CHANNELS.iteritems()}
+        self.CHANNELS_ID = {v: k for k, v in self.ID_CHANNELS.items()}
 
     def _fix_xml_unicode_string(self, text):
         """Replace in a string all Windows-1252 specific chars to UTF-8 and delete non
@@ -161,33 +165,30 @@ class TeleramaXMLTVGrabber:
         # Horaire
         try:
             local_tz = get_localzone()
-        except:
+        except Exception:
             # Hotfix issue #102
             local_tz = pytz.timezone('Europe/Paris')
 
         start_s = program['horaire']['debut']
         try:
-            start = datetime.datetime.strptime(
-                start_s,
-                self._TELERAMA_TIME_FORMAT)
+            start = datetime.datetime.strptime(start_s,
+                                               self._TELERAMA_TIME_FORMAT)
         except TypeError:
-            start = datetime.datetime(*(time.strptime(
-                start_s, self._TELERAMA_TIME_FORMAT)[0:6]))
+            start = datetime.datetime(*(
+                time.strptime(start_s, self._TELERAMA_TIME_FORMAT)[0:6]))
 
         start = self._TELERAMA_TIMEZONE.localize(start)
         start = start.astimezone(local_tz)
         final_start_s = start.strftime("%Hh%M")
         program_dict['start_time'] = final_start_s
 
-
         stop_s = program['horaire']['fin']
         try:
-            stop = datetime.datetime.strptime(
-                stop_s,
-                self._TELERAMA_TIME_FORMAT)
+            stop = datetime.datetime.strptime(stop_s,
+                                              self._TELERAMA_TIME_FORMAT)
         except TypeError:
-            stop = datetime.datetime(*(time.strptime(
-                stop_s, self._TELERAMA_TIME_FORMAT)[0:6]))
+            stop = datetime.datetime(*(
+                time.strptime(stop_s, self._TELERAMA_TIME_FORMAT)[0:6]))
 
         stop = self._TELERAMA_TIMEZONE.localize(stop)
         stop = stop.astimezone(local_tz)
@@ -243,7 +244,8 @@ class TeleramaXMLTVGrabber:
         stereo = None
         if program['flags']['est_dolby']:
             stereo = 'dolby'
-        elif program['flags']['est_stereoar16x9'] or program['flags']['est_stereo']:
+        elif program['flags']['est_stereoar16x9'] or program['flags'][
+                'est_stereo']:
             stereo = 'stereo'
         elif program['flags']['est_vm']:
             stereo = 'bilingual'
@@ -283,22 +285,19 @@ class TeleramaXMLTVGrabber:
         updated_query['appareil'] = self._API_DEVICE
         signing_string = procedure + ''.join(
             sorted([k + str(v) for k, v in updated_query.items()]))
-        signature = hmac.new(
-            self._API_SECRET.encode(),
-            signing_string.encode(),
-            hashlib.sha1).hexdigest()
+        signature = hmac.new(self._API_SECRET.encode(),
+                             signing_string.encode(),
+                             hashlib.sha1).hexdigest()
         updated_query['api_signature'] = signature
         updated_query['api_cle'] = self._API_KEY
 
-        url = '{}{}?{}'.format(
-            self._API_URL, procedure, urllib.urlencode(updated_query))
+        url = '{}{}?{}'.format(self._API_URL, procedure,
+                               urllib.urlencode(updated_query))
 
         # print('Retrieving URL %s', url)
-        return urlquick.get(
-            url,
-            headers={'User-agent': self._API_USER_AGENT},
-            max_age=-1)
-
+        return urlquick.get(url,
+                            headers={'User-agent': self._API_USER_AGENT},
+                            max_age=-1)
         '''
         with requests.Session() as session:
             response = session.get(
@@ -322,8 +321,7 @@ class TeleramaXMLTVGrabber:
                 '/v1/programmes/maintenant',
                 id_chaines=','.join(str(i) for i in telerama_ids),
                 page=page,
-                nb_par_page=self._MAX_PROGRAMS_PER_PAGE
-            )
+                nb_par_page=self._MAX_PROGRAMS_PER_PAGE)
             try:
                 data = response.json()
                 if response.status_code == 200:
@@ -350,7 +348,8 @@ class TeleramaXMLTVGrabber:
         programs = {}
         for program in self._get_current_programs(channels):
             program_dict = self._parse_program_dict(program)
-            programs[self.ID_CHANNELS[program_dict['id_chaine']]] = program_dict
+            programs[self.ID_CHANNELS[
+                program_dict['id_chaine']]] = program_dict
 
         return programs
 
@@ -366,8 +365,6 @@ if __name__ == '__main__':
     channels = ['france2', 'm6', 'w9', 'test_channel_no_present']
 
     programs = grab_tv_guide(channels)
-
-
 '''
 Telerama ID
 

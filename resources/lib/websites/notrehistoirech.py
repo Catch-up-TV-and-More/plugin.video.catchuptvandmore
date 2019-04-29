@@ -24,6 +24,7 @@ from codequick import Route, Resolver, Listitem
 
 from resources.lib.labels import LABELS
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
@@ -34,30 +35,29 @@ import urlquick
 URL_ROOT = 'http://www.notrehistoire.ch'
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     item = Listitem()
     item.label = plugin.localize(LABELS['All videos'])
     category_url = URL_ROOT + '/search?types=video&page=%s&sort=-origin_date'
 
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        category_url=category_url,
-        page=1
-    )
+    item.set_callback(list_videos,
+                      item_id=item_id,
+                      category_url=category_url,
+                      page=1)
+    item_post_treatment(item)
     yield item
 
-    resp = urlquick.get(
-        URL_ROOT + '/search?types=video')
-    root = resp.parse("div", attrs={"class": "facet-group facet-group--tags open"})
+    resp = urlquick.get(URL_ROOT + '/search?types=video')
+    root = resp.parse("div",
+                      attrs={"class": "facet-group facet-group--tags open"})
 
     for category in root.iterfind(".//label"):
         item = Listitem()
@@ -67,58 +67,51 @@ def root(plugin, item_id):
             '&tags=%s&sort=-origin_date' % category_id + \
             '&page=%s'
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url,
-            page=1)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url,
+                          page=1)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url, page):
+def list_videos(plugin, item_id, category_url, page, **kwargs):
     """Build videos listing"""
-    resp = urlquick.get(
-        category_url % page)
+    resp = urlquick.get(category_url % page)
     root = resp.parse()
 
     for episode in root.iterfind(".//div[@class='media-item']"):
         item = Listitem()
         item.label = episode.get('title')
         video_url = URL_ROOT + episode.find('.//a').get('href')
-        item.art['thumb'] = episode.find(
-            './/img').get('src')
+        item.art['thumb'] = episode.find('.//img').get('src')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     # More videos...
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=category_url,
-        page=page + 1)
+    yield Listitem.next_page(item_id=item_id,
+                             category_url=category_url,
+                             page=page + 1)
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
 
     video_html = urlquick.get(video_url).text
     video_url = re.compile(
-        r'property=\"og\:video\" content=\"(.*?)\"').findall(
-        video_html)[0]
+        r'property=\"og\:video\" content=\"(.*?)\"').findall(video_html)[0]
 
     if download_mode:
         return download.download_video(video_url, video_label)

@@ -30,10 +30,10 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import urlquick
-
 
 URL_ROOT = 'https://www3.nhk.or.jp/'
 
@@ -61,7 +61,7 @@ CORRECT_MONTH = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -69,7 +69,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -80,23 +80,20 @@ def list_categories(plugin, item_id):
     category_title = 'NHK ニュース'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos_news,
-        item_id=item_id,
-        page='1')
+    item.set_callback(list_videos_news, item_id=item_id, page='1')
+    item_post_treatment(item)
     yield item
 
     category_title = 'NHK ニュース - 気象'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos_weather,
-        item_id=item_id)
+    item.set_callback(list_videos_weather, item_id=item_id)
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_videos_weather(plugin, item_id):
+def list_videos_weather(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_WEATHER_NHK_NEWS)
     json_parser = json.loads(resp.text)
@@ -108,20 +105,25 @@ def list_videos_weather(plugin, item_id):
     item = Listitem()
     item.label = video_title
     item.art['thumb'] = video_image
-    item.set_callback(
-        get_video_weather_url,
-        item_id=item_id,
-        video_url=video_url)
+    item.set_callback(get_video_weather_url,
+                      item_id=item_id,
+                      video_label=LABELS[item_id] + ' - ' + item.label,
+                      video_url=video_url)
+    item_post_treatment(item, is_playable=True, is_downloadable=True)
     yield item
 
 
 @Resolver.register
-def get_video_weather_url(plugin, item_id, video_url, download_mode=False):
+def get_video_weather_url(plugin,
+                          item_id,
+                          video_url,
+                          download_mode=False,
+                          **kwargs):
     return video_url
 
 
 @Route.register
-def list_videos_news(plugin, item_id, page):
+def list_videos_news(plugin, item_id, page, **kwargs):
 
     list_videos_datas_url = ''
     if int(page) < 10:
@@ -158,29 +160,25 @@ def list_videos_news(plugin, item_id, page):
         item.info['duration'] = video_duration
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.context.script(
-            get_video_news_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_news_url,
-            item_id=item_id,
-            video_id=video_id,
-            video_date=video_date)
+        item.set_callback(get_video_news_url,
+                          item_id=item_id,
+                          video_id=video_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_date=video_date)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_news_url(
-        plugin, item_id, video_id, video_date, download_mode=False, video_label=None):
+def get_video_news_url(plugin,
+                       item_id,
+                       video_id,
+                       video_date,
+                       download_mode=False,
+                       video_label=None,
+                       **kwargs):
 
     resp = urlquick.get(URL_STREAM_NHK_NEWS % (video_date, video_id))
     json_parser = json.loads(resp.text)

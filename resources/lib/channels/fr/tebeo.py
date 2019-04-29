@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
@@ -45,7 +46,7 @@ URL_REPLAY = URL_ROOT + '/le-replay'
 URL_STREAM = URL_ROOT + '/player.php?idprogramme=%s'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -53,7 +54,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -70,22 +71,20 @@ def list_categories(plugin, item_id):
 
         item = Listitem()
         item.label = category_name
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url):
+def list_videos(plugin, item_id, category_url, **kwargs):
 
     resp = urlquick.get(category_url)
     root = resp.parse()
-    list_videos_datas = root.findall(
-        ".//div[@class='grid_8 replay']")
-    list_videos_datas += root.findall(
-        ".//div[@class='grid_4 replay']")
+    list_videos_datas = root.findall(".//div[@class='grid_8 replay']")
+    list_videos_datas += root.findall(".//div[@class='grid_4 replay']")
 
     for video_datas in list_videos_datas:
         video_title = video_datas.find('.//h3').text
@@ -98,47 +97,41 @@ def list_videos(plugin, item_id, category_url):
         item.art['thumb'] = video_image
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    video_id = re.compile(
-        r'idprogramme\=(.*?)\&autoplay').findall(resp.text)[0]
+    video_id = re.compile(r'idprogramme\=(.*?)\&autoplay').findall(
+        resp.text)[0]
     resp2 = urlquick.get(URL_STREAM % video_id)
 
-    final_url = 'https:' + re.compile(
-        r'source\: \"(.*?)\"').findall(resp2.text)[0]
-    
+    final_url = 'https:' + re.compile(r'source\: \"(.*?)\"').findall(
+        resp2.text)[0]
+
     if download_mode:
         return download.download_video(final_url, video_label)
     return final_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE, max_age=-1)
-    return re.compile(
-        r'source\: \"(.*?)\"').findall(
-            resp.text)[0]
+    resp = urlquick.get(URL_LIVE, max_age=-1)
+    return re.compile(r'source\: \"(.*?)\"').findall(resp.text)[0]

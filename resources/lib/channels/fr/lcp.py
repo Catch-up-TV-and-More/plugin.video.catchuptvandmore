@@ -32,6 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -44,7 +45,6 @@ import urlquick
 # Old : play1.qbrick.com
 # New : www.dailymotion.com
 
-
 URL_ROOT = 'http://www.lcp.fr'
 
 URL_LIVE_SITE = 'http://www.lcp.fr/le-direct'
@@ -52,7 +52,6 @@ URL_LIVE_SITE = 'http://www.lcp.fr/le-direct'
 URL_VIDEO_REPLAY = 'http://play1.qbrick.com/config/avp/v1/player/' \
                    'media/%s/darkmatter/%s/'
 # VideoID, AccountId
-
 
 CATEGORIES = {
     URL_ROOT + '/actualites': 'Actualités',
@@ -76,7 +75,7 @@ CORRECT_MONTH = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -84,7 +83,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -92,37 +91,37 @@ def list_categories(plugin, item_id):
     - Informations
     - ...
     """
-    for category_url, category_name in CATEGORIES.iteritems():
+    for category_url, category_name in CATEGORIES.items():
 
         if 'actualites' in category_url:
             item = Listitem()
             item.label = category_name
-            item.set_callback(
-                list_videos_actualites,
-                item_id=item_id,
-                next_url=category_url,
-                page='0')
+            item.set_callback(list_videos_actualites,
+                              item_id=item_id,
+                              next_url=category_url,
+                              page='0')
+            item_post_treatment(item)
             yield item
         if 'emissions' in category_url:
             item = Listitem()
             item.label = category_name
-            item.set_callback(
-                list_programs,
-                item_id=item_id,
-                next_url=category_url)
+            item.set_callback(list_programs,
+                              item_id=item_id,
+                              next_url=category_url)
+            item_post_treatment(item)
             yield item
         if 'documentaires' in category_url:
             item = Listitem()
             item.label = category_name
-            item.set_callback(
-                list_videos_documentaires,
-                item_id=item_id,
-                next_url=category_url)
+            item.set_callback(list_videos_documentaires,
+                              item_id=item_id,
+                              next_url=category_url)
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, next_url):
+def list_programs(plugin, item_id, next_url, **kwargs):
     """
     Build programs listing
     - Journal de 20H
@@ -139,26 +138,28 @@ def list_programs(plugin, item_id, next_url):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos_program,
-            item_id=item_id,
-            next_url=program_url,
-            page='0')
+        item.set_callback(list_videos_program,
+                          item_id=item_id,
+                          next_url=program_url,
+                          page='0')
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos_documentaires(plugin, item_id, next_url):
+def list_videos_documentaires(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='col-md-3 col-sm-6 col-xs-12']"):
+    for video_datas in root.iterfind(
+            ".//div[@class='col-md-3 col-sm-6 col-xs-12']"):
         video_title = video_datas.find(
             ".//span[@class='rdf-meta element-hidden']").get('content')
         video_image = video_datas.find('.//img').get('src')
-        video_duration = int(video_datas.find(
-            ".//div[@class='duration']").find('.//div').find('.//span').text) * 60
+        video_duration = int(
+            video_datas.find(".//div[@class='duration']").find('.//div').find(
+                './/span').text) * 60
         video_url = URL_ROOT + video_datas.find('.//a').get('href')
         date_value = video_datas.find(".//span[@class='date']").text
         date = date_value.split(' ')
@@ -176,23 +177,16 @@ def list_videos_documentaires(plugin, item_id, next_url):
         item.info['duration'] = video_duration
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Route.register
-def list_videos_actualites(plugin, item_id, next_url, page):
+def list_videos_actualites(plugin, item_id, next_url, page, **kwargs):
 
     if page == '0':
         videos_actualites_url = next_url
@@ -202,12 +196,15 @@ def list_videos_actualites(plugin, item_id, next_url, page):
     resp = urlquick.get(videos_actualites_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='col-md-6 col-sm-6 col-xs-12']"):
+    for video_datas in root.iterfind(
+            ".//div[@class='col-md-6 col-sm-6 col-xs-12']"):
         if len(video_datas.findall(".//svg[@class='icon icon-play2']")) > 0:
-            video_title = video_datas.find(".//span[@class='rdf-meta element-hidden']").get('content')
+            video_title = video_datas.find(
+                ".//span[@class='rdf-meta element-hidden']").get('content')
             video_image = video_datas.find('.//img').get('src')
             video_url = URL_ROOT + video_datas.find('.//a').get('href')
-            date_value = video_datas.find(".//div[@class='field field_submitted']").text
+            date_value = video_datas.find(
+                ".//div[@class='field field_submitted']").text
             date = date_value.split('/')
             date_value = date[2] + '-' + date[1] + '-' + date[0]
 
@@ -216,39 +213,31 @@ def list_videos_actualites(plugin, item_id, next_url, page):
             item.art['thumb'] = video_image
             item.info.date(date_value, '%Y-%m-%d')
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
-
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_url=video_url)
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        next_url=next_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             next_url=next_url,
+                             page=str(int(page) + 1))
 
 
 @Route.register
-def list_videos_program(plugin, item_id, next_url, page):
+def list_videos_program(plugin, item_id, next_url, page, **kwargs):
 
     # Cas emission (2 cas) (-0) ou (sans -0)
     # 1ère page http://www.lcp.fr/emissions/evenements/replay-0
-        # (url départ => http://www.lcp.fr/emissions/evenements-0)
-        # 1ère page http://www.lcp.fr/emissions/evenements/replay-0?page=1
-        # ainsi de suite
+    # (url départ => http://www.lcp.fr/emissions/evenements-0)
+    # 1ère page http://www.lcp.fr/emissions/evenements/replay-0?page=1
+    # ainsi de suite
     # 1ère page : http://www.lcp.fr/emissions/en-voiture-citoyens/replay
-        # (url départ => http://www.lcp.fr/emissions/en-voiture-citoyens)
+    # (url départ => http://www.lcp.fr/emissions/en-voiture-citoyens)
     # 2ème page :
-        # http://www.lcp.fr/emissions/en-voiture-citoyens/replay?page=1
-        # ainsi de suite
+    # http://www.lcp.fr/emissions/en-voiture-citoyens/replay?page=1
+    # ainsi de suite
     # TODO fix some cases http://www.lcp.fr/emissions/questions-au-gouvernement/replay-2 http://www.lcp.fr/emissions/questions-au-gouvernement-2
 
     if page == '0' and '-0' not in next_url:
@@ -263,13 +252,14 @@ def list_videos_program(plugin, item_id, next_url, page):
     resp = urlquick.get(video_program_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='col-md-3 col-sm-6 col-xs-12']"):
+    for video_datas in root.iterfind(
+            ".//div[@class='col-md-3 col-sm-6 col-xs-12']"):
         video_title = video_datas.find(
             ".//span[@class='rdf-meta element-hidden']").get('content')
         video_image = video_datas.find('.//img').get('src')
         video_duration = int(
-            video_datas.find(
-                ".//div[@class='duration']").find('.//div').find('.//span').text) * 60
+            video_datas.find(".//div[@class='duration']").find('.//div').find(
+                './/span').text) * 60
         video_url = URL_ROOT + video_datas.find('.//a').get('href')
         date_value = video_datas.find(".//span[@class='date']").text
         date = date_value.split(' ')
@@ -287,50 +277,45 @@ def list_videos_program(plugin, item_id, next_url, page):
         item.info['duration'] = video_duration
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        next_url=next_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             next_url=next_url,
+                             page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=False):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=False,
+                  **kwargs):
 
-    resp = urlquick.get(
-        video_url,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(video_url,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
 
     if 'dailymotion' in resp.text:
         video_id = re.compile(
             r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(
-            resp.text)[0]
-        return resolver_proxy.get_stream_dailymotion(
-            plugin, video_id, download_mode, video_label)
+                resp.text)[0]
+        return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                     download_mode,
+                                                     video_label)
     else:
         # get videoId and accountId
-        videoId, accountId = re.compile(
-            r'embed/(.*?)/(.*?)/').findall(resp.text)[0]
+        videoId, accountId = re.compile(r'embed/(.*?)/(.*?)/').findall(
+            resp.text)[0]
 
-        resp2 = urlquick.get(
-            URL_VIDEO_REPLAY % (videoId, accountId),
-            headers={'User-Agent': web_utils.get_random_ua},
-            max_age=-1)
+        resp2 = urlquick.get(URL_VIDEO_REPLAY % (videoId, accountId),
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
         json_parser = json.loads(
             re.compile(r'\((.*?)\);').findall(resp2.text)[0])
 
@@ -344,17 +329,16 @@ def get_video_url(
         return url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE_SITE,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(URL_LIVE_SITE,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     video_id = re.compile(
         r'www.dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
     return resolver_proxy.get_stream_dailymotion(plugin, video_id, False)

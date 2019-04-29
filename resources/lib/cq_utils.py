@@ -29,33 +29,52 @@ import xbmcgui
 import xbmc
 import sys
 
+try:
+    import urllib.parse as urlparse
+except ImportError:
+    # noinspection PyUnresolvedReferences
+    import urlparse
+
 from codequick import Script
 from resources.lib.labels import LABELS
 
+import pickle
+import binascii
 
-def item2dict(item):
-    item_dict = {}
-    item_dict['art'] = dict(item.art)
-    item_dict['info'] = dict(item.info)
-    item_dict['stream'] = dict(item.stream)
-    item_dict['context'] = dict(item.context)
-    item_dict['property'] = item.property
-    item_dict['params'] = item.params
-    item_dict['label'] = item.label
-    return item_dict
+PY3 = sys.version_info[0] >= 3
 
 
-def find_module_in_url(base_url):
+def build_kodi_url(route_path, raw_params):
+    # route_path: /resources/lib/channels/fr/mytf1/get_video_url/
+    # raw_params: params dict
+    if raw_params:
+        pickled = binascii.hexlify(
+            pickle.dumps(raw_params, protocol=pickle.HIGHEST_PROTOCOL))
+        query = "_pickle_={}".format(
+            pickled.decode("ascii") if PY3 else pickled)
+
+    # Build kodi url
+    return urlparse.urlunsplit(
+        ("plugin", "plugin.video.catchuptvandmore", route_path, query, ""))
+
+
+def get_module_in_url(base_url):
     # e.g. base_url = plugin://plugin.video.catchuptvandmore/resources/lib/websites/culturepub/list_shows
+    if 'resources' not in base_url:
+        return ''
+
+    # Remove last '/'
+    if base_url[-1] == '/':
+        base_url = base_url[:-1]
+
+    # Remove plugin_id
+    base_url = base_url.replace('plugin://plugin.video.catchuptvandmore/', '')
+
     base_url_l = base_url.split('/')
     module_l = []
-    addon_name_triggered = False
-    for name in base_url_l:
-        if addon_name_triggered:
-            module_l.append(name)
-            continue
-        if name == 'plugin.video.catchuptvandmore':
-            addon_name_triggered = True
+    for word in base_url_l:
+        module_l.append(word)
+
     module_l.pop()  # Pop the function name (e.g. list_shows)
     module = '.'.join(module_l)
     # Returned module: resources.lib.websites.culturepub
@@ -65,18 +84,18 @@ def find_module_in_url(base_url):
 def import_needed_module():
     # Import needed module according to the
     # base URL (Fix for Kodi favorite item)
-    module_to_import = find_module_in_url(sys.argv[0])
+    module_to_import = get_module_in_url(sys.argv[0])
+    if module_to_import == '':
+        # No additionnal module to load
+        return
+
+    # Need to load additional module
     try:
         importlib.import_module(module_to_import)
     except Exception:
-        pass
+        Script.log('[cq_utils.import_needed_module] Failed to import module ' +
+                   module_to_import)
 
-    module_to_load_2 = Script.setting['module_to_load']
-    if module_to_load_2 != '':
-        try:
-            importlib.import_module(module_to_load_2)
-        except Exception:
-            pass
     return
 
 

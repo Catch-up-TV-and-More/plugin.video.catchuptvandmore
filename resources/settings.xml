@@ -16,6 +16,9 @@
 
         <setting label="30032" type="bool" id="websites" default="true"/>
         <setting label="" type="number" visible="false" id="websites.order" default="3"/>
+
+        <setting label="30033" type="bool" id="favourites" default="true"/>
+        <setting label="" type="number" visible="false" id="favourites.order" default="4"/>
     </category>
     <!-- Main menu -->
 
@@ -254,6 +257,10 @@
 
             <setting label="Quest Red" type="bool" id="questred" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="questred.order" default="19"/>
+
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="5USA" type="bool" id="fiveusa" default="false" visible="false"/>
+            <setting label="" type="number" visible="false" id="fiveusa.order" default="20"/>
         <!-- United Kingdom -->
 
 
@@ -333,6 +340,9 @@
 
             <setting label="RT" type="bool" id="rt" default="true" visible="eq(-47,true)"/>
             <setting label="" type="number" visible="false" id="rt.order" default="24"/>
+
+            <setting label="Africa 24" type="bool" id="africa24" default="true" visible="eq(-49,true)"/>
+            <setting label="" type="number" visible="false" id="africa24.order" default="25"/>
         <!-- International -->
 
 
@@ -396,6 +406,9 @@
 
             <setting label="TV Com" type="bool" id="tvcom" default="true" visible="eq(-37,true)"/>
             <setting label="" type="number" visible="false" id="tvcom.order" default="19"/>
+
+            <setting label="Canal C" type="bool" id="canalc" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="canalc.order" default="20"/>
         <!-- Belgium -->
 
 
@@ -596,7 +609,8 @@
             <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
             <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
 
-            <setting label="Culturebox (francetv)" type="bool" id="culturebox" default="true" visible="eq(-125,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Culturebox (francetv)" type="bool" id="culturebox" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="culturebox.order" default="63"/>
 
             <setting label="KTO" type="bool" id="kto" default="true" visible="eq(-127,true)"/>
@@ -658,12 +672,21 @@
 
             <setting label="Lucky Jack" type="bool" id="luckyjack" default="true" visible="eq(-165,true)"/>
             <setting label="" type="number" visible="false" id="luckyjack.order" default="83"/>
-            
+
             <setting label="Mont Blanc Live TV" type="bool" id="mblivetv" default="true" visible="eq(-167,true)"/>
             <setting label="" type="number" visible="false" id="mblivetv.order" default="84"/>
-            
+
             <setting label="8 Mont-Blanc" type="bool" id="tv8montblanc" default="true" visible="eq(-169,true)"/>
             <setting label="" type="number" visible="false" id="tv8montblanc.order" default="85"/>
+
+            <setting label="Luxe.TV" type="bool" id="luxetv" default="true" visible="eq(-171,true)"/>
+            <setting label="" type="number" visible="false" id="luxetv.order" default="86"/>
+
+            <setting label="Alsace 20" type="bool" id="alsace20" default="true" visible="eq(-173,true)"/>
+            <setting label="" type="number" visible="false" id="alsace20.order" default="87"/>
+
+            <setting label="Spectacles et Culture (francetv)" type="bool" id="francetvspectaclesetculture" default="true" visible="eq(-175,true)"/>
+            <setting label="" type="number" visible="false" id="francetvspectaclesetculture.order" default="88"/>
         <!-- France -->
 
 
@@ -710,6 +733,9 @@
             <setting label="関西テレビ" type="bool" id="ktv" default="true" visible="eq(-25,true)"/>
             <setting label="" type="number" visible="false" id="ktv.order" default="13"/>
 
+            <setting label="株式会社ウェザーニューズ" type="bool" id="weathernewsjp" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="weathernewsjp.order" default="14"/>
+
             <!--<setting label="フジテレビ" type="bool" id="cx" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="cx.order" default="8"/>-->
         <!-- Japan -->
@@ -746,6 +772,9 @@
 
             <setting label="Télé-Mag" type="bool" id="telemag" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="telemag.order" default="9"/>
+
+            <setting label="NOOVO" type="bool" id="noovo" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="noovo.order" default="10"/>
         <!-- Canada -->
 
 
@@ -773,7 +802,8 @@
         <setting label="30088" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="" type="bool" id="pl" default="true" visible="false"/>
 
-            <setting label="TVP" type="bool" id="tvp" default="true" visible="eq(-1,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="TVP" type="bool" id="tvp" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="tvp.order" default="1"/>
 
             <setting label="TVP 3" type="bool" id="tvp3" default="true" visible="eq(-3,true)"/>
@@ -934,8 +964,12 @@
             <setting label="NPO Politiek" type="bool" id="npo-politiek" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="npo-politiek.order" default="8"/>
 
-            <setting label="NPO Start" type="bool" id="npo-start" default="true" visible="eq(-17,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="NPO Start" type="bool" id="npo-start" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="npo-start.order" default="9"/>
+
+            <setting label="AT5" type="bool" id="at5" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="at5.order" default="10"/>
        <!-- Netherlands -->
 
 
@@ -1066,7 +1100,7 @@
 
 
 
-    <!-- Download -->
+    <!-- Downloads -->
     <category label="30003">
         <setting label="30012" type="lsep"/>
         <setting label="30200" type="folder" id="dl_folder" source="" option="writeable"/>
@@ -1074,7 +1108,7 @@
         <setting label="30202" type="bool" id="dl_background" default="false" visible="true"/>
         <setting label="30203" type="bool" id="dl_item_filename" default="false" visible="true"/>
     </category>
-    <!-- Download -->
+    <!-- Downloads -->
 
 
 
@@ -1085,23 +1119,23 @@
         <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
-            <setting label="30240" type="text" id="nrj.login" defaut=""/>
-            <setting label="30241" type="text" id="nrj.password" option="hidden" defaut=""/>
+            <setting label="30240" type="text" id="nrj.login" default=""/>
+            <setting label="30241" type="text" id="nrj.password" option="hidden" default=""/>
 
-            <setting label="30244" type="text" id="6play.login" defaut=""/>
-            <setting label="30245" type="text" id="6play.password" option="hidden" defaut=""/>
+            <setting label="30244" type="text" id="6play.login" default=""/>
+            <setting label="30245" type="text" id="6play.password" option="hidden" default=""/>
 
-            <setting label="30248" type="text" id="abweb.login" defaut=""/>
-            <setting label="30249" type="text" id="abweb.password" option="hidden" defaut=""/>
+            <setting label="30248" type="text" id="abweb.login" default=""/>
+            <setting label="30249" type="text" id="abweb.password" option="hidden" default=""/>
 
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
-            <setting label="30242" type="text" id="vrt.login" defaut=""/>
-            <setting label="30243" type="text" id="vrt.password" option="hidden" defaut=""/>
+            <setting label="30242" type="text" id="vrt.login" default=""/>
+            <setting label="30243" type="text" id="vrt.password" option="hidden" default=""/>
 
-            <setting label="30246" type="text" id="rtlplaybe.login" defaut=""/>
-            <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" defaut=""/>
+            <setting label="30246" type="text" id="rtlplaybe.login" default=""/>
+            <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" default=""/>
 
     </category>
     <!-- Accounts -->
@@ -1114,10 +1148,10 @@
         <!-- OpenVPN -->
     <category label="OpenVPN">
         <setting label="30340" type="bool" id="vpn.hide" default="true"/>
-        <setting label="30361" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/vpn_connectdisconnect_setting)"  visible="eq(-1,true)"/>
+        <setting label="30361" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/vpn/vpn_item_callback/)"  visible="eq(-1,true)"/>
         <setting label="30341" type="file" id="vpn.openvpnfilepath" default="/usr/bin/openvpn" visible="eq(-2,true)"/>
-        <setting label="30342" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/vpn_import_setting)"  visible="eq(-3,true)"/>
-        <setting label="30343" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/vpn_delete_setting)"  visible="eq(-4,true)"/>
+        <setting label="30342" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/vpn/import_ovpn/)"  visible="eq(-3,true)"/>
+        <setting label="30343" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/vpn/delete_ovpn/)"  visible="eq(-4,true)"/>
         <setting label="30344" type="text" id="vpn.args" default="" visible="eq(-5,true)"/>
         <setting label="30345" type="bool" id="vpn.sudo" default="false" visible="eq(-6,true)"/>
         <setting label="30346" type="bool" id="vpn.sudopsw" default="false" enable="!eq(-1,false)" visible="eq(-7,true)"/>
@@ -1133,6 +1167,7 @@
     <category label="30005">
         <setting label="30370" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/clear_cache/)"/>
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
+        <setting label="" type="bool" id="show_live_tv_m3u_info" default="true" visible="false"/>
     </category>
     <!-- Advanced settings / Tools and other things to save -->
 

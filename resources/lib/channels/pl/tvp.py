@@ -29,6 +29,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
@@ -39,10 +40,8 @@ import urlquick
 # Live
 URL_LIVE = 'http://tvpstream.vod.tvp.pl/'
 
-
 URL_STREAM = 'http://www.tvp.pl/sess/tvplayer.php?object_id=%s'
 # videoId
-
 
 LIVE_TVP3_REGIONS = {
     "Białystok": "tvp3-bialystok",
@@ -64,12 +63,12 @@ LIVE_TVP3_REGIONS = {
 }
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     final_language = Script.setting['tvp3.language']
 
     # If we come from the M3U file and the language
@@ -80,8 +79,9 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     if 'language' in item_dict:
         final_language = item_dict['language']
 
-    resp = urlquick.get(
-        URL_LIVE, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+    resp = urlquick.get(URL_LIVE,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     root = resp.parse()
 
     live_id = ''
@@ -98,14 +98,13 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                     live_id = live_datas.get('data-video-id')
             elif item_id == 'tvp3':
                 if LIVE_TVP3_REGIONS[utils.ensure_unicode(
-                        final_language)] in live_datas.find('.//img').get('alt'):
+                        final_language)] in live_datas.find('.//img').get(
+                            'alt'):
                     live_id = live_datas.get('data-video-id')
     if live_id == '':
         # Add Notification
         return False
-    lives_html = urlquick.get(
-        URL_STREAM % live_id,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-    return re.compile(
-        r'src:\'(.*?)\'').findall(lives_html.text)[0]
+    lives_html = urlquick.get(URL_STREAM % live_id,
+                              headers={'User-Agent': web_utils.get_random_ua},
+                              max_age=-1)
+    return re.compile(r'src:\'(.*?)\'').findall(lives_html.text)[0]

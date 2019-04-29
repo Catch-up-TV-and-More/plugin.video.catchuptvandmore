@@ -30,13 +30,12 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
-
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
 import urlquick
 import xbmcgui
-
 
 # TO DO
 #   Most recent
@@ -77,7 +76,7 @@ CORRECT_MONTH = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -85,7 +84,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -94,8 +93,8 @@ def list_categories(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_ROOT % DESIRED_LANGUAGE.lower())
-    json_value = re.compile(
-        r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
+    json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(
+        resp.text)[0]
     # print 'json_value : ' + repr(json_value)
     json_parser = json.loads(json_value + '}')
 
@@ -107,38 +106,39 @@ def list_categories(plugin, item_id):
 
             item = Listitem()
             item.label = category_title
-            item.set_callback(
-                list_sub_categories,
-                item_id=item_id,
-                category_url=category_url)
+            item.set_callback(list_sub_categories,
+                              item_id=item_id,
+                              category_url=category_url)
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_sub_categories(plugin, item_id, category_url):
+def list_sub_categories(plugin, item_id, category_url, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
     - ...
     """
     resp = urlquick.get(category_url)
-    json_value = re.compile(
-        r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
+    json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(
+        resp.text)[0]
     json_parser = json.loads(json_value + '}')
 
     value_code = json_parser['pages']['currentCode']
-    for sub_category_datas in json_parser['pages']['list'][value_code]['zones']:
+    for sub_category_datas in json_parser['pages']['list'][value_code][
+            'zones']:
         if 'subcategory' in sub_category_datas['code']['name']:
             sub_category_title = sub_category_datas['title']
             sub_category_url = sub_category_datas['link']['url']
 
             item = Listitem()
             item.label = sub_category_title
-            item.set_callback(
-                list_videos_sub_category,
-                item_id=item_id,
-                sub_category_url=sub_category_url,
-                page='1')
+            item.set_callback(list_videos_sub_category,
+                              item_id=item_id,
+                              sub_category_url=sub_category_url,
+                              page='1')
+            item_post_treatment(item)
             yield item
 
         elif sub_category_datas['code']['name'] == 'playlists' or \
@@ -151,11 +151,11 @@ def list_sub_categories(plugin, item_id, category_url):
             item = Listitem()
             item.label = sub_category_title
 
-            item.set_callback(
-                list_programs,
-                item_id=item_id,
-                sub_category_code_name=sub_category_code_name,
-                sub_category_url=sub_category_url)
+            item.set_callback(list_programs,
+                              item_id=item_id,
+                              sub_category_code_name=sub_category_code_name,
+                              sub_category_url=sub_category_url)
+            item_post_treatment(item)
             yield item
         # else:
         #     # Add Notification (Category Not known)
@@ -163,25 +163,28 @@ def list_sub_categories(plugin, item_id, category_url):
 
 
 @Route.register
-def list_programs(plugin, item_id, sub_category_code_name, sub_category_url):
+def list_programs(plugin, item_id, sub_category_code_name, sub_category_url,
+                  **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
     - ...
     """
     resp = urlquick.get(sub_category_url)
-    json_value = re.compile(
-        r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
+    json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(
+        resp.text)[0]
     json_parser = json.loads(json_value + '}')
 
     value_code = json_parser['pages']['currentCode']
-    for sub_category_datas in json_parser['pages']['list'][value_code]['zones']:
+    for sub_category_datas in json_parser['pages']['list'][value_code][
+            'zones']:
         if sub_category_datas['code']['name'] == sub_category_code_name:
             for program_datas in sub_category_datas['data']:
                 program_title = program_datas['title']
                 program_id = program_datas['programId']
                 program_image = ''
-                for image_datas in program_datas['images']['landscape']['resolutions']:
+                for image_datas in program_datas['images']['landscape'][
+                        'resolutions']:
                     program_image = image_datas['url']
 
                 item = Listitem()
@@ -192,29 +195,34 @@ def list_programs(plugin, item_id, sub_category_code_name, sub_category_url):
                     item_id=item_id,
                     sub_category_code_name=sub_category_code_name,
                     program_id=program_id)
+                item_post_treatment(item)
                 yield item
 
 
 @Route.register
-def list_videos_sub_category(plugin, item_id, sub_category_url, page):
+def list_videos_sub_category(plugin, item_id, sub_category_url, page,
+                             **kwargs):
 
     resp = urlquick.get(sub_category_url + '?page=%s' % page)
-    json_value = re.compile(
-        r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
+    json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(
+        resp.text)[0]
     json_parser = json.loads(json_value + '}')
 
     value_code = json_parser['pages']['currentCode']
-    for sub_category_datas in json_parser['pages']['list'][value_code]['zones']:
+    for sub_category_datas in json_parser['pages']['list'][value_code][
+            'zones']:
         if 'videos_subcategory' == sub_category_datas['code']['name']:
             for video_datas in sub_category_datas['data']:
                 if video_datas['subtitle'] is not None:
-                    video_title = video_datas['title'] + ' - ' + video_datas['subtitle']
+                    video_title = video_datas['title'] + ' - ' + video_datas[
+                        'subtitle']
                 else:
                     video_title = video_datas['title']
                 video_id = video_datas['programId']
                 video_image = ''
                 if 'resolutions' in video_datas['images']['landscape']:
-                    for video_image_datas in video_datas['images']['landscape']['resolutions']:
+                    for video_image_datas in video_datas['images'][
+                            'landscape']['resolutions']:
                         video_image = video_image_datas['url']
                 video_duration = video_datas["duration"]
                 video_plot = video_datas["description"]
@@ -225,29 +233,28 @@ def list_videos_sub_category(plugin, item_id, sub_category_url, page):
                 item.info['duration'] = video_duration
                 item.info['plot'] = video_plot
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    video_id=video_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_id=video_id)
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' +
+                                  item.label,
+                                  video_id=video_id)
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
                 yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        sub_category_url=sub_category_url,
-        page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id,
+                             sub_category_url=sub_category_url,
+                             page=str(int(page) + 1))
+
 
 @Route.register
-def list_videos_program(plugin, item_id, sub_category_code_name, program_id):
+def list_videos_program(plugin, item_id, sub_category_code_name, program_id,
+                        **kwargs):
 
-    resp = urlquick.get(URL_VIDEOS_2 % (sub_category_code_name.upper(), program_id, DESIRED_LANGUAGE.lower()))
+    resp = urlquick.get(
+        URL_VIDEOS_2 %
+        (sub_category_code_name.upper(), program_id, DESIRED_LANGUAGE.lower()))
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser['videos']:
@@ -275,24 +282,21 @@ def list_videos_program(plugin, item_id, sub_category_code_name, program_id):
         item.info['plot'] = video_plot
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(URL_REPLAY_ARTE % (DESIRED_LANGUAGE.lower(), video_id))
     json_parser = json.loads(resp.text)
@@ -307,13 +311,13 @@ def get_video_url(
         for video in stream_datas:
             if not video.find("HLS"):
                 datas = json_parser['videoJsonPlayer']['VSR'][video]
-                all_datas_videos_quality.append(
-                    datas['mediaType'] + " (" +
-                    datas['versionLibelle'] + ")")
+                all_datas_videos_quality.append(datas['mediaType'] + " (" +
+                                                datas['versionLibelle'] + ")")
                 all_datas_videos_path.append(datas['url'])
 
         seleted_item = xbmcgui.Dialog().select(
-            plugin.localize(LABELS['choose_video_quality']), all_datas_videos_quality)
+            plugin.localize(LABELS['choose_video_quality']),
+            all_datas_videos_quality)
         if seleted_item > -1:
             url_selected = all_datas_videos_path[seleted_item]
         else:
@@ -330,14 +334,14 @@ def get_video_url(
     return url_selected
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     final_language = DESIRED_LANGUAGE
-   
+
     # If we come from the M3U file and the language
     # is set in the M3U URL, then we overwrite
     # Catch Up TV & More language setting

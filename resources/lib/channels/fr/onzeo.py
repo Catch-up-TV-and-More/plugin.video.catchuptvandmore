@@ -30,18 +30,17 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
 
-
 # TO DO
-
 
 URL_ROOT = 'http://www.onzeo.fr/'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -49,7 +48,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -57,9 +56,14 @@ def list_programs(plugin, item_id):
     """
     resp = urlquick.get(
         URL_ROOT,
-        headers={'User-Agent': web_utils.get_random_ua,
-                 'Host': 'www.onzeo.fr',
-                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'})
+        headers={
+            'User-Agent':
+            web_utils.get_random_ua,
+            'Host':
+            'www.onzeo.fr',
+            'Accept':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
+        })
     root = resp.parse()
 
     for program_datas in root.iterfind(".//section[@class='une2']"):
@@ -67,29 +71,31 @@ def list_programs(plugin, item_id):
             program_title = program_datas.find(
                 ".//h2[@class='titreBloc']").text
             if program_datas.find(".//div[@class='zoneb']") is not None:
-                program_id = program_datas.find(
-                    ".//div[@class='zoneb']").get('id')
+                program_id = program_datas.find(".//div[@class='zoneb']").get(
+                    'id')
             else:
                 program_id = program_datas.find(
-                    ".//div[@class='zoneb flickity-enabled is-draggable']").get('id')
+                    ".//div[@class='zoneb flickity-enabled is-draggable']"
+                ).get('id')
 
             item = Listitem()
             item.label = program_title
-            item.set_callback(
-                list_videos,
-                item_id=item_id,
-                program_id=program_id)
+            item.set_callback(list_videos,
+                              item_id=item_id,
+                              program_id=program_id)
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_id):
+def list_videos(plugin, item_id, program_id, **kwargs):
 
     resp = urlquick.get(URL_ROOT)
     root = resp.parse()
 
     list_programs_datas = root.findall(".//div[@class='zoneb']")
-    list_programs_datas += root.findall(".//div[@class='zoneb flickity-enabled is-draggable']")
+    list_programs_datas += root.findall(
+        ".//div[@class='zoneb flickity-enabled is-draggable']")
 
     for program_datas in list_programs_datas:
         if program_id == program_datas.get('id'):
@@ -104,23 +110,23 @@ def list_videos(plugin, item_id, program_id):
                 item.label = video_title
                 item.art['thumb'] = video_image
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    video_id=video_id,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_id=video_id)
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' +
+                                  item.label,
+                                  video_id=video_id)
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
                 yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
-    return resolver_proxy.get_stream_dailymotion(
-        plugin, video_id, download_mode, video_label)
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)

@@ -33,13 +33,12 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 import resources.lib.cq_utils as cqu
-
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import time
 import urlquick
 import xbmcgui
-
 '''
 Channels:
     * Franceinfo
@@ -67,7 +66,7 @@ URL_INFO_OEUVRE = 'https://sivideo.webservices.francetelevisions.fr/tools/getInf
 DESIRED_QUALITY = Script.setting['quality']
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -75,7 +74,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -86,53 +85,49 @@ def list_categories(plugin, item_id):
     category_title = 'Videos'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        next_url=URL_VIDEOS_ROOT,
-        page='1')
+    item.set_callback(list_videos,
+                      item_id=item_id,
+                      next_url=URL_VIDEOS_ROOT,
+                      page='1')
+    item_post_treatment(item)
     yield item
 
     category_title = 'Audio'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_programs,
-        item_id=item_id,
-        next_url=URL_AUDIO_ROOT)
+    item.set_callback(list_programs, item_id=item_id, next_url=URL_AUDIO_ROOT)
+    item_post_treatment(item)
     yield item
 
     category_title = 'JT'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_programs,
-        item_id=item_id,
-        next_url=URL_JT_ROOT)
+    item.set_callback(list_programs, item_id=item_id, next_url=URL_JT_ROOT)
+    item_post_treatment(item)
     yield item
 
     category_title = 'Magazines'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_programs,
-        item_id=item_id,
-        next_url=URL_MAGAZINES_ROOT)
+    item.set_callback(list_programs,
+                      item_id=item_id,
+                      next_url=URL_MAGAZINES_ROOT)
+    item_post_treatment(item)
     yield item
 
     category_title = 'Modules'
     item = Listitem()
     item.label = category_title
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        next_url=URL_MODULES_ROOT,
-        page='1')
+    item.set_callback(list_videos,
+                      item_id=item_id,
+                      next_url=URL_MODULES_ROOT,
+                      page='1')
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, next_url):
+def list_programs(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     json_parser = json.loads(resp.text)
@@ -145,16 +140,16 @@ def list_programs(plugin, item_id, next_url):
         item = Listitem()
         item.label = program_title
         item.info['plot'] = program_plot
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            next_url=program_url,
-            page='1')
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          next_url=program_url,
+                          page='1')
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, next_url, page):
+def list_videos(plugin, item_id, next_url, page, **kwargs):
 
     resp = urlquick.get(next_url + '/page/' + page)
     json_parser = json.loads(resp.text)
@@ -169,8 +164,7 @@ def list_videos(plugin, item_id, next_url, page):
         video_title = video_datas['title']
         video_plot = video_datas['description']
         date_epoch = video_datas['lastPublicationDate']
-        date_value = time.strftime(
-            '%Y-%m-%d', time.localtime(date_epoch))
+        date_value = time.strftime('%Y-%m-%d', time.localtime(date_epoch))
         video_url = URL_STREAM_ROOT + video_datas['url']
         video_image = ''
         for media_datas in video_datas['medias']:
@@ -184,34 +178,31 @@ def list_videos(plugin, item_id, next_url, page):
         item.art['thumb'] = video_image
         item.info.date(date_value, '%Y-%m-%d')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url,
-            item_dict=cqu.item2dict(item))
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_url=video_url,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if at_least_one_item:
-        yield Listitem.next_page(
-            item_id=item_id,
-            next_url=next_url,
-            page=str(int(page) + 1))
+        yield Listitem.next_page(item_id=item_id,
+                                 next_url=next_url,
+                                 page=str(int(page) + 1))
     else:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
         yield False
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  item_dict=None,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
     json_parser = json.loads(resp.text)
@@ -268,17 +259,16 @@ def get_video_url(
         return False
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE_JSON,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(URL_LIVE_JSON,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     json_parser = json.loads(resp.text)
 
     for live in json_parser["result"]:

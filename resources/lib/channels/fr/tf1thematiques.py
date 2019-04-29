@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -39,7 +40,6 @@ import xbmcgui
 
 # TO DO
 # Move WAT to resolver.py (merge with mytf1 code)
-
 
 URL_ROOT = 'https://www.%s.fr'
 # ChannelName
@@ -54,7 +54,7 @@ URL_VIDEO_STREAM = 'https://www.wat.tv/get/webhtml/%s'
 DESIRED_QUALITY = Script.setting['quality']
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -62,7 +62,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -72,15 +72,13 @@ def list_categories(plugin, item_id):
     """
     item = Listitem()
     item.label = plugin.localize(LABELS['All videos'])
-    item.set_callback(
-        list_videos,
-        item_id=item_id,
-        page='1')
+    item.set_callback(list_videos, item_id=item_id, page='1')
+    item_post_treatment(item)
     yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, page):
+def list_videos(plugin, item_id, page, **kwargs):
 
     if item_id == 'tvbreizh':
         resp = urlquick.get(URL_VIDEOS % item_id)
@@ -89,12 +87,10 @@ def list_videos(plugin, item_id, page):
     root = resp.parse("div", attrs={"class": "view-content"})
 
     for video_datas in root.iterfind("./div"):
-        video_title = video_datas.find(
-            ".//span[@class='field-content']").find(
+        video_title = video_datas.find(".//span[@class='field-content']").find(
             './/a').text
         video_plot = ''
-        if video_datas.find(
-                ".//div[@class='field-resume']") is not None:
+        if video_datas.find(".//div[@class='field-resume']") is not None:
             video_plot = video_datas.find(
                 ".//div[@class='field-resume']").text.strip()
         video_image = URL_ROOT % item_id + \
@@ -107,37 +103,30 @@ def list_videos(plugin, item_id, page):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     if 'tvbreizh' not in item_id:
-        yield Listitem.next_page(
-            item_id=item_id,
-            page=str(int(page) + 1))
+        yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    resp = urlquick.get(
-        video_url,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-    video_id = re.compile(
-        r'www.wat.tv/embedframe/(.*?)[\"\?]').findall(
-            resp.text)[0]
+    resp = urlquick.get(video_url,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
+    video_id = re.compile(r'www.wat.tv/embedframe/(.*?)[\"\?]').findall(
+        resp.text)[0]
     url_wat_embed = URL_WAT_BY_ID % video_id
     wat_embed_html = urlquick.get(
         url_wat_embed,
@@ -145,30 +134,25 @@ def get_video_url(
         max_age=-1)
     stream_id = re.compile('UVID=(.*?)&').findall(wat_embed_html.text)[0]
     url_json = URL_VIDEO_STREAM % stream_id
-    htlm_json = urlquick.get(
-        url_json,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    htlm_json = urlquick.get(url_json,
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
     # Check DRM in the m3u8 file
-    manifest = urlquick.get(
-        json_parser["hls"],
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    manifest = urlquick.get(json_parser["hls"],
+                            headers={'User-Agent': web_utils.get_random_ua},
+                            max_age=-1)
     if 'drm' in manifest:
-        Script.notify(
-            "TEST",
-            plugin.localize(LABELS['drm_notification']),
-            Script.NOTIFY_INFO)
+        Script.notify("TEST", plugin.localize(LABELS['drm_notification']),
+                      Script.NOTIFY_INFO)
         return False
 
     root = os.path.dirname(json_parser["hls"])
 
-    manifest = urlquick.get(
-        json_parser["hls"].split('&max_bitrate=')[0],
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    manifest = urlquick.get(json_parser["hls"].split('&max_bitrate=')[0],
+                            headers={'User-Agent': web_utils.get_random_ua},
+                            max_age=-1)
 
     lines = manifest.text.splitlines()
     final_video_url = ''
@@ -177,11 +161,8 @@ def get_video_url(
     for k in range(0, len(lines) - 1):
         if 'RESOLUTION=' in lines[k]:
             all_datas_videos_quality.append(
-                re.compile(
-                    r'RESOLUTION=(.*?),').findall(
-                    lines[k])[0])
-            all_datas_videos_path.append(
-                root + '/' + lines[k + 1])
+                re.compile(r'RESOLUTION=(.*?),').findall(lines[k])[0])
+            all_datas_videos_path.append(root + '/' + lines[k + 1])
     if DESIRED_QUALITY == "DIALOG":
         seleted_item = xbmcgui.Dialog().select(
             plugin.localize(LABELS['choose_video_quality']),

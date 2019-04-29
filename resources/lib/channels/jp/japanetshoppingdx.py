@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
@@ -42,25 +43,20 @@ URL_ROOT = 'http://www.japanet.co.jp'
 URL_LIVE = URL_ROOT + '/shopping/movie/movie_player_dx.html'
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
-    data_account = re.compile(
-        r'data-account\'\,\'(.*?)\'').findall(resp.text)[0]
-    data_player = re.compile(
-        r'data-player\'\,\'(.*?)\'').findall(resp.text)[0]
-    data_video_id = re.compile(
-        r'data-video-id\'\,\'(.*?)\'').findall(resp.text)[0]
-    return resolver_proxy.get_brightcove_video_json(
-        plugin,
-        data_account,
-        data_player,
-        data_video_id)
+    resp = urlquick.get(URL_LIVE,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
+    data_account = re.compile(r'data-account\'\,\'(.*?)\'').findall(
+        resp.text)[0]
+    data_player = re.compile(r'data-player\'\,\'(.*?)\'').findall(resp.text)[0]
+    data_video_id = re.compile(r'data-video-id\'\,\'(.*?)\'').findall(
+        resp.text)[0]
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id)

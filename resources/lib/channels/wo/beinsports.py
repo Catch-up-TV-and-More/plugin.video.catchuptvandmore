@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import urlquick
@@ -44,7 +45,7 @@ URL_VIDEOS = URL_API_ROOT + '/contents?itemsPerPage=30&type=3&site=%s&page=%s&or
 # site, page
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -52,7 +53,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -93,41 +94,38 @@ def list_categories(plugin, item_id):
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url):
+def list_videos(plugin, item_id, category_url, **kwargs):
 
     resp = urlquick.get(category_url)
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser['hydra:member']:
-        video_title = video_datas['headline']
-        video_id = video_datas['media'][0]['media']['context']['private_id']
-        video_image = video_datas['media'][0]['media']['context']['thumbnail_url']
+        if video_datas['media'][0]['media'] is not None:
+            video_title = video_datas['headline']
+            video_id = video_datas['media'][0]['media']['context'][
+                'private_id']
+            video_image = video_datas['media'][0]['media']['context'][
+                'thumbnail_url']
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = video_image
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_id=video_id)
-        yield item
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
     yield Listitem.next_page(
         item_id=item_id,
@@ -135,11 +133,12 @@ def list_videos(plugin, item_id, category_url):
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    return resolver_proxy.get_stream_dailymotion(
-        plugin,
-        video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)

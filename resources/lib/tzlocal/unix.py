@@ -4,6 +4,7 @@ import pytz
 
 _cache_tz = None
 
+
 def _tz_from_env(tzenv):
     if tzenv[0] == ':':
         tzenv = tzenv[1:]
@@ -104,14 +105,14 @@ def _get_localzone(_root='/'):
     tzpath = os.path.join(_root, 'etc/localtime')
     if os.path.exists(tzpath) and os.path.islink(tzpath):
         tzpath = os.path.realpath(tzpath)
-        start = tzpath.find("/")+1
+        start = tzpath.find("/") + 1
         while start is not 0:
             tzpath = tzpath[start:]
             try:
                 return pytz.timezone(tzpath)
             except pytz.UnknownTimeZoneError:
                 pass
-            start = tzpath.find("/")+1
+            start = tzpath.find("/") + 1
 
     # No explicit setting existed. Use localtime
     for filename in ('etc/localtime', 'usr/local/etc/localtime'):
@@ -124,12 +125,14 @@ def _get_localzone(_root='/'):
 
     raise pytz.UnknownTimeZoneError('Can not find any timezone configuration')
 
+
 def get_localzone():
     """Get the computers configured local timezone, if any."""
     global _cache_tz
     if _cache_tz is None:
         _cache_tz = _get_localzone()
     return _cache_tz
+
 
 def reload_localzone():
     """Reload the cached localzone. You need to call this if the timezone has changed."""

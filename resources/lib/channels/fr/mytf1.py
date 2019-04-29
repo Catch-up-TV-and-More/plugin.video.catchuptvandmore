@@ -32,6 +32,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
 # https://docs.python.org/3/library/hashlib.html
@@ -44,7 +45,6 @@ import re
 import urlquick
 import xbmc
 import xbmcgui
-
 
 # TO DO
 
@@ -59,7 +59,7 @@ URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s|Content-Type=&User-Agent=
 DESIRED_QUALITY = Script.setting['quality']
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -67,7 +67,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -84,16 +84,16 @@ def list_categories(plugin, item_id):
 
         item = Listitem()
         item.label = category_name
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            category=category_url
-        )
+        item.params['item_id'] = item_id
+        item.params['category'] = category_url
+        item.set_callback(list_programs)
+        item_post_treatment(item)
+
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category):
+def list_programs(plugin, item_id, category, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -104,7 +104,8 @@ def list_programs(plugin, item_id, category):
         resp = urlquick.get(URL_ROOT('/programmes-tv/abecedaire/#'))
         root = resp.parse()
 
-        for program in root.iterfind(".//div[@class='program key-list-programs']"):
+        for program in root.iterfind(
+                ".//div[@class='program key-list-programs']"):
             is_channel_program = False
             list_channels = program.findall(".//div")
             for channel in list_channels:
@@ -112,11 +113,9 @@ def list_programs(plugin, item_id, category):
                     is_channel_program = True
             if is_channel_program:
                 item = Listitem()
-                program_url = program.find(
-                    ".//div[@class='description']")
+                program_url = program.find(".//div[@class='description']")
                 program_url = program_url.find('.//a').get('href')
-                program_name = program.find(
-                    ".//p[@class='program']").text
+                program_name = program.find(".//p[@class='program']").text
                 img = program.find('.//img')
                 try:
                     img = img.get('data-srcset')
@@ -128,21 +127,19 @@ def list_programs(plugin, item_id, category):
                 if 'meteo.tf1.fr/meteo-france' in program_url:
                     item.label = program_name
                     item.art["thumb"] = img
-                    item.set_callback(
-                        list_videos,
-                        item_id=item_id,
-                        program_category_url=program_url
-                    )
+                    item.set_callback(list_videos,
+                                      item_id=item_id,
+                                      program_category_url=program_url)
+                    item_post_treatment(item)
                     yield item
 
                 else:
                     item.label = program_name
                     item.art["thumb"] = img
-                    item.set_callback(
-                        list_program_categories,
-                        item_id=item_id,
-                        program_url=program_url
-                    )
+                    item.set_callback(list_program_categories,
+                                      item_id=item_id,
+                                      program_url=program_url)
+                    item_post_treatment(item)
                     yield item
     else:
         resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'))
@@ -152,11 +149,9 @@ def list_programs(plugin, item_id, category):
             current_category = program.get('data-type')
             if category == current_category or category == 'all':
                 item = Listitem()
-                program_url = program.find(
-                    ".//div[@class='description']")
+                program_url = program.find(".//div[@class='description']")
                 program_url = program_url.find('.//a').get('href')
-                program_name = program.find(
-                    ".//p[@class='program']").text
+                program_name = program.find(".//p[@class='program']").text
                 img = program.find('.//img')
                 try:
                     img = img.get('srcset')
@@ -169,26 +164,24 @@ def list_programs(plugin, item_id, category):
                 if 'meteo.tf1.fr/meteo-france' in program_url:
                     item.label = program_name
                     item.art["thumb"] = img
-                    item.set_callback(
-                        list_videos,
-                        item_id=item_id,
-                        program_category_url=program_url
-                    )
+                    item.set_callback(list_videos,
+                                      item_id=item_id,
+                                      program_category_url=program_url)
+                    item_post_treatment(item)
                     yield item
 
                 else:
                     item.label = program_name
                     item.art["thumb"] = img
-                    item.set_callback(
-                        list_program_categories,
-                        item_id=item_id,
-                        program_url=program_url
-                    )
+                    item.set_callback(list_program_categories,
+                                      item_id=item_id,
+                                      program_url=program_url)
+                    item_post_treatment(item)
                     yield item
 
 
 @Route.register
-def list_program_categories(plugin, item_id, program_url):
+def list_program_categories(plugin, item_id, program_url, **kwargs):
     """
     Build program categories
     - Toutes les vidéos
@@ -205,11 +198,10 @@ def list_program_categories(plugin, item_id, program_url):
             item = Listitem()
             item.label = "".join(li.itertext())
             category_id = li.find('a').get('data-filter')
-            item.set_callback(
-                list_videos,
-                item_id=item_id,
-                program_category_url=program_url + '/videos?filter=' + category_id
-            )
+            item.set_callback(list_videos,
+                              item_id=item_id,
+                              program_category_url=program_url + '/videos?filter=' + category_id)
+            item_post_treatment(item)
             yield item
     except Exception:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
@@ -217,7 +209,7 @@ def list_program_categories(plugin, item_id, program_url):
 
 
 @Route.register
-def list_videos(plugin, item_id, program_category_url):
+def list_videos(plugin, item_id, program_category_url, **kwargs):
 
     if 'meteo.tf1.fr/meteo-france' in program_category_url:
         resp = urlquick.get(program_category_url)
@@ -225,59 +217,50 @@ def list_videos(plugin, item_id, program_category_url):
 
         title = root.find('.//h3').text
 
-        program_id = re.compile(
-            r'\; src \= \'(.*?)\'').findall(resp.text)[0]
+        program_id = re.compile(r'\; src \= \'(.*?)\'').findall(resp.text)[0]
 
         item = Listitem()
         item.label = title
+        item.params['video_label'] = LABELS[item_id] + ' - ' + item.label
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            program_id=program_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            program_id=program_id,
-            item_dict=cqu.item2dict(item)
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          program_id=program_id,
+                          item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     else:
 
         resp = urlquick.get(program_category_url)
-        grid = resp.parse("div", attrs={"class": "content"})
+        root = resp.parse()
+        if root.find(".//div[@class='content']") is not None:
+            grid = resp.parse("div", attrs={"class": "content"})
+        else:
+            grid = resp.parse("div", attrs={"class": "content withPub"})
 
         if grid is not None:
             for li in grid.findall('.//li'):
                 video_type_string = li.find(
-                    ".//div[@class='description']"
-                ).find('.//a').get('data-xiti-libelle')
+                    ".//div[@class='description']").find('.//a').get(
+                        'data-xiti-libelle')
                 video_type_string = video_type_string.split('-')[0]
 
                 if 'Playlist' not in video_type_string:
                     item = Listitem()
 
-                    item.label = li.find(
-                        ".//p[@class='title']").text
+                    item.label = li.find(".//p[@class='title']").text
 
                     try:
-                        stitle = li.find(
-                            ".//p[@class='stitle']").text
+                        stitle = li.find(".//p[@class='stitle']").text
                         item.info['plot'] = stitle
                     except Exception:
                         pass
 
                     try:
-                        duration_soup = li.find(
-                            ".//p[@class='uptitle']").find(
-                                ".//span[@class='momentDate']")
-                        duration = int(
-                            duration_soup.text)
+                        duration_soup = li.find(".//p[@class='uptitle']").find(
+                            ".//span[@class='momentDate']")
+                        duration = int(duration_soup.text)
                         item.info['duration'] = duration
                     except Exception:
                         pass
@@ -292,8 +275,7 @@ def list_videos(plugin, item_id, program_category_url):
                         img.split(',')[-1].split(' ')[0]
 
                     try:
-                        date_value = li.find(
-                            ".//div[@class='text']").find(
+                        date_value = li.find(".//div[@class='text']").find(
                             ".//p[@class='uptitle']").find('.//span')
 
                         aired = date_value.get('data-date').split('T')[0]
@@ -302,21 +284,15 @@ def list_videos(plugin, item_id, program_category_url):
                         pass
 
                     program_id = li.find('.//a').get('href')
-
-                    item.context.script(
-                        get_video_url,
-                        plugin.localize(LABELS['Download']),
-                        item_id=item_id,
-                        program_id=program_id,
-                        video_label=LABELS[item_id] + ' - ' + item.label,
-                        download_mode=True)
-
-                    item.set_callback(
-                        get_video_url,
-                        item_id=item_id,
-                        program_id=program_id,
-                        item_dict=cqu.item2dict(item)
-                    )
+                    item.params[
+                        'video_label'] = LABELS[item_id] + ' - ' + item.label
+                    item.set_callback(get_video_url,
+                                      item_id=item_id,
+                                      program_id=program_id,
+                                      item_dict=item2dict(item))
+                    item_post_treatment(item,
+                                        is_playable=True,
+                                        is_downloadable=True)
                     yield item
 
             # Check for any next page
@@ -334,13 +310,18 @@ def list_videos(plugin, item_id, program_category_url):
                         next_li = li_list[i + 1]
                         yield Listitem.next_page(
                             item_id=item_id,
-                            program_category_url=next_li.find(
-                                './/a').get('href'))
+                            program_category_url=next_li.find('.//a').get(
+                                'href'))
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, program_id, item_dict=None, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  program_id,
+                  item_dict=None,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     if 'www.wat.tv/embedframe' in program_id:
         url = 'http:' + program_id
@@ -357,20 +338,18 @@ def get_video_url(
     if 'www.wat.tv/embedframe' in program_id:
         video_id = re.compile('UVID=(.*?)&').findall(video_html.text)[0]
     else:
-        iframe_player = root.find(
-            ".//div[@class='iframe_player']")
+        iframe_player = root.find(".//div[@class='iframe_player']")
         if iframe_player is not None:
             video_id = iframe_player.get('data-watid')
         else:
-            video_id = re.compile(
-                r'\"data\"\:\{\"id\"\:\"(.*?)\"').findall(video_html.text)[0]
+            video_id = re.compile(r'\"data\"\:\{\"id\"\:\"(.*?)\"').findall(
+                video_html.text)[0]
 
     video_format = 'hls'
     url_json = URL_VIDEO_STREAM % (video_id, video_format)
-    htlm_json = urlquick.get(
-        url_json,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    htlm_json = urlquick.get(url_json,
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
     if json_parser['code'] >= 400:
@@ -378,17 +357,14 @@ def get_video_url(
         return False
 
     # Check DRM in the m3u8 file
-    manifest = urlquick.get(
-        json_parser["url"],
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1).text
+    manifest = urlquick.get(json_parser["url"],
+                            headers={
+                                'User-Agent': web_utils.get_random_ua},
+                            max_age=-1).text
     if 'drm' in manifest:
 
-        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-        if xbmc_version < 18:
-            xbmcgui.Dialog().ok(
-                'Info',
-                plugin.localize(30602))
+        if cqu.get_kodi_version() < 18:
+            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
             return False
         else:
             video_format = 'dash'
@@ -397,9 +373,11 @@ def get_video_url(
 
         root = os.path.dirname(json_parser["url"])
 
-        url_without_max_bitrate_list = json_parser["url"].split('&max_bitrate=')
+        url_without_max_bitrate_list = json_parser["url"].split(
+            '&max_bitrate=')
         if '&' in url_without_max_bitrate_list[1]:
-            url_without_max_bitrate = url_without_max_bitrate_list[0] + '&' + url_without_max_bitrate_list[1].split('&')[1]
+            url_without_max_bitrate = url_without_max_bitrate_list[
+                0] + '&' + url_without_max_bitrate_list[1].split('&')[1]
         else:
             url_without_max_bitrate = url_without_max_bitrate_list[0]
         manifest = urlquick.get(
@@ -414,11 +392,8 @@ def get_video_url(
         for k in range(0, len(lines) - 1):
             if 'RESOLUTION=' in lines[k]:
                 all_datas_videos_quality.append(
-                    re.compile(
-                        r'RESOLUTION=(.*?),').findall(
-                        lines[k])[0])
-                all_datas_videos_path.append(
-                    root + '/' + lines[k + 1])
+                    re.compile(r'RESOLUTION=(.*?),').findall(lines[k])[0])
+                all_datas_videos_path.append(root + '/' + lines[k + 1])
         if DESIRED_QUALITY == "DIALOG":
             seleted_item = xbmcgui.Dialog().select(
                 plugin.localize(LABELS['choose_video_quality']),
@@ -442,13 +417,14 @@ def get_video_url(
 
     else:
         if download_mode:
-            xbmcgui.Dialog().ok(
-                'Info',
-                plugin.localize(30603))
+            xbmcgui.Dialog().ok('Info', plugin.localize(30603))
             return False
 
         url_json = URL_VIDEO_STREAM % (video_id, video_format)
-        htlm_json = urlquick.get(url_json, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+        htlm_json = urlquick.get(
+            url_json,
+            headers={'User-Agent': web_utils.get_random_ua},
+            max_age=-1)
         json_parser = json.loads(htlm_json.text)
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
@@ -462,27 +438,28 @@ def get_video_url(
         item.art.update(item_dict['art'])
         item.property['inputstreamaddon'] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
+        item.property[
+            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property[
+            'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
 
         return item
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
-
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     video_id = 'L_%s' % item_id.upper()
 
     video_format = 'hls'
     url_json = URL_VIDEO_STREAM % (video_id, video_format)
-    htlm_json = urlquick.get(
-        url_json,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    htlm_json = urlquick.get(url_json,
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
-    return json_parser['url'].replace('master_2000000.m3u8', 'master_4000000.m3u8')
+    return json_parser['url'].replace('master_2000000.m3u8',
+                                      'master_4000000.m3u8')

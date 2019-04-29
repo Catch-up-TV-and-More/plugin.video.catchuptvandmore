@@ -24,12 +24,12 @@ from codequick import Route, Resolver, Listitem
 
 from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import htmlement
 import json
 import re
 import urlquick
-
 
 # TO DO
 
@@ -39,7 +39,7 @@ URL_VIDEOS = URL_ROOT + '/remote/explore-all-films/?language=en&genre=%s&availab
 # Genre, Page
 
 
-def website_entry(plugin, item_id):
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
@@ -58,24 +58,23 @@ GENRE_VIDEOS = {
 }
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
-    for category_id, category_title in GENRE_VIDEOS.iteritems():
+    for category_id, category_title in GENRE_VIDEOS.items():
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_id=category_id,
-            page=1)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_id=category_id,
+                          page=1)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_id, page):
+def list_videos(plugin, item_id, category_id, page, **kwargs):
     """Build videos listing"""
-    replay_episodes_json = urlquick.get(
-        URL_VIDEOS % (category_id, page)).text
+    replay_episodes_json = urlquick.get(URL_VIDEOS % (category_id, page)).text
     replay_episodes_jsonparser = json.loads(replay_episodes_json)
     at_least_one = False
     for replay_episodes_datas in replay_episodes_jsonparser["items_html"]:
@@ -86,51 +85,40 @@ def list_videos(plugin, item_id, category_id, page):
         for episode in root.iterfind(".//li"):
             at_least_one = True
             item = Listitem()
-            item.label = episode.find(
-                './/img').get('alt')
+            item.label = episode.find('.//img').get('alt')
             video_url = URL_ROOT + episode.find('.//a').get('href')
-            item.art['thumb'] = episode.find(
-                './/img').get('src')
+            item.art['thumb'] = episode.find('.//img').get('src')
 
-            item.context.script(
-                get_video_url,
-                plugin.localize(LABELS['Download']),
-                item_id=item_id,
-                video_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                download_mode=True)
-
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_url=video_url)
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
     if at_least_one:
         # More videos...
-        yield Listitem.next_page(
-            item_id=item_id,
-            category_id=category_id,
-            page=page + 1)
+        yield Listitem.next_page(item_id=item_id,
+                                 category_id=category_id,
+                                 page=page + 1)
     else:
         plugin.notify(plugin.localize(LABELS['No videos found']), '')
         yield False
 
 
-
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
 
     video_html = urlquick.get(video_url).text
     # Get Kalkura Id Video
-    video_url = re.compile(
-        r'og\:video\:url" content="(.*?)"').findall(
+    video_url = re.compile(r'og\:video\:url" content="(.*?)"').findall(
         video_html)[0]
 
-    return resolver_proxy.get_stream_kaltura(
-        plugin,
-        video_url,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_stream_kaltura(plugin, video_url, download_mode,
+                                             video_label)

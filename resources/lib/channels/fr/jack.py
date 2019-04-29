@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import json
@@ -38,15 +39,15 @@ import urlquick
 # TO DO
 # ....
 
-
 URL_ROOT = 'https://jack.canal.fr'
 # ChannelName
 
 URL_VIDEOS = URL_ROOT + '/video'
+
 # PageId
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -54,7 +55,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -63,8 +64,8 @@ def list_programs(plugin, item_id):
     - ...
     """
     resp = urlquick.get(URL_VIDEOS)
-    json_value = re.compile(
-        r'window.APP_STATE\=(.*?)\}\;').findall(resp.text)[0]
+    json_value = re.compile(r'window.APP_STATE\=(.*?)\}\;').findall(
+        resp.text)[0]
     json_parser = json.loads(json_value + '}')
 
     for program_datas in json_parser["page"]["data"]["blocks"]:
@@ -75,17 +76,17 @@ def list_programs(plugin, item_id):
                 item = Listitem()
                 item.label = program_title
                 item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    program_title=program_title)
+                    list_videos, item_id=item_id, program_title=program_title)
+                item_post_treatment(item)
                 yield item
 
+
 @Route.register
-def list_videos(plugin, item_id, program_title):
+def list_videos(plugin, item_id, program_title, **kwargs):
 
     resp = urlquick.get(URL_VIDEOS)
-    json_value = re.compile(
-        r'window.APP_STATE\=(.*?)\}\;').findall(resp.text)[0]
+    json_value = re.compile(r'window.APP_STATE\=(.*?)\}\;').findall(
+        resp.text)[0]
     json_parser = json.loads(json_value + '}')
 
     for program_datas in json_parser["page"]["data"]["blocks"]:
@@ -96,12 +97,18 @@ def list_videos(plugin, item_id, program_title):
                     for video_datas in program_datas["content"]["articles"]:
                         if 'video' in video_datas:
                             video_title = video_datas["title"]
-                            video_image = video_datas["mainMedia"]["links"][0]["href"]
-                            video_image = video_image.replace('{width}', '800').replace('{height}', '450')
+                            video_image = ''
+                            if 'links' in video_datas["mainMedia"]["default"]:
+                                video_image = video_datas["mainMedia"][
+                                    "default"]["links"][0]["href"]
+                                video_image = video_image.replace(
+                                    '{width}', '800').replace(
+                                        '{height}', '450')
                             video_plot = video_datas["abstract"]
                             video_id = video_datas["video"]["id"]
                             video_source = video_datas["video"]["source"]
-                            date_value = video_datas["publishedAt"].split('T')[0]
+                            date_value = video_datas["publishedAt"].split('T')[
+                                0]
 
                             item = Listitem()
                             item.label = video_title
@@ -109,30 +116,30 @@ def list_videos(plugin, item_id, program_title):
                             item.info['plot'] = video_plot
                             item.info.date(date_value, '%Y-%m-%d')
 
-                            item.context.script(
-                                get_video_url,
-                                plugin.localize(LABELS['Download']),
-                                item_id=item_id,
-                                video_id=video_id,
-                                video_source=video_source,
-                                video_label=LABELS[item_id] + ' - ' + item.label,
-                                download_mode=True)
-
                             item.set_callback(
                                 get_video_url,
                                 item_id=item_id,
                                 video_id=video_id,
+                                video_label=LABELS[item_id] + ' - ' +
+                                item.label,
                                 video_source=video_source)
+                            item_post_treatment(
+                                item, is_playable=True, is_downloadable=True)
                             yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, video_source, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  video_source,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     if 'youtube' in video_source:
-        return resolver_proxy.get_stream_youtube(
-            plugin, video_id, download_mode, video_label)
-    elif 'dailymotion' in video_source: 
+        return resolver_proxy.get_stream_youtube(plugin, video_id,
+                                                 download_mode, video_label)
+    elif 'dailymotion' in video_source:
         return resolver_proxy.get_stream_dailymotion(
             plugin, video_id, download_mode, video_label)

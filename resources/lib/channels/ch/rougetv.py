@@ -36,20 +36,18 @@ import urlquick
 # TO DO
 # Add replay
 
-
 URL_ROOT = 'http://www.rouge.com'
 
 # Live
 URL_LIVE = URL_ROOT + '/rouge-tv-live'
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    return re.compile(
-        'streaming_url = \'(.*?)\'').findall(resp.text)[0]
+    return re.compile('streaming_url = \'(.*?)\'').findall(resp.text)[0]

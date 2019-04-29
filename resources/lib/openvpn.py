@@ -19,7 +19,6 @@
 # *
 # */
 
-
 import os
 import subprocess
 import time
@@ -27,13 +26,12 @@ import socket
 
 
 class OpenVPNManagementInterface:
-
     def __init__(self, ip, port, openvpn=None):
         self.openvpn = openvpn
         self.ip = ip
         self.port = port
-        #self.openvpn._log_debug('OpenVPNManagementInterface: IP: [%s]' % ip)
-        #self.openvpn._log_debug(
+        # self.openvpn._log_debug('OpenVPNManagementInterface: IP: [%s]' % ip)
+        # self.openvpn._log_debug(
         #    'OpenVPNManagementInterface: Port: [%s]' % port)
         self.buf = ''
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -45,9 +43,9 @@ class OpenVPNManagementInterface:
         self.sock.close()
 
     def send(self, msg):
-        #self.openvpn._log_debug('Sending: [%s]' % msg)
-        sent = self.sock.send(msg)
-        #self.openvpn._log_debug('Sent: [%d]' % sent)
+        # self.openvpn._log_debug('Sending: [%s]' % msg)
+        self.sock.send(msg)
+        # self.openvpn._log_debug('Sent: [%d]' % sent)
 
     def receive(self):
         buf = ''
@@ -73,7 +71,9 @@ def is_running(ip, port):
             if data.startswith('SUCCESS: pid='):
                 pid = int(data.split('=')[1])
                 cmdline = 'ps -fp %d' % pid
-                ps = subprocess.Popen(cmdline, shell=True, stdout=subprocess.PIPE)
+                ps = subprocess.Popen(cmdline,
+                                      shell=True,
+                                      stdout=subprocess.PIPE)
                 cmdline = ps.stdout.read()
                 ps.stdout.close()
                 output = cmdline.split('--config')
@@ -81,7 +81,9 @@ def is_running(ip, port):
                     config = output[1].lstrip().split('--')[0].rstrip()
                 else:
                     cmdline = 'ps | grep -w %d | grep -vw grep' % pid
-                    ps = subprocess.Popen(cmdline, shell=True, stdout=subprocess.PIPE)
+                    ps = subprocess.Popen(cmdline,
+                                          shell=True,
+                                          stdout=subprocess.PIPE)
                     cmdline = ps.stdout.read()
                     ps.stdout.close()
                     output = cmdline.split('--config')
@@ -91,7 +93,7 @@ def is_running(ip, port):
             data = interface.receive().split(',')
             if len(data) > 1:
                 state = data[1]
-    except socket.error as exception:
+    except socket.error:
         return False, None, None
     return True, config, state
 
@@ -102,12 +104,11 @@ def disconnect(ip, port):
         interface.connect()
         interface.send('signal SIGTERM\n')
         interface.disconnect()
-    except socket.error as exception:
+    except socket.error:
         raise OpenVPNError(3, 'Unable to disconnect OpenVPN')
 
 
 class OpenVPNError(Exception):
-
     def __init__(self, errno, string):
         self.errno = errno
         self.string = string
@@ -117,8 +118,16 @@ class OpenVPNError(Exception):
 
 
 class OpenVPN:
-
-    def __init__(self, openvpn, ovpnconfig, ip='127.0.0.1', port=1337, sudo=False, sudopwd=None, args=None, timeout=1, debug=False):
+    def __init__(self,
+                 openvpn,
+                 ovpnconfig,
+                 ip='127.0.0.1',
+                 port=1337,
+                 sudo=False,
+                 sudopwd=None,
+                 args=None,
+                 timeout=1,
+                 debug=False):
         self.openvpn = openvpn
         self.ovpnconfig = ovpnconfig
         self.ip = ip
@@ -136,12 +145,15 @@ class OpenVPN:
         if self.args is not None:
             self._log_debug('Additional Arguments: [%s]' % self.args)
 
-        if self.openvpn is None or not os.path.exists(self.openvpn) or not os.path.isfile(self.openvpn):
+        if self.openvpn is None or not os.path.exists(
+                self.openvpn) or not os.path.isfile(self.openvpn):
             self._log_error('OpenVPN: ERROR: Specified OpenVPN does not exist')
 
-        if self.ovpnconfig is None or not os.path.exists(self.ovpnconfig) or not os.path.isfile(self.ovpnconfig):
+        if self.ovpnconfig is None or not os.path.exists(
+                self.ovpnconfig) or not os.path.isfile(self.ovpnconfig):
             self._log_error(
-                'OpenVPN: ERROR: Specified OpenVPN configuration file does not exist')
+                'OpenVPN: ERROR: Specified OpenVPN configuration file does not exist'
+            )
 
         self.interface = None
         self.workdir = os.path.dirname(ovpnconfig)
@@ -149,14 +161,15 @@ class OpenVPN:
 
     def _log_debug(self, msg):
         if self.debug:
-            print 'OpenVPN: DEBUG: %s' % msg
+            print('OpenVPN: DEBUG: %s' % msg)
 
     def _log_error(self, msg):
-        print 'OpenVPN: ERROR: %s' % msg
+        print('OpenVPN: ERROR: %s' % msg)
 
     def connect_to_interface(self, logerror):
         if self.interface is None:
-            self.interface = OpenVPNManagementInterface(self.ip, self.port, self)
+            self.interface = OpenVPNManagementInterface(
+                self.ip, self.port, self)
         try:
             self.interface.connect()
         except socket.error as exception:
@@ -187,7 +200,8 @@ class OpenVPN:
             raise OpenVPNError(1, 'OpenVPN is already running')
 
         cmdline = '\'%s\' --cd \'%s\' --daemon --management %s %d --config \'%s\' --log \'%s\'' % (
-            self.openvpn, self.workdir, self.ip, self.port, self.ovpnconfig, self.logfile)
+            self.openvpn, self.workdir, self.ip, self.port, self.ovpnconfig,
+            self.logfile)
         if self.args is not None:
             cmdline = '%s %s' % (cmdline, self.args)
 
@@ -200,8 +214,12 @@ class OpenVPN:
             else:
                 cmdline = 'sudo %s' % (cmdline)
 
-        self.process = subprocess.Popen(cmdline, cwd=self.workdir, shell=True,
-                                        stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.process = subprocess.Popen(cmdline,
+                                        cwd=self.workdir,
+                                        shell=True,
+                                        stdout=subprocess.PIPE,
+                                        stdin=subprocess.PIPE,
+                                        stderr=subprocess.PIPE)
         time.sleep(self.timeout)
         if not self.connect_to_interface(True):
             self._log_debug('Connect OpenVPN failed')

@@ -42,19 +42,18 @@ URL_PROGRAMS = 'https://api-ctr.programme-tv.net/v2/broadcasts.json?' \
                'channelBouquets%7BchannelNumber,bouquet%7Bid,' \
                'isDefault%7D%7D%7D&bouquets=default&date=now'
 
-
 ID_CHANNELS = {
-   24: 'canvas',
-   382: 'bx1',
-   387: 'telemb',
-   390: 'rtc',
-   392: 'tvlux',
-   1280: 'ketnet',
-   23: 'een',
-   385: 'tvcom',
-   168: 'rtl_tvi',
-   50: 'club_rtl',
-   377: 'plug_rtl'
+    24: 'canvas',
+    382: 'bx1',
+    387: 'telemb',
+    390: 'rtc',
+    392: 'tvlux',
+    1280: 'ketnet',
+    23: 'een',
+    385: 'tvcom',
+    168: 'rtl_tvi',
+    50: 'club_rtl',
+    377: 'plug_rtl'
 }
 
 GUIDE_TIMEZONE = pytz.timezone('UTC')
@@ -64,9 +63,7 @@ GUIDE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 def grab_tv_guide(channels):
     programs = {}
 
-    guide_json = urlquick.get(
-        URL_PROGRAMS,
-        max_age=-1)
+    guide_json = urlquick.get(URL_PROGRAMS, max_age=-1)
     guide_json = json.loads(guide_json.text)
     guide_items = guide_json['data']['items']
 
@@ -86,26 +83,25 @@ def grab_tv_guide(channels):
             start_s = start_s.split('+')[0]
 
             try:
-                start = datetime.datetime.strptime(
-                    start_s,
-                    GUIDE_TIME_FORMAT)
+                start = datetime.datetime.strptime(start_s, GUIDE_TIME_FORMAT)
             except TypeError:
-                start = datetime.datetime(*(time.strptime(
-                    start_s, GUIDE_TIME_FORMAT)[0:6]))
+                start = datetime.datetime(*(
+                    time.strptime(start_s, GUIDE_TIME_FORMAT)[0:6]))
 
             try:
                 local_tz = get_localzone()
-            except:
+            except Exception:
                 # Hotfix issue #102
                 local_tz = pytz.timezone('Europe/Brussels')
-            
+
             start = GUIDE_TIMEZONE.localize(start)
             start = start.astimezone(local_tz)
             start_time = start.strftime("%Hh%M")
 
             program_dict['start_time'] = start_time
 
-            program_dict['genre'] = guide_item['program']['formatGenre']['genre']['name']
+            program_dict['genre'] = guide_item['program']['formatGenre'][
+                'genre']['name']
 
             program_dict['program_id'] = guide_item['id']
 
@@ -132,8 +128,6 @@ def grab_tv_guide(channels):
 # Only for testing purpose
 if __name__ == '__main__':
     grab_tv_guide({})
-
-
 '''
 Ciné revue IDs
 

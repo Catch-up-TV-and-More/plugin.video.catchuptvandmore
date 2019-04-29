@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -46,7 +47,7 @@ URL_DAYS = URL_ROOT + '/rivedila7/0/%s'
 URL_LIVE = URL_ROOT + '/dirette-tv'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -54,7 +55,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_days(plugin, item_id):
+def list_days(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -68,31 +69,31 @@ def list_days(plugin, item_id):
         if day_datas.find(".//div[@class='dateRowWeek']") is not None:
             day_title = day_datas.find(
                 ".//div[@class='dateRowWeek']").text + ' - ' + \
-                    day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
-                        day_datas.find(".//div[@class='dateMonth']").text
+                day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
+                day_datas.find(".//div[@class='dateMonth']").text
         else:
             day_title = day_datas.find(
                 ".//div[@class='dateRowWeek active']").text + ' - ' + \
-                    day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
-                        day_datas.find(".//div[@class='dateMonth']").text
+                day_datas.find(".//div[@class='dateDay']").text + ' - ' + \
+                day_datas.find(".//div[@class='dateMonth']").text
         day_url = URL_ROOT + day_datas.get('href')
 
         item = Listitem()
         item.label = day_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            day_url=day_url)
+        item.set_callback(list_videos, item_id=item_id, day_url=day_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, day_url):
+def list_videos(plugin, item_id, day_url, **kwargs):
 
     resp = urlquick.get(day_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='palinsesto_row             disponibile clearfix']"):
+    for video_datas in root.iterfind(
+            ".//div[@class='palinsesto_row             disponibile clearfix']"
+    ):
         video_title = video_datas.find('.//img').get('title')
         video_image = video_datas.find('.//img').get('src')
         video_plot = ''
@@ -105,41 +106,36 @@ def list_videos(plugin, item_id, day_url):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    json_value = re.compile(
-        r'src\: \{(.*?)\}\,').findall(resp.text)[0]
+    json_value = re.compile(r'src\: \{(.*?)\}\,').findall(resp.text)[0]
     json_parser = json.loads('{' + json_value + '}')
     if download_mode:
         return download.download_video(json_parser["m3u8"], video_label)
     return json_parser["m3u8"]
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    return re.compile(
-        r'var vS \= \'(.*?)\'').findall(resp.text)[0]
+    return re.compile(r'var vS \= \'(.*?)\'').findall(resp.text)[0]

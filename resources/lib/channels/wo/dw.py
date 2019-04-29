@@ -41,15 +41,16 @@ URL_ROOT = 'http://www.dw.com'
 
 DESIRED_LANGUAGE = Script.setting['dw.language']
 
-def live_entry(plugin, item_id, item_dict):
+
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     final_language = DESIRED_LANGUAGE
-   
+
     # If we come from the M3U file and the language
     # is set in the M3U URL, then we overwrite
     # Catch Up TV & More language setting
@@ -60,8 +61,8 @@ def get_live_url(plugin, item_id, video_id, item_dict):
 
     stream_url = ''
     resp = urlquick.get(URL_ROOT + '/%s' % final_language.lower())
-    list_lives_datas = re.compile(
-        r'name="file_name" value="(.*?)"').findall(resp.text)
+    list_lives_datas = re.compile(r'name="file_name" value="(.*?)"').findall(
+        resp.text)
 
     for live_datas in list_lives_datas:
         if 'm3u8' in live_datas:

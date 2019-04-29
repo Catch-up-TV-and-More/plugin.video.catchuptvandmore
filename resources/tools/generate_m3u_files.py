@@ -31,21 +31,17 @@ sys.path.append('..')
 
 import mock_codequick
 import urllib
+import importlib
+import os
 
-import lib.skeleton as sk
 from lib.labels import LABELS
-
 
 LIVE_TV_M3U_ALL_FILEPATH = "../m3u/live_tv_all.m3u"
 
 LIVE_TV_M3U_COUTRY_FILEPATH = "../m3u/live_tv_%s.m3u"
 # arg0: country_code (fr, nl, jp, ...)
 
-
-
-
 EN_STRINGS_PO_FILEPATH = "../language/resource.language.en_gb/strings.po"
-
 
 # NOT USED ANYMORE
 # LOGO_URL = "https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/%s/resources/media/channels/%s/%s"
@@ -60,7 +56,6 @@ PLUGIN_QUERY = "%s/?item_id=%s&item_module=%s&item_dict=%s"
 # arg3: item_dict ({'language': 'FR'})
 
 PLUGIN_LIVE_BRIDGE_PATH = "plugin://plugin.video.catchuptvandmore/main/"
-
 
 M3U_ENTRY = '#EXTINF:-1 tvg-id="%s" tvg-logo="%s" group-title="%s",%s\n%s'
 # arg0: tgv_id
@@ -77,7 +72,6 @@ en_strings_po = {}
 po = polib.pofile(EN_STRINGS_PO_FILEPATH)
 for entry in po:
     en_strings_po[entry.msgctxt] = entry.msgid
-
 
 MANUAL_LABELS = {
     'la_1ere': 'La 1ère',
@@ -99,22 +93,20 @@ MANUAL_LABELS = {
 # Get image path/url
 def get_item_media_path(item_media_path):
     full_path = ''
-    
+
     # Local image in ressources/media folder
     if type(item_media_path) is list:
-        full_path = os.path.join(
-            "..", "media", *(item_media_path))
-    
+        full_path = os.path.join("..", "media", *(item_media_path))
+
     # Remote image with complete URL
     elif 'http' in item_media_path:
         full_path = item_media_path
-    
+
     # Remote image on our images repo
     else:
         full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
-    
-    return full_path
 
+    return full_path
 
 
 # Return string label from item_id
@@ -123,7 +115,7 @@ def get_label(item_id):
 
     # strings.po case
     if isinstance(label, int):
-        if ('#' + str(label) ) in en_strings_po:
+        if ('#' + str(label)) in en_strings_po:
             return en_strings_po['#' + str(label)]
         else:
             print('Number ' + str(label) + ' not found in english strings.po')
@@ -132,22 +124,19 @@ def get_label(item_id):
     # manual label case
     elif item_id in MANUAL_LABELS:
         return MANUAL_LABELS[item_id]
-    
 
     # Label given in labels.py case
     elif isinstance(label, str):
         return label
-    
+
     else:
         print('\nNeed to add ' + item_id + ' label in MANUAL_LABELS')
         exit(-1)
 
 
-
 # Write M3U header in file
 def write_header(file):
     file.write("#EXTM3U tvg-shift=0\n\n")
-
 
 
 # Generate m3u files
@@ -156,14 +145,14 @@ def generate_m3u_files():
     m3u_entries = {}
 
     # Iterate over countries
-    for country_id, country_infos in eval('sk.LIVE_TV').items():
-        
+    live_tv = importlib.import_module('lib.skeletons.live_tv').menu
+    for country_id, country_infos in live_tv.items():
+
         country_label = get_label(country_id)
-        country_code =  country_id.replace('_live', '')
+        country_code = country_id.replace('_live', '')
 
         print('\ncountry_id: ' + country_id)
-        #print('\ncountry_label: ' + country_label)
-        
+        # print('\ncountry_label: ' + country_label)
 
         if country_id not in m3u_entries:
             m3u_entries[country_id] = {}
@@ -171,44 +160,42 @@ def generate_m3u_files():
             m3u_entries[country_id]['country_code'] = country_code
             m3u_entries[country_id]['channels'] = []
 
-
         # Iterate over channels
-        for channel_id, channel_infos in eval('sk.' + country_id.upper()).items():
-            
+        country_channels = importlib.import_module('lib.skeletons.' +
+                                                   country_id).menu
+        for channel_id, channel_infos in country_channels.items():
+
             channel_label = get_label(channel_id)
             print('\n\tchannel_id: ' + channel_id)
             # print('\t\tchannel_label: ' + channel_label)
 
-
             # If we have mutliple languages
             # for this channel we need to add each language
-            
+
             languages = []
             # Key: Label to append
             # Value: custom item_dict
 
             if 'available_languages' in channel_infos:
                 for language in channel_infos['available_languages']:
-                    languages.append(
-                        {
-                            'language_code': language.lower(),
-                            'language_label': ' ' + language,
-                            'language_dict' : '{"language":"' + language + '"}'
-                        }
-                    )
+                    languages.append({
+                        'language_code':
+                        language.lower(),
+                        'language_label':
+                        ' ' + language,
+                        'language_dict':
+                        '{"language":"' + language + '"}'
+                    })
             else:
-                languages.append(
-                    {   
-                        'language_code': '',
-                        'language_label': '',
-                        'language_dict' : '{}'
-                    }
-                )
-
+                languages.append({
+                    'language_code': '',
+                    'language_label': '',
+                    'language_dict': '{}'
+                })
 
             # For each language we add the corresponding m3u entry
             for language in languages:
-                
+
                 channel_m3u_dict = {}
 
                 # channe_id
@@ -218,49 +205,60 @@ def generate_m3u_files():
                 channel_m3u_dict['channel_module'] = channel_infos['module']
 
                 # Is the call back is not live_bridge we skip :-/
-                channel_m3u_dict['channel_callback'] = channel_infos['callback']
-                if channel_m3u_dict['channel_callback'] is not 'live_bridge':
+                channel_m3u_dict['channel_callback'] = channel_infos[
+                    'callback']
+                if channel_m3u_dict['channel_callback'] != 'live_bridge':
                     continue
 
                 # channel_logo
                 # channel_m3u_dict['channel_logo'] = LOGO_URL % (current_branch, channel_infos["thumb"][1], channel_infos["thumb"][2])
-                channel_m3u_dict['channel_logo'] = get_item_media_path(channel_infos["thumb"])
-                
+                channel_m3u_dict['channel_logo'] = get_item_media_path(
+                    channel_infos["thumb"])
+
                 # channel_label
-                channel_m3u_dict['channel_label'] = channel_label + language['language_label']
+                channel_m3u_dict['channel_label'] = channel_label + language[
+                    'language_label']
 
                 # channel_dict
-                channel_m3u_dict['channel_item_dict'] = language['language_dict']
+                channel_m3u_dict['channel_item_dict'] = language[
+                    'language_dict']
 
                 # channel_group_coutry
                 channel_m3u_dict['channel_group_country'] = country_label
                 if 'm3u_group' in channel_infos:
-                    channel_m3u_dict['channel_group_country'] = channel_m3u_dict['channel_group_country'] + " " + channel_infos['m3u_group']
+                    channel_m3u_dict[
+                        'channel_group_country'] = channel_m3u_dict[
+                            'channel_group_country'] + " " + channel_infos[
+                                'm3u_group']
 
                 # channel_group_all
                 channel_m3u_dict['channel_group_all'] = country_label
-                
+
                 # channel_xmltv_id
                 channel_m3u_dict['channel_xmltv_id'] = ''
                 if 'xmltv_ids' in channel_infos:
                     if language['language_code'] in channel_infos['xmltv_ids']:
-                        channel_m3u_dict['channel_xmltv_id'] = channel_infos['xmltv_ids'][language['language_code']]
+                        channel_m3u_dict['channel_xmltv_id'] = channel_infos[
+                            'xmltv_ids'][language['language_code']]
                 elif 'xmltv_id' in channel_infos:
-                    channel_m3u_dict['channel_xmltv_id'] = channel_infos['xmltv_id']
+                    channel_m3u_dict['channel_xmltv_id'] = channel_infos[
+                        'xmltv_id']
 
                 channel_m3u_dict['add_in_all'] = True
 
                 # channel_order
                 channel_order = channel_infos.get('m3u_order', 100)
 
-                m3u_entries[country_id]['channels'].append((channel_order, channel_m3u_dict))
-
+                m3u_entries[country_id]['channels'].append(
+                    (channel_order, channel_m3u_dict))
 
         # Add WO channels if needed (e.g. Arte FR in the French M3U)
-        for channel_wo_id, channel_wo_infos in eval('sk.WO_LIVE').items():
+        wo_live = importlib.import_module('lib.skeletons.wo_live').menu
+        for channel_wo_id, channel_wo_infos in wo_live.items():
             channel_can_be_added = False
             if 'available_languages' in channel_wo_infos:
-                if country_code.upper() in channel_wo_infos['available_languages']:
+                if country_code.upper(
+                ) in channel_wo_infos['available_languages']:
                     channel_can_be_added = True
 
             if channel_can_be_added:
@@ -276,59 +274,69 @@ def generate_m3u_files():
                 channel_m3u_dict['channel_module'] = channel_wo_infos['module']
 
                 # Is the call back is not live_bridge we skip :-/
-                channel_m3u_dict['channel_callback'] = channel_wo_infos['callback']
-                if channel_m3u_dict['channel_callback'] is not 'live_bridge':
+                channel_m3u_dict['channel_callback'] = channel_wo_infos[
+                    'callback']
+                if channel_m3u_dict['channel_callback'] != 'live_bridge':
                     continue
 
                 # channel_logo
                 # channel_m3u_dict['channel_logo'] = LOGO_URL % (current_branch, channel_wo_infos["thumb"][1], channel_wo_infos["thumb"][2])
-                channel_m3u_dict['channel_logo'] = get_item_media_path(channel_wo_infos["thumb"])
+                channel_m3u_dict['channel_logo'] = get_item_media_path(
+                    channel_wo_infos["thumb"])
 
                 # channel_label
                 channel_m3u_dict['channel_label'] = channel_wo_label
 
                 # channel_dict
-                channel_m3u_dict['channel_item_dict'] = "{'language':'" + country_code.upper() + "'}"
+                channel_m3u_dict[
+                    'channel_item_dict'] = '{"language":"' + country_code.upper() + '"}'
 
                 # channel_group_coutry
                 channel_m3u_dict['channel_group_country'] = country_label
                 if 'm3u_groups' in channel_wo_infos:
                     if country_code in channel_wo_infos['m3u_groups']:
-                        channel_m3u_dict['channel_group_country'] = channel_wo_infos['m3u_groups'][country_code]
+                        channel_m3u_dict[
+                            'channel_group_country'] = channel_wo_infos[
+                                'm3u_groups'][country_code]
                 elif 'm3u_group' in channel_wo_infos:
-                    channel_m3u_dict['channel_group_country'] = channel_m3u_dict['channel_group_country'] + " " + channel_wo_infos['m3u_group']
+                    channel_m3u_dict[
+                        'channel_group_country'] = channel_m3u_dict[
+                            'channel_group_country'] + " " + channel_wo_infos[
+                                'm3u_group']
 
                 # channel_group_all
-                channel_m3u_dict['channel_group_all'] = '' # Not used
-                
+                channel_m3u_dict['channel_group_all'] = ''  # Not used
+
                 # channel_xmltv_id
                 channel_m3u_dict['channel_xmltv_id'] = ''
                 if 'xmltv_ids' in channel_wo_infos:
                     if country_code in channel_wo_infos['xmltv_ids']:
-                        channel_m3u_dict['channel_xmltv_id'] = channel_wo_infos['xmltv_ids'][country_code]
+                        channel_m3u_dict[
+                            'channel_xmltv_id'] = channel_wo_infos[
+                                'xmltv_ids'][country_code]
                 elif 'xmltv_id' in channel_wo_infos:
-                    channel_m3u_dict['channel_xmltv_id'] = channel_wo_infos['xmltv_id']
+                    channel_m3u_dict['channel_xmltv_id'] = channel_wo_infos[
+                        'xmltv_id']
 
                 # channel_order
                 channel_order = 100
                 if 'm3u_orders' in channel_wo_infos:
                     if country_code in channel_wo_infos['m3u_orders']:
-                        channel_order = channel_wo_infos['m3u_orders'][country_code]
+                        channel_order = channel_wo_infos['m3u_orders'][
+                            country_code]
                 elif 'm3u_order' in channel_wo_infos:
                     channel_order = channel_wo_infos['m3u_order']
 
                 channel_m3u_dict['add_in_all'] = False
 
-                m3u_entries[country_id]['channels'].append((channel_order, channel_m3u_dict))
-
-
+                m3u_entries[country_id]['channels'].append(
+                    (channel_order, channel_m3u_dict))
 
     # Now we can write in m3u files
 
-
     # Init m3u all file
-    print ("Generate m3u all in " + LIVE_TV_M3U_ALL_FILEPATH)
-    m3u_all = open(LIVE_TV_M3U_ALL_FILEPATH, "w") 
+    print("Generate m3u all in " + LIVE_TV_M3U_ALL_FILEPATH)
+    m3u_all = open(LIVE_TV_M3U_ALL_FILEPATH, "w")
     write_header(m3u_all)
 
     for country_id, country_dict in m3u_entries.items():
@@ -337,8 +345,9 @@ def generate_m3u_files():
         country_code = country_dict['country_code']
 
         # Init m3u country file
-        print ("Generate m3u of " + country_label + " in " + (LIVE_TV_M3U_COUTRY_FILEPATH % country_code))
-        m3u_country = open((LIVE_TV_M3U_COUTRY_FILEPATH % country_code), "w") 
+        print("Generate m3u of " + country_label + " in " +
+              (LIVE_TV_M3U_COUTRY_FILEPATH % country_code))
+        m3u_country = open((LIVE_TV_M3U_COUTRY_FILEPATH % country_code), "w")
         write_header(m3u_country)
 
         # Add the current country as comment
@@ -362,46 +371,36 @@ def generate_m3u_files():
             channel_xmltv_id = channel_dict['channel_xmltv_id']
             channel_callback = channel_dict['channel_callback']
 
-            query = PLUGIN_QUERY % (channel_callback, channel_id, channel_module, channel_item_dict)
+            query = PLUGIN_QUERY % (channel_callback, channel_id,
+                                    channel_module, channel_item_dict)
             channel_url = PLUGIN_LIVE_BRIDGE_PATH + query
 
-            channel_m3u_entry_country = M3U_ENTRY % (channel_xmltv_id, channel_logo, channel_group_country, channel_label, channel_url)
+            channel_m3u_entry_country = M3U_ENTRY % (
+                channel_xmltv_id, channel_logo, channel_group_country,
+                channel_label, channel_url)
             m3u_country.write("##\t" + channel_label + "\n")
             m3u_country.write("##\t" + channel_id + "\n")
             m3u_country.write(channel_m3u_entry_country + "\n\n")
 
             if channel_dict['add_in_all']:
-                channel_m3u_entry_all = M3U_ENTRY % (channel_xmltv_id, channel_logo, channel_group_all, channel_label, channel_url)
+                channel_m3u_entry_all = M3U_ENTRY % (
+                    channel_xmltv_id, channel_logo, channel_group_all,
+                    channel_label, channel_url)
                 m3u_all.write("##\t" + channel_label + "\n")
                 m3u_all.write("##\t" + channel_id + "\n")
                 m3u_all.write(channel_m3u_entry_all + "\n\n")
-            
-        
+
         m3u_all.write("\n\n")
         m3u_country.close()
 
     m3u_all.close()
 
 
-
-
-
-
-
 def main():
 
-    generate_m3u_files()    
+    generate_m3u_files()
     print("\nM3U files generation done! :-D")
 
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-

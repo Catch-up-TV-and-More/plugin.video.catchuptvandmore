@@ -30,6 +30,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 # Verify md5 still present in hashlib python 3 (need to find another way if it is not the case)
 # https://docs.python.org/3/library/hashlib.html
@@ -40,41 +41,43 @@ import json
 import time
 import urlquick
 
-
 # TO DO
 # Improve Live TV (Title, picture, plot)
-
 
 SECRET_KEY = '19nBVBxv791Xs'
 
 CATEGORIES = {}
 
-CATEGORIES['Dessins animés'] = 'http://sslreplay.gulli.fr/replay/api?' \
-                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%22' \
-                               'method%%22:%%22programme.getLatest' \
-                               'Episodes%%22,%%22params%%22:%%7B%%22' \
-                               'program_image_thumb%%22:%%5B310,230%%5D,%%22' \
-                               'category_id%%22:%%22dessins-animes%%22%%7D%%7D'
+CATEGORIES['Dessins animés'] = (
+    'http://sslreplay.gulli.fr/replay/api?'
+    'call=%%7B%%22api_key%%22:%%22%s%%22,%%22'
+    'method%%22:%%22programme.getLatest'
+    'Episodes%%22,%%22params%%22:%%7B%%22'
+    'program_image_thumb%%22:%%5B310,230%%5D,%%22'
+    'category_id%%22:%%22dessins-animes%%22%%7D%%7D')
 
-CATEGORIES['Émissions'] = 'https://sslreplay.gulli.fr/replay/api?' \
-                          'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method' \
-                          '%%22:%%22programme.getLatestEpisodes%%22,%%' \
-                          '22params%%22:%%7B%%22program_image_thumb%%' \
-                          '22:%%5B310,230%%5D,%%22category_id%%22:%%22' \
-                          'emissions%%22%%7D%%7D'
+CATEGORIES['Émissions'] = (
+    'https://sslreplay.gulli.fr/replay/api?'
+    'call=%%7B%%22api_key%%22:%%22%s%%22,%%22method'
+    '%%22:%%22programme.getLatestEpisodes%%22,%%'
+    '22params%%22:%%7B%%22program_image_thumb%%'
+    '22:%%5B310,230%%5D,%%22category_id%%22:%%22'
+    'emissions%%22%%7D%%7D')
 
-CATEGORIES['Séries & films'] = 'https://sslreplay.gulli.fr/replay/api?' \
-                               'call=%%7B%%22api_key%%22:%%22%s%%22,%%2' \
-                               '2method%%22:%%22programme.getLatest' \
-                               'Episodes%%22,%%22params%%22:%%7B%%22program_' \
-                               'image_thumb%%22:%%5B310,230%%5D,%%22category' \
-                               '_id%%22:%%22series%%22%%7D%%7D'
+CATEGORIES['Séries & films'] = (
+    'https://sslreplay.gulli.fr/replay/api?'
+    'call=%%7B%%22api_key%%22:%%22%s%%22,%%2'
+    '2method%%22:%%22programme.getLatest'
+    'Episodes%%22,%%22params%%22:%%7B%%22program_'
+    'image_thumb%%22:%%5B310,230%%5D,%%22category'
+    '_id%%22:%%22series%%22%%7D%%7D')
 
-URL_LIST_SHOW = 'https://sslreplay.gulli.fr/replay/api?call=%%7B%%22api_key' \
-                '%%22:%%22%s%%22,%%22' \
-                'method%%22:%%22programme.getEpisodesByProgramIds%%22,%%22' \
-                'params%%22:%%7B%%22program_id_list%%22:%%5B%%22%s%%22%%5D' \
-                '%%7D%%7D'
+URL_LIST_SHOW = (
+    'https://sslreplay.gulli.fr/replay/api?call=%%7B%%22api_key'
+    '%%22:%%22%s%%22,%%22'
+    'method%%22:%%22programme.getEpisodesByProgramIds%%22,%%22'
+    'params%%22:%%7B%%22program_id_list%%22:%%5B%%22%s%%22%%5D'
+    '%%7D%%7D')
 
 URL_LIVE_TV = 'http://replay.gulli.fr/Direct'
 
@@ -83,11 +86,11 @@ def get_api_key():
     """Compute the API key"""
     date = time.strftime("%Y%m%d")
     key = SECRET_KEY + date
-    key = md5(key).hexdigest()
+    key = md5(key.encode('utf-8')).hexdigest()
     return 'iphoner_' + key
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -95,32 +98,31 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
     - ...
     """
-    for category_title, program_url in CATEGORIES.iteritems():
+    for category_title, program_url in CATEGORIES.items():
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            program_url=program_url % get_api_key()
-        )
+        item.set_callback(list_programs,
+                          item_id=item_id,
+                          program_url=program_url % get_api_key())
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, program_url):
+def list_programs(plugin, item_id, program_url, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(
-        program_url, headers={'User-Agent': web_utils.get_random_ua})
+    resp = urlquick.get(program_url,
+                        headers={'User-Agent': web_utils.get_random_ua})
     json_parser = json.loads(resp.text)
 
     for program in json_parser['res']:
@@ -132,20 +134,16 @@ def list_programs(plugin, item_id, program_url):
         item.label = program_title
         item.art["thumb"] = program_image
         item.art["fanart"] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_id=program_id
-        )
+        item.set_callback(list_videos, item_id=item_id, program_id=program_id)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_id):
+def list_videos(plugin, item_id, program_id, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIST_SHOW % (get_api_key(), program_id),
-        headers={'User-Agent': web_utils.get_random_ua})
+    resp = urlquick.get(URL_LIST_SHOW % (get_api_key(), program_id),
+                        headers={'User-Agent': web_utils.get_random_ua})
     json_parser = json.loads(resp.text)
 
     for show in json_parser['res']:
@@ -183,25 +181,21 @@ def list_videos(plugin, item_id, program_id):
         item.art["thumb"] = thumb
         item.art["fanart"] = fanart
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url
-        )
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     url_root = video_url.replace('playlist.m3u8', '')
     m3u8_content = urlquick.get(
         video_url, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
@@ -216,20 +210,25 @@ def get_video_url(
     return url_root + last_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     url_live = ''
-    live_html = urlquick.get(URL_LIVE_TV, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-    url_live_embeded = re.compile(
-        '<iframe src=\"(.*?)\"').findall(live_html.text)[0]
-    root_live_embeded_html = urlquick.get(url_live_embeded, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
-    all_url_video = re.compile(
-        r'file: \'(.*?)\'').findall(root_live_embeded_html.text)
+    live_html = urlquick.get(URL_LIVE_TV,
+                             headers={'User-Agent': web_utils.get_random_ua},
+                             max_age=-1)
+    url_live_embeded = re.compile('<iframe src=\"(.*?)\"').findall(
+        live_html.text)[0]
+    root_live_embeded_html = urlquick.get(
+        url_live_embeded,
+        headers={'User-Agent': web_utils.get_random_ua},
+        max_age=-1)
+    all_url_video = re.compile(r'file: \'(.*?)\'').findall(
+        root_live_embeded_html.text)
 
     for url_video in all_url_video:
         if url_video.count('m3u8') > 0:

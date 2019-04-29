@@ -30,8 +30,8 @@ msgid "Quality and content"
 msgstr "Qualité et Contenu"
 
 msgctxt "#30003"
-msgid "Download"
-msgstr "Téléchargement"
+msgid "Downloads"
+msgstr "Téléchargements"
 
 msgctxt "#30004"
 msgid "Accounts"
@@ -94,6 +94,9 @@ msgctxt "#30032"
 msgid "Websites"
 msgstr "Sites internet"
 
+msgctxt "#30033"
+msgid "Favourites"
+msgstr "Favoris"
 
 
 # Countries (from 30050 to 30079)
@@ -495,6 +498,15 @@ msgctxt "#30604"
 msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
 msgstr "Accèss à ce contenu nécessite un compte %s. Vous pouvez configurer votre identifiant et votre mot de passe dans la configuration de cette extension. Si vous n'avez pas de compte, vous pouvez le créer à cette URL %s."
 
+msgctxt "#30605"
+msgid "You can now use Kodi's TV feature to watch live TV channels from Catch-up TV & More, follow the tutorial at https://catch-up-tv-and-more.github.io/live_tv_installation/."
+msgstr "Vous pouvez maintenant utiliser la fonctionnalité TV de Kodi pour regarder les chaînes de TV en direct de Catch-up TV & More, suivez le tutoriel à l'adresse https://catch-up-tv-and-more.github.io/fr/live_tv_installation/."
+
+msgctxt "#30606"
+msgid "Do you want to see this information next time?"
+msgstr "Voulez-vous voir cette information la prochaine fois ?"
+
+
 # Others (from 30700 to 30799)
 msgctxt "#30700"
 msgid "More videos..."
@@ -579,3 +591,35 @@ msgstr "Inputstream Adaptive n'est pas activé"
 msgctxt "#30720"
 msgid "Kodi 17.6 or > is required"
 msgstr "Kodi 17.6 ou > est requis"
+
+
+# Favourites (from 30800 to 30859)
+
+msgctxt "#30800"
+msgid "Add to add-on favourites"
+msgstr "Ajouter aux favoris du plugin"
+
+msgctxt "#30801"
+msgid "Favourite name"
+msgstr "Nom du favori"
+
+msgctxt "#30802"
+msgid "Remove"
+msgstr "Supprimer"
+
+msgctxt "#30803"
+msgid "Favourites"
+msgstr "Favoris"
+
+msgctxt "#30804"
+msgid "Rename"
+msgstr "Renommer"
+
+msgctxt "#30805"
+msgid "The item has been added to the favourites of the add-on"
+msgstr "L'élément a été ajouté à aux favoris de l'extension"
+
+msgctxt "#30806"
+msgid "Add at least one favourite to access this menu"
+msgstr "Ajoutez au moins un favori pour accéder à ce menu"
+

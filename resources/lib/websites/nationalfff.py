@@ -28,7 +28,7 @@ import urlquick
 
 from resources.lib.labels import LABELS
 from resources.lib import resolver_proxy
-
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 URL_ROOT = 'https://national.fff.fr'
 
@@ -36,14 +36,15 @@ URL_REPLAY = URL_ROOT + '/#replay'
 
 # TODO Add Live
 
-def website_entry(plugin, item_id):
+
+def website_entry(plugin, item_id, **kwargs):
     """
     First executed function after website_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     resp = urlquick.get(URL_REPLAY)
     list_categories_title = re.compile(
@@ -55,21 +56,21 @@ def root(plugin, item_id):
         item.label = category_title
         category_id += 1
 
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            category_id=category_id)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_id=category_id)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_id):
+def list_videos(plugin, item_id, category_id, **kwargs):
     """Build videos listing"""
 
     resp = urlquick.get(URL_REPLAY)
-    list_videos_datas = re.compile(
-        r'videos            : \[(.*?)\]').findall(resp.text)
-    
+    list_videos_datas = re.compile(r'videos            : \[(.*?)\]').findall(
+        resp.text)
+
     json_parser = json.loads('[' + list_videos_datas[category_id - 1] + ']')
 
     for video_datas in json_parser:
@@ -87,28 +88,22 @@ def list_videos(plugin, item_id, category_id):
             date_value = video_datas['overlayDescription'].split('|')[0]
             item.info.date(date_value, '%d/%m/%Y')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_id=video_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_id=video_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_id, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
     """Get video URL and start video player"""
 
-    return resolver_proxy.get_stream_dailymotion(
-        plugin,
-        video_id,
-        download_mode,
-        video_label)
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id,
+                                                 download_mode, video_label)

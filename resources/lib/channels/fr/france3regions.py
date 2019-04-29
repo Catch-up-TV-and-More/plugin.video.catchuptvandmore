@@ -32,11 +32,11 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
 import urlquick
-
 '''
 Channels:
     * France 3 Régions (JT, Météo, Live TV)
@@ -94,7 +94,7 @@ CORRECT_MONTH = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -102,7 +102,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -115,9 +115,12 @@ def list_programs(plugin, item_id):
     resp = urlquick.get(URL_EMISSIONS % region)
     root = resp.parse()
 
-    for program_datas in root.iterfind(".//div[@class='little-column-style--content col-sm-6 col-md-4 mobile-toggler-replace']"):
+    for program_datas in root.iterfind(
+            ".//div[@class='little-column-style--content col-sm-6 col-md-4 mobile-toggler-replace']"
+    ):
         program_title = program_datas.find('.//h2').text
-        program_plot = program_datas.find(".//div[@class='column-style--text hidden-xs']").text
+        program_plot = program_datas.find(
+            ".//div[@class='column-style--text hidden-xs']").text
         program_image = program_datas.find('.//img').get('data-srcset')
         program_url = program_datas.find('.//a').get('href')
 
@@ -125,28 +128,29 @@ def list_programs(plugin, item_id):
         item.label = program_title
         item.art['thumb'] = program_image
         item.info['plot'] = program_plot
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url):
+def list_videos(plugin, item_id, program_url, **kwargs):
 
     resp = urlquick.get(program_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//a[@class='slider-inline-style--content video_mosaic']"):
+    for video_datas in root.iterfind(
+            ".//a[@class='slider-inline-style--content video_mosaic']"):
         video_title = video_datas.get('title')
         video_plot = video_datas.get('description')
         if video_datas.find('.//img').get('data-srcset'):
             video_image = video_datas.find('.//img').get('data-srcset')
         else:
             video_image = video_datas.find('.//img').get('src')
-        id_diffusion = re.compile(
-            r'video\/(.*?)\@Regions').findall(video_datas.get('href'))[0]
+        id_diffusion = re.compile(r'video\/(.*?)\@Regions').findall(
+            video_datas.get('href'))[0]
 
         item = Listitem()
         item.label = video_title
@@ -154,40 +158,43 @@ def list_videos(plugin, item_id, program_url):
         item.info['plot'] = video_plot
 
         date_value = ''
-        if video_datas.find(".//p[@class='slider-inline-style--text text-light m-t-0']").text is not None:
-            date_value = video_datas.find(".//p[@class='slider-inline-style--text text-light m-t-0']").text.split(' du ')[1]
+        if video_datas.find(
+                ".//p[@class='slider-inline-style--text text-light m-t-0']"
+        ).text is not None:
+            date_value = video_datas.find(
+                ".//p[@class='slider-inline-style--text text-light m-t-0']"
+            ).text.split(' du ')[1]
             item.info.date(date_value, '%d/%m/%Y')
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            id_diffusion=id_diffusion,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            id_diffusion=id_diffusion,
-            item_dict=cqu.item2dict(item))
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          id_diffusion=id_diffusion,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, id_diffusion, item_dict=None, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  id_diffusion,
+                  item_dict=None,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
-    return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, item_dict, download_mode, video_label)
+    return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
+                                                    item_dict, download_mode,
+                                                    video_label)
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     final_region = Script.setting['france3regions.language']
 
     # If we come from the M3U file and the language
@@ -198,13 +205,12 @@ def get_live_url(plugin, item_id, video_id, item_dict):
     if 'language' in item_dict:
         final_region = item_dict['language']
 
-    resp = urlquick.get(
-        URL_LIVES_JSON,
-        headers={'User-Agent': web_utils.get_random_ua},
-        max_age=-1)
+    resp = urlquick.get(URL_LIVES_JSON,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
     json_parser = json.loads(resp.text)
 
     region = utils.ensure_unicode(final_region)
     id_sivideo = json_parser[LIVE_FR3_REGIONS[region]]["id_sivideo"]
-    return resolver_proxy.get_francetv_live_stream(
-        plugin, id_sivideo.split('@')[0])
+    return resolver_proxy.get_francetv_live_stream(plugin,
+                                                   id_sivideo.split('@')[0])

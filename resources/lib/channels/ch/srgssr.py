@@ -30,6 +30,8 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
+import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import inputstreamhelper
 import datetime
@@ -39,13 +41,11 @@ import urlquick
 import xbmc
 import xbmcgui
 
-
 # TO DO and Infos
 # RTR No category (verify in the future ?)
 # Add More Video_button (for category and emissions)
 # Add Info Video
 # Add Quality Mode / test Download Mode
-
 
 URL_ROOT = 'https://%s.%s.ch'
 # (www or play), channel_name
@@ -97,7 +97,7 @@ LIVE_LIVE_CHANNEL_NAME = {
 }
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -105,7 +105,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -119,10 +119,10 @@ def list_categories(plugin, item_id):
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_programs,
+                          item_id=item_id,
+                          category_url=category_url)
+        item_post_treatment(item)
         yield item
 
     if 'swissinfo' in item_id:
@@ -140,15 +140,15 @@ def list_categories(plugin, item_id):
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_videos_category,
-            item_id=item_id,
-            category_url=category_url)
+        item.set_callback(list_videos_category,
+                          item_id=item_id,
+                          category_url=category_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category_url):
+def list_programs(plugin, item_id, category_url, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -156,8 +156,7 @@ def list_programs(plugin, item_id, category_url):
     """
     resp = urlquick.get(category_url)
     json_value = re.compile(
-        r'data-alphabetical-sections=\\\"(.*?)\\\"').findall(
-            resp.text)[0]
+        r'data-alphabetical-sections=\\\"(.*?)\\\"').findall(resp.text)[0]
     json_value = json_value.replace('&quot;', '"')
     json_value = json_value.replace('\\\\"', ' ')
     json_parser = json.loads(json_value)
@@ -174,19 +173,18 @@ def list_programs(plugin, item_id, category_url):
             item = Listitem()
             item.label = program_title
             item.art['thumb'] = program_image
-            item.set_callback(
-                list_videos_program,
-                item_id=item_id,
-                program_id=program_id)
+            item.set_callback(list_videos_program,
+                              item_id=item_id,
+                              program_id=program_id)
+            item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_videos_category(plugin, item_id, category_url):
+def list_videos_category(plugin, item_id, category_url, **kwargs):
 
     resp = urlquick.get(category_url)
-    json_value = re.compile(
-        r'data-teaser=\"(.*?)\"').findall(resp.text)[0]
+    json_value = re.compile(r'data-teaser=\"(.*?)\"').findall(resp.text)[0]
     json_value = json_value.replace('&quot;', '"')
     json_parser = json.loads(json_value)
 
@@ -208,29 +206,23 @@ def list_videos_category(plugin, item_id, category_url):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Route.register
-def list_videos_program(plugin, item_id, program_id):
+def list_videos_program(plugin, item_id, program_id, **kwargs):
 
     date = datetime.datetime.now()
     actual_month = str(date).split(' ')[0].split('-')[1] + '-' + \
         str(date).split(' ')[0].split('-')[0]
 
-    resp = urlquick.get(URL_LIST_EPISODES % (item_id, program_id, actual_month))
+    resp = urlquick.get(URL_LIST_EPISODES %
+                        (item_id, program_id, actual_month))
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["episodes"]:
@@ -251,24 +243,21 @@ def list_videos_program(plugin, item_id, program_id):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     video_id = video_url.split('=')[1]
     if item_id == 'swissinfo':
@@ -284,14 +273,14 @@ def get_video_url(
         if video_id in stream_datas["id"]:
             for stream_datas_url in stream_datas["resourceList"]:
                 if 'HD' in stream_datas_url["quality"] and \
-                    'mpegURL' in stream_datas_url["mimeType"]:
+                        'mpegURL' in stream_datas_url["mimeType"]:
                     stream_url = stream_datas_url["url"]
                     break
                 else:
                     if 'mpegURL' in stream_datas_url["mimeType"]:
                         stream_url = stream_datas_url["url"]
-    acl_value = '/i/%s/*' % (re.compile(
-        r'\/i\/(.*?)\/master').findall(stream_url)[0])
+    acl_value = '/i/%s/*' % (
+        re.compile(r'\/i\/(.*?)\/master').findall(stream_url)[0])
     token_datas = urlquick.get(URL_TOKEN % acl_value)
     token_jsonparser = json.loads(token_datas.text)
     token = token_jsonparser["token"]["authparams"]
@@ -306,12 +295,12 @@ def get_video_url(
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE_JSON % item_id[:3])
     json_parser = json.loads(resp.text)
@@ -335,11 +324,8 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                     is_drm = True
 
     if is_drm:
-        xbmc_version = int(xbmc.getInfoLabel("System.BuildVersion").split('-')[0].split('.')[0])
-        if xbmc_version < 18:
-            xbmcgui.Dialog().ok(
-                'Info',
-                plugin.localize(30602))
+        if cqu.get_kodi_version() < 18:
+            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
             return False
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
@@ -359,16 +345,24 @@ def get_live_url(plugin, item_id, video_id, item_dict):
         item.path = stream_url
         item.property['inputstreamaddon'] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property['inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
+        item.property[
+            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property[
+            'inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
 
-        if 'label' in item_dict:
-            item.label = item_dict['label']
-        if 'info' in item_dict:
-            item.info.update(item_dict['info'])
-        if 'art' in item_dict:
-            item.art.update(item_dict['art'])
-
+        if item_dict:
+            if 'label' in item_dict:
+                item.label = item_dict['label']
+            if 'info' in item_dict:
+                item.info.update(item_dict['info'])
+            if 'art' in item_dict:
+                item.art.update(item_dict['art'])
+        else:
+            item.label = LABELS[item_id]
+            item.art["thumb"] = ""
+            item.art["icon"] = ""
+            item.art["fanart"] = ""
+            item.info["plot"] = LABELS[item_id]
         return item
 
     else:
@@ -383,8 +377,8 @@ def get_live_url(plugin, item_id, video_id, item_dict):
                         if 'mpegURL' in stream_datas_url["mimeType"]:
                             stream_url = stream_datas_url["url"]
 
-        acl_value = '/i/%s/*' % (re.compile(
-            r'\/i\/(.*?)\/').findall(stream_url)[0])
+        acl_value = '/i/%s/*' % (
+            re.compile(r'\/i\/(.*?)\/').findall(stream_url)[0])
         token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
         token_jsonparser = json.loads(token_datas.text)
         token = token_jsonparser["token"]["authparams"]

@@ -30,8 +30,8 @@ msgid "Quality and content"
 msgstr "Kwaliteit en inhoud"
 
 msgctxt "#30003"
-msgid "Download"
-msgstr "Download"
+msgid "Downloads"
+msgstr "Downloads"
 
 msgctxt "#30004"
 msgid "Accounts"
@@ -94,7 +94,9 @@ msgctxt "#30032"
 msgid "Websites"
 msgstr "Websites"
 
-
+msgctxt "#30033"
+msgid "Favourites"
+msgstr ""
 
 # Countries (from 30050 to 30079)
 msgctxt "#30050"
@@ -495,6 +497,14 @@ msgctxt "#30604"
 msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
 msgstr "Toegang tot deze inhoud vereist een account %s. U kunt de gegevens hiervoor verstrekken in de instellingen van deze add-on. Wanneer u geen account heeft kunt u deze aanmaken op het volgende adres %s."
 
+msgctxt "#30605"
+msgid "You can now use Kodi's TV feature to watch live TV channels from Catch-up TV & More, follow the tutorial at https://catch-up-tv-and-more.github.io/live_tv_installation/."
+msgstr ""
+
+msgctxt "#30606"
+msgid "Do you want to see this information next time?"
+msgstr ""
+
 # Others (from 30700 to 30799)
 msgctxt "#30700"
 msgid "More videos..."
@@ -579,3 +589,35 @@ msgstr "Inputstream Adaptive is niet geactiveerd"
 msgctxt "#30720"
 msgid "Kodi 17.6 or > is required"
 msgstr "Kodi 17.6 of > is vereist"
+
+
+# Favourites (from 30800 to 30859)
+
+msgctxt "#30800"
+msgid "Add to add-on favourites"
+msgstr ""
+
+msgctxt "#30801"
+msgid "Favourite name"
+msgstr ""
+
+msgctxt "#30802"
+msgid "Remove"
+msgstr ""
+
+msgctxt "#30803"
+msgid "Favourites"
+msgstr ""
+
+msgctxt "#30804"
+msgid "Rename"
+msgstr ""
+
+msgctxt "#30805"
+msgid "The item has been added to the favourites of the add-on"
+msgstr ""
+
+msgctxt "#30806"
+msgid "Add at least one favourite to access this menu"
+msgstr ""
+

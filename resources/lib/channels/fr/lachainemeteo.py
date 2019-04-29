@@ -30,10 +30,10 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
-
 
 URL_ROOT = 'https://www.lachainemeteo.com'
 
@@ -42,7 +42,7 @@ URL_VIDEOS = URL_ROOT + '/videos-meteo/videos-la-chaine-meteo'
 URL_BRIGHTCOVE_DATAS = URL_ROOT + '/jsdyn/lcmjs.js'
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -50,7 +50,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_programs(plugin, item_id):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -66,15 +66,15 @@ def list_programs(plugin, item_id):
 
         item = Listitem()
         item.label = program_title
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_title_value=program_title)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_title_value=program_title)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_title_value):
+def list_videos(plugin, item_id, program_title_value, **kwargs):
 
     resp = urlquick.get(URL_VIDEOS)
     root = resp.parse()
@@ -95,37 +95,31 @@ def list_videos(plugin, item_id, program_title_value):
                 item.label = video_title
                 item.art['thumb'] = video_image
 
-                item.context.script(
-                    get_video_url,
-                    plugin.localize(LABELS['Download']),
-                    item_id=item_id,
-                    video_url=video_url,
-                    video_label=LABELS[item_id] + ' - ' + item.label,
-                    download_mode=True)
-
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_url=video_url)
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' +
+                                  item.label,
+                                  video_url=video_url)
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
                 yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
-    data_video_id = re.compile(
-        'data-video-id=\'(.*?)\'').findall(resp.text)[0]
-    data_player = re.compile(
-        'data-player=\'(.*?)\'').findall(resp.text)[0]
+    data_video_id = re.compile('data-video-id=\'(.*?)\'').findall(resp.text)[0]
+    data_player = re.compile('data-player=\'(.*?)\'').findall(resp.text)[0]
     resp2 = urlquick.get(URL_BRIGHTCOVE_DATAS)
-    data_account = re.compile(
-        'players.brightcove.net/(.*?)/').findall(resp2.text)[0]
-    return resolver_proxy.get_brightcove_video_json(
-        plugin,
-        data_account,
-        data_player,
-        data_video_id,
-        download_mode,
-        video_label)
+    data_account = re.compile('players.brightcove.net/(.*?)/').findall(
+        resp2.text)[0]
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id,
+                                                    download_mode, video_label)

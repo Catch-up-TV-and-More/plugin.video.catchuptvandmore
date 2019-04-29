@@ -413,6 +413,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=mblivetv&item_m
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tv8montblanc.png" group-title="France",8 Mont-Blanc
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv8montblanc&item_module=resources.lib.channels.fr.tv8montblanc&item_dict={}
 
+##	Alsace 20
+##	alsace20
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/alsace20.png" group-title="France",Alsace 20
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=alsace20&item_module=resources.lib.channels.fr.alsace20&item_dict={}
+
 
 
 # Belgium
@@ -497,6 +502,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=contact&item_mo
 ##	rtl_sport
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/rtlsport.png" group-title="Belgium",RTL Sport
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl_sport&item_module=resources.lib.channels.be.rtlplaybe&item_dict={}
+
+##	CanalC
+##	canalc
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/canalc.png" group-title="Belgium",CanalC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=canalc&item_module=resources.lib.channels.be.canalc&item_dict={}
 
 
 
@@ -928,6 +938,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rt&item_module=
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/rt.png" group-title="International",RT ES
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rt&item_module=resources.lib.channels.wo.rt&item_dict={"language":"ES"}
 
+##	Africa 24
+##	africa24
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/africa24.png" group-title="International",Africa 24
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=africa24&item_module=resources.lib.channels.wo.africa24&item_dict={}
+
 
 
 # United States of America
@@ -1148,6 +1163,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=japanetshopping
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/jp/ntvnews24.png" group-title="Japan",日テレ News24
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=ntvnews24&item_module=resources.lib.channels.jp.ntvnews24&item_dict={}
 
+##	株式会社ウェザーニューズ
+##	weathernewsjp
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/jp/weathernewsjp.png" group-title="Japan",株式会社ウェザーニューズ
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=weathernewsjp&item_module=resources.lib.channels.jp.weathernewsjp&item_dict={}
+
 
 
 # Tunisia
@@ -1287,6 +1307,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=npo-nieuws&item
 ##	npo-politiek
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/nl/npopolitiek.png" group-title="Netherlands",NPO Politiek
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=npo-politiek&item_module=resources.lib.channels.nl.npo&item_dict={}
+
+##	AT5
+##	at5
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/nl/at5.png" group-title="Netherlands",AT5
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=at5&item_module=resources.lib.channels.nl.at5&item_dict={}
 
 
 

@@ -29,6 +29,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
@@ -42,16 +43,16 @@ URL_ROOT = 'https://www.cbsnews.com'
 URL_LIVE = URL_ROOT + '/live'
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
     return get_live_url(plugin, item_id, item_id.upper(), item_dict)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    jsonparser = json.loads( '{' + re.compile(
-        r'CBSNEWS\.defaultPayload \= \{(.*?)\}\]\}').findall(
-            resp.text)[0] + '}]}')
-    
+    jsonparser = json.loads('{' + re.compile(
+        r'CBSNEWS\.defaultPayload \= \{(.*?)\}\]\}').findall(resp.text)[0] +
+        '}]}')
+
     return jsonparser["items"][0]["video2"]

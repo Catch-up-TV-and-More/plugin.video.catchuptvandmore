@@ -32,11 +32,11 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import json
 import re
 import urlquick
-
 '''
 Channels:
     * IRL
@@ -47,7 +47,7 @@ URL_ROOT_NOUVELLES_ECRITURES = 'http://%s.nouvelles-ecritures.francetv.fr'
 # channel name
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
@@ -55,7 +55,7 @@ def replay_entry(plugin, item_id):
 
 
 @Route.register
-def list_categories(plugin, item_id):
+def list_categories(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -73,15 +73,15 @@ def list_categories(plugin, item_id):
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(
-            list_programs,
-            item_id=item_id,
-            category_data_panel=category_data_panel)
+        item.set_callback(list_programs,
+                          item_id=item_id,
+                          category_data_panel=category_data_panel)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category_data_panel):
+def list_programs(plugin, item_id, category_data_panel, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -100,21 +100,22 @@ def list_programs(plugin, item_id, category_data_panel):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = program_image
-        item.set_callback(
-            list_videos,
-            item_id=item_id,
-            program_url=program_url)
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_url=program_url)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url):
+def list_videos(plugin, item_id, program_url, **kwargs):
 
     resp = urlquick.get(program_url)
     root = resp.parse()
 
     list_videos_datas = root.findall(".//li[@class='push type-episode']")
-    list_videos_datas += root.findall(".//li[@class='push type-episode active seen']")
+    list_videos_datas += root.findall(
+        ".//li[@class='push type-episode active seen']")
 
     for video_datas in list_videos_datas:
         if video_datas.find(".//div[@class='description']").text is not None:
@@ -135,45 +136,41 @@ def list_videos(plugin, item_id, program_url):
         item.label = video_title
         item.art['thumb'] = video_image
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_url=video_url,
-            item_dict=cqu.item2dict(item))
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_url=video_url,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, video_url, item_dict=None, download_mode=False, video_label=None):
+def get_video_url(plugin,
+                  item_id,
+                  video_url,
+                  item_dict=None,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
 
     resp = urlquick.get(video_url)
     root = resp.parse()
-    player_datas = root.find(
-        ".//div[@class='player-wrapper']")
+    player_datas = root.find(".//div[@class='player-wrapper']")
 
     if player_datas.find(".//a[@class='video_link']") is not None:
-        id_diffusion = player_datas.find(
-            ".//a[@class='video_link']").get(
-                'href').split('video/')[1].split('@')[0]
+        id_diffusion = player_datas.find(".//a[@class='video_link']").get(
+            'href').split('video/')[1].split('@')[0]
         return resolver_proxy.get_francetv_video_stream(
             plugin, id_diffusion, item_dict, download_mode, video_label)
     else:
         url_video_resolver = player_datas.find('.//iframe').get('src')
         # Case Youtube
         if 'youtube' in url_video_resolver:
-            video_id = url_video_resolver.split(
-                'youtube.com/embed/')[1]
-            return resolver_proxy.get_stream_youtube(
-                plugin, video_id, download_mode, video_label)
+            video_id = url_video_resolver.split('youtube.com/embed/')[1]
+            return resolver_proxy.get_stream_youtube(plugin, video_id,
+                                                     download_mode,
+                                                     video_label)
 
         # Case DailyMotion
         elif 'dailymotion' in url_video_resolver:

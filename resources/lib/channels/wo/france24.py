@@ -32,6 +32,8 @@ import urlquick
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
 import json
 
 LANG = Script.setting['france24.language']
@@ -39,20 +41,18 @@ TOKEN_APP = '66b85dad-3ad5-40f3-ab32-2305fc2357ea'
 URL_API = utils.urljoin_partial('http://apis.france24.com')
 
 
-def replay_entry(plugin, item_id):
+def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
     return root(plugin, item_id)
 
 
-def root(plugin, item_id):
+def root(plugin, item_id, **kwargs):
     # http://apis.france24.com/products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13?token_application=66b85dad-3ad5-40f3-ab32-2305fc2357ea
     root_json_url = 'products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13'
-    root_json_r = urlquick.get(
-        URL_API(root_json_url),
-        params={
-            'token_application': TOKEN_APP})
+    root_json_r = urlquick.get(URL_API(root_json_url),
+                               params={'token_application': TOKEN_APP})
     json_root = json.loads(root_json_r.text)
 
     try:
@@ -70,10 +70,10 @@ def root(plugin, item_id):
                 item.label = json_tv['direct_tv']['label']
                 guid = json_tv['direct_tv']['guid']
                 item.info['plot'] = json_tv['direct_tv']['description']
-                item.set_callback(
-                    list_direct_tv_jts,
-                    item_id=item_id,
-                    guid=guid)
+                item.set_callback(list_direct_tv_jts,
+                                  item_id=item_id,
+                                  guid=guid)
+                item_post_treatment(item)
                 yield item
 
             if 'videos' in json_tv:
@@ -81,10 +81,8 @@ def root(plugin, item_id):
                 item.label = json_tv['videos']['label']
                 guid = json_tv['videos']['guid']
                 item.info['plot'] = json_tv['videos']['description']
-                item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    guid=guid)
+                item.set_callback(list_videos, item_id=item_id, guid=guid)
+                item_post_treatment(item)
                 yield item
 
             if 'shows' in json_tv:
@@ -93,11 +91,12 @@ def root(plugin, item_id):
                     item = Listitem()
                     item.label = json_shows['shows_last_edition']['label']
                     guid = json_shows['shows_last_edition']['guid']
-                    item.info['plot'] = json_shows['shows_last_edition']['description']
-                    item.set_callback(
-                        list_last_edition,
-                        item_id=item_id,
-                        guid=guid)
+                    item.info['plot'] = json_shows['shows_last_edition'][
+                        'description']
+                    item.set_callback(list_last_edition,
+                                      item_id=item_id,
+                                      guid=guid)
+                    item_post_treatment(item)
                     yield item
 
                 if 'shows_all' in json_shows:
@@ -106,14 +105,15 @@ def root(plugin, item_id):
                         item = Listitem()
                         item.label = json_shows['shows_all']['label']
                         guid = json_shows['shows_all']['guid']
-                        item.info['plot'] = json_shows['shows_all']['description']
+                        item.info['plot'] = json_shows['shows_all'][
+                            'description']
                         item.set_callback(
                             list_all_programs,
                             item_id=item_id,
                             guid=guid,
                             guid_program=json_shows['show_editions']['guid'])
+                        item_post_treatment(item)
                         yield item
-
                 '''
 
                 if 'show_editions' in json_shows:
@@ -122,13 +122,11 @@ def root(plugin, item_id):
 
 
 @Route.register
-def list_direct_tv_jts(plugin, item_id, guid):
+def list_direct_tv_jts(plugin, item_id, guid, **kwargs):
     json_url = 'products/get_product/%s' % guid
-    json_r = urlquick.get(
-        URL_API(json_url),
-        params={
-            'token_application': TOKEN_APP},
-        headers={'User-agent': web_utils.get_ua()})
+    json_r = urlquick.get(URL_API(json_url),
+                          params={'token_application': TOKEN_APP},
+                          headers={'User-agent': web_utils.get_ua()})
     json_v = json.loads(json_r.text)
     try:
         json_channels = json_v['result']['channels']
@@ -142,7 +140,6 @@ def list_direct_tv_jts(plugin, item_id, guid):
         if code == 'live_audio':
             continue
         label = json_channel['title']
-
         '''
 
         for json_image in json_channel['images']['formats']:
@@ -163,14 +160,13 @@ def list_direct_tv_jts(plugin, item_id, guid):
 
 
 @Route.register
-def list_videos(plugin, item_id, guid, page=1):
+def list_videos(plugin, item_id, guid, page=1, **kwargs):
     json_url = 'products/get_product/%s' % guid
-    json_r = urlquick.get(
-        URL_API(json_url),
-        params={
-            'token_application': TOKEN_APP,
-            'page': page},
-        headers={'User-agent': web_utils.get_ua()})
+    json_r = urlquick.get(URL_API(json_url),
+                          params={
+                              'token_application': TOKEN_APP,
+                              'page': page},
+                          headers={'User-agent': web_utils.get_ua()})
     json_v = json.loads(json_r.text)
     try:
         json_list = json_v['result']['list']
@@ -189,36 +185,24 @@ def list_videos(plugin, item_id, guid, page=1):
         except Exception:
             pass
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            youtube_id=youtube_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            youtube_id=youtube_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          youtube_id=youtube_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
     last_page = json_v['result']['last_page']
     if page != last_page:
-        yield Listitem.next_page(
-            item_id=item_id,
-            guid=guid,
-            page=page + 1)
+        yield Listitem.next_page(item_id=item_id, guid=guid, page=page + 1)
 
 
 @Route.register
-def list_last_edition(plugin, item_id, guid):
+def list_last_edition(plugin, item_id, guid, **kwargs):
     json_url = 'products/get_product/%s' % guid
-    json_r = urlquick.get(
-        URL_API(json_url),
-        params={
-            'token_application': TOKEN_APP},
-        headers={'User-agent': web_utils.get_ua()})
+    json_r = urlquick.get(URL_API(json_url),
+                          params={'token_application': TOKEN_APP},
+                          headers={'User-agent': web_utils.get_ua()})
     json_v = json.loads(json_r.text)
     try:
         json_list = json_v['result']['list']
@@ -232,7 +216,8 @@ def list_last_edition(plugin, item_id, guid):
             item.label = item.label + ' — ' + json_video['subtitle']
 
         if 'intro':
-            item.info['plot'] = json_video['intro'].replace('<p>', '').replace('</p>', '')
+            item.info['plot'] = json_video['intro'].replace('<p>', '').replace(
+                '</p>', '')
         youtube_id = json_video['main_video'][0]['youtube_id']
 
         try:
@@ -242,29 +227,20 @@ def list_last_edition(plugin, item_id, guid):
         except Exception:
             pass
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            youtube_id=youtube_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            youtube_id=youtube_id)
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          youtube_id=youtube_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Route.register
-def list_all_programs(plugin, item_id, guid, guid_program, page=1):
+def list_all_programs(plugin, item_id, guid, guid_program, page=1, **kwargs):
     json_url = 'products/get_product/%s' % guid
-    json_r = urlquick.get(
-        URL_API(json_url),
-        params={
-            'token_application': TOKEN_APP},
-        headers={'User-agent': web_utils.get_ua()})
+    json_r = urlquick.get(URL_API(json_url),
+                          params={'token_application': TOKEN_APP},
+                          headers={'User-agent': web_utils.get_ua()})
     json_v = json.loads(json_r.text)
     try:
         json_list = json_v['result']['list']
@@ -278,7 +254,8 @@ def list_all_programs(plugin, item_id, guid, guid_program, page=1):
             item.label = item.label + ' — ' + json_video['subtitle']
 
         if 'intro':
-            item.info['plot'] = json_video['intro'].replace('<p>', '').replace('</p>', '')
+            item.info['plot'] = json_video['intro'].replace('<p>', '').replace(
+                '</p>', '')
 
         try:
             for json_image in json_video['images']['formats']:
@@ -289,31 +266,27 @@ def list_all_programs(plugin, item_id, guid, guid_program, page=1):
 
         nid = json_video['nid']
 
-        item.set_callback(
-            list_program_video,
-            item_id=item_id,
-            nid=nid,
-            guid_program=guid_program)
+        item.set_callback(list_program_video,
+                          item_id=item_id,
+                          nid=nid,
+                          guid_program=guid_program)
+        item_post_treatment(item)
         yield item
 
     last_page = json_v['result']['last_page']
     if page != last_page:
-        yield Listitem.next_page(
-            item_id=item_id,
-            guid=guid,
-            page=page + 1)
+        yield Listitem.next_page(item_id=item_id, guid=guid, page=page + 1)
 
 
 @Route.register
-def list_program_video(plugin, item_id, nid, guid_program, page=1):
+def list_program_video(plugin, item_id, nid, guid_program, page=1, **kwargs):
     json_url = 'products/get_product/%s' % guid_program
-    json_r = urlquick.get(
-        URL_API(json_url),
-        params={
-            'token_application': TOKEN_APP,
-            'nid': nid,
-            'page': page},
-        headers={'User-agent': web_utils.get_ua()})
+    json_r = urlquick.get(URL_API(json_url),
+                          params={
+                              'token_application': TOKEN_APP,
+                              'nid': nid,
+                              'page': page},
+                          headers={'User-agent': web_utils.get_ua()})
     json_v = json.loads(json_r.text)
 
     try:
@@ -322,59 +295,56 @@ def list_program_video(plugin, item_id, nid, guid_program, page=1):
         yield False
 
     for json_video in json_list:
-        item = Listitem()
-        item.label = json_video['title']
-        if 'subtitle' in json_video:
-            item.label = item.label + ' — ' + json_video['subtitle']
+        if len(json_video['main_video']) > 0:
+            item = Listitem()
+            item.label = json_video['title']
+            if 'subtitle' in json_video:
+                item.label = item.label + ' — ' + json_video['subtitle']
 
-        if 'intro':
-            item.info['plot'] = json_video['intro'].replace('<p>', '').replace('</p>', '')
-        youtube_id = json_video['main_video'][0]['youtube_id']
+            if 'intro':
+                item.info['plot'] = json_video['intro'].replace('<p>',
+                                                                '').replace(
+                                                                    '</p>', '')
+            youtube_id = json_video['main_video'][0]['youtube_id']
 
-        try:
-            for json_image in json_video['images']['formats']:
-                item.art['fanart'] = json_image['url']
-                item.art['thumb'] = json_image['url']
-        except Exception:
-            pass
+            try:
+                for json_image in json_video['images']['formats']:
+                    item.art['fanart'] = json_image['url']
+                    item.art['thumb'] = json_image['url']
+            except Exception:
+                pass
 
-        item.context.script(
-            get_video_url,
-            plugin.localize(LABELS['Download']),
-            item_id=item_id,
-            youtube_id=youtube_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            download_mode=True)
-
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            youtube_id=youtube_id)
-        yield item
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                youtube_id=youtube_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
     last_page = json_v['result']['last_page']
     if page != last_page:
-        yield Listitem.next_page(
-            item_id=item_id,
-            nid=nid,
-            guid_program=guid_program,
-            page=page + 1)
+        yield Listitem.next_page(item_id=item_id,
+                                 nid=nid,
+                                 guid_program=guid_program,
+                                 page=page + 1)
 
 
 @Resolver.register
-def get_video_url(
-        plugin, item_id, youtube_id, download_mode=False, video_label=None):
-    return resolver_proxy.get_stream_youtube(
-        plugin,
-        youtube_id,
-        download_mode,
-        video_label)
+def get_video_url(plugin,
+                  item_id,
+                  youtube_id,
+                  download_mode=False,
+                  video_label=None,
+                  **kwargs):
+    return resolver_proxy.get_stream_youtube(plugin, youtube_id, download_mode,
+                                             video_label)
 
 
-def live_entry(plugin, item_id, item_dict):
+def live_entry(plugin, item_id, item_dict, **kwargs):
 
     final_language = LANG
-   
+
     # If we come from the M3U file and the language
     # is set in the M3U URL, then we overwrite
     # Catch Up TV & More language setting
@@ -384,10 +354,8 @@ def live_entry(plugin, item_id, item_dict):
         final_language = item_dict['language']
 
     root_json_url = 'products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13'
-    root_json_r = urlquick.get(
-        URL_API(root_json_url),
-        params={
-            'token_application': TOKEN_APP})
+    root_json_r = urlquick.get(URL_API(root_json_url),
+                               params={'token_application': TOKEN_APP})
     json_root = json.loads(root_json_r.text)
 
     try:
@@ -404,8 +372,7 @@ def live_entry(plugin, item_id, item_dict):
                 json_url = 'products/get_product/%s' % guid
                 json_r = urlquick.get(
                     URL_API(json_url),
-                    params={
-                        'token_application': TOKEN_APP},
+                    params={'token_application': TOKEN_APP},
                     headers={'User-agent': web_utils.get_ua()})
                 json_v = json.loads(json_r.text)
                 try:
