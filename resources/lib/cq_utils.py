@@ -37,6 +37,7 @@ except ImportError:
 
 from codequick import Script
 from resources.lib.labels import LABELS
+from codequick.utils import parse_qs
 
 import pickle
 import binascii
@@ -81,20 +82,52 @@ def get_module_in_url(base_url):
     return module
 
 
+def get_module_in_query(query_string):
+    module = ''
+    params = parse_qs(query_string)
+    # Unpickle pickled data
+    if "_pickle_" in params:
+        unpickled = pickle.loads(binascii.unhexlify(params.pop("_pickle_")))
+        # '_route': u'/resources/lib/channels/fr/francetv/list_videos_search/'
+        if '_route' in unpickled:
+            base_url = unpickled['_route']
+            # Remove last '/'
+            if base_url[-1] == '/':
+                base_url = base_url[:-1]
+
+            # Remove first '/'
+            if base_url[0] == '/':
+                base_url = base_url[1:]
+
+            base_url_l = base_url.split('/')
+            module_l = []
+            for word in base_url_l:
+                module_l.append(word)
+
+            module_l.pop()  # Pop the function name (e.g. list_videos_search)
+            module = '.'.join(module_l)
+            # Returned module: resources.lib.channels.fr.francetv
+
+    return module
+
+
 def import_needed_module():
     # Import needed module according to the
-    # base URL (Fix for Kodi favorite item)
-    module_to_import = get_module_in_url(sys.argv[0])
-    if module_to_import == '':
-        # No additionnal module to load
-        return
+    # base URL and query string (Fix for Kodi favorite item and search)
+    modules_to_import = [get_module_in_url(sys.argv[0])]
+    if 'codequick/search' in sys.argv[0]:
+        modules_to_import.append(get_module_in_query(sys.argv[2]))
+    for module_to_import in modules_to_import:
+        if module_to_import == '':
+            # No additionnal module to load
+            continue
 
-    # Need to load additional module
-    try:
-        importlib.import_module(module_to_import)
-    except Exception:
-        Script.log('[cq_utils.import_needed_module] Failed to import module ' +
-                   module_to_import)
+        # Need to load additional module
+        try:
+            Script.log('[cq_utils.import_needed_module] Import module {} on the fly'.format(module_to_import))
+            importlib.import_module(module_to_import)
+        except Exception:
+            Script.log('[cq_utils.import_needed_module] Failed to import module {} on the fly'.format(module_to_import))
 
     return
 
