@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 
 # Core imports
 import importlib
+import sys
 
 # Kodi imports
 from codequick import Route, Resolver, Listitem, run, Script, utils, storage
@@ -315,6 +316,7 @@ def tv_guide_menu(plugin, **kwargs):
 
 @Route.register
 def replay_bridge(plugin, **kwargs):
+    defr
     """
     replay_bridge is the bridge between the
     addon.py file and each channel modules files.
@@ -458,6 +460,9 @@ def favourites(plugin, start=0, **kwargs):
         item_dict.pop('subtitles')
         item_dict.pop('context')
 
+        item_dict['params']['from_fav'] = True
+        item_dict['params']['item_hash'] = item_hash
+
         item = Listitem.from_dict(**item_dict)
         url = cqu.build_kodi_url(item_dict['callback'], item_dict['params'])
 
@@ -496,6 +501,18 @@ def favourites(plugin, start=0, **kwargs):
         yield item
 
 
+def error_handler(exception):
+    params = cqu.get_params_in_query(sys.argv[2])
+
+    # If we come from fav menu
+    # suggest user to delete this item
+    if 'from_fav' in params:
+        r = xbmcgui.Dialog().yesno(Script.localize(LABELS['Information']),
+                                   Script.localize(30807))
+        if r:
+            fav.remove_favourite_item(plugin=None, item_hash=params['item_hash'])
+
+
 def main():
     """
     Before calling run() function of
@@ -509,7 +526,9 @@ def main():
     the correct function according to
     the Kodi URL
     """
-    run()
+    exception = run()
+    if isinstance(exception, Exception):
+        error_handler(exception)
 
 
 if __name__ == '__main__':

@@ -626,4 +626,6 @@ msgctxt "#30806"
 msgid "Add at least one favourite to access this menu"
 msgstr ""
 
-
+msgctxt "#30807"
+msgid "This favourite raises an error, would you like to delete it?"
+msgstr ""
