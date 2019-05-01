@@ -134,7 +134,7 @@ def list_shows_emissions_2(plugin, item_id, categorie_programs_url, **kwargs):
     item.label = '# Les videos'
     show_url = categorie_programs_url
 
-    item.set_callback(list_videos_emissions_1,
+    item.set_callback(list_videos_emissions_2,
                       item_id=item_id,
                       page=1,
                       last_page=100,
@@ -177,10 +177,10 @@ def list_shows_emissions_3(plugin, item_id, subcategorie_programs_url,
     # Les vidéos
     item = Listitem()
     item.label = '# Les videos'
-    item.set_callback(list_videos_emissions_1,
+    item.set_callback(list_videos_emissions_2,
                       item_id=item_id,
                       page=1,
-                      last_page=100,
+                      last_page=100, # TODO get last Page
                       show_url=subcategorie_programs_url)
     item_post_treatment(item)
     yield item
@@ -232,66 +232,24 @@ def list_shows_emissions_4(plugin, item_id, page, programs_url, **kwargs):
 
 @Route.register
 def list_shows_emissions_5(plugin, item_id, program_url, **kwargs):
-    resp = urlquick.get(program_url + 'saisons/')
-    root = resp.parse()
+
+    resp = urlquick.get(program_url)
+    root = resp.parse("div", attrs={"class": "cf"})
+
     replay_seasons = root.findall(
-        ".//h2[@class='fs18 d_inline_block margin_10r']")
+        ".//a[@class='end-section-link ']")
 
     if len(replay_seasons) > 0:
-
         for season in replay_seasons:
+
             item = Listitem()
-            item.label = season.find('.//a').find('.//span').text.strip()
-            show_season_url = URL_ROOT + season.find(
-                ".//a[@class='no_underline']").get('href')
-
-            # Get Last Page
-            last_page = '0'
-            info_show_season = urlquick.get(show_season_url).text
-            info_show_season_pages = re.compile('<a href="(.*?)"').findall(
-                info_show_season)
-            for info_show_season_page in info_show_season_pages:
-                if '?page=' in info_show_season_page:
-                    last_page = info_show_season_page.split('=')[1]
-
+            item.label = season.get('title')
+            show_season_url = URL_ROOT + season.get('href')
             item.set_callback(list_videos_emissions_1,
                               item_id=item_id,
-                              page=1,
-                              last_page=last_page,
                               show_url=show_season_url)
             item_post_treatment(item)
             yield item
-
-    else:
-        item = Listitem()
-        try:
-            item.label = root.find(".//div[@class='margin_20t margin_40b']"
-                                   ).find('.//a').text.strip()
-            show_season_url = URL_ROOT + root.find(
-                ".//div[@class='margin_20t margin_40b']").find('.//a').get(
-                    'href')
-        except Exception:
-            item.label = root.find(".//h3[@class='title']").find(
-                './/a').text.strip()
-            show_season_url = URL_ROOT + root.find(
-                ".//h3[@class='title']").find('.//a').get('href')
-
-        # Get Last Page
-        last_page = '0'
-        info_show_season = urlquick.get(show_season_url).text
-        info_show_season_pages = re.compile('<a href="(.*?)"').findall(
-            info_show_season)
-        for info_show_season_page in info_show_season_pages:
-            if '?page=' in info_show_season_page:
-                last_page = info_show_season_page.split('=')[1]
-
-        item.set_callback(list_videos_emissions_1,
-                          item_id=item_id,
-                          page=1,
-                          last_page=last_page,
-                          show_url=show_season_url)
-        item_post_treatment(item)
-        yield item
 
 
 @Route.register
@@ -379,7 +337,44 @@ def list_videos_films_series_1(plugin, item_id, page, show_url, **kwargs):
 
 
 @Route.register
-def list_videos_emissions_1(plugin, item_id, page, show_url, last_page,
+def list_videos_emissions_1(plugin, item_id, show_url,
+                            **kwargs):
+    resp = urlquick.get(show_url)
+    root = resp.parse("div", attrs={"class": "gd gd-gap-15 gd-xs-1 gd-s-2"})
+
+    for episode in root.iterfind(".//div[@class='card video-card video-card-col mdl-fixed']"):
+        item = Listitem()
+        item.label = episode.find(".//img").get('alt')
+
+        if episode.find('.//img').get('data-attr') is not None:
+            image_json_parser = json.loads(
+                episode.find('.//img').get('data-attr'))
+            item.art['thumb'] = image_json_parser['src']
+        elif episode.find('.//img').get('data-src') is not None:
+            item.art['thumb'] = episode.find('.//img').get('data-src')
+        else:
+            item.art['thumb'] = episode.find('.//img').get('src')
+
+        if '?cmedia=' in episode.find('.//a').get('href'):
+            video_id = episode.find('.//a').get('href').split('?cmedia=')[1]
+        elif 'cfilm=' in episode.find('.//a').get('href') or \
+                'cserie=' in episode.find('.//a').get('href'):
+            video_id = episode.find('.//a').get(
+                'href').split('_cmedia=')[1].split('&')[0]
+        else:
+            video_id = episode.find('.//a').get('href').split('-')[1].replace(
+                '/', '')
+
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        yield item
+
+
+@Route.register
+def list_videos_emissions_2(plugin, item_id, page, show_url, last_page,
                             **kwargs):
     resp = urlquick.get(show_url + '?page=%s' % page)
     root = resp.parse()
