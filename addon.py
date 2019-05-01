@@ -158,14 +158,14 @@ def generic_menu(plugin, **kwargs):
     Build a generic addon menu
     with all not hidden items
     """
+    plugin.redirect_single_item = True
 
     menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
-    items = []
 
     if not menu:
         # If the selected menu is empty just reload the current menu
-        return False
+        yield False
 
     for index, (item_order, item_id, item_infos) in enumerate(menu):
 
@@ -203,12 +203,7 @@ def generic_menu(plugin, **kwargs):
                                   len(menu),
                                   item_infos=item_infos)
 
-        if len(menu) == 1:
-            return item_callback(plugin, **(item.params))
-        else:
-            items.append(item)
-
-    return items
+        yield item
 
 
 @Route.register
