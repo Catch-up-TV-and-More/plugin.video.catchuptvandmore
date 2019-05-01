@@ -59,6 +59,17 @@ def build_kodi_url(route_path, raw_params):
         ("plugin", "plugin.video.catchuptvandmore", route_path, query, ""))
 
 
+def get_params_in_query(query_string):
+    params = parse_qs(query_string)
+
+    # Unpickle pickled data
+    if "_pickle_" in params:
+        unpickled = pickle.loads(binascii.unhexlify(params.pop("_pickle_")))
+        params.update(unpickled)
+
+    return params
+
+
 def get_module_in_url(base_url):
     # e.g. base_url = plugin://plugin.video.catchuptvandmore/resources/lib/websites/culturepub/list_shows
     if 'resources' not in base_url:
@@ -84,29 +95,26 @@ def get_module_in_url(base_url):
 
 def get_module_in_query(query_string):
     module = ''
-    params = parse_qs(query_string)
-    # Unpickle pickled data
-    if "_pickle_" in params:
-        unpickled = pickle.loads(binascii.unhexlify(params.pop("_pickle_")))
-        # '_route': u'/resources/lib/channels/fr/francetv/list_videos_search/'
-        if '_route' in unpickled:
-            base_url = unpickled['_route']
-            # Remove last '/'
-            if base_url[-1] == '/':
-                base_url = base_url[:-1]
+    params = get_params_in_query(query_string)
+    # '_route': u'/resources/lib/channels/fr/francetv/list_videos_search/'
+    if '_route' in params:
+        base_url = params['_route']
+        # Remove last '/'
+        if base_url[-1] == '/':
+            base_url = base_url[:-1]
 
-            # Remove first '/'
-            if base_url[0] == '/':
-                base_url = base_url[1:]
+        # Remove first '/'
+        if base_url[0] == '/':
+            base_url = base_url[1:]
 
-            base_url_l = base_url.split('/')
-            module_l = []
-            for word in base_url_l:
-                module_l.append(word)
+        base_url_l = base_url.split('/')
+        module_l = []
+        for word in base_url_l:
+            module_l.append(word)
 
-            module_l.pop()  # Pop the function name (e.g. list_videos_search)
-            module = '.'.join(module_l)
-            # Returned module: resources.lib.channels.fr.francetv
+        module_l.pop()  # Pop the function name (e.g. list_videos_search)
+        module = '.'.join(module_l)
+        # Returned module: resources.lib.channels.fr.francetv
 
     return module
 
