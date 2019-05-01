@@ -180,7 +180,7 @@ def list_shows_emissions_3(plugin, item_id, subcategorie_programs_url,
     item.set_callback(list_videos_emissions_2,
                       item_id=item_id,
                       page=1,
-                      last_page=100, # TODO get last Page
+                      last_page=100,
                       show_url=subcategorie_programs_url)
     item_post_treatment(item)
     yield item
