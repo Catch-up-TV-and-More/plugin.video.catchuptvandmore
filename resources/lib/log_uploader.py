@@ -40,7 +40,16 @@ CWD = Script.get_info('path')
 URL = 'https://paste.kodi.tv/'
 LOGPATH = xbmc.translatePath('special://logpath')
 LOGFILE = os.path.join(LOGPATH, 'kodi.log')
-REPLACES = (('//.+?:.+?@', '//USER:PASSWORD@'), ('password=.+?&', 'password=PASSWORD&'), ('<user>.+?</user>', '<user>USER</user>'), ('<pass>.+?</pass>', '<pass>PASSWORD</pass>'),)
+REPLACES = (
+    ('//.+?:.+?@', '//USER:PASSWORD@'),
+    ('password.*', 'password*******LINE_DELETED*********'),
+    ('login.*', 'login******LINE_DELETED**********'),
+    ('Password.*', 'Password*******LINE_DELETED*********'),
+    ('Login.*', 'Login******LINE_DELETED**********'),
+    ('email.*', 'email******LINE_DELETED**********'),
+    ('<user>.+?</user>', '<user>USER</user>'),
+    ('<pass>.+?</pass>', '<pass>PASSWORD</pass>'),
+)
 
 
 class QRCode(xbmcgui.WindowXMLDialog):
@@ -89,7 +98,7 @@ def read_log(path):
 def clean_log(content):
     for pattern, repl in REPLACES:
         content = re.sub(pattern, repl, content)
-        return content
+    return content
 
 
 def post_log(data):
