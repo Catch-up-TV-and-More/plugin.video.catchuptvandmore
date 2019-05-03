@@ -316,7 +316,6 @@ def tv_guide_menu(plugin, **kwargs):
 
 @Route.register
 def replay_bridge(plugin, **kwargs):
-    defr
     """
     replay_bridge is the bridge between the
     addon.py file and each channel modules files.
@@ -502,15 +501,22 @@ def favourites(plugin, start=0, **kwargs):
 
 
 def error_handler(exception):
+    """
+    This function is called each time
+    run() trigger an Exception
+    """
     params = cqu.get_params_in_query(sys.argv[2])
 
-    # If we come from fav menu
+    # If we come from fav menu we
     # suggest user to delete this item
     if 'from_fav' in params:
-        r = xbmcgui.Dialog().yesno(Script.localize(LABELS['Information']),
-                                   Script.localize(30807))
-        if r:
-            fav.remove_favourite_item(plugin=None, item_hash=params['item_hash'])
+        fav.ask_to_delete_error_fav_item(params)
+
+    # Else, we ask the user if he wants
+    # to share his log to addon devs
+    else:
+        log_uploader = importlib.import_module('resources.lib.log_uploader')
+        log_uploader.ask_to_share_log()
 
 
 def main():

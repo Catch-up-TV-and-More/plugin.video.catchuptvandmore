@@ -26,6 +26,7 @@
 from __future__ import unicode_literals
 
 import xbmc
+import xbmcgui
 
 from codequick import utils, storage, Script
 from hashlib import md5
@@ -36,6 +37,12 @@ import resources.lib.mem_storage as mem_storage
 
 
 def guess_fav_prefix(item_id):
+    """
+    When the use add a favourite,
+    guess the prefix to add for the
+    favourite label according to the
+    current main category
+    """
     prefix = 'empty'
     if item_id == 'live_tv':
         prefix = Script.localize(LABELS['live_tv'])
@@ -219,3 +226,14 @@ def add_fav_context(item, item_dict, **kwargs):
                         Script.localize(LABELS['Add to add-on favourites']),
                         item_dict=item_dict,
                         **kwargs)
+
+
+def ask_to_delete_error_fav_item(params):
+    """
+    Suggest user to delete
+    the fav item that trigger the error
+    """
+    r = xbmcgui.Dialog().yesno(Script.localize(LABELS['Information']),
+                               Script.localize(30807))
+    if r:
+        remove_favourite_item(plugin=None, item_hash=params['item_hash'])
