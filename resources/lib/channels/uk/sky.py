@@ -145,20 +145,21 @@ def list_videos_sports(plugin, item_id, category_url, page, **kwargs):
     for video_datas in root.iterfind(".//div[@class='polaris-tile__inner']"):
         video_title = video_datas.find('.//h2').find('.//a').text.strip()
         video_image = video_datas.find('.//img').get('data-src')
-        video_id = re.compile(r'216\/(.*?)\.jpg').findall(
-            video_datas.find('.//img').get('data-src'))[0]
+        video_id_list = re.compile(r'216\/(.*?)\.jpg').findall(
+            video_datas.find('.//img').get('data-src'))
 
-        at_least_one_item = True
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = video_image
+        if len(video_id_list) > 0:
+            at_least_one_item = True
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
-                          video_id=video_id)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+            item.set_callback(get_video_url,
+                            item_id=item_id,
+                            video_label=LABELS[item_id] + ' - ' + item.label,
+                            video_id=video_id_list[0])
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
     if at_least_one_item:
         # More videos...
