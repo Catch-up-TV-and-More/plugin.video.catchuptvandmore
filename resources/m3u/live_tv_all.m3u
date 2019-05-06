@@ -683,6 +683,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questtv&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/questred.png" group-title="United Kingdom",Quest RED
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questred&item_module=resources.lib.channels.uk.questod&item_dict={}
 
+##	Bristol TV
+##	bristoltv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/bristoltv.png" group-title="United Kingdom",Bristol TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bristoltv&item_module=resources.lib.channels.uk.bristoltv&item_dict={}
+
 
 
 # International

@@ -261,6 +261,9 @@
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
             <setting label="5USA" type="bool" id="fiveusa" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="fiveusa.order" default="20"/>
+
+            <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="bristoltv.order" default="21"/>
         <!-- United Kingdom -->
 
 

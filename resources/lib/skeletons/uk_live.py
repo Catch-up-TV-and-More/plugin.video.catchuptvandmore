@@ -102,5 +102,11 @@ menu = {
         'thumb': 'channels/uk/questred.png',
         'fanart': 'channels/uk/questred_fanart.jpg',
         'module': 'resources.lib.channels.uk.questod'
+    },
+    'bristoltv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/bristoltv.png',
+        'fanart': 'channels/uk/bristoltv_fanart.jpg',
+        'module': 'resources.lib.channels.uk.bristoltv'
     }
 }

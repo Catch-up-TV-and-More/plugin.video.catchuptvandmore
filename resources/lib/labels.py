@@ -675,6 +675,8 @@ LABELS = {
     'UKTV Play',
     'fiveusa':
     '5USA',
+    'bristoltv':
+    'Bristol TV',
 
     # International channels / live TV
     'tv5mondeafrique':
