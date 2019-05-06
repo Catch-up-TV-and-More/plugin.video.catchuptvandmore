@@ -96,9 +96,9 @@ def list_programs(plugin, item_id, category_title, **kwargs):
                     item = Listitem()
                     item.label = program_title
                     item.set_callback(list_videos,
-                                    item_id=item_id,
-                                    program_url=program_url,
-                                    page='1')
+                                      item_id=item_id,
+                                      program_url=program_url,
+                                      page='1')
                     item_post_treatment(item)
                     yield item
 
