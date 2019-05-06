@@ -91,9 +91,9 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
                 item = Listitem()
                 item.label = sub_category_title
                 item.set_callback(list_videos,
-                                item_id=item_id,
-                                sub_category_url=sub_category_url,
-                                page='1')
+                                  item_id=item_id,
+                                  sub_category_url=sub_category_url,
+                                  page='1')
                 item_post_treatment(item)
                 yield item
 
@@ -116,9 +116,9 @@ def list_videos(plugin, item_id, sub_category_url, page, **kwargs):
             item.art['thumb'] = video_image
 
             item.set_callback(get_video_url,
-                            item_id=item_id,
-                            video_label=LABELS[item_id] + ' - ' + item.label,
-                            video_url=video_url)
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
