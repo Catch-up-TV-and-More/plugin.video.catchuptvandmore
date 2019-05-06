@@ -964,8 +964,7 @@
             <setting label="NPO Politiek" type="bool" id="npo-politiek" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="npo-politiek.order" default="8"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="NPO Start" type="bool" id="npo-start" default="false" visible="false"/>
+            <setting label="NPO Start" type="bool" id="npo-start" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="npo-start.order" default="9"/>
 
             <setting label="AT5" type="bool" id="at5" default="true" visible="eq(-19,true)"/>

@@ -155,9 +155,9 @@ def list_videos_sports(plugin, item_id, category_url, page, **kwargs):
             item.art['thumb'] = video_image
 
             item.set_callback(get_video_url,
-                            item_id=item_id,
-                            video_label=LABELS[item_id] + ' - ' + item.label,
-                            video_id=video_id_list[0])
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_id=video_id_list[0])
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 

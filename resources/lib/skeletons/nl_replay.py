@@ -42,5 +42,11 @@ menu = {
         'thumb': 'channels/nl/at5.png',
         'fanart': 'channels/nl/at5_fanart.jpg',
         'module': 'resources.lib.channels.nl.at5'
+    },
+    'npo-start': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/nl/npostart.png',
+        'fanart': 'channels/nl/npostart_fanart.jpg',
+        'module': 'resources.lib.channels.nl.npo'
     }
 }
