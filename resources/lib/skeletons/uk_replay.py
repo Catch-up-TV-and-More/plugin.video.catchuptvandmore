@@ -72,6 +72,12 @@ menu = {
         'thumb': 'channels/uk/uktvplay.png',
         'fanart': 'channels/uk/uktvplay_fanart.jpg',
         'module': 'resources.lib.channels.uk.uktvplay'
+    },
+    'bristoltv': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/uk/bristoltv.png',
+        'fanart': 'channels/uk/bristoltv_fanart.jpg',
+        'module': 'resources.lib.channels.uk.bristoltv'
     }
     # ,
     # 'fiveusa': {
