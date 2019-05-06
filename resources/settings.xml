@@ -690,6 +690,9 @@
 
             <setting label="Spectacles et Culture (francetv)" type="bool" id="francetvspectaclesetculture" default="true" visible="eq(-175,true)"/>
             <setting label="" type="number" visible="false" id="francetvspectaclesetculture.order" default="88"/>
+
+            <setting label="TVPI télévision d\'ici" type="bool" id="tvpifr" default="true" visible="eq(-179,true)"/>
+            <setting label="" type="number" visible="false" id="tvpifr.order" default="89"/>
         <!-- France -->
 
 

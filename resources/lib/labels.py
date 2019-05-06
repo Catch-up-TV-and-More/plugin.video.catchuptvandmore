@@ -604,6 +604,8 @@ LABELS = {
     'Luxe.TV',
     'alsace20':
     'Alsace 20',
+    'tvpifr':
+    'TVPI télévision d\'ici',
 
     # Japan channels / live TV
     'nhknews':
