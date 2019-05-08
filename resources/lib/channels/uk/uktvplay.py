@@ -73,13 +73,86 @@ URL_INFO_PROGRAM = URL_API + '/vod/brand/?slug=%s'
 URL_VIDEOS = URL_API + '/vod/series/?id=%s'
 # Serie_ID
 
+URL_CATEGORIES = URL_API + '/vod/categories/'
+
+URL_PROGRAMS_SUBCATEGORY = URL_API + '/vod/subcategory_brands/?slug=%s'
+# Slug subcategory
+
 
 def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
-    return list_letters(plugin, item_id)
+    return list_categories(plugin, item_id)
 
+
+@Route.register
+def list_categories(plugin, item_id, **kwargs):
+    """
+    Build categories listing
+    """
+    item = Listitem()
+    item.label = 'A-Z'
+    item.set_callback(list_letters, item_id=item_id)
+    item_post_treatment(item)
+    yield item
+
+    resp = urlquick.get(URL_CATEGORIES)
+    json_parser = json.loads(resp.text)
+
+    for category_datas in json_parser["categories"]:
+        category_title = category_datas["name"]
+        category_slug = category_datas["slug"]
+        item = Listitem()
+        item.label = category_title
+        item.set_callback(list_sub_categories,
+                          item_id=item_id,
+                          category_slug=category_slug)
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register
+def list_sub_categories(plugin, item_id, category_slug, **kwargs):
+
+    resp = urlquick.get(URL_CATEGORIES)
+    json_parser = json.loads(resp.text)
+
+    for category_datas in json_parser["categories"]:
+        if category_slug in category_datas["slug"]:
+            for sub_category_datas in category_datas["subcategories"]:
+                sub_category_title = sub_category_datas["name"]
+                sub_category_slug = sub_category_datas["slug"]
+                item = Listitem()
+                item.label = sub_category_title
+                item.set_callback(list_programs_sub_categories,
+                                  item_id=item_id,
+                                  sub_category_slug=sub_category_slug)
+                item_post_treatment(item)
+                yield item
+
+
+@Route.register
+def list_programs_sub_categories(plugin, item_id, sub_category_slug, **kwargs):
+
+    resp = urlquick.get(URL_PROGRAMS_SUBCATEGORY % sub_category_slug)
+    json_parser = json.loads(resp.text)
+
+    for program_datas in json_parser["brand_list"]:
+        program_title = program_datas['name']
+        program_image = ''
+        if 'image' in program_datas:
+            program_image = program_datas['image']
+        program_slug = program_datas['slug']
+
+        item = Listitem()
+        item.label = program_title
+        item.art['thumb'] = program_image
+        item.set_callback(list_seasons,
+                          item_id=item_id,
+                          program_slug=program_slug)
+        item_post_treatment(item)
+        yield item
 
 @Route.register
 def list_letters(plugin, item_id, **kwargs):
