@@ -34,7 +34,7 @@ from resources.lib.listitem_utils import item_post_treatment, item2dict
 import re
 import urlquick
 
-# TODO 
+# TODO
 # Add Replay
 
 URL_ROOT = 'http://www.tvpi.fr/'
