@@ -154,6 +154,7 @@ def list_programs_sub_categories(plugin, item_id, sub_category_slug, **kwargs):
         item_post_treatment(item)
         yield item
 
+
 @Route.register
 def list_letters(plugin, item_id, **kwargs):
     """
