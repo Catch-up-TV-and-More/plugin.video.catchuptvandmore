@@ -75,7 +75,7 @@ URL_VIDEOS = URL_API + '/vod/series/?id=%s'
 
 URL_CATEGORIES = URL_API + '/vod/categories/'
 
-URL_PROGRAMS_SUBCATEGORY = URL_API + '/vod/subcategory_brands/?slug=%s'
+URL_PROGRAMS_SUBCATEGORY = URL_API + '/vod/subcategory_brands/?slug=%s&size=999'
 # Slug subcategory
 
 

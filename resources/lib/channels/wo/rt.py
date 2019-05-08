@@ -219,8 +219,8 @@ def list_videos_programs(plugin, item_id, next_url, page, **kwargs):
                 yield item
 
         yield Listitem.next_page(item_id=item_id,
-                                next_url=next_url,
-                                page=str(int(page) + 1))
+                                 next_url=next_url,
+                                 page=str(int(page) + 1))
 
     else:
         if DESIRED_LANGUAGE == 'FR':
