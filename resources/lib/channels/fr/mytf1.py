@@ -246,54 +246,58 @@ def list_videos(plugin, item_id, program_category_url, **kwargs):
                         'data-xiti-libelle')
                 video_type_string = video_type_string.split('-')[0]
 
-                if 'Playlist' not in video_type_string:
-                    item = Listitem()
+                item = Listitem()
 
-                    item.label = li.find(".//p[@class='title']").text
+                item.label = li.find(".//p[@class='title']").text
 
-                    try:
-                        stitle = li.find(".//p[@class='stitle']").text
-                        item.info['plot'] = stitle
-                    except Exception:
-                        pass
+                try:
+                    stitle = li.find(".//p[@class='stitle']").text
+                    item.info['plot'] = stitle
+                except Exception:
+                    pass
 
-                    try:
-                        duration_soup = li.find(".//p[@class='uptitle']").find(
-                            ".//span[@class='momentDate']")
-                        duration = int(duration_soup.text)
-                        item.info['duration'] = duration
-                    except Exception:
-                        pass
+                try:
+                    duration_soup = li.find(".//p[@class='uptitle']").find(
+                        ".//span[@class='momentDate']")
+                    duration = int(duration_soup.text)
+                    item.info['duration'] = duration
+                except Exception:
+                    pass
 
-                    img = li.find('.//img')
-                    try:
-                        img = img.get('data-srcset')
-                    except Exception:
-                        img = img.get('srcset')
+                img = li.find('.//img')
+                try:
+                    img = img.get('data-srcset')
+                except Exception:
+                    img = img.get('srcset')
 
-                    item.art["thumb"] = 'http:' + \
-                        img.split(',')[-1].split(' ')[0]
+                item.art["thumb"] = 'http:' + \
+                    img.split(',')[-1].split(' ')[0]
 
-                    try:
-                        date_value = li.find(".//div[@class='text']").find(
-                            ".//p[@class='uptitle']").find('.//span')
+                try:
+                    date_value = li.find(".//div[@class='text']").find(
+                        ".//p[@class='uptitle']").find('.//span')
 
-                        aired = date_value.get('data-date').split('T')[0]
-                        item.info.date(aired, '%Y-%m-%d')
-                    except Exception:
-                        pass
+                    aired = date_value.get('data-date').split('T')[0]
+                    item.info.date(aired, '%Y-%m-%d')
+                except Exception:
+                    pass
 
-                    program_id = li.find('.//a').get('href')
-                    item.params[
-                        'video_label'] = LABELS[item_id] + ' - ' + item.label
-                    item.set_callback(get_video_url,
-                                      item_id=item_id,
-                                      program_id=program_id,
-                                      item_dict=item2dict(item))
-                    item_post_treatment(item,
-                                        is_playable=True,
-                                        is_downloadable=True)
-                    yield item
+                program_id = li.find('.//a').get('href')
+                item.params[
+                    'video_label'] = LABELS[item_id] + ' - ' + item.label
+
+                callback = get_video_url
+                if 'Playlist' in video_type_string:
+                    callback = build_playlist
+
+                item.set_callback(callback,
+                                  item_id=item_id,
+                                  program_id=program_id,
+                                  item_dict=item2dict(item))
+                item_post_treatment(item,
+                                    is_playable=True,
+                                    is_downloadable=True)
+                yield item
 
             # Check for any next page
             pagination = resp.parse(
@@ -312,6 +316,55 @@ def list_videos(plugin, item_id, program_category_url, **kwargs):
                             item_id=item_id,
                             program_category_url=next_li.find('.//a').get(
                                 'href'))
+
+
+@Resolver.register
+def build_playlist(plugin,
+                   item_id,
+                   program_id,
+                   item_dict=None,
+                   video_label=None,
+                   **kwargs):
+    playlist_html = urlquick.get(program_id)
+    playlist = playlist_html.parse()
+    reco_videos = playlist.find(".//div[@id='reco-video-content']")
+    data_more = ''
+
+    playlist_items = []
+
+    for reco_video in reco_videos:
+        if data_more == '':
+            data_more = reco_video.get('data-more')
+        if reco_video.get('data-more') == data_more:
+            video_page_url = reco_video.get('href')
+
+            # Grab the video URL
+            video_url = get_video_url(
+                plugin=plugin,
+                item_id=item_id,
+                program_id=video_page_url)
+            if video_url is not False:
+                item = Listitem()
+                if isinstance(video_url, Listitem):
+                    item = video_url
+                else:
+                    item.path = video_url
+
+                # Grab additionnal infos (title, image)
+                item.label = reco_video.find(".//div[@class='reco_video_content']").find(".//p[@class='reco_video_title']").text
+                img = reco_video.find(".//div[@class='reco_video_image']").find(".//img")
+                try:
+                    img = img.get('data-srcset')
+                except Exception:
+                    img = img.get('srcset')
+
+                item.art["thumb"] = 'http:' + \
+                    img.split(',')[-1].split(' ')[0]
+
+                print('LABEL: ' + repr(item.label))
+                playlist_items.append(item)
+
+    return playlist_items
 
 
 @Resolver.register
