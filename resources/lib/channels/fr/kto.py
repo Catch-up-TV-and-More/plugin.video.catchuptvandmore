@@ -32,7 +32,6 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
-import htmlement
 import re
 import urlquick
 '''
@@ -63,11 +62,13 @@ def list_categories(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_SHOWS)
     root = resp.parse()
 
-    for category_datas in root.iterfind(".//span[@class='programTitle']"):
-        category_title = category_datas.text
+    for category_datas in root.iterfind(".//div[@class='col-md-4 ProgramList-sub']"):
+        category_title = category_datas.find(".//img").get('alt')
+        category_image = category_datas.find(".//img").get('src')
 
         item = Listitem()
         item.label = category_title
+        item.art['thumb'] = category_image
         item.set_callback(list_programs,
                           item_id=item_id,
                           category_title=category_title)
@@ -83,26 +84,23 @@ def list_programs(plugin, item_id, category_title, **kwargs):
     - ...
     """
     resp = urlquick.get(URL_SHOWS)
-    start = '%s</span>' % category_title.replace("'", "&#039;")
-    end = '<span class="'
-    sub_category_datas = (resp.text.split(start))[1].split(end)[0]
-    parser = htmlement.HTMLement()
-    parser.feed(sub_category_datas)
-    root = parser.close()
+    root = resp.parse()
 
-    for program_datas in root.iterfind(".//a"):
-        if 'emissions' in program_datas.get('href'):
-            program_title = program_datas.text
-            program_url = URL_ROOT + program_datas.get('href')
+    for category_datas in root.iterfind(".//div[@class='col-md-4 ProgramList-sub']"):
+        if category_title in category_datas.find(".//img").get('alt'):
+            for program_datas in category_datas.findall(".//a"):
+                if 'emissions' in program_datas.get('href'):
+                    program_title = program_datas.text
+                    program_url = URL_ROOT + program_datas.get('href')
 
-            item = Listitem()
-            item.label = program_title
-            item.set_callback(list_videos,
-                              item_id=item_id,
-                              program_url=program_url,
-                              page='1')
-            item_post_treatment(item)
-            yield item
+                    item = Listitem()
+                    item.label = program_title
+                    item.set_callback(list_videos,
+                                      item_id=item_id,
+                                      program_url=program_url,
+                                      page='1')
+                    item_post_treatment(item)
+                    yield item
 
 
 @Route.register
@@ -122,7 +120,6 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
-        item.art['fanart'] = video_image
 
         item.set_callback(get_video_url,
                           video_label=LABELS[item_id] + ' - ' + item.label,
@@ -139,7 +136,6 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = video_image
-        item.art['fanart'] = video_image
 
         item.set_callback(get_video_url,
                           item_id=item_id,

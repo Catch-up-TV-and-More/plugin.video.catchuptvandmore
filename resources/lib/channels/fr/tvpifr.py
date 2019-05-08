@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2016  SylvainCecchetto
+    Copyright (C) 2019  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -24,29 +24,28 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
-from codequick import Script
-"""
-The following dictionaries describe
-the addon's tree architecture.
-* Key: item id
-* Value: item infos
-    - callback: Callback function to run once this item is selected
-    - thumb: Item thumb path relative to "media" folder
-    - fanart: Item fanart path relative to "meia" folder
-    - module: Item module to load in order to work (like 6play.py)
-"""
 
-menu = {
-    'at5': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/nl/at5.png',
-        'fanart': 'channels/nl/at5_fanart.jpg',
-        'module': 'resources.lib.channels.nl.at5'
-    },
-    'npo-start': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/nl/npostart.png',
-        'fanart': 'channels/nl/npostart_fanart.jpg',
-        'module': 'resources.lib.channels.nl.npo'
-    }
-}
+from codequick import Route, Resolver, Listitem, utils, Script
+
+from resources.lib.labels import LABELS
+from resources.lib import web_utils
+from resources.lib.listitem_utils import item_post_treatment, item2dict
+
+import re
+import urlquick
+
+# TODO
+# Add Replay
+
+URL_ROOT = 'http://www.tvpi.fr/'
+
+
+def live_entry(plugin, item_id, item_dict, **kwargs):
+    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+
+    resp = urlquick.get(URL_ROOT)
+    return re.compile(r'file\'\: \'(.*?)\'').findall(resp.text)[0]

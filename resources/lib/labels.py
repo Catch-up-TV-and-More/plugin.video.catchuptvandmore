@@ -604,6 +604,8 @@ LABELS = {
     'Luxe.TV',
     'alsace20':
     'Alsace 20',
+    'tvpifr':
+    'TVPI télévision d\'ici',
 
     # Japan channels / live TV
     'nhknews':
@@ -675,6 +677,8 @@ LABELS = {
     'UKTV Play',
     'fiveusa':
     '5USA',
+    'bristoltv':
+    'Bristol TV',
 
     # International channels / live TV
     'tv5mondeafrique':

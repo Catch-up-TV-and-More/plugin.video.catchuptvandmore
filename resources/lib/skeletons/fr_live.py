@@ -487,5 +487,12 @@ menu = {
         'fanart': 'channels/fr/alsace20_fanart.jpg',
         'module': 'resources.lib.channels.fr.alsace20',
         'm3u_group': 'Région'
+    },
+    'tvpifr': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/tvpifr.png',
+        'fanart': 'channels/fr/tvpifr_fanart.jpg',
+        'module': 'resources.lib.channels.fr.tvpifr',
+        'm3u_group': 'Région'
     }
 }

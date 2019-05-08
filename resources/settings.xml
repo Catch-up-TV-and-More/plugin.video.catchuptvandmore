@@ -261,6 +261,9 @@
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
             <setting label="5USA" type="bool" id="fiveusa" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="fiveusa.order" default="20"/>
+
+            <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="bristoltv.order" default="21"/>
         <!-- United Kingdom -->
 
 
@@ -687,6 +690,9 @@
 
             <setting label="Spectacles et Culture (francetv)" type="bool" id="francetvspectaclesetculture" default="true" visible="eq(-175,true)"/>
             <setting label="" type="number" visible="false" id="francetvspectaclesetculture.order" default="88"/>
+
+            <setting label="TVPI télévision d\'ici" type="bool" id="tvpifr" default="true" visible="eq(-179,true)"/>
+            <setting label="" type="number" visible="false" id="tvpifr.order" default="89"/>
         <!-- France -->
 
 
@@ -964,8 +970,7 @@
             <setting label="NPO Politiek" type="bool" id="npo-politiek" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="npo-politiek.order" default="8"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="NPO Start" type="bool" id="npo-start" default="false" visible="false"/>
+            <setting label="NPO Start" type="bool" id="npo-start" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="npo-start.order" default="9"/>
 
             <setting label="AT5" type="bool" id="at5" default="true" visible="eq(-19,true)"/>
