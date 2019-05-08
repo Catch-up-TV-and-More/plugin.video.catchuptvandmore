@@ -78,6 +78,22 @@ URL_CATEGORIES = URL_API + '/vod/categories/'
 URL_PROGRAMS_SUBCATEGORY = URL_API + '/vod/subcategory_brands/?slug=%s&size=999'
 # Slug subcategory
 
+URL_LIVE = 'https://uktvplay.uktv.co.uk/watch-live/%s'
+# Channel name
+
+URL_STREAM_LIVE = 'https://v2-streams-elb.simplestreamcdn.com/api/live/stream/%s?key=%s&platform=chrome&user=%s'
+# data_channel, key, user
+
+URL_LIVE_KEY = 'https://mp.simplestream.com/uktv/1.0.4/ss.js'
+
+URL_LIVE_TOKEN = 'https://sctoken.uktvapi.co.uk/?stream_id=%s'
+# data_channel
+
+URL_LOGIN_TOKEN = 'https://uktvplay.uktv.co.uk/account/static/js/settings/settings.js'
+
+URL_ROOT = 'https://uktvplay.uktv.co.uk'
+
+URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate'
 
 def replay_entry(plugin, item_id, **kwargs):
     """
@@ -311,5 +327,108 @@ def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     item.property[
         'inputstream.adaptive.license_key'] = licence_key + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=manifest.prod.boltdns.net|R{SSM}|'
+
+    return item
+
+
+def live_entry(plugin, item_id, item_dict, **kwargs):
+    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+
+    if cqu.get_kodi_version() < 18:
+        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+        return False
+
+    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
+
+    # create session request
+    session_requests = requests.session()
+
+    resptokenid = session_requests.get(URL_LOGIN_TOKEN)
+    token_id = re.compile(r'tokenId: \'(.*?)\'').findall(resptokenid.text)[1]
+
+    if plugin.setting.get_string(
+            'uktvplay.login') == '' or plugin.setting.get_string(
+                'uktvplay.password') == '':
+        xbmcgui.Dialog().ok('Info',
+                            plugin.localize(30604) %
+                            ('UKTVPlay', 'https://uktvplay.uktv.co.uk'))
+        return False
+
+    # Build PAYLOAD
+    payload = {
+        "email": plugin.setting.get_string('uktvplay.login'),
+        "password": plugin.setting.get_string('uktvplay.password')
+    }
+
+    # LOGIN
+    # KO - resp2 = session_urlquick.post(
+    #     URL_COMPTE_LOGIN, data=payload,
+    #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
+    resplogin = session_requests.post(
+        URL_COMPTE_LOGIN, data=payload, headers={
+            'X-TokenId': token_id
+        })
+    if 'TODO_GET_ERROR_MESSAGE_OR_STATUS_CODE' in repr(resplogin.text):
+        plugin.notify('ERROR', 'UKTVPlay : ' + plugin.localize(30711))
+        return False
+
+    # Account ID is get from the second call (commented)
+    # I block to get the X-SessionId
+    # X-SessionId is present in the cookie name MPP-SessionId (chrome settings of uktvplay website) : )
+    # respsessionoptions = session_requests.options('https://live.mppglobal.com/api/sessions',
+    #                                               headers={'Access-Control-Request-Headers': 'x-sessionid,x-tokenid,x-version',
+    #                                               'Access-Control-Request-Method': 'GET',
+    #                                                 'Origin': 'https://uktvplay.uktv.co.uk',
+    #                                                 'Referer': 'https://uktvplay.uktv.co.uk/account/',
+    #                                                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'})
+    # print 'cookie value ' + repr(respsessionoptions.cookies.get_dict())
+    # print 'respsessionoptions.headers value ' + repr(respsessionoptions.headers.get('access-control-allow-headers'))
+
+    # respsession = session_requests.get('https://live.mppglobal.com/api/sessions',
+    #                                    headers={'X-TokenId': token_id,
+    #                                             'X-SessionId': '9cdda857ba354cb99892d55151e4f5a5',
+    #                                             'Referer': 'https://uktvplay.uktv.co.uk/account/',
+    #                                             'Origin': 'https://uktvplay.uktv.co.uk'})
+    # json_parser_respsession = json.loads(respsession.text)
+    json_parser_respsession = json.loads(
+        '{"accountId": "TODO_ADD_ACCOUNT_ID_FOR_TEST"}')
+
+    respdatachannel = session_requests.get(URL_LIVE % item_id)
+    data_channel = re.compile(r'data\-channel\=\"(.*?)\"').findall(
+        respdatachannel.text)[0]
+
+    respkey = session_requests.get(URL_LIVE_KEY)
+    app_key = re.compile(r'app\_key"\ \: \"(.*?)\"').findall(respkey.text)[0]
+
+    resptoken = session_requests.get(URL_LIVE_TOKEN % data_channel)
+    json_parser_resptoken = json.loads(resptoken.text)
+
+    respstreamdatas = session_requests.post(
+        URL_STREAM_LIVE % (data_channel, app_key,
+                           json_parser_respsession["accountId"]),
+        headers={
+            'Token-Expiry': json_parser_resptoken["expiry"],
+            'Token': json_parser_resptoken["token"],
+            'Uvid': data_channel,
+            'Userid': json_parser_respsession["accountId"]
+        })
+    json_parser = json.loads(respstreamdatas.text)
+
+    item = Listitem()
+    item.path = json_parser["response"]["drm"]["widevine"]["stream"]
+    item.label = item_dict['label']
+    item.info.update(item_dict['info'])
+    item.art.update(item_dict['art'])
+    item.property['inputstreamaddon'] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property[
+        'inputstream.adaptive.license_key'] = json_parser["response"]["drm"]["widevine"]["licenseAcquisitionUrl"] + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36|R{SSM}|'
 
     return item

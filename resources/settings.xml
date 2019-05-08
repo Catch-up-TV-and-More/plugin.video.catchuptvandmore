@@ -211,8 +211,7 @@
             <setting label="Yesterday" type="bool" id="yesterday" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="yesterday.order" default="4"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="Drama" type="bool" id="drama" default="false" visible="false"/>
+            <setting label="Drama" type="bool" id="drama" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="drama.order" default="5"/>
 
             <setting label="Sky News" type="bool" id="skynews" default="true" visible="eq(-11,true)"/>
@@ -1141,6 +1140,12 @@
 
             <setting label="30246" type="text" id="rtlplaybe.login" default=""/>
             <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" default=""/>
+
+        <setting label="30084" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
+
+            <setting label="30250" type="text" id="uktvplay.login" default=""/>
+            <setting label="30251" type="text" id="uktvplay.password" option="hidden" default=""/>
 
     </category>
     <!-- Accounts -->

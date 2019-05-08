@@ -109,4 +109,11 @@ menu = {
         'fanart': 'channels/uk/bristoltv_fanart.jpg',
         'module': 'resources.lib.channels.uk.bristoltv'
     }
+    # ,
+    # 'drama': {
+    #     'callback': 'live_bridge',
+    #     'thumb': 'channels/uk/drama.png',
+    #     'fanart': 'channels/uk/drama_fanart.jpg',
+    #     'module': 'resources.lib.channels.uk.uktvplay'
+    # }
 }
