@@ -409,11 +409,11 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     # I block to get the X-SessionId
     # X-SessionId is present in the cookie name MPP-SessionId (chrome settings of uktvplay website) : )
     respsessionoptions = session_requests.options('https://live.mppglobal.com/api/sessions',
-                                                  headers={'Access-Control-Request-Headers': 'x-sessionid,x-tokenid,x-version',
-                                                  'Access-Control-Request-Method': 'GET',
-                                                    'Origin': 'https://uktvplay.uktv.co.uk',
-                                                    'Referer': 'https://uktvplay.uktv.co.uk/account/',
-                                                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'})
+                                                   headers={'Access-Control-Request-Headers': 'x-sessionid,x-tokenid,x-version',
+                                                            'Access-Control-Request-Method': 'GET',
+                                                            'Origin': 'https://uktvplay.uktv.co.uk',
+                                                            'Referer': 'https://uktvplay.uktv.co.uk/account/',
+                                                            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'})
     cj.save(ignore_discard=True)
     # print 'cookie value ' + repr(respsessionoptions.cookies.get_dict())
     # print 'respsessionoptions.headers value ' + repr(respsessionoptions.headers.get('access-control-allow-headers'))
