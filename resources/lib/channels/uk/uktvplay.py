@@ -40,6 +40,7 @@ import requests
 import urlquick
 import xbmc
 import xbmcgui
+import cookielib
 
 # TO DO
 # Mode code brightcove protected by DRM in resolver_proxy
@@ -94,6 +95,7 @@ URL_LOGIN_TOKEN = 'https://uktvplay.uktv.co.uk/account/static/js/settings/settin
 URL_ROOT = 'https://uktvplay.uktv.co.uk'
 
 URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate'
+
 
 def replay_entry(plugin, item_id, **kwargs):
     """
@@ -346,8 +348,18 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     if not is_helper.check_inputstream():
         return False
 
+    cookie_file = '/tmp/cookies'
+    cj = cookielib.LWPCookieJar(cookie_file)
+
+    # Load existing cookies (file might not yet exist)
+    try:
+        cj.load()
+    except:
+        pass
+
     # create session request
     session_requests = requests.session()
+    session_requests.cookies = cj
 
     resptokenid = session_requests.get(URL_LOGIN_TOKEN)
     token_id = re.compile(r'tokenId: \'(.*?)\'').findall(resptokenid.text)[1]
@@ -370,10 +382,25 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     # KO - resp2 = session_urlquick.post(
     #     URL_COMPTE_LOGIN, data=payload,
     #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
+    resploginoptions = session_requests.options(
+        URL_COMPTE_LOGIN, headers={
+            'Access-Control-Request-Headers': 'content-type,x-tokenid,x-version',
+            'Access-Control-Request-Method': 'POST',
+            'Origin': 'https://uktvplay.uktv.co.uk',
+            'Referer': 'https://uktvplay.uktv.co.uk/account/',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
+        })
     resplogin = session_requests.post(
         URL_COMPTE_LOGIN, data=payload, headers={
-            'X-TokenId': token_id
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Origin': 'https://uktvplay.uktv.co.uk',
+            'Referer': 'https://uktvplay.uktv.co.uk/account/',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
+            'X-TokenId': token_id,
+            'X-Version': '9.0.0'
         })
+    print 'resplogin value ' + repr(resplogin.text)
     if 'TODO_GET_ERROR_MESSAGE_OR_STATUS_CODE' in repr(resplogin.text):
         plugin.notify('ERROR', 'UKTVPlay : ' + plugin.localize(30711))
         return False
@@ -381,12 +408,13 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     # Account ID is get from the second call (commented)
     # I block to get the X-SessionId
     # X-SessionId is present in the cookie name MPP-SessionId (chrome settings of uktvplay website) : )
-    # respsessionoptions = session_requests.options('https://live.mppglobal.com/api/sessions',
-    #                                               headers={'Access-Control-Request-Headers': 'x-sessionid,x-tokenid,x-version',
-    #                                               'Access-Control-Request-Method': 'GET',
-    #                                                 'Origin': 'https://uktvplay.uktv.co.uk',
-    #                                                 'Referer': 'https://uktvplay.uktv.co.uk/account/',
-    #                                                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'})
+    respsessionoptions = session_requests.options('https://live.mppglobal.com/api/sessions',
+                                                  headers={'Access-Control-Request-Headers': 'x-sessionid,x-tokenid,x-version',
+                                                  'Access-Control-Request-Method': 'GET',
+                                                    'Origin': 'https://uktvplay.uktv.co.uk',
+                                                    'Referer': 'https://uktvplay.uktv.co.uk/account/',
+                                                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'})
+    cj.save(ignore_discard=True)
     # print 'cookie value ' + repr(respsessionoptions.cookies.get_dict())
     # print 'respsessionoptions.headers value ' + repr(respsessionoptions.headers.get('access-control-allow-headers'))
 
