@@ -92,7 +92,7 @@ URL_LIVE_TOKEN = 'https://sctoken.uktvapi.co.uk/?stream_id=%s'
 
 URL_LOGIN_TOKEN = 'https://uktvplay.uktv.co.uk/account/static/js/settings/settings.js'
 
-URL_ROOT = 'https://uktvplay.uktv.co.uk'
+URL_LOGIN_MODAL = 'https://uktvplay.uktv.co.uk/account/'
 
 URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate'
 
@@ -354,14 +354,16 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     # Load existing cookies (file might not yet exist)
     try:
         cj.load()
-    except:
+    except Exception:
         pass
 
     # create session request
     session_requests = requests.session()
     session_requests.cookies = cj
 
-    resptokenid = session_requests.get(URL_LOGIN_TOKEN)
+    resploginmodal = session_requests.get(URL_LOGIN_MODAL)
+
+    resptokenid = session_requests.get(URL_LOGIN_TOKEN, cookies=resploginmodal.cookies)
     token_id = re.compile(r'tokenId: \'(.*?)\'').findall(resptokenid.text)[1]
 
     if plugin.setting.get_string(
@@ -389,7 +391,8 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
             'Origin': 'https://uktvplay.uktv.co.uk',
             'Referer': 'https://uktvplay.uktv.co.uk/account/',
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
-        })
+        },
+        cookies=resptokenid.cookies)
     resplogin = session_requests.post(
         URL_COMPTE_LOGIN, data=payload, headers={
             'Accept': 'application/json, text/plain, */*',
@@ -399,9 +402,10 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
             'X-TokenId': token_id,
             'X-Version': '9.0.0'
-        })
+        },
+        cookies=resploginoptions.cookies)
     print 'resplogin value ' + repr(resplogin.text)
-    if 'TODO_GET_ERROR_MESSAGE_OR_STATUS_CODE' in repr(resplogin.text):
+    if resplogin.status_code >= 400:
         plugin.notify('ERROR', 'UKTVPlay : ' + plugin.localize(30711))
         return False
 
@@ -415,7 +419,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                                                             'Referer': 'https://uktvplay.uktv.co.uk/account/',
                                                             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'})
     cj.save(ignore_discard=True)
-    # print 'cookie value ' + repr(respsessionoptions.cookies.get_dict())
+    print 'respsessionoptions cookie value ' + repr(respsessionoptions.cookies.get_dict())
     # print 'respsessionoptions.headers value ' + repr(respsessionoptions.headers.get('access-control-allow-headers'))
 
     # respsession = session_requests.get('https://live.mppglobal.com/api/sessions',
