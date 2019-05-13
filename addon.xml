@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.7~beta04"
+       version="0.2.7~beta05"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -46,7 +46,7 @@
 [Fix] Catch-up TV - Sky Sport (UK)
 [Add] Catch-up TV - NPO Start (NL)
 [Add] Catch-up TV and Live TV - Bristol TV (UK)
-[Add] Live TV - TVPI télévision d'ici (FR)
+[Add] Catch-up TV and Live TV - TVPI télévision d'ici (FR)
 [Fix] Catch-up TV - نسمة تي في (TN)
 [Fix] Catch-up TV - RT (FR|EN) - Magazines/Shows
 [Improvements] Catch-up TV - UKTVPlay (UK) - Add Categories
