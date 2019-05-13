@@ -29,12 +29,15 @@ from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
-from resources.lib import download
+import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
+import inputstreamhelper
 import json
 import re
 import urlquick
+import xbmc
+import xbmcgui
 
 # TO DO
 # Add emissions
@@ -46,7 +49,7 @@ URL_ROOT = 'https://services.radio-canada.ca'
 
 URL_REPLAY_BY_DAY = URL_ROOT + '/toutv/presentation/CatchUp?device=web&version=4'
 
-URL_STREAM_REPLAY = URL_ROOT + '/media/validation/v2/?connectionType=hd&output=json&multibitrate=true&deviceType=ipad&appCode=toutv&idMedia=%s'
+URL_STREAM_REPLAY = URL_ROOT + '/media/validation/v2/?connectionType=hd&output=json&multibitrate=true&deviceType=multiams&appCode=toutv&idMedia=%s'
 # VideoId
 
 URL_CLIENT_KEY_JS = 'https://ici.tou.tv/app.js'
@@ -71,11 +74,7 @@ def list_days(plugin, item_id, **kwargs):
     - day 2
     - ...
     """
-    resp = urlquick.get(URL_CLIENT_KEY_JS)
-    client_key_value = 'client-key %s' % re.compile(
-        r'Scope\:\{clientId\:\"(.*?)\"').findall(resp.text)[0]
-    headers = {'Authorization': client_key_value}
-    resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
+    resp2 = urlquick.get(URL_REPLAY_BY_DAY)
     json_parser = json.loads(resp2.text)
 
     for day_datas in json_parser["Lineups"]:
@@ -92,19 +91,14 @@ def list_days(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, day_id, **kwargs):
 
-    resp = urlquick.get(URL_CLIENT_KEY_JS)
-    client_key_value = 'client-key %s' % re.compile(
-        r'Scope\:\{clientId\:\"(.*?)\"').findall(resp.text)[0]
-    headers = {'Authorization': client_key_value}
-    resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
+    resp2 = urlquick.get(URL_REPLAY_BY_DAY)
     json_parser = json.loads(resp2.text)
 
     for day_datas in json_parser["Lineups"]:
 
         if day_datas["Name"] == day_id:
             for video_datas in day_datas["LineupItems"]:
-                if video_datas["IsFree"] is True and video_datas[
-                        "IsDrm"] is False:
+                if video_datas["IsFree"] is True:
                     video_title = video_datas[
                         "ProgramTitle"] + ' ' + video_datas["HeadTitle"]
                     video_plot = video_datas["Description"]
@@ -121,10 +115,11 @@ def list_videos(plugin, item_id, day_id, **kwargs):
                                       item_id=item_id,
                                       video_label=LABELS[item_id] + ' - ' +
                                       item.label,
-                                      video_id=video_id)
+                                      video_id=video_id,
+                                      item_dict=item2dict(item))
                     item_post_treatment(item,
                                         is_playable=True,
-                                        is_downloadable=True)
+                                        is_downloadable=False)
                     yield item
 
 
@@ -132,18 +127,44 @@ def list_videos(plugin, item_id, day_id, **kwargs):
 def get_video_url(plugin,
                   item_id,
                   video_id,
+                  item_dict,
                   download_mode=False,
                   video_label=None,
                   **kwargs):
+
+    if cqu.get_kodi_version() < 18:
+        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+        return False
+
+    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
 
     resp = urlquick.get(URL_CLIENT_KEY_VIDEO_JS)
     client_key_value = 'client-key %s' % re.compile(
         r'prod\"\,clientKey\:\"(.*?)\"').findall(resp.text)[0]
     headers = {'Authorization': client_key_value}
     resp2 = urlquick.get(URL_STREAM_REPLAY % video_id, headers=headers)
-    json_parser = json.loads(resp2.text)
-    final_video_url = json_parser["url"]
 
-    if download_mode:
-        return download.download_video(final_video_url, video_label)
-    return final_video_url
+    json_parser = json.loads(resp2.text)
+    licence_key_drm = ''
+    for licence_key_drm_datas in json_parser["params"]:
+        if 'widevineLicenseUrl' in licence_key_drm_datas["name"]:
+            licence_key_drm = licence_key_drm_datas["value"]
+    token_drm = ''
+    for token_drm_datas in json_parser["params"]:
+        if 'widevineAuthToken' in token_drm_datas["name"]:
+            token_drm = token_drm_datas["value"]
+
+    item = Listitem()
+    item.path = json_parser["url"].replace('filter=', 'format=mpd-time-csf,filter=')
+    item.label = item_dict['label']
+    item.info.update(item_dict['info'])
+    item.art.update(item_dict['art'])
+    item.property['inputstreamaddon'] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property[
+        'inputstream.adaptive.license_key'] = licence_key_drm + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Authorization=%s|R{SSM}|' % token_drm
+
+    return item
