@@ -418,12 +418,12 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
             item.info.update(item_dict['info'])
         if 'art' in item_dict:
             item.art.update(item_dict['art'])
-        else:
-            item.label = LABELS[item_id]
-            item.art["thumb"] = ""
-            item.art["icon"] = ""
-            item.art["fanart"] = ""
-            item.info["plot"] = LABELS[item_id]
+    else:
+        item.label = LABELS[item_id]
+        item.art["thumb"] = ""
+        item.art["icon"] = ""
+        item.art["fanart"] = ""
+        item.info["plot"] = LABELS[item_id]
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
