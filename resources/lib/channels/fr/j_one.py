@@ -113,5 +113,5 @@ def get_video_url(plugin,
     account_override = 'intl.mtvi.com'
 
     return resolver_proxy.get_mtvnservices_stream(plugin, video_uri,
-                                                  account_override,
-                                                  download_mode, video_label)
+                                                  download_mode, video_label,
+                                                  account_override)

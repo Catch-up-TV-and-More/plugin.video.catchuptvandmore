@@ -206,10 +206,10 @@ def get_brightcove_video_json(plugin,
 # MTVN Services Part
 def get_mtvnservices_stream(plugin,
                             video_uri,
-                            account_override=None,
                             download_mode=False,
-                            video_label=None):
-    if account_override:
+                            video_label=None,
+                            account_override=None):
+    if account_override is not None:
         json_video_stream = urlquick.get(URL_MTVNSERVICES_STREAM_ACCOUNT %
                                          (video_uri, account_override),
                                          max_age=-1)
