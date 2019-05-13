@@ -127,9 +127,10 @@ def list_videos(plugin, item_id, category_url, **kwargs):
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=URL_API_ROOT + json_parser["hydra:nextPage"])
+    if 'hydra:nextPage' in json_parser:
+        yield Listitem.next_page(
+            item_id=item_id,
+            category_url=URL_API_ROOT + json_parser["hydra:nextPage"])
 
 
 @Resolver.register
