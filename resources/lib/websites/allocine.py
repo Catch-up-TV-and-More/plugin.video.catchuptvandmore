@@ -234,22 +234,24 @@ def list_shows_emissions_4(plugin, item_id, page, programs_url, **kwargs):
 def list_shows_emissions_5(plugin, item_id, program_url, **kwargs):
 
     resp = urlquick.get(program_url)
-    root = resp.parse("div", attrs={"class": "cf"})
+    root = resp.parse()
+    if root.find(".//div[@class='cf']") is not None:
+        root_ok = resp.parse("div", attrs={"class": "cf"})
 
-    replay_seasons = root.findall(
-        ".//a[@class='end-section-link ']")
+        replay_seasons = root_ok.findall(
+            ".//a[@class='end-section-link ']")
 
-    if len(replay_seasons) > 0:
-        for season in replay_seasons:
+        if len(replay_seasons) > 0:
+            for season in replay_seasons:
 
-            item = Listitem()
-            item.label = season.get('title')
-            show_season_url = URL_ROOT + season.get('href')
-            item.set_callback(list_videos_emissions_1,
-                              item_id=item_id,
-                              show_url=show_season_url)
-            item_post_treatment(item)
-            yield item
+                item = Listitem()
+                item.label = season.get('title')
+                show_season_url = URL_ROOT + season.get('href')
+                item.set_callback(list_videos_emissions_1,
+                                  item_id=item_id,
+                                  show_url=show_season_url)
+                item_post_treatment(item)
+                yield item
 
 
 @Route.register
