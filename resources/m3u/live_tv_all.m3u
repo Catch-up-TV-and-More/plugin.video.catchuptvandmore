@@ -693,6 +693,26 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questred&item_m
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/bristoltv.png" group-title="United Kingdom",Bristol TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bristoltv&item_module=resources.lib.channels.uk.bristoltv&item_dict={}
 
+##	Drama
+##	drama
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/drama.png" group-title="United Kingdom",Drama
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=drama&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
+
+##	Dave
+##	dave
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/dave.png" group-title="United Kingdom",Dave
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=dave&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
+
+##	Really
+##	really
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/really.png" group-title="United Kingdom",Really
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=really&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
+
+##	Yesterday
+##	yesterday
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/yesterday.png" group-title="United Kingdom",Yesterday
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=yesterday&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
+
 
 
 # International

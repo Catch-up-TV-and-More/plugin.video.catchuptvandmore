@@ -350,6 +350,14 @@ msgctxt "#30249"
 msgid "ABWeb Password"
 msgstr "ABWeb wachtwoord"
 
+msgctxt "#30250"
+msgid "UKTVPlay Login"
+msgstr "UKTVPlay gebruikersnaam"
+
+msgctxt "#30251"
+msgid "UKTVPlay Password"
+msgstr "UKTVPlay wachtwoord"
+
 # Reserved space for other tab/category in settins (from 30260 to 30339)
 
 

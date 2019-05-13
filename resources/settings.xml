@@ -199,16 +199,13 @@
             <setting label="Blaze" type="bool" id="blaze" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="blaze.order" default="1"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="Dave" type="bool" id="dave" default="false" visible="false"/>
+            <setting label="Dave" type="bool" id="dave" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="dave.order" default="2"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="Really" type="bool" id="really" default="false" visible="false"/>
+            <setting label="Really" type="bool" id="really" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="really.order" default="3"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="Yesterday" type="bool" id="yesterday" default="false" visible="false"/>
+            <setting label="Yesterday" type="bool" id="yesterday" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="yesterday.order" default="4"/>
 
             <setting label="Drama" type="bool" id="drama" default="true" visible="eq(-9,true)"/>

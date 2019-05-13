@@ -40,7 +40,6 @@ import requests
 import urlquick
 import xbmc
 import xbmcgui
-import cookielib
 
 # TO DO
 # Mode code brightcove protected by DRM in resolver_proxy
@@ -94,7 +93,7 @@ URL_LOGIN_TOKEN = 'https://uktvplay.uktv.co.uk/account/static/js/settings/settin
 
 URL_LOGIN_MODAL = 'https://uktvplay.uktv.co.uk/account/'
 
-URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate'
+URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate/'
 
 
 def replay_entry(plugin, item_id, **kwargs):
@@ -348,23 +347,12 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     if not is_helper.check_inputstream():
         return False
 
-    cookie_file = '/tmp/cookies'
-    cj = cookielib.LWPCookieJar(cookie_file)
-
-    # Load existing cookies (file might not yet exist)
-    try:
-        cj.load()
-    except Exception:
-        pass
-
     # create session request
     session_requests = requests.session()
-    session_requests.cookies = cj
+    session_requests.get(URL_LOGIN_MODAL)
 
-    resploginmodal = session_requests.get(URL_LOGIN_MODAL)
-
-    resptokenid = session_requests.get(URL_LOGIN_TOKEN, cookies=resploginmodal.cookies)
-    token_id = re.compile(r'tokenId: \'(.*?)\'').findall(resptokenid.text)[1]
+    resptokenid = session_requests.get(URL_LOGIN_TOKEN)
+    token_id = re.compile(r'tokenId: \'(.*?)\'').findall(resptokenid.text)[2]
 
     if plugin.setting.get_string(
             'uktvplay.login') == '' or plugin.setting.get_string(
@@ -376,23 +364,15 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     # Build PAYLOAD
     payload = {
-        "email": plugin.setting.get_string('uktvplay.login'),
-        "password": plugin.setting.get_string('uktvplay.password')
+        'email': plugin.setting.get_string('uktvplay.login'),
+        'password': plugin.setting.get_string('uktvplay.password')
     }
+    payload = json.dumps(payload)
 
     # LOGIN
     # KO - resp2 = session_urlquick.post(
     #     URL_COMPTE_LOGIN, data=payload,
     #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
-    resploginoptions = session_requests.options(
-        URL_COMPTE_LOGIN, headers={
-            'Access-Control-Request-Headers': 'content-type,x-tokenid,x-version',
-            'Access-Control-Request-Method': 'POST',
-            'Origin': 'https://uktvplay.uktv.co.uk',
-            'Referer': 'https://uktvplay.uktv.co.uk/account/',
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
-        },
-        cookies=resptokenid.cookies)
     resplogin = session_requests.post(
         URL_COMPTE_LOGIN, data=payload, headers={
             'Accept': 'application/json, text/plain, */*',
@@ -402,34 +382,11 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
             'X-TokenId': token_id,
             'X-Version': '9.0.0'
-        },
-        cookies=resploginoptions.cookies)
-    print 'resplogin value ' + repr(resplogin.text)
+        })
     if resplogin.status_code >= 400:
         plugin.notify('ERROR', 'UKTVPlay : ' + plugin.localize(30711))
         return False
-
-    # Account ID is get from the second call (commented)
-    # I block to get the X-SessionId
-    # X-SessionId is present in the cookie name MPP-SessionId (chrome settings of uktvplay website) : )
-    respsessionoptions = session_requests.options('https://live.mppglobal.com/api/sessions',
-                                                   headers={'Access-Control-Request-Headers': 'x-sessionid,x-tokenid,x-version',
-                                                            'Access-Control-Request-Method': 'GET',
-                                                            'Origin': 'https://uktvplay.uktv.co.uk',
-                                                            'Referer': 'https://uktvplay.uktv.co.uk/account/',
-                                                            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'})
-    cj.save(ignore_discard=True)
-    print 'respsessionoptions cookie value ' + repr(respsessionoptions.cookies.get_dict())
-    # print 'respsessionoptions.headers value ' + repr(respsessionoptions.headers.get('access-control-allow-headers'))
-
-    # respsession = session_requests.get('https://live.mppglobal.com/api/sessions',
-    #                                    headers={'X-TokenId': token_id,
-    #                                             'X-SessionId': '9cdda857ba354cb99892d55151e4f5a5',
-    #                                             'Referer': 'https://uktvplay.uktv.co.uk/account/',
-    #                                             'Origin': 'https://uktvplay.uktv.co.uk'})
-    # json_parser_respsession = json.loads(respsession.text)
-    json_parser_respsession = json.loads(
-        '{"accountId": "TODO_ADD_ACCOUNT_ID_FOR_TEST"}')
+    json_parser_resplogin = json.loads(resplogin.content)
 
     respdatachannel = session_requests.get(URL_LIVE % item_id)
     data_channel = re.compile(r'data\-channel\=\"(.*?)\"').findall(
@@ -443,20 +400,30 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     respstreamdatas = session_requests.post(
         URL_STREAM_LIVE % (data_channel, app_key,
-                           json_parser_respsession["accountId"]),
+                           str(json_parser_resplogin["accountId"])),
         headers={
             'Token-Expiry': json_parser_resptoken["expiry"],
             'Token': json_parser_resptoken["token"],
             'Uvid': data_channel,
-            'Userid': json_parser_respsession["accountId"]
+            'Userid': str(json_parser_resplogin["accountId"])
         })
     json_parser = json.loads(respstreamdatas.text)
 
     item = Listitem()
     item.path = json_parser["response"]["drm"]["widevine"]["stream"]
-    item.label = item_dict['label']
-    item.info.update(item_dict['info'])
-    item.art.update(item_dict['art'])
+    if item_dict:
+        if 'label' in item_dict:
+            item.label = item_dict['label']
+        if 'info' in item_dict:
+            item.info.update(item_dict['info'])
+        if 'art' in item_dict:
+            item.art.update(item_dict['art'])
+        else:
+            item.label = LABELS[item_id]
+            item.art["thumb"] = ""
+            item.art["icon"] = ""
+            item.art["fanart"] = ""
+            item.info["plot"] = LABELS[item_id]
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
