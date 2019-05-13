@@ -148,7 +148,7 @@ def list_videos(plugin, item_id, season_id, **kwargs):
             item_id=item_id,
             video_id=video_id,
             item_dict=item2dict(item))
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        item_post_treatment(item, is_playable=True, is_downloadable=False)
         yield item
 
 
