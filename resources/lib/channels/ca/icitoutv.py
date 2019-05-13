@@ -144,27 +144,31 @@ def get_video_url(plugin,
     client_key_value = 'client-key %s' % re.compile(
         r'prod\"\,clientKey\:\"(.*?)\"').findall(resp.text)[0]
     headers = {'Authorization': client_key_value}
-    resp2 = urlquick.get(URL_STREAM_REPLAY % video_id, headers=headers)
+    resp2 = urlquick.get(URL_STREAM_REPLAY % video_id, headers=headers, max_age=-1)
 
     json_parser = json.loads(resp2.text)
-    licence_key_drm = ''
-    for licence_key_drm_datas in json_parser["params"]:
-        if 'widevineLicenseUrl' in licence_key_drm_datas["name"]:
-            licence_key_drm = licence_key_drm_datas["value"]
-    token_drm = ''
-    for token_drm_datas in json_parser["params"]:
-        if 'widevineAuthToken' in token_drm_datas["name"]:
-            token_drm = token_drm_datas["value"]
 
-    item = Listitem()
-    item.path = json_parser["url"].replace('filter=', 'format=mpd-time-csf,filter=')
-    item.label = item_dict['label']
-    item.info.update(item_dict['info'])
-    item.art.update(item_dict['art'])
-    item.property['inputstreamaddon'] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property[
-        'inputstream.adaptive.license_key'] = licence_key_drm + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Authorization=%s|R{SSM}|' % token_drm
+    if json_parser["params"] is not None:
+        licence_key_drm = ''
+        for licence_key_drm_datas in json_parser["params"]:
+            if 'widevineLicenseUrl' in licence_key_drm_datas["name"]:
+                licence_key_drm = licence_key_drm_datas["value"]
+        token_drm = ''
+        for token_drm_datas in json_parser["params"]:
+            if 'widevineAuthToken' in token_drm_datas["name"]:
+                token_drm = token_drm_datas["value"]
 
-    return item
+        item = Listitem()
+        item.path = json_parser["url"].replace('filter=', 'format=mpd-time-csf,filter=')
+        item.label = item_dict['label']
+        item.info.update(item_dict['info'])
+        item.art.update(item_dict['art'])
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property[
+            'inputstream.adaptive.license_key'] = licence_key_drm + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Authorization=%s|R{SSM}|' % token_drm
+
+        return item
+    plugin.notify('ERROR', plugin.localize(30713))
+    return False
