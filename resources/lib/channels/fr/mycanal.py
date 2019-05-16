@@ -91,8 +91,7 @@ def list_categories(plugin, item_id, **kwargs):
     json_parser = json.loads(json_replay + ('}'))
 
     for category in json_parser["landing"]["strates"]:
-        if category["type"] == "contentRow" or \
-                category["type"] == "contentGrid":
+        if category["type"] == "contentRow" or category["type"] == "contentGrid":
             if 'title' in category:
                 title = category['title']
             else:
@@ -100,9 +99,8 @@ def list_categories(plugin, item_id, **kwargs):
 
             item = Listitem()
             item.label = title
-            item.set_callback(list_contents,
-                              item_id=item_id,
-                              title_value=title)
+            item.set_callback(
+                list_contents, item_id=item_id, title_value=title)
             item_post_treatment(item)
             yield item
 
@@ -115,8 +113,7 @@ def list_contents(plugin, item_id, title_value, **kwargs):
     json_parser = json.loads(json_replay + ('}'))
 
     for category in json_parser["landing"]["strates"]:
-        if category["type"] == "contentRow" or \
-                category["type"] == "contentGrid":
+        if category["type"] == "contentRow" or category["type"] == "contentGrid":
             if 'title' in category:
                 title = category['title']
             else:
@@ -124,9 +121,11 @@ def list_contents(plugin, item_id, title_value, **kwargs):
 
             if title_value == title:
                 for content in category["contents"]:
-                    if content["type"] == 'quicktime' or content[
-                            "type"] == 'pfv' or content["type"] == 'detailPage':
-                        video_title = content["onClick"]["displayName"]
+                    if content["type"] == 'quicktime' or content["type"] == 'pfv' or content["type"] == 'detailPage':
+                        if 'subtitle' in content:
+                            video_title = content["onClick"]["displayName"] + ' (' + content["subtitle"] + ')'
+                        else:
+                            video_title = content["onClick"]["displayName"]
                         video_image = content['URLImage']
                         if content["type"] == 'quicktime':
                             video_url = content["onClick"]["URLMedias"]
@@ -144,24 +143,29 @@ def list_contents(plugin, item_id, title_value, **kwargs):
                             item = Listitem()
                             item.label = video_title
                             item.art['thumb'] = video_image
-                            item.set_callback(get_video_url,
-                                              item_id=item_id,
-                                              next_url=video_url)
+                            item.set_callback(
+                                get_video_url,
+                                item_id=item_id,
+                                next_url=video_url)
                             item_post_treatment(item)
                             yield item
                     elif content["type"] == 'article':
                         continue
                     else:
-                        program_title = content["onClick"]["displayName"]
+                        if 'subtitle' in content:
+                            program_title = content["onClick"]["displayName"] + ' (' + content["subtitle"] + ')'
+                        else:
+                            program_title = content["onClick"]["displayName"]
                         program_image = content['URLImage']
                         program_url = content["onClick"]["URLPage"]
 
                         item = Listitem()
                         item.label = program_title
                         item.art['thumb'] = program_image
-                        item.set_callback(list_sub_programs,
-                                          item_id=item_id,
-                                          next_url=program_url)
+                        item.set_callback(
+                            list_sub_programs,
+                            item_id=item_id,
+                            next_url=program_url)
                         item_post_treatment(item)
                         yield item
 
@@ -186,10 +190,11 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
 
                 item = Listitem()
                 item.label = sub_program_title
-                item.set_callback(list_videos,
-                                  item_id=item_id,
-                                  next_url=next_url,
-                                  sub_program_title=sub_program_title)
+                item.set_callback(
+                    list_videos,
+                    item_id=item_id,
+                    next_url=next_url,
+                    sub_program_title=sub_program_title)
                 item_post_treatment(item)
                 yield item
             else:
@@ -197,10 +202,11 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
 
                 item = Listitem()
                 item.label = sub_program_title
-                item.set_callback(list_videos,
-                                  item_id=item_id,
-                                  next_url=next_url,
-                                  sub_program_title=sub_program_title)
+                item.set_callback(
+                    list_videos,
+                    item_id=item_id,
+                    next_url=next_url,
+                    sub_program_title=sub_program_title)
                 item_post_treatment(item)
                 yield item
 
@@ -211,9 +217,8 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
 
             item = Listitem()
             item.label = season_title
-            item.set_callback(list_videos_seasons,
-                              item_id=item_id,
-                              next_url=season_url)
+            item.set_callback(
+                list_videos_seasons, item_id=item_id, next_url=season_url)
             item_post_treatment(item)
             yield item
 
@@ -223,8 +228,7 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
 
         for video_datas in json_parser['episodes']['contents']:
             if 'subtitle' in video_datas:
-                video_title = program_title + ' ' + video_datas[
-                    'title'] + ' ' + video_datas['subtitle']
+                video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
             else:
                 video_title = program_title + ' ' + video_datas['title']
             video_image = video_datas['URLImage']
@@ -236,13 +240,41 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
             item.art['thumb'] = video_image
             item.info['plot'] = video_plot
 
-            item.set_callback(get_video_url,
-                              item_id=item_id,
-                              next_url=video_url,
-                              video_label=LABELS[item_id] + ' - ' + item.label,
-                              item_dict=item2dict(item))
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                next_url=video_url,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                item_dict=item2dict(item))
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
+
+    elif 'detail' in json_parser:
+
+        program_title = json_parser['currentPage']['displayName']
+        video_datas = json_parser['detail']['informations']
+
+        if 'subtitle' in video_datas:
+            video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
+        else:
+            video_title = program_title + ' ' + video_datas['title']
+        video_image = video_datas['URLImage']
+        video_plot = video_datas['summary']
+        video_url = video_datas['URLMedias']
+
+        item = Listitem()
+        item.label = video_title
+        item.art['thumb'] = video_image
+        item.info['plot'] = video_plot
+
+        item.set_callback(
+            get_video_url,
+            item_id=item_id,
+            next_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
+            item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        yield item
 
 
 @Route.register
@@ -255,8 +287,7 @@ def list_videos_seasons(plugin, item_id, next_url, **kwargs):
 
     for video_datas in json_parser['episodes']['contents']:
         if 'subtitle' in video_datas:
-            video_title = program_title + ' ' + video_datas[
-                'title'] + ' ' + video_datas['subtitle']
+            video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
         else:
             video_title = program_title + ' ' + video_datas['title']
         video_image = video_datas['URLImage']
@@ -268,11 +299,12 @@ def list_videos_seasons(plugin, item_id, next_url, **kwargs):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          next_url=video_url,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
-                          item_dict=item2dict(item))
+        item.set_callback(
+            get_video_url,
+            item_id=item_id,
+            next_url=video_url,
+            video_label=LABELS[item_id] + ' - ' + item.label,
+            item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -288,15 +320,10 @@ def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
             if sub_program_title == sub_program_datas["title"]:
                 if 'contents' in sub_program_datas:
                     for video_datas in sub_program_datas["contents"]:
-                        if video_datas["type"] == 'quicktime' or video_datas[
-                                "type"] == 'pfv' or video_datas[
-                                    "type"] == 'VoD' or video_datas[
-                                        "type"] == 'detailPage':
+                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD' or video_datas["type"] == 'detailPage':
                             if 'title' in video_datas:
                                 if 'subtitle' in video_datas:
-                                    video_title = video_datas[
-                                        'subtitle'] + ' - ' + video_datas[
-                                            'title']
+                                    video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
                                 else:
                                     video_title = video_datas['title']
                             else:
@@ -317,29 +344,24 @@ def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
                             item.label = video_title
                             item.art['thumb'] = video_image
 
-                            item.set_callback(get_video_url,
-                                              item_id=item_id,
-                                              next_url=video_url,
-                                              video_label=LABELS[item_id] +
-                                              ' - ' + item.label,
-                                              item_dict=item2dict(item))
-                            item_post_treatment(item,
-                                                is_playable=True,
-                                                is_downloadable=True)
+                            item.set_callback(
+                                get_video_url,
+                                item_id=item_id,
+                                next_url=video_url,
+                                video_label=LABELS[item_id] + ' - ' +
+                                item.label,
+                                item_dict=item2dict(item))
+                            item_post_treatment(
+                                item, is_playable=True, is_downloadable=True)
                             yield item
         else:
             if sub_program_title == json_parser["currentPage"]["displayName"]:
                 if 'contents' in sub_program_datas:
                     for video_datas in sub_program_datas["contents"]:
-                        if video_datas["type"] == 'quicktime' or video_datas[
-                                "type"] == 'pfv' or video_datas[
-                                    "type"] == 'VoD' or video_datas[
-                                        "type"] == 'detailPage':
+                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD' or video_datas["type"] == 'detailPage':
                             if 'title' in video_datas:
                                 if 'subtitle' in video_datas:
-                                    video_title = video_datas[
-                                        'subtitle'] + ' - ' + video_datas[
-                                            'title']
+                                    video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
                                 else:
                                     video_title = video_datas['title']
                             else:
@@ -360,15 +382,15 @@ def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
                             item.label = video_title
                             item.art['thumb'] = video_image
 
-                            item.set_callback(get_video_url,
-                                              item_id=item_id,
-                                              video_label=LABELS[item_id] +
-                                              ' - ' + item.label,
-                                              next_url=video_url,
-                                              item_dict=item2dict(item))
-                            item_post_treatment(item,
-                                                is_playable=True,
-                                                is_downloadable=True)
+                            item.set_callback(
+                                get_video_url,
+                                item_id=item_id,
+                                video_label=LABELS[item_id] + ' - ' +
+                                item.label,
+                                next_url=video_url,
+                                item_dict=item2dict(item))
+                            item_post_treatment(
+                                item, is_playable=True, is_downloadable=True)
                             yield item
 
 
@@ -381,9 +403,8 @@ def get_video_url(plugin,
                   video_label=None,
                   **kwargs):
 
-    resp = urlquick.get(next_url,
-                        headers={'User-Agent': web_utils.get_random_ua},
-                        max_age=-1)
+    resp = urlquick.get(
+        next_url, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
     json_parser = json.loads(resp.text)
 
     if json_parser["detail"]["informations"]['consumptionPlatform'] == 'HAPI':
@@ -441,6 +462,5 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    return resolver_proxy.get_stream_dailymotion(plugin,
-                                                 LIVE_DAILYMOTION_ID[item_id],
-                                                 False)
+    return resolver_proxy.get_stream_dailymotion(
+        plugin, LIVE_DAILYMOTION_ID[item_id], False)
