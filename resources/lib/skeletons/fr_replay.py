@@ -455,7 +455,12 @@ menu = {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/tvpifr.png',
         'fanart': 'channels/fr/tvpifr_fanart.jpg',
-        'module': 'resources.lib.channels.fr.tvpifr',
-        'm3u_group': 'Région'
+        'module': 'resources.lib.channels.fr.tvpifr'
+    },
+    'cliquetv': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/cliquetv.png',
+        'fanart': 'channels/fr/cliquetv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.mycanal'
     }
 }

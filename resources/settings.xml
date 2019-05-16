@@ -689,6 +689,9 @@
 
             <setting label="TVPI télévision d\'ici" type="bool" id="tvpifr" default="true" visible="eq(-179,true)"/>
             <setting label="" type="number" visible="false" id="tvpifr.order" default="89"/>
+
+            <setting label="Clique TV" type="bool" id="cliquetv" default="true" visible="eq(-181,true)"/>
+            <setting label="" type="number" visible="false" id="cliquetv.order" default="90"/>
         <!-- France -->
 
 

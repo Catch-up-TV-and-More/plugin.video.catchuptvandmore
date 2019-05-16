@@ -606,6 +606,8 @@ LABELS = {
     'Alsace 20',
     'tvpifr':
     'TVPI télévision d\'ici',
+    'cliquetv':
+    'Clique TV',
 
     # Japan channels / live TV
     'nhknews':
