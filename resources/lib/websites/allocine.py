@@ -396,15 +396,13 @@ def list_videos_emissions_2(plugin, item_id, page, show_url, last_page,
                     './/h3').find('.//span').find('.//a').find(
                         './/strong').tail.strip()
         else:
-            if episode.find('.//h2').find('.//span').find('.//a').find(
-                    './/strong') is not None:
-                item.label = episode.find('.//h2').find('.//span').find(
-                    './/a').find('.//strong').text.strip() \
-                    + ' - ' + episode.find('.//h2').find('.//span').find(
-                        './/a').find('.//strong').tail.strip()
+            if episode.find('.//h2/span/a/strong') is not None:
+                item.label = episode.find('.//h2/span/a/strong').text.strip() \
+                    + ' - ' + episode.find('.//h2/span/a/strong').tail.strip()
+            elif episode.find('.//h2/span/span') is not None:
+                item.label = episode.find('.//h2/span/span').text.strip()
             else:
-                item.label = episode.find('.//h2').find('.//span').find(
-                    './/a').text.strip()
+                item.label = episode.find('.//h2/span/a').text.strip()
         if '?cmedia=' in episode.find('.//a').get('href'):
             video_id = episode.find('.//a').get('href').split('?cmedia=')[1]
         elif 'cfilm=' in episode.find('.//a').get('href') or \
