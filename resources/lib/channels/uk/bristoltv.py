@@ -122,8 +122,10 @@ def list_videos(plugin, item_id, sub_category_url, page, **kwargs):
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-    yield Listitem.next_page(
-        item_id=item_id, sub_category_url=sub_category_url, page=str(int(page) + 1))
+    root_change_pages = resp.parse()
+    if root_change_pages.find(".//a[@class='next page-numbers']") is not None:
+        yield Listitem.next_page(
+            item_id=item_id, sub_category_url=sub_category_url, page=str(int(page) + 1))
 
 
 @Resolver.register
