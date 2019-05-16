@@ -706,7 +706,7 @@ LABELS = {
     'dw':
     'DW (' + Script.setting['dw.language'] + ')',
     'beinsports':
-    'Bein Sports (' + Script.setting['beinsports.language'] + ')',
+    'Bein Sports',
     'qvc':
     'QVC (' + Script.setting['qvc.language'] + ')',
     'icirdi':

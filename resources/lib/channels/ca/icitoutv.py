@@ -196,8 +196,6 @@ def list_videos_programs(plugin, item_id, program_url, season_name, **kwargs):
                     video_image = video_datas["ImageUrl"].replace(
                         'w_200,h_300', 'w_300,h_200')
                     video_duration = video_datas["Details"]["LengthInSeconds"]
-                    publication_date = video_datas["Details"][
-                        "AirDate"].split(' ')[0]
                     video_id = video_datas["IdMedia"]
 
                     item = Listitem()
@@ -205,7 +203,10 @@ def list_videos_programs(plugin, item_id, program_url, season_name, **kwargs):
                     item.art['thumb'] = video_image
                     item.info['plot'] = video_plot
                     item.info['duration'] = video_duration
-                    item.info.date(publication_date, "%Y-%m-%d")
+                    if video_datas["Details"]["AirDate"] is not None:
+                        publication_date = video_datas["Details"][
+                            "AirDate"].split(' ')[0]
+                        item.info.date(publication_date, "%Y-%m-%d")
                     item.set_callback(
                         get_video_url,
                         item_id=item_id,
