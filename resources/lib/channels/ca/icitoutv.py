@@ -74,7 +74,12 @@ def list_days(plugin, item_id, **kwargs):
     - day 2
     - ...
     """
-    resp2 = urlquick.get(URL_REPLAY_BY_DAY)
+    resp = urlquick.get(URL_CLIENT_KEY_JS)
+    client_key_value = 'client-key %s' % re.compile(
+        r'4\"\,key\:\"(.*?)\"\,timeout').findall(resp.text)[0]
+    headers = {'Authorization': client_key_value,
+               'Accept': 'application/json, text/plain, */*'}
+    resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
     json_parser = json.loads(resp2.text)
 
     for day_datas in json_parser["Lineups"]:
@@ -91,7 +96,12 @@ def list_days(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, day_id, **kwargs):
 
-    resp2 = urlquick.get(URL_REPLAY_BY_DAY)
+    resp = urlquick.get(URL_CLIENT_KEY_JS)
+    client_key_value = 'client-key %s' % re.compile(
+        r'4\"\,key\:\"(.*?)\"\,timeout').findall(resp.text)[0]
+    headers = {'Authorization': client_key_value,
+               'Accept': 'application/json, text/plain, */*'}
+    resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
     json_parser = json.loads(resp2.text)
 
     for day_datas in json_parser["Lineups"]:
