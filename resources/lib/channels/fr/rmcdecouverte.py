@@ -86,9 +86,12 @@ def list_videos(plugin, item_id, category_url, **kwargs):
 
     for video_datas in root.iterfind(".//div[@class='root_qT0Me']"):
         if video_datas.find(".//p[@class='subtitle_1hI_I']") is not None:
-            video_title = video_datas.find(
-                ".//p[@class='title_1APl2']").text + ' - ' + video_datas.find(
-                    ".//p[@class='subtitle_1hI_I']").text
+            if video_datas.find(".//p[@class='title_1APl2']").text is not None:
+                video_title = video_datas.find(
+                    ".//p[@class='title_1APl2']").text + ' - ' + video_datas.find(
+                        ".//p[@class='subtitle_1hI_I']").text
+            else:
+                video_title = video_datas.find(".//p[@class='subtitle_1hI_I']").text
         else:
             video_title = video_datas.find(".//p[@class='title_1APl2']").text
         video_image = video_datas.find('.//img').get('src')
