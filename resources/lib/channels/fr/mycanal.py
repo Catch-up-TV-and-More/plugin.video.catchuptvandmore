@@ -40,6 +40,12 @@ import json
 import urlquick
 import xbmc
 import xbmcgui
+import requests
+# Working for Python 2/3
+try:
+    import urllib.parse as urllib
+except ImportError:
+    import urllib
 
 # TO DO
 # Wait Kodi 18 to use live with DRM
@@ -51,6 +57,11 @@ URL_ROOT_SITE = 'https://www.mycanal.fr'
 # Replay channel :
 URL_REPLAY = URL_ROOT_SITE + '/chaines/%s'
 # Channel name
+
+URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken'
+
+URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
+
 
 # TODO
 URL_LICENCE_DRM = '[license-server url]|[Header]|[Post-Data]|[Response]'
@@ -408,42 +419,121 @@ def get_video_url(plugin,
     json_parser = json.loads(resp.text)
 
     if json_parser["detail"]["informations"]['consumptionPlatform'] == 'HAPI':
+
+        if cqu.get_kodi_version() < 18:
+            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+            return False
+
+        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not is_helper.check_inputstream():
+            return False
+
+        if download_mode:
+            xbmcgui.Dialog().ok('Info', plugin.localize(30603))
+            return False
+
+        # Get Portail Id
+        session_requests = requests.session()
+        resp_app_config = session_requests.get(URL_REPLAY % item_id)
+        json_app_config = re.compile('window.app_config=(.*?)};').findall(
+            resp_app_config.text)[0]
+        json_app_config_parser = json.loads(json_app_config + ('}'))
+        portail_id = json_app_config_parser["api"]["pass"][
+            "portailIdEncrypted"]
+
+        # Get PassToken
+        payload = {
+            'deviceId': 'unknown',
+            'vect': 'INTERNET',
+            'media': 'PC',
+            'portailId': portail_id
+        }
+        resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload)
+        json_token_parser = json.loads(resp_token_mycanal.text)
+        pass_token = json_token_parser["response"]["passToken"]
+
+        # Get stream Id
+        for stream_datas in json_parser["detail"]["informations"]["videoURLs"]:
+            if 'Widevine' in stream_datas["drmType"]:
+                payload = {
+                    'comMode': stream_datas['comMode'],
+                    'contentId': stream_datas['contentId'],
+                    'distMode': stream_datas['distMode'],
+                    'distTechnology': stream_datas['distTechnology'],
+                    'drmType': stream_datas['drmType'],
+                    'functionalType': stream_datas['functionalType'],
+                    'hash': stream_datas['hash'],
+                    'idKey': stream_datas['idKey'],
+                    'quality': stream_datas['quality']
+                }
+                payload = json.dumps(payload)
+                headers = {
+                    'Accept':
+                    'application/json, text/plain, */*',
+                    'Authorization':
+                    'PASS Token="%s"' % pass_token,
+                    'Content-Type':
+                    'application/json; charset=UTF-8',
+                    'XX-DEVICE':
+                    'pc 9d6b98c4-433a-4150-9778-b668cc980109',
+                    'XX-DOMAIN':
+                    'cpfra',
+                    'XX-OPERATOR':
+                    'pc',
+                    'XX-Profile-Id':
+                    '0',
+                    'XX-SERVICE':
+                    'mycanal',
+                    'User-Agent':
+                    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36'
+                }
+                resp_stream_datas = session_requests.put(
+                    URL_STREAM_DATAS, data=payload, headers=headers)
+                jsonparser_stream_datas = json.loads(resp_stream_datas.text)
+
+                resp_real_stream_datas = session_requests.get(
+                    jsonparser_stream_datas['@medias'], headers=headers)
+                jsonparser_real_stream_datas = json.loads(
+                    resp_real_stream_datas.text)
+
+                item = Listitem()
+                item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
+                item.label = item_dict['label']
+                item.info.update(item_dict['info'])
+                item.art.update(item_dict['art'])
+                item.property['inputstreamaddon'] = 'inputstream.adaptive'
+                item.property['inputstream.adaptive.manifest_type'] = 'ism'
+                item.property[
+                    'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+                headers2 = {
+                    'Accept':
+                    'application/json, text/plain, */*',
+                    'Authorization':
+                    'PASS Token="%s"' % pass_token,
+                    'Content-Type':
+                    'text/plain',
+                    'User-Agent':
+                    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36',
+                    'XX-DEVICE':
+                    'pc 9d6b98c4-433a-4150-9778-b668cc980109',
+                    'XX-DOMAIN':
+                    'cpfra',
+                    'XX-OPERATOR':
+                    'pc',
+                    'XX-Profile-Id':
+                    '0',
+                    'XX-SERVICE':
+                    'mycanal',
+                }
+                print('headers2 value ' +
+                      urllib.unquote_plus(urllib.urlencode(headers2)))
+                # Return HTTP 401
+                # item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '|%s|R{SSM}|' % urllib.unquote_plus(urllib.urlencode(headers2))
+                # return item
+
         Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
                       Script.NOTIFY_INFO)
         return False
-
-        # TODO Add CODE DRM
-
-        # Utile ?
-        # https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin
-        # Response
-        # CsECCAMSEBcFuRfMEgSGiwYzOi93KowYgrSCkgUijgIwggEKAoIBAQCZ7Vs7Mn2rXiTvw7YqlbWYUgrVvMs3UD4GRbgU2Ha430BRBEGtjOOtsRu4jE5yWl5KngeVKR1YWEAjp+GvDjipEnk5MAhhC28VjIeMfiG/+/7qd+EBnh5XgeikX0YmPRTmDoBYqGB63OBPrIRXsTeo1nzN6zNwXZg6IftO7L1KEMpHSQykfqpdQ4IY3brxyt4zkvE9b/tkQv0x4b9AsMYE0cS6TJUgpL+X7r1gkpr87vVbuvVk4tDnbNfFXHOggrmWEguDWe3OJHBwgmgNb2fG2CxKxfMTRJCnTuw3r0svAQxZ6ChD4lgvC2ufXbD8Xm7fZPvTCLRxG88SUAGcn1oJAgMBAAE6FGxpY2Vuc2Uud2lkZXZpbmUuY29tEoADrjRzFLWoNSl/JxOI+3u4y1J30kmCPN3R2jC5MzlRHrPMveoEuUS5J8EhNG79verJ1BORfm7BdqEEOEYKUDvBlSubpOTOD8S/wgqYCKqvS/zRnB3PzfV0zKwo0bQQQWz53ogEMBy9szTK/NDUCXhCOmQuVGE98K/PlspKkknYVeQrOnA+8XZ/apvTbWv4K+drvwy6T95Z0qvMdv62Qke4XEMfvKUiZrYZ/DaXlUP8qcu9u/r6DhpV51Wjx7zmVflkb1gquc9wqgi5efhn9joLK3/bNixbxOzVVdhbyqnFk8ODyFfUnaq3fkC3hR3f0kmYgI41sljnXXjqwMoW9wRzBMINk+3k6P8cbxfmJD4/Paj8FwmHDsRfuoI6Jj8M76H3CTsZCZKDJjM3BQQ6Kb2m+bQ0LMjfVDyxoRgvfF//M/EEkPrKWyU2C3YBXpxaBquO4C8A0ujVmGEEqsxN1HX9lu6c5OMm8huDxwWFd7OHMs3avGpr7RP7DUnTikXrh6X0
-
-        # https://player.mycanal.fr/one/prod/v2/bundle-api.js (contient les id des trois JS ci-dessous)
-        # https://player.mycanal.fr/one/prod/v2/1.1.chunk-811df61222c423293fda.js
-        # https://player.mycanal.fr/one/prod/v2/5.5.chunk-2dc4906a84344fcc4084.js
-        # https://player.mycanal.fr/one/prod/v2/18.18.chunk-7e9778d8f6a9708b67f8.js
-        # Info on the passToken on these three JS below not easy to build (????) = maybe need help ...
-
-        # URL of the manifest
-        # GET need the Pass Token (return 401 if calling directly)
-        # https://secure-gen-hapi.canal-plus.com/conso/view/6f97b560-50ca-11e9-b127-4b12d86c665a/media
-
-        # URL of the licence pour mycanal
-        # POST to be used on URL_LICENCE_DRM normally
-        # need the Pass Token (return 401 if calling directly)
-        # https://secure-gen-hapi.canal-plus.com/conso/view/6f97b560-50ca-11e9-b127-4b12d86c665a/licence?drmType=DRM%20Widevine
-
-        # item = Listitem()
-        # item.path = ''
-        # item.label = item_dict['label']
-        # item.info.update(item_dict['info'])
-        # item.art.update(item_dict['art'])
-        # item.property['inputstreamaddon'] = 'inputstream.adaptive'
-        # item.property['inputstream.adaptive.manifest_type'] = 'ism'
-        # item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        # item.property['inputstream.adaptive.license_key'] = URL_LICENCE_DRM
-        # return item
 
     stream_url = ''
     for stream_datas in json_parser["detail"]["informations"]["videoURLs"]:
