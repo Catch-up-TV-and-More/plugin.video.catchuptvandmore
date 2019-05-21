@@ -509,11 +509,12 @@ def get_video_url(plugin,
                 item.property['inputstream.adaptive.manifest_type'] = 'ism'
                 item.property[
                     'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+                value_pass_token = 'PASS Token="%s"' % pass_token
                 headers2 = {
                     'Accept':
                     'application/json, text/plain, */*',
                     'Authorization':
-                    'PASS Token="%s"' % pass_token,
+                    value_pass_token,
                     'Content-Type':
                     'text/plain',
                     'User-Agent':
@@ -530,10 +531,12 @@ def get_video_url(plugin,
                     'mycanal',
                 }
                 print('headers2 value ' +
-                      urllib.unquote_plus(urllib.urlencode(headers2)))
+                      urllib.urlencode(headers2))
+                print('licence url value ' +
+                      jsonparser_stream_datas['@licence'])
                 # Return HTTP 401
-                # item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '|%s|R{SSM}|' % urllib.unquote_plus(urllib.urlencode(headers2))
-                # return item
+                item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|R{SSM}|' % urllib.urlencode(headers2)
+                return item
 
     stream_url = ''
     for stream_datas in json_parser["detail"]["informations"]["videoURLs"]:
