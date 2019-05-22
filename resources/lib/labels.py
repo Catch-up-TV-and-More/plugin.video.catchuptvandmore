@@ -68,8 +68,6 @@ LABELS = {
     30031,
     'websites':
     30032,
-    'favourites':
-    30033,
 
     # Countries
     'fr_replay':
