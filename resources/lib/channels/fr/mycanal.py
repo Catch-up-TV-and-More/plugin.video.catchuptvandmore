@@ -434,6 +434,10 @@ def get_video_url(plugin,
                 xbmcgui.Dialog().ok('Info', plugin.localize(30603))
                 return False
 
+            Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
+                        Script.NOTIFY_INFO)
+            return False
+
             # Get Portail Id
             session_requests = requests.session()
             resp_app_config = session_requests.get(URL_REPLAY % item_id)
