@@ -420,123 +420,214 @@ def get_video_url(plugin,
 
     if json_parser["detail"]["informations"]['consumptionPlatform'] == 'HAPI':
 
-        if cqu.get_kodi_version() < 18:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+        if xbmc.getCondVisibility('system.platform.android'):
+
+            if cqu.get_kodi_version() < 18:
+                xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+                return False
+
+            is_helper = inputstreamhelper.Helper('mpd')
+            if not is_helper.check_inputstream():
+                return False
+
+            if download_mode:
+                xbmcgui.Dialog().ok('Info', plugin.localize(30603))
+                return False
+
+            # Get Portail Id
+            session_requests = requests.session()
+            resp_app_config = session_requests.get(URL_REPLAY % item_id)
+            json_app_config = re.compile('window.app_config=(.*?)};').findall(
+                resp_app_config.text)[0]
+            json_app_config_parser = json.loads(json_app_config + ('}'))
+            portail_id = json_app_config_parser["api"]["pass"][
+                "portailIdEncrypted"]
+
+            # Get PassToken
+            payload = {
+                'deviceId': 'unknown',
+                'vect': 'INTERNET',
+                'media': 'PC',
+                'portailId': portail_id
+            }
+            resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload)
+            json_token_parser = json.loads(resp_token_mycanal.text)
+            pass_token = json_token_parser["response"]["passToken"]
+
+            # Get stream Id
+            for stream_datas in json_parser["detail"]["informations"]["videoURLs"]:
+                if stream_datas["drmType"] == "DRM PlayReady":
+                    payload = {
+                        'comMode': stream_datas['comMode'],
+                        'contentId': stream_datas['contentId'],
+                        'distMode': stream_datas['distMode'],
+                        'distTechnology': stream_datas['distTechnology'],
+                        'drmType': stream_datas['drmType'],
+                        'functionalType': stream_datas['functionalType'],
+                        'hash': stream_datas['hash'],
+                        'idKey': stream_datas['idKey'],
+                        'quality': stream_datas['quality']
+                    }
+                    payload = json.dumps(payload)
+                    headers = {
+                        'Accept':
+                        'application/json, text/plain, */*',
+                        'Authorization':
+                        'PASS Token="%s"' % pass_token,
+                        'Content-Type':
+                        'application/json; charset=UTF-8',
+                        'XX-DEVICE':
+                        'pc 9d6b98c4-433a-4150-9778-b668cc980109',
+                        'XX-DOMAIN':
+                        'cpfra',
+                        'XX-OPERATOR':
+                        'pc',
+                        'XX-Profile-Id':
+                        '0',
+                        'XX-SERVICE':
+                        'mycanal',
+                        'User-Agent':
+                        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36'
+                    }
+                    resp_stream_datas = session_requests.put(
+                        URL_STREAM_DATAS, data=payload, headers=headers)
+                    jsonparser_stream_datas = json.loads(resp_stream_datas.text)
+
+                    resp_real_stream_datas = session_requests.get(
+                        jsonparser_stream_datas['@medias'], headers=headers)
+                    jsonparser_real_stream_datas = json.loads(
+                        resp_real_stream_datas.text)
+
+                    item = Listitem()
+                    item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
+                    item.label = item_dict['label']
+                    item.info.update(item_dict['info'])
+                    item.art.update(item_dict['art'])
+                    item.property['inputstreamaddon'] = 'inputstream.adaptive'
+                    item.property['inputstream.adaptive.manifest_type'] = 'ism'
+                    item.property[
+                        'inputstream.adaptive.license_type'] = 'com.microsoft.playready'
+                    return item
+        else:
+            if cqu.get_kodi_version() < 18:
+                xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+                return False
+
+            is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+            if not is_helper.check_inputstream():
+                return False
+
+            if download_mode:
+                xbmcgui.Dialog().ok('Info', plugin.localize(30603))
+                return False
+
+            Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
+                        Script.NOTIFY_INFO)
             return False
 
-        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-        if not is_helper.check_inputstream():
-            return False
+            # Get Portail Id
+            session_requests = requests.session()
+            resp_app_config = session_requests.get(URL_REPLAY % item_id)
+            json_app_config = re.compile('window.app_config=(.*?)};').findall(
+                resp_app_config.text)[0]
+            json_app_config_parser = json.loads(json_app_config + ('}'))
+            portail_id = json_app_config_parser["api"]["pass"][
+                "portailIdEncrypted"]
 
-        if download_mode:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30603))
-            return False
+            # Get PassToken
+            payload = {
+                'deviceId': 'unknown',
+                'vect': 'INTERNET',
+                'media': 'PC',
+                'portailId': portail_id
+            }
+            resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload)
+            json_token_parser = json.loads(resp_token_mycanal.text)
+            pass_token = json_token_parser["response"]["passToken"]
 
-        Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
-                      Script.NOTIFY_INFO)
-        return False
+            # Get stream Id
+            for stream_datas in json_parser["detail"]["informations"]["videoURLs"]:
+                if 'Widevine' in stream_datas["drmType"]:
+                    payload = {
+                        'comMode': stream_datas['comMode'],
+                        'contentId': stream_datas['contentId'],
+                        'distMode': stream_datas['distMode'],
+                        'distTechnology': stream_datas['distTechnology'],
+                        'drmType': stream_datas['drmType'],
+                        'functionalType': stream_datas['functionalType'],
+                        'hash': stream_datas['hash'],
+                        'idKey': stream_datas['idKey'],
+                        'quality': stream_datas['quality']
+                    }
+                    payload = json.dumps(payload)
+                    headers = {
+                        'Accept':
+                        'application/json, text/plain, */*',
+                        'Authorization':
+                        'PASS Token="%s"' % pass_token,
+                        'Content-Type':
+                        'application/json; charset=UTF-8',
+                        'XX-DEVICE':
+                        'pc 9d6b98c4-433a-4150-9778-b668cc980109',
+                        'XX-DOMAIN':
+                        'cpfra',
+                        'XX-OPERATOR':
+                        'pc',
+                        'XX-Profile-Id':
+                        '0',
+                        'XX-SERVICE':
+                        'mycanal',
+                        'User-Agent':
+                        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36'
+                    }
+                    resp_stream_datas = session_requests.put(
+                        URL_STREAM_DATAS, data=payload, headers=headers)
+                    jsonparser_stream_datas = json.loads(resp_stream_datas.text)
 
-        # Get Portail Id
-        session_requests = requests.session()
-        resp_app_config = session_requests.get(URL_REPLAY % item_id)
-        json_app_config = re.compile('window.app_config=(.*?)};').findall(
-            resp_app_config.text)[0]
-        json_app_config_parser = json.loads(json_app_config + ('}'))
-        portail_id = json_app_config_parser["api"]["pass"][
-            "portailIdEncrypted"]
+                    resp_real_stream_datas = session_requests.get(
+                        jsonparser_stream_datas['@medias'], headers=headers)
+                    jsonparser_real_stream_datas = json.loads(
+                        resp_real_stream_datas.text)
 
-        # Get PassToken
-        payload = {
-            'deviceId': 'unknown',
-            'vect': 'INTERNET',
-            'media': 'PC',
-            'portailId': portail_id
-        }
-        resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload)
-        json_token_parser = json.loads(resp_token_mycanal.text)
-        pass_token = json_token_parser["response"]["passToken"]
-
-        # Get stream Id
-        for stream_datas in json_parser["detail"]["informations"]["videoURLs"]:
-            if 'Widevine' in stream_datas["drmType"]:
-                payload = {
-                    'comMode': stream_datas['comMode'],
-                    'contentId': stream_datas['contentId'],
-                    'distMode': stream_datas['distMode'],
-                    'distTechnology': stream_datas['distTechnology'],
-                    'drmType': stream_datas['drmType'],
-                    'functionalType': stream_datas['functionalType'],
-                    'hash': stream_datas['hash'],
-                    'idKey': stream_datas['idKey'],
-                    'quality': stream_datas['quality']
-                }
-                payload = json.dumps(payload)
-                headers = {
-                    'Accept':
-                    'application/json, text/plain, */*',
-                    'Authorization':
-                    'PASS Token="%s"' % pass_token,
-                    'Content-Type':
-                    'application/json; charset=UTF-8',
-                    'XX-DEVICE':
-                    'pc 9d6b98c4-433a-4150-9778-b668cc980109',
-                    'XX-DOMAIN':
-                    'cpfra',
-                    'XX-OPERATOR':
-                    'pc',
-                    'XX-Profile-Id':
-                    '0',
-                    'XX-SERVICE':
-                    'mycanal',
-                    'User-Agent':
-                    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36'
-                }
-                resp_stream_datas = session_requests.put(
-                    URL_STREAM_DATAS, data=payload, headers=headers)
-                jsonparser_stream_datas = json.loads(resp_stream_datas.text)
-
-                resp_real_stream_datas = session_requests.get(
-                    jsonparser_stream_datas['@medias'], headers=headers)
-                jsonparser_real_stream_datas = json.loads(
-                    resp_real_stream_datas.text)
-
-                item = Listitem()
-                item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
-                item.label = item_dict['label']
-                item.info.update(item_dict['info'])
-                item.art.update(item_dict['art'])
-                item.property['inputstreamaddon'] = 'inputstream.adaptive'
-                item.property['inputstream.adaptive.manifest_type'] = 'ism'
-                item.property[
-                    'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-                value_pass_token = 'PASS Token="%s"' % pass_token
-                headers2 = {
-                    'Accept':
-                    'application/json, text/plain, */*',
-                    'Authorization':
-                    value_pass_token,
-                    'Content-Type':
-                    'text/plain',
-                    'User-Agent':
-                    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36',
-                    'XX-DEVICE':
-                    'pc 9d6b98c4-433a-4150-9778-b668cc980109',
-                    'XX-DOMAIN':
-                    'cpfra',
-                    'XX-OPERATOR':
-                    'pc',
-                    'XX-Profile-Id':
-                    '0',
-                    'XX-SERVICE':
-                    'mycanal',
-                }
-                print('headers2 value ' +
-                      urllib.urlencode(headers2))
-                print('licence url value ' +
-                      jsonparser_stream_datas['@licence'])
-                # Return HTTP 401
-                item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|R{SSM}|' % urllib.urlencode(headers2)
-                return item
+                    item = Listitem()
+                    item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
+                    item.label = item_dict['label']
+                    item.info.update(item_dict['info'])
+                    item.art.update(item_dict['art'])
+                    item.property['inputstreamaddon'] = 'inputstream.adaptive'
+                    item.property['inputstream.adaptive.manifest_type'] = 'ism'
+                    item.property[
+                        'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+                    value_pass_token = 'PASS Token="%s"' % pass_token
+                    headers2 = {
+                        'Accept':
+                        'application/json, text/plain, */*',
+                        'Authorization':
+                        value_pass_token,
+                        'Content-Type':
+                        'text/plain',
+                        'User-Agent':
+                        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36',
+                        'Origin':
+                        'https://www.mycanal.fr',
+                        'XX-DEVICE':
+                        'pc 9d6b98c4-433a-4150-9778-b668cc980109',
+                        'XX-DOMAIN':
+                        'cpfra',
+                        'XX-OPERATOR':
+                        'pc',
+                        'XX-Profile-Id':
+                        '0',
+                        'XX-SERVICE':
+                        'mycanal',
+                    }
+                    print('headers2 value ' +
+                        urllib.urlencode(headers2))
+                    print('licence url value ' +
+                        jsonparser_stream_datas['@licence'])
+                    # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
+                    item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|b{SSM}|' % urllib.urlencode(headers2)
+                    return item
 
     stream_url = ''
     for stream_datas in json_parser["detail"]["informations"]["videoURLs"]:
