@@ -33,6 +33,7 @@ from resources.lib import resolver_proxy
 from resources.lib import download
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
+import inputstreamhelper
 import json
 import re
 import urlquick
@@ -136,6 +137,11 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     if item_id == 'viavosges':
+
+        is_helper = inputstreamhelper.Helper('mpd')
+        if not is_helper.check_inputstream():
+            return False
+
         live_html = urlquick.get(
             URL_LIVE_VIAVOSGES,
             headers={'User-Agent': web_utils.get_random_ua},

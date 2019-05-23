@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
+import inputstreamhelper
 import json
 import re
 import urlquick
@@ -169,6 +170,10 @@ def get_video_url(plugin,
                   video_label=None,
                   **kwargs):
 
+    is_helper = inputstreamhelper.Helper('mpd')
+    if not is_helper.check_inputstream():
+        return False
+
     resp = urlquick.get(
         video_url, headers={"User-Agent": web_utils.get_random_ua}, max_age=-1)
     root = resp.parse()
@@ -200,6 +205,10 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+
+    is_helper = inputstreamhelper.Helper('mpd')
+    if not is_helper.check_inputstream():
+        return False
 
     resp = urlquick.get(
         URL_LIVE, headers={"User-Agent": web_utils.get_random_ua}, max_age=-1)

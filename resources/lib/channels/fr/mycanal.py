@@ -435,7 +435,7 @@ def get_video_url(plugin,
                 return False
 
             Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
-                        Script.NOTIFY_INFO)
+                Script.NOTIFY_INFO)
             return False
 
             # Get Portail Id
@@ -526,7 +526,7 @@ def get_video_url(plugin,
                 return False
 
             Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
-                        Script.NOTIFY_INFO)
+                Script.NOTIFY_INFO)
             return False
 
             # Get Portail Id
@@ -625,10 +625,6 @@ def get_video_url(plugin,
                         'XX-SERVICE':
                         'mycanal',
                     }
-                    print('headers2 value ' +
-                        urllib.urlencode(headers2))
-                    print('licence url value ' +
-                        jsonparser_stream_datas['@licence'])
                     # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
                     item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|b{SSM}|' % urllib.urlencode(headers2)
                     return item
