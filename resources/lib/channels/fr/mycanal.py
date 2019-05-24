@@ -62,6 +62,7 @@ URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
 
+URL_DEVICE_ID = 'https://pass.canal-plus.com/service/HelloJSON.php'
 
 # TODO
 URL_LICENCE_DRM = '[license-server url]|[Header]|[Post-Data]|[Response]'
@@ -420,6 +421,15 @@ def get_video_url(plugin,
 
     if json_parser["detail"]["informations"]['consumptionPlatform'] == 'HAPI':
 
+        # Get DeviceId
+        header_device_id = {
+            'referer':
+            'https://secure-player.canal-plus.com/one/prod/v2/',
+        }
+        resp_device_id = urlquick.get(URL_DEVICE_ID, headers=header_device_id, max_age=-1)
+        device_id = re.compile(
+            r'deviceId\"\:\"(.*?)\"').findall(resp_device_id.text)[0]
+
         if xbmc.getCondVisibility('system.platform.android'):
 
             if cqu.get_kodi_version() < 18:
@@ -435,7 +445,7 @@ def get_video_url(plugin,
                 return False
 
             Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
-                Script.NOTIFY_INFO)
+                          Script.NOTIFY_INFO)
             return False
 
             # Get Portail Id
@@ -481,7 +491,7 @@ def get_video_url(plugin,
                         'Content-Type':
                         'application/json; charset=UTF-8',
                         'XX-DEVICE':
-                        'pc 9d6b98c4-433a-4150-9778-b668cc980109',
+                        'pc %s' % device_id,
                         'XX-DOMAIN':
                         'cpfra',
                         'XX-OPERATOR':
@@ -526,7 +536,7 @@ def get_video_url(plugin,
                 return False
 
             Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
-                Script.NOTIFY_INFO)
+                          Script.NOTIFY_INFO)
             return False
 
             # Get Portail Id
@@ -572,7 +582,7 @@ def get_video_url(plugin,
                         'Content-Type':
                         'application/json; charset=UTF-8',
                         'XX-DEVICE':
-                        'pc 9d6b98c4-433a-4150-9778-b668cc980109',
+                        'pc %s' % device_id,
                         'XX-DOMAIN':
                         'cpfra',
                         'XX-OPERATOR':
@@ -615,7 +625,7 @@ def get_video_url(plugin,
                         'Origin':
                         'https://www.mycanal.fr',
                         'XX-DEVICE':
-                        'pc 9d6b98c4-433a-4150-9778-b668cc980109',
+                        'pc %s' % device_id,
                         'XX-DOMAIN':
                         'cpfra',
                         'XX-OPERATOR':
