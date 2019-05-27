@@ -81,8 +81,15 @@ def list_categories(plugin, item_id, **kwargs):
     item_post_treatment(item)
     yield item
 
-    resp = urlquick.get(URL_CATEGORIES)
-    json_parser = json.loads(resp.text)
+    resp = urlquick.get(URL_CLIENT_KEY_JS)
+    client_key_value = 'client-key %s' % re.compile(
+        r'client-key \"\.concat\(\"(.*?)\"').findall(resp.text)[0]
+    headers = {
+        'Authorization': client_key_value,
+        'Accept': 'application/json, text/plain, */*'
+    }
+    resp2 = urlquick.get(URL_CATEGORIES, headers=headers)
+    json_parser = json.loads(resp2.text)
 
     for category_datas in json_parser["Types"]:
         category_title = category_datas["Title"]
@@ -99,8 +106,15 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_programs(plugin, item_id, category_key, **kwargs):
 
-    resp = urlquick.get(URL_PROGRAMS % category_key)
-    json_parser = json.loads(resp.text)
+    resp = urlquick.get(URL_CLIENT_KEY_JS)
+    client_key_value = 'client-key %s' % re.compile(
+        r'client-key \"\.concat\(\"(.*?)\"').findall(resp.text)[0]
+    headers = {
+        'Authorization': client_key_value,
+        'Accept': 'application/json, text/plain, */*'
+    }
+    resp2 = urlquick.get(URL_PROGRAMS % category_key, headers=headers)
+    json_parser = json.loads(resp2.text)
 
     for program_datas in json_parser["LineupItems"]:
         if program_datas["IsFree"] is True:
@@ -212,8 +226,15 @@ def list_days(plugin, item_id, **kwargs):
     - day 2
     - ...
     """
-    resp = urlquick.get(URL_REPLAY_BY_DAY)
-    json_parser = json.loads(resp.text)
+    resp = urlquick.get(URL_CLIENT_KEY_JS)
+    client_key_value = 'client-key %s' % re.compile(
+        r'client-key \"\.concat\(\"(.*?)\"').findall(resp.text)[0]
+    headers = {
+        'Authorization': client_key_value,
+        'Accept': 'application/json, text/plain, */*'
+    }
+    resp2 = urlquick.get(URL_REPLAY_BY_DAY, headers=headers)
+    json_parser = json.loads(resp2.text)
 
     for day_datas in json_parser["Lineups"]:
         day_title = day_datas["Title"]
