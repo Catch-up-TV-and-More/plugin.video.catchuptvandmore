@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 
 # Core imports
 import importlib
+import sys
 
 # Kodi imports
 from codequick import Route, Resolver, Listitem, run, Script, utils, storage
@@ -158,14 +159,14 @@ def generic_menu(plugin, **kwargs):
     Build a generic addon menu
     with all not hidden items
     """
+    plugin.redirect_single_item = True
 
     menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
-    items = []
 
     if not menu:
         # If the selected menu is empty just reload the current menu
-        return False
+        yield False
 
     for index, (item_order, item_id, item_infos) in enumerate(menu):
 
@@ -203,12 +204,7 @@ def generic_menu(plugin, **kwargs):
                                   len(menu),
                                   item_infos=item_infos)
 
-        if len(menu) == 1:
-            return item_callback(plugin, **(item.params))
-        else:
-            items.append(item)
-
-    return items
+        yield item
 
 
 @Route.register
@@ -463,6 +459,9 @@ def favourites(plugin, start=0, **kwargs):
         item_dict.pop('subtitles')
         item_dict.pop('context')
 
+        item_dict['params']['from_fav'] = True
+        item_dict['params']['item_hash'] = item_hash
+
         item = Listitem.from_dict(**item_dict)
         url = cqu.build_kodi_url(item_dict['callback'], item_dict['params'])
 
@@ -501,6 +500,25 @@ def favourites(plugin, start=0, **kwargs):
         yield item
 
 
+def error_handler(exception):
+    """
+    This function is called each time
+    run() trigger an Exception
+    """
+    params = cqu.get_params_in_query(sys.argv[2])
+
+    # If we come from fav menu we
+    # suggest user to delete this item
+    if 'from_fav' in params:
+        fav.ask_to_delete_error_fav_item(params)
+
+    # Else, we ask the user if he wants
+    # to share his log to addon devs
+    else:
+        log_uploader = importlib.import_module('resources.lib.log_uploader')
+        log_uploader.ask_to_share_log()
+
+
 def main():
     """
     Before calling run() function of
@@ -514,7 +532,9 @@ def main():
     the correct function according to
     the Kodi URL
     """
-    run()
+    exception = run()
+    if isinstance(exception, Exception):
+        error_handler(exception)
 
 
 if __name__ == '__main__':

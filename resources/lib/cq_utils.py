@@ -132,10 +132,10 @@ def import_needed_module():
 
         # Need to load additional module
         try:
-            Script.log('[cq_utils.import_needed_module] Import module {} on the fly'.format(module_to_import))
+            Script.log('[cq_utils.import_needed_module] Import module {} on the fly'.format(module_to_import), lvl=Script.INFO)
             importlib.import_module(module_to_import)
         except Exception:
-            Script.log('[cq_utils.import_needed_module] Failed to import module {} on the fly'.format(module_to_import))
+            Script.log('[cq_utils.import_needed_module] Failed to import module {} on the fly'.format(module_to_import), lvl=Script.WARNING)
 
     return
 
