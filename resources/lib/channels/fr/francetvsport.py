@@ -148,7 +148,7 @@ def multi_live_entry(plugin, item_id, **kwargs):
 @Route.register
 def list_lives(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(URL_FRANCETV_SPORT % 'directs')
+    resp = urlquick.get(URL_FRANCETV_SPORT % 'directs', max_age=-1)
     json_parser = json.loads(resp.text)
 
     if 'lives' in json_parser["page"]:

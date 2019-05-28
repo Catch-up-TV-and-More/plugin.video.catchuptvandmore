@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.7~beta12"
+       version="0.2.7~beta13"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -64,6 +64,7 @@
 [Fix] Catch-up TV - Public Sénat (FR) - Next Page
 [Fix] Catch-up TV - RMC Découverte (FR)
 [Add] Live TV - CCTV 1,2,3,4,... (CN)
+[Improvements] Live TV - France TV Sport - Don't use cache for listing live tvs
     </news>
     <assets>
       <icon>icon.png</icon>
