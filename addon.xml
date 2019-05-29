@@ -65,6 +65,7 @@
 [Fix] Catch-up TV - RMC Découverte (FR)
 [Add] Live TV - CCTV 1,2,3,4,... (CN)
 [Improvements] Live TV - France TV Sport - Don't use cache for listing live tvs / check if the thumb is available
+[Fix] Catch-up TV - VRT NU (BE)
     </news>
     <assets>
       <icon>icon.png</icon>
