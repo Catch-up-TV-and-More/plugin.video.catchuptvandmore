@@ -102,7 +102,7 @@ def list_categories(plugin, item_id, **kwargs):
     json_replay = re.compile('window.__data=(.*?)};').findall(resp.text)[0]
     json_parser = json.loads(json_replay + ('}'))
 
-    for category in json_parser["landing"]["strates"]:
+    for category in json_parser["templates"]["landing"]["strates"]:
         if category["type"] == "contentRow" or category["type"] == "contentGrid":
             if 'title' in category:
                 title = category['title']
@@ -124,7 +124,7 @@ def list_contents(plugin, item_id, title_value, **kwargs):
     json_replay = re.compile('window.__data=(.*?)};').findall(resp.text)[0]
     json_parser = json.loads(json_replay + ('}'))
 
-    for category in json_parser["landing"]["strates"]:
+    for category in json_parser["templates"]["landing"]["strates"]:
         if category["type"] == "contentRow" or category["type"] == "contentGrid":
             if 'title' in category:
                 title = category['title']
