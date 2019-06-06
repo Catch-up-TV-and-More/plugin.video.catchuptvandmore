@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.7~beta14"
+       version="0.2.7~beta15"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -66,6 +66,7 @@
 [Add] Live TV - CCTV 1,2,3,4,... (CN)
 [Improvements] Live TV - France TV Sport - Don't use cache for listing live tvs / check if the thumb is available
 [Fix] Catch-up TV - VRT NU (BE)
+[Fix] Catch-up TV - MyTF1 (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

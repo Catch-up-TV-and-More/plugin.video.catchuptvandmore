@@ -48,7 +48,7 @@ import xbmcgui
 
 # TO DO
 
-URL_ROOT = utils.urljoin_partial("http://www.tf1.fr")
+URL_ROOT = utils.urljoin_partial("https://www.tf1.fr")
 
 URL_VIDEO_STREAM = 'https://delivery.tf1.fr/mytf1-wrd/%s?format=%s'
 # videoId, format['hls', 'dash']
@@ -75,7 +75,8 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'))
+    resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'),
+                        headers={'User-Agent': web_utils.get_random_ua})
     root = resp.parse("ul", attrs={"class": "filters_2 contentopen"})
 
     for category in root.iterfind(".//a"):
@@ -101,7 +102,8 @@ def list_programs(plugin, item_id, category, **kwargs):
     """
 
     if category == 'all':
-        resp = urlquick.get(URL_ROOT('/programmes-tv/abecedaire/#'))
+        resp = urlquick.get(URL_ROOT('/programmes-tv/abecedaire/#'),
+                            headers={'User-Agent': web_utils.get_random_ua})
         root = resp.parse()
 
         for program in root.iterfind(
@@ -142,7 +144,8 @@ def list_programs(plugin, item_id, category, **kwargs):
                     item_post_treatment(item)
                     yield item
     else:
-        resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'))
+        resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'),
+                            headers={'User-Agent': web_utils.get_random_ua})
         root = resp.parse("ul", attrs={"id": "js_filter_el_container"})
 
         for program in root.iterfind('.//li'):
@@ -189,7 +192,8 @@ def list_program_categories(plugin, item_id, program_url, **kwargs):
     - Saison 1
     - ...
     """
-    resp = urlquick.get(program_url + '/videos')
+    resp = urlquick.get(program_url + '/videos',
+                        headers={'User-Agent': web_utils.get_random_ua})
     try:
         program_categories = resp.parse(
             u"ul", attrs={'class': 'filters_1 contentopen'})
@@ -212,7 +216,8 @@ def list_program_categories(plugin, item_id, program_url, **kwargs):
 def list_videos(plugin, item_id, program_category_url, **kwargs):
 
     if 'meteo.tf1.fr/meteo-france' in program_category_url:
-        resp = urlquick.get(program_category_url)
+        resp = urlquick.get(program_category_url,
+                            headers={'User-Agent': web_utils.get_random_ua})
         root = resp.parse("td", attrs={"class": "textbase"})
 
         title = root.find('.//h3').text
@@ -232,7 +237,8 @@ def list_videos(plugin, item_id, program_category_url, **kwargs):
 
     else:
 
-        resp = urlquick.get(program_category_url)
+        resp = urlquick.get(program_category_url,
+                            headers={'User-Agent': web_utils.get_random_ua})
         root = resp.parse()
         if root.find(".//div[@class='content']") is not None:
             grid = resp.parse("div", attrs={"class": "content"})
@@ -325,7 +331,8 @@ def build_playlist(plugin,
                    item_dict=None,
                    video_label=None,
                    **kwargs):
-    playlist_html = urlquick.get(program_id)
+    playlist_html = urlquick.get(program_id,
+                                 headers={'User-Agent': web_utils.get_random_ua})
     playlist = playlist_html.parse()
     reco_videos = playlist.find(".//div[@id='reco-video-content']")
     data_more = ''
@@ -385,7 +392,8 @@ def get_video_url(plugin,
     else:
         url = program_id
 
-    video_html = urlquick.get(url)
+    video_html = urlquick.get(url,
+                              headers={'User-Agent': web_utils.get_random_ua})
     root = video_html.parse()
 
     if 'www.wat.tv/embedframe' in program_id:
