@@ -122,6 +122,10 @@ LABELS = {
     30062,
     'nl_live':
     30062,
+    'cn_replay':
+    30063,
+    'cn_live':
+    30063,
     'French channels':
     30080,
     'Belgian channels':
@@ -148,6 +152,8 @@ LABELS = {
     30091,
     'Dutch channels':
     30092,
+    'Chinese channels':
+    30093,
 
     # Settings again
     'Video quality':
@@ -604,6 +610,10 @@ LABELS = {
     'Luxe.TV',
     'alsace20':
     'Alsace 20',
+    'tvpifr':
+    'TVPI télévision d\'ici',
+    'cliquetv':
+    'Clique TV',
 
     # Japan channels / live TV
     'nhknews':
@@ -675,6 +685,8 @@ LABELS = {
     'UKTV Play',
     'fiveusa':
     '5USA',
+    'bristoltv':
+    'Bristol TV',
 
     # International channels / live TV
     'tv5mondeafrique':
@@ -702,7 +714,7 @@ LABELS = {
     'dw':
     'DW (' + Script.setting['dw.language'] + ')',
     'beinsports':
-    'Bein Sports (' + Script.setting['beinsports.language'] + ')',
+    'Bein Sports',
     'qvc':
     'QVC (' + Script.setting['qvc.language'] + ')',
     'icirdi':
@@ -845,6 +857,44 @@ LABELS = {
     'NPO Start',
     'at5':
     'AT5',
+
+    # Chinese channels / live TV
+    'cctv1':
+    'CCTV-1 综合',
+    'cctv2':
+    'CCTV-2 财经',
+    'cctv3':
+    'CCTV-3 综艺',
+    'cctv4':
+    'CCTV-4 中文国际（亚）',
+    'cctveurope':
+    'CCTV-4 中文国际（欧）',
+    'cctvamerica':
+    'CCTV-4 中文国际（美）',
+    'cctv5':
+    'CCTV-5 体育',
+    'cctv5plus':
+    'CCTV-5+ 体育赛事',
+    'cctv6':
+    'CCTV-6 电影',
+    'cctv7':
+    'CCTV-7 军事农业',
+    'cctv8':
+    'CCTV-8 电视剧',
+    'cctvjilu':
+    'CCTV-9 纪录',
+    'cctv10':
+    'CCTV-10 科教',
+    'cctv11':
+    'CCTV-11 戏曲',
+    'cctv12':
+    'CCTV-12 社会与法',
+    'cctv13':
+    'CCTV-13 新闻',
+    'cctvchild':
+    'CCTV-14 少儿',
+    'cctv15':
+    'CCTV-15 音乐',
 
     # Websites
     'allocine':

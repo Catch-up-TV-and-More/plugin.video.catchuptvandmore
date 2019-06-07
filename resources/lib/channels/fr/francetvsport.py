@@ -148,13 +148,15 @@ def multi_live_entry(plugin, item_id, **kwargs):
 @Route.register
 def list_lives(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(URL_FRANCETV_SPORT % 'directs')
+    resp = urlquick.get(URL_FRANCETV_SPORT % 'directs', max_age=-1)
     json_parser = json.loads(resp.text)
 
     if 'lives' in json_parser["page"]:
         for live_datas in json_parser["page"]["lives"]:
             live_title = live_datas["title"]
-            live_image = live_datas["image"]["large_16_9"]
+            live_image = ''
+            if 'image' in live_datas:
+                live_image = live_datas["image"]["large_16_9"]
             id_diffusion = live_datas["sivideo-id"]
             try:
                 live_date_plot = time.strftime(

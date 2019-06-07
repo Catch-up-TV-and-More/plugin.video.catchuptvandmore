@@ -102,5 +102,35 @@ menu = {
         'thumb': 'channels/uk/questred.png',
         'fanart': 'channels/uk/questred_fanart.jpg',
         'module': 'resources.lib.channels.uk.questod'
+    },
+    'bristoltv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/bristoltv.png',
+        'fanart': 'channels/uk/bristoltv_fanart.jpg',
+        'module': 'resources.lib.channels.uk.bristoltv'
+    },
+    'drama': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/drama.png',
+        'fanart': 'channels/uk/drama_fanart.jpg',
+        'module': 'resources.lib.channels.uk.uktvplay'
+    },
+    'dave': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/dave.png',
+        'fanart': 'channels/uk/dave_fanart.jpg',
+        'module': 'resources.lib.channels.uk.uktvplay'
+    },
+    'really': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/really.png',
+        'fanart': 'channels/uk/really_fanart.jpg',
+        'module': 'resources.lib.channels.uk.uktvplay'
+    },
+    'yesterday': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/yesterday.png',
+        'fanart': 'channels/uk/yesterday_fanart.jpg',
+        'module': 'resources.lib.channels.uk.uktvplay'
     }
 }

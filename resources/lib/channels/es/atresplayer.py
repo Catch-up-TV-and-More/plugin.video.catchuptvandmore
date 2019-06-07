@@ -32,6 +32,7 @@ from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
+import inputstreamhelper
 import json
 import re
 import urlquick
@@ -204,6 +205,10 @@ def get_video_url(plugin,
                   download_mode=False,
                   video_label=None,
                   **kwargs):
+
+    is_helper = inputstreamhelper.Helper('mpd')
+    if not is_helper.check_inputstream():
+        return False
 
     resp = urlquick.get(video_url)
     json_parser = json.loads(resp.text)

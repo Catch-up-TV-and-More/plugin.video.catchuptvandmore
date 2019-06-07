@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.6"
+       version="0.2.7"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
     <import addon="script.module.requests" version="2.12.4"/>
-    <import addon="script.module.codequick" version="0.9.9"/>
+    <import addon="script.module.codequick" version="0.9.10"/>
     <import addon="script.module.pytz" version="2014.2"/>
     <import addon="script.module.inputstreamhelper" version="0.3.3"/>
     <import addon="script.module.six" version="1.11.0"/>
+    <import addon="script.module.pyqrcode" version="0.0.1"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -37,39 +38,35 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.6]
-[Add] Catch-Up TV and Live TV - AT5 (NL)
-[Add] Notification to inform the new feature to bind CU TV And More with TV Mode of Kodi
-[Add] Catch-Up TV - Luxe.TV (FR)
-[Add] Internal Favourites for the add-on.
-[Add] Catch-Up TV and Live TV - Africa 24 (WO)
-[Fix] Catch-Up TV - RT (WO) - programme videos
-[Add] Catch-Up TV and Live TV - Alsace 20 (FR)
-[Fix] Catch-Up TV - Ici TouvTV (CA)
-[Add/Remove] Catch-Up TV - Culturebox change name to Spectacles et Culture (France TV) (FR)
-[Fix] Catch-up TV - Jack (mycanal) (FR)
-[Fix] Icon channel in Kodi Live TV (inpustream live TV case)
-[Fix] Catch-up TV and Live TV - RTLPlay (BE) - get apikey
-[Fix] Catch-up TV - MyTF1 (FR) - Some DALS contents
-[Add] Live TV - CanalC (BE)
-[Python2/3] Add compatibility for urllib (sky.py, canalc.py, ...)
-[Fix] Live TV - TVP 3 (PL) - Not shown in the plugin because of encoding issue
-[Fix] title UNKNOWN for channels in Kodi Live TV (inpustream live TV case)
-[Fix] Catch-up TV - France 24 (WO) - bypass videos program without youtube-video-id
-[Imporvement] Catch-up TV - BX1 (BE) - Verify in the next page exists
-[Fix] Catch-up TV - TVM3 (CH) - bypass videos program without video_id
-[Python2/3] Fix if condition for Live TV - 日テレ News24 (JP)
-[Fix] Catch-up TV - Lequipe TV (FR) - Remove Date (format change all the times)
-[Fix] Catch-up TV - BeinSport (WO) - bypass videos program without video_id
-[Fix] Catch-up TV - Rai Play (IT) - Video without video duration
-[Fix] Catch-up TV - ICI Télé (CA)
-[Add] Live TV - 株式会社ウェザーニューズ (JP)
-[Improvement] If only one item in the menu, directly open this item
-[Fix] Live TV - Télé-Quebec (CA)
-[Fix] Catch-up TV - TVA (CA)
-[Add] Catch-up TV - NOOVO (CA)
-[Python2/3] Add compatibility for Catch-up TV - Quest OD (UK) - remove double cast
+[Version 0.2.7]
+[Improvements] Update message of content requiring a subscription for Catch-up TV - 6play (FR) and RTLPlay (BE)
+[Fix] Website - Allociné (FR)
+[Fix] Catch-up TV - Caledonia (FR)
+[Fix] Search - Allociné, France TV, INA, ... (ALL)
+[Fix] Catch-up TV - KTO (FR)
+[Fix] Catch-up TV - Sky Sport (UK)
+[Add] Catch-up TV - NPO Start (NL)
+[Add] Catch-up TV and Live TV - Bristol TV (UK)
+[Add] Catch-up TV and Live TV - TVPI télévision d'ici (FR)
+[Fix] Catch-up TV - نسمة تي في (TN)
+[Fix] Catch-up TV - RT (FR|EN) - Magazines/Shows
+[Improvements] Catch-up TV - UKTVPlay (UK) - Add Categories
+[Playlist] Catch-up TV - MyTF1 (FR) - Add playlist feature
+[Add] Live TV - UKTVPlay (Drama, Dave, ...) (UK)
+[DRM/Fix/Improvements] Catch-up TV - ICI Tout.tv (CA) (Play DRM Content, Add categories, ...)
+[Fix] Catch-up TV - J-One, GameOne, MTV (FR)
+[Fix] Catch-up TV - BX1 (BE) - Next Page
+[Fix] Catch-up TV - Rai Play (IT) - video duration
+[Improvements] Catch-up TV - Beinsport (WO) - Add categories and all sites
+[Add] Catch-up TV - Clique TV (FR)
+[Fix] Catch-up TV - CNews (FR) - Show thumb
+[Fix] Catch-up TV - LCI (FR)
+[Fix] Catch-up TV - Public Sénat (FR) - Next Page
+[Fix] Catch-up TV - RMC Découverte (FR)
+[Add] Live TV - CCTV 1,2,3,4,... (CN)
+[Improvements] Live TV - France TV Sport - Don't use cache for listing live tvs / check if the thumb is available
 [Fix] Catch-up TV - VRT NU (BE)
+[Fix] Catch-up TV - MyTF1 (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

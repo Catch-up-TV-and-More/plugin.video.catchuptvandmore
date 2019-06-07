@@ -90,5 +90,9 @@ menu = {
     'nl_live': {
         'callback': 'generic_menu',
         'thumb': 'channels/nl.png'
+    },
+    'cn_live': {
+        'callback': 'generic_menu',
+        'thumb': 'channels/cn.png'
     }
 }

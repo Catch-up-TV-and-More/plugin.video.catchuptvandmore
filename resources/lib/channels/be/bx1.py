@@ -98,13 +98,12 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
 
         yield item
 
-    root_change_pages = resp.parse(
-        "ol", attrs={
-            "class": "wp-paginate font-inherit"
-        })
-    if root_change_pages.find(".//a[@class='next']") is not None:
-        yield Listitem.next_page(
-            item_id=item_id, program_url=program_url, page=str(int(page) + 1))
+    root_change_pages = resp.parse()
+    if root_change_pages.find(".//ol[@class='wp-paginate font-inherit']") is not None:
+        change_page_node = root_change_pages.find(".//ol[@class='wp-paginate font-inherit']")
+        if change_page_node.find(".//a[@class='next']") is not None:
+            yield Listitem.next_page(
+                item_id=item_id, program_url=program_url, page=str(int(page) + 1))
 
 
 @Resolver.register

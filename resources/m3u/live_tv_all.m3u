@@ -418,6 +418,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv8montblanc&it
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/alsace20.png" group-title="France",Alsace 20
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=alsace20&item_module=resources.lib.channels.fr.alsace20&item_dict={}
 
+##	TVPI télévision d'ici
+##	tvpifr
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvpifr.png" group-title="France",TVPI télévision d'ici
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvpifr&item_module=resources.lib.channels.fr.tvpifr&item_dict={}
+
 
 
 # Belgium
@@ -503,9 +508,9 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=contact&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/rtlsport.png" group-title="Belgium",RTL Sport
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl_sport&item_module=resources.lib.channels.be.rtlplaybe&item_dict={}
 
-##	CanalC
+##	Canal C
 ##	canalc
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/canalc.png" group-title="Belgium",CanalC
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/canalc.png" group-title="Belgium",Canal C
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=canalc&item_module=resources.lib.channels.be.canalc&item_dict={}
 
 
@@ -682,6 +687,31 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questtv&item_mo
 ##	questred
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/questred.png" group-title="United Kingdom",Quest RED
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=questred&item_module=resources.lib.channels.uk.questod&item_dict={}
+
+##	Bristol TV
+##	bristoltv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/bristoltv.png" group-title="United Kingdom",Bristol TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bristoltv&item_module=resources.lib.channels.uk.bristoltv&item_dict={}
+
+##	Drama
+##	drama
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/drama.png" group-title="United Kingdom",Drama
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=drama&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
+
+##	Dave
+##	dave
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/dave.png" group-title="United Kingdom",Dave
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=dave&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
+
+##	Really
+##	really
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/really.png" group-title="United Kingdom",Really
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=really&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
+
+##	Yesterday
+##	yesterday
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/yesterday.png" group-title="United Kingdom",Yesterday
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=yesterday&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
 
 
 
@@ -1312,6 +1342,101 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=npo-politiek&it
 ##	at5
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/nl/at5.png" group-title="Netherlands",AT5
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=at5&item_module=resources.lib.channels.nl.at5&item_dict={}
+
+
+
+# China
+# cn_live
+
+##	CCTV-1 综合
+##	cctv1
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv1.png" group-title="China",CCTV-1 综合
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv1&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-2 财经
+##	cctv2
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv2.png" group-title="China",CCTV-2 财经
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv2&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-3 综艺
+##	cctv3
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv3.png" group-title="China",CCTV-3 综艺
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv3&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-4 中文国际（亚）
+##	cctv4
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv4.png" group-title="China",CCTV-4 中文国际（亚）
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv4&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-4 中文国际（欧）
+##	cctveurope
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctveurope.png" group-title="China",CCTV-4 中文国际（欧）
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctveurope&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-4 中文国际（美）
+##	cctvamerica
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctvamerica.png" group-title="China",CCTV-4 中文国际（美）
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctvamerica&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-5 体育
+##	cctv5
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv5.png" group-title="China",CCTV-5 体育
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv5&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-5+ 体育赛事
+##	cctv5plus
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv5plus.png" group-title="China",CCTV-5+ 体育赛事
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv5plus&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-6 电影
+##	cctv6
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv6.png" group-title="China",CCTV-6 电影
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv6&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-7 军事农业
+##	cctv7
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv7.png" group-title="China",CCTV-7 军事农业
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv7&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-8 电视剧
+##	cctv8
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv8.png" group-title="China",CCTV-8 电视剧
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv8&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-9 纪录
+##	cctvjilu
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctvjilu.png" group-title="China",CCTV-9 纪录
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctvjilu&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-10 科教
+##	cctv10
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv10.png" group-title="China",CCTV-10 科教
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv10&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-11 戏曲
+##	cctv11
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv11.png" group-title="China",CCTV-11 戏曲
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv11&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-12 社会与法
+##	cctv12
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv12.png" group-title="China",CCTV-12 社会与法
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv12&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-13 新闻
+##	cctv13
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv13.png" group-title="China",CCTV-13 新闻
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv13&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-14 少儿
+##	cctvchild
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctvchild.png" group-title="China",CCTV-14 少儿
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctvchild&item_module=resources.lib.channels.cn.cctv&item_dict={}
+
+##	CCTV-15 音乐
+##	cctv15
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/cn/cctv15.png" group-title="China",CCTV-15 音乐
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cctv15&item_module=resources.lib.channels.cn.cctv&item_dict={}
 
 
 

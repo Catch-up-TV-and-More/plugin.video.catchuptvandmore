@@ -73,12 +73,103 @@ URL_INFO_PROGRAM = URL_API + '/vod/brand/?slug=%s'
 URL_VIDEOS = URL_API + '/vod/series/?id=%s'
 # Serie_ID
 
+URL_CATEGORIES = URL_API + '/vod/categories/'
+
+URL_PROGRAMS_SUBCATEGORY = URL_API + '/vod/subcategory_brands/?slug=%s&size=999'
+# Slug subcategory
+
+URL_LIVE = 'https://uktvplay.uktv.co.uk/watch-live/%s'
+# Channel name
+
+URL_STREAM_LIVE = 'https://v2-streams-elb.simplestreamcdn.com/api/live/stream/%s?key=%s&platform=chrome&user=%s'
+# data_channel, key, user
+
+URL_LIVE_KEY = 'https://mp.simplestream.com/uktv/1.0.4/ss.js'
+
+URL_LIVE_TOKEN = 'https://sctoken.uktvapi.co.uk/?stream_id=%s'
+# data_channel
+
+URL_LOGIN_TOKEN = 'https://uktvplay.uktv.co.uk/account/static/js/settings/settings.js'
+
+URL_LOGIN_MODAL = 'https://uktvplay.uktv.co.uk/account/'
+
+URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate/'
+
 
 def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
-    return list_letters(plugin, item_id)
+    return list_categories(plugin, item_id)
+
+
+@Route.register
+def list_categories(plugin, item_id, **kwargs):
+    """
+    Build categories listing
+    """
+    item = Listitem()
+    item.label = 'A-Z'
+    item.set_callback(list_letters, item_id=item_id)
+    item_post_treatment(item)
+    yield item
+
+    resp = urlquick.get(URL_CATEGORIES)
+    json_parser = json.loads(resp.text)
+
+    for category_datas in json_parser["categories"]:
+        category_title = category_datas["name"]
+        category_slug = category_datas["slug"]
+        item = Listitem()
+        item.label = category_title
+        item.set_callback(list_sub_categories,
+                          item_id=item_id,
+                          category_slug=category_slug)
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register
+def list_sub_categories(plugin, item_id, category_slug, **kwargs):
+
+    resp = urlquick.get(URL_CATEGORIES)
+    json_parser = json.loads(resp.text)
+
+    for category_datas in json_parser["categories"]:
+        if category_slug in category_datas["slug"]:
+            for sub_category_datas in category_datas["subcategories"]:
+                sub_category_title = sub_category_datas["name"]
+                sub_category_slug = sub_category_datas["slug"]
+                item = Listitem()
+                item.label = sub_category_title
+                item.set_callback(list_programs_sub_categories,
+                                  item_id=item_id,
+                                  sub_category_slug=sub_category_slug)
+                item_post_treatment(item)
+                yield item
+
+
+@Route.register
+def list_programs_sub_categories(plugin, item_id, sub_category_slug, **kwargs):
+
+    resp = urlquick.get(URL_PROGRAMS_SUBCATEGORY % sub_category_slug)
+    json_parser = json.loads(resp.text)
+
+    for program_datas in json_parser["brand_list"]:
+        program_title = program_datas['name']
+        program_image = ''
+        if 'image' in program_datas:
+            program_image = program_datas['image']
+        program_slug = program_datas['slug']
+
+        item = Listitem()
+        item.label = program_title
+        item.art['thumb'] = program_image
+        item.set_callback(list_seasons,
+                          item_id=item_id,
+                          program_slug=program_slug)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
@@ -237,5 +328,106 @@ def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     item.property[
         'inputstream.adaptive.license_key'] = licence_key + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=manifest.prod.boltdns.net|R{SSM}|'
+
+    return item
+
+
+def live_entry(plugin, item_id, item_dict, **kwargs):
+    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+
+    if cqu.get_kodi_version() < 18:
+        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+        return False
+
+    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
+
+    # create session request
+    session_requests = requests.session()
+    session_requests.get(URL_LOGIN_MODAL)
+
+    resptokenid = session_requests.get(URL_LOGIN_TOKEN)
+    token_id = re.compile(r'tokenId: \'(.*?)\'').findall(resptokenid.text)[2]
+
+    if plugin.setting.get_string(
+            'uktvplay.login') == '' or plugin.setting.get_string(
+                'uktvplay.password') == '':
+        xbmcgui.Dialog().ok('Info',
+                            plugin.localize(30604) %
+                            ('UKTVPlay', 'https://uktvplay.uktv.co.uk'))
+        return False
+
+    # Build PAYLOAD
+    payload = {
+        'email': plugin.setting.get_string('uktvplay.login'),
+        'password': plugin.setting.get_string('uktvplay.password')
+    }
+    payload = json.dumps(payload)
+
+    # LOGIN
+    # KO - resp2 = session_urlquick.post(
+    #     URL_COMPTE_LOGIN, data=payload,
+    #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
+    resplogin = session_requests.post(
+        URL_COMPTE_LOGIN, data=payload, headers={
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Origin': 'https://uktvplay.uktv.co.uk',
+            'Referer': 'https://uktvplay.uktv.co.uk/account/',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
+            'X-TokenId': token_id,
+            'X-Version': '9.0.0'
+        })
+    if resplogin.status_code >= 400:
+        plugin.notify('ERROR', 'UKTVPlay : ' + plugin.localize(30711))
+        return False
+    json_parser_resplogin = json.loads(resplogin.content)
+
+    respdatachannel = session_requests.get(URL_LIVE % item_id)
+    data_channel = re.compile(r'data\-channel\=\"(.*?)\"').findall(
+        respdatachannel.text)[0]
+
+    respkey = session_requests.get(URL_LIVE_KEY)
+    app_key = re.compile(r'app\_key"\ \: \"(.*?)\"').findall(respkey.text)[0]
+
+    resptoken = session_requests.get(URL_LIVE_TOKEN % data_channel)
+    json_parser_resptoken = json.loads(resptoken.text)
+
+    respstreamdatas = session_requests.post(
+        URL_STREAM_LIVE % (data_channel, app_key,
+                           str(json_parser_resplogin["accountId"])),
+        headers={
+            'Token-Expiry': json_parser_resptoken["expiry"],
+            'Token': json_parser_resptoken["token"],
+            'Uvid': data_channel,
+            'Userid': str(json_parser_resplogin["accountId"])
+        })
+    json_parser = json.loads(respstreamdatas.text)
+
+    item = Listitem()
+    item.path = json_parser["response"]["drm"]["widevine"]["stream"]
+    if item_dict:
+        if 'label' in item_dict:
+            item.label = item_dict['label']
+        if 'info' in item_dict:
+            item.info.update(item_dict['info'])
+        if 'art' in item_dict:
+            item.art.update(item_dict['art'])
+    else:
+        item.label = LABELS[item_id]
+        item.art["thumb"] = ""
+        item.art["icon"] = ""
+        item.art["fanart"] = ""
+        item.info["plot"] = LABELS[item_id]
+    item.property['inputstreamaddon'] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property[
+        'inputstream.adaptive.license_key'] = json_parser["response"]["drm"]["widevine"]["licenseAcquisitionUrl"] + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36|R{SSM}|'
 
     return item

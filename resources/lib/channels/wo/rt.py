@@ -51,8 +51,6 @@ URL_LIVE_AR = 'https://arabic.rt.com/live/'
 
 URL_LIVE_ES = 'https://actualidad.rt.com/en_vivo'
 
-# URL_VIDEOS = 'URL_ROOT_%s' % DESIRED_LANGUAGE + '/listing/program.%s/prepare/idi-listing/10/%s'
-
 DESIRED_LANGUAGE = Script.setting['rt.language']
 
 CATEGORIES_VIDEOS_FR = {
@@ -159,72 +157,115 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 def list_videos_programs(plugin, item_id, next_url, page, **kwargs):
 
     resp = urlquick.get(next_url)
-    if 'pageID' in resp.text:
-        program_id = re.compile(r'pageID \= \"(.*?)\"').findall(resp.text)[0]
+    program_id_values = re.compile(r'\/program\.(.*?)\/prepare').findall(
+        resp.text)
+
+    if len(program_id_values) > 0:
+        if DESIRED_LANGUAGE == 'FR':
+            resp2 = urlquick.get(
+                eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/idi-listing/10/%s' %
+                (program_id_values[0], page))
+            root = resp2.parse("div", attrs={"data-role": "content"})
+
+            for video_datas in root.iterfind(".//div[@data-role='item']"):
+                video_title = video_datas.find(
+                    ".//span[@class='st-idi-episode-card__title']").text.strip()
+                video_image_datas = video_datas.find(
+                    ".//span[@class='st-idi-episode-card__image']").get('style')
+                video_image = re.compile(r'url\((.*?)\)').findall(
+                    video_image_datas)[0]
+                video_url = video_datas.find('.//a').get('href')
+                video_plot = video_datas.find(
+                    ".//span[@class='st-idi-episode-card__summary']").text.strip()
+
+                item = Listitem()
+                item.label = video_title
+                item.art['thumb'] = video_image
+                item.info['plot'] = video_plot
+
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' + item.label,
+                                  video_url=video_url)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                yield item
+
+        elif DESIRED_LANGUAGE == 'EN':
+            resp2 = urlquick.get(
+                eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/latestepisodes/10/%s' %
+                (program_id_values[0], page))
+
+            root = resp2.parse("ul", attrs={"class": "card-rows js-listing__list"})
+
+            for video_datas in root.iterfind("li"):
+                video_title = video_datas.find(".//img").get('alt')
+                video_image = video_datas.find(".//img").get('data-src')
+                video_url = eval(
+                    'URL_ROOT_%s' %
+                    DESIRED_LANGUAGE) + video_datas.find('.//a').get('href')
+                video_plot = video_datas.find(
+                    ".//div[@class='card__summary ']").text.strip()
+
+                item = Listitem()
+                item.label = video_title
+                item.art['thumb'] = video_image
+                item.info['plot'] = video_plot
+
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' + item.label,
+                                  video_url=video_url)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                yield item
+
+        yield Listitem.next_page(item_id=item_id,
+                                 next_url=next_url,
+                                 page=str(int(page) + 1))
+
     else:
-        program_id = re.compile(r'\/program\.(.*?)\/prepare').findall(
-            resp.text)[0]
+        if DESIRED_LANGUAGE == 'FR':
+            root = resp.parse("ul", attrs={"class": "telecast-list js-listing__list"})
+            for video_datas in root.iterfind(".//li"):
+                video_title = video_datas.find('.//img').get('alt')
+                video_image = video_datas.find('.//img').get('data-src')
+                video_url = eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + video_datas.find(
+                    './/a').get('href')
+                video_plot = video_datas.find(
+                    ".//p[@class='card__summary ']").text.strip()
 
-    if DESIRED_LANGUAGE == 'FR':
-        resp2 = urlquick.get(
-            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/idi-listing/10/%s' %
-            (program_id, page))
-        root = resp2.parse("div", attrs={"data-role": "content"})
+                item = Listitem()
+                item.label = video_title
+                item.art['thumb'] = video_image
+                item.info['plot'] = video_plot
 
-        for video_datas in root.iterfind(".//div[@data-role='item']"):
-            video_title = video_datas.find(
-                ".//span[@class='st-idi-episode-card__title']").text.strip()
-            video_image_datas = video_datas.find(
-                ".//span[@class='st-idi-episode-card__image']").get('style')
-            video_image = re.compile(r'url\((.*?)\)').findall(
-                video_image_datas)[0]
-            video_url = video_datas.find('.//a').get('href')
-            video_plot = video_datas.find(
-                ".//span[@class='st-idi-episode-card__summary']").text.strip()
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' + item.label,
+                                  video_url=video_url)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                yield item
 
-            item = Listitem()
-            item.label = video_title
-            item.art['thumb'] = video_image
-            item.info['plot'] = video_plot
+        elif DESIRED_LANGUAGE == 'EN':
+            root = resp.parse("ul", attrs={"class": "card-rows js-listing__list"})
+            for video_datas in root.iterfind(".//li"):
+                video_title = video_datas.find('.//img').get('alt')
+                video_image = video_datas.find('.//img').get('data-src')
+                video_url = eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + video_datas.find(
+                    './/a').get('href')
+                video_plot = video_datas.find(
+                    ".//div[@class='card__summary ']").text.strip()
 
-            item.set_callback(get_video_url,
-                              item_id=item_id,
-                              video_label=LABELS[item_id] + ' - ' + item.label,
-                              video_url=video_url)
-            item_post_treatment(item, is_playable=True, is_downloadable=True)
-            yield item
+                item = Listitem()
+                item.label = video_title
+                item.art['thumb'] = video_image
+                item.info['plot'] = video_plot
 
-    elif DESIRED_LANGUAGE == 'EN':
-        resp2 = urlquick.get(
-            eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/latestepisodes/10/%s' %
-            (program_id, page))
-
-        root = resp2.parse("ul", attrs={"class": "card-rows js-listing__list"})
-
-        for video_datas in root.iterfind("li"):
-            video_title = video_datas.find(".//img").get('alt')
-            video_image = video_datas.find(".//img").get('data-src')
-            video_url = eval(
-                'URL_ROOT_%s' %
-                DESIRED_LANGUAGE) + video_datas.find('.//a').get('href')
-            video_plot = video_datas.find(
-                ".//div[@class='card__summary ']").text.strip()
-
-            item = Listitem()
-            item.label = video_title
-            item.art['thumb'] = video_image
-            item.info['plot'] = video_plot
-
-            item.set_callback(get_video_url,
-                              item_id=item_id,
-                              video_label=LABELS[item_id] + ' - ' + item.label,
-                              video_url=video_url)
-            item_post_treatment(item, is_playable=True, is_downloadable=True)
-            yield item
-
-    yield Listitem.next_page(item_id=item_id,
-                             next_url=next_url,
-                             page=str(int(page) + 1))
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  video_label=LABELS[item_id] + ' - ' + item.label,
+                                  video_url=video_url)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                yield item
 
 
 @Route.register
@@ -293,58 +334,6 @@ def list_videos(plugin, item_id, page, **kwargs):
         yield item
 
     yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
-
-
-@Route.register
-def list_videos_search(plugin, search_query, item_id, page, **kwargs):
-
-    if DESIRED_LANGUAGE == 'FR':
-        # resp = urlquick.get(
-        #     eval('URL_ROOT_%s' % DESIRED_LANGUAGE) +
-        #     '/recherche?search_api_views_fulltext=%s&page=%s' %
-        #     (search_query, page))
-        pass
-    else:
-        return False
-    # resp = urlquick.get(URL_TIVI5MONDE_ROOT + '/recherche?search_api_views_fulltext=%s&page=%s' % (search_query, page))
-    # root_soup = bs(resp.text, 'html.parser')
-    # list_videos_datas = root_soup.find_all(
-    #     'div', class_='row-vignette')
-
-    # at_least_one_item = False
-    # for video_datas in list_videos_datas:
-    #     at_least_one_item = True
-    #     video_title = video_datas.find('img').get('alt')
-    #     video_image = video_datas.find('img').get('src')
-    #     video_url = URL_TIVI5MONDE_ROOT + video_datas.find(
-    #         'a').get('href')
-
-    #     item = Listitem()
-    #     item.label = video_title
-    #     item.art['thumb'] = video_image
-
-    #     item.context.script(
-    #         get_video_url,
-    #         plugin.localize(LABELS['Download']),
-    #         item_id=item_id,
-    #         video_url=video_url,
-    #         video_label=LABELS[item_id] + ' - ' + item.label,
-    #         download_mode=True)
-
-    #     item.set_callback(
-    #         get_video_url,
-    #         item_id=item_id,
-    #         video_url=video_url)
-    #     yield item
-
-    # if at_least_one_item:
-    #     yield Listitem.next_page(
-    #         item_id=item_id,
-    #         search_query=search_query,
-    #         page=str(int(page) + 1))
-    # else:
-    #     plugin.notify(plugin.localize(LABELS['No videos found']), '')
-    #     yield False
 
 
 @Resolver.register

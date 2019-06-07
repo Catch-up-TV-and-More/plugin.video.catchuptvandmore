@@ -87,7 +87,7 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, category_url, page, **kwargs):
 
-    replay_paged_url = category_url + '&paged=' + page
+    replay_paged_url = category_url + '&page=' + page
     resp = urlquick.get(replay_paged_url)
     root = resp.parse("div", attrs={"class": "view-content"})
 

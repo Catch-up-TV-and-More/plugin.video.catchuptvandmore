@@ -108,7 +108,7 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
     root = resp.parse()
 
     for replay in root.iterfind(
-            ".//article[@class='md-3col-art-blk__article']"):
+            ".//article[@class='grid-blk__item']"):
 
         if replay.find(
                 ".//span[@class='broadcast-infos-blk__type']") is not None:

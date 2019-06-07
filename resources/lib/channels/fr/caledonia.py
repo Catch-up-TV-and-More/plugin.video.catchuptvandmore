@@ -63,7 +63,10 @@ def list_programs(plugin, item_id, **kwargs):
         if program_datas.get('href'):
             if 'emission/' in program_datas.get('href'):
                 program_title = program_datas.text
-                program_url = URL_ROOT + program_datas.get('href')
+                if URL_ROOT in program_datas.get('href'):
+                    program_url = program_datas.get('href')
+                else:
+                    program_url = URL_ROOT + program_datas.get('href')
 
                 item = Listitem()
                 item.label = program_title

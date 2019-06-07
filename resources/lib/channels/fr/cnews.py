@@ -104,7 +104,7 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
 
     for video_datas in data.iterfind(".//a"):
         video_title = video_datas.find('.//img').get('title')
-        video_image = video_datas.find('.//img').get('data-src')
+        video_image = video_datas.find('.//img').get('data-echo')
         video_url = URL_ROOT_SITE + video_datas.get('href')
 
         item = Listitem()

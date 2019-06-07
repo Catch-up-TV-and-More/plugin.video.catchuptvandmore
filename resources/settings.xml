@@ -68,6 +68,9 @@
             <setting label="30062" type="bool" id="nl_live" default="true"/>
             <setting label="" type="number" visible="false" id="nl_live.order" default="13"/>
 
+            <setting label="30063" type="bool" id="cn_live" default="true"/>
+            <setting label="" type="number" visible="false" id="cn_live.order" default="14"/>
+
         <!-- Hide catch-up TV countries -->
         <setting label="30016" type="lsep"/>
 
@@ -109,6 +112,9 @@
 
             <setting label="30062" type="bool" id="nl_replay" default="true"/>
             <setting label="" type="number" visible="false" id="nl_replay.order" default="13"/>
+
+            <setting label="30063" type="bool" id="cn_replay" default="true"/>
+            <setting label="" type="number" visible="false" id="cn_replay.order" default="14"/>
     </category>
     <!-- Countries-->
 
@@ -199,20 +205,16 @@
             <setting label="Blaze" type="bool" id="blaze" default="true" visible="eq(-1,true)"/>
             <setting label="" type="number" visible="false" id="blaze.order" default="1"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="Dave" type="bool" id="dave" default="false" visible="false"/>
+            <setting label="Dave" type="bool" id="dave" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="dave.order" default="2"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="Really" type="bool" id="really" default="false" visible="false"/>
+            <setting label="Really" type="bool" id="really" default="true" visible="eq(-5,true)"/>
             <setting label="" type="number" visible="false" id="really.order" default="3"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="Yesterday" type="bool" id="yesterday" default="false" visible="false"/>
+            <setting label="Yesterday" type="bool" id="yesterday" default="true" visible="eq(-7,true)"/>
             <setting label="" type="number" visible="false" id="yesterday.order" default="4"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="Drama" type="bool" id="drama" default="false" visible="false"/>
+            <setting label="Drama" type="bool" id="drama" default="true" visible="eq(-9,true)"/>
             <setting label="" type="number" visible="false" id="drama.order" default="5"/>
 
             <setting label="Sky News" type="bool" id="skynews" default="true" visible="eq(-11,true)"/>
@@ -261,6 +263,9 @@
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
             <setting label="5USA" type="bool" id="fiveusa" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="fiveusa.order" default="20"/>
+
+            <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-39,true)"/>
+            <setting label="" type="number" visible="false" id="bristoltv.order" default="21"/>
         <!-- United Kingdom -->
 
 
@@ -687,6 +692,12 @@
 
             <setting label="Spectacles et Culture (francetv)" type="bool" id="francetvspectaclesetculture" default="true" visible="eq(-175,true)"/>
             <setting label="" type="number" visible="false" id="francetvspectaclesetculture.order" default="88"/>
+
+            <setting label="TVPI télévision d\'ici" type="bool" id="tvpifr" default="true" visible="eq(-179,true)"/>
+            <setting label="" type="number" visible="false" id="tvpifr.order" default="89"/>
+
+            <setting label="Clique TV" type="bool" id="cliquetv" default="true" visible="eq(-181,true)"/>
+            <setting label="" type="number" visible="false" id="cliquetv.order" default="90"/>
         <!-- France -->
 
 
@@ -964,14 +975,71 @@
             <setting label="NPO Politiek" type="bool" id="npo-politiek" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="npo-politiek.order" default="8"/>
 
-            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
-            <setting label="NPO Start" type="bool" id="npo-start" default="false" visible="false"/>
+            <setting label="NPO Start" type="bool" id="npo-start" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="npo-start.order" default="9"/>
 
             <setting label="AT5" type="bool" id="at5" default="true" visible="eq(-19,true)"/>
             <setting label="" type="number" visible="false" id="at5.order" default="10"/>
        <!-- Netherlands -->
 
+       <!-- China -->
+       <setting label="30093" type="lsep" subsetting="true" visible="eq(1,true)"/>
+       <setting label="" type="bool" id="cn" default="true" visible="false"/>
+
+            <setting label="CCTV-1 综合" type="bool" id="cctv1" default="true" visible="eq(-1,true)"/>
+            <setting label="" type="number" visible="false" id="cctv1.order" default="1"/>
+
+            <setting label="CCTV-2 财经" type="bool" id="cctv2" default="true" visible="eq(-3,true)"/>
+            <setting label="" type="number" visible="false" id="cctv2.order" default="2"/>
+
+            <setting label="CCTV-3 综艺" type="bool" id="cctv3" default="true" visible="eq(-7,true)"/>
+            <setting label="" type="number" visible="false" id="cctv3.order" default="3"/>
+
+            <setting label="CCTV-4 中文国际（亚）" type="bool" id="cctv4" default="true" visible="eq(-9,true)"/>
+            <setting label="" type="number" visible="false" id="cctv4.order" default="4"/>
+
+            <setting label="CCTV-4 中文国际（欧）" type="bool" id="cctveurope" default="true" visible="eq(-11,true)"/>
+            <setting label="" type="number" visible="false" id="cctveurope.order" default="5"/>
+
+            <setting label="CCTV-4 中文国际（美）" type="bool" id="cctvamerica" default="true" visible="eq(-13,true)"/>
+            <setting label="" type="number" visible="false" id="cctvamerica.order" default="6"/>
+
+            <setting label="CCTV-5 体育" type="bool" id="cctv5" default="true" visible="eq(-15,true)"/>
+            <setting label="" type="number" visible="false" id="cctv5.order" default="7"/>
+
+            <setting label="CCTV-5+ 体育赛事" type="bool" id="cctv5plus" default="true" visible="eq(-17,true)"/>
+            <setting label="" type="number" visible="false" id="cctv5plus.order" default="8"/>
+
+            <setting label="CCTV-6 电影" type="bool" id="cctv6" default="true" visible="eq(-19,true)"/>
+            <setting label="" type="number" visible="false" id="cctv6.order" default="9"/>
+
+            <setting label="CCTV-7 军事农业" type="bool" id="cctv7" default="true" visible="eq(-21,true)"/>
+            <setting label="" type="number" visible="false" id="cctv7.order" default="10"/>
+
+            <setting label="CCTV-8 电视剧" type="bool" id="cctv8" default="true" visible="eq(-23,true)"/>
+            <setting label="" type="number" visible="false" id="cctv8.order" default="11"/>
+
+            <setting label="CCTV-9 纪录" type="bool" id="cctvjilu" default="true" visible="eq(-25,true)"/>
+            <setting label="" type="number" visible="false" id="cctvjilu.order" default="12"/>
+
+            <setting label="CCTV-10 科教" type="bool" id="cctv10" default="true" visible="eq(-27,true)"/>
+            <setting label="" type="number" visible="false" id="cctv10.order" default="13"/>
+
+            <setting label="CCTV-11 戏曲" type="bool" id="cctv11" default="true" visible="eq(-29,true)"/>
+            <setting label="" type="number" visible="false" id="cctv11.order" default="14"/>
+
+            <setting label="CCTV-12 社会与法" type="bool" id="cctv12" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="cctv12.order" default="15"/>
+
+            <setting label="CCTV-13 新闻" type="bool" id="cctv13" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="cctv13.order" default="16"/>
+
+            <setting label="CCTV-14 少儿" type="bool" id="cctvchild" default="true" visible="eq(-35,true)"/>
+            <setting label="" type="number" visible="false" id="cctvchild.order" default="17"/>
+
+            <setting label="CCTV-15 音乐" type="bool" id="cctv15" default="true" visible="eq(-37,true)"/>
+            <setting label="" type="number" visible="false" id="cctv15.order" default="18"/>
+       <!-- China -->
 
     </category>
     <!-- Channels -->
@@ -1068,7 +1136,6 @@
                 <setting label="30154" type="labelenum" id="france24.language" values="FR|EN|AR|ES" default="FR"/>
                 <setting label="30156" type="labelenum" id="mtv.language" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" values="EN|DE|ES|AR" default="EN"/>
-                <setting label="30160" type="labelenum" id="beinsports.language" values="AU|AR|EN|FR|US|ES|NZ|HK|PH|TH|ID|MY" default="FR"/>
                 <setting label="30161" type="labelenum" id="qvc.language" values="JP|DE|IT|UK|US" default="UK"/>
                 <setting label="30162" type="labelenum" id="nhkworld.language" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" values="FR|EN|AR|ES|RU" default="FR"/>
@@ -1136,6 +1203,12 @@
 
             <setting label="30246" type="text" id="rtlplaybe.login" default=""/>
             <setting label="30247" type="text" id="rtlplaybe.password" option="hidden" default=""/>
+
+        <setting label="30084" type="lsep" subsetting="true" visible="eq(1,true)"/>
+        <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
+
+            <setting label="30250" type="text" id="uktvplay.login" default=""/>
+            <setting label="30251" type="text" id="uktvplay.password" option="hidden" default=""/>
 
     </category>
     <!-- Accounts -->

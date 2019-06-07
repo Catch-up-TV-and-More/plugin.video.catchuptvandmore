@@ -41,19 +41,25 @@ import urlquick
 # https://gist.github.com/sergeimikhan/1e90f28b8129335274b9
 URL_API_ROOT = 'http://api.beinsports.com'
 
-URL_VIDEOS = URL_API_ROOT + '/contents?itemsPerPage=30&type=3&site=%s&page=%s&order%%5BpublishedAt%%5D=DESC'
-# site, page
+URL_INFO_SITES = URL_API_ROOT + '/sites'
+
+URL_CATEGORIES = URL_API_ROOT + '/dropdowns?site=%s'
+# siteId
+
+URL_VIDEOS = URL_API_ROOT + '/contents?itemsPerPage=30&type=3&site=%s&page=%s&taxonomy%%5B%%5D=%s&order%%5BpublishedAt%%5D=DESC'
+
+# siteId, page
 
 
 def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
-    return list_categories(plugin, item_id)
+    return list_sites(plugin, item_id)
 
 
 @Route.register
-def list_categories(plugin, item_id, **kwargs):
+def list_sites(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -61,63 +67,87 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    desired_language = Script.setting['beinsports.language']
+    resp = urlquick.get(URL_INFO_SITES)
+    json_parser = json.loads(resp.text)
 
-    if desired_language == 'FR':
-        sites = ['2', '5']
-    elif desired_language == 'AU':
-        sites = ['1']
-    elif desired_language == 'AR':
-        sites = ['3']
-    elif desired_language == 'EN':
-        sites = ['4']
-    elif desired_language == 'US':
-        sites = ['6']
-    elif desired_language == 'ES':
-        sites = ['7']
-    elif desired_language == 'NZ':
-        sites = ['8']
-    elif desired_language == 'HK':
-        sites = ['10']
-    elif desired_language == 'PH':
-        sites = ['11']
-    elif desired_language == 'TH':
-        sites = ['12', '15']
-    elif desired_language == 'ID':
-        sites = ['13', '14']
-    elif desired_language == 'MY':
-        sites = ['16']
+    for site_datas in json_parser['hydra:member']:
 
-    for siteid in sites:
-        category_title = 'Videos %s (%s)' % (desired_language, siteid)
-        category_url = URL_VIDEOS % (siteid, '1')
+        site_title = site_datas["name"] + ' - Timezone : ' + site_datas["timezone"]
+        site_id = site_datas["@id"].replace('/sites/', '')
 
         item = Listitem()
-        item.label = category_title
-        item.set_callback(list_videos,
-                          item_id=item_id,
-                          category_url=category_url)
+        item.label = site_title
+        item.set_callback(list_categories, item_id=item_id, site_id=site_id)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_url, **kwargs):
+def list_categories(plugin, item_id, site_id, **kwargs):
 
-    resp = urlquick.get(category_url)
+    resp = urlquick.get(URL_CATEGORIES % site_id)
     json_parser = json.loads(resp.text)
 
-    for video_datas in json_parser['hydra:member']:
-        if video_datas['media'][0]['media'] is not None:
-            video_title = video_datas['headline']
-            video_id = video_datas['media'][0]['media']['context'][
-                'private_id']
-            video_image = video_datas['media'][0]['media']['context'][
-                'thumbnail_url']
+    for category_datas in json_parser['hydra:member']:
+        if category_datas["name"] is not None:
+            category_title = category_datas["name"]
+            category_reference = category_datas["reference"]
+
+            item = Listitem()
+            item.label = category_title
+            item.set_callback(
+                list_sub_categories,
+                item_id=item_id,
+                site_id=site_id,
+                category_reference=category_reference)
+            item_post_treatment(item)
+            yield item
+
+
+@Route.register
+def list_sub_categories(plugin, item_id, site_id, category_reference,
+                        **kwargs):
+
+    resp = urlquick.get(URL_CATEGORIES % site_id)
+    json_parser = json.loads(resp.text)
+
+    for category_datas in json_parser['hydra:member']:
+        if category_datas["name"] is not None:
+            if category_reference in category_datas["reference"]:
+                for sub_category_datas in category_datas["dropdownEntries"]:
+                    sub_category_title = sub_category_datas["taxonomy"]["name"]
+                    sub_category_id = sub_category_datas["taxonomy"][
+                        "@id"].replace('/taxonomies/', '')
+
+                    item = Listitem()
+                    item.label = sub_category_title
+                    item.set_callback(
+                        list_videos,
+                        item_id=item_id,
+                        site_id=site_id,
+                        sub_category_id=sub_category_id,
+                        page='1')
+                    item_post_treatment(item)
+                    yield item
+
+
+@Route.register
+def list_videos(plugin, item_id, site_id, sub_category_id, page, **kwargs):
+
+    resp = urlquick.get(URL_VIDEOS % (site_id, page, sub_category_id))
+    json_parser = json.loads(resp.text)
+
+    for list_videos_datas in json_parser['hydra:member']:
+        for video_datas in list_videos_datas['media']:
+            video_title = list_videos_datas['headline']
+            video_image = video_datas['media']['context']['thumbnail_url']
+            video_duration = video_datas['media']['context']['duration']
+            video_id = video_datas['media']['context']['private_id']
 
             item = Listitem()
             item.label = video_title
             item.art['thumb'] = video_image
+            item.info['duration'] = video_duration
 
             item.set_callback(
                 get_video_url,
@@ -127,9 +157,10 @@ def list_videos(plugin, item_id, category_url, **kwargs):
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-    yield Listitem.next_page(
-        item_id=item_id,
-        category_url=URL_API_ROOT + json_parser["hydra:nextPage"])
+    if 'hydra:nextPage' in json_parser:
+        yield Listitem.next_page(
+            item_id=item_id,
+            category_url=URL_API_ROOT + json_parser["hydra:nextPage"])
 
 
 @Resolver.register

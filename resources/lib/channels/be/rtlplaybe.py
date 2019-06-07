@@ -320,7 +320,7 @@ def get_video_url(plugin,
 
         video_assets = json_parser['clips'][0]['assets']
         if video_assets is None:
-            plugin.notify('ERROR', plugin.localize(30712))
+            plugin.notify('ERROR', plugin.localize(30721))
             return False
 
         final_video_url = ''
@@ -378,7 +378,7 @@ def get_video_url(plugin,
 
         video_assets = json_parser['clips'][0]['assets']
         if video_assets is None:
-            plugin.notify('ERROR', plugin.localize(30712))
+            plugin.notify('ERROR', plugin.localize(30721))
             return None
 
         resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY)
@@ -560,10 +560,6 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         return False
 
     video_assets = json_parser[channel][0]['live']['assets']
-
-    if video_assets is None:
-        plugin.notify('ERROR', plugin.localize(30712))
-        return False
 
     if not video_assets:
         plugin.notify('INFO', plugin.localize(30716))
