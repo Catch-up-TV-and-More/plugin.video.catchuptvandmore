@@ -266,6 +266,9 @@
 
             <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-39,true)"/>
             <setting label="" type="number" visible="false" id="bristoltv.order" default="21"/>
+
+            <setting label="Home" type="bool" id="home_uktvplay" default="true" visible="eq(-41,true)"/>
+            <setting label="" type="number" visible="false" id="home_uktvplay.order" default="22"/>
         <!-- United Kingdom -->
 
 
