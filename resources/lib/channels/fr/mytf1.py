@@ -148,8 +148,8 @@ def list_programs(plugin, item_id, category_id, **kwargs):
             item.label = program_name
             item.art["thumb"] = program_image
             item.set_callback(list_program_categories,
-                            item_id=item_id,
-                            program_slug=program_slug)
+                              item_id=item_id,
+                              program_slug=program_slug)
             item_post_treatment(item)
             yield item
 
@@ -170,17 +170,17 @@ def list_program_categories(plugin, item_id, program_slug, **kwargs):
                           item_id=item_id,
                           program_slug=program_slug,
                           video_type_value=video_type_value,
-                          page='0')
+                          offset='0')
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_slug, video_type_value, page, **kwargs):
+def list_videos(plugin, item_id, program_slug, video_type_value, offset, **kwargs):
 
     params = {
         'id': '6708f510f2af7e75114ab3c4378142b2ce25cd636ff5a1ae11f47ce7ad9c4a91',
-        'variables': '{"programSlug":"%s","offset":0,"limit":20,"sort":{"type":"DATE","order":"DESC"},"types":["%s"]}' % (program_slug, video_type_value)
+        'variables': '{"programSlug":"%s","offset":%d,"limit":20,"sort":{"type":"DATE","order":"DESC"},"types":["%s"]}' % (program_slug, int(offset), video_type_value)
     }
     headers = {
         'content-type': 'application/json',
@@ -202,6 +202,7 @@ def list_videos(plugin, item_id, program_slug, video_type_value, page, **kwargs)
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
         item.info['duration'] = video_duration
+        item.info.date(video_datas['date'].split('T')[0], '%Y-%m-%d')
 
         item.set_callback(get_video_url,
                           item_id=item_id,
@@ -210,6 +211,11 @@ def list_videos(plugin, item_id, program_slug, video_type_value, page, **kwargs)
                           item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
+
+    yield Listitem.next_page(item_id=item_id,
+                             program_slug=program_slug,
+                             video_type_value=video_type_value,
+                             offset=str(int(offset) + 1))
 
 
 @Resolver.register
