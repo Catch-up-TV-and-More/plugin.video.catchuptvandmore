@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.8~beta02"
+       version="0.2.8~beta03"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -42,6 +42,8 @@
 [Fix] Live TV - L'équipe TV (FR)
 [Fix] Live TV - NRJ 12 / Cherie 25 (FR)
 [Add] Live TV - Home (UK)
+[Fix] Catch-up TV - MyTF1 (FR)
+[Remove] Catch-up TV - TFOU (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -504,7 +504,8 @@
             <setting label="01Net TV" type="bool" id="01net" default="true" visible="eq(-53,true)"/>
             <setting label="" type="number" visible="false" id="01net.order" default="27"/>
 
-            <setting label="Tfou (MYTF1)" type="bool" id="tfou" default="true" visible="eq(-55,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Tfou (MYTF1)" type="bool" id="tfou" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="tfou.order" default="28"/>
 
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
