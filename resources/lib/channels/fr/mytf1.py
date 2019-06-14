@@ -47,9 +47,8 @@ import xbmc
 import xbmcgui
 
 # TO DO
-# Readd Playlist
-# Add more videos (if needed)
-# Add more infos videos (dates, saison, episodes, casts, etc ...)
+# Readd Playlist (if needed)
+# Add more infos videos (saison, episodes, casts, etc ...)
 # Find a way to get Id for each API call
 
 URL_ROOT = utils.urljoin_partial("https://www.tf1.fr")
@@ -212,10 +211,11 @@ def list_videos(plugin, item_id, program_slug, video_type_value, offset, **kwarg
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    yield Listitem.next_page(item_id=item_id,
-                             program_slug=program_slug,
-                             video_type_value=video_type_value,
-                             offset=str(int(offset) + 1))
+    if (20 + int(offset) * 20) < json_parser['data']['programBySlug']['videos']['total']:
+        yield Listitem.next_page(item_id=item_id,
+                                 program_slug=program_slug,
+                                 video_type_value=video_type_value,
+                                 offset=str(int(offset) + 1))
 
 
 @Resolver.register
