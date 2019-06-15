@@ -456,5 +456,17 @@ menu = {
         'thumb': 'channels/fr/cliquetv.png',
         'fanart': 'channels/fr/cliquetv_fanart.jpg',
         'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'piwiplus': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/piwiplus.png',
+        'fanart': 'channels/fr/piwiplus_fanart.jpg',
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'teletoonplus': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/teletoonplus.png',
+        'fanart': 'channels/fr/teletoonplus_fanart.jpg',
+        'module': 'resources.lib.channels.fr.mycanal'
     }
 }

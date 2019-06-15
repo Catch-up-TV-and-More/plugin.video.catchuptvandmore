@@ -614,6 +614,10 @@ LABELS = {
     'TVPI télévision d\'ici',
     'cliquetv':
     'Clique TV',
+    'piwiplus':
+    'Piwi +',
+    'teletoonplus':
+    'TéléToon +',
 
     # Japan channels / live TV
     'nhknews':

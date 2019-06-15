@@ -39,7 +39,9 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.2.9]
-[Fix] Catch-up TV - KTO (FR)
+[Fix] Catch-up TV - KTO (FR) - Some programs
+[Fix] Catch-up TV - MyCanal (FR) - Some programs
+[Add] Catch-up TV - Piwi + and TéléToon + (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

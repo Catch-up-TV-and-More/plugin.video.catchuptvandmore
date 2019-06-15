@@ -702,6 +702,12 @@
 
             <setting label="Clique TV" type="bool" id="cliquetv" default="true" visible="eq(-181,true)"/>
             <setting label="" type="number" visible="false" id="cliquetv.order" default="90"/>
+
+            <setting label="Piwi +" type="bool" id="piwiplus" default="true" visible="eq(-183,true)"/>
+            <setting label="" type="number" visible="false" id="piwiplus.order" default="91"/>
+
+            <setting label="TéléToon +" type="bool" id="teletoonplus" default="true" visible="eq(-185,true)"/>
+            <setting label="" type="number" visible="false" id="teletoonplus.order" default="92"/>
         <!-- France -->
 
 
