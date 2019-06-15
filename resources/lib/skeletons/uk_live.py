@@ -132,5 +132,11 @@ menu = {
         'thumb': 'channels/uk/yesterday.png',
         'fanart': 'channels/uk/yesterday_fanart.jpg',
         'module': 'resources.lib.channels.uk.uktvplay'
+    },
+    'home_uktvplay': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/home.png',
+        'fanart': 'channels/uk/home_fanart.jpg',
+        'module': 'resources.lib.channels.uk.uktvplay'
     }
 }

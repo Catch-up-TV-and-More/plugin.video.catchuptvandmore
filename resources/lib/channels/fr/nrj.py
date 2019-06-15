@@ -42,7 +42,7 @@ import xbmcgui
 # TO DO
 # Fix Live TV
 
-URL_ROOT = 'http://www.nrj-play.fr'
+URL_ROOT = 'https://www.nrj-play.fr'
 
 URL_REPLAY = URL_ROOT + '/%s/replay'
 # channel_name (nrj12, ...)
@@ -219,6 +219,10 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         "login_form[password]": plugin.setting.get_string('nrj.password'),
         "login_form[_token]": token_form_login
     }
+    headers = {
+        'accept': 'application/json, text/javascript, */*; q=0.01',
+        'referer': 'https://www.nrj-play.fr/%s' % item_id
+    }
 
     # LOGIN
     # KO - resp2 = session_urlquick.post(
@@ -226,7 +230,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
     resp2 = session_requests.post(URL_COMPTE_LOGIN,
                                   data=payload,
-                                  headers=dict(referer=URL_COMPTE_LOGIN))
+                                  headers=headers)
     if 'error alert alert-danger' in repr(resp2.text):
         plugin.notify('ERROR', 'NRJ : ' + plugin.localize(30711))
         return False

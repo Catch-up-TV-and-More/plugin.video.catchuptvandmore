@@ -388,7 +388,12 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         return False
     json_parser_resplogin = json.loads(resplogin.content)
 
-    respdatachannel = session_requests.get(URL_LIVE % item_id)
+    if 'home_uktvplay' in item_id:
+        channel_uktvplay_id = 'home'
+    else:
+        channel_uktvplay_id = item_id
+
+    respdatachannel = session_requests.get(URL_LIVE % channel_uktvplay_id)
     data_channel = re.compile(r'data\-channel\=\"(.*?)\"').findall(
         respdatachannel.text)[0]
 
@@ -419,11 +424,11 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         if 'art' in item_dict:
             item.art.update(item_dict['art'])
     else:
-        item.label = LABELS[item_id]
+        item.label = LABELS[channel_uktvplay_id]
         item.art["thumb"] = ""
         item.art["icon"] = ""
         item.art["fanart"] = ""
-        item.info["plot"] = LABELS[item_id]
+        item.info["plot"] = LABELS[channel_uktvplay_id]
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'

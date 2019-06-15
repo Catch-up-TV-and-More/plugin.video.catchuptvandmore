@@ -71,7 +71,7 @@ def list_categories(plugin, item_id, **kwargs):
 
     for category_datas in root.iterfind(".//a"):
         category_title = category_datas.text
-        category_url = URL_ROOT + category_datas.get('href')
+        category_url = URL_ROOT + '/spectacles-et-culture/' + category_datas.get('href')
 
         item = Listitem()
         item.label = category_title

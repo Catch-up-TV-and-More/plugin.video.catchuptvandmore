@@ -129,6 +129,6 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     resp = urlquick.get(URL_LIVE,
                         headers={'User-Agent': web_utils.get_random_ua},
                         max_age=-1)
-    live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]',
+    live_id = re.compile(r'video/(.*?)[\?\"]',
                          re.DOTALL).findall(resp.text)[0]
     return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)

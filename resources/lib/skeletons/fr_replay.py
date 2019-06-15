@@ -61,12 +61,6 @@ menu = {
         'fanart': 'channels/fr/tfx_fanart.jpg',
         'module': 'resources.lib.channels.fr.mytf1'
     },
-    'tfou': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/fr/tfou.png',
-        'fanart': 'channels/fr/tfou_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mytf1'
-    },
     'm6': {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/m6.png',

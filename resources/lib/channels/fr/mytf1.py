@@ -47,6 +47,9 @@ import xbmc
 import xbmcgui
 
 # TO DO
+# Readd Playlist (if needed)
+# Add more infos videos (saison, episodes, casts, etc ...)
+# Find a way to get Id for each API call
 
 URL_ROOT = utils.urljoin_partial("https://www.tf1.fr")
 
@@ -56,7 +59,15 @@ URL_VIDEO_STREAM = 'https://delivery.tf1.fr/mytf1-wrd/%s?format=%s'
 URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=drm-wide.tf1.fr|R{SSM}|'
 # videoId
 
+URL_API = 'https://www.tf1.fr/graphql/web'
+
 DESIRED_QUALITY = Script.setting['quality']
+
+VIDEO_TYPES = {
+    'Replay': 'replay',
+    'Extrait': 'extract',
+    'Exclu': 'bonus'
+}
 
 
 def replay_entry(plugin, item_id, **kwargs):
@@ -75,116 +86,75 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'),
-                        headers={'User-Agent': web_utils.get_random_ua})
-    root = resp.parse("ul", attrs={"class": "filters_2 contentopen"})
+    params = {
+        'id': '83ae0bfb82e29a71ad00e07122cca81e840cf88f5d4595f65ffb171bdb701543',
+        'variables': '{}'
+    }
+    headers = {
+        'content-type': 'application/json',
+        'referer': 'https://www.tf1.fr/programmes-tv',
+        'User-Agent': web_utils.get_random_ua
+    }
+    resp = urlquick.get(URL_API, params=params, headers=headers)
+    json_parser = json.loads(resp.text)
 
-    for category in root.iterfind(".//a"):
-        category_name = category.text
-        category_url = category.get('data-target')
+    for json_key in json_parser['data'].keys():
+        if json_parser['data'][json_key]['label']:
+            category_name = json_parser['data'][json_key]['label']
+            category_id = json_parser['data'][json_key]['id']
 
-        item = Listitem()
-        item.label = category_name
-        item.params['item_id'] = item_id
-        item.params['category'] = category_url
-        item.set_callback(list_programs)
-        item_post_treatment(item)
+            item = Listitem()
+            item.label = category_name
+            item.params['item_id'] = item_id
+            item.params['category_id'] = category_id
+            item.set_callback(list_programs)
+            item_post_treatment(item)
 
-        yield item
+            yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category, **kwargs):
+def list_programs(plugin, item_id, category_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
     - ...
     """
 
-    if category == 'all':
-        resp = urlquick.get(URL_ROOT('/programmes-tv/abecedaire/#'),
-                            headers={'User-Agent': web_utils.get_random_ua})
-        root = resp.parse()
+    params = {
+        'id': '400be301099f781dbee5bf2641b3bfba74f9fb6c13a54a22cae1fde916e42c7a',
+        'variables': '{"context":{"persona":"PERSONA_2","application":"WEB","device":"DESKTOP","os":"WINDOWS"},"filter":{"channel":"%s"},"offset":0,"limit":500}' % item_id
+    }
+    headers = {
+        'content-type': 'application/json',
+        'referer': 'https://www.tf1.fr/programmes-tv',
+        'User-Agent': web_utils.get_random_ua
+    }
+    resp = urlquick.get(URL_API, params=params, headers=headers)
+    json_parser = json.loads(resp.text)
 
-        for program in root.iterfind(
-                ".//div[@class='program key-list-programs']"):
-            is_channel_program = False
-            list_channels = program.findall(".//div")
-            for channel in list_channels:
-                if channel.get('class') == 'channel %s' % item_id:
-                    is_channel_program = True
-            if is_channel_program:
-                item = Listitem()
-                program_url = program.find(".//div[@class='description']")
-                program_url = program_url.find('.//a').get('href')
-                program_name = program.find(".//p[@class='program']").text
-                img = program.find('.//img')
-                try:
-                    img = img.get('data-srcset')
-                except Exception:
-                    img = img.get('srcset')
+    for program_datas in json_parser['data']['programs']['items']:
+        is_category = False
+        for category_datas in program_datas['categories']:
+            if category_id in category_datas['id']:
+                is_category = True
+        if is_category:
+            program_name = program_datas['name']
+            program_slug = program_datas['slug']
+            program_image = program_datas['decoration']['image']['sources'][0]['url']
 
-                img = 'http:' + img.split(',')[-1].split(' ')[0]
-
-                if 'meteo.tf1.fr/meteo-france' in program_url:
-                    item.label = program_name
-                    item.art["thumb"] = img
-                    item.set_callback(list_videos,
-                                      item_id=item_id,
-                                      program_category_url=program_url)
-                    item_post_treatment(item)
-                    yield item
-
-                else:
-                    item.label = program_name
-                    item.art["thumb"] = img
-                    item.set_callback(list_program_categories,
-                                      item_id=item_id,
-                                      program_url=program_url)
-                    item_post_treatment(item)
-                    yield item
-    else:
-        resp = urlquick.get(URL_ROOT(item_id + '/programmes-tv'),
-                            headers={'User-Agent': web_utils.get_random_ua})
-        root = resp.parse("ul", attrs={"id": "js_filter_el_container"})
-
-        for program in root.iterfind('.//li'):
-            current_category = program.get('data-type')
-            if category == current_category or category == 'all':
-                item = Listitem()
-                program_url = program.find(".//div[@class='description']")
-                program_url = program_url.find('.//a').get('href')
-                program_name = program.find(".//p[@class='program']").text
-                img = program.find('.//img')
-                try:
-                    img = img.get('srcset')
-                except Exception:
-                    img = img.get('src')
-
-                if img is not None:
-                    img = 'http:' + img.split(',')[-1].split(' ')[0]
-
-                if 'meteo.tf1.fr/meteo-france' in program_url:
-                    item.label = program_name
-                    item.art["thumb"] = img
-                    item.set_callback(list_videos,
-                                      item_id=item_id,
-                                      program_category_url=program_url)
-                    item_post_treatment(item)
-                    yield item
-
-                else:
-                    item.label = program_name
-                    item.art["thumb"] = img
-                    item.set_callback(list_program_categories,
-                                      item_id=item_id,
-                                      program_url=program_url)
-                    item_post_treatment(item)
-                    yield item
+            item = Listitem()
+            item.label = program_name
+            item.art["thumb"] = program_image
+            item.set_callback(list_program_categories,
+                              item_id=item_id,
+                              program_slug=program_slug)
+            item_post_treatment(item)
+            yield item
 
 
 @Route.register
-def list_program_categories(plugin, item_id, program_url, **kwargs):
+def list_program_categories(plugin, item_id, program_slug, **kwargs):
     """
     Build program categories
     - Toutes les vidéos
@@ -192,219 +162,70 @@ def list_program_categories(plugin, item_id, program_url, **kwargs):
     - Saison 1
     - ...
     """
-    resp = urlquick.get(program_url + '/videos',
-                        headers={'User-Agent': web_utils.get_random_ua})
-    try:
-        program_categories = resp.parse(
-            u"ul", attrs={'class': 'filters_1 contentopen'})
-
-        for li in program_categories.iterfind('.//li'):
-            item = Listitem()
-            item.label = "".join(li.itertext())
-            category_id = li.find('a').get('data-filter')
-            item.set_callback(list_videos,
-                              item_id=item_id,
-                              program_category_url=program_url + '/videos?filter=' + category_id)
-            item_post_treatment(item)
-            yield item
-    except Exception:
-        plugin.notify(plugin.localize(LABELS['No videos found']), '')
-        yield False
+    for video_type_title, video_type_value in VIDEO_TYPES.items():
+        item = Listitem()
+        item.label = video_type_title
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_slug=program_slug,
+                          video_type_value=video_type_value,
+                          offset='0')
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_category_url, **kwargs):
+def list_videos(plugin, item_id, program_slug, video_type_value, offset, **kwargs):
 
-    if 'meteo.tf1.fr/meteo-france' in program_category_url:
-        resp = urlquick.get(program_category_url,
-                            headers={'User-Agent': web_utils.get_random_ua})
-        root = resp.parse("td", attrs={"class": "textbase"})
+    params = {
+        'id': '6708f510f2af7e75114ab3c4378142b2ce25cd636ff5a1ae11f47ce7ad9c4a91',
+        'variables': '{"programSlug":"%s","offset":%d,"limit":20,"sort":{"type":"DATE","order":"DESC"},"types":["%s"]}' % (program_slug, int(offset), video_type_value)
+    }
+    headers = {
+        'content-type': 'application/json',
+        'referer': 'https://www.tf1.fr/programmes-tv',
+        'User-Agent': web_utils.get_random_ua
+    }
+    resp = urlquick.get(URL_API, params=params, headers=headers)
+    json_parser = json.loads(resp.text)
 
-        title = root.find('.//h3').text
-
-        program_id = re.compile(r'\; src \= \'(.*?)\'').findall(resp.text)[0]
+    for video_datas in json_parser['data']['programBySlug']['videos']['items']:
+        video_title = video_datas['title']
+        video_image = video_datas['decoration']['images'][1]['sources'][0]['url']
+        video_plot = video_datas['decoration']['description']
+        video_duration = video_datas['publicPlayingInfos']['duration']
+        video_id = video_datas['streamId']
 
         item = Listitem()
-        item.label = title
-        item.params['video_label'] = LABELS[item_id] + ' - ' + item.label
+        item.label = video_title
+        item.art['thumb'] = video_image
+        item.info['plot'] = video_plot
+        item.info['duration'] = video_duration
+        item.info.date(video_datas['date'].split('T')[0], '%Y-%m-%d')
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          program_id=program_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          video_id=video_id,
                           item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-    else:
-
-        resp = urlquick.get(program_category_url,
-                            headers={'User-Agent': web_utils.get_random_ua})
-        root = resp.parse()
-        if root.find(".//div[@class='content']") is not None:
-            grid = resp.parse("div", attrs={"class": "content"})
-        else:
-            grid = resp.parse("div", attrs={"class": "content withPub"})
-
-        if grid is not None:
-            for li in grid.findall('.//li'):
-                video_type_string = li.find(
-                    ".//div[@class='description']").find('.//a').get(
-                        'data-xiti-libelle')
-                video_type_string = video_type_string.split('-')[0]
-
-                item = Listitem()
-
-                item.label = li.find(".//p[@class='title']").text
-
-                try:
-                    stitle = li.find(".//p[@class='stitle']").text
-                    item.info['plot'] = stitle
-                except Exception:
-                    pass
-
-                try:
-                    duration_soup = li.find(".//p[@class='uptitle']").find(
-                        ".//span[@class='momentDate']")
-                    duration = int(duration_soup.text)
-                    item.info['duration'] = duration
-                except Exception:
-                    pass
-
-                img = li.find('.//img')
-                try:
-                    img = img.get('data-srcset')
-                except Exception:
-                    img = img.get('srcset')
-
-                item.art["thumb"] = 'http:' + \
-                    img.split(',')[-1].split(' ')[0]
-
-                try:
-                    date_value = li.find(".//div[@class='text']").find(
-                        ".//p[@class='uptitle']").find('.//span')
-
-                    aired = date_value.get('data-date').split('T')[0]
-                    item.info.date(aired, '%Y-%m-%d')
-                except Exception:
-                    pass
-
-                program_id = li.find('.//a').get('href')
-                item.params[
-                    'video_label'] = LABELS[item_id] + ' - ' + item.label
-
-                callback = get_video_url
-                if 'Playlist' in video_type_string:
-                    callback = build_playlist
-
-                item.set_callback(callback,
-                                  item_id=item_id,
-                                  program_id=program_id,
-                                  item_dict=item2dict(item))
-                item_post_treatment(item,
-                                    is_playable=True,
-                                    is_downloadable=True)
-                yield item
-
-            # Check for any next page
-            pagination = resp.parse(
-                u"div", attrs={'class': 'clearfix list_pagination'})
-
-            ol = pagination.find('.//ol')
-            if ol is not None:
-                li_list = ol.findall('.//li')
-
-                for i in range(len(li_list) - 1):
-                    li = li_list[i]
-                    if 'selected' in li.find('.//a').get('class') and \
-                            i < len(li_list):
-                        next_li = li_list[i + 1]
-                        yield Listitem.next_page(
-                            item_id=item_id,
-                            program_category_url=next_li.find('.//a').get(
-                                'href'))
-
-
-@Resolver.register
-def build_playlist(plugin,
-                   item_id,
-                   program_id,
-                   item_dict=None,
-                   video_label=None,
-                   **kwargs):
-    playlist_html = urlquick.get(program_id,
-                                 headers={'User-Agent': web_utils.get_random_ua})
-    playlist = playlist_html.parse()
-    reco_videos = playlist.find(".//div[@id='reco-video-content']")
-    data_more = ''
-
-    playlist_items = []
-
-    for reco_video in reco_videos:
-        if data_more == '':
-            data_more = reco_video.get('data-more')
-        if reco_video.get('data-more') == data_more:
-            video_page_url = reco_video.get('href')
-
-            # Grab the video URL
-            video_url = get_video_url(
-                plugin=plugin,
-                item_id=item_id,
-                program_id=video_page_url)
-            if video_url is not False:
-                item = Listitem()
-                if isinstance(video_url, Listitem):
-                    item = video_url
-                else:
-                    item.path = video_url
-
-                # Grab additionnal infos (title, image)
-                item.label = reco_video.find(".//div[@class='reco_video_content']").find(".//p[@class='reco_video_title']").text
-                img = reco_video.find(".//div[@class='reco_video_image']").find(".//img")
-                try:
-                    img = img.get('data-srcset')
-                except Exception:
-                    img = img.get('srcset')
-
-                item.art["thumb"] = 'http:' + \
-                    img.split(',')[-1].split(' ')[0]
-
-                print('LABEL: ' + repr(item.label))
-                playlist_items.append(item)
-
-    return playlist_items
+    if (20 + int(offset) * 20) < json_parser['data']['programBySlug']['videos']['total']:
+        yield Listitem.next_page(item_id=item_id,
+                                 program_slug=program_slug,
+                                 video_type_value=video_type_value,
+                                 offset=str(int(offset) + 1))
 
 
 @Resolver.register
 def get_video_url(plugin,
                   item_id,
-                  program_id,
+                  video_id,
                   item_dict=None,
                   download_mode=False,
                   video_label=None,
                   **kwargs):
-
-    if 'www.wat.tv/embedframe' in program_id:
-        url = 'http:' + program_id
-    elif "http" not in program_id:
-        if program_id[0] == '/':
-            program_id = program_id[1:]
-        url = URL_ROOT(program_id)
-    else:
-        url = program_id
-
-    video_html = urlquick.get(url,
-                              headers={'User-Agent': web_utils.get_random_ua})
-    root = video_html.parse()
-
-    if 'www.wat.tv/embedframe' in program_id:
-        video_id = re.compile('UVID=(.*?)&').findall(video_html.text)[0]
-    else:
-        iframe_player = root.find(".//div[@class='iframe_player']")
-        if iframe_player is not None:
-            video_id = iframe_player.get('data-watid')
-        else:
-            video_id = re.compile(r'\"data\"\:\{\"id\"\:\"(.*?)\"').findall(
-                video_html.text)[0]
 
     video_format = 'hls'
     url_json = URL_VIDEO_STREAM % (video_id, video_format)
