@@ -117,37 +117,45 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     program_name = json_parser["Name"]
     program_plot = json_parser["infoProg"]["description"]
 
-    url_videos = URL_ROOT + json_parser["Blocks"][0]["Sets"][0]["url"]
-    resp2 = urlquick.get(url_videos)
-    json_parser2 = json.loads(resp2.text)
+    has_contents = False
 
-    for video_datas in json_parser2["items"]:
-        video_title = program_name + ' ' + video_datas[
-            'name'] + ' ' + video_datas['subtitle']
-        video_image = video_datas["images"]["landscape"].replace(
-            '/resizegd/[RESOLUTION]', '')
-        duration_value = video_datas['duration'].split(':')
-        video_duration = 0
-        if len(duration_value) > 2:
-            video_duration = int(duration_value[0]) * 3600 + int(
-                duration_value[1]) * 60 + int(duration_value[2])
-        elif len(duration_value) > 1:
-            video_duration = int(duration_value[0]) * 60 + int(
-                duration_value[1])
-        video_url = URL_ROOT + video_datas['pathID']
+    try:
+        url_videos = URL_ROOT + json_parser["Blocks"][0]["Sets"][0]["url"]
+        has_contents = True
+    except Exception:
+        pass
 
-        item = Listitem()
-        item.label = video_title
-        item.art["thumb"] = video_image
-        item.info['duration'] = video_duration
-        item.info['plot'] = program_plot
+    if has_contents:
+        resp2 = urlquick.get(url_videos)
+        json_parser2 = json.loads(resp2.text)
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
-                          video_url=video_url)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+        for video_datas in json_parser2["items"]:
+            video_title = program_name + ' ' + video_datas[
+                'name'] + ' ' + video_datas['subtitle']
+            video_image = video_datas["images"]["landscape"].replace(
+                '/resizegd/[RESOLUTION]', '')
+            duration_value = video_datas['duration'].split(':')
+            video_duration = 0
+            if len(duration_value) > 2:
+                video_duration = int(duration_value[0]) * 3600 + int(
+                    duration_value[1]) * 60 + int(duration_value[2])
+            elif len(duration_value) > 1:
+                video_duration = int(duration_value[0]) * 60 + int(
+                    duration_value[1])
+            video_url = URL_ROOT + video_datas['pathID']
+
+            item = Listitem()
+            item.label = video_title
+            item.art["thumb"] = video_image
+            item.info['duration'] = video_duration
+            item.info['plot'] = program_plot
+
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_label=LABELS[item_id] + ' - ' + item.label,
+                              video_url=video_url)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
 
 @Resolver.register
