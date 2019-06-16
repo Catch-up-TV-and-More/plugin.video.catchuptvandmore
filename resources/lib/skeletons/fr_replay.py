@@ -379,12 +379,6 @@ menu = {
         'fanart': 'channels/fr/studio4_fanart.jpg',
         'module': 'resources.lib.channels.fr.nouvellesecritures'
     },
-    'j_one': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/fr/jone.png',
-        'fanart': 'channels/fr/jone_fanart.jpg',
-        'module': 'resources.lib.channels.fr.j_one'
-    },
     'jack': {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/jack.png',

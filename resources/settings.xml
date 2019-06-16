@@ -643,7 +643,8 @@
             <setting label="La Chaîne Météo" type="bool" id="lachainemeteo" default="true" visible="eq(-139,true)"/>
             <setting label="" type="number" visible="false" id="lachainemeteo.order" default="70"/>
 
-            <setting label="J-One" type="bool" id="j_one" default="true" visible="eq(-141,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="J-One" type="bool" id="j_one" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="j_one.order" default="71"/>
 
             <setting label="viàATV" type="bool" id="viaatv" default="true" visible="eq(-143,true)"/>
