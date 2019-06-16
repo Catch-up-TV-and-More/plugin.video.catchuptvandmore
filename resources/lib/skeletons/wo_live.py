@@ -162,13 +162,6 @@ menu = {
         'fanart': 'channels/wo/cgtndocumentary_fanart.jpg',
         'module': 'resources.lib.channels.wo.cgtn'
     },
-    'paramountchannel': {
-        'callback': 'live_bridge',
-        'thumb': 'channels/wo/paramountchannel.png',
-        'fanart': 'channels/wo/paramountchannel_fanart.jpg',
-        'module': 'resources.lib.channels.wo.paramountchannel',
-        'available_languages': ['ES', 'IT']
-    },
     'rt': {
         'callback': 'live_bridge',
         'thumb': 'channels/wo/rt.png',

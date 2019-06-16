@@ -121,5 +121,11 @@ menu = {
         'thumb': 'channels/es/bemad.png',
         'fanart': 'channels/es/bemad_fanart.jpg',
         'module': 'resources.lib.channels.es.mitele'
+    },
+    'paramountchannel_es': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/es/paramountchannel_es.png',
+        'fanart': 'channels/es/paramountchannel_es_fanart.jpg',
+        'module': 'resources.lib.channels.es.paramountchannel_es'
     }
 }

@@ -223,16 +223,6 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cgtn&item_modul
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/cgtndocumentary.png" group-title="International",CGTN Documentary
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cgtndocumentary&item_module=resources.lib.channels.wo.cgtn&item_dict={}
 
-##	Paramount Channel ES
-##	paramountchannel
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/paramountchannel.png" group-title="International",Paramount Channel ES
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel&item_module=resources.lib.channels.wo.paramountchannel&item_dict={"language":"ES"}
-
-##	Paramount Channel IT
-##	paramountchannel
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/paramountchannel.png" group-title="International",Paramount Channel IT
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel&item_module=resources.lib.channels.wo.paramountchannel&item_dict={"language":"IT"}
-
 ##	RT FR
 ##	rt
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/rt.png" group-title="International",RT FR

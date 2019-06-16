@@ -45,6 +45,8 @@
 [Fix] Catch-up TV - Rai (IT) - Check if program has contents
 [Remove] Catch-up TV - J-One (FR) - No more contents in the website - Maybe will be readd in the future
 [Fix] Catch-up TV - GameOne (FR)
+[Add] Catch-up TV - Paramount Channel (FR)
+[Move] Live TV - Paramount Channel (ES|IT) from WO to IT and ES
     </news>
     <assets>
       <icon>icon.png</icon>

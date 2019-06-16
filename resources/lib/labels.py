@@ -618,6 +618,8 @@ LABELS = {
     'Piwi +',
     'teletoonplus':
     'TéléToon +',
+    'paramountchannel_fr':
+    'Paramount Channel (FR)',
 
     # Japan channels / live TV
     'nhknews':
@@ -729,8 +731,6 @@ LABELS = {
     'CGTN (' + Script.setting['cgtn.language'] + ')',
     'cgtndocumentary':
     'CGTN Documentary',
-    'paramountchannel':
-    'Paramount Channel (' + Script.setting['paramountchannel.language'] + ')',
     'afriquemedia':
     'Afrique Media',
     'tv5mondefbs':
@@ -799,6 +799,8 @@ LABELS = {
     'Atreseries',
     'atresplayer':
     'Atresplayer',
+    'paramountchannel_es':
+    'Paramount Channel (ES)',
 
     # Tunisia channels / live TV
     'watania1':
@@ -841,6 +843,8 @@ LABELS = {
     'La7d',
     'raiplay':
     'Rai Play',
+    'paramountchannel_it':
+    'Paramount Channel (IT)',
 
     # Netherlands channels / live TV
     'npo-1':

@@ -943,16 +943,6 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cgtn&item_modul
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/cgtndocumentary.png" group-title="International",CGTN Documentary
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cgtndocumentary&item_module=resources.lib.channels.wo.cgtn&item_dict={}
 
-##	Paramount Channel ES
-##	paramountchannel
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/paramountchannel.png" group-title="International",Paramount Channel ES
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel&item_module=resources.lib.channels.wo.paramountchannel&item_dict={"language":"ES"}
-
-##	Paramount Channel IT
-##	paramountchannel
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/paramountchannel.png" group-title="International",Paramount Channel IT
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel&item_module=resources.lib.channels.wo.paramountchannel&item_dict={"language":"IT"}
-
 ##	RT FR
 ##	rt
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/rt.png" group-title="International",RT FR
@@ -1183,6 +1173,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=divinity&item_m
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/es/bemad.png" group-title="Spain",Be Mad
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bemad&item_module=resources.lib.channels.es.mitele&item_dict={}
 
+##	Paramount Channel (ES)
+##	paramountchannel_es
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/it/paramountchannel_es.png" group-title="Spain",Paramount Channel (ES)
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel_es&item_module=resources.lib.channels.it.paramountchannel_es&item_dict={}
+
 
 
 # Japan
@@ -1297,6 +1292,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=raistoria&item_
 ##	raiscuola
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/it/raiscuola.png" group-title="Italia",Rai Scuola
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=raiscuola&item_module=resources.lib.channels.it.raiplay&item_dict={}
+
+##	Paramount Channel (IT)
+##	paramountchannel_it
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/it/paramountchannel_it.png" group-title="Italia",Paramount Channel (IT)
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel_it&item_module=resources.lib.channels.it.paramountchannel_it&item_dict={}
 
 
 

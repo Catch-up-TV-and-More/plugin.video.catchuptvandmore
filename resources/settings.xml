@@ -331,7 +331,8 @@
             <setting label="CGTN Documentary" type="bool" id="cgtndocumentary" default="true" visible="eq(-35,true)"/>
             <setting label="" type="number" visible="false" id="cgtndocumentary.order" default="18"/>
 
-            <setting label="Paramount Channel" type="bool" id="paramountchannel" default="true" visible="eq(-37,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Paramount Channel" type="bool" id="paramountchannel" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="paramountchannel.order" default="19"/>
 
             <setting label="Afrique Media" type="bool" id="afriquemedia" default="true" visible="eq(-39,true)"/>
@@ -709,6 +710,9 @@
 
             <setting label="TéléToon +" type="bool" id="teletoonplus" default="true" visible="eq(-185,true)"/>
             <setting label="" type="number" visible="false" id="teletoonplus.order" default="92"/>
+
+            <setting label="Paramount Channel (FR)" type="bool" id="paramountchannel_fr" default="true" visible="eq(-187,true)"/>
+            <setting label="" type="number" visible="false" id="paramountchannel_fr.order" default="93"/>
         <!-- France -->
 
 
@@ -889,6 +893,9 @@
 
             <setting label="Atresplayer" type="bool" id="atresplayer" default="true" visible="eq(-29,true)"/>
             <setting label="" type="number" visible="false" id="atresplayer.order" default="15"/>
+
+            <setting label="Paramount Channel (ES)" type="bool" id="paramountchannel_es" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="paramountchannel_es.order" default="16"/>
         <!-- Spain -->
 
         <!-- Tunisia -->
@@ -956,6 +963,10 @@
 
             <setting label="Rai Play" type="bool" id="raiplay" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="raiplay.order" default="16"/>
+
+            <setting label="Paramount Channel (IT)" type="bool" id="paramountchannel_it" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="paramountchannel_it.order" default="17"/>
+
         <!-- Italia -->
 
         <!-- Netherlands -->
@@ -1150,7 +1161,6 @@
                 <setting label="30161" type="labelenum" id="qvc.language" values="JP|DE|IT|UK|US" default="UK"/>
                 <setting label="30162" type="labelenum" id="nhkworld.language" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" values="FR|EN|AR|ES|RU" default="FR"/>
-                <setting label="30164" type="labelenum" id="paramountchannel.language" values="ES|IT" default="ES"/>
                 <setting label="30166" type="labelenum" id="rt.language" values="FR|EN|AR|ES" default="FR"/>
 
             <!-- French channels -->

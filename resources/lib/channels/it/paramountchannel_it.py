@@ -36,15 +36,9 @@ import re
 import urlquick
 
 # TO DO
-# Add Replay ES, FR, ....
+# Add Replay
 
-DESIRED_LANGUAGE = Script.setting['paramountchannel.language']
-
-URL_LIVE_ES = 'http://www.paramountnetwork.es/en-directo/4ypes1'
-
-# URL_LIVE_US = 'https://www.paramountnetwork.com/live-tv/oeojy2'
-
-URL_LIVE_IT = 'http://www.paramountchannel.it/tv/diretta'
+URL_LIVE = 'http://www.paramountchannel.it/tv/diretta'
 
 URL_LIVE_URI = 'http://media.mtvnservices.com/pmt/e1/access/index.html?uri=%s&configtype=edge'
 
@@ -56,37 +50,17 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    final_language = DESIRED_LANGUAGE
+    resp = urlquick.get(URL_LIVE)
+    video_uri_1 = re.compile(r'data-mtv-uri="(.*?)"').findall(resp.text)[0]
+    headers = {
+        'Content-Type': 'application/json',
+        'referer': 'http://www.paramountchannel.it/tv/diretta'
+    }
+    resp2 = urlquick.get(URL_LIVE_URI % video_uri_1, headers=headers)
+    json_parser = json.loads(resp2.text)
+    if 'items' not in json_parser["feed"]:
+        plugin.notify('ERROR', plugin.localize(30713))
+        return False
+    video_uri = json_parser["feed"]["items"][0]["guid"]
 
-    # If we come from the M3U file and the language
-    # is set in the M3U URL, then we overwrite
-    # Catch Up TV & More language setting
-    if type(item_dict) is not dict:
-        item_dict = eval(item_dict)
-    if 'language' in item_dict:
-        final_language = item_dict['language']
-
-    if final_language.lower() == 'es':
-        resp = urlquick.get(URL_LIVE_ES)
-        video_uri = re.compile(r'\"config"\:\{\"uri\"\:\"(.*?)\"').findall(
-            resp.text)[0]
-    # elif DESIRED_LANGUAGE.lower() == 'us':
-    #     resp = urlquick.get(URL_LIVE_US)
-    #     video_uri = re.compile(
-    #         r'\"config"\:\{\"uri\"\:\"(.*?)\"').findall(resp.text)[0]
-    elif final_language.lower() == 'it':
-        resp = urlquick.get(URL_LIVE_IT)
-        video_uri_1 = re.compile(r'data-mtv-uri="(.*?)"').findall(resp.text)[0]
-        headers = {
-            'Content-Type': 'application/json',
-            'referer': 'http://www.paramountchannel.it/tv/diretta'
-        }
-        resp2 = urlquick.get(URL_LIVE_URI % video_uri_1, headers=headers)
-        json_parser = json.loads(resp2.text)
-        if 'items' not in json_parser["feed"]:
-            plugin.notify('ERROR', plugin.localize(30713))
-            return False
-        video_uri = json_parser["feed"]["items"][0]["guid"]
-    else:
-        return ''
     return resolver_proxy.get_mtvnservices_stream(plugin, video_uri)

@@ -462,5 +462,11 @@ menu = {
         'thumb': 'channels/fr/teletoonplus.png',
         'fanart': 'channels/fr/teletoonplus_fanart.jpg',
         'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'paramountchannel_fr': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/paramountchannel_fr.png',
+        'fanart': 'channels/fr/paramountchannel_fr_fanart.jpg',
+        'module': 'resources.lib.channels.fr.paramountchannel_fr'
     }
 }
