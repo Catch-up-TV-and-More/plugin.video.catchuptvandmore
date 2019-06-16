@@ -37,8 +37,7 @@ import re
 import urlquick
 
 # TO DO
-# Video Infos
-# More Videos
+# Video Infos (date, duration)
 
 URL_ROOT = 'http://www.gameone.net'
 # ChannelName
@@ -117,42 +116,77 @@ def list_seasons(plugin, item_id, program_url, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, season_url, **kwargs):
 
-    resp = urlquick.get(season_url)
-    json_value = re.compile(r'window\.__DATA__ \= (.*?)\}\;').findall(
-        resp.text)[0]
-    json_parser = json.loads(json_value + '}')
+    if 'api/context' in season_url:
+        resp = urlquick.get(season_url)
+        json_parser = json.loads(resp.text)
 
-    for main_contents_datas in json_parser['children']:
-        if 'MainContainer' in main_contents_datas['type']:
-            for video_child in main_contents_datas['children']:
-                if 'LineList' in video_child['type']:
-                    video_props = video_child['props']
-                    if 'video-guide' in video_props['type']:
-                        for video_datas in video_props['items']:
-                            video_title = video_datas['meta']['header'][
-                                'title']
-                            video_image = video_datas['media']['image']['url']
-                            video_plot = video_datas['meta']['description']
-                            # TODO add duration / date
-                            video_url = URL_ROOT + video_datas['url']
+        for video_datas in json_parser['items']:
+            video_title = video_datas['meta']['header'][
+                'title']
+            video_image = video_datas['media']['image']['url']
+            video_plot = video_datas['meta']['description']
+            # TODO add duration / date
+            video_url = URL_ROOT + video_datas['url']
 
-                            item = Listitem()
-                            item.label = video_title
-                            item.art['thumb'] = video_image
-                            item.info['plot'] = video_plot
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
+            item.info['plot'] = video_plot
 
-                            item.set_callback(
-                                get_video_url,
-                                item_id=item_id,
-                                video_label=LABELS[item_id] + ' - ' +
-                                item.label,
-                                video_url=video_url)
-                            item_post_treatment(
-                                item, is_playable=True, is_downloadable=True)
-                            yield item
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' +
+                item.label,
+                video_url=video_url)
+            item_post_treatment(
+                item, is_playable=True, is_downloadable=True)
+            yield item
 
-                        # TODO Add more pages if existed
-                        # yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
+        if json_parser['loadMore'] is not None:
+            new_season_url = URL_ROOT + json_parser['loadMore']['url']
+            yield Listitem.next_page(item_id=item_id, season_url=new_season_url)
+
+    else:
+        resp = urlquick.get(season_url)
+        json_value = re.compile(r'window\.__DATA__ \= (.*?)\}\;').findall(
+            resp.text)[0]
+        json_parser = json.loads(json_value + '}')
+
+        for main_contents_datas in json_parser['children']:
+            if 'MainContainer' in main_contents_datas['type']:
+                for video_child in main_contents_datas['children']:
+                    if 'LineList' in video_child['type']:
+                        video_props = video_child['props']
+                        if 'video-guide' in video_props['type']:
+                            for video_datas in video_props['items']:
+                                video_title = video_datas['meta']['header'][
+                                    'title']
+                                video_image = video_datas['media']['image']['url']
+                                video_plot = video_datas['meta']['description']
+                                # TODO add duration / date
+                                video_url = URL_ROOT + video_datas['url']
+
+                                item = Listitem()
+                                item.label = video_title
+                                item.art['thumb'] = video_image
+                                item.info['plot'] = video_plot
+
+                                item.set_callback(
+                                    get_video_url,
+                                    item_id=item_id,
+                                    video_label=LABELS[item_id] + ' - ' +
+                                    item.label,
+                                    video_url=video_url)
+                                item_post_treatment(
+                                    item, is_playable=True, is_downloadable=True)
+                                yield item
+
+                            if 'loadMore' in video_props:
+                                new_season_url = URL_ROOT + video_props['loadMore']['url']
+                                yield Listitem.next_page(
+                                    item_id=item_id,
+                                    season_url=new_season_url)
 
 
 @Resolver.register
