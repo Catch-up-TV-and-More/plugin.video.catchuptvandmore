@@ -32,16 +32,19 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
+import json
 import re
 import urlquick
 
 # TO DO
-# ....
+# Video Infos
+# More Videos
 
 URL_ROOT = 'http://www.gameone.net'
 # ChannelName
 
-URL_VIDEOS = URL_ROOT + '/dernieres-videos/%s'
+URL_PROGRAMS = URL_ROOT + '/shows'
+
 # PageId
 
 
@@ -49,11 +52,11 @@ def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
-    return list_categories(plugin, item_id)
+    return list_programs(plugin, item_id)
 
 
 @Route.register
-def list_categories(plugin, item_id, **kwargs):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -61,36 +64,95 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    item = Listitem()
-    item.label = plugin.localize(LABELS['All videos'])
-    item.set_callback(list_videos, item_id=item_id, page='1')
-    item_post_treatment(item)
-    yield item
+    resp = urlquick.get(URL_PROGRAMS)
+    root = resp.parse()
+
+    for program_datas in root.iterfind(".//div[@class='item poster']"):
+        program_title = program_datas.find(".//div[@class='header']/span").text
+        program_image = ''
+        list_images = program_datas.findall(".//img")
+        for image_datas in list_images:
+            if 'http' in image_datas.get('srcset'):
+                program_image = image_datas.get('srcset')
+        program_url = URL_ROOT + program_datas.find('.//a').get('href')
+
+        item = Listitem()
+        item.label = program_title
+        item.art["thumb"] = program_image
+        item.set_callback(
+            list_seasons, item_id=item_id, program_url=program_url)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, page, **kwargs):
+def list_seasons(plugin, item_id, program_url, **kwargs):
 
-    resp = urlquick.get(URL_VIDEOS % page)
-    root = resp.parse()
+    resp = urlquick.get(program_url)
+    json_value = re.compile(r'window\.__DATA__ \= (.*?)\}\;').findall(
+        resp.text)[0]
+    json_parser = json.loads(json_value + '}')
 
-    for video_datas in root.iterfind(".//div[@class='thumbnail singlebox']"):
-        video_title = video_datas.find('.//h3').find('.//span').text
-        video_image = video_datas.find('.//img').get('src')
-        video_url = URL_ROOT + video_datas.find('.//a').get('href')
+    for main_contents_datas in json_parser['children']:
+        if 'MainContainer' in main_contents_datas['type']:
+            for season_child in main_contents_datas['children']:
+                if 'SeasonSelector' in season_child['type']:
+                    for season_datas in season_child['props']['items']:
+                        season_title = season_datas['label']
+                        if season_datas['url'] is not None:
+                            season_url = URL_ROOT + season_datas['url']
+                        else:
+                            season_url = program_url
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = video_image
+                        item = Listitem()
+                        item.label = season_title
+                        item.set_callback(
+                            list_videos,
+                            item_id=item_id,
+                            season_url=season_url)
+                        item_post_treatment(item)
+                        yield item
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
-                          video_url=video_url)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
 
-    yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
+@Route.register
+def list_videos(plugin, item_id, season_url, **kwargs):
+
+    resp = urlquick.get(season_url)
+    json_value = re.compile(r'window\.__DATA__ \= (.*?)\}\;').findall(
+        resp.text)[0]
+    json_parser = json.loads(json_value + '}')
+
+    for main_contents_datas in json_parser['children']:
+        if 'MainContainer' in main_contents_datas['type']:
+            for video_child in main_contents_datas['children']:
+                if 'LineList' in video_child['type']:
+                    video_props = video_child['props']
+                    if 'video-guide' in video_props['type']:
+                        for video_datas in video_props['items']:
+                            video_title = video_datas['meta']['header'][
+                                'title']
+                            video_image = video_datas['media']['image']['url']
+                            video_plot = video_datas['meta']['description']
+                            # TODO add duration / date
+                            video_url = URL_ROOT + video_datas['url']
+
+                            item = Listitem()
+                            item.label = video_title
+                            item.art['thumb'] = video_image
+                            item.info['plot'] = video_plot
+
+                            item.set_callback(
+                                get_video_url,
+                                item_id=item_id,
+                                video_label=LABELS[item_id] + ' - ' +
+                                item.label,
+                                video_url=video_url)
+                            item_post_treatment(
+                                item, is_playable=True, is_downloadable=True)
+                            yield item
+
+                        # TODO Add more pages if existed
+                        # yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
 
 
 @Resolver.register
@@ -101,9 +163,18 @@ def get_video_url(plugin,
                   video_label=None,
                   **kwargs):
 
-    resp = urlquick.get(video_url,
-                        headers={'User-Agent': web_utils.get_random_ua},
-                        max_age=-1)
-    video_uri = re.compile(r'data-mtv-uri="(.*?)"').findall(resp.text)[0]
+    resp = urlquick.get(video_url)
+    json_value = re.compile(r'window\.__DATA__ \= (.*?)\}\;').findall(
+        resp.text)[0]
+    json_parser = json.loads(json_value + '}')
+
+    video_uri = ''
+    for main_contents_datas in json_parser['children']:
+        if 'MainContainer' in main_contents_datas['type']:
+            for stream_child in main_contents_datas['children']:
+                if 'VideoPlayer' in stream_child['type']:
+                    video_uri = stream_child['props']['media']['video'][
+                        'config']['uri']
+
     return resolver_proxy.get_mtvnservices_stream(plugin, video_uri,
                                                   download_mode, video_label)
