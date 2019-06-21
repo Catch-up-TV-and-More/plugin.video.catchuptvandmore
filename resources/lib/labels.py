@@ -620,6 +620,8 @@ LABELS = {
     'TéléToon +',
     'paramountchannel_fr':
     'Paramount Channel (FR)',
+    'mtv_fr':
+    'MTV (FR)',
 
     # Japan channels / live TV
     'nhknews':
@@ -715,8 +717,6 @@ LABELS = {
     'BVN',
     'icitelevision':
     'ICI Télévision',
-    'mtv':
-    'MTV (' + Script.setting['mtv.language'] + ')',
     'arirang':
     'Arirang (아리랑)',
     'dw':

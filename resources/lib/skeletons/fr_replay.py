@@ -468,5 +468,11 @@ menu = {
         'thumb': 'channels/fr/paramountchannel_fr.png',
         'fanart': 'channels/fr/paramountchannel_fr_fanart.jpg',
         'module': 'resources.lib.channels.fr.paramountchannel_fr'
+    },
+    'mtv_fr': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/mtv_fr.png',
+        'fanart': 'channels/fr/mtv_fr_fanart.jpg',
+        'module': 'resources.lib.channels.fr.mtv_fr'
     }
 }

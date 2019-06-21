@@ -303,7 +303,8 @@
             <setting label="ICI Télévision" type="bool" id="icitelevision" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="icitelevision.order" default="9"/>
 
-            <setting label="MTV" type="bool" id="mtv" default="true" visible="eq(-19,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="MTV" type="bool" id="mtv" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="mtv.order" default="10"/>
 
             <setting label="Arirang (아리랑)" type="bool" id="arirang" default="true" visible="eq(-21,true)"/>
@@ -713,6 +714,9 @@
 
             <setting label="Paramount Channel (FR)" type="bool" id="paramountchannel_fr" default="true" visible="eq(-187,true)"/>
             <setting label="" type="number" visible="false" id="paramountchannel_fr.order" default="93"/>
+
+            <setting label="MTV (FR)" type="bool" id="mtv_fr" default="true" visible="eq(-189,true)"/>
+            <setting label="" type="number" visible="false" id="mtv_fr.order" default="94"/>
         <!-- France -->
 
 
@@ -1156,7 +1160,6 @@
                 <setting label="30153" type="labelenum" id="arte.language" values="FR|DE|EN|ES|PL|IT" default="FR"/>
                 <setting label="30155" type="labelenum" id="euronews.language" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU" default="FR"/>
                 <setting label="30154" type="labelenum" id="france24.language" values="FR|EN|AR|ES" default="FR"/>
-                <setting label="30156" type="labelenum" id="mtv.language" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" values="EN|DE|ES|AR" default="EN"/>
                 <setting label="30161" type="labelenum" id="qvc.language" values="JP|DE|IT|UK|US" default="UK"/>
                 <setting label="30162" type="labelenum" id="nhkworld.language" values="Outside Japan|In Japan" default="Outside Japan"/>
