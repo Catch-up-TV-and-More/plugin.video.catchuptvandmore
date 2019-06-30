@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.9~beta03"
+       version="0.2.9~beta04"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -49,6 +49,7 @@
 [Move] Live TV - Paramount Channel (ES|IT) from WO to IT and ES
 [Move] Catch-up TV - MTV (FR) from WO to FR
 [Remove] Log_uploader for the exception 'No items found'
+[Fix] Catch-up TV - Arte Concert (WO)
     </news>
     <assets>
       <icon>icon.png</icon>

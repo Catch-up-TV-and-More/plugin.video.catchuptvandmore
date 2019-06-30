@@ -40,6 +40,7 @@ import xbmcgui
 # TO DO
 #   Most recent
 #   Most viewed
+#   Readd More pages (for concert and subcategories)
 
 URL_ROOT = 'https://www.arte.tv/%s/'
 # Language
@@ -141,9 +142,10 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
             item_post_treatment(item)
             yield item
 
-        elif sub_category_datas['code']['name'] == 'playlists' or \
-                sub_category_datas['code']['name'] == 'collections' or \
-                sub_category_datas['code']['name'] == 'magazines':
+        elif 'playlists' in sub_category_datas['code']['name'] or \
+                'collections' in sub_category_datas['code']['name']  or \
+                'magazines' in sub_category_datas['code']['name'] or \
+                'festivals' in sub_category_datas['code']['name']:
             sub_category_title = sub_category_datas['title']
             sub_category_code_name = sub_category_datas['code']['name']
             sub_category_url = category_url
@@ -152,6 +154,21 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
             item.label = sub_category_title
 
             item.set_callback(list_programs,
+                              item_id=item_id,
+                              sub_category_code_name=sub_category_code_name,
+                              sub_category_url=sub_category_url)
+            item_post_treatment(item)
+            yield item
+
+        elif 'genres' in sub_category_datas['code']['name']:
+            sub_category_title = sub_category_datas['title']
+            sub_category_code_name = sub_category_datas['code']['name']
+            sub_category_url = category_url
+
+            item = Listitem()
+            item.label = sub_category_title
+
+            item.set_callback(list_programs_concert,
                               item_id=item_id,
                               sub_category_code_name=sub_category_code_name,
                               sub_category_url=sub_category_url)
@@ -195,6 +212,42 @@ def list_programs(plugin, item_id, sub_category_code_name, sub_category_url,
                     item_id=item_id,
                     sub_category_code_name=sub_category_code_name,
                     program_id=program_id)
+                item_post_treatment(item)
+                yield item
+
+
+@Route.register
+def list_programs_concert(plugin, item_id, sub_category_code_name, sub_category_url,
+                  **kwargs):
+    """
+    Build programs listing
+    - Les feux de l'amour
+    - ...
+    """
+    resp = urlquick.get(sub_category_url)
+    json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(
+        resp.text)[0]
+    json_parser = json.loads(json_value + '}')
+
+    value_code = json_parser['pages']['currentCode']
+    for sub_category_datas in json_parser['pages']['list'][value_code][
+            'zones']:
+        if sub_category_datas['code']['name'] == sub_category_code_name:
+            for program_datas in sub_category_datas['data']:
+                program_title = program_datas['title']
+                program_url = program_datas['url']
+                program_image = ''
+                for image_datas in program_datas['images']['landscape'][
+                        'resolutions']:
+                    program_image = image_datas['url']
+
+                item = Listitem()
+                item.label = program_title
+                item.art['thumb'] = program_image
+                item.set_callback(
+                    list_videos_program_concert,
+                    item_id=item_id,
+                    program_url=program_url)
                 item_post_treatment(item)
                 yield item
 
@@ -287,6 +340,49 @@ def list_videos_program(plugin, item_id, sub_category_code_name, program_id,
                           video_label=LABELS[item_id] + ' - ' + item.label,
                           video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
+        yield item
+
+
+@Route.register
+def list_videos_program_concert(plugin, item_id, program_url,
+                        **kwargs):
+
+    resp = urlquick.get(program_url)
+    json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(
+        resp.text)[0]
+    json_parser = json.loads(json_value + '}')
+
+    value_code = json_parser['pages']['currentCode']
+    for video_datas in json_parser['pages']['list'][value_code][
+        'zones'][0]['data']:
+        if video_datas['subtitle'] is not None:
+            video_title = video_datas['title'] + ' - ' + video_datas[
+                'subtitle']
+        else:
+            video_title = video_datas['title']
+        video_id = video_datas['programId']
+        video_image = ''
+        if 'resolutions' in video_datas['images']['landscape']:
+            for video_image_datas in video_datas['images'][
+                    'landscape']['resolutions']:
+                video_image = video_image_datas['url']
+        video_duration = video_datas["duration"]
+        video_plot = video_datas["description"]
+
+        item = Listitem()
+        item.label = video_title
+        item.art['thumb'] = video_image
+        item.info['duration'] = video_duration
+        item.info['plot'] = video_plot
+
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' +
+                          item.label,
+                          video_id=video_id)
+        item_post_treatment(item,
+                            is_playable=True,
+                            is_downloadable=True)
         yield item
 
 
