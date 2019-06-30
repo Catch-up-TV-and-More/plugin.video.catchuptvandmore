@@ -497,7 +497,8 @@ def list_videos_program_concert(plugin, item_id, program_url,
 
         if videos_datas['nextPage'] is not None:
             yield Listitem.next_page(item_id=item_id,
-                                    program_url=videos_datas['nextPage'])
+                                     program_url=videos_datas['nextPage'])
+
 
 @Resolver.register
 def get_video_url(plugin,
