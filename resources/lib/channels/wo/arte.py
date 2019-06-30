@@ -141,24 +141,6 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
             item_post_treatment(item)
             yield item
 
-        elif 'playlists' in sub_category_datas['code']['name'] or \
-                'collections' in sub_category_datas['code']['name'] or \
-                'magazines' in sub_category_datas['code']['name'] or \
-                'festivals' in sub_category_datas['code']['name']:
-            sub_category_title = sub_category_datas['title']
-            sub_category_code_name = sub_category_datas['code']['name']
-            sub_category_url = category_url
-
-            item = Listitem()
-            item.label = sub_category_title
-
-            item.set_callback(list_programs,
-                              item_id=item_id,
-                              sub_category_code_name=sub_category_code_name,
-                              sub_category_url=sub_category_url)
-            item_post_treatment(item)
-            yield item
-
         elif 'genres' in sub_category_datas['code']['name']:
             sub_category_title = sub_category_datas['title']
             sub_category_code_name = sub_category_datas['code']['name']
@@ -173,6 +155,28 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
                               sub_category_url=sub_category_url)
             item_post_treatment(item)
             yield item
+
+        elif 'banner' in sub_category_datas['code']['name']:
+            continue
+
+        elif 'playlists' in sub_category_datas['code']['name'] or \
+                'collections' in sub_category_datas['code']['name'] or \
+                'magazines' in sub_category_datas['code']['name'] or \
+                'ARTE_CONCERT' in sub_category_datas['code']['name']:
+            sub_category_title = sub_category_datas['title']
+            sub_category_code_name = sub_category_datas['code']['name']
+            sub_category_url = category_url
+
+            item = Listitem()
+            item.label = sub_category_title
+
+            item.set_callback(list_programs,
+                              item_id=item_id,
+                              sub_category_code_name=sub_category_code_name,
+                              sub_category_url=sub_category_url)
+            item_post_treatment(item)
+            yield item
+
         # else:
         #     # Add Notification (Category Not known)
         #     return None
@@ -244,7 +248,6 @@ def list_programs(plugin, item_id, sub_category_code_name, sub_category_url,
                                         is_playable=True,
                                         is_downloadable=True)
                     yield item
-
 
 
 @Route.register
