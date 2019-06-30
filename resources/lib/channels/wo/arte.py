@@ -143,7 +143,7 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
             yield item
 
         elif 'playlists' in sub_category_datas['code']['name'] or \
-                'collections' in sub_category_datas['code']['name']  or \
+                'collections' in sub_category_datas['code']['name'] or \
                 'magazines' in sub_category_datas['code']['name'] or \
                 'festivals' in sub_category_datas['code']['name']:
             sub_category_title = sub_category_datas['title']
@@ -197,28 +197,60 @@ def list_programs(plugin, item_id, sub_category_code_name, sub_category_url,
             'zones']:
         if sub_category_datas['code']['name'] == sub_category_code_name:
             for program_datas in sub_category_datas['data']:
-                program_title = program_datas['title']
-                program_id = program_datas['programId']
-                program_image = ''
-                for image_datas in program_datas['images']['landscape'][
-                        'resolutions']:
-                    program_image = image_datas['url']
+                if 'RC-' in program_datas['programId']:
+                    program_title = program_datas['title']
+                    program_id = program_datas['programId']
+                    program_image = ''
+                    for image_datas in program_datas['images']['landscape'][
+                            'resolutions']:
+                        program_image = image_datas['url']
 
-                item = Listitem()
-                item.label = program_title
-                item.art['thumb'] = program_image
-                item.set_callback(
-                    list_videos_program,
-                    item_id=item_id,
-                    sub_category_code_name=sub_category_code_name,
-                    program_id=program_id)
-                item_post_treatment(item)
-                yield item
+                    item = Listitem()
+                    item.label = program_title
+                    item.art['thumb'] = program_image
+                    item.set_callback(
+                        list_videos_program,
+                        item_id=item_id,
+                        sub_category_code_name=sub_category_code_name,
+                        program_id=program_id)
+                    item_post_treatment(item)
+                    yield item
+                else:
+                    if program_datas['subtitle'] is not None:
+                        video_title = program_datas['title'] + ' - ' + program_datas[
+                            'subtitle']
+                    else:
+                        video_title = program_datas['title']
+                    video_id = program_datas['programId']
+                    video_image = ''
+                    if 'resolutions' in program_datas['images']['landscape']:
+                        for video_image_datas in program_datas['images'][
+                                'landscape']['resolutions']:
+                            video_image = video_image_datas['url']
+                    video_duration = program_datas["duration"]
+                    video_plot = program_datas["description"]
+
+                    item = Listitem()
+                    item.label = video_title
+                    item.art['thumb'] = video_image
+                    item.info['duration'] = video_duration
+                    item.info['plot'] = video_plot
+
+                    item.set_callback(get_video_url,
+                                      item_id=item_id,
+                                      video_label=LABELS[item_id] + ' - ' +
+                                      item.label,
+                                      video_id=video_id)
+                    item_post_treatment(item,
+                                        is_playable=True,
+                                        is_downloadable=True)
+                    yield item
+
 
 
 @Route.register
 def list_programs_concert(plugin, item_id, sub_category_code_name, sub_category_url,
-                  **kwargs):
+                          **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -345,7 +377,7 @@ def list_videos_program(plugin, item_id, sub_category_code_name, program_id,
 
 @Route.register
 def list_videos_program_concert(plugin, item_id, program_url,
-                        **kwargs):
+                                **kwargs):
 
     resp = urlquick.get(program_url)
     json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(
@@ -354,7 +386,7 @@ def list_videos_program_concert(plugin, item_id, program_url,
 
     value_code = json_parser['pages']['currentCode']
     for video_datas in json_parser['pages']['list'][value_code][
-        'zones'][0]['data']:
+            'zones'][0]['data']:
         if video_datas['subtitle'] is not None:
             video_title = video_datas['title'] + ' - ' + video_datas[
                 'subtitle']
