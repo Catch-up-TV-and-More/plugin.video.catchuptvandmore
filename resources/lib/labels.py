@@ -558,8 +558,6 @@ LABELS = {
     'France tv slash',
     'polar-plus':
     'Polar+',
-    'virginradiotv':
-    'Virgin Radio TV',
     'francetvspectaclesetculture':
     'Spectacles et Culture (francetv)',
     'kto':

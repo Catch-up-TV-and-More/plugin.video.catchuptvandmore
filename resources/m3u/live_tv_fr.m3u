@@ -153,11 +153,6 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl2&item_modul
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/funradio.png" group-title="France Radio",Fun Radio
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=fun_radio&item_module=resources.lib.channels.fr.6play&item_dict={}
 
-##	Virgin Radio TV
-##	virginradiotv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/virginradiotv.png" group-title="France Radio",Virgin Radio TV
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=virginradiotv&item_module=resources.lib.channels.fr.virginradiotv&item_dict={}
-
 ##	viàOccitanie
 ##	viaoccitanie
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/viaoccitanie.png" group-title="France Région",viàOccitanie

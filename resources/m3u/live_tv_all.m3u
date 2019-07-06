@@ -148,11 +148,6 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=rtl2&item_modul
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/funradio.png" group-title="France",Fun Radio
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=fun_radio&item_module=resources.lib.channels.fr.6play&item_dict={}
 
-##	Virgin Radio TV
-##	virginradiotv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/virginradiotv.png" group-title="France",Virgin Radio TV
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=virginradiotv&item_module=resources.lib.channels.fr.virginradiotv&item_dict={}
-
 ##	viàOccitanie
 ##	viaoccitanie
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/viaoccitanie.png" group-title="France",viàOccitanie
@@ -1175,8 +1170,8 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bemad&item_modu
 
 ##	Paramount Channel (ES)
 ##	paramountchannel_es
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/it/paramountchannel_es.png" group-title="Spain",Paramount Channel (ES)
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel_es&item_module=resources.lib.channels.it.paramountchannel_es&item_dict={}
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/es/paramountchannel_es.png" group-title="Spain",Paramount Channel (ES)
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel_es&item_module=resources.lib.channels.es.paramountchannel_es&item_dict={}
 
 
 

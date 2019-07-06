@@ -617,7 +617,8 @@
             <setting label="Polar+" type="bool" id="polar-plus" default="true" visible="eq(-121,true)"/>
             <setting label="" type="number" visible="false" id="polar-plus.order" default="61"/>
 
-            <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
 
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->

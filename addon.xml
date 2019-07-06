@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.9~beta04"
+       version="0.2.9~beta05"
        provider-name="SylvainCcchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -50,6 +50,7 @@
 [Move] Catch-up TV - MTV (FR) from WO to FR
 [Remove] Log_uploader for the exception 'No items found'
 [Fix] Catch-up TV - Arte Concert (WO)
+[Remove] Live TV - Virgin Radio (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
