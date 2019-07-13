@@ -138,5 +138,11 @@ menu = {
         'thumb': 'websites/nationalfff.png',
         'fanart': 'websites/nationalfff_fanart.jpg',
         'module': 'resources.lib.websites.nationalfff'
+    },
+    'philharmoniedeparis': {
+        'callback': 'website_bridge',
+        'thumb': 'websites/philharmoniedeparis.png',
+        'fanart': 'websites/philharmoniedeparis_fanart.jpg',
+        'module': 'resources.lib.websites.philharmoniedeparis'
     }
 }

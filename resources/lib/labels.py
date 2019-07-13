@@ -938,5 +938,7 @@ LABELS = {
     'lesargonautes':
     'Les Argonautes',
     'nationalfff':
-    'National FFF'
+    'National FFF',
+    'philharmoniedeparis':
+    'Philharmonie de Paris'
 }

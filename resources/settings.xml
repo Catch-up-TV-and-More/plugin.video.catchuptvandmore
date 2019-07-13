@@ -1130,6 +1130,9 @@
 
             <setting label="National FFF" type="bool" id="nationalfff" default="true"/>
             <setting label="" type="number" visible="false" id="nationalfff.order" default="17"/>
+
+            <setting label="Philharmonie de Paris" type="bool" id="philharmoniedeparis" default="true"/>
+            <setting label="" type="number" visible="false" id="philharmoniedeparis.order" default="18"/>
     </category>
     <!-- Websites -->
 
