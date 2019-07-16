@@ -144,7 +144,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                         max_age=-1)
 
     root = resp.parse()
-    live_datas = root.find(".//div[@class='next-player']")
+    live_datas = root.find(".//div[@class='next-player player_2t_e9']")
 
     data_account = live_datas.get('data-account')
     data_video_id = live_datas.get('data-video-id')
