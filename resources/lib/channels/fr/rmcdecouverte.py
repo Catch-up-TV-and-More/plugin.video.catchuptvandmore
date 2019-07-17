@@ -121,7 +121,7 @@ def get_video_url(plugin,
                         headers={'User-Agent': web_utils.get_random_ua},
                         max_age=-1)
     root = resp.parse()
-    video_datas = root.find(".//div[@class='next-player']")
+    video_datas = root.find(".//div[@class='next-player player_2t_e9']")
 
     data_account = video_datas.get('data-account')
     data_video_id = video_datas.get('data-video-id')
