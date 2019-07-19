@@ -85,12 +85,6 @@ menu = {
         'fanart': 'channels/wo/bvn_fanart.jpg',
         'module': 'resources.lib.channels.wo.bvn'
     },
-    'mtv': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/wo/mtv.png',
-        'fanart': 'channels/wo/mtv_fanart.jpg',
-        'module': 'resources.lib.channels.wo.mtv'
-    },
     'nhkworld': {
         'callback': 'replay_bridge',
         'thumb': 'channels/wo/nhkworld.png',

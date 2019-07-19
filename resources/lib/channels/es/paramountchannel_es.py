@@ -30,17 +30,14 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
-from resources.lib.listitem_utils import item_post_treatment, item2dict
 
+import json
 import re
 import urlquick
-'''
-TODO Add Replay
-'''
 
-URL_ROOT = 'https://www.virginradio.fr'
+# TO DO
 
-URL_LIVE = URL_ROOT + '/virginradiotv/'
+URL_LIVE = 'http://www.paramountnetwork.es/en-directo/4ypes1'
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -50,9 +47,8 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    live_html = urlquick.get(URL_LIVE,
-                             headers={'User-Agent': web_utils.get_random_ua},
-                             max_age=-1)
-    video_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\"\?]').findall(
-        live_html.text)[0]
-    return resolver_proxy.get_stream_dailymotion(plugin, video_id, False)
+    resp = urlquick.get(URL_LIVE)
+    video_uri = re.compile(r'\"config"\:\{\"uri\"\:\"(.*?)\"').findall(
+        resp.text)[0]
+
+    return resolver_proxy.get_mtvnservices_stream(plugin, video_uri)

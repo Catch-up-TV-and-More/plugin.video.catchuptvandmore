@@ -78,6 +78,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=divinity&item_m
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/es/bemad.png" group-title="Spain",Be Mad
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bemad&item_module=resources.lib.channels.es.mitele&item_dict={}
 
+##	Paramount Channel (ES)
+##	paramountchannel_es
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/es/paramountchannel_es.png" group-title="Spain",Paramount Channel (ES)
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel_es&item_module=resources.lib.channels.es.paramountchannel_es&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/euronews.png" group-title="Spain",Euronews
@@ -97,11 +102,6 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france24&item_m
 ##	cgtn
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/cgtn.png" group-title="Spain",CGTN
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=cgtn&item_module=resources.lib.channels.wo.cgtn&item_dict={"language":"ES"}
-
-##	Paramount Channel
-##	paramountchannel
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/paramountchannel.png" group-title="Spain",Paramount Channel
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=paramountchannel&item_module=resources.lib.channels.wo.paramountchannel&item_dict={"language":"ES"}
 
 ##	RT
 ##	rt

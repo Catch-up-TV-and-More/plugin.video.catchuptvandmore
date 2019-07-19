@@ -71,6 +71,11 @@ URL_MTVNSERVICES_STREAM_ACCOUNT = 'https://media-utils.mtvnservices.com/services
                                   '&accountOverride=%s'
 # videoURI, accountOverride
 
+URL_MTVNSERVICES_STREAM_ACCOUNT_EP = 'https://media-utils.mtvnservices.com/services/' \
+                                     'MediaGenerator/%s?&format=json&acceptMethods=hls' \
+                                     '&accountOverride=%s&ep=%s'
+# videoURI, accountOverride, ep
+
 URL_FRANCETV_LIVE_PROGRAM_INFO = 'http://sivideo.webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/?idDiffusion=%s'
 # VideoId
 
@@ -208,8 +213,14 @@ def get_mtvnservices_stream(plugin,
                             video_uri,
                             download_mode=False,
                             video_label=None,
-                            account_override=None):
-    if account_override is not None:
+                            account_override=None,
+                            ep=None):
+
+    if account_override is not None and ep is not None:
+        json_video_stream = urlquick.get(URL_MTVNSERVICES_STREAM_ACCOUNT_EP %
+                                         (video_uri, account_override, ep),
+                                         max_age=-1)
+    elif account_override is not None:
         json_video_stream = urlquick.get(URL_MTVNSERVICES_STREAM_ACCOUNT %
                                          (video_uri, account_override),
                                          max_age=-1)

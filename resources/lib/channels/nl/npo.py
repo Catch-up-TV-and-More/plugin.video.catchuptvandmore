@@ -237,7 +237,7 @@ def list_videos_franchise(plugin, item_id, program_url, **kwargs):
                 program_url=json_parser["_links"]['next']['href'])
 
     else:
-        resp = urlquick.get(program_url + '?ApiKey=%s' % (API_KEY))
+        resp = urlquick.get(program_url.replace('/router', '') + '?ApiKey=%s' % API_KEY)
         json_parser = json.loads(resp.text)
 
         for video_datas in json_parser["components"][2]["data"]["items"]:

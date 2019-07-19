@@ -98,7 +98,16 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_REPLAY % item_id)
+
+    channel_mycanal_id = ''
+    if 'piwiplus' in item_id:
+        channel_mycanal_id = 'Piwi+'
+    elif 'teletoonplus' in item_id:
+        channel_mycanal_id = 'Télétoon+'
+    else:
+        channel_mycanal_id = item_id
+
+    resp = urlquick.get(URL_REPLAY % channel_mycanal_id)
     json_replay = re.compile('window.__data=(.*?)};').findall(resp.text)[0]
     json_parser = json.loads(json_replay + ('}'))
 
@@ -120,7 +129,15 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_contents(plugin, item_id, title_value, **kwargs):
 
-    resp = urlquick.get(URL_REPLAY % item_id)
+    channel_mycanal_id = ''
+    if 'piwiplus' in item_id:
+        channel_mycanal_id = 'Piwi+'
+    elif 'teletoonplus' in item_id:
+        channel_mycanal_id = 'Télétoon+'
+    else:
+        channel_mycanal_id = item_id
+
+    resp = urlquick.get(URL_REPLAY % channel_mycanal_id)
     json_replay = re.compile('window.__data=(.*?)};').findall(resp.text)[0]
     json_parser = json.loads(json_replay + ('}'))
 
@@ -222,18 +239,6 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
                 item_post_treatment(item)
                 yield item
 
-    elif 'seasons' in json_parser['detail']:
-        for seasons_datas in json_parser['detail']['seasons']:
-            season_title = seasons_datas['onClick']['displayName']
-            season_url = seasons_datas['onClick']['URLPage']
-
-            item = Listitem()
-            item.label = season_title
-            item.set_callback(
-                list_videos_seasons, item_id=item_id, next_url=season_url)
-            item_post_treatment(item)
-            yield item
-
     elif 'episodes' in json_parser:
 
         program_title = json_parser['currentPage']['displayName']
@@ -263,30 +268,66 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
 
     elif 'detail' in json_parser:
 
-        program_title = json_parser['currentPage']['displayName']
-        video_datas = json_parser['detail']['informations']
+        if 'seasons' in json_parser['detail']:
+            for seasons_datas in json_parser['detail']['seasons']:
+                season_title = seasons_datas['onClick']['displayName']
+                season_url = seasons_datas['onClick']['URLPage']
 
-        if 'subtitle' in video_datas:
-            video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
+                item = Listitem()
+                item.label = season_title
+                item.set_callback(
+                    list_videos_seasons, item_id=item_id, next_url=season_url)
+                item_post_treatment(item)
+                yield item
+
         else:
-            video_title = program_title + ' ' + video_datas['title']
-        video_image = video_datas['URLImage']
-        video_plot = video_datas['summary']
-        video_url = video_datas['URLMedias']
+            program_title = json_parser['currentPage']['displayName']
+            video_datas = json_parser['detail']['informations']
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = video_image
-        item.info['plot'] = video_plot
+            if 'subtitle' in video_datas:
+                video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
+            else:
+                video_title = program_title + ' ' + video_datas['title']
+            video_image = video_datas['URLImage']
+            video_plot = video_datas['summary']
+            video_url = video_datas['URLMedias']
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            next_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            item_dict=item2dict(item))
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
+            item.info['plot'] = video_plot
+
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                next_url=video_url,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                item_dict=item2dict(item))
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
+
+    elif 'contents' in json_parser:
+
+        for video_datas in json_parser['contents']:
+            if 'subtitle' in video_datas:
+                video_title = video_datas['title'] + ' ' + video_datas['subtitle']
+            else:
+                video_title = video_datas['title']
+            video_image = video_datas['URLImage']
+            video_url = video_datas['onClick']['URLPage']
+
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
+
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                next_url=video_url,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                item_dict=item2dict(item))
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
 
 @Route.register

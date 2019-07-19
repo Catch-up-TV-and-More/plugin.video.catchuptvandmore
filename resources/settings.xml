@@ -303,7 +303,8 @@
             <setting label="ICI Télévision" type="bool" id="icitelevision" default="true" visible="eq(-17,true)"/>
             <setting label="" type="number" visible="false" id="icitelevision.order" default="9"/>
 
-            <setting label="MTV" type="bool" id="mtv" default="true" visible="eq(-19,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="MTV" type="bool" id="mtv" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="mtv.order" default="10"/>
 
             <setting label="Arirang (아리랑)" type="bool" id="arirang" default="true" visible="eq(-21,true)"/>
@@ -331,7 +332,8 @@
             <setting label="CGTN Documentary" type="bool" id="cgtndocumentary" default="true" visible="eq(-35,true)"/>
             <setting label="" type="number" visible="false" id="cgtndocumentary.order" default="18"/>
 
-            <setting label="Paramount Channel" type="bool" id="paramountchannel" default="true" visible="eq(-37,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Paramount Channel" type="bool" id="paramountchannel" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="paramountchannel.order" default="19"/>
 
             <setting label="Afrique Media" type="bool" id="afriquemedia" default="true" visible="eq(-39,true)"/>
@@ -615,7 +617,8 @@
             <setting label="Polar+" type="bool" id="polar-plus" default="true" visible="eq(-121,true)"/>
             <setting label="" type="number" visible="false" id="polar-plus.order" default="61"/>
 
-            <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="true" visible="eq(-123,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Virgin Radio TV" type="bool" id="virginradiotv" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="virginradiotv.order" default="62"/>
 
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
@@ -643,7 +646,8 @@
             <setting label="La Chaîne Météo" type="bool" id="lachainemeteo" default="true" visible="eq(-139,true)"/>
             <setting label="" type="number" visible="false" id="lachainemeteo.order" default="70"/>
 
-            <setting label="J-One" type="bool" id="j_one" default="true" visible="eq(-141,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="J-One" type="bool" id="j_one" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="j_one.order" default="71"/>
 
             <setting label="viàATV" type="bool" id="viaatv" default="true" visible="eq(-143,true)"/>
@@ -702,6 +706,18 @@
 
             <setting label="Clique TV" type="bool" id="cliquetv" default="true" visible="eq(-181,true)"/>
             <setting label="" type="number" visible="false" id="cliquetv.order" default="90"/>
+
+            <setting label="Piwi +" type="bool" id="piwiplus" default="true" visible="eq(-183,true)"/>
+            <setting label="" type="number" visible="false" id="piwiplus.order" default="91"/>
+
+            <setting label="TéléToon +" type="bool" id="teletoonplus" default="true" visible="eq(-185,true)"/>
+            <setting label="" type="number" visible="false" id="teletoonplus.order" default="92"/>
+
+            <setting label="Paramount Channel (FR)" type="bool" id="paramountchannel_fr" default="true" visible="eq(-187,true)"/>
+            <setting label="" type="number" visible="false" id="paramountchannel_fr.order" default="93"/>
+
+            <setting label="MTV (FR)" type="bool" id="mtv_fr" default="true" visible="eq(-189,true)"/>
+            <setting label="" type="number" visible="false" id="mtv_fr.order" default="94"/>
         <!-- France -->
 
 
@@ -882,6 +898,9 @@
 
             <setting label="Atresplayer" type="bool" id="atresplayer" default="true" visible="eq(-29,true)"/>
             <setting label="" type="number" visible="false" id="atresplayer.order" default="15"/>
+
+            <setting label="Paramount Channel (ES)" type="bool" id="paramountchannel_es" default="true" visible="eq(-31,true)"/>
+            <setting label="" type="number" visible="false" id="paramountchannel_es.order" default="16"/>
         <!-- Spain -->
 
         <!-- Tunisia -->
@@ -949,6 +968,10 @@
 
             <setting label="Rai Play" type="bool" id="raiplay" default="true" visible="eq(-31,true)"/>
             <setting label="" type="number" visible="false" id="raiplay.order" default="16"/>
+
+            <setting label="Paramount Channel (IT)" type="bool" id="paramountchannel_it" default="true" visible="eq(-33,true)"/>
+            <setting label="" type="number" visible="false" id="paramountchannel_it.order" default="17"/>
+
         <!-- Italia -->
 
         <!-- Netherlands -->
@@ -1107,6 +1130,9 @@
 
             <setting label="National FFF" type="bool" id="nationalfff" default="true"/>
             <setting label="" type="number" visible="false" id="nationalfff.order" default="17"/>
+
+            <setting label="Philharmonie de Paris" type="bool" id="philharmoniedeparis" default="true"/>
+            <setting label="" type="number" visible="false" id="philharmoniedeparis.order" default="18"/>
     </category>
     <!-- Websites -->
 
@@ -1138,12 +1164,10 @@
                 <setting label="30153" type="labelenum" id="arte.language" values="FR|DE|EN|ES|PL|IT" default="FR"/>
                 <setting label="30155" type="labelenum" id="euronews.language" values="FR|EN|AR|DE|IT|ES|PT|RU|TR|FA|GR|HU" default="FR"/>
                 <setting label="30154" type="labelenum" id="france24.language" values="FR|EN|AR|ES" default="FR"/>
-                <setting label="30156" type="labelenum" id="mtv.language" values="FR" default="FR"/>
                 <setting label="30157" type="labelenum" id="dw.language" values="EN|DE|ES|AR" default="EN"/>
                 <setting label="30161" type="labelenum" id="qvc.language" values="JP|DE|IT|UK|US" default="UK"/>
                 <setting label="30162" type="labelenum" id="nhkworld.language" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" values="FR|EN|AR|ES|RU" default="FR"/>
-                <setting label="30164" type="labelenum" id="paramountchannel.language" values="ES|IT" default="ES"/>
                 <setting label="30166" type="labelenum" id="rt.language" values="FR|EN|AR|ES" default="FR"/>
 
             <!-- French channels -->

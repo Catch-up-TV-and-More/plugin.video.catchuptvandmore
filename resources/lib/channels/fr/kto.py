@@ -111,7 +111,7 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
 
     if page == '1':
         video_title = root.find(".//div[@class='container content']").find(
-            './/a').text
+            './/h3').find('.//a').text
         video_image = root.find(".//div[@class='container content']").find(
             './/img').get('src')
         video_url = root.find(".//div[@class='container content']").find(

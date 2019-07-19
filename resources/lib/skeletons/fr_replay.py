@@ -379,12 +379,6 @@ menu = {
         'fanart': 'channels/fr/studio4_fanart.jpg',
         'module': 'resources.lib.channels.fr.nouvellesecritures'
     },
-    'j_one': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/fr/jone.png',
-        'fanart': 'channels/fr/jone_fanart.jpg',
-        'module': 'resources.lib.channels.fr.j_one'
-    },
     'jack': {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/jack.png',
@@ -456,5 +450,29 @@ menu = {
         'thumb': 'channels/fr/cliquetv.png',
         'fanart': 'channels/fr/cliquetv_fanart.jpg',
         'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'piwiplus': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/piwiplus.png',
+        'fanart': 'channels/fr/piwiplus_fanart.jpg',
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'teletoonplus': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/teletoonplus.png',
+        'fanart': 'channels/fr/teletoonplus_fanart.jpg',
+        'module': 'resources.lib.channels.fr.mycanal'
+    },
+    'paramountchannel_fr': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/paramountchannel_fr.png',
+        'fanart': 'channels/fr/paramountchannel_fr_fanart.jpg',
+        'module': 'resources.lib.channels.fr.paramountchannel_fr'
+    },
+    'mtv_fr': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/mtv_fr.png',
+        'fanart': 'channels/fr/mtv_fr_fanart.jpg',
+        'module': 'resources.lib.channels.fr.mtv_fr'
     }
 }

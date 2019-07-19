@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2019  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -39,7 +39,7 @@ import urlquick
 # TO DO
 # Video Infos (date, duration)
 
-URL_ROOT = 'http://www.gameone.net'
+URL_ROOT = 'https://www.paramountchannel.fr'
 # ChannelName
 
 URL_PROGRAMS = URL_ROOT + '/shows'
@@ -79,45 +79,16 @@ def list_programs(plugin, item_id, **kwargs):
         item.label = program_title
         item.art["thumb"] = program_image
         item.set_callback(
-            list_seasons, item_id=item_id, program_url=program_url)
+            list_videos, item_id=item_id, program_url=program_url)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_seasons(plugin, item_id, program_url, **kwargs):
+def list_videos(plugin, item_id, program_url, **kwargs):
 
-    resp = urlquick.get(program_url)
-    json_value = re.compile(r'window\.__DATA__ \= (.*?)\}\;').findall(
-        resp.text)[0]
-    json_parser = json.loads(json_value + '}')
-
-    for main_contents_datas in json_parser['children']:
-        if 'MainContainer' in main_contents_datas['type']:
-            for season_child in main_contents_datas['children']:
-                if 'SeasonSelector' in season_child['type']:
-                    for season_datas in season_child['props']['items']:
-                        season_title = season_datas['label']
-                        if season_datas['url'] is not None:
-                            season_url = URL_ROOT + season_datas['url']
-                        else:
-                            season_url = program_url
-
-                        item = Listitem()
-                        item.label = season_title
-                        item.set_callback(
-                            list_videos,
-                            item_id=item_id,
-                            season_url=season_url)
-                        item_post_treatment(item)
-                        yield item
-
-
-@Route.register
-def list_videos(plugin, item_id, season_url, **kwargs):
-
-    if 'api/context' in season_url:
-        resp = urlquick.get(season_url)
+    if 'api/context' in program_url:
+        resp = urlquick.get(program_url)
         json_parser = json.loads(resp.text)
 
         for video_datas in json_parser['items']:
@@ -144,11 +115,11 @@ def list_videos(plugin, item_id, season_url, **kwargs):
             yield item
 
         if json_parser['loadMore'] is not None:
-            new_season_url = URL_ROOT + json_parser['loadMore']['url']
-            yield Listitem.next_page(item_id=item_id, season_url=new_season_url)
+            new_program_url = URL_ROOT + json_parser['loadMore']['url']
+            yield Listitem.next_page(item_id=item_id, program_url=new_program_url)
 
     else:
-        resp = urlquick.get(season_url)
+        resp = urlquick.get(program_url)
         json_value = re.compile(r'window\.__DATA__ \= (.*?)\}\;').findall(
             resp.text)[0]
         json_parser = json.loads(json_value + '}')
@@ -183,10 +154,10 @@ def list_videos(plugin, item_id, season_url, **kwargs):
                                 yield item
 
                             if 'loadMore' in video_props:
-                                new_season_url = URL_ROOT + video_props['loadMore']['url']
+                                new_program_url = URL_ROOT + video_props['loadMore']['url']
                                 yield Listitem.next_page(
                                     item_id=item_id,
-                                    season_url=new_season_url)
+                                    program_url=new_program_url)
 
 
 @Resolver.register
@@ -209,6 +180,8 @@ def get_video_url(plugin,
                 if 'VideoPlayer' in stream_child['type']:
                     video_uri = stream_child['props']['media']['video'][
                         'config']['uri']
+    account_override = 'intl.mtvi.com'
+    ep = '00a43210'
 
     return resolver_proxy.get_mtvnservices_stream(plugin, video_uri,
-                                                  download_mode, video_label)
+                                                  download_mode, video_label, account_override, ep)

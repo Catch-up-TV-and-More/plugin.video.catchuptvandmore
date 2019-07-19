@@ -558,8 +558,6 @@ LABELS = {
     'France tv slash',
     'polar-plus':
     'Polar+',
-    'virginradiotv':
-    'Virgin Radio TV',
     'francetvspectaclesetculture':
     'Spectacles et Culture (francetv)',
     'kto':
@@ -614,6 +612,14 @@ LABELS = {
     'TVPI télévision d\'ici',
     'cliquetv':
     'Clique TV',
+    'piwiplus':
+    'Piwi +',
+    'teletoonplus':
+    'TéléToon +',
+    'paramountchannel_fr':
+    'Paramount Channel (FR)',
+    'mtv_fr':
+    'MTV (FR)',
 
     # Japan channels / live TV
     'nhknews':
@@ -709,8 +715,6 @@ LABELS = {
     'BVN',
     'icitelevision':
     'ICI Télévision',
-    'mtv':
-    'MTV (' + Script.setting['mtv.language'] + ')',
     'arirang':
     'Arirang (아리랑)',
     'dw':
@@ -725,8 +729,6 @@ LABELS = {
     'CGTN (' + Script.setting['cgtn.language'] + ')',
     'cgtndocumentary':
     'CGTN Documentary',
-    'paramountchannel':
-    'Paramount Channel (' + Script.setting['paramountchannel.language'] + ')',
     'afriquemedia':
     'Afrique Media',
     'tv5mondefbs':
@@ -795,6 +797,8 @@ LABELS = {
     'Atreseries',
     'atresplayer':
     'Atresplayer',
+    'paramountchannel_es':
+    'Paramount Channel (ES)',
 
     # Tunisia channels / live TV
     'watania1':
@@ -837,6 +841,8 @@ LABELS = {
     'La7d',
     'raiplay':
     'Rai Play',
+    'paramountchannel_it':
+    'Paramount Channel (IT)',
 
     # Netherlands channels / live TV
     'npo-1':
@@ -932,5 +938,7 @@ LABELS = {
     'lesargonautes':
     'Les Argonautes',
     'nationalfff':
-    'National FFF'
+    'National FFF',
+    'philharmoniedeparis':
+    'Philharmonie de Paris'
 }

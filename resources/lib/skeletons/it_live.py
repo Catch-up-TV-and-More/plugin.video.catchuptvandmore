@@ -120,5 +120,11 @@ menu = {
         'thumb': 'channels/it/raiscuola.png',
         'fanart': 'channels/it/raiscuola_fanart.jpg',
         'module': 'resources.lib.channels.it.raiplay'
+    },
+    'paramountchannel_it': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/it/paramountchannel_it.png',
+        'fanart': 'channels/it/paramountchannel_it_fanart.jpg',
+        'module': 'resources.lib.channels.it.paramountchannel_it'
     }
 }

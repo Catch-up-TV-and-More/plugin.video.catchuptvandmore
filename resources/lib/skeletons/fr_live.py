@@ -87,13 +87,6 @@ menu = {
         'module': 'resources.lib.channels.fr.6play',
         'm3u_group': 'Radio'
     },
-    'virginradiotv': {
-        'callback': 'live_bridge',
-        'thumb': 'channels/fr/virginradiotv.png',
-        'fanart': 'channels/fr/virginradiotv_fanart.jpg',
-        'module': 'resources.lib.channels.fr.virginradiotv',
-        'm3u_group': 'Radio'
-    },
     'viaoccitanie': {
         'callback': 'live_bridge',
         'thumb': 'channels/fr/viaoccitanie.png',

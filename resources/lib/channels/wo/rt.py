@@ -195,28 +195,32 @@ def list_videos_programs(plugin, item_id, next_url, page, **kwargs):
                 eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/latestepisodes/10/%s' %
                 (program_id_values[0], page))
 
-            root = resp2.parse("ul", attrs={"class": "card-rows js-listing__list"})
+            try:
+                root = resp2.parse("ul", attrs={"class": "card-rows js-listing__list"})
+            except Exception:
+                root = None
 
-            for video_datas in root.iterfind("li"):
-                video_title = video_datas.find(".//img").get('alt')
-                video_image = video_datas.find(".//img").get('data-src')
-                video_url = eval(
-                    'URL_ROOT_%s' %
-                    DESIRED_LANGUAGE) + video_datas.find('.//a').get('href')
-                video_plot = video_datas.find(
-                    ".//div[@class='card__summary ']").text.strip()
+            if root is not None:
+                for video_datas in root.iterfind(".//li"):
+                    video_title = video_datas.find(".//img").get('alt')
+                    video_image = video_datas.find(".//img").get('data-src')
+                    video_url = eval(
+                        'URL_ROOT_%s' %
+                        DESIRED_LANGUAGE) + video_datas.find('.//a').get('href')
+                    video_plot = video_datas.find(
+                        ".//div[@class='card__summary ']").text.strip()
 
-                item = Listitem()
-                item.label = video_title
-                item.art['thumb'] = video_image
-                item.info['plot'] = video_plot
+                    item = Listitem()
+                    item.label = video_title
+                    item.art['thumb'] = video_image
+                    item.info['plot'] = video_plot
 
-                item.set_callback(get_video_url,
-                                  item_id=item_id,
-                                  video_label=LABELS[item_id] + ' - ' + item.label,
-                                  video_url=video_url)
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
-                yield item
+                    item.set_callback(get_video_url,
+                                      item_id=item_id,
+                                      video_label=LABELS[item_id] + ' - ' + item.label,
+                                      video_url=video_url)
+                    item_post_treatment(item, is_playable=True, is_downloadable=True)
+                    yield item
 
         yield Listitem.next_page(item_id=item_id,
                                  next_url=next_url,
