@@ -5,11 +5,12 @@ python:
 
 install:
   # Install dependencies
-  - pip install flake8 git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
+  - pip install flake8 git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl kodi-addon-checker
   - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
 
 env:
   - JOB=flake
+  - JOB=kodi_addon_checker
   # - JOB=simul_root
   # - JOB=simul_replay
   # - JOB=simul_replay_country
@@ -23,6 +24,7 @@ env:
 
 script:
   - if [ $JOB == 'flake' ]; then flake8 .; fi
+  - if [ $JOB == 'kodi_addon_checker' ]; then kodi-addon-checker --branch krypton --allow-folder-id-mismatch .; fi
   # - if [ $JOB == 'simul_root' ]; then cd ../simul && ./main.py -c configs/0_open_root_and_exit.json &> "${JOB}.log"; fi
   # - if [ $JOB == 'simul_replay' ]; then cd ../simul && ./main.py -c configs/1_open_replay_menu_and_exit.json &> "${JOB}.log"; fi
   # - if [ $JOB == 'simul_replay_country' ]; then cd ../simul && ./main.py -c configs/2_open_each_replay_country_root_menu_and_exit.json &> ${JOB}.log; fi
@@ -38,7 +40,7 @@ script:
 #after_failure:
 after_script:
   #- curl -L https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/raw/master/utils/haste > haste_${JOB} && chmod 755 haste_${JOB} && echo "* Truncated log file can be found here:" && tail -n 3000 ${JOB}.log|./haste_${JOB}
-  - if [ $JOB != 'flake' ]; then tail -n 1000 ${JOB}.log; fi
+  - if [ $JOB != 'flake' -o $JOB != 'kodi_addon_checker' ]; then tail -n 1000 ${JOB}.log; fi
 
 notifications:
   email:
