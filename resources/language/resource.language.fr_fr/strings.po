@@ -508,7 +508,7 @@ msgstr "Ce contenu est protégé par DRM. Pour pouvoir le lire nous vous inviton
 
 msgctxt "#30603"
 msgid "This content is DRM protected. The download mode doesn't work for this kind of protection. Thank you for your understanding."
-msgstr "Ce contenu est protégé par DRM. Le mode "téléchargement" ne fonctionne pas pour un contenu protégé par DRM. Merci pour votre compréhension"
+msgstr "Ce contenu est protégé par DRM. Le mode téléchargement ne fonctionne pas pour un contenu protégé par DRM. Merci pour votre compréhension"
 
 msgctxt "#30604"
 msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
