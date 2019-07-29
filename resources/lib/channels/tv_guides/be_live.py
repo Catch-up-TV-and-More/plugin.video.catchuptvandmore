@@ -28,7 +28,7 @@ import urlquick
 import json
 import datetime
 import time
-from resources.lib.tzlocal import get_localzone
+from tzlocal import get_localzone
 import pytz
 
 URL_PROGRAMS = 'https://api-ctr.programme-tv.net/v2/broadcasts.json?' \
