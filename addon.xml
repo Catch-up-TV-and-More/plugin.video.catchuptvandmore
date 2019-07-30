@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.10~beta01"
+       version="0.2.10~beta02"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -43,6 +43,7 @@
 [Fix] Catch-up TV - France TV (FR) - Case Fort Boyard
 [Add] Live TV - IDF 1 (FR)
 [Improvements] Use external tzlocal module
+[Fix] Catch-up TV - Arte (WO) - Fix Description
     </news>
     <assets>
       <icon>icon.png</icon>
