@@ -35,3 +35,5 @@ Temporary Items
 *.sublime-workspace
 *.sublime-project
 
+# Kodi addon checker
+kodi-addon-checker-report.log

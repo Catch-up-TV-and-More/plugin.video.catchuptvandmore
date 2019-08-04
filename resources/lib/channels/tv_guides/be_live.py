@@ -28,7 +28,7 @@ import urlquick
 import json
 import datetime
 import time
-from resources.lib.tzlocal import get_localzone
+from tzlocal import get_localzone
 import pytz
 
 URL_PROGRAMS = 'https://api-ctr.programme-tv.net/v2/broadcasts.json?' \
@@ -63,7 +63,10 @@ GUIDE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 def grab_tv_guide(channels):
     programs = {}
 
-    guide_json = urlquick.get(URL_PROGRAMS, max_age=-1)
+    try:
+        guide_json = urlquick.get(URL_PROGRAMS, max_age=-1)
+    except Exception:
+        return programs
     guide_json = json.loads(guide_json.text)
     guide_items = guide_json['data']['items']
 

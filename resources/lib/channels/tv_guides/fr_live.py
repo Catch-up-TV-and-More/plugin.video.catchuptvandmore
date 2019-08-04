@@ -40,7 +40,7 @@ except ImportError:
     import urllib
 import datetime
 import time
-from resources.lib.tzlocal import get_localzone
+from tzlocal import get_localzone
 
 
 class TeleramaXMLTVGrabber:
