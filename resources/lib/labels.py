@@ -624,6 +624,8 @@ LABELS = {
     'IDF 1',
     'azurtv':
     'Azur TV',
+    'biptv':
+    'BIP TV',
 
     # Japan channels / live TV
     'nhknews':

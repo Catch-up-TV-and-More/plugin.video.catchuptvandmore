@@ -724,6 +724,9 @@
 
             <setting label="Azur TV" type="bool" id="azurtv" default="true" visible="eq(-193,true)"/>
             <setting label="" type="number" visible="false" id="azurtv.order" default="96"/>
+
+            <setting label="BIP TV" type="bool" id="biptv" default="true" visible="eq(-195,true)"/>
+            <setting label="" type="number" visible="false" id="biptv.order" default="97"/>
         <!-- France -->
 
 

@@ -501,5 +501,12 @@ menu = {
         'fanart': 'channels/fr/azurtv_fanart.jpg',
         'module': 'resources.lib.channels.fr.azurtv',
         'm3u_group': 'Région'
+    },
+    'biptv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/biptv.png',
+        'fanart': 'channels/fr/biptv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.biptv',
+        'm3u_group': 'Région'
     }
 }
