@@ -423,6 +423,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvpifr&item_mod
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/idf1.png" group-title="France",IDF 1
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=idf1&item_module=resources.lib.channels.fr.idf1&item_dict={}
 
+##	Azur TV
+##	azurtv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/azurtv.png" group-title="France",Azur TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=azurtv&item_module=resources.lib.channels.fr.azurtv&item_dict={}
+
 
 
 # Belgium

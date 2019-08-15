@@ -622,6 +622,8 @@ LABELS = {
     'MTV (FR)',
     'idf1':
     'IDF 1',
+    'azurtv':
+    'Azur TV',
 
     # Japan channels / live TV
     'nhknews':

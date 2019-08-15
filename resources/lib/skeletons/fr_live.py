@@ -494,5 +494,12 @@ menu = {
         'fanart': 'channels/fr/idf1_fanart.jpg',
         'module': 'resources.lib.channels.fr.idf1',
         'm3u_group': 'Région'
+    },
+    'azurtv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/azurtv.png',
+        'fanart': 'channels/fr/azurtv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.azurtv',
+        'm3u_group': 'Région'
     }
 }

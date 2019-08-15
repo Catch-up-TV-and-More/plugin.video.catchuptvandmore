@@ -721,6 +721,9 @@
 
             <setting label="IDF 1" type="bool" id="idf1" default="true" visible="eq(-191,true)"/>
             <setting label="" type="number" visible="false" id="idf1.order" default="95"/>
+
+            <setting label="Azur TV" type="bool" id="azurtv" default="true" visible="eq(-193,true)"/>
+            <setting label="" type="number" visible="false" id="azurtv.order" default="96"/>
         <!-- France -->
 
 
