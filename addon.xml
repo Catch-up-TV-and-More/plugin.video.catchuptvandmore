@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.11~beta02"
+       version="0.2.11~beta03"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -46,6 +46,7 @@
 [Fix] Catch-up TV - Arte (WO) - some updates (description, erros, etc...)
 [Add] Live TV - BIP TV (FR)
 [Fix] Live TV - Tébéo (FR)
+[Fix] Live TV - Blaze TV (UK)
     </news>
     <assets>
       <icon>icon.png</icon>
