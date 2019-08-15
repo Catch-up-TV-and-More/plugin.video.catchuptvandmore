@@ -100,12 +100,12 @@ def list_programs(plugin, item_id, **kwargs):
 @Route.register
 def list_seasons(plugin, item_id, program_url, **kwargs):
 
-    resp = urlquick.get(program_url)
+    resp = urlquick.get(program_url, headers={"User-Agent": web_utils.get_random_ua})
     root = resp.parse("ul", attrs={"class": "nav nav-tabs"})
 
     for season_datas in root.iterfind(".//h3"):
-        season_title = 'Series %s' % season_datas.text.strip()
-        season_url = program_url + '#%s' % season_datas.text.split(' ')[2]
+        season_title = season_datas.text.strip()
+        season_url = program_url + '#%s' % season_datas.text.split(' ')[1]
 
         item = Listitem()
         item.label = season_title
@@ -131,7 +131,7 @@ def list_videos(plugin, item_id, season_url, **kwargs):
     root = resp.parse()
 
     for video_datas in root.iterfind(
-            ".//a[@class='thumbnail video vod-REPLAY']"):
+            ".//a[@class='thumbnail video vod-REPLAY play-video-trigger']"):
 
         video_title = video_datas.find('.//h3').get('title')
         video_image = video_datas.find('.//img').get('data-src')
@@ -158,7 +158,7 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(video_url)
-    stream_id = re.compile(r'uvid\"\:\"(.*?)\"').findall(resp.text)[0]
+    stream_id = re.compile(r'blaze\"\,\"uvid\"\:\"(.*?)\"').findall(resp.text)[0]
     resp2 = urlquick.get(URL_STREAM % stream_id,
                          headers={"x-requested-with": "XMLHttpRequest"},
                          max_age=-1)
