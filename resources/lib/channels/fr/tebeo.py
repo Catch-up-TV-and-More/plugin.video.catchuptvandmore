@@ -134,4 +134,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    return re.compile(r'source\: \"(.*?)\"').findall(resp.text)[0]
+    if 'http' in re.compile(r'source\: \"(.*?)\"').findall(resp.text)[0]:
+        return re.compile(r'source\: \"(.*?)\"').findall(resp.text)[0]
+    else:
+        return 'https:' + re.compile(r'source\: \"(.*?)\"').findall(resp.text)[0]
