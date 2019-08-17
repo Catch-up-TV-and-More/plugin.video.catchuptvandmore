@@ -37,9 +37,9 @@ import urlquick
 # TODO
 # Add Replay
 
-URL_ROOT = "https://www.grandlille.tv"
+URL_ROOT = "http://grandlittoral.tv"
 
-URL_LIVE = "https://www.creacast.com/play.php?su=grandlilletv"
+URL_LIVE = "http://www.creacast.com/play.php?su=grandlittoral"
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):

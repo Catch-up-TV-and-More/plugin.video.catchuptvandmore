@@ -443,6 +443,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=biptv&item_modu
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/grandlilletv.png" group-title="France Région",Grand Lille TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=grandlilletv&item_module=resources.lib.channels.fr.grandlilletv&item_dict={}
 
+##	Grand Litorral TV
+##	grandlitorraltv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/grandlitorraltv.png" group-title="France Région",Grand Litorral TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=grandlitorraltv&item_module=resources.lib.channels.fr.grandlitorraltv&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/euronews.png" group-title="France",Euronews

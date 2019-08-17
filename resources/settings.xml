@@ -729,6 +729,9 @@
 
             <setting label="Grand Lille TV" type="bool" id="grandlilletv" default="true" visible="eq(-197,true)"/>
             <setting label="" type="number" visible="false" id="grandlilletv.order" default="98"/>
+
+            <setting label="Grand Litorral TV" type="bool" id="grandlitorraltv" default="true" visible="eq(-199,true)"/>
+            <setting label="" type="number" visible="false" id="grandlitorraltv.order" default="99"/>
         <!-- France -->
 
 

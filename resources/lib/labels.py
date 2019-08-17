@@ -628,6 +628,8 @@ LABELS = {
     'BIP TV',
     'grandlilletv':
     'Grand Lille TV',
+    'grandlitorraltv':
+    'Grand Litorral TV',
 
     # Japan channels / live TV
     'nhknews':

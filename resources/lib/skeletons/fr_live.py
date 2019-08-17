@@ -515,5 +515,12 @@ menu = {
         'fanart': 'channels/fr/grandlilletv_fanart.jpg',
         'module': 'resources.lib.channels.fr.grandlilletv',
         'm3u_group': 'Région'
+    },
+    'grandlitorraltv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/grandlitorraltv.png',
+        'fanart': 'channels/fr/grandlitorraltv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.grandlitorraltv',
+        'm3u_group': 'Région'
     }
 }
