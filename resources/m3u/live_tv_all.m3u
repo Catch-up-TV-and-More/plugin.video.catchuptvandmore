@@ -443,6 +443,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=grandlilletv&it
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/grandlitorraltv.png" group-title="France",Grand Litorral TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=grandlitorraltv&item_module=resources.lib.channels.fr.grandlitorraltv&item_dict={}
 
+##	La Chaine Normande
+##	lachainenormande
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/lachainenormande.png" group-title="France",La Chaine Normande
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=lachainenormande&item_module=resources.lib.channels.fr.lachainenormande&item_dict={}
+
 
 
 # Belgium

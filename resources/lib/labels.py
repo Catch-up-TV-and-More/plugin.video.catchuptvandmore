@@ -630,6 +630,8 @@ LABELS = {
     'Grand Lille TV',
     'grandlitorraltv':
     'Grand Litorral TV',
+    'lachainenormande':
+    'La Chaine Normande',
 
     # Japan channels / live TV
     'nhknews':

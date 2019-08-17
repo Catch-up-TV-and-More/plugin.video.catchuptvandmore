@@ -522,5 +522,12 @@ menu = {
         'fanart': 'channels/fr/grandlitorraltv_fanart.jpg',
         'module': 'resources.lib.channels.fr.grandlitorraltv',
         'm3u_group': 'Région'
+    },
+    'lachainenormande': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/lachainenormande.png',
+        'fanart': 'channels/fr/lachainenormande_fanart.jpg',
+        'module': 'resources.lib.channels.fr.lachainenormande',
+        'm3u_group': 'Région'
     }
 }

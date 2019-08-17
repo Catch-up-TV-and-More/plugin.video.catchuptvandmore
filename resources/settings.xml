@@ -732,6 +732,9 @@
 
             <setting label="Grand Litorral TV" type="bool" id="grandlitorraltv" default="true" visible="eq(-199,true)"/>
             <setting label="" type="number" visible="false" id="grandlitorraltv.order" default="99"/>
+
+            <setting label="La Chaine Normande" type="bool" id="lachainenormande" default="true" visible="eq(-201,true)"/>
+            <setting label="" type="number" visible="false" id="lachainenormande.order" default="100"/>
         <!-- France -->
 
 
