@@ -455,7 +455,7 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=lachainenormand
 
 ##	Sport en France
 ##	sportenfrance
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/sportenfrance.png" group-title="France Région",Sport en France
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/sportenfrance.png" group-title="France Satellite/FAI",Sport en France
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=sportenfrance&item_module=resources.lib.channels.fr.sportenfrance&item_dict={}
 
 ##	Euronews

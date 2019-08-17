@@ -535,6 +535,6 @@ menu = {
         'thumb': 'channels/fr/sportenfrance.png',
         'fanart': 'channels/fr/sportenfrance_fanart.jpg',
         'module': 'resources.lib.channels.fr.sportenfrance',
-        'm3u_group': 'Région'
+        'm3u_group': 'Satellite/FAI'
     }
 }
