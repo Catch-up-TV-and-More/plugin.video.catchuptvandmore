@@ -313,12 +313,6 @@ menu = {
         'fanart': 'channels/fr/ouatchtv_fanart.jpg',
         'module': 'resources.lib.channels.fr.ouatchtv'
     },
-    'onzeo': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/fr/onzeo.png',
-        'fanart': 'channels/fr/onzeo_fanart.jpg',
-        'module': 'resources.lib.channels.fr.onzeo'
-    },
     'publicsenat': {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/publicsenat.png',

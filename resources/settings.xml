@@ -601,7 +601,8 @@
             <setting label="BFM Paris" type="bool" id="bfmparis" default="true" visible="eq(-111,true)"/>
             <setting label="" type="number" visible="false" id="bfmparis.order" default="56"/>
 
-            <setting label="Onzéo" type="bool" id="onzeo" default="true" visible="eq(-113,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Onzéo" type="bool" id="onzeo" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="onzeo.order" default="57"/>
 
             <setting label="Fun Radio" type="bool" id="fun_radio" default="true" visible="eq(-115,true)"/>
