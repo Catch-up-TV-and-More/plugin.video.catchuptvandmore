@@ -474,5 +474,11 @@ menu = {
         'thumb': 'channels/fr/mtv_fr.png',
         'fanart': 'channels/fr/mtv_fr_fanart.jpg',
         'module': 'resources.lib.channels.fr.mtv_fr'
+    },
+    'j_one': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/jone.png',
+        'fanart': 'channels/fr/jone_fanart.jpg',
+        'module': 'resources.lib.channels.fr.j_one'
     }
 }
