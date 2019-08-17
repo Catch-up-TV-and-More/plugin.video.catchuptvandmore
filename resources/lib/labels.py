@@ -626,6 +626,8 @@ LABELS = {
     'Azur TV',
     'biptv':
     'BIP TV',
+    'grandlilletv':
+    'Grand Lille TV',
 
     # Japan channels / live TV
     'nhknews':

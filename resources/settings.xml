@@ -727,6 +727,9 @@
 
             <setting label="BIP TV" type="bool" id="biptv" default="true" visible="eq(-195,true)"/>
             <setting label="" type="number" visible="false" id="biptv.order" default="97"/>
+
+            <setting label="Grand Lille TV" type="bool" id="grandlilletv" default="true" visible="eq(-197,true)"/>
+            <setting label="" type="number" visible="false" id="grandlilletv.order" default="98"/>
         <!-- France -->
 
 

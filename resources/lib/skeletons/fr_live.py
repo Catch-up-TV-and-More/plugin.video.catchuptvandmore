@@ -508,5 +508,12 @@ menu = {
         'fanart': 'channels/fr/biptv_fanart.jpg',
         'module': 'resources.lib.channels.fr.biptv',
         'm3u_group': 'Région'
+    },
+    'grandlilletv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/grandlilletv.png',
+        'fanart': 'channels/fr/grandlilletv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.grandlilletv',
+        'm3u_group': 'Région'
     }
 }

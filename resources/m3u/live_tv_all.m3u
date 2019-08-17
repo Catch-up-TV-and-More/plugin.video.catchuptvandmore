@@ -433,6 +433,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=azurtv&item_mod
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/biptv.png" group-title="France",BIP TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=biptv&item_module=resources.lib.channels.fr.biptv&item_dict={}
 
+##	Grand Lille TV
+##	grandlilletv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/grandlilletv.png" group-title="France",Grand Lille TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=grandlilletv&item_module=resources.lib.channels.fr.grandlilletv&item_dict={}
+
 
 
 # Belgium
