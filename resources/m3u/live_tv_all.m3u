@@ -448,6 +448,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=grandlitorraltv
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/lachainenormande.png" group-title="France",La Chaine Normande
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=lachainenormande&item_module=resources.lib.channels.fr.lachainenormande&item_dict={}
 
+##	Sport en France
+##	sportenfrance
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/sportenfrance.png" group-title="France",Sport en France
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=sportenfrance&item_module=resources.lib.channels.fr.sportenfrance&item_dict={}
+
 
 
 # Belgium

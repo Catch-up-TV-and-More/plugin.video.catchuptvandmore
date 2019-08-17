@@ -736,6 +736,9 @@
 
             <setting label="La Chaine Normande" type="bool" id="lachainenormande" default="true" visible="eq(-201,true)"/>
             <setting label="" type="number" visible="false" id="lachainenormande.order" default="100"/>
+
+            <setting label="Sport en France" type="bool" id="sportenfrance" default="true" visible="eq(-203,true)"/>
+            <setting label="" type="number" visible="false" id="sportenfrance.order" default="101"/>
         <!-- France -->
 
 

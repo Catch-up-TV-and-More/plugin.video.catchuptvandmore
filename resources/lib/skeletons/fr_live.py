@@ -529,5 +529,12 @@ menu = {
         'fanart': 'channels/fr/lachainenormande_fanart.jpg',
         'module': 'resources.lib.channels.fr.lachainenormande',
         'm3u_group': 'Région'
+    },
+    'sportenfrance': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/sportenfrance.png',
+        'fanart': 'channels/fr/sportenfrance_fanart.jpg',
+        'module': 'resources.lib.channels.fr.sportenfrance',
+        'm3u_group': 'Région'
     }
 }
