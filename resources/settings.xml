@@ -739,6 +739,9 @@
 
             <setting label="Sport en France" type="bool" id="sportenfrance" default="true" visible="eq(-203,true)"/>
             <setting label="" type="number" visible="false" id="sportenfrance.order" default="101"/>
+
+            <setting label="Provence Azur TV" type="bool" id="provenceazurtv" default="true" visible="eq(-205,true)"/>
+            <setting label="" type="number" visible="false" id="provenceazurtv.order" default="102"/>
         <!-- France -->
 
 

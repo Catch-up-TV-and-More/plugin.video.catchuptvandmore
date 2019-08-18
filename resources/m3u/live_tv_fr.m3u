@@ -458,6 +458,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=lachainenormand
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/sportenfrance.png" group-title="France Satellite/FAI",Sport en France
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=sportenfrance&item_module=resources.lib.channels.fr.sportenfrance&item_dict={}
 
+##	Provence Azur TV
+##	provenceazurtv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/provenceazurtv.png" group-title="France Région",Provence Azur TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=provenceazurtv&item_module=resources.lib.channels.fr.azurtv&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/euronews.png" group-title="France",Euronews

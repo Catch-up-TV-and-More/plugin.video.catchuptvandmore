@@ -536,5 +536,12 @@ menu = {
         'fanart': 'channels/fr/sportenfrance_fanart.jpg',
         'module': 'resources.lib.channels.fr.sportenfrance',
         'm3u_group': 'Satellite/FAI'
+    },
+    'provenceazurtv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/provenceazurtv.png',
+        'fanart': 'channels/fr/provenceazurtv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.azurtv',
+        'm3u_group': 'Région'
     }
 }

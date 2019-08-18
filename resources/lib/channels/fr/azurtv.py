@@ -38,7 +38,7 @@ import urlquick
 # TODO
 # Add Replay
 
-URL_ROOT = "https://www.azur-tv.fr"
+URL_ROOT = "https://www.%s-tv.fr"
 
 URL_LIVE = URL_ROOT + "/live/"
 
@@ -50,8 +50,12 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE, headers={"User-Agent": web_utils.get_random_ua}, max_age=-1)
+    if 'provenceazur' in item_id:
+        resp = urlquick.get(
+            URL_LIVE % 'provenceazur', headers={"User-Agent": web_utils.get_random_ua}, max_age=-1)
+    else:
+        resp = urlquick.get(
+            URL_LIVE % 'azur', headers={"User-Agent": web_utils.get_random_ua}, max_age=-1)
     live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
     return resolver_proxy.get_stream_dailymotion(plugin,
                                                  live_id,

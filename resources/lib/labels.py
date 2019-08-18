@@ -634,6 +634,8 @@ LABELS = {
     'La Chaine Normande',
     'sportenfrance':
     'Sport en France',
+    'provenceazurtv':
+    'Provence Azur TV',
 
     # Japan channels / live TV
     'nhknews':
