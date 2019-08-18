@@ -38,9 +38,7 @@ import urlquick
 # TO DO
 # Add Replay
 
-URL_LIVE = 'http://www.paramountchannel.it/tv/diretta'
-
-URL_LIVE_URI = 'http://media.mtvnservices.com/pmt/e1/access/index.html?uri=%s&configtype=edge'
+URL_LIVE = 'https://www.paramountchannel.it/tv/diretta'
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -50,17 +48,10 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_LIVE)
-    video_uri_1 = re.compile(r'data-mtv-uri="(.*?)"').findall(resp.text)[0]
-    headers = {
-        'Content-Type': 'application/json',
-        'referer': 'http://www.paramountchannel.it/tv/diretta'
-    }
-    resp2 = urlquick.get(URL_LIVE_URI % video_uri_1, headers=headers)
-    json_parser = json.loads(resp2.text)
-    if 'items' not in json_parser["feed"]:
-        plugin.notify('ERROR', plugin.localize(30713))
-        return False
-    video_uri = json_parser["feed"]["items"][0]["guid"]
+    resp = urlquick.get(URL_LIVE, max_age=-1)
+    video_uri = re.compile(r'uri\"\:\"(.*?)\"').findall(resp.text)[0]
+    account_override = 'intl.mtvi.com'
+    ep = 'be84d1a2'
 
-    return resolver_proxy.get_mtvnservices_stream(plugin, video_uri)
+    return resolver_proxy.get_mtvnservices_stream(
+        plugin, video_uri, False, '', account_override, ep)
