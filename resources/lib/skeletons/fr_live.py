@@ -366,7 +366,7 @@ menu = {
             'Limousin', 'Lorraine', 'Midi-Pyrénées', 'Nord-Pas-de-Calais',
             'Basse-Normandie', 'Haute-Normandie', 'Paris Île-de-France',
             'Pays de la Loire', 'Picardie', 'Poitou-Charentes',
-            'Provence-Alpes', 'Rhône-Alpes'
+            'Provence-Alpes', 'Rhône-Alpes', 'Nouvelle-Aquitaine'
         ]
     },
     'viaatv': {

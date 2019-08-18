@@ -353,6 +353,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France",France 3 Régions Rhône-Alpes
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Rhône-Alpes"}
 
+##	France 3 Régions Nouvelle-Aquitaine
+##	france3regions
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/france3regions.png" group-title="France",France 3 Régions Nouvelle-Aquitaine
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&item_dict={"language":"Nouvelle-Aquitaine"}
+
 ##	viàATV
 ##	viaatv
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/viaatv.png" group-title="France",viàATV
