@@ -52,8 +52,8 @@
 [Add] Live TV - Grand Littoral TV (FR)
 [Add] Live TV - La Chaine Normande (FR)
 [Remove] Catch-up TV - Onzeo (FR)
-[Add] Live TV - Sport En France (FR) - (La chaine du mouvement sportif - Olympique)
-[Fix] Live TV - La7 (IT)
+[Add] Live TV - Sport En France (FR) - (La chaine du mouvement sportif)
+[Fix] Catch-up TV and Live TV - La7 (IT)
     </news>
     <assets>
       <icon>icon.png</icon>
