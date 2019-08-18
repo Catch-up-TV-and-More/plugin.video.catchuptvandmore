@@ -474,5 +474,11 @@ menu = {
         'thumb': 'channels/fr/jone.png',
         'fanart': 'channels/fr/jone_fanart.jpg',
         'module': 'resources.lib.channels.fr.j_one'
+    },
+    'tebesud': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/tebesud.png',
+        'fanart': 'channels/fr/tebesud_fanart.jpg',
+        'module': 'resources.lib.channels.fr.tebeo'
     }
 }

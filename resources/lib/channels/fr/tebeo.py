@@ -63,7 +63,10 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
     resp = urlquick.get(URL_REPLAY % item_id)
-    root = resp.parse("div", attrs={"class": "grid_12"})
+    if 'tebeo' in item_id:
+        root = resp.parse("div", attrs={"class": "grid_12"})
+    else:
+        root = resp.parse("div", attrs={"class": "grid_16"})
 
     for category_datas in root.iterfind(".//li"):
         category_name = category_datas.find('.//a').text
@@ -88,8 +91,14 @@ def list_videos(plugin, item_id, category_url, **kwargs):
 
     for video_datas in list_videos_datas:
         video_title = video_datas.find('.//h3').text
-        video_image = 'https:' + video_datas.find('.//img').get('src')
-        video_url = 'https:' + video_datas.find('.//a').get('href')
+        if 'http' in video_datas.find('.//img').get('src'):
+            video_image = video_datas.find('.//img').get('src')
+        else:
+            video_image = 'https:' + video_datas.find('.//img').get('src')
+        if 'http' in video_datas.find('.//a').get('href'):
+            video_url = video_datas.find('.//a').get('href')
+        else:
+            video_url = 'https:' + video_datas.find('.//a').get('href')
         date_value = video_datas.find('.//p').text.split(' ')[0]
 
         item = Listitem()
@@ -118,8 +127,12 @@ def get_video_url(plugin,
         resp.text)[0]
     resp2 = urlquick.get(URL_STREAM % (item_id, video_id))
 
-    final_url = 'https:' + re.compile(r'source\: \"(.*?)\"').findall(
-        resp2.text)[0]
+    if 'http' in re.compile(r'source\: \"(.*?)\"').findall(resp2.text)[0]:
+        final_url = re.compile(r'source\: \"(.*?)\"').findall(
+            resp2.text)[0]
+    else:
+        final_url = 'https:' + re.compile(r'source\: \"(.*?)\"').findall(
+            resp2.text)[0]
 
     if download_mode:
         return download.download_video(final_url, video_label)
