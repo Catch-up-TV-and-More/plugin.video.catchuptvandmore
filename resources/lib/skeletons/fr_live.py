@@ -543,5 +543,12 @@ menu = {
         'fanart': 'channels/fr/provenceazurtv_fanart.jpg',
         'module': 'resources.lib.channels.fr.azurtv',
         'm3u_group': 'Région'
+    },
+    'tebesud': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/tebesud.png',
+        'fanart': 'channels/fr/tebesud_fanart.jpg',
+        'module': 'resources.lib.channels.fr.tebeo',
+        'm3u_group': 'Région'
     }
 }

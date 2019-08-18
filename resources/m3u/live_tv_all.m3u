@@ -463,6 +463,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=sportenfrance&i
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/provenceazurtv.png" group-title="France",Provence Azur TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=provenceazurtv&item_module=resources.lib.channels.fr.azurtv&item_dict={}
 
+##	TébéSud
+##	tebesud
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tebesud.png" group-title="France",TébéSud
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tebesud&item_module=resources.lib.channels.fr.tebeo&item_dict={}
+
 
 
 # Belgium

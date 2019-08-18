@@ -742,6 +742,9 @@
 
             <setting label="Provence Azur TV" type="bool" id="provenceazurtv" default="true" visible="eq(-205,true)"/>
             <setting label="" type="number" visible="false" id="provenceazurtv.order" default="102"/>
+
+            <setting label="TébéSud" type="bool" id="tebesud" default="true" visible="eq(-207,true)"/>
+            <setting label="" type="number" visible="false" id="tebesud.order" default="103"/>
         <!-- France -->
 
 

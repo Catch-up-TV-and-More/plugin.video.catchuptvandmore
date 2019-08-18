@@ -636,6 +636,8 @@ LABELS = {
     'Sport en France',
     'provenceazurtv':
     'Provence Azur TV',
+    'tebesud':
+    'TébéSud',
 
     # Japan channels / live TV
     'nhknews':

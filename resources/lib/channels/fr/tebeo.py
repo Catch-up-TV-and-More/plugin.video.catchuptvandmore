@@ -37,7 +37,7 @@ import urlquick
 
 # TODO
 
-URL_ROOT = 'http://www.tebeo.bzh'
+URL_ROOT = 'http://www.%s.bzh'
 
 URL_LIVE = URL_ROOT + '/player_live.php'
 
@@ -62,7 +62,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_REPLAY)
+    resp = urlquick.get(URL_REPLAY % item_id)
     root = resp.parse("div", attrs={"class": "grid_12"})
 
     for category_datas in root.iterfind(".//li"):
@@ -116,7 +116,7 @@ def get_video_url(plugin,
     resp = urlquick.get(video_url)
     video_id = re.compile(r'idprogramme\=(.*?)\&autoplay').findall(
         resp.text)[0]
-    resp2 = urlquick.get(URL_STREAM % video_id)
+    resp2 = urlquick.get(URL_STREAM % (item_id, video_id))
 
     final_url = 'https:' + re.compile(r'source\: \"(.*?)\"').findall(
         resp2.text)[0]
@@ -133,7 +133,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_LIVE, max_age=-1)
+    resp = urlquick.get(URL_LIVE % item_id, max_age=-1)
     if 'http' in re.compile(r'source\: \"(.*?)\"').findall(resp.text)[0]:
         return re.compile(r'source\: \"(.*?)\"').findall(resp.text)[0]
     else:
