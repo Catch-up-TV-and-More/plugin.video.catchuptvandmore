@@ -745,6 +745,9 @@
 
             <setting label="TébéSud" type="bool" id="tebesud" default="true" visible="eq(-207,true)"/>
             <setting label="" type="number" visible="false" id="tebesud.order" default="103"/>
+
+            <setting label="MaTélé" type="bool" id="matele" default="true" visible="eq(-209,true)"/>
+            <setting label="" type="number" visible="false" id="matele.order" default="104"/>
         <!-- France -->
 
 

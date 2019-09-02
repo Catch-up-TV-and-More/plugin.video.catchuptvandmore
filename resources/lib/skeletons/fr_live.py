@@ -550,5 +550,12 @@ menu = {
         'fanart': 'channels/fr/tebesud_fanart.jpg',
         'module': 'resources.lib.channels.fr.tebeo',
         'm3u_group': 'Région'
+    },
+    'matele': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/matele.png',
+        'fanart': 'channels/fr/matele_fanart.jpg',
+        'module': 'resources.lib.channels.fr.matele',
+        'm3u_group': 'Région'
     }
 }

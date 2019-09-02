@@ -638,6 +638,8 @@ LABELS = {
     'Provence Azur TV',
     'tebesud':
     'TébéSud',
+    'matele':
+    'MaTélé',
 
     # Japan channels / live TV
     'nhknews':

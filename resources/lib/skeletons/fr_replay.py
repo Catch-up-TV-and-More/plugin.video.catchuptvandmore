@@ -40,7 +40,7 @@ menu = {
     'tf1': {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/tf1.png',
-        'fanart': 'channels/fr/tf1_fanart.png',
+        'fanart': 'channels/fr/tf1_fanart.jpg',
         'module': 'resources.lib.channels.fr.mytf1'
     },
     'tmc': {

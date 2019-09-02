@@ -468,6 +468,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=provenceazurtv&
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tebesud.png" group-title="France",TébéSud
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tebesud&item_module=resources.lib.channels.fr.tebeo&item_dict={}
 
+##	MaTélé
+##	matele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/matele.png" group-title="France",MaTélé
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=matele&item_module=resources.lib.channels.fr.matele&item_dict={}
+
 
 
 # Belgium
