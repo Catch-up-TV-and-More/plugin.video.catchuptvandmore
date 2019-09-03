@@ -42,6 +42,7 @@
 [Version 0.2.12]
 [Fix] Live TV - TéléMB (BE)
 [Fix] Catch-up TV and Live TV - NRJ TV (BE)
+[Fix] Live TV - France 24 (WO)
     </news>
     <assets>
       <icon>icon.png</icon>
