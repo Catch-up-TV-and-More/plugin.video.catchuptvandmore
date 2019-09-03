@@ -32,14 +32,17 @@ from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.listitem_utils import item_post_treatment, item2dict
 
+import json
 import re
 import urlquick
 
 # TO DO
 
-URL_ROOT = 'http://www.nrj.be'
+URL_ROOT = 'https://www.nrj.be'
 
-URL_LIVE = URL_ROOT + '/nrjhitstv'
+URL_LIVE = URL_ROOT + '/tv'
+
+URL_STREAM_LIVE = 'https://services.brid.tv/services/get/video/%s/%s.json'
 
 URL_VIDEOS = URL_ROOT + '/videos'
 
@@ -168,10 +171,13 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_LIVE)
-    root = resp.parse("div", attrs={"class": "col-md-12"})
+    resp = urlquick.get(URL_LIVE, max_age=-1)
+    data_player = re.compile(r'data-video-player-id\=\"(.*?)\"').findall(
+        resp.text)[0]
+    data_video_id = re.compile(r'data-video-id\=\"(.*?)\"').findall(
+        resp.text)[0]
 
-    stream_url = ''
-    for stream_datas in root.iterfind(".//a"):
-        stream_url = stream_datas.get('href')
-    return stream_url
+    resp2 = urlquick.get(
+        URL_STREAM_LIVE % (data_player, data_video_id), max_age=-1)
+    json_parser2 = json.loads(resp2.text)
+    return json_parser2["Video"][0]["source"]["sd"]
