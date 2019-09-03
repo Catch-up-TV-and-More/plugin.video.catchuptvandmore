@@ -140,7 +140,7 @@ def get_video_url(plugin,
     resp = urlquick.get(URL_VIDEO_VOD % video_id)
     data_de_api_key = re.compile(
         r'data-de-api-key\=\"(.*?)\"').findall(resp.text)[0]
-    data_de_program_uuid =re.compile(
+    data_de_program_uuid = re.compile(
         r'data-de-program-uuid\=\"(.*?)\"').findall(resp.text)[0]
 
     resp2 = urlquick.get(URL_VIDEO_STREAM % (data_de_api_key, data_de_program_uuid))
