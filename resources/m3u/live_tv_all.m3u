@@ -483,6 +483,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=telegrenoble&it
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/telenantes.png" group-title="France",TéléNantes
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=telenantes&item_module=resources.lib.channels.fr.telenantes&item_dict={}
 
+##	BFM Lyon
+##	bfmlyon
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmlyon.png" group-title="France",BFM Lyon
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmlyon&item_module=resources.lib.channels.fr.bfmlyon&item_dict={}
+
 
 
 # Belgium

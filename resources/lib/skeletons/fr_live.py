@@ -571,5 +571,12 @@ menu = {
         'fanart': 'channels/fr/telenantes_fanart.jpg',
         'module': 'resources.lib.channels.fr.telenantes',
         'm3u_group': 'Région'
+    },
+    'bfmlyon': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/bfmlyon.png',
+        'fanart': 'channels/fr/bfmlyon_fanart.jpg',
+        'module': 'resources.lib.channels.fr.bfmlyon',
+        'm3u_group': 'Région'
     }
 }

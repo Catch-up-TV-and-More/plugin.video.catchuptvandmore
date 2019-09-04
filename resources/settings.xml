@@ -754,6 +754,9 @@
 
             <setting label="TéléNantes" type="bool" id="telenantes" default="true" visible="eq(-213,true)"/>
             <setting label="" type="number" visible="false" id="telenantes.order" default="106"/>
+
+            <setting label="BFM Lyon" type="bool" id="bfmlyon" default="true" visible="eq(-215,true)"/>
+            <setting label="" type="number" visible="false" id="bfmlyon.order" default="107"/>
         <!-- France -->
 
 
