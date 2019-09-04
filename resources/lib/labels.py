@@ -642,6 +642,8 @@ LABELS = {
     'MaTélé',
     'telegrenoble':
     'TéléGrenoble',
+    'telenantes':
+    'TéléNantes',
 
     # Japan channels / live TV
     'nhknews':

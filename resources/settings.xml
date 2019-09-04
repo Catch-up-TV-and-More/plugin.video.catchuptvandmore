@@ -751,6 +751,9 @@
 
             <setting label="TéléGrenoble" type="bool" id="telegrenoble" default="true" visible="eq(-211,true)"/>
             <setting label="" type="number" visible="false" id="telegrenoble.order" default="105"/>
+
+            <setting label="TéléNantes" type="bool" id="telenantes" default="true" visible="eq(-213,true)"/>
+            <setting label="" type="number" visible="false" id="telenantes.order" default="106"/>
         <!-- France -->
 
 

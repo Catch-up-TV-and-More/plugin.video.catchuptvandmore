@@ -564,5 +564,12 @@ menu = {
         'fanart': 'channels/fr/telegrenoble_fanart.jpg',
         'module': 'resources.lib.channels.fr.telegrenoble',
         'm3u_group': 'Région'
+    },
+    'telenantes': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/telenantes.png',
+        'fanart': 'channels/fr/telenantes_fanart.jpg',
+        'module': 'resources.lib.channels.fr.telenantes',
+        'm3u_group': 'Région'
     }
 }
