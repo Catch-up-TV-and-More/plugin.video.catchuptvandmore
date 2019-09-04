@@ -748,6 +748,9 @@
 
             <setting label="MaTélé" type="bool" id="matele" default="true" visible="eq(-209,true)"/>
             <setting label="" type="number" visible="false" id="matele.order" default="104"/>
+
+            <setting label="TéléGrenoble" type="bool" id="telegrenoble" default="true" visible="eq(-211,true)"/>
+            <setting label="" type="number" visible="false" id="telegrenoble.order" default="105"/>
         <!-- France -->
 
 

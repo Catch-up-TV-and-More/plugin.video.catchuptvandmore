@@ -473,6 +473,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tebesud&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/matele.png" group-title="France",MaTélé
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=matele&item_module=resources.lib.channels.fr.matele&item_dict={}
 
+##	TéléGrenoble
+##	telegrenoble
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/telegrenoble.png" group-title="France",TéléGrenoble
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=telegrenoble&item_module=resources.lib.channels.fr.telegrenoble&item_dict={}
+
 
 
 # Belgium

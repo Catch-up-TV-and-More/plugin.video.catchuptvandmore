@@ -640,6 +640,8 @@ LABELS = {
     'TébéSud',
     'matele':
     'MaTélé',
+    'telegrenoble':
+    'TéléGrenoble',
 
     # Japan channels / live TV
     'nhknews':

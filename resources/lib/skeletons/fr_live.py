@@ -557,5 +557,12 @@ menu = {
         'fanart': 'channels/fr/matele_fanart.jpg',
         'module': 'resources.lib.channels.fr.matele',
         'm3u_group': 'Région'
+    },
+    'telegrenoble': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/telegrenoble.png',
+        'fanart': 'channels/fr/telegrenoble_fanart.jpg',
+        'module': 'resources.lib.channels.fr.telegrenoble',
+        'm3u_group': 'Région'
     }
 }
