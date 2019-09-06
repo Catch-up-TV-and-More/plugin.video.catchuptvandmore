@@ -760,6 +760,9 @@
 
             <setting label="TLC" type="bool" id="tlc" default="true" visible="eq(-217,true)"/>
             <setting label="" type="number" visible="false" id="tlc.order" default="108"/>
+
+            <setting label="TV Vendée" type="bool" id="tvvendee" default="true" visible="eq(-219,true)"/>
+            <setting label="" type="number" visible="false" id="tvvendee.order" default="109"/>
         <!-- France -->
 
 

@@ -498,6 +498,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmlyon&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tlc.png" group-title="France Région",TLC
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tlc&item_module=resources.lib.channels.fr.tlc&item_dict={}
 
+##	TV Vendée
+##	tvvendee
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvvendee.png" group-title="France Région",TV Vendée
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvvendee&item_module=resources.lib.channels.fr.tvvendee&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/euronews.png" group-title="France",Euronews

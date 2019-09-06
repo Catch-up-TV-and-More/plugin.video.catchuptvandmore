@@ -648,6 +648,8 @@ LABELS = {
     'BFM Lyon',
     'tlc':
     'TLC',
+    'tvvendee':
+    'TV Vendée',
 
     # Japan channels / live TV
     'nhknews':

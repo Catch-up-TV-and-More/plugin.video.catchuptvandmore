@@ -585,5 +585,12 @@ menu = {
         'fanart': 'channels/fr/tlc_fanart.jpg',
         'module': 'resources.lib.channels.fr.tlc',
         'm3u_group': 'Région'
+    },
+    'tvvendee': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/tvvendee.png',
+        'fanart': 'channels/fr/tvvendee_fanart.jpg',
+        'module': 'resources.lib.channels.fr.tvvendee',
+        'm3u_group': 'Région'
     }
 }
