@@ -592,5 +592,12 @@ menu = {
         'fanart': 'channels/fr/tvvendee_fanart.jpg',
         'module': 'resources.lib.channels.fr.tvvendee',
         'm3u_group': 'Région'
+    },
+    'tv7bordeaux': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/tv7bordeaux.png',
+        'fanart': 'channels/fr/tv7bordeaux_fanart.jpg',
+        'module': 'resources.lib.channels.fr.tv7bordeaux',
+        'm3u_group': 'Région'
     }
 }

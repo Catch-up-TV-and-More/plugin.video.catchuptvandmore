@@ -650,6 +650,8 @@ LABELS = {
     'TLC',
     'tvvendee':
     'TV Vendée',
+    'tv7bordeaux':
+    'TV7 Bordeaux',
 
     # Japan channels / live TV
     'nhknews':

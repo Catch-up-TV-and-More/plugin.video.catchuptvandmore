@@ -763,6 +763,9 @@
 
             <setting label="TV Vendée" type="bool" id="tvvendee" default="true" visible="eq(-219,true)"/>
             <setting label="" type="number" visible="false" id="tvvendee.order" default="109"/>
+
+            <setting label="TV7 Bordeaux" type="bool" id="tv7bordeaux" default="true" visible="eq(-221,true)"/>
+            <setting label="" type="number" visible="false" id="tv7bordeaux.order" default="110"/>
         <!-- France -->
 
 

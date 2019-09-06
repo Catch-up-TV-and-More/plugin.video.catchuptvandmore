@@ -498,6 +498,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tlc&item_module
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvvendee.png" group-title="France",TV Vendée
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvvendee&item_module=resources.lib.channels.fr.tvvendee&item_dict={}
 
+##	TV7 Bordeaux
+##	tv7bordeaux
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tv7bordeaux.png" group-title="France",TV7 Bordeaux
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv7bordeaux&item_module=resources.lib.channels.fr.tv7bordeaux&item_dict={}
+
 
 
 # Belgium
