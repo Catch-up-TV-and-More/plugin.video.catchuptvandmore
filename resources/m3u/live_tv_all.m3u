@@ -503,6 +503,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvvendee&item_m
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tv7bordeaux.png" group-title="France",TV7 Bordeaux
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv7bordeaux&item_module=resources.lib.channels.fr.tv7bordeaux&item_dict={}
 
+##	TVT Val de Loire
+##	tvt
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvt.png" group-title="France",TVT Val de Loire
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvt&item_module=resources.lib.channels.fr.tvt&item_dict={}
+
 
 
 # Belgium

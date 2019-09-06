@@ -766,6 +766,9 @@
 
             <setting label="TV7 Bordeaux" type="bool" id="tv7bordeaux" default="true" visible="eq(-221,true)"/>
             <setting label="" type="number" visible="false" id="tv7bordeaux.order" default="110"/>
+
+            <setting label="TVT Val de Loire" type="bool" id="tvt" default="true" visible="eq(-223,true)"/>
+            <setting label="" type="number" visible="false" id="tvt.order" default="111"/>
         <!-- France -->
 
 

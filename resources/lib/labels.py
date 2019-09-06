@@ -652,6 +652,8 @@ LABELS = {
     'TV Vendée',
     'tv7bordeaux':
     'TV7 Bordeaux',
+    'tvt':
+    'TVT Val de Loire',
 
     # Japan channels / live TV
     'nhknews':

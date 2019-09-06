@@ -599,5 +599,12 @@ menu = {
         'fanart': 'channels/fr/tv7bordeaux_fanart.jpg',
         'module': 'resources.lib.channels.fr.tv7bordeaux',
         'm3u_group': 'Région'
+    },
+    'tvt': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/tvt.png',
+        'fanart': 'channels/fr/tvt_fanart.jpg',
+        'module': 'resources.lib.channels.fr.tvt',
+        'm3u_group': 'Région'
     }
 }
