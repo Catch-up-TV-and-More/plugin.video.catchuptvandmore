@@ -488,6 +488,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=telenantes&item
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmlyon.png" group-title="France",BFM Lyon
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmlyon&item_module=resources.lib.channels.fr.bfmlyon&item_dict={}
 
+##	TLC
+##	tlc
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tlc.png" group-title="France",TLC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tlc&item_module=resources.lib.channels.fr.tlc&item_dict={}
+
 
 
 # Belgium

@@ -646,6 +646,8 @@ LABELS = {
     'TéléNantes',
     'bfmlyon':
     'BFM Lyon',
+    'tlc':
+    'TLC',
 
     # Japan channels / live TV
     'nhknews':

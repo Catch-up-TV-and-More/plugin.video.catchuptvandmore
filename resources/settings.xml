@@ -757,6 +757,9 @@
 
             <setting label="BFM Lyon" type="bool" id="bfmlyon" default="true" visible="eq(-215,true)"/>
             <setting label="" type="number" visible="false" id="bfmlyon.order" default="107"/>
+
+            <setting label="TLC" type="bool" id="tlc" default="true" visible="eq(-217,true)"/>
+            <setting label="" type="number" visible="false" id="tlc.order" default="108"/>
         <!-- France -->
 
 

@@ -578,5 +578,12 @@ menu = {
         'fanart': 'channels/fr/bfmlyon_fanart.jpg',
         'module': 'resources.lib.channels.fr.bfmlyon',
         'm3u_group': 'Région'
+    },
+    'tlc': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/tlc.png',
+        'fanart': 'channels/fr/tlc_fanart.jpg',
+        'module': 'resources.lib.channels.fr.tlc',
+        'm3u_group': 'Région'
     }
 }
