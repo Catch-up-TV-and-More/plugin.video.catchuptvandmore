@@ -518,6 +518,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvt&item_module
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvr.png" group-title="France Région",TVR
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvr&item_module=resources.lib.channels.fr.tvr&item_dict={}
 
+##	Wéo TV
+##	weo
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/weo.png" group-title="France Région",Wéo TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=weo&item_module=resources.lib.channels.fr.weo&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/euronews.png" group-title="France",Euronews

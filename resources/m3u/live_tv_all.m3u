@@ -513,6 +513,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvt&item_module
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvr.png" group-title="France",TVR
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvr&item_module=resources.lib.channels.fr.tvr&item_dict={}
 
+##	Wéo TV
+##	weo
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/weo.png" group-title="France",Wéo TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=weo&item_module=resources.lib.channels.fr.weo&item_dict={}
+
 
 
 # Belgium

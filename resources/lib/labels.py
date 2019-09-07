@@ -656,6 +656,8 @@ LABELS = {
     'TVT Val de Loire',
     'tvr':
     'TVR',
+    'weo':
+    'Wéo TV',
 
     # Japan channels / live TV
     'nhknews':

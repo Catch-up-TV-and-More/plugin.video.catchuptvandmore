@@ -613,5 +613,12 @@ menu = {
         'fanart': 'channels/fr/tvr_fanart.jpg',
         'module': 'resources.lib.channels.fr.tvr',
         'm3u_group': 'Région'
+    },
+    'weo': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/weo.png',
+        'fanart': 'channels/fr/weo_fanart.jpg',
+        'module': 'resources.lib.channels.fr.weo',
+        'm3u_group': 'Région'
     }
 }

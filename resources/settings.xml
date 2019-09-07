@@ -772,6 +772,9 @@
 
             <setting label="TVR" type="bool" id="tvr" default="true" visible="eq(-225,true)"/>
             <setting label="" type="number" visible="false" id="tvr.order" default="112"/>
+
+            <setting label="Wéo TV" type="bool" id="weo" default="true" visible="eq(-227,true)"/>
+            <setting label="" type="number" visible="false" id="weo.order" default="113"/>
         <!-- France -->
 
 
