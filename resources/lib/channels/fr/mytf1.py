@@ -142,10 +142,12 @@ def list_programs(plugin, item_id, category_id, **kwargs):
             program_name = program_datas['name']
             program_slug = program_datas['slug']
             program_image = program_datas['decoration']['image']['sources'][0]['url']
+            program_background = program_datas['decoration']['background']['sources'][0]['url']
 
             item = Listitem()
             item.label = program_name
             item.art["thumb"] = program_image
+            item.art["fanart"] = program_background
             item.set_callback(list_program_categories,
                               item_id=item_id,
                               program_slug=program_slug)
