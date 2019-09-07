@@ -769,6 +769,9 @@
 
             <setting label="TVT Val de Loire" type="bool" id="tvt" default="true" visible="eq(-223,true)"/>
             <setting label="" type="number" visible="false" id="tvt.order" default="111"/>
+
+            <setting label="TVR" type="bool" id="tvr" default="true" visible="eq(-225,true)"/>
+            <setting label="" type="number" visible="false" id="tvr.order" default="112"/>
         <!-- France -->
 
 

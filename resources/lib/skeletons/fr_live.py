@@ -606,5 +606,12 @@ menu = {
         'fanart': 'channels/fr/tvt_fanart.jpg',
         'module': 'resources.lib.channels.fr.tvt',
         'm3u_group': 'Région'
+    },
+    'tvr': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/tvr.png',
+        'fanart': 'channels/fr/tvr_fanart.jpg',
+        'module': 'resources.lib.channels.fr.tvr',
+        'm3u_group': 'Région'
     }
 }

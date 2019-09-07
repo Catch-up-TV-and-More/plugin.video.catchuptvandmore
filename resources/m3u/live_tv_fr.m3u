@@ -513,6 +513,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv7bordeaux&ite
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvt.png" group-title="France Région",TVT Val de Loire
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvt&item_module=resources.lib.channels.fr.tvt&item_dict={}
 
+##	TVR
+##	tvr
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvr.png" group-title="France Région",TVR
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvr&item_module=resources.lib.channels.fr.tvr&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/euronews.png" group-title="France",Euronews
