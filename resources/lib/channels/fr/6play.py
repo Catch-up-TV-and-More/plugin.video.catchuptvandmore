@@ -211,6 +211,7 @@ def list_program_categories(plugin, item_id, program_id, **kwargs):
                       item_id=item_id,
                       program_id=program_id,
                       sub_category_id=None)
+    item_post_treatment(item)
     yield item
 
 
