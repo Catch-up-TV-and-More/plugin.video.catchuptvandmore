@@ -115,6 +115,7 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
                              category_url=category_url,
                              page=str(int(page) + 1))
 
+
 @Resolver.register
 def get_video_url(plugin,
                   item_id,
