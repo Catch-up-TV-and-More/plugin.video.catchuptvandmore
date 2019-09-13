@@ -517,7 +517,7 @@ def populate_item(item, video, include_program_name=True, **kwargs):
                     image_url = URL_API(image['urls']['w:1024'])
 
     # 2018-09-20T05:03:01+02:00
-    publication_date = video['first_publication_date'].split("T")[0]
+    publication_date = video['last_publication_date'].split("T")[0]
     item.info.date(publication_date, "%Y-%m-%d")
 
     if "text" in video and video['text']:
