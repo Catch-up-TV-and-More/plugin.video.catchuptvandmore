@@ -138,7 +138,7 @@ def list_programs(plugin, item_id, category_part_url, page=0, **kwargs):
                         params={
                             'size': 20,
                             'page': page,
-                            'filter': "with-no-vod,only-visible",
+                            'filter': "with-no-vod,only-visible,only-replay",
                             'sort': "begin_date:desc"})
     json_parser = json.loads(resp.text)
 
@@ -161,6 +161,16 @@ def list_programs(plugin, item_id, category_part_url, page=0, **kwargs):
                           item_id=item_id,
                           program_part_url=program_part_url)
         item_post_treatment(item)
+        item.context.container(list_videos_extrait,
+                               Script.localize(LABELS['List Videos (type=extrait)']),
+                               item_id=item_id,
+                               program_part_url=program_part_url,
+                               **kwargs)
+        item.context.container(list_videos_episode,
+                               Script.localize(LABELS['List Videos (type=episode)']),
+                               item_id=item_id,
+                               program_part_url=program_part_url,
+                               **kwargs)
         yield item
 
     # Next page
@@ -208,7 +218,7 @@ def list_videos(plugin, item_id, program_part_url, page=0, **kwargs):
                         params={
                             'size': 20,
                             'page': page,
-                            'filter': "with-no-vod,only-visible",
+                            'filter': "with-no-vod,only-visible,only-replay",
                             'sort': "sort = begin_date:desc"})
     json_parser = json.loads(resp.text)
 
@@ -223,6 +233,71 @@ def list_videos(plugin, item_id, program_part_url, page=0, **kwargs):
                           item_dict=item2dict(item))
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
+
+    # More videos...
+    if json_parser['cursor']['next'] is not None:
+        yield Listitem.next_page(item_id=item_id,
+                                 program_part_url=program_part_url,
+                                 page=json_parser['cursor']['next'])
+
+
+@Route.register
+def list_videos_extrait(plugin, item_id, program_part_url, page=0, **kwargs):
+
+    # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
+    url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
+    resp = urlquick.get(URL_API(url_program),
+                        params={
+                            'size': 20,
+                            'page': page,
+                            'filter': "with-no-vod,only-visible,only-extract",
+                            'sort': "sort = begin_date:desc"})
+    json_parser = json.loads(resp.text)
+
+    for video in json_parser['result']:
+        item = Listitem()
+        broadcast_id = populate_item(item, video)
+
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          broadcast_id=broadcast_id,
+                          video_label=LABELS[item_id] + " - " + item.label,
+                          item_dict=item2dict(item))
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        yield item
+
+    # More videos...
+    if json_parser['cursor']['next'] is not None:
+        yield Listitem.next_page(item_id=item_id,
+                                 program_part_url=program_part_url,
+                                 page=json_parser['cursor']['next'])
+
+
+@Route.register
+def list_videos_episode(plugin, item_id, program_part_url, page=0, **kwargs):
+
+    # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
+    url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
+    resp = urlquick.get(URL_API(url_program),
+                        params={
+                            'size': 5000,
+                            'page': page,
+                            'filter': "with-no-vod,only-visible",
+                            'sort': "sort = begin_date:desc"})
+    json_parser = json.loads(resp.text)
+
+    for video in json_parser['result']:
+        if video['type'] == 'episode':
+            item = Listitem()
+            broadcast_id = populate_item(item, video)
+
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              broadcast_id=broadcast_id,
+                              video_label=LABELS[item_id] + " - " + item.label,
+                              item_dict=item2dict(item))
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
     # More videos...
     if json_parser['cursor']['next'] is not None:
@@ -390,7 +465,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         plugin, broadcast_id % item_id.split('-')[1])
 
 
-def populate_item(item, video, include_program_name=False, **kwargs):
+def populate_item(item, video, include_program_name=True, **kwargs):
     program_name = ""
     for taxonomy in video['content_has_taxonomys']:
         if taxonomy['type'] == "program":

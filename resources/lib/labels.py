@@ -274,6 +274,10 @@ LABELS = {
     30502,
     'Download':
     30503,
+    'List Videos (type=extrait)':
+    30504,
+    'List Videos (type=episode)':
+    30505,
     'Information':
     30600,
     'To re-enable hidden items go to the plugin settings':

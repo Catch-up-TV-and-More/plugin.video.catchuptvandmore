@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.12~beta05"
+       version="0.2.12~beta06"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -54,9 +54,10 @@
 [Add] Live TV - Wéo TV (FR)
 [Fix] Catch-up TV - France TV Spectacles Et Culture (FR)
 [Fix] Website - NotreHistoire.ch (CH)
-[Update] Catch-up TV - MyTF1 - Add background picture (FR) - Thanks Psychoses
+[Improvements] Catch-up TV - MyTF1 - Add background picture (FR) - Thanks Psychoses
 [Fix] Catch-up TV - 6Play - Missing favourites for 6Play (FR) - Thanks Psychoses
 [Fix] Catch-up TV - STV (UK)
+[Improvements] Catch-up TV - France TV (FR) - Class videos by type (replay, extrait, episode)
     </news>
     <assets>
       <icon>icon.png</icon>

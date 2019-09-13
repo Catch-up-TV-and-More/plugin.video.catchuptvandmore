@@ -492,6 +492,13 @@ msgctxt "#30503"
 msgid "Download"
 msgstr "הורד"
 
+msgctxt "#30504"
+msgid "List Videos (type=extrait)"
+msgstr ""
+
+msgctxt "#30505"
+msgid "List Videos (type=episode)"
+msgstr ""
 
 # Dialog boxes (from 30600 to 30699)
 msgctxt "#30600"
