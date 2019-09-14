@@ -620,5 +620,12 @@ menu = {
         'fanart': 'channels/fr/weo_fanart.jpg',
         'module': 'resources.lib.channels.fr.weo',
         'm3u_group': 'Région'
+    },
+    'dicitv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/dicitv.png',
+        'fanart': 'channels/fr/dicitv_fanart.jpg',
+        'module': 'resources.lib.channels.fr.dicitv',
+        'm3u_group': 'Région'
     }
 }

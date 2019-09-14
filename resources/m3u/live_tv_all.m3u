@@ -518,6 +518,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvr&item_module
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/weo.png" group-title="France",Wéo TV
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=weo&item_module=resources.lib.channels.fr.weo&item_dict={}
 
+##	DiCi TV
+##	dicitv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/dicitv.png" group-title="France",DiCi TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=dicitv&item_module=resources.lib.channels.fr.dicitv&item_dict={}
+
 
 
 # Belgium

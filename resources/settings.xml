@@ -775,6 +775,9 @@
 
             <setting label="Wéo TV" type="bool" id="weo" default="true" visible="eq(-227,true)"/>
             <setting label="" type="number" visible="false" id="weo.order" default="113"/>
+
+            <setting label="DiCi TV" type="bool" id="dicitv" default="true" visible="eq(-229,true)"/>
+            <setting label="" type="number" visible="false" id="dicitv.order" default="114"/>
         <!-- France -->
 
 

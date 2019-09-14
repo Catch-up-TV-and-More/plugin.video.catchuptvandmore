@@ -662,6 +662,8 @@ LABELS = {
     'TVR',
     'weo':
     'Wéo TV',
+    'dicitv':
+    'DiCi TV',
 
     # Japan channels / live TV
     'nhknews':
