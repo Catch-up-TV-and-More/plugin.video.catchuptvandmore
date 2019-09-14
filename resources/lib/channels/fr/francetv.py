@@ -138,7 +138,7 @@ def list_programs(plugin, item_id, category_part_url, page=0, **kwargs):
                         params={
                             'size': 20,
                             'page': page,
-                            'filter': "with-no-vod,only-visible,only-replay",
+                            'filter': "with-no-vod,only-visible",
                             'sort': "begin_date:desc"})
     json_parser = json.loads(resp.text)
 
@@ -157,20 +157,10 @@ def list_programs(plugin, item_id, category_part_url, page=0, **kwargs):
 
         program_part_url = program['url_complete'].replace("/", "_")
 
-        item.set_callback(list_videos,
+        item.set_callback(list_videos_cat,
                           item_id=item_id,
                           program_part_url=program_part_url)
         item_post_treatment(item)
-        item.context.container(list_videos_extrait,
-                               Script.localize(LABELS['List Videos (type=extrait)']),
-                               item_id=item_id,
-                               program_part_url=program_part_url,
-                               **kwargs)
-        item.context.container(list_videos_episode,
-                               Script.localize(LABELS['List Videos (type=episode)']),
-                               item_id=item_id,
-                               program_part_url=program_part_url,
-                               **kwargs)
         yield item
 
     # Next page
@@ -210,7 +200,29 @@ def list_videos_last(plugin, item_id, page=1, **kwargs):
 
 
 @Route.register
-def list_videos(plugin, item_id, program_part_url, page=0, **kwargs):
+def list_videos_cat(plugin, item_id, program_part_url, **kwargs):
+
+    item = Listitem()
+    item.label = "Replay"
+    item.set_callback(list_videos, item_id=item_id, program_part_url=program_part_url, filter_value='only-replay')
+    item_post_treatment(item)
+    yield item
+
+    item = Listitem()
+    item.label = "Extrait"
+    item.set_callback(list_videos, item_id=item_id, program_part_url=program_part_url, filter_value='only-extract')
+    item_post_treatment(item)
+    yield item
+
+    item = Listitem()
+    item.label = "Autres Videos"
+    item.set_callback(list_videos_other, item_id=item_id, program_part_url=program_part_url)
+    item_post_treatment(item)
+    yield item
+
+
+@Route.register
+def list_videos(plugin, item_id, program_part_url, filter_value, page=0, **kwargs):
 
     # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
     url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
@@ -218,7 +230,7 @@ def list_videos(plugin, item_id, program_part_url, page=0, **kwargs):
                         params={
                             'size': 20,
                             'page': page,
-                            'filter': "with-no-vod,only-visible,only-replay",
+                            'filter': "with-no-vod,only-visible,%s" % filter_value,
                             'sort': "sort = begin_date:desc"})
     json_parser = json.loads(resp.text)
 
@@ -235,59 +247,28 @@ def list_videos(plugin, item_id, program_part_url, page=0, **kwargs):
         yield item
 
     # More videos...
-    if json_parser['cursor']['next'] is not None:
+    if json_parser['cursor']['next'] is not None and json_parser['cursor']['last'] is not None:
         yield Listitem.next_page(item_id=item_id,
                                  program_part_url=program_part_url,
+                                 filter_value=filter_value,
                                  page=json_parser['cursor']['next'])
 
 
 @Route.register
-def list_videos_extrait(plugin, item_id, program_part_url, page=0, **kwargs):
+def list_videos_other(plugin, item_id, program_part_url, page=0, **kwargs):
 
     # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
     url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
     resp = urlquick.get(URL_API(url_program),
                         params={
-                            'size': 20,
-                            'page': page,
-                            'filter': "with-no-vod,only-visible,only-extract",
-                            'sort': "sort = begin_date:desc"})
-    json_parser = json.loads(resp.text)
-
-    for video in json_parser['result']:
-        item = Listitem()
-        broadcast_id = populate_item(item, video)
-
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          broadcast_id=broadcast_id,
-                          video_label=LABELS[item_id] + " - " + item.label,
-                          item_dict=item2dict(item))
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
-
-    # More videos...
-    if json_parser['cursor']['next'] is not None:
-        yield Listitem.next_page(item_id=item_id,
-                                 program_part_url=program_part_url,
-                                 page=json_parser['cursor']['next'])
-
-
-@Route.register
-def list_videos_episode(plugin, item_id, program_part_url, page=0, **kwargs):
-
-    # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
-    url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
-    resp = urlquick.get(URL_API(url_program),
-                        params={
-                            'size': 5000,
+                            'size': 500,
                             'page': page,
                             'filter': "with-no-vod,only-visible",
                             'sort': "sort = begin_date:desc"})
     json_parser = json.loads(resp.text)
 
     for video in json_parser['result']:
-        if video['type'] == 'episode':
+        if video['type'] != 'integrale' and video['type'] != 'extrait':
             item = Listitem()
             broadcast_id = populate_item(item, video)
 
@@ -300,7 +281,7 @@ def list_videos_episode(plugin, item_id, program_part_url, page=0, **kwargs):
             yield item
 
     # More videos...
-    if json_parser['cursor']['next'] is not None:
+    if json_parser['cursor']['next'] is not None and json_parser['cursor']['last'] is not None:
         yield Listitem.next_page(item_id=item_id,
                                  program_part_url=program_part_url,
                                  page=json_parser['cursor']['next'])
