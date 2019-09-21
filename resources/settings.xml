@@ -748,6 +748,36 @@
 
             <setting label="MaTélé" type="bool" id="matele" default="true" visible="eq(-209,true)"/>
             <setting label="" type="number" visible="false" id="matele.order" default="104"/>
+
+            <setting label="TéléGrenoble" type="bool" id="telegrenoble" default="true" visible="eq(-211,true)"/>
+            <setting label="" type="number" visible="false" id="telegrenoble.order" default="105"/>
+
+            <setting label="TéléNantes" type="bool" id="telenantes" default="true" visible="eq(-213,true)"/>
+            <setting label="" type="number" visible="false" id="telenantes.order" default="106"/>
+
+            <setting label="BFM Lyon" type="bool" id="bfmlyon" default="true" visible="eq(-215,true)"/>
+            <setting label="" type="number" visible="false" id="bfmlyon.order" default="107"/>
+
+            <setting label="TLC" type="bool" id="tlc" default="true" visible="eq(-217,true)"/>
+            <setting label="" type="number" visible="false" id="tlc.order" default="108"/>
+
+            <setting label="TV Vendée" type="bool" id="tvvendee" default="true" visible="eq(-219,true)"/>
+            <setting label="" type="number" visible="false" id="tvvendee.order" default="109"/>
+
+            <setting label="TV7 Bordeaux" type="bool" id="tv7bordeaux" default="true" visible="eq(-221,true)"/>
+            <setting label="" type="number" visible="false" id="tv7bordeaux.order" default="110"/>
+
+            <setting label="TVT Val de Loire" type="bool" id="tvt" default="true" visible="eq(-223,true)"/>
+            <setting label="" type="number" visible="false" id="tvt.order" default="111"/>
+
+            <setting label="TVR" type="bool" id="tvr" default="true" visible="eq(-225,true)"/>
+            <setting label="" type="number" visible="false" id="tvr.order" default="112"/>
+
+            <setting label="Wéo TV" type="bool" id="weo" default="true" visible="eq(-227,true)"/>
+            <setting label="" type="number" visible="false" id="weo.order" default="113"/>
+
+            <setting label="DiCi TV" type="bool" id="dicitv" default="true" visible="eq(-229,true)"/>
+            <setting label="" type="number" visible="false" id="dicitv.order" default="114"/>
         <!-- France -->
 
 

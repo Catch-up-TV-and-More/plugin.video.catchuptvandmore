@@ -473,6 +473,56 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tebesud&item_mo
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/matele.png" group-title="France",MaTélé
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=matele&item_module=resources.lib.channels.fr.matele&item_dict={}
 
+##	TéléGrenoble
+##	telegrenoble
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/telegrenoble.png" group-title="France",TéléGrenoble
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=telegrenoble&item_module=resources.lib.channels.fr.telegrenoble&item_dict={}
+
+##	TéléNantes
+##	telenantes
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/telenantes.png" group-title="France",TéléNantes
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=telenantes&item_module=resources.lib.channels.fr.telenantes&item_dict={}
+
+##	BFM Lyon
+##	bfmlyon
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmlyon.png" group-title="France",BFM Lyon
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=bfmlyon&item_module=resources.lib.channels.fr.bfmlyon&item_dict={}
+
+##	TLC
+##	tlc
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tlc.png" group-title="France",TLC
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tlc&item_module=resources.lib.channels.fr.tlc&item_dict={}
+
+##	TV Vendée
+##	tvvendee
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvvendee.png" group-title="France",TV Vendée
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvvendee&item_module=resources.lib.channels.fr.tvvendee&item_dict={}
+
+##	TV7 Bordeaux
+##	tv7bordeaux
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tv7bordeaux.png" group-title="France",TV7 Bordeaux
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tv7bordeaux&item_module=resources.lib.channels.fr.tv7bordeaux&item_dict={}
+
+##	TVT Val de Loire
+##	tvt
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvt.png" group-title="France",TVT Val de Loire
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvt&item_module=resources.lib.channels.fr.tvt&item_dict={}
+
+##	TVR
+##	tvr
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tvr.png" group-title="France",TVR
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tvr&item_module=resources.lib.channels.fr.tvr&item_dict={}
+
+##	Wéo TV
+##	weo
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/weo.png" group-title="France",Wéo TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=weo&item_module=resources.lib.channels.fr.weo&item_dict={}
+
+##	DiCi TV
+##	dicitv
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/dicitv.png" group-title="France",DiCi TV
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=dicitv&item_module=resources.lib.channels.fr.dicitv&item_dict={}
+
 
 
 # Belgium

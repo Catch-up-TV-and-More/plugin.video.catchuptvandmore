@@ -274,6 +274,10 @@ LABELS = {
     30502,
     'Download':
     30503,
+    'List Videos (type=extrait)':
+    30504,
+    'List Videos (type=episode)':
+    30505,
     'Information':
     30600,
     'To re-enable hidden items go to the plugin settings':
@@ -640,6 +644,26 @@ LABELS = {
     'TébéSud',
     'matele':
     'MaTélé',
+    'telegrenoble':
+    'TéléGrenoble',
+    'telenantes':
+    'TéléNantes',
+    'bfmlyon':
+    'BFM Lyon',
+    'tlc':
+    'TLC',
+    'tvvendee':
+    'TV Vendée',
+    'tv7bordeaux':
+    'TV7 Bordeaux',
+    'tvt':
+    'TVT Val de Loire',
+    'tvr':
+    'TVR',
+    'weo':
+    'Wéo TV',
+    'dicitv':
+    'DiCi TV',
 
     # Japan channels / live TV
     'nhknews':

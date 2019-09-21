@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2019  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -30,15 +30,21 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
+import json
 import re
 import urlquick
 
-# TO DO
+# TODO
+# Add Replay
 
-URL_ROOT = 'https://icitelevision.ca'
+URL_ROOT = "https://www.dici.fr"
 
-URL_LIVE = URL_ROOT + '/live-video/'
+URL_LIVE = URL_ROOT + "/player?tab=tv"
+
+URL_STREAM = 'https://player.infomaniak.com/playerConfig.php?channel=%s'
+# channel
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -48,5 +54,17 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_LIVE)
-    return re.compile('source src=\"(.*?)\"').findall(resp.text)[0]
+    resp = urlquick.get(URL_LIVE,
+                        headers={'User-Agent': web_utils.get_random_ua},
+                        max_age=-1)
+    channel_id = re.compile(r'\?channel\=(.*?)\&').findall(resp.text)[0]
+    resp2 = urlquick.get(
+        URL_STREAM % channel_id,
+        headers={'User-Agent': web_utils.get_random_ua},
+        max_age=-1)
+    json_parser = json.loads(resp2.text)
+    stream_url = ''
+    for stram_datas in json_parser['data']['integrations']:
+        if 'hls' in stram_datas['type']:
+            stream_url = stram_datas['url']
+    return stream_url

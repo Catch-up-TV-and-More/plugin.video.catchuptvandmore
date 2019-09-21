@@ -48,7 +48,7 @@ URL_PROGRAMS_JSON = 'https://player.api.stv.tv/v1/programmes/?limit=300&orderBy=
 URL_VIDEOS_JSON = 'https://player.api.stv.tv/v1/episodes'
 # guidProgramm
 
-URL_BRIGHTCOVE_DATAS = 'https://player.stv.tv/assets/build/sites/playerv3/js/script.js'
+URL_BRIGHTCOVE_DATAS = 'https://player.stv.tv/player-web/players/vod/bundle.js'
 
 
 def replay_entry(plugin, item_id, **kwargs):

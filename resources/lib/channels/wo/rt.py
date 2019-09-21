@@ -382,11 +382,15 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     if final_language == 'EN':
         url_live = URL_LIVE_EN
         resp = urlquick.get(url_live, max_age=-1)
-        return re.compile(r'file\: \'(.*?)\'').findall(resp.text)[0]
+        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(
+            resp.text)[0]
+        return resolver_proxy.get_stream_youtube(plugin, live_id, False)
     elif final_language == 'AR':
         url_live = URL_LIVE_AR
         resp = urlquick.get(url_live, max_age=-1)
-        return re.compile(r'file\'\: \'(.*?)\'').findall(resp.text)[0]
+        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(
+            resp.text)[0]
+        return resolver_proxy.get_stream_youtube(plugin, live_id, False)
     elif final_language == 'FR':
         url_live = URL_LIVE_FR
         resp = urlquick.get(url_live, max_age=-1)
@@ -394,6 +398,6 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     elif final_language == 'ES':
         url_live = URL_LIVE_ES
         resp = urlquick.get(url_live, max_age=-1)
-        live_id = re.compile(r'youtube\.com\/embed\/(.*?)\?').findall(
+        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(
             resp.text)[0]
         return resolver_proxy.get_stream_youtube(plugin, live_id, False)

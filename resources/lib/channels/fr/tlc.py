@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     Catch-up TV & More
-    Copyright (C) 2017  SylvainCecchetto
+    Copyright (C) 2019  SylvainCecchetto
 
     This file is part of Catch-up TV & More.
 
@@ -30,15 +30,17 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
 
-# TO DO
+# TODO
+# Add Replay
 
-URL_ROOT = 'https://icitelevision.ca'
+URL_ROOT = "http://www.tlc-cholet.fr"
 
-URL_LIVE = URL_ROOT + '/live-video/'
+URL_LIVE = URL_ROOT + '/le-direct'
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -48,5 +50,9 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_LIVE)
-    return re.compile('source src=\"(.*?)\"').findall(resp.text)[0]
+    resp = urlquick.get(
+        URL_LIVE, headers={"User-Agent": web_utils.get_random_ua}, max_age=-1)
+    live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
+    return resolver_proxy.get_stream_dailymotion(plugin,
+                                                 live_id,
+                                                 False)
