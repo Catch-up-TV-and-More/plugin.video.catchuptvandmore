@@ -746,7 +746,8 @@
             <setting label="TébéSud" type="bool" id="tebesud" default="true" visible="eq(-207,true)"/>
             <setting label="" type="number" visible="false" id="tebesud.order" default="103"/>
 
-            <setting label="MaTélé" type="bool" id="matele" default="true" visible="eq(-209,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="MaTélé" type="bool" id="matele" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="matele.order" default="104"/>
 
             <setting label="TéléGrenoble" type="bool" id="telegrenoble" default="true" visible="eq(-211,true)"/>
@@ -778,6 +779,9 @@
 
             <setting label="DiCi TV" type="bool" id="dicitv" default="true" visible="eq(-229,true)"/>
             <setting label="" type="number" visible="false" id="dicitv.order" default="114"/>
+
+            <setting label="viàMaTélé" type="bool" id="viamatele" default="true" visible="eq(-231,true)"/>
+            <setting label="" type="number" visible="false" id="viamatele.order" default="115"/>
         <!-- France -->
 
 
