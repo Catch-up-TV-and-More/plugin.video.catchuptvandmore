@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.13~beta01"
+       version="0.2.13~beta02"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -41,6 +41,7 @@
     <news>
 [Version 0.2.13]
 [Change] Live TV - MaTélé -> ViaMaTélé (FR)
+[Fix] Live TV - L'équipe TV (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
