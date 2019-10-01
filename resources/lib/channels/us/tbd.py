@@ -37,9 +37,11 @@ import urlquick
 
 # TO DO
 
-URL_ROOT = 'http://tbd.com'
+URL_ROOT = 'https://tbd.com'
 
 URL_REPLAY = URL_ROOT + '/shows'
+
+URL_LIVE = URL_ROOT + '/live'
 
 
 def replay_entry(plugin, item_id, **kwargs):
@@ -132,5 +134,5 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_ROOT)
+    resp = urlquick.get(URL_LIVE)
     return re.compile(r'file\': "(.*?)"').findall(resp.text)[0]
