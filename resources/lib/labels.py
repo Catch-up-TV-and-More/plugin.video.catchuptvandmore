@@ -343,6 +343,25 @@ LABELS = {
     'Rename':
     30804,
 
+    # HTTP codes
+    'HTTP Error code':
+    30890,
+
+    'http_code_500':
+    30891,
+
+    'http_code_401':
+    30892,
+
+    'http_code_403':
+    30893,
+
+    'http_code_402':
+    30894,
+
+    'http_code_404':
+    30895,
+
     # Belgium channels / live TV
     'auvio':
     'RTBF Auvio',

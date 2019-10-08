@@ -41,6 +41,7 @@
     <news>
 [Version 0.2.14]
 [Add] Live TV - France Inter (FR)
+[Improvements] Understandable HTTP code error message
     </news>
     <assets>
       <icon>icon.png</icon>

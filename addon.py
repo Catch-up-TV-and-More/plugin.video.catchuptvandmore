@@ -507,6 +507,31 @@ def error_handler(exception):
     """
     params = cqu.get_params_in_query(sys.argv[2])
 
+    # If it's an HTTPError
+    if isinstance(exception, urlquick.HTTPError):
+        code = exception.code
+        msg = exception.msg
+        # hdrs = exception.hdrs
+        # url = exception.filename
+        Script.log('urlquick.get() failed with HTTPError code {} with message "{}"'.format(code, msg, lvl=Script.ERROR))
+
+        # Build dialog message
+        dialog_message = msg
+        if 'http_code_' + str(code) in LABELS:
+            dialog_message = Script.localize(LABELS['http_code_' + str(code)])
+
+        # Build dialog title
+        dialog_title = Script.localize(LABELS['HTTP Error code']) + ' ' + str(code)
+
+        # Show xbmc dialog
+        xbmcgui.Dialog().ok(dialog_title, dialog_message)
+
+        # If error code is in avoid_log_uploader, then return
+        # Else, let log_uploader run
+        avoid_log_uploader = [403, 404]
+        if code in avoid_log_uploader:
+            return
+
     # If we come from fav menu we
     # suggest user to delete this item
     if 'from_fav' in params:
