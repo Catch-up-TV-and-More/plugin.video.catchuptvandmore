@@ -59,7 +59,7 @@ URL_API = 'https://start-api.npo.nl'
 URL_CATEGORIES = URL_API + '/page/catalogue?ApiKey=%s'
 # ApiKey
 
-API_KEY = 'e45fe473feaf42ad9a215007c6aa5e7e'
+API_KEY = '07896f1ee72645f68bc75581d7f00d54'
 
 URL_IMAGE = 'https://images.poms.omroep.nl/image/s1280/c1280x720/%s.jpg'
 # ImageId
