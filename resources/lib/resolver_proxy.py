@@ -185,7 +185,9 @@ def get_brightcove_video_json(plugin,
             web_utils.get_random_ua,
             'Accept':
             'application/json;pk=%s' %
-            (get_brightcove_policy_key(data_account, data_player))
+            (get_brightcove_policy_key(data_account, data_player)),
+            'X-Forwarded-For':
+            plugin.setting.get_string('header_x-forwarded-for')
         })
     json_parser = json.loads(resp.text)
 
