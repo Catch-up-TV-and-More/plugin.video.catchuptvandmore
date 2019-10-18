@@ -207,7 +207,7 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(video_url,
-                        headers={'User-Agent': web_utils.get_random_ua},
+                        headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
     video_json = re.compile('data-broadcast=\'(.*?)\'').findall(resp.text)[0]
     json_parser = json.loads(video_json)
@@ -231,7 +231,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         if item_id == channel_name:
             live_id = live_id_value
     resp = urlquick.get(URL_TV5MONDE_LIVE + '%s.html' % live_id,
-                        headers={'User-Agent': web_utils.get_random_ua},
+                        headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
     live_json = re.compile(r'data-broadcast=\'(.*?)\'').findall(resp.text)[0]
     json_parser = json.loads(live_json)

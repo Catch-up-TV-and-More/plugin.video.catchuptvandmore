@@ -178,14 +178,14 @@ def get_video_url(plugin,
 
     url_json = URL_VIDEO_STREAM % video_id
     htlm_json = urlquick.get(url_json,
-                             headers={'User-Agent': web_utils.get_random_ua},
+                             headers={'User-Agent': web_utils.get_random_ua()},
                              max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
     # Check DRM in the m3u8 file
     manifest = urlquick.get(json_parser["hls"],
                             headers={
-                                'User-Agent': web_utils.get_random_ua},
+                                'User-Agent': web_utils.get_random_ua()},
                             max_age=-1).text
     if 'drm' in manifest:
         Script.notify("TEST", plugin.localize(LABELS['drm_notification']),
@@ -195,7 +195,7 @@ def get_video_url(plugin,
     root = os.path.dirname(json_parser["hls"])
 
     manifest = urlquick.get(json_parser["hls"].split('&max_bitrate=')[0],
-                            headers={'User-Agent': web_utils.get_random_ua},
+                            headers={'User-Agent': web_utils.get_random_ua()},
                             max_age=-1)
 
     final_video_url = ''
@@ -237,7 +237,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     video_format = 'hls'
     url_json = URL_VIDEO_STREAM_2 % (video_id, video_format)
     htlm_json = urlquick.get(url_json,
-                             headers={'User-Agent': web_utils.get_random_ua},
+                             headers={'User-Agent': web_utils.get_random_ua()},
                              max_age=-1)
     json_parser = json.loads(htlm_json.text)
 

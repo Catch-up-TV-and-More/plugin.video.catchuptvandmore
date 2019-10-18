@@ -139,7 +139,7 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     live_html = urlquick.get(URL_LIVE,
-                             headers={'User-Agent': web_utils.get_random_ua},
+                             headers={'User-Agent': web_utils.get_random_ua()},
                              max_age=-1)
     list_url_stream = re.compile(r'file"\: "(.*?)"').findall(live_html.text)
     url_live = ''

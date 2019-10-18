@@ -55,12 +55,12 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE,
-                        headers={'User-Agent': web_utils.get_random_ua},
+                        headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
     channel_id = re.compile(r'\?channel\=(.*?)\&').findall(resp.text)[0]
     resp2 = urlquick.get(
         URL_STREAM % channel_id,
-        headers={'User-Agent': web_utils.get_random_ua},
+        headers={'User-Agent': web_utils.get_random_ua()},
         max_age=-1)
     json_parser = json.loads(resp2.text)
     stream_url = ''
