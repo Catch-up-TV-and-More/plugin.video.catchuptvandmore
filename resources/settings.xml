@@ -1333,6 +1333,7 @@
         <setting label="30370" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/clear_cache/)"/>
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
         <setting label="" type="bool" id="show_live_tv_m3u_info" default="true" visible="false"/>
+        <setting label="X-Forwarded-For" type="text" id="header_x-forwarded-for" default=""/>
     </category>
     <!-- Advanced settings / Tools and other things to save -->
 
