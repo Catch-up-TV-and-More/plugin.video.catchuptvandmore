@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.13~beta03"
+       version="0.2.13~beta04"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -50,6 +50,7 @@
 [Remove] Live TV - Home, Really (UK) - Not present anymore in the website of uktvplay
 [Fix] Live TV - Télé Quebec (CA)
 [Fix] Catch-up TV - LCI (FR)
+[Fix] Live TV - KTO TV (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
