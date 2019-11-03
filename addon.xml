@@ -48,6 +48,7 @@
 [Update] NL po files
 [Update/Fix] X-Forwarded-For in settings - Thanks caguiclajmg
 [Remove] Live TV - Home, Really (UK) - Not present anymore in the website of uktvplay
+[Fix] Live TV - Télé Quebec (CA)
     </news>
     <assets>
       <icon>icon.png</icon>
