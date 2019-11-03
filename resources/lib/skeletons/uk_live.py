@@ -121,22 +121,10 @@ menu = {
         'fanart': 'channels/uk/dave_fanart.jpg',
         'module': 'resources.lib.channels.uk.uktvplay'
     },
-    'really': {
-        'callback': 'live_bridge',
-        'thumb': 'channels/uk/really.png',
-        'fanart': 'channels/uk/really_fanart.jpg',
-        'module': 'resources.lib.channels.uk.uktvplay'
-    },
     'yesterday': {
         'callback': 'live_bridge',
         'thumb': 'channels/uk/yesterday.png',
         'fanart': 'channels/uk/yesterday_fanart.jpg',
-        'module': 'resources.lib.channels.uk.uktvplay'
-    },
-    'home_uktvplay': {
-        'callback': 'live_bridge',
-        'thumb': 'channels/uk/home.png',
-        'fanart': 'channels/uk/home_fanart.jpg',
         'module': 'resources.lib.channels.uk.uktvplay'
     }
 }

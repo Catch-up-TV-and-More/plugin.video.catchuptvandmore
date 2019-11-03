@@ -208,7 +208,8 @@
             <setting label="Dave" type="bool" id="dave" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="dave.order" default="2"/>
 
-            <setting label="Really" type="bool" id="really" default="true" visible="eq(-5,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Really" type="bool" id="really" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="really.order" default="3"/>
 
             <setting label="Yesterday" type="bool" id="yesterday" default="true" visible="eq(-7,true)"/>
@@ -267,7 +268,8 @@
             <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-39,true)"/>
             <setting label="" type="number" visible="false" id="bristoltv.order" default="21"/>
 
-            <setting label="Home" type="bool" id="home_uktvplay" default="true" visible="eq(-41,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Home" type="bool" id="home_uktvplay" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="home_uktvplay.order" default="22"/>
         <!-- United Kingdom -->
 
