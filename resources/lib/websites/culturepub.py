@@ -145,7 +145,7 @@ def get_video_url(plugin,
 
     info_video_html = urlquick.get(video_url,
                                    headers={
-                                       'User-Agent': web_utils.get_random_ua
+                                       'User-Agent': web_utils.get_random_ua()
                                    },
                                    max_age=-1).text
     video_id = re.compile('player=7&pod=(.*?)[\"\&]').findall(

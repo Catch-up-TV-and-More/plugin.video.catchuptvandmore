@@ -457,7 +457,7 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(
-        next_url, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+        next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
     json_parser = json.loads(resp.text)
 
     if json_parser["detail"]["informations"]['consumptionPlatform'] == 'HAPI':
