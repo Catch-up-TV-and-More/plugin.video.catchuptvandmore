@@ -110,33 +110,30 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
     for replay in root.iterfind(
             ".//article[@class='grid-blk__item']"):
 
-        if replay.find(
-                ".//span[@class='broadcast-infos-blk__type']") is not None:
-            if 'Replay' in replay.find(
-                    ".//span[@class='broadcast-infos-blk__type']").text:
-                title = replay.find('.//img').get('alt')
-                img = ''
-                for img in replay.findall('.//source'):
-                    try:
-                        img = img.get('data-srcset')
-                    except Exception:
-                        img = img.get('srcset')
 
-                img = img.split(',')[0].split(' ')[0]
-                program_id = URL_LCI_ROOT + replay.find('.//a').get('href')
+        title = replay.find('.//img').get('alt')
+        img = ''
+        for img in replay.findall('.//source'):
+            try:
+                img = img.get('data-srcset')
+            except Exception:
+                img = img.get('srcset')
 
-                item = Listitem()
-                item.label = title
-                item.art["thumb"] = img
+        img = img.split(',')[0].split(' ')[0]
+        program_id = URL_LCI_ROOT + replay.find('.//a').get('href')
 
-                item.set_callback(get_video_url,
-                                  item_id=item_id,
-                                  video_label=LABELS[item_id] + ' - ' + item.label,
-                                  program_id=program_id)
-                item_post_treatment(item,
-                                    is_playable=True,
-                                    is_downloadable=True)
-                yield item
+        item = Listitem()
+        item.label = title
+        item.art["thumb"] = img
+
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          program_id=program_id)
+        item_post_treatment(item,
+                            is_playable=True,
+                            is_downloadable=True)
+        yield item
 
     # More videos...
     yield Listitem.next_page(item_id=item_id,
