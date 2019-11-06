@@ -193,7 +193,10 @@ def list_videos(plugin, item_id, program_slug, video_type_value, offset, **kwarg
 
     for video_datas in json_parser['data']['programBySlug']['videos']['items']:
         video_title = video_datas['title']
-        video_image = video_datas['decoration']['images'][1]['sources'][0]['url']
+        try:
+            video_image = video_datas['decoration']['images'][1]['sources'][0]['url']
+        except:
+            video_image = ''
         video_plot = video_datas['decoration']['description']
         video_duration = video_datas['publicPlayingInfos']['duration']
         video_id = video_datas['streamId']
