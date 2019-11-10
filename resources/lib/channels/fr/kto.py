@@ -172,13 +172,5 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
-
-    resp = urlquick.get(URL_ROOT,
-                        headers={'User-Agent': web_utils.get_random_ua},
-                        max_age=-1)
-    list_url_stream = re.compile(r'videoUrl = \'(.*?)\'').findall(resp.text)
-    url_live = ''
-    for url_stream_data in list_url_stream:
-        if 'm3u8' in url_stream_data:
-            url_live = url_stream_data
+    url_live = 'https://livehdkto-lh.akamaihd.net/i/LiveStream_1@178944/master.m3u8'
     return url_live
