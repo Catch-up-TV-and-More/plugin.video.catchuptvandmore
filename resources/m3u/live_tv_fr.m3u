@@ -473,10 +473,10 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=provenceazurtv&
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/tebesud.png" group-title="France Région",TébéSud
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=tebesud&item_module=resources.lib.channels.fr.tebeo&item_dict={}
 
-##	MaTélé
-##	matele
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/matele.png" group-title="France Région",MaTélé
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=matele&item_module=resources.lib.channels.fr.matele&item_dict={}
+##	viàMaTélé
+##	viamatele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/viamatele.png" group-title="France Région",viàMaTélé
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=viamatele&item_module=resources.lib.channels.fr.via&item_dict={}
 
 ##	TéléGrenoble
 ##	telegrenoble

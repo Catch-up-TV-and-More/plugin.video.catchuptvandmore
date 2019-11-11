@@ -216,11 +216,11 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     if item_id == 'bfmtv':
         resp = urlquick.get(URL_LIVE_BFMTV,
-                            headers={'User-Agent': web_utils.get_random_ua},
+                            headers={'User-Agent': web_utils.get_random_ua()},
                             max_age=-1)
     elif item_id == 'bfmbusiness':
         resp = urlquick.get(URL_LIVE_BFMBUSINESS,
-                            headers={'User-Agent': web_utils.get_random_ua},
+                            headers={'User-Agent': web_utils.get_random_ua()},
                             max_age=-1)
 
     root = resp.parse()

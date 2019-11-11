@@ -258,13 +258,13 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_ROOT,
-                        headers={'User-Agent': web_utils.get_random_ua},
+                        headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
     lives_json = re.compile(r'window.__ENV__ = (.*?)\;').findall(resp.text)[0]
     json_parser = json.loads(lives_json)
     live_stream_json = urlquick.get(
         URL_LIVE_STREAM % json_parser[LIVE_ATRES_PLAYER[item_id]],
-        headers={'User-Agent': web_utils.get_random_ua},
+        headers={'User-Agent': web_utils.get_random_ua()},
         max_age=-1)
     live_stream_jsonparser = json.loads(live_stream_json.text)
     if "sources" in live_stream_jsonparser:

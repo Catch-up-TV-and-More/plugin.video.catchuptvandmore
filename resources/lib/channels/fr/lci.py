@@ -110,33 +110,29 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
     for replay in root.iterfind(
             ".//article[@class='grid-blk__item']"):
 
-        if replay.find(
-                ".//span[@class='broadcast-infos-blk__type']") is not None:
-            if 'Replay' in replay.find(
-                    ".//span[@class='broadcast-infos-blk__type']").text:
-                title = replay.find('.//img').get('alt')
-                img = ''
-                for img in replay.findall('.//source'):
-                    try:
-                        img = img.get('data-srcset')
-                    except Exception:
-                        img = img.get('srcset')
+        title = replay.find('.//img').get('alt')
+        img = ''
+        for img in replay.findall('.//source'):
+            try:
+                img = img.get('data-srcset')
+            except Exception:
+                img = img.get('srcset')
 
-                img = img.split(',')[0].split(' ')[0]
-                program_id = URL_LCI_ROOT + replay.find('.//a').get('href')
+        img = img.split(',')[0].split(' ')[0]
+        program_id = URL_LCI_ROOT + replay.find('.//a').get('href')
 
-                item = Listitem()
-                item.label = title
-                item.art["thumb"] = img
+        item = Listitem()
+        item.label = title
+        item.art["thumb"] = img
 
-                item.set_callback(get_video_url,
-                                  item_id=item_id,
-                                  video_label=LABELS[item_id] + ' - ' + item.label,
-                                  program_id=program_id)
-                item_post_treatment(item,
-                                    is_playable=True,
-                                    is_downloadable=True)
-                yield item
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_label=LABELS[item_id] + ' - ' + item.label,
+                          program_id=program_id)
+        item_post_treatment(item,
+                            is_playable=True,
+                            is_downloadable=True)
+        yield item
 
     # More videos...
     yield Listitem.next_page(item_id=item_id,
@@ -178,14 +174,14 @@ def get_video_url(plugin,
 
     url_json = URL_VIDEO_STREAM % video_id
     htlm_json = urlquick.get(url_json,
-                             headers={'User-Agent': web_utils.get_random_ua},
+                             headers={'User-Agent': web_utils.get_random_ua()},
                              max_age=-1)
     json_parser = json.loads(htlm_json.text)
 
     # Check DRM in the m3u8 file
     manifest = urlquick.get(json_parser["hls"],
                             headers={
-                                'User-Agent': web_utils.get_random_ua},
+                                'User-Agent': web_utils.get_random_ua()},
                             max_age=-1).text
     if 'drm' in manifest:
         Script.notify("TEST", plugin.localize(LABELS['drm_notification']),
@@ -195,7 +191,7 @@ def get_video_url(plugin,
     root = os.path.dirname(json_parser["hls"])
 
     manifest = urlquick.get(json_parser["hls"].split('&max_bitrate=')[0],
-                            headers={'User-Agent': web_utils.get_random_ua},
+                            headers={'User-Agent': web_utils.get_random_ua()},
                             max_age=-1)
 
     final_video_url = ''
@@ -237,7 +233,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     video_format = 'hls'
     url_json = URL_VIDEO_STREAM_2 % (video_id, video_format)
     htlm_json = urlquick.get(url_json,
-                             headers={'User-Agent': web_utils.get_random_ua},
+                             headers={'User-Agent': web_utils.get_random_ua()},
                              max_age=-1)
     json_parser = json.loads(htlm_json.text)
 

@@ -73,20 +73,10 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=drama&item_modu
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/dave.png" group-title="United Kingdom",Dave
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=dave&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
 
-##	Really
-##	really
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/really.png" group-title="United Kingdom",Really
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=really&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
-
 ##	Yesterday
 ##	yesterday
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/yesterday.png" group-title="United Kingdom",Yesterday
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=yesterday&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
-
-##	Home
-##	home_uktvplay
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/home.png" group-title="United Kingdom",Home
-plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=home_uktvplay&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
 
 ##	QVC
 ##	qvc

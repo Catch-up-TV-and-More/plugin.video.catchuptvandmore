@@ -551,11 +551,11 @@ menu = {
         'module': 'resources.lib.channels.fr.tebeo',
         'm3u_group': 'Région'
     },
-    'matele': {
+    'viamatele': {
         'callback': 'live_bridge',
-        'thumb': 'channels/fr/matele.png',
-        'fanart': 'channels/fr/matele_fanart.jpg',
-        'module': 'resources.lib.channels.fr.matele',
+        'thumb': 'channels/fr/viamatele.png',
+        'fanart': 'channels/fr/viamatele_fanart.jpg',
+        'module': 'resources.lib.channels.fr.via',
         'm3u_group': 'Région'
     },
     'telegrenoble': {

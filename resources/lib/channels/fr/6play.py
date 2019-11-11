@@ -302,7 +302,7 @@ def get_video_url(plugin,
     if cqu.get_kodi_version() < 18:
         video_json = urlquick.get(URL_JSON_VIDEO % video_id,
                                   headers={
-                                      'User-Agent': web_utils.get_random_ua,
+                                      'User-Agent': web_utils.get_random_ua(),
                                       'x-customer-name': 'm6web'
                                   },
                                   max_age=-1)
@@ -324,7 +324,7 @@ def get_video_url(plugin,
             elif 'h264' in asset["type"]:
                 manifest = urlquick.get(
                     asset['full_physical_path'],
-                    headers={'User-Agent': web_utils.get_random_ua},
+                    headers={'User-Agent': web_utils.get_random_ua()},
                     max_age=-1)
                 if 'drm' not in manifest.text:
                     all_datas_videos_quality.append(asset["video_quality"])
@@ -387,7 +387,7 @@ def get_video_url(plugin,
         resp2 = urlquick.post(URL_COMPTE_LOGIN,
                               data=payload,
                               headers={
-                                  'User-Agent': web_utils.get_random_ua,
+                                  'User-Agent': web_utils.get_random_ua(),
                                   'referer': 'https://www.6play.fr/connexion'
                               })
         json_parser = json.loads(
@@ -421,7 +421,7 @@ def get_video_url(plugin,
 
         video_json = urlquick.get(URL_JSON_VIDEO % video_id,
                                   headers={
-                                      'User-Agent': web_utils.get_random_ua,
+                                      'User-Agent': web_utils.get_random_ua(),
                                       'x-customer-name': 'm6web'
                                   },
                                   max_age=-1)
@@ -482,14 +482,14 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         if item_id == 'mb':
             video_json = urlquick.get(
                 URL_LIVE_JSON % (item_id.upper()),
-                headers={'User-Agent': web_utils.get_random_ua},
+                headers={'User-Agent': web_utils.get_random_ua()},
                 max_age=-1)
             json_parser = json.loads(video_json.text)
             video_assets = json_parser[item_id.upper()][0]['live']['assets']
         else:
             video_json = urlquick.get(
                 URL_LIVE_JSON % (item_id),
-                headers={'User-Agent': web_utils.get_random_ua},
+                headers={'User-Agent': web_utils.get_random_ua()},
                 max_age=-1)
             json_parser = json.loads(video_json.text)
             video_assets = json_parser[item_id][0]['live']['assets']
@@ -553,7 +553,7 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         resp2 = urlquick.post(URL_COMPTE_LOGIN,
                               data=payload,
                               headers={
-                                  'User-Agent': web_utils.get_random_ua,
+                                  'User-Agent': web_utils.get_random_ua(),
                                   'referer': 'https://www.6play.fr/connexion'
                               })
         json_parser = json.loads(
@@ -594,14 +594,14 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         if item_id == '6ter':
             video_json = urlquick.get(
                 URL_LIVE_JSON % '6T',
-                headers={'User-Agent': web_utils.get_random_ua},
+                headers={'User-Agent': web_utils.get_random_ua()},
                 max_age=-1)
             json_parser = json.loads(video_json.text)
             video_assets = json_parser['6T'][0]['live']['assets']
         else:
             video_json = urlquick.get(
                 URL_LIVE_JSON % (item_id.upper()),
-                headers={'User-Agent': web_utils.get_random_ua},
+                headers={'User-Agent': web_utils.get_random_ua()},
                 max_age=-1)
             json_parser = json.loads(video_json.text)
             video_assets = json_parser[item_id.upper()][0]['live']['assets']

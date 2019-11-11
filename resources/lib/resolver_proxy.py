@@ -124,14 +124,14 @@ def get_stream_vimeo(plugin,
     if referer is not None:
         html_vimeo = urlquick.get(url_vimeo,
                                   headers={
-                                      'User-Agent': web_utils.get_random_ua,
+                                      'User-Agent': web_utils.get_random_ua(),
                                       'Referer': referer
                                   },
                                   max_age=-1)
     else:
         html_vimeo = urlquick.get(
             url_vimeo,
-            headers={'User-Agent': web_utils.get_random_ua},
+            headers={'User-Agent': web_utils.get_random_ua()},
             max_age=-1)
     json_vimeo = json.loads(
         '{' +
@@ -182,10 +182,12 @@ def get_brightcove_video_json(plugin,
         URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
         headers={
             'User-Agent':
-            web_utils.get_random_ua,
+            web_utils.get_random_ua(),
             'Accept':
             'application/json;pk=%s' %
-            (get_brightcove_policy_key(data_account, data_player))
+            (get_brightcove_policy_key(data_account, data_player)),
+            'X-Forwarded-For':
+            plugin.setting.get_string('header_x-forwarded-for')
         })
     json_parser = json.loads(resp.text)
 
@@ -313,7 +315,7 @@ def get_francetv_video_stream(plugin,
     if drm:
         file_prgm2 = urlquick.get(
             URL_FRANCETV_HDFAUTH_URL % (url_selected),
-            headers={'User-Agent': web_utils.get_random_ua},
+            headers={'User-Agent': web_utils.get_random_ua()},
             max_age=-1)
         json_parser3 = json.loads(file_prgm2.text)
         url_selected = json_parser3['url']
@@ -326,7 +328,7 @@ def get_francetv_video_stream(plugin,
     if 'cloudreplayfrancetv' in url_selected:
         file_prgm2 = urlquick.get(
             URL_FRANCETV_HDFAUTH_URL % (url_selected),
-            headers={'User-Agent': web_utils.get_random_ua},
+            headers={'User-Agent': web_utils.get_random_ua()},
             max_age=-1)
         json_parser3 = json.loads(file_prgm2.text)
         url_selected = json_parser3['url']

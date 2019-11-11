@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.12"
+       version="0.2.13"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -39,30 +39,22 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.12]
-[Fix] Live TV - TéléMB (BE)
-[Fix] Catch-up TV and Live TV - NRJ TV (BE)
-[Fix] Live TV - France 24 (WO)
-[Add] Live TV - TéléGrenoble (FR)
-[Add] Live TV - TéléNantes (FR)
-[Add] Catch-up TV and Live TV - BFM Lyon (FR)
-[Add] Live TV - TLC (FR)
-[Add] Live TV - TV Vendée (FR)
-[Add] Live TV - TV7 Bordeaux (FR)
-[Add] Live TV - TVT Val de Loire (FR)
-[Add] Live TV - TVR (FR)
-[Add] Live TV - Wéo TV (FR)
-[Fix] Catch-up TV - France TV Spectacles Et Culture (FR)
-[Fix] Website - NotreHistoire.ch (CH)
-[Improvements] Catch-up TV - MyTF1 - Add background picture (FR) - Thanks Psychoses
-[Fix] Catch-up TV - 6Play - Missing favourites for 6Play (FR) - Thanks Psychoses
-[Fix] Catch-up TV - STV (UK)
-[Improvements] Catch-up TV - France TV (FR) - Class videos by type (replay, extrait, episode) - Thanks Psychoses and Forage
-[Fix] Live TV - RT (EN, AR and ES) (WO)
-[Fix] Live TV - BVN (WO)
-[Add] Live TV - DiCi TV (FR)
+[Version 0.2.13]
+[Change] Live TV - MaTélé -> ViaMaTélé (FR)
+[Fix] Live TV - L'équipe TV (FR)
+[Fix] Catch-up TV and Live TV - TBD (US)
+[Fix] Catch-up TV - Histoire (FR)
+[Update] API Change NPO (NL) - Thanks Forage
+[Update] NL po files - Thanks Forage
+[Update/Fix] X-Forwarded-For in settings - Thanks caguiclajmg
+[Remove] Live TV - Home, Really (UK) - Not present anymore in the website of uktvplay
 [Fix] Live TV - Télé Quebec (CA)
-[Fix] Website - ONF - NFB (CA)
+[Fix] Catch-up TV - LCI (FR)
+[Fix] Catch-up TV and Live TV - KTO TV (FR)
+[Fix] Catch-up TV - MyTF1 (FR)
+[Fix] Live TV - Rai (IT)
+[Remove] Live TV - Mitélé - AstrePlayer (ES) - Need rework
+[Fix] Catch-up TV - MyCanal+ (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

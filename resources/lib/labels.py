@@ -642,8 +642,8 @@ LABELS = {
     'Provence Azur TV',
     'tebesud':
     'TébéSud',
-    'matele':
-    'MaTélé',
+    'viamatele':
+    'viàMaTélé',
     'telegrenoble':
     'TéléGrenoble',
     'telenantes':

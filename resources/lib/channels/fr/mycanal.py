@@ -249,7 +249,9 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
             else:
                 video_title = program_title + ' ' + video_datas['title']
             video_image = video_datas['URLImage']
-            video_plot = video_datas['summary']
+            video_plot = ''
+            if 'summary' in video_datas:
+                video_plot = video_datas['summary']
             video_url = video_datas['URLMedias']
 
             item = Listitem()
@@ -289,7 +291,9 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
             else:
                 video_title = program_title + ' ' + video_datas['title']
             video_image = video_datas['URLImage']
-            video_plot = video_datas['summary']
+            video_plot = ''
+            if 'summary' in video_datas:
+                video_plot = video_datas['summary']
             video_url = video_datas['URLMedias']
 
             item = Listitem()
@@ -344,7 +348,9 @@ def list_videos_seasons(plugin, item_id, next_url, **kwargs):
         else:
             video_title = program_title + ' ' + video_datas['title']
         video_image = video_datas['URLImage']
-        video_plot = video_datas['summary']
+        video_plot = ''
+        if 'summary' in video_datas:
+            video_plot = video_datas['summary']
         video_url = video_datas['URLMedias']
 
         item = Listitem()
@@ -457,7 +463,7 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(
-        next_url, headers={'User-Agent': web_utils.get_random_ua}, max_age=-1)
+        next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
     json_parser = json.loads(resp.text)
 
     if json_parser["detail"]["informations"]['consumptionPlatform'] == 'HAPI':

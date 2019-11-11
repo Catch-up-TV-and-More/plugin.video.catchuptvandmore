@@ -208,7 +208,8 @@
             <setting label="Dave" type="bool" id="dave" default="true" visible="eq(-3,true)"/>
             <setting label="" type="number" visible="false" id="dave.order" default="2"/>
 
-            <setting label="Really" type="bool" id="really" default="true" visible="eq(-5,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Really" type="bool" id="really" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="really.order" default="3"/>
 
             <setting label="Yesterday" type="bool" id="yesterday" default="true" visible="eq(-7,true)"/>
@@ -267,7 +268,8 @@
             <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-39,true)"/>
             <setting label="" type="number" visible="false" id="bristoltv.order" default="21"/>
 
-            <setting label="Home" type="bool" id="home_uktvplay" default="true" visible="eq(-41,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Home" type="bool" id="home_uktvplay" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="home_uktvplay.order" default="22"/>
         <!-- United Kingdom -->
 
@@ -746,7 +748,8 @@
             <setting label="TébéSud" type="bool" id="tebesud" default="true" visible="eq(-207,true)"/>
             <setting label="" type="number" visible="false" id="tebesud.order" default="103"/>
 
-            <setting label="MaTélé" type="bool" id="matele" default="true" visible="eq(-209,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="MaTélé" type="bool" id="matele" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="matele.order" default="104"/>
 
             <setting label="TéléGrenoble" type="bool" id="telegrenoble" default="true" visible="eq(-211,true)"/>
@@ -778,6 +781,9 @@
 
             <setting label="DiCi TV" type="bool" id="dicitv" default="true" visible="eq(-229,true)"/>
             <setting label="" type="number" visible="false" id="dicitv.order" default="114"/>
+
+            <setting label="viàMaTélé" type="bool" id="viamatele" default="true" visible="eq(-231,true)"/>
+            <setting label="" type="number" visible="false" id="viamatele.order" default="115"/>
         <!-- France -->
 
 
@@ -914,49 +920,63 @@
         <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <setting label="" type="bool" id="es" default="true" visible="false"/>
 
-            <setting label="Telecinco" type="bool" id="telecinco" default="true" visible="eq(-1,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Telecinco" type="bool" id="telecinco" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="telecinco.order" default="1"/>
 
-            <setting label="Cuatro" type="bool" id="cuatro" default="true" visible="eq(-3,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Cuatro" type="bool" id="cuatro" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="cuatro.order" default="2"/>
 
-            <setting label="Factoria de Ficcion" type="bool" id="fdf" default="true" visible="eq(-5,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Factoria de Ficcion" type="bool" id="fdf" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="fdf.order" default="3"/>
 
-            <setting label="Boing" type="bool" id="boing" default="true" visible="eq(-7,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Boing" type="bool" id="boing" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="boing.order" default="4"/>
 
-            <setting label="Energy TV" type="bool" id="energy" default="true" visible="eq(-9,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Energy TV" type="bool" id="energy" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="energy.order" default="5"/>
 
-            <setting label="Divinity" type="bool" id="divinity" default="true" visible="eq(-11,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Divinity" type="bool" id="divinity" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="divinity.order" default="6"/>
 
-            <setting label="Be Mad" type="bool" id="bemad" default="true" visible="eq(-13,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Be Mad" type="bool" id="bemad" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="bemad.order" default="7"/>
 
             <setting label="Realmadrid TV" type="bool" id="realmadridtv" default="true" visible="eq(-15,true)"/>
             <setting label="" type="number" visible="false" id="realmadridtv.order" default="8"/>
 
-            <setting label="Antena 3" type="bool" id="antena3" default="true" visible="eq(-17,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Antena 3" type="bool" id="antena3" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="antena3.order" default="9"/>
 
-            <setting label="La Sexta" type="bool" id="lasexta" default="true" visible="eq(-19,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="La Sexta" type="bool" id="lasexta" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="lasexta.order" default="10"/>
 
-            <setting label="Neox" type="bool" id="neox" default="true" visible="eq(-21,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Neox" type="bool" id="neox" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="neox.order" default="11"/>
 
-            <setting label="Nova" type="bool" id="nova" default="true" visible="eq(-23,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Nova" type="bool" id="nova" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="nova.order" default="12"/>
 
-            <setting label="Mega" type="bool" id="mega" default="true" visible="eq(-25,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Mega" type="bool" id="mega" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="mega.order" default="13"/>
 
-            <setting label="Atreseries" type="bool" id="atreseries" default="true" visible="eq(-27,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Atreseries" type="bool" id="atreseries" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="atreseries.order" default="14"/>
 
-            <setting label="Atresplayer" type="bool" id="atresplayer" default="true" visible="eq(-29,true)"/>
+            <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
+            <setting label="Atresplayer" type="bool" id="atresplayer" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="atresplayer.order" default="15"/>
 
             <setting label="Paramount Channel (ES)" type="bool" id="paramountchannel_es" default="true" visible="eq(-31,true)"/>
@@ -1329,6 +1349,7 @@
         <setting label="30370" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/clear_cache/)"/>
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
         <setting label="" type="bool" id="show_live_tv_m3u_info" default="true" visible="false"/>
+        <setting label="X-Forwarded-For" type="text" id="header_x-forwarded-for" default=""/>
     </category>
     <!-- Advanced settings / Tools and other things to save -->
 
