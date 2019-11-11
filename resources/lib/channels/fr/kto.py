@@ -116,16 +116,16 @@ def list_programs(plugin, item_id, category_title, sub_category_title, **kwargs)
         if category_title in category_datas.find(".//h2").text:
             for sub_category_datas in category_datas.findall(".//div[@class='entry-section clearfix']"):
                 if sub_category_title in sub_category_datas.find("./p/strong").text:
-                    for program_datas in sub_category_datas.findall(".//li"): 
+                    for program_datas in sub_category_datas.findall(".//li"):
                         program_title = program_datas.find('./a').text
                         program_url = URL_ROOT + program_datas.find('./a').get('href')
 
                         item = Listitem()
                         item.label = program_title
                         item.set_callback(list_videos,
-                                        item_id=item_id,
-                                        program_url=program_url,
-                                        page='1')
+                                          item_id=item_id,
+                                          program_url=program_url,
+                                          page='1')
                         item_post_treatment(item)
                         yield item
 

@@ -150,8 +150,8 @@ def get_video_url(plugin,
         stream_id = re.compile('UVID=(.*?)&').findall(wat_embed_html.text)[0]
         url_json = URL_VIDEO_STREAM_WAT % stream_id
         htlm_json = urlquick.get(url_json,
-                                headers={'User-Agent': web_utils.get_random_ua()},
-                                max_age=-1)
+                                 headers={'User-Agent': web_utils.get_random_ua()},
+                                 max_age=-1)
         json_parser = json.loads(htlm_json.text)
 
         # Check DRM in the m3u8 file
@@ -160,7 +160,7 @@ def get_video_url(plugin,
                                 max_age=-1)
         if 'drm' in manifest:
             Script.notify("TEST", plugin.localize(LABELS['drm_notification']),
-                        Script.NOTIFY_INFO)
+                          Script.NOTIFY_INFO)
             return False
 
         root = os.path.dirname(json_parser["hls"])
@@ -201,8 +201,8 @@ def get_video_url(plugin,
         video_format = 'hls'
         url_json = URL_VIDEO_STREAM % (video_id, video_format)
         htlm_json = urlquick.get(url_json,
-                                headers={'User-Agent': web_utils.get_random_ua()},
-                                max_age=-1)
+                                 headers={'User-Agent': web_utils.get_random_ua()},
+                                 max_age=-1)
         json_parser = json.loads(htlm_json.text)
 
         if json_parser['code'] >= 400:
