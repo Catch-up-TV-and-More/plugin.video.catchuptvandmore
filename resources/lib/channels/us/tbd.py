@@ -87,8 +87,11 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     root = resp.parse()
 
     for video_datas in root.iterfind(".//div[@class='event-item episode']"):
-        video_title = video_datas.find('.//h3').text + video_datas.find(
-            './/h3/span').text
+        if video_datas.find(".//p[@class='content-label-secondary']/span") is not None:
+            video_title = video_datas.find('.//h3').text + video_datas.find(
+                ".//p[@class='content-label-secondary']/span").text
+        else:
+            video_title = video_datas.find('.//h3').text
         video_image = ''
         for image_datas in video_datas.findall('.//img'):
             if 'jpg' in image_datas.get('src'):
