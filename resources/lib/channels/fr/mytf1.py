@@ -195,7 +195,7 @@ def list_videos(plugin, item_id, program_slug, video_type_value, offset, **kwarg
         video_title = video_datas['title']
         try:
             video_image = video_datas['decoration']['images'][1]['sources'][0]['url']
-        except:
+        except Exception:
             video_image = ''
         video_plot = video_datas['decoration']['description']
         video_duration = video_datas['publicPlayingInfos']['duration']

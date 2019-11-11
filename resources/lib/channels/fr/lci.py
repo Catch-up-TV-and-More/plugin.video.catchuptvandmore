@@ -110,7 +110,6 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
     for replay in root.iterfind(
             ".//article[@class='grid-blk__item']"):
 
-
         title = replay.find('.//img').get('alt')
         img = ''
         for img in replay.findall('.//source'):
