@@ -53,6 +53,7 @@
 [Fix] Live TV - KTO TV (FR)
 [Fix] Catch-up TV - MyTF1 (FR)
 [Fix] Live TV - Rai (IT)
+[Remove] Live TV - Mitélé - AstrePlayer (ES) - Need rework
     </news>
     <assets>
       <icon>icon.png</icon>
