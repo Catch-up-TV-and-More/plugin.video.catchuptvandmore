@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.13~beta06"
+       version="0.2.13~beta07"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -54,6 +54,7 @@
 [Fix] Catch-up TV - MyTF1 (FR)
 [Fix] Live TV - Rai (IT)
 [Remove] Live TV - Mitélé - AstrePlayer (ES) - Need rework
+[Fix] Catch-up TV - MyCanal+ (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
