@@ -784,6 +784,9 @@
 
             <setting label="viàMaTélé" type="bool" id="viamatele" default="true" visible="eq(-231,true)"/>
             <setting label="" type="number" visible="false" id="viamatele.order" default="115"/>
+
+            <setting label="France Inter" type="bool" id="franceinter" default="true" visible="eq(-233,true)"/>
+            <setting label="" type="number" visible="false" id="franceinter.order" default="116"/>
         <!-- France -->
 
 
