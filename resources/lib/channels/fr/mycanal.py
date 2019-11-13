@@ -25,6 +25,7 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
+
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
@@ -38,14 +39,14 @@ import inputstreamhelper
 import re
 import json
 import urlquick
-import xbmc
-import xbmcgui
+from kodi_six import xbmc
+from kodi_six import xbmcgui
 import requests
 # Working for Python 2/3
 try:
-    import urllib.parse as urllib
+    from urllib.parse import urlencode
 except ImportError:
-    import urllib
+    from urllib import urlencode
 
 # TO DO
 # Wait Kodi 18 to use live with DRM
@@ -683,7 +684,7 @@ def get_video_url(plugin,
                         'mycanal',
                     }
                     # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
-                    item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|b{SSM}|' % urllib.urlencode(headers2)
+                    item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|b{SSM}|' % urlencode(headers2)
                     return item
 
     stream_url = ''

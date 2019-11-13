@@ -24,16 +24,16 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
+
 import importlib
-import xbmcgui
-import xbmc
+from kodi_six import xbmcgui
+from kodi_six import xbmc
 import sys
 
 try:
-    import urllib.parse as urlparse
+    from urllib.parse import urlparse
 except ImportError:
-    # noinspection PyUnresolvedReferences
-    import urlparse
+    from urlparse import urlparse
 
 from codequick import Script
 from resources.lib.labels import LABELS

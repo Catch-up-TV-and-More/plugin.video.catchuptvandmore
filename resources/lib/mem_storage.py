@@ -6,12 +6,13 @@ SimplePlugin micro-framework for Kodi content plugins
 **License**: `GPL v.3 <https://www.gnu.org/copyleft/gpl.html>`_
 """
 
+
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError:
     import pickle
 from collections import MutableMapping
-import xbmcgui
+from kodi_six import xbmcgui
 from six import string_types
 
 
@@ -64,7 +65,7 @@ class MemStorage(MutableMapping):
         :rtype: str
         """
         lines = []
-        for key, val in self.items():
+        for key, val in list(self.items()):
             lines.append('{0}: {1}'.format(repr(key), repr(val)))
         return ', '.join(lines)
 

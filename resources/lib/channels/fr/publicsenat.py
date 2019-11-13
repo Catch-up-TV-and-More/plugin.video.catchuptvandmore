@@ -26,6 +26,7 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
+from builtins import str
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
@@ -71,7 +72,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    for category_id, category_name in CATEGORIES.items():
+    for category_id, category_name in list(CATEGORIES.items()):
         category_url = URL_CATEGORIES % category_id
 
         item = Listitem()

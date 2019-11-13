@@ -24,7 +24,10 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
+from __future__ import division
 
+from builtins import str
+from past.utils import old_div
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
@@ -37,7 +40,7 @@ import json
 import time
 import re
 import urlquick
-import xbmcgui
+from kodi_six import xbmcgui
 
 # TO DO
 
@@ -123,7 +126,7 @@ def list_videos(plugin, item_id, program_category, page, **kwargs):
         description = video_datas['description']
         # begin_date = video['begin_date']  # 1486725600,
         image = video_datas['image']
-        duration = video_datas['video_duration_ms'] / 1000
+        duration = old_div(video_datas['video_duration_ms'], 1000)
 
         value_date = time.strftime('%d %m %Y',
                                    time.localtime(video_datas["begin_date"]))

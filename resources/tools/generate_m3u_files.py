@@ -25,12 +25,22 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
+from __future__ import print_function
+
+from builtins import str
 import polib
 import sys
 sys.path.append('..')
 
 import mock_codequick
-import urllib
+try:
+    from urllib.parse import urlparse, urlencode
+    from urllib.request import urlopen, Request
+    from urllib.error import HTTPError
+except ImportError:
+    from urlparse import urlparse
+    from urllib import urlencode
+    from urllib2 import urlopen, Request, HTTPError
 import importlib
 import os
 
@@ -146,7 +156,7 @@ def generate_m3u_files():
 
     # Iterate over countries
     live_tv = importlib.import_module('lib.skeletons.live_tv').menu
-    for country_id, country_infos in live_tv.items():
+    for country_id, country_infos in list(live_tv.items()):
 
         country_label = get_label(country_id)
         country_code = country_id.replace('_live', '')
@@ -163,7 +173,7 @@ def generate_m3u_files():
         # Iterate over channels
         country_channels = importlib.import_module('lib.skeletons.' +
                                                    country_id).menu
-        for channel_id, channel_infos in country_channels.items():
+        for channel_id, channel_infos in list(country_channels.items()):
 
             channel_label = get_label(channel_id)
             print('\n\tchannel_id: ' + channel_id)
@@ -254,7 +264,7 @@ def generate_m3u_files():
 
         # Add WO channels if needed (e.g. Arte FR in the French M3U)
         wo_live = importlib.import_module('lib.skeletons.wo_live').menu
-        for channel_wo_id, channel_wo_infos in wo_live.items():
+        for channel_wo_id, channel_wo_infos in list(wo_live.items()):
             channel_can_be_added = False
             if 'available_languages' in channel_wo_infos:
                 if country_code.upper(
@@ -339,7 +349,7 @@ def generate_m3u_files():
     m3u_all = open(LIVE_TV_M3U_ALL_FILEPATH, "w")
     write_header(m3u_all)
 
-    for country_id, country_dict in m3u_entries.items():
+    for country_id, country_dict in list(m3u_entries.items()):
 
         country_label = country_dict['country_label']
         country_code = country_dict['country_code']

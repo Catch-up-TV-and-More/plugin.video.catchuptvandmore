@@ -25,6 +25,8 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
+from builtins import str
+from builtins import range
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
@@ -38,7 +40,7 @@ import json
 import re
 import os
 import urlquick
-import xbmcgui
+from kodi_six import xbmcgui
 
 # TO DO
 # Move WAT to resolver.py (merge with mytf1 code)

@@ -67,7 +67,7 @@ def list_letters(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_REPLAYS)
     json_parser = json.loads(resp.text)
 
-    for letter_title in json_parser.keys():
+    for letter_title in list(json_parser.keys()):
         item = Listitem()
         item.label = letter_title
         item.set_callback(list_programs,

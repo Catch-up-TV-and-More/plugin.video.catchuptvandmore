@@ -25,7 +25,7 @@ import json
 
 from codequick import Route, Resolver, Listitem, Script
 import urlquick
-import xbmcgui
+from kodi_six import xbmcgui
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils

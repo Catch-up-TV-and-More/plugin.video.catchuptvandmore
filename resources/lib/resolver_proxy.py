@@ -35,7 +35,7 @@ from resources.lib import download
 import json
 import re
 import urlquick
-import xbmcgui
+from kodi_six import xbmcgui
 
 # TO DO
 # Quality VIMEO

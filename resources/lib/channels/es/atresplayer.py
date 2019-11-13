@@ -25,6 +25,7 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
+from builtins import str
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
@@ -36,7 +37,7 @@ import inputstreamhelper
 import json
 import re
 import urlquick
-import xbmc
+from kodi_six import xbmc
 from six import text_type
 
 # TO DO
@@ -233,7 +234,7 @@ def get_video_url(plugin,
     response = xbmc.executeJSONRPC(json.dumps(payload))
     responses_uni = text_type(response, 'utf-8', errors='ignore')
     response_serialized = json.loads(responses_uni)
-    if 'error' not in response_serialized.keys():
+    if 'error' not in list(response_serialized.keys()):
         result = response_serialized.get('result', {})
         addon = result.get('addon', {})
         if addon.get('enabled', False) is True:

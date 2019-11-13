@@ -26,15 +26,17 @@
 from __future__ import unicode_literals
 
 # Core imports
+from builtins import str
+from builtins import range
 import importlib
 import sys
 
 # Kodi imports
 from codequick import Route, Resolver, Listitem, run, Script, utils, storage
 import urlquick
-import xbmc
-import xbmcgui
-import xbmcplugin
+from kodi_six import xbmc
+from kodi_six import xbmcgui
+from kodi_six import xbmcplugin
 from six import string_types
 
 # Local imports
@@ -73,7 +75,7 @@ def get_sorted_menu(plugin, menu_id):
     # according to each item order and we have
     # to hide each disabled item
     menu = []
-    for item_id, item_infos in current_menu.items():
+    for item_id, item_infos in list(current_menu.items()):
 
         add_item = True
 
@@ -430,7 +432,7 @@ def favourites(plugin, start=0, **kwargs):
     sorted_menu = []
     with storage.PersistentDict("favourites.pickle") as db:
         menu = []
-        for item_hash, item_dict in db.items():
+        for item_hash, item_dict in list(db.items()):
             item = (item_dict['params']['order'], item_hash, item_dict)
 
             menu.append(item)

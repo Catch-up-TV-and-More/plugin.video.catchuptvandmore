@@ -60,7 +60,7 @@ GENRE_VIDEOS = {
 
 def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
-    for category_id, category_title in GENRE_VIDEOS.items():
+    for category_id, category_title in list(GENRE_VIDEOS.items()):
         item = Listitem()
         item.label = category_title
         item.set_callback(list_videos,
