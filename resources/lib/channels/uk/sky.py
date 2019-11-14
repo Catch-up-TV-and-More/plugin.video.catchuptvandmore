@@ -40,13 +40,9 @@ import json
 import re
 # Working for Python 2/3
 try:
-    from urllib.parse import urlparse, urlencode
-    from urllib.request import urlopen, Request
-    from urllib.error import HTTPError
+    from urllib.parse import quote_plus
 except ImportError:
-    from urlparse import urlparse
-    from urllib import urlencode
-    from urllib2 import urlopen, Request, HTTPError
+    from urlparse import quote_plus
 import urlquick
 
 # TO DO
@@ -188,7 +184,7 @@ def get_video_url(plugin,
     data_embed_token = urlquick.get(URL_PCODE_EMBED_TOKEN).text
     pcode = re.compile('sas/embed_token/(.*?)/all').findall(
         data_embed_token)[0]
-    data_embed_token = urllib.parse.quote_plus(data_embed_token.replace('"', ''))
+    data_embed_token = quote_plus(data_embed_token.replace('"', ''))
     video_vod = urlquick.get(URL_OOYALA_VOD %
                              (pcode, video_id, data_embed_token)).text
     json_parser = json.loads(video_vod)

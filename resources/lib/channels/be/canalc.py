@@ -35,13 +35,9 @@ import re
 import urlquick
 # Working for Python 2/3
 try:
-    from urllib.parse import urlparse, urlencode
-    from urllib.request import urlopen, Request
-    from urllib.error import HTTPError
+    from urllib.parse import unquote_plus
 except ImportError:
-    from urlparse import urlparse
-    from urllib import urlencode
-    from urllib2 import urlopen, Request, HTTPError
+    from urlparse import unquote_plus
 
 # TO DO
 # Add Replay
@@ -59,5 +55,5 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    return urllib.parse.unquote_plus(
+    return unquote_plus(
         re.compile(r'sourceURL\"\:\"(.*?)\"').findall(resp.text)[0])
