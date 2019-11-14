@@ -541,7 +541,7 @@ def error_handler(exception):
 
     # Else, we ask the user if he wants
     # to share his log to addon devs
-    elif 'No items found' not in exception:
+    elif 'No items found' not in str(exception):
         log_uploader = importlib.import_module('resources.lib.log_uploader')
         log_uploader.ask_to_share_log()
 
