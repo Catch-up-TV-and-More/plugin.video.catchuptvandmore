@@ -482,6 +482,10 @@ msgctxt "#30371"
 msgid "Cache cleared"
 msgstr ""
 
+msgctxt "#30372"
+msgid "Send Kodi log to the developers when an error occurred"
+msgstr ""
+
 
 # Reserved space for other tab/category in settins (from 30400 to 30499)
 

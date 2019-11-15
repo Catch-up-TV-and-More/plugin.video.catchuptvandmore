@@ -46,6 +46,7 @@
 [Improvements] Understandable HTTP code error message
 [Improvements] Website - Culturepub - Add playlist
 [Improvements] Start working on Python 2 and 3 compatibility
+[Add] Setting - Possibility to disable log uploader pop up
     </news>
     <assets>
       <icon>icon.png</icon>
