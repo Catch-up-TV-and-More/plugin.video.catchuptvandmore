@@ -45,8 +45,8 @@
 [Add] Live TV - France Inter (FR)
 [Improvements] Understandable HTTP code error message
 [Improvements] Website - Culturepub - Add playlist
-[Improvements] Start working on Python 2 and 3 compatibility
 [Add] Setting - Possibility to disable log uploader pop up
+[Improvements] First Python 2/3 version working on Kodi 19
     </news>
     <assets>
       <icon>icon.png</icon>
