@@ -48,6 +48,7 @@
 [Add] Setting - Possibility to disable log uploader pop up
 [Improvements] First Python 2/3 version working on Kodi 19
 [Improvements] Live TV - France TV (FR) - Possibility to use live TV not geolocalised outside France and DomTom
+[Fix] Catchup-TV - France TV (FR) - New API (need more test)
     </news>
     <assets>
       <icon>icon.png</icon>

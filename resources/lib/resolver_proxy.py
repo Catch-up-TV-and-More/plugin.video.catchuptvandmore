@@ -32,6 +32,7 @@ from resources.lib import web_utils
 from resources.lib import cq_utils
 from resources.lib import download
 
+import inputstreamhelper
 import json
 import re
 import urlquick
@@ -76,10 +77,13 @@ URL_MTVNSERVICES_STREAM_ACCOUNT_EP = 'https://media-utils.mtvnservices.com/servi
                                      '&accountOverride=%s&ep=%s'
 # videoURI, accountOverride, ep
 
-URL_FRANCETV_LIVE_PROGRAM_INFO = 'http://sivideo.webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/?idDiffusion=%s'
+URL_FRANCETV_LIVE_PROGRAM_INFO = 'https://sivideo.webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/?idDiffusion=%s'
 # VideoId
 
-URL_FRANCETV_HDFAUTH_URL = 'http://hdfauth.francetv.fr/esi/TA?format=json&url=%s'
+URL_FRANCETV_CATCHUP_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s?0&device_type=desktop&browser=chrome'
+# VideoId
+
+URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json&url=%s'
 # Url
 
 
@@ -251,110 +255,54 @@ def get_francetv_video_stream(plugin,
                               download_mode=False,
                               video_label=None):
 
-    resp = urlquick.get(URL_FRANCETV_LIVE_PROGRAM_INFO % id_diffusion,
+    resp = urlquick.get(URL_FRANCETV_CATCHUP_PROGRAM_INFO % id_diffusion,
                         max_age=-1)
     json_parser = json.loads(resp.text)
 
-    if 'videos' not in json_parser:
+    if 'video' not in json_parser:
         plugin.notify('ERROR', plugin.localize(30716))
         return False
 
-    subtitles = []
-    if plugin.setting.get_boolean('active_subtitle'):
-        if json_parser['subtitles']:
-            subtitles_list = json_parser['subtitles']
-            for subtitle in subtitles_list:
-                if subtitle['format'] == 'vtt':
-                    subtitles.append(subtitle['url'])
-
-    url_selected = ''
-
-    if DESIRED_QUALITY == "DIALOG":
-        all_datas_videos_quality = []
-        all_datas_videos_path = []
-
-        for video in json_parser['videos']:
-            if 'hds' not in video['format']:
-                if video['format'] == 'hls_v5_os':
-                    all_datas_videos_quality.append("HD")
-                else:
-                    all_datas_videos_quality.append("SD")
-                all_datas_videos_path.append((video['url'], video['drm']))
-
-        seleted_item = xbmcgui.Dialog().select(
-            plugin.localize(LABELS['choose_video_quality']),
-            all_datas_videos_quality)
-
-        if seleted_item == -1:
-            return False
-
-        url_selected = all_datas_videos_path[seleted_item][0]
-        drm = all_datas_videos_path[seleted_item][1]
-
-    elif DESIRED_QUALITY == "BEST":
-        for video in json_parser['videos']:
-            if 'hds' not in video['format']:
-                if video['format'] == 'hls_v5_os':
-                    url_selected = video['url']
-                    drm = video['drm']
-                    break
-                else:
-                    url_selected = video['url']
-                    drm = video['drm']
+    all_video_datas = []
+    video_datas = json_parser['video']
+    # Implementer Caption (found case)
+    # Implement DRM (found case)
+    if video_datas['drm'] is not None:
+        all_video_datas.append((video_datas['format'], 'True', video_datas['token']))
     else:
-        for video in json_parser['videos']:
-            if 'hds' not in video['format']:
-                if video['format'] == 'm3u8-download':
-                    url_selected = video['url']
-                    drm = video['drm']
-                    break
-                else:
-                    url_selected = video['url']
-                    drm = video['drm']
+        all_video_datas.append((video_datas['format'], 'False', video_datas['token']))
 
-    if drm:
-        file_prgm2 = urlquick.get(
-            URL_FRANCETV_HDFAUTH_URL % (url_selected),
-            headers={'User-Agent': web_utils.get_random_ua()},
-            max_age=-1)
-        json_parser3 = json.loads(file_prgm2.text)
-        url_selected = json_parser3['url']
-        url_selected = url_selected.replace('.m3u8:', '.m4u9:')
+    url_selected = all_video_datas[0][2]
+    if 'hls' in all_video_datas[0][0]:
+        json_parser2 = json.loads(
+            urlquick.get(url_selected, max_age=-1).text)
+        return json_parser2['url']
+    elif 'dash' in all_video_datas[0][0]:
 
-    if url_selected is None:
-        plugin.notify('ERROR', plugin.localize(30716))
-        return False
+        # Block Donwload video in this case
+        is_helper = inputstreamhelper.Helper('mpd')
+        if not is_helper.check_inputstream():
+            return False
+        json_parser2 = json.loads(
+            urlquick.get(url_selected, max_age=-1).text)
 
-    if 'cloudreplayfrancetv' in url_selected:
-        file_prgm2 = urlquick.get(
-            URL_FRANCETV_HDFAUTH_URL % (url_selected),
-            headers={'User-Agent': web_utils.get_random_ua()},
-            max_age=-1)
-        json_parser3 = json.loads(file_prgm2.text)
-        url_selected = json_parser3['url']
-        if drm:
-            url_selected = url_selected.replace('.m3u8:', '.m4u9:')
-
-    final_video_url = url_selected
-
-    if download_mode:
-        return download.download_video(final_video_url, video_label)
-
-    if len(subtitles) > 0:
         item = Listitem()
-        item.path = final_video_url
-        for subtitle in subtitles:
-            item.subtitles.append(subtitle)
+        item.path = json_parser2['url']
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
         item.label = item_dict['label']
         item.info.update(item_dict['info'])
         item.art.update(item_dict['art'])
+
         return item
     else:
-        return final_video_url
+        # Return info the format is not known
+        return None
 
 
 def get_francetv_live_stream(plugin, live_id):
 
+    # Move Live TV on the new API
     json_parser_liveId = json.loads(
         urlquick.get(URL_FRANCETV_LIVE_PROGRAM_INFO % live_id,
                      max_age=-1).text)
