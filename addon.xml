@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.14~beta01"
+       version="0.2.14~beta02"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -47,6 +47,7 @@
 [Improvements] Website - Culturepub - Add playlist
 [Add] Setting - Possibility to disable log uploader pop up
 [Improvements] First Python 2/3 version working on Kodi 19
+[Improvements] Live TV - France TV (FR) - Possibility to use live TV not geolocalised outside France and DomTom
     </news>
     <assets>
       <icon>icon.png</icon>

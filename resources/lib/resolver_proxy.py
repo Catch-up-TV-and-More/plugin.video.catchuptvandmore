@@ -358,29 +358,21 @@ def get_francetv_live_stream(plugin, live_id):
     json_parser_liveId = json.loads(
         urlquick.get(URL_FRANCETV_LIVE_PROGRAM_INFO % live_id,
                      max_age=-1).text)
-    url_hls_v1 = ''
-    url_hls_v5 = ''
-    url_hls = ''
-
-    for video in json_parser_liveId['videos']:
-        if 'format' in video:
-            if 'hls_v1_os' in video['format']:
-                url_hls_v1 = video['url']
-            if 'hls_v5_os' in video['format']:
-                url_hls_v5 = video['url']
-            if 'hls' in video['format']:
-                url_hls = video['url']
 
     final_url = ''
+    geoip_value = web_utils.geoip()
+    for video in json_parser_liveId['videos']:
+        if 'format' in video:
+            if 'hls_v' in video['format'] or video['format']=='hls':
+                if video['geoblocage'] is not None:
+                    for value_geoblocage in video['geoblocage']:
+                        if geoip_value == value_geoblocage:
+                            final_url = video['url']
+                else:
+                    final_url = video['url']
 
-    # Case France 3 Région
-    if url_hls_v1 == '' and url_hls_v5 == '':
-        final_url = url_hls
-
-    if final_url == '' and url_hls_v5 != '':
-        final_url = url_hls_v5
-    elif final_url == '':
-        final_url = url_hls_v1
+    if final_url == '':
+        return None
 
     json_parser2 = json.loads(
         urlquick.get(URL_FRANCETV_HDFAUTH_URL % (final_url), max_age=-1).text)
