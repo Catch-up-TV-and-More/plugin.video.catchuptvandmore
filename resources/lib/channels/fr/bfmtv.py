@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from builtins import str
-from past.utils import old_div
+import sys
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
@@ -35,6 +35,7 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
 from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.common import old_div
 
 import json
 import time

@@ -26,6 +26,7 @@
 from __future__ import unicode_literals
 
 import os
+import numbers
 from codequick.script import Script
 from codequick.utils import ensure_native_str
 
@@ -47,3 +48,10 @@ def get_item_media_path(item_media_path):
         full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
 
     return ensure_native_str(full_path)
+
+
+def old_div(a, b):
+    if isinstance(a, numbers.Integral) and isinstance(b, numbers.Integral):
+        return a // b
+    else:
+        return a / b
