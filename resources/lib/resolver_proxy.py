@@ -312,7 +312,7 @@ def get_francetv_live_stream(plugin, live_id):
     geoip_value = web_utils.geoip()
     for video in json_parser_liveId['videos']:
         if 'format' in video:
-            if 'hls_v' in video['format'] or video['format']=='hls':
+            if 'hls_v' in video['format'] or video['format'] == 'hls':
                 if video['geoblocage'] is not None:
                     for value_geoblocage in video['geoblocage']:
                         if geoip_value == value_geoblocage:
