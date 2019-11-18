@@ -87,10 +87,10 @@ def connect_openvpn(config, restart=False, sudopassword=None):
                 openvpn.disconnect()
                 db['status'] = "disconnected"
             openvpn.connect()
-            utils.send_notification(Script.localize(
-                LABELS['Started VPN connection']),
-                title="OpenVPN",
-                time=3000)
+            Script.notify(
+                "OpenVPN",
+                Script.localize(LABELS['Started VPN connection']),
+                display_time=3000)
 
             db['status'] = "connected"
         except vpnlib.OpenVPNError as exception:
@@ -117,7 +117,7 @@ def connect_openvpn(config, restart=False, sudopassword=None):
         db.flush()
 
 
-@Route.register
+@Script.register
 def import_ovpn(*args, **kwargs):
     path = xbmcgui.Dialog().browse(
         1,
@@ -198,7 +198,7 @@ def select_ovpn():
             return ''
 
 
-@Route.register
+@Script.register
 def delete_ovpn(*args, **kwargs):
     ovpnfiles = {}
     with storage.PersistentDict('vpn') as db:
@@ -242,7 +242,7 @@ def delete_ovpn(*args, **kwargs):
             return ''
 
 
-@Route.register
+@Script.register
 def vpn_item_callback(plugin):
     with storage.PersistentDict('vpn') as db:
         if 'status' not in db:
@@ -263,9 +263,7 @@ def vpn_item_callback(plugin):
         elif db['status'] == "connected":
             disconnect_openvpn()
         db.flush()
-
-        # xbmc.executebuiltin('XBMC.Container.Refresh()')
-    return False
+        xbmc.executebuiltin('XBMC.Container.Refresh()')
 
 
 def add_vpn_context(item):
