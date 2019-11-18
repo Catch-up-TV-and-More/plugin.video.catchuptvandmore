@@ -37,7 +37,7 @@ import urlquick
 try:
     from urllib.parse import unquote_plus
 except ImportError:
-    from urlparse import unquote_plus
+    from urllib import unquote_plus
 
 # TO DO
 # Add Replay

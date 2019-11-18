@@ -42,7 +42,7 @@ import re
 try:
     from urllib.parse import quote_plus
 except ImportError:
-    from urlparse import quote_plus
+    from urllib import quote_plus
 import urlquick
 
 # TO DO
