@@ -215,19 +215,15 @@ def tv_guide_menu(plugin, **kwargs):
     # Move up and move down action only work with this sort method
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
 
+    # Get sorted menu of this live TV country
     menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
-    channels_id = []
-    for index, (channel_order, channel_id, channel_infos) in enumerate(menu):
-        channels_id.append(channel_id)
 
-    # Load the graber module accroding to the country
-    # (e.g. resources.lib.channels.tv_guides.fr_live)
-    tv_guide_module_path = 'resources.lib.channels.tv_guides.' + menu_id
-    tv_guide_module = importlib.import_module(tv_guide_module_path)
+    # Load xmltv module
+    xmltv = importlib.import_module('resources.lib.xmltv')
 
-    # For each channel grab the current program according to the current time
-    tv_guide = tv_guide_module.grab_tv_guide(channels_id)
+    # Get tv_guide of this country
+    tv_guide = xmltv.grab_tv_guide(menu_id, menu)
 
     for index, (channel_order, channel_id, channel_infos) in enumerate(menu):
 
@@ -251,8 +247,8 @@ def tv_guide_menu(plugin, **kwargs):
             item.params['item_module'] = channel_infos['module']
 
         # If we have program infos from the grabber
-        if channel_id in tv_guide:
-            guide_infos = tv_guide[channel_id]
+        if 'xmltv_id' in channel_infos and channel_infos['xmltv_id'] in tv_guide:
+            guide_infos = tv_guide[channel_infos['xmltv_id']]
 
             if 'title' in guide_infos:
                 item.label = item.label + ' — ' + guide_infos['title']
@@ -272,31 +268,25 @@ def tv_guide_menu(plugin, **kwargs):
                 else:
                     plot.append(guide_infos['specific_genre'])
 
-            # start_time and stop_time must be a string
-            if 'start_time' in guide_infos and 'stop_time' in guide_infos:
-                plot.append(guide_infos['start_time'] + ' - ' +
-                            guide_infos['stop_time'])
-            elif 'start_time' in guide_infos:
-                plot.append(guide_infos['start_time'])
+            # # start_time and stop_time must be a string
+            if 'start' in guide_infos and 'stop' in guide_infos:
+                plot.append(guide_infos['start'] + ' - ' +
+                            guide_infos['stop'])
+            elif 'stop' in guide_infos:
+                plot.append(guide_infos['start'])
 
             if 'subtitle' in guide_infos:
                 plot.append(guide_infos['subtitle'])
 
-            if 'plot' in guide_infos:
-                plot.append(guide_infos['plot'])
+            if 'desc' in guide_infos:
+                plot.append(guide_infos['desc'])
 
             item.info['plot'] = '\n'.join(plot)
 
-            item.info['episode'] = guide_infos.get('episode')
-            item.info['season'] = guide_infos.get('season')
-            item.info["rating"] = guide_infos.get('rating')
-            item.info["duration"] = guide_infos.get('duration')
+            item.info["duration"] = guide_infos.get('length')
 
-            if 'fanart' in guide_infos:
-                item.art["fanart"] = guide_infos['fanart']
-
-            if 'thumb' in guide_infos:
-                item.art["thumb"] = guide_infos['thumb']
+            if 'icon' in guide_infos:
+                item.art["thumb"] = guide_infos['icon']
 
         item.params['item_id'] = channel_id
         item.params['item_dict'] = item2dict(item)
