@@ -226,46 +226,7 @@ def get_video_url(plugin,
 
         if video_format == 'hls':
 
-            root = os.path.dirname(json_parser["url"])
-
-            url_without_max_bitrate_list = json_parser["url"].split(
-                '&max_bitrate=')
-            if '&' in url_without_max_bitrate_list[1]:
-                url_without_max_bitrate = url_without_max_bitrate_list[
-                    0] + '&' + url_without_max_bitrate_list[1].split('&')[1]
-            else:
-                url_without_max_bitrate = url_without_max_bitrate_list[0]
-            manifest = urlquick.get(
-                url_without_max_bitrate,
-                headers={'User-Agent': web_utils.get_random_ua()},
-                max_age=-1)
-
-            lines = manifest.text.splitlines()
-            final_video_url = ''
-            all_datas_videos_quality = []
-            all_datas_videos_path = []
-            for k in range(0, len(lines) - 1):
-                if 'RESOLUTION=' in lines[k]:
-                    all_datas_videos_quality.append(
-                        re.compile(r'RESOLUTION=(.*?),').findall(lines[k])[0])
-                    all_datas_videos_path.append(root + '/' + lines[k + 1])
-            if DESIRED_QUALITY == "DIALOG":
-                seleted_item = xbmcgui.Dialog().select(
-                    plugin.localize(LABELS['choose_video_quality']),
-                    all_datas_videos_quality)
-
-                if seleted_item == -1:
-                    return False
-
-                final_video_url = all_datas_videos_path[seleted_item]
-            elif DESIRED_QUALITY == 'BEST':
-                # Last video in the Best
-                for k in all_datas_videos_path:
-                    url = k
-                final_video_url = url
-            else:
-                final_video_url = all_datas_videos_path[0]
-
+            final_video_url = json_parser["url"].replace('2800000', '4000000')
             if download_mode:
                 return download.download_video(final_video_url, video_label)
             return final_video_url
