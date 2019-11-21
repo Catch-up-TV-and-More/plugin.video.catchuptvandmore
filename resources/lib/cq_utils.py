@@ -31,9 +31,9 @@ from kodi_six import xbmc
 import sys
 
 try:
-    from urllib.parse import urlparse
+    from urllib.parse import urlunsplit
 except ImportError:
-    from urlparse import urlparse
+    from urlparse import urlunsplit
 
 from codequick import Script
 from resources.lib.labels import LABELS
@@ -55,7 +55,7 @@ def build_kodi_url(route_path, raw_params):
             pickled.decode("ascii") if PY3 else pickled)
 
     # Build kodi url
-    return urlparse.urlunsplit(
+    return urlunsplit(
         ("plugin", "plugin.video.catchuptvandmore", route_path, query, ""))
 
 
