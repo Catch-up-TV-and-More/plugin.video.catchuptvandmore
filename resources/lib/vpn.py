@@ -51,7 +51,7 @@ def disconnect_openvpn():
             xbmcgui.Dialog().ok(
                 'OpenVPN',
                 Script.localize(LABELS[
-                    'An error has occurred whilst trying to connect OpenVPN']))
+                    'An error has occurred while trying to connect OpenVPN']))
             Script.log('OpenVPN: OpenVPN error: ' + str(exception))
             db['status'] = "failed"
         db.flush()
@@ -112,7 +112,7 @@ def connect_openvpn(config, restart=False, sudopassword=None):
                 xbmcgui.Dialog().ok(
                     'OpenVPN',
                     Script.localize(LABELS[
-                        'An error has occurred whilst trying to connect OpenVPN']))
+                        'An error has occurred while trying to connect OpenVPN']))
                 db['status'] = "failed"
         db.flush()
 

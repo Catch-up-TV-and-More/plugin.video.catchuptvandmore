@@ -456,7 +456,7 @@ msgid "Disconnect it?"
 msgstr "Deze verbreken?"
 
 msgctxt "#30358"
-msgid "An error has occurred whilst trying to connect OpenVPN"
+msgid "An error has occurred while trying to connect OpenVPN"
 msgstr "Er is een fout opgetreden bij het opbouwen van de verbinding"
 
 msgctxt "#30359"

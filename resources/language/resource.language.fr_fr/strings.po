@@ -456,7 +456,7 @@ msgid "Disconnect it?"
 msgstr "La déconnecter ?"
 
 msgctxt "#30358"
-msgid "An error has occurred whilst trying to connect OpenVPN"
+msgid "An error has occurred while trying to connect OpenVPN"
 msgstr "Une erreur est survenue durant la tentative de reconnexion"
 
 msgctxt "#30359"

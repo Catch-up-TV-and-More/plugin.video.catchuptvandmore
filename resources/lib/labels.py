@@ -252,7 +252,7 @@ LABELS = {
     30356,
     'Disconnect it?':
     30357,
-    'An error has occurred whilst trying to connect OpenVPN':
+    'An error has occurred while trying to connect OpenVPN':
     30358,
     'Disconnect VPN':
     30359,
