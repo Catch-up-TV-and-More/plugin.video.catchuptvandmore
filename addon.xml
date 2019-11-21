@@ -43,6 +43,7 @@
     <news>
 [Version 0.2.15]
 [Fix] Download Mode - France TV (FR)
+[Improvements] Live TV - MyTF1 (FR) - Add notification if live TV is not available in your region
     </news>
     <assets>
       <icon>icon.png</icon>
