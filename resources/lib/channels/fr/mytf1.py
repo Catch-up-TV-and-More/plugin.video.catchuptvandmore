@@ -26,6 +26,8 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
+from builtins import str
+from builtins import range
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
@@ -43,8 +45,8 @@ import json
 import os
 import re
 import urlquick
-import xbmc
-import xbmcgui
+from kodi_six import xbmc
+from kodi_six import xbmcgui
 
 # TO DO
 # Readd Playlist (if needed)
@@ -98,7 +100,7 @@ def list_categories(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_API, params=params, headers=headers)
     json_parser = json.loads(resp.text)
 
-    for json_key in json_parser['data'].keys():
+    for json_key in list(json_parser['data'].keys()):
         if json_parser['data'][json_key]['label']:
             category_name = json_parser['data'][json_key]['label']
             category_id = json_parser['data'][json_key]['id']
@@ -164,7 +166,7 @@ def list_program_categories(plugin, item_id, program_slug, **kwargs):
     - Saison 1
     - ...
     """
-    for video_type_title, video_type_value in VIDEO_TYPES.items():
+    for video_type_title, video_type_value in list(VIDEO_TYPES.items()):
         item = Listitem()
         item.label = video_type_title
         item.set_callback(list_videos,
@@ -258,46 +260,7 @@ def get_video_url(plugin,
 
     if video_format == 'hls':
 
-        root = os.path.dirname(json_parser["url"])
-
-        url_without_max_bitrate_list = json_parser["url"].split(
-            '&max_bitrate=')
-        if '&' in url_without_max_bitrate_list[1]:
-            url_without_max_bitrate = url_without_max_bitrate_list[
-                0] + '&' + url_without_max_bitrate_list[1].split('&')[1]
-        else:
-            url_without_max_bitrate = url_without_max_bitrate_list[0]
-        manifest = urlquick.get(
-            url_without_max_bitrate,
-            headers={'User-Agent': web_utils.get_random_ua()},
-            max_age=-1)
-
-        lines = manifest.text.splitlines()
-        final_video_url = ''
-        all_datas_videos_quality = []
-        all_datas_videos_path = []
-        for k in range(0, len(lines) - 1):
-            if 'RESOLUTION=' in lines[k]:
-                all_datas_videos_quality.append(
-                    re.compile(r'RESOLUTION=(.*?),').findall(lines[k])[0])
-                all_datas_videos_path.append(root + '/' + lines[k + 1])
-        if DESIRED_QUALITY == "DIALOG":
-            seleted_item = xbmcgui.Dialog().select(
-                plugin.localize(LABELS['choose_video_quality']),
-                all_datas_videos_quality)
-
-            if seleted_item == -1:
-                return False
-
-            final_video_url = all_datas_videos_path[seleted_item]
-        elif DESIRED_QUALITY == 'BEST':
-            # Last video in the Best
-            for k in all_datas_videos_path:
-                url = k
-            final_video_url = url
-        else:
-            final_video_url = all_datas_videos_path[0]
-
+        final_video_url = json_parser["url"].replace('2800000', '4000000')
         if download_mode:
             return download.download_video(final_video_url, video_label)
         return final_video_url

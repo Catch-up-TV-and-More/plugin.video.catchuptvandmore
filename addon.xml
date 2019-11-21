@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.13"
+       version="0.2.14"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -13,6 +13,8 @@
     <import addon="script.module.six" version="1.11.0"/>
     <import addon="script.module.pyqrcode" version="0.0.1"/>
     <import addon="script.module.tzlocal" version="2.0.0"/>
+    <import addon="script.module.future" version="0.17.1"/>
+    <import addon="script.module.kodi-six" version="0.0.4"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -39,22 +41,16 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.13]
-[Change] Live TV - MaTélé -> ViaMaTélé (FR)
-[Fix] Live TV - L'équipe TV (FR)
-[Fix] Catch-up TV and Live TV - TBD (US)
-[Fix] Catch-up TV - Histoire (FR)
-[Update] API Change NPO (NL) - Thanks Forage
-[Update] NL po files - Thanks Forage
-[Update/Fix] X-Forwarded-For in settings - Thanks caguiclajmg
-[Remove] Live TV - Home, Really (UK) - Not present anymore in the website of uktvplay
-[Fix] Live TV - Télé Quebec (CA)
-[Fix] Catch-up TV - LCI (FR)
-[Fix] Catch-up TV and Live TV - KTO TV (FR)
-[Fix] Catch-up TV - MyTF1 (FR)
-[Fix] Live TV - Rai (IT)
-[Remove] Live TV - Mitélé - AstrePlayer (ES) - Need rework
-[Fix] Catch-up TV - MyCanal+ (FR)
+[Version 0.2.14]
+[Add] Live TV - France Inter (FR)
+[Improvements] Understandable HTTP code error message
+[Improvements] Website - Culturepub - Add playlist
+[Add] Setting - Possibility to disable log uploader pop up
+[Improvements] First Python 2/3 version working on Kodi 19
+[Improvements] Live TV - France TV (FR) - Possibility to use live TV not geolocalised outside France and DomTom
+[Fix] Catchup-TV - France TV (FR) - New API (need more test)
+[Improvements] TV guide - Use XMLTV instead of telerama API
+[Fix] Catchup-TV - MyTF1 (FR) - Remove quality choose (Use kodi quality selection instead)
     </news>
     <assets>
       <icon>icon.png</icon>

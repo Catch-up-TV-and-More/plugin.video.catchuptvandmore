@@ -627,5 +627,12 @@ menu = {
         'fanart': 'channels/fr/dicitv_fanart.jpg',
         'module': 'resources.lib.channels.fr.dicitv',
         'm3u_group': 'Région'
+    },
+    'franceinter': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/franceinter.png',
+        'fanart': 'channels/fr/franceinter_fanart.jpg',
+        'module': 'resources.lib.channels.fr.franceinter',
+        'm3u_group': 'Radio'
     }
 }

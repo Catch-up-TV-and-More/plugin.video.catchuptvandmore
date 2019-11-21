@@ -26,15 +26,17 @@
 from __future__ import unicode_literals
 
 # Core imports
+from builtins import str
+from builtins import range
 import importlib
 import sys
 
 # Kodi imports
 from codequick import Route, Resolver, Listitem, run, Script, utils, storage
 import urlquick
-import xbmc
-import xbmcgui
-import xbmcplugin
+from kodi_six import xbmc
+from kodi_six import xbmcgui
+from kodi_six import xbmcplugin
 from six import string_types
 
 # Local imports
@@ -73,7 +75,7 @@ def get_sorted_menu(plugin, menu_id):
     # according to each item order and we have
     # to hide each disabled item
     menu = []
-    for item_id, item_infos in current_menu.items():
+    for item_id, item_infos in list(current_menu.items()):
 
         add_item = True
 
@@ -213,19 +215,15 @@ def tv_guide_menu(plugin, **kwargs):
     # Move up and move down action only work with this sort method
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
 
+    # Get sorted menu of this live TV country
     menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
-    channels_id = []
-    for index, (channel_order, channel_id, channel_infos) in enumerate(menu):
-        channels_id.append(channel_id)
 
-    # Load the graber module accroding to the country
-    # (e.g. resources.lib.channels.tv_guides.fr_live)
-    tv_guide_module_path = 'resources.lib.channels.tv_guides.' + menu_id
-    tv_guide_module = importlib.import_module(tv_guide_module_path)
+    # Load xmltv module
+    xmltv = importlib.import_module('resources.lib.xmltv')
 
-    # For each channel grab the current program according to the current time
-    tv_guide = tv_guide_module.grab_tv_guide(channels_id)
+    # Get tv_guide of this country
+    tv_guide = xmltv.grab_tv_guide(menu_id, menu)
 
     for index, (channel_order, channel_id, channel_infos) in enumerate(menu):
 
@@ -249,8 +247,8 @@ def tv_guide_menu(plugin, **kwargs):
             item.params['item_module'] = channel_infos['module']
 
         # If we have program infos from the grabber
-        if channel_id in tv_guide:
-            guide_infos = tv_guide[channel_id]
+        if 'xmltv_id' in channel_infos and channel_infos['xmltv_id'] in tv_guide:
+            guide_infos = tv_guide[channel_infos['xmltv_id']]
 
             if 'title' in guide_infos:
                 item.label = item.label + ' — ' + guide_infos['title']
@@ -270,31 +268,25 @@ def tv_guide_menu(plugin, **kwargs):
                 else:
                     plot.append(guide_infos['specific_genre'])
 
-            # start_time and stop_time must be a string
-            if 'start_time' in guide_infos and 'stop_time' in guide_infos:
-                plot.append(guide_infos['start_time'] + ' - ' +
-                            guide_infos['stop_time'])
-            elif 'start_time' in guide_infos:
-                plot.append(guide_infos['start_time'])
+            # # start_time and stop_time must be a string
+            if 'start' in guide_infos and 'stop' in guide_infos:
+                plot.append(guide_infos['start'] + ' - ' +
+                            guide_infos['stop'])
+            elif 'stop' in guide_infos:
+                plot.append(guide_infos['start'])
 
             if 'subtitle' in guide_infos:
                 plot.append(guide_infos['subtitle'])
 
-            if 'plot' in guide_infos:
-                plot.append(guide_infos['plot'])
+            if 'desc' in guide_infos:
+                plot.append(guide_infos['desc'])
 
             item.info['plot'] = '\n'.join(plot)
 
-            item.info['episode'] = guide_infos.get('episode')
-            item.info['season'] = guide_infos.get('season')
-            item.info["rating"] = guide_infos.get('rating')
-            item.info["duration"] = guide_infos.get('duration')
+            item.info["duration"] = guide_infos.get('length')
 
-            if 'fanart' in guide_infos:
-                item.art["fanart"] = guide_infos['fanart']
-
-            if 'thumb' in guide_infos:
-                item.art["thumb"] = guide_infos['thumb']
+            if 'icon' in guide_infos:
+                item.art["thumb"] = guide_infos['icon']
 
         item.params['item_id'] = channel_id
         item.params['item_dict'] = item2dict(item)
@@ -430,7 +422,7 @@ def favourites(plugin, start=0, **kwargs):
     sorted_menu = []
     with storage.PersistentDict("favourites.pickle") as db:
         menu = []
-        for item_hash, item_dict in db.items():
+        for item_hash, item_dict in list(db.items()):
             item = (item_dict['params']['order'], item_hash, item_dict)
 
             menu.append(item)
@@ -507,6 +499,31 @@ def error_handler(exception):
     """
     params = cqu.get_params_in_query(sys.argv[2])
 
+    # If it's an HTTPError
+    if isinstance(exception, urlquick.HTTPError):
+        code = exception.code
+        msg = exception.msg
+        # hdrs = exception.hdrs
+        # url = exception.filename
+        Script.log('urlquick.get() failed with HTTPError code {} with message "{}"'.format(code, msg, lvl=Script.ERROR))
+
+        # Build dialog message
+        dialog_message = msg
+        if 'http_code_' + str(code) in LABELS:
+            dialog_message = Script.localize(LABELS['http_code_' + str(code)])
+
+        # Build dialog title
+        dialog_title = Script.localize(LABELS['HTTP Error code']) + ' ' + str(code)
+
+        # Show xbmc dialog
+        xbmcgui.Dialog().ok(dialog_title, dialog_message)
+
+        # If error code is in avoid_log_uploader, then return
+        # Else, let log_uploader run
+        avoid_log_uploader = [403, 404]
+        if code in avoid_log_uploader:
+            return
+
     # If we come from fav menu we
     # suggest user to delete this item
     if 'from_fav' in params:
@@ -514,7 +531,7 @@ def error_handler(exception):
 
     # Else, we ask the user if he wants
     # to share his log to addon devs
-    elif 'No items found' not in exception:
+    elif 'No items found' not in str(exception) and Script.setting.get_boolean('log_pop_up'):
         log_uploader = importlib.import_module('resources.lib.log_uploader')
         log_uploader.ask_to_share_log()
 

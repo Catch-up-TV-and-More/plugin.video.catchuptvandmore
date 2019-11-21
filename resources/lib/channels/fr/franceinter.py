@@ -25,26 +25,22 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
+from resources.lib import resolver_proxy
+from resources.lib.listitem_utils import item_post_treatment, item2dict
 
 import re
 import urlquick
-# Working for Python 2/3
-try:
-    from urllib.parse import unquote_plus
-except ImportError:
-    from urllib import unquote_plus
 
-# TO DO
+# TODO
 # Add Replay
 
-URL_ROOT = 'http://www.canalc.be'
+URL_ROOT = "https://www.franceinter.fr"
 
-URL_LIVE = URL_ROOT + '/live/'
+URL_LIVE = URL_ROOT + '/direct'
 
 
 def live_entry(plugin, item_id, item_dict, **kwargs):
@@ -54,6 +50,9 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_LIVE, max_age=-1)
-    return unquote_plus(
-        re.compile(r'sourceURL\"\:\"(.*?)\"').findall(resp.text)[0])
+    resp = urlquick.get(
+        URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
+    live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
+    return resolver_proxy.get_stream_dailymotion(plugin,
+                                                 live_id,
+                                                 False)

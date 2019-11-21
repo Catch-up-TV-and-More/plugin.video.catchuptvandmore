@@ -50,7 +50,7 @@ def item2dict(item):
     item_dict['info'] = dict(item.info)
     item_dict['stream'] = dict(item.stream)
     item_dict['context'] = dict(item.context)
-    item_dict['properties'] = item.property
+    item_dict['properties'] = dict(item.property)
     item_dict['params'] = item.params
     item_dict['label'] = item.label
     return item_dict

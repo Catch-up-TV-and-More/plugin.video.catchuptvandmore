@@ -343,6 +343,25 @@ LABELS = {
     'Rename':
     30804,
 
+    # HTTP codes
+    'HTTP Error code':
+    30890,
+
+    'http_code_500':
+    30891,
+
+    'http_code_401':
+    30892,
+
+    'http_code_403':
+    30893,
+
+    'http_code_402':
+    30894,
+
+    'http_code_404':
+    30895,
+
     # Belgium channels / live TV
     'auvio':
     'RTBF Auvio',
@@ -664,6 +683,8 @@ LABELS = {
     'Wéo TV',
     'dicitv':
     'DiCi TV',
+    'franceinter':
+    'France Inter',
 
     # Japan channels / live TV
     'nhknews':
@@ -701,8 +722,6 @@ LABELS = {
     'Blaze',
     'dave':
     'Dave',
-    'really':
-    'Really',
     'yesterday':
     'Yesterday',
     'drama':
@@ -737,8 +756,6 @@ LABELS = {
     '5USA',
     'bristoltv':
     'Bristol TV',
-    'home_uktvplay':
-    'Home',
 
     # International channels / live TV
     'tv5mondeafrique':
@@ -811,36 +828,8 @@ LABELS = {
     'TVP Poland IN',
 
     # Spanish channels / live TV
-    'telecinco':
-    'Telecinco',
-    'cuatro':
-    'Cuatro',
-    'fdf':
-    'Factoria de Ficcion',
-    'boing':
-    'Boing',
-    'energy':
-    'Energy TV',
-    'divinity':
-    'Divinity',
-    'bemad':
-    'Be Mad',
     'realmadridtv':
     'Realmadrid TV (' + Script.setting['realmadridtv.language'] + ')',
-    'antena3':
-    'Antena 3',
-    'lasexta':
-    'La Sexta',
-    'neox':
-    'Neox',
-    'nova':
-    'Nova',
-    'mega':
-    'Mega',
-    'atreseries':
-    'Atreseries',
-    'atresplayer':
-    'Atresplayer',
     'paramountchannel_es':
     'Paramount Channel (ES)',
 
