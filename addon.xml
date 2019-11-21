@@ -45,6 +45,7 @@
 [Fix] Download Mode - France TV (FR)
 [Improvements] Live TV - MyTF1 (FR) - Add notification if live TV is not available in your region
 [Fix] Favourites
+[Hotfix] Show Live TV even is TV guide is KO
     </news>
     <assets>
       <icon>icon.png</icon>
