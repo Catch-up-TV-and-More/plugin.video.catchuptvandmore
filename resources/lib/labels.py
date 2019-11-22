@@ -330,6 +330,10 @@ LABELS = {
     30719,
     'Kodi 17.6 or > is required':
     30720,
+    'TV guide':
+    30722,
+    'An error occurred while getting TV guide':
+    30723,
 
     # Favourites
     'Add to add-on favourites':

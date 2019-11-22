@@ -639,6 +639,14 @@ msgctxt "#30721"
 msgid "Content requiring a subscription"
 msgstr ""
 
+msgctxt "#30722"
+msgid "TV guide"
+msgstr ""
+
+msgctxt "#30723"
+msgid "An error occurred while getting TV guide"
+msgstr ""
+
 
 # Favourites (from 30800 to 30859)
 
