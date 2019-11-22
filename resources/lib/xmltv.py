@@ -309,8 +309,14 @@ def programme_post_treatment(programme):
     if 'icon' in programme:
         programme['icon'] = programme['icon'][0]['src']
 
+    # Listitem need duration in seconds
     if 'length' in programme:
-        programme['length'] = int(programme['length']['length']) * 60
+        duration = int(programme['length']['length'])
+        if programme['length']['units'] == 'minutes':
+            duration = duration * 60
+        elif programme['length']['units'] == 'hours':
+            duration = duration * 3600
+        programme['length'] = duration
 
     # For start and stop we use a string in %Hh%m format
 
