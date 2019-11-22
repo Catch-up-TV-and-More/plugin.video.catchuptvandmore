@@ -22,13 +22,15 @@ import os
 import pytz
 import datetime
 from tzlocal import get_localzone
-from zipfile import ZipFile
-
 from xml.etree.ElementTree import ElementTree
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 from kodi_six import xbmcvfs
 
-from codequick import Script, storage
+from codequick import Script
 import urlquick
 
 from resources.lib.common import current_timestamp
@@ -126,19 +128,6 @@ def elem_to_channel(elem):
     append_text(d, 'url', elem, with_lang=False)
 
     return d
-
-
-def read_channels(fp=None, tree=None):
-    """
-    read_channels(fp=None, tree=None) -> list
-
-    Return a list of channel dictionaries from file object 'fp' or the
-    ElementTree 'tree'
-    """
-    if fp:
-        et = ElementTree()
-        tree = et.parse(fp)
-    return [elem_to_channel(elem) for elem in tree.findall('channel')]
 
 
 def elem_to_programme(elem):
@@ -258,19 +247,6 @@ def elem_to_programme(elem):
     return d
 
 
-def read_programmes(fp=None, tree=None):
-    """
-    read_programmes(fp=None, tree=None) -> list
-
-    Return a list of programme dictionaries from file object 'fp' or the
-    ElementTree 'tree'
-    """
-    if fp:
-        et = ElementTree()
-        tree = et.parse(fp)
-    return [elem_to_programme(elem) for elem in tree.findall('programme')]
-
-
 def date_str_to_timestamp(s):
     # ATM, only telerama format is supported (%Y%m%d%H%M%S %Z)
 
@@ -321,35 +297,6 @@ def read_current_programmes(fp=None, tree=None):
     return programmes
 
 
-def read_data(fp=None, tree=None):
-    """
-    read_data(fp=None, tree=None) -> dict
-
-    Get the source and other info from file object fp or the ElementTree
-    'tree'
-    """
-    if fp:
-        et = ElementTree()
-        tree = et.parse(fp)
-
-    d = {}
-    set_attrs(d, tree, ('date', 'source-info-url', 'source-info-name',
-                        'source-data-url', 'generator-info-name',
-                        'generator-info-url'))
-    return d
-
-
-xmtlv_zip_urls = {
-    'fr_live': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_lite.zip',
-    'be_live': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_lite.zip'
-}
-
-xmtlv_filenames = {
-    'fr_live': 'tv_guide_fr_lite.xml',
-    'be_live': 'tv_guide_be_lite.xml'
-}
-
-
 def programme_post_treatment(programme):
     for k in ['title', 'desc']:
         if k in programme:
@@ -397,46 +344,51 @@ def programme_post_treatment(programme):
     return programme
 
 
+xmltv_infos = {
+    'fr_live':
+        {
+            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_{}.xml',
+            'timezone': 'Europe/Paris',
+            'keyword': 'tv_guide_fr_'
+        },
+    'be_live':
+        {
+            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}.xml',
+            'timezone': 'Europe/Paris',
+            'keyword': 'tv_guide_be_'
+        }
+}
+
+
+def get_xmltv_url(menu_id):
+    # Get current date at specific timezone
+    xmltv_date = datetime.datetime.now(pytz.timezone(xmltv_infos[menu_id]['timezone']))
+    xmltv_date_s = xmltv_date.strftime("%Y%m%d")
+    return xmltv_infos[menu_id]['url'].format(xmltv_date_s)
+
+
 def grab_tv_guide(menu_id, menu):
-    xmltv_fp = os.path.join(Script.get_info('profile'), xmtlv_filenames[menu_id])
-    xmltv_fp_zip = xmltv_fp + '.zip'
+    xmltv_url = get_xmltv_url(menu_id)
+    Script.log('xmltv url of {}: {}'.format(menu_id, xmltv_url))
+
+    xmltv_fn = os.path.basename(urlparse(xmltv_url).path)
+    Script.log('xmltv filename of {}: {}'.format(menu_id, xmltv_fn))
+
+    xmltv_fp = os.path.join(Script.get_info('profile'), xmltv_fn)
+
+    # Remove old xmltv files of this country
+    dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
+    for fn in files:
+        if xmltv_infos[menu_id]['keyword'] in fn and fn != xmltv_fn:
+            Script.log('Remove old xmltv file: {}'.format(fn))
+            xbmcvfs.delete(os.path.join(Script.get_info('profile'), fn))
 
     # Check if we need to download a fresh xmltv file
-    need_to_update_xmltv = False
     if not xbmcvfs.exists(xmltv_fp):
-        Script.log('xmltv file of {} does not exist'.format(menu_id))
-        need_to_update_xmltv = True
-    else:
-        with storage.PersistentDict('tv_guide') as db:
-            if xmltv_fp not in db:
-                db[xmltv_fp] = current_timestamp()
-                db.flush()
-            if current_timestamp() - db[xmltv_fp] > 24 * 3600:
-                Script.log('xmltv file of {} need to be updated'.format(menu_id))
-                need_to_update_xmltv = True
-            else:
-                Script.log('xmltv file of {} was already download in the last 24 hours'.format(menu_id))
-
-    # If needed, update xmltv file
-    if need_to_update_xmltv:
-        Script.log('Download and extract xmltv zip file of {}'.format(menu_id))
-
-        # Download zip file
-        r = urlquick.get(xmtlv_zip_urls[menu_id])
-        with open(xmltv_fp_zip, 'wb') as f:
+        Script.log("xmltv file of {} for today does not exist, let's download it".format(menu_id))
+        r = urlquick.get(xmltv_url)
+        with open(xmltv_fp, 'wb') as f:
             f.write(r.content)
-
-        # Extract zip file
-        with ZipFile(xmltv_fp_zip, 'r') as zipObj:
-            zipObj.extractall(Script.get_info('profile'))
-
-        # Remove zip file
-        xbmcvfs.delete(xmltv_fp_zip)
-
-        # Save current time for this xmltv file
-        with storage.PersistentDict('tv_guide') as db:
-            db[xmltv_fp] = current_timestamp()
-            db.flush()
 
     # Grab programmes in xmltv file
     programmes = read_current_programmes(open(xmltv_fp, 'r'))
