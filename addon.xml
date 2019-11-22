@@ -41,11 +41,7 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.15]
-[Fix] Download Mode - France TV (FR)
-[Improvements] Live TV - MyTF1 (FR) - Add notification if live TV is not available in your region
-[Fix] Favourites
-[Hotfix] Show Live TV even is TV guide is KO
+[Version 0.2.16]
     </news>
     <assets>
       <icon>icon.png</icon>
