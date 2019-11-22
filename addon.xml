@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.14"
+       version="0.2.15"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -41,16 +41,11 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.14]
-[Add] Live TV - France Inter (FR)
-[Improvements] Understandable HTTP code error message
-[Improvements] Website - Culturepub - Add playlist
-[Add] Setting - Possibility to disable log uploader pop up
-[Improvements] First Python 2/3 version working on Kodi 19
-[Improvements] Live TV - France TV (FR) - Possibility to use live TV not geolocalised outside France and DomTom
-[Fix] Catchup-TV - France TV (FR) - New API (need more test)
-[Improvements] TV guide - Use XMLTV instead of telerama API
-[Fix] Catchup-TV - MyTF1 (FR) - Remove quality choose (Use kodi quality selection instead)
+[Version 0.2.15]
+[Fix] Download Mode - France TV (FR)
+[Improvements] Live TV - MyTF1 (FR) - Add notification if live TV is not available in your region
+[Fix] Favourites
+[Hotfix] Show Live TV even is TV guide is KO
     </news>
     <assets>
       <icon>icon.png</icon>

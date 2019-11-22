@@ -277,10 +277,14 @@ def get_francetv_video_stream(plugin,
     if 'hls' in all_video_datas[0][0]:
         json_parser2 = json.loads(
             urlquick.get(url_selected, max_age=-1).text)
-        return json_parser2['url']
+        final_video_url = json_parser2['url']
+        if download_mode:
+            return download.download_video(final_video_url, video_label)
+        return final_video_url
     elif 'dash' in all_video_datas[0][0]:
-
-        # Block Donwload video in this case
+        if download_mode:
+            xbmcgui.Dialog().ok('Info', plugin.localize(30603))
+            return False
         is_helper = inputstreamhelper.Helper('mpd')
         if not is_helper.check_inputstream():
             return False
@@ -298,7 +302,7 @@ def get_francetv_video_stream(plugin,
         return item
     else:
         # Return info the format is not known
-        return None
+        return False
 
 
 def get_francetv_live_stream(plugin, live_id):

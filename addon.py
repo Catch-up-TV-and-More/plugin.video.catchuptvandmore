@@ -219,11 +219,16 @@ def tv_guide_menu(plugin, **kwargs):
     menu_id = kwargs.get('item_id')
     menu = get_sorted_menu(plugin, menu_id)
 
-    # Load xmltv module
-    xmltv = importlib.import_module('resources.lib.xmltv')
+    try:
+        # Load xmltv module
+        xmltv = importlib.import_module('resources.lib.xmltv')
 
-    # Get tv_guide of this country
-    tv_guide = xmltv.grab_tv_guide(menu_id, menu)
+        # Get tv_guide of this country
+        tv_guide = xmltv.grab_tv_guide(menu_id, menu)
+    except Exception:
+        # TODO: Show notification to tell the user that the TV guide is KO
+        # and print error in the log.
+        tv_guide = {}
 
     for index, (channel_order, channel_id, channel_infos) in enumerate(menu):
 
