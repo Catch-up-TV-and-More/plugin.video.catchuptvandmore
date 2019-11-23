@@ -280,19 +280,19 @@ def read_current_programmes(fp=None, tree=None):
     Return a list of programme dictionaries from file object 'fp' or the
     ElementTree 'tree'
     """
+
+    current_utc_time = datetime.datetime.now(pytz.UTC)
+    current_utc_time = int(current_utc_time.strftime(date_format_notz))
+
     if fp:
         et = ElementTree()
         tree = et.parse(fp)
     programmes = []
     for elem in tree.findall('programme'):
-        start_s = elem.get('start')
-        stop_s = elem.get('stop')
+        start = int(elem.get('start'))  # UTC start time
+        stop = int(elem.get('stop'))  # UTC stop time
 
-        start_ts = date_str_to_timestamp(start_s)
-        stop_ts = date_str_to_timestamp(stop_s)
-
-        current_ts = current_timestamp()
-        if current_ts >= start_ts and current_ts <= stop_ts:
+        if current_utc_time >= start and current_utc_time <= stop:
             programmes.append(elem_to_programme(elem))
     return programmes
 
@@ -318,11 +318,7 @@ def programme_post_treatment(programme):
             duration = duration * 3600
         programme['length'] = duration
 
-    # For start and stop we use a string in %Hh%m format
-
-    # Get start and stop in UTC timestamp
-    start_ts = date_str_to_timestamp(programme['start'])
-    stop_ts = date_str_to_timestamp(programme['stop'])
+    # For start and stop we use a string in %Hh%m format in our local timezone
 
     # Get local timezone
     try:
@@ -331,9 +327,13 @@ def programme_post_treatment(programme):
         # Hotfix issue #102
         local_tz = pytz.timezone('Europe/Paris')
 
+    # Get UTC start and stop datetime
+    start_s = programme['start']
+    stop_s = programme['stop']
+
     # Convert start and stop on naive datetime object
-    start_dt = datetime.datetime.utcfromtimestamp(start_ts)
-    stop_dt = datetime.datetime.utcfromtimestamp(stop_ts)
+    start_dt = datetime.datetime.strptime(start_s, date_format_notz)
+    stop_dt = datetime.datetime.strptime(stop_s, date_format_notz)
 
     # Add UTC timezone to start and stop
     utc_tz = pytz.UTC
@@ -354,21 +354,19 @@ xmltv_infos = {
     'fr_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_{}.xml',
-            'timezone': 'Europe/Paris',
             'keyword': 'tv_guide_fr_'
         },
     'be_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}.xml',
-            'timezone': 'Europe/Paris',
             'keyword': 'tv_guide_be_'
         }
 }
 
 
 def get_xmltv_url(menu_id):
-    # Get current date at specific timezone
-    xmltv_date = datetime.datetime.now(pytz.timezone(xmltv_infos[menu_id]['timezone']))
+    # Get current UTC date
+    xmltv_date = datetime.datetime.now(pytz.UTC)
     xmltv_date_s = xmltv_date.strftime("%Y%m%d")
     return xmltv_infos[menu_id]['url'].format(xmltv_date_s)
 
