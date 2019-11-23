@@ -56,7 +56,8 @@ menu = {
         'thumb': 'channels/ch.png'
     },
     'uk_live': {
-        'callback': 'generic_menu',
+        'callback': 'tv_guide_menu'
+        if Script.setting.get_boolean('tv_guide') else 'generic_menu',
         'thumb': 'channels/uk.png'
     },
     'wo_live': {

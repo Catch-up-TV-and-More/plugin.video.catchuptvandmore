@@ -46,6 +46,7 @@
 [Fix] Catchup-TV - RTBF Auvio (BE)
 [New] Use XMLTV with UTC time (If needed, clear cache in addon settings)
 [Fix] WebSite - Philharmonie de Paris (FR)
+[Add] Guide TV - UK
     </news>
     <assets>
       <icon>icon.png</icon>
