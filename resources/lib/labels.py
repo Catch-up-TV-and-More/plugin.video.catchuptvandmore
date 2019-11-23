@@ -760,6 +760,8 @@ LABELS = {
     '5USA',
     'bristoltv':
     'Bristol TV',
+    'freesports':
+    'Free Sports',
 
     # International channels / live TV
     'tv5mondeafrique':

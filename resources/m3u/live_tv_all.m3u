@@ -813,6 +813,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=dave&item_modul
 #EXTINF:-1 tvg-id="320.tvguide.co.uk" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/yesterday.png" group-title="United Kingdom",Yesterday
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=yesterday&item_module=resources.lib.channels.uk.uktvplay&item_dict={}
 
+##	Free Sports
+##	freesports
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/freesports.png" group-title="United Kingdom",Free Sports
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=freesports&item_module=resources.lib.channels.uk.stv&item_dict={}
+
 
 
 # International

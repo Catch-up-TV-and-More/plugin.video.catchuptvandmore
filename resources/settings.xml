@@ -265,12 +265,15 @@
             <setting label="5USA" type="bool" id="fiveusa" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="fiveusa.order" default="20"/>
 
-            <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-39,true)"/>
+            <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-41,true)"/>
             <setting label="" type="number" visible="false" id="bristoltv.order" default="21"/>
 
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
             <setting label="Home" type="bool" id="home_uktvplay" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="home_uktvplay.order" default="22"/>
+
+            <setting label="Free Sports" type="bool" id="freesports" default="true" visible="eq(-45,true)"/>
+            <setting label="" type="number" visible="false" id="freesports.order" default="23"/>
         <!-- United Kingdom -->
 
 

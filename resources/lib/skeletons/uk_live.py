@@ -139,5 +139,11 @@ menu = {
         'fanart': 'channels/uk/yesterday_fanart.jpg',
         'module': 'resources.lib.channels.uk.uktvplay',
         'xmltv_id': '320.tvguide.co.uk'
+    },
+    'freesports': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/freesports.png',
+        'fanart': 'channels/uk/freesports_fanart.jpg',
+        'module': 'resources.lib.channels.uk.stv'
     }
 }
