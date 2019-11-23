@@ -20,6 +20,7 @@ with this software; if not, see <http://www.gnu.org/licenses/>.
 
 import os
 import pytz
+import time
 import datetime
 from tzlocal import get_localzone
 from xml.etree.ElementTree import ElementTree
@@ -270,6 +271,13 @@ def read_current_programmes(fp=None, tree=None):
     return programmes
 
 
+def datetime_strptime(s, f):
+    try:
+        return datetime.datetime.strptime(s, f)
+    except TypeError:
+        return datetime.datetime(*(time.strptime(s, f)[0:6]))
+
+
 def programme_post_treatment(programme):
     for k in ['title', 'desc']:
         if k in programme:
@@ -305,8 +313,8 @@ def programme_post_treatment(programme):
     stop_s = programme['stop']
 
     # Convert start and stop on naive datetime object
-    start_dt = datetime.datetime.strptime(start_s, date_format_notz)
-    stop_dt = datetime.datetime.strptime(stop_s, date_format_notz)
+    start_dt = datetime_strptime(start_s, date_format_notz)
+    stop_dt = datetime_strptime(stop_s, date_format_notz)
 
     # Add UTC timezone to start and stop
     utc_tz = pytz.UTC
