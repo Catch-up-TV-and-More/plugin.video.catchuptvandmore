@@ -30,6 +30,7 @@ from builtins import str
 from builtins import range
 import importlib
 import sys
+import os
 
 # Kodi imports
 from codequick import Route, Resolver, Listitem, run, Script, utils, storage
@@ -37,6 +38,7 @@ import urlquick
 from kodi_six import xbmc
 from kodi_six import xbmcgui
 from kodi_six import xbmcplugin
+from kodi_six import xbmcvfs
 from six import string_types
 
 # Local imports
@@ -375,8 +377,17 @@ def live_bridge(plugin, **kwargs):
 @Script.register
 def clear_cache(plugin):
     # Callback function of clear cache setting button
+
+    # Clear urlquick cache
     urlquick.cache_cleanup(-1)
     Script.notify(plugin.localize(30371), '')
+
+    # Remove all tv guides
+    dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
+    for fn in files:
+        if '.xml' in fn and fn != 'settings.xml':
+            Script.log('Remove xmltv file: {}'.format(fn))
+            xbmcvfs.delete(os.path.join(Script.get_info('profile'), fn))
 
 
 @Script.register
