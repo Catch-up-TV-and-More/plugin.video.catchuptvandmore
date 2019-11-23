@@ -33,7 +33,6 @@ from kodi_six import xbmcvfs
 from codequick import Script
 import urlquick
 
-from resources.lib.common import current_timestamp
 
 # The Python-XMLTV version
 VERSION = "1.4.3"
@@ -245,32 +244,6 @@ def elem_to_programme(elem):
         d['review'].append(rd)
 
     return d
-
-
-def date_str_to_timestamp(s):
-    # ATM, only telerama format is supported (%Y%m%d%H%M%S %Z)
-
-    # Remove timezone part to get %Y%m%d%H%M%S format
-    s = s.split(' ')[0]
-
-    # Get the naive datetime object
-    d = datetime.datetime.strptime(s, date_format_notz)
-
-    # Add telerama timezone
-    telerama_tz = pytz.timezone('Europe/Paris')
-    d = telerama_tz.localize(d)
-
-    # Convert to UTC timezone
-    utc_tz = pytz.UTC
-    d = d.astimezone(utc_tz)
-
-    # epoch is the beginning of time in the UTC timestamp world
-    epoch = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=utc_tz)
-
-    # get the total second difference
-    ts = (d - epoch).total_seconds()
-
-    return ts
 
 
 def read_current_programmes(fp=None, tree=None):
