@@ -74,23 +74,24 @@ def list_videos(plugin, item_id, page, **kwargs):
     root = parser.close()
 
     for video_datas in root.iterfind(".//li"):
-        video_title = video_datas.find('.//a').get('title')
-        video_image = URL_ROOT + re.compile(r'url\((.*?)\)').findall(
-            video_datas.find(".//div[@class='imgContainer']").get('style'))[0]
-        video_id = re.compile(r'concert\/(.*?)\/').findall(
-            video_datas.find('.//a').get('href'))[0]
+        if 'concert' in video_datas.get('class'):
+            video_title = video_datas.find('.//a').get('title')
+            video_image = URL_ROOT + re.compile(r'url\((.*?)\)').findall(
+                video_datas.find(".//div[@class='imgContainer']").get('style'))[0]
+            video_id = re.compile(r'concert\/(.*?)\/').findall(
+                video_datas.find('.//a').get('href'))[0]
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = video_image
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = video_image
 
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            video_id=video_id)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_label=LABELS[item_id] + ' - ' + item.label,
+                video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
     yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
 

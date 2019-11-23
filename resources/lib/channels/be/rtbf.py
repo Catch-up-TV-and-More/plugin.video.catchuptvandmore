@@ -279,7 +279,7 @@ def list_videos_sub_category(plugin, item_id, category_url, sub_category_id,
 
                 json_parser = json.loads(video_datas.get('data-card'))
                 if json_parser["isVideo"]:
-                    video_title = json_parser["title"]
+                    video_title = json_parser["title"] + ' - ' + json_parser["subtitle"]
                     video_image = json_parser["illustration"]["format1248"]
                     video_id = json_parser["mediaId"]
 
@@ -319,7 +319,7 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
 
                 json_parser = json.loads(video_datas.get('data-card'))
                 if json_parser["isVideo"]:
-                    video_title = json_parser["title"]
+                    video_title = json_parser["title"] + ' - ' + json_parser["subtitle"]
                     video_image = json_parser["illustration"]["format1248"]
                     video_id = json_parser["mediaId"]
 
