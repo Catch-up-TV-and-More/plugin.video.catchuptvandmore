@@ -550,9 +550,16 @@ def error_handler(exception):
 
     # Else, we ask the user if he wants
     # to share his log to addon devs
-    elif 'No items found' not in str(exception) and Script.setting.get_boolean('log_pop_up'):
-        log_uploader = importlib.import_module('resources.lib.log_uploader')
-        log_uploader.ask_to_share_log()
+    elif Script.setting.get_boolean('log_pop_up'):
+        ask_to_share_log = True
+        log_exceptions = ['No items found', 'Youtube-DL: Video geo-restricted by the owner']
+        for log_exception in log_exceptions:
+            if log_exception in str(exception):
+                ask_to_share_log = False
+
+        if ask_to_share_log:
+            log_uploader = importlib.import_module('resources.lib.log_uploader')
+            log_uploader.ask_to_share_log()
 
 
 def main():
