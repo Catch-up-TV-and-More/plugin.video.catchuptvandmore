@@ -466,9 +466,13 @@ def favourites(plugin, start=0, **kwargs):
             break
 
         cnt += 1
-        # Listitem.from_dict fails with this
+        # Listitem.from_dict fails with subtitles
+        # See https://github.com/willforde/script.module.codequick/issues/30
         item_dict.pop('subtitles')
-        item_dict.pop('context')
+
+        # Listitem.from_dict only works if context is a list
+        if not isinstance(item_dict['context'], list):
+            item_dict.pop('context')
 
         item_dict['params']['from_fav'] = True
         item_dict['params']['item_hash'] = item_hash
