@@ -175,12 +175,12 @@ def get_video_url(plugin,
     return json_parser["video"]["contentUrl"]
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, **kwargs)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE % item_id, max_age=-1)
     return re.compile(r'\"content_url\"\:\"(.*?)\"').findall(

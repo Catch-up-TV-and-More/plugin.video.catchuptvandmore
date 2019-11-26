@@ -197,12 +197,12 @@ def get_video_url(plugin,
                                              video_label)
 
 
-def live_entry(plugin, item_id, item_dict):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, **kwargs)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict):
+def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_ROOT)
     live_id = re.compile(r"youtube\.com\/embed\/(.*?)\"").findall(resp.text)[0]

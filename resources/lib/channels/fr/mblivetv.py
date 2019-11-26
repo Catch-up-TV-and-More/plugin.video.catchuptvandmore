@@ -44,7 +44,7 @@ URL_LIVES = 'https://api.dailymotion.com/user/%s/videos?fields=id,thumbnail_larg
 URL_REPLAY = 'https://api.dailymotion.com/user/%s/videos?fields=description,duration,id,taken_time,thumbnail_large_url,title&limit=20&sort=recent&page=1'
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
+def live_entry(plugin, item_id, **kwargs):
     return get_live_url(plugin, item_id)
 
 

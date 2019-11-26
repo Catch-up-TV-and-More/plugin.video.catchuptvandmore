@@ -153,12 +153,12 @@ def get_video_url(plugin,
     return stream_url
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, **kwargs)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
     root = resp.parse()

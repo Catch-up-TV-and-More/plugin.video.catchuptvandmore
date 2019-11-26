@@ -333,12 +333,12 @@ def get_video_url(plugin, item_id, data_video_id, item_dict, **kwargs):
     return item
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, **kwargs)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     if cqu.get_kodi_version() < 18:
         xbmcgui.Dialog().ok('Info', plugin.localize(30602))
@@ -417,19 +417,20 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
     item = Listitem()
     item.path = json_parser["response"]["drm"]["widevine"]["stream"]
-    if item_dict:
-        if 'label' in item_dict:
-            item.label = item_dict['label']
-        if 'info' in item_dict:
-            item.info.update(item_dict['info'])
-        if 'art' in item_dict:
-            item.art.update(item_dict['art'])
+    if 'label' in kwargs:
+        item.label = kwargs['label']
     else:
         item.label = LABELS[channel_uktvplay_id]
+    if 'info' in kwargs:
+        item.info.update(kwargs['info'])
+    else:
+        item.info["plot"] = LABELS[channel_uktvplay_id]
+    if 'art' in kwargs:
+        item.art.update(kwargs['art'])
+    else:
         item.art["thumb"] = ""
         item.art["icon"] = ""
         item.art["fanart"] = ""
-        item.info["plot"] = LABELS[channel_uktvplay_id]
     item.property['inputstreamaddon'] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'

@@ -52,12 +52,12 @@ URL_LIVE_STREAM = 'https://pubads.g.doubleclick.net/ssai/event/%s/streams'
 URL_LIVE_HASH = 'https://gatekeeper.mediaset.es/'
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, **kwargs)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     session_requests = requests.session()
     resp = session_requests.get(URL_LIVE_DATAS % item_id)

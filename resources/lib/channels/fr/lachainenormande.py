@@ -42,12 +42,12 @@ import urlquick
 URL_ROOT = "https://www.lachainenormande.tv"
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, **kwargs)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     is_helper = inputstreamhelper.Helper('mpd')
     if not is_helper.check_inputstream():
@@ -69,17 +69,18 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     item.path = json_parser["files"]["auto"]
     item.property["inputstreamaddon"] = "inputstream.adaptive"
     item.property["inputstream.adaptive.manifest_type"] = "mpd"
-    if item_dict:
-        if "label" in item_dict:
-            item.label = item_dict["label"]
-        if "info" in item_dict:
-            item.info.update(item_dict["info"])
-        if "art" in item_dict:
-            item.art.update(item_dict["art"])
+    if 'label' in kwargs:
+        item.label = kwargs['label']
     else:
         item.label = LABELS[item_id]
+    if 'info' in kwargs:
+        item.info.update(kwargs['info'])
+    else:
+        item.info["plot"] = LABELS[item_id]
+    if 'art' in kwargs:
+        item.art.update(kwargs['art'])
+    else:
         item.art["thumb"] = ""
         item.art["icon"] = ""
         item.art["fanart"] = ""
-        item.info["plot"] = LABELS[item_id]
     return item

@@ -296,12 +296,12 @@ def get_video_url(plugin,
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, **kwargs)
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE_JSON % item_id[:3])
     json_parser = json.loads(resp.text)
@@ -351,19 +351,20 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
         item.property[
             'inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
 
-        if item_dict:
-            if 'label' in item_dict:
-                item.label = item_dict['label']
-            if 'info' in item_dict:
-                item.info.update(item_dict['info'])
-            if 'art' in item_dict:
-                item.art.update(item_dict['art'])
+        if 'label' in kwargs:
+            item.label = kwargs['label']
         else:
             item.label = LABELS[item_id]
+        if 'info' in kwargs:
+            item.info.update(kwargs['info'])
+        else:
+            item.info["plot"] = LABELS[item_id]
+        if 'art' in kwargs:
+            item.art.update(kwargs['art'])
+        else:
             item.art["thumb"] = ""
             item.art["icon"] = ""
             item.art["fanart"] = ""
-            item.info["plot"] = LABELS[item_id]
         return item
 
     else:
