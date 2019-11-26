@@ -370,8 +370,11 @@ def live_bridge(plugin, **kwargs):
 
     # Let's go to the module file ...
     item_module = importlib.import_module(kwargs.get('item_module'))
-    return item_module.live_entry(plugin, kwargs.get('item_id'),
-                                  kwargs.get('item_dict', {}))
+    return item_module.live_entry(
+        plugin,
+        kwargs.get('item_id'),
+        **kwargs.get('item_dict', {})
+    )
 
 
 @Script.register
