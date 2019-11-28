@@ -45,13 +45,13 @@ def item2dict(item):
     # https://scriptmodulecodequick.readthedocs.io/en/latest/_modules/codequick/listing.html#Listitem.from_dict
     # in order to be able to directly use `Listitem.from_dict` later
     item_dict = {}
-    item_dict['subtitles'] = item.subtitles
+    item_dict['subtitles'] = list(item.subtitles)
     item_dict['art'] = dict(item.art)
     item_dict['info'] = dict(item.info)
     item_dict['stream'] = dict(item.stream)
     item_dict['context'] = list(item.context)
     item_dict['properties'] = dict(item.property)
-    item_dict['params'] = item.params
+    item_dict['params'] = dict(item.params)
     item_dict['label'] = item.label
     return item_dict
 

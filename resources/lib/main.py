@@ -432,15 +432,14 @@ def favourites(plugin, start=0, **kwargs):
 
     # Get sorted items
     sorted_menu = []
-    with storage.PersistentDict("favourites.pickle") as db:
-        menu = []
-        for item_hash, item_dict in list(db.items()):
-            item = (item_dict['params']['order'], item_hash, item_dict)
+    fav_dict = fav.get_fav_dict_from_json()
+    menu = []
+    for item_hash, item_dict in list(fav_dict.items()):
+        item = (item_dict['params']['order'], item_hash, item_dict)
+        menu.append(item)
 
-            menu.append(item)
-
-        # We sort the menu according to the item_order values
-        sorted_menu = sorted(menu, key=lambda x: x[0])
+    # We sort the menu according to the item_order values
+    sorted_menu = sorted(menu, key=lambda x: x[0])
 
     # Notify the user if there is not item in favourites
     if len(sorted_menu) == 0:
@@ -461,11 +460,20 @@ def favourites(plugin, start=0, **kwargs):
         cnt += 1
         # Listitem.from_dict fails with subtitles
         # See https://github.com/willforde/script.module.codequick/issues/30
-        item_dict.pop('subtitles')
+        if 'subtitles' in item_dict:
+            item_dict.pop('subtitles')
 
         # Listitem.from_dict only works if context is a list
-        if not isinstance(item_dict['context'], list):
+        if 'context' in item_dict and not isinstance(item_dict['context'], list):
             item_dict.pop('context')
+
+        # Remove original move and hide contexts:
+        if 'context' in item_dict:
+            new_context = []
+            for context in item_dict['context']:
+                if 'move_item' not in context[1] and 'hide' not in context[1]:
+                    new_context.append(context)
+            item_dict['context'] = new_context
 
         item_dict['params']['from_fav'] = True
         item_dict['params']['item_hash'] = item_hash
@@ -499,7 +507,7 @@ def favourites(plugin, start=0, **kwargs):
                                 item_hash=item_hash)
 
         # Move down
-        if item_dict['params']['order'] < len(db) - 1:
+        if item_dict['params']['order'] < len(fav_dict) - 1:
             item.context.script(fav.move_favourite_item,
                                 plugin.localize(LABELS['Move down']),
                                 direction='down',
