@@ -145,5 +145,11 @@ menu = {
         'thumb': 'channels/uk/freesports.png',
         'fanart': 'channels/uk/freesports_fanart.jpg',
         'module': 'resources.lib.channels.uk.stv'
+    },
+    'stv_plusone': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/uk/stv_plusone.png',
+        'fanart': 'channels/uk/stv_plusone_fanart.jpg',
+        'module': 'resources.lib.channels.uk.stv'
     }
 }

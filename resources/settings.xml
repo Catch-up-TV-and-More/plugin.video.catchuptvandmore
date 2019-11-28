@@ -274,6 +274,9 @@
 
             <setting label="Free Sports" type="bool" id="freesports" default="true" visible="eq(-45,true)"/>
             <setting label="" type="number" visible="false" id="freesports.order" default="23"/>
+
+            <setting label="STV+1" type="bool" id="stv_plusone" default="true" visible="eq(-47,true)"/>
+            <setting label="" type="number" visible="false" id="stv_plusone.order" default="24"/>
         <!-- United Kingdom -->
 
 

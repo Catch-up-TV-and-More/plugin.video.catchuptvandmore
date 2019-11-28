@@ -762,6 +762,8 @@ LABELS = {
     'Bristol TV',
     'freesports':
     'Free Sports',
+    'stv_plusone':
+    'STV+1',
 
     # International channels / live TV
     'tv5mondeafrique':
