@@ -39,9 +39,11 @@ import urlquick
 # TO DO
 # Get year from Replay
 
+URL_ROOT = 'https://rmcstory.bfmtv.com'
+
 URL_REPLAY = 'http://www.numero23.fr/replay/'
 
-URL_INFO_LIVE_JSON = 'http://www.numero23.fr/wp-content/cache/n23-direct.json'
+URL_LIVE_RMCSTORY = URL_ROOT + '/mediaplayer-direct/'
 
 CORRECT_MONTH = {
     'janvier': '01',
@@ -177,9 +179,16 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
-    resp = urlquick.get(URL_INFO_LIVE_JSON,
+    resp = urlquick.get(URL_LIVE_RMCSTORY,
                         headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
-    json_parser = json.loads(resp.text)
-    video_id = json_parser["video"]
-    return resolver_proxy.get_stream_dailymotion(plugin, video_id, False)
+
+    root = resp.parse()
+    live_datas = root.find(".//div[@class='next-player player_2t_e9']")
+
+    data_account = live_datas.get('data-account')
+    data_video_id = live_datas.get('data-video-id')
+    data_player = live_datas.get('data-player')
+
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id)
