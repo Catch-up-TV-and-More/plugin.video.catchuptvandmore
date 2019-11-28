@@ -83,6 +83,11 @@ plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=yesterday&item_
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/freesports.png" group-title="United Kingdom",Free Sports
 plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=freesports&item_module=resources.lib.channels.uk.stv&item_dict={}
 
+##	STV+1
+##	stv_plusone
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/stv_plusone.png" group-title="United Kingdom",STV+1
+plugin://plugin.video.catchuptvandmore/main/live_bridge/?item_id=stv_plusone&item_module=resources.lib.channels.uk.stv&item_dict={}
+
 ##	QVC
 ##	qvc
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/qvc.png" group-title="United Kingdom",QVC
