@@ -48,6 +48,7 @@ import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item2dict, get_item_label
 from resources.lib.vpn import vpn_item_callback, add_vpn_context, import_ovpn, delete_ovpn
 import resources.lib.favourites as fav
+from resources.lib.favourites import delete_favourites
 
 
 def get_sorted_menu(plugin, menu_id):

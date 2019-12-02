@@ -494,6 +494,14 @@ msgctxt "#30372"
 msgid "Send Kodi log to the developers when an error occurred"
 msgstr ""
 
+msgctxt "#30373"
+msgid "Delete favourites"
+msgstr ""
+
+msgctxt "#30374"
+msgid "Favourites deleted"
+msgstr ""
+
 
 # Reserved space for other tab/category in settins (from 30400 to 30499)
 
