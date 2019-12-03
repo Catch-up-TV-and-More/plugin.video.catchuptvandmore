@@ -279,6 +279,12 @@ def tv_guide_menu(plugin, **kwargs):
                 else:
                     plot.append(guide_infos['specific_genre'])
 
+            credits = []
+            for credit, l in guide_infos.get('credits', {}).items():
+                for s in l:
+                    credits.append(s)
+            item.info['credits'] = credits
+
             # # start_time and stop_time must be a string
             if 'start' in guide_infos and 'stop' in guide_infos:
                 plot.append(guide_infos['start'] + ' - ' +
