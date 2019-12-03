@@ -261,36 +261,34 @@ def tv_guide_menu(plugin, **kwargs):
         if 'xmltv_id' in channel_infos and channel_infos['xmltv_id'] in tv_guide:
             guide_infos = tv_guide[channel_infos['xmltv_id']]
 
+            # Title
             if 'title' in guide_infos:
                 item.label = item.label + ' — ' + guide_infos['title']
 
-            item.info['originaltitle'] = guide_infos.get('originaltitle')
-
-            # e.g Divertissement, Documentaire, Film, ...
-            item.info['genre'] = guide_infos.get('genre')
-
-            plot = []
-
-            if 'specific_genre' in guide_infos:
-                if 'genre' not in guide_infos:
-                    item.info['genre'] = guide_infos['specific_genre']
-                elif guide_infos.get('genre') in guide_infos['specific_genre']:
-                    item.info['genre'] = guide_infos['specific_genre']
-                else:
-                    plot.append(guide_infos['specific_genre'])
-
+            # Credits
             credits = []
             for credit, l in guide_infos.get('credits', {}).items():
                 for s in l:
                     credits.append(s)
             item.info['credits'] = credits
 
-            # # start_time and stop_time must be a string
+            # Country
+            if 'country' in guide_infos:
+                item.info['country'] = guide_infos['country']
+
+            # Category
+            if 'category' in guide_infos:
+                item.info['genre'] = guide_infos['category']
+
+            # Plot
+            plot = []
+
+            # start_time and stop_time must be a string
             if 'start' in guide_infos and 'stop' in guide_infos:
-                plot.append(guide_infos['start'] + ' - ' +
-                            guide_infos['stop'])
+                s = guide_infos['start'] + ' - ' + guide_infos['stop']
+                plot.append(s)
             elif 'stop' in guide_infos:
-                plot.append(guide_infos['start'])
+                plot.append(guide_infos['stop'])
 
             if 'sub-title' in guide_infos:
                 plot.append(guide_infos['sub-title'])
@@ -300,8 +298,10 @@ def tv_guide_menu(plugin, **kwargs):
 
             item.info['plot'] = '\n'.join(plot)
 
+            # Duration
             item.info["duration"] = guide_infos.get('length')
 
+            # Art
             if 'icon' in guide_infos:
                 item.art["thumb"] = guide_infos['icon']
 
