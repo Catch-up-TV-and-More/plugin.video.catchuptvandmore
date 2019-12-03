@@ -405,15 +405,20 @@ def list_videos_emissions_2(plugin, item_id, page, show_url, last_page,
                 item.label = episode.find('.//h2/span/a').text.strip()
             else:
                 item.label = ''
-        if '?cmedia=' in episode.find('.//a').get('href'):
-            video_id = episode.find('.//a').get('href').split('?cmedia=')[1]
-        elif 'cfilm=' in episode.find('.//a').get('href') or \
-                'cserie=' in episode.find('.//a').get('href'):
-            video_id = episode.find('.//h2').find('.//span').find('.//a').get(
-                'href').split('_cmedia=')[1].split('&')[0]
+
+        if episode.find('.//a') is not None:
+            if '?cmedia=' in episode.find('.//a').get('href'):
+                video_id = episode.find('.//a').get('href').split('?cmedia=')[1]
+            elif 'cfilm=' in episode.find('.//a').get('href') or \
+                    'cserie=' in episode.find('.//a').get('href'):
+                video_id = episode.find('.//h2').find('.//span').find('.//a').get(
+                    'href').split('_cmedia=')[1].split('&')[0]
+            else:
+                video_id = episode.find('.//a').get('href').split('-')[1].replace(
+                    '/', '')
         else:
-            video_id = episode.find('.//a').get('href').split('-')[1].replace(
-                '/', '')
+            # TODO: ↪ Root menu (1) ➡ Websites (3) ➡ Allociné (1) ➡ Les émissions (1) ➡ Stars (6) ➡ Clips musicaux (3) ➡ # Les videos (1) ➡ [B]Next page 2[/B]
+            continue
 
         for plot_value in episode.find(
                 ".//div[@class='media-meta-figcaption-inner']").findall(
