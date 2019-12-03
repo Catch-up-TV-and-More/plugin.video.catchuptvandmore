@@ -80,7 +80,7 @@ URL_MTVNSERVICES_STREAM_ACCOUNT_EP = 'https://media-utils.mtvnservices.com/servi
 URL_FRANCETV_LIVE_PROGRAM_INFO = 'https://sivideo.webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/?idDiffusion=%s'
 # VideoId
 
-URL_FRANCETV_CATCHUP_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s?country_code=%s&device_type=desktop&browser=chrome'
+URL_FRANCETV_CATCHUP_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s?country_code=%s&device_type=mobile&browser=chrome'
 # VideoId
 
 URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json&url=%s'
