@@ -279,7 +279,7 @@ def datetime_strptime(s, f):
 
 
 def programme_post_treatment(programme):
-    for k in ['title', 'desc']:
+    for k in ['title', 'desc', 'sub-title']:
         if k in programme:
             s = ''
             for t in programme[k]:

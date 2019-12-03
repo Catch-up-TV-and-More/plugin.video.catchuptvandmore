@@ -292,8 +292,8 @@ def tv_guide_menu(plugin, **kwargs):
             elif 'stop' in guide_infos:
                 plot.append(guide_infos['start'])
 
-            if 'subtitle' in guide_infos:
-                plot.append(guide_infos['subtitle'])
+            if 'sub-title' in guide_infos:
+                plot.append(guide_infos['sub-title'])
 
             if 'desc' in guide_infos:
                 plot.append(guide_infos['desc'])
