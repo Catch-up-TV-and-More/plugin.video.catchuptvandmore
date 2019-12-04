@@ -25,20 +25,24 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
+import os
+import sys
+import pickle
+import binascii
+
 from kodi_six import xbmcgui
 from kodi_six import xbmc
-import sys
+from kodi_six import xbmcvfs
 
 try:
     from urllib.parse import urlunsplit
 except ImportError:
     from urlparse import urlunsplit
 
+import urlquick
 from codequick import Script
 from resources.lib.labels import LABELS
 
-import pickle
-import binascii
 
 PY3 = sys.version_info[0] >= 3
 
@@ -92,3 +96,19 @@ def get_quality_YTDL(download_mode=False):
 def get_kodi_version():
     xbmc_version = xbmc.getInfoLabel("System.BuildVersion")
     return int(xbmc_version.split('-')[0].split('.')[0])
+
+
+@Script.register
+def clear_cache(plugin):
+    # Callback function of clear cache setting button
+
+    # Clear urlquick cache
+    urlquick.cache_cleanup(-1)
+    Script.notify(plugin.localize(30371), '')
+
+    # Remove all tv guides
+    dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
+    for fn in files:
+        if '.xml' in fn and fn != 'settings.xml':
+            Script.log('Remove xmltv file: {}'.format(fn))
+            xbmcvfs.delete(os.path.join(Script.get_info('profile'), fn))
