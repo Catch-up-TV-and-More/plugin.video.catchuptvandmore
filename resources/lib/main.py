@@ -33,7 +33,7 @@ import sys
 import os
 
 # Kodi imports
-from codequick import Route, Resolver, Listitem, run, Script, utils, storage
+from codequick import Route, Resolver, Listitem, Script, utils, storage
 import urlquick
 from kodi_six import xbmc
 from kodi_six import xbmcgui
@@ -45,6 +45,7 @@ from six import string_types
 from resources.lib.labels import LABELS
 from resources.lib import common
 import resources.lib.cq_utils as cqu
+from resources.lib import entrypoint_utils
 from resources.lib.listitem_utils import item2dict, get_item_label
 from resources.lib.vpn import vpn_item_callback, add_vpn_context, import_ovpn, delete_ovpn
 import resources.lib.favourites as fav
@@ -527,7 +528,7 @@ def error_handler(exception):
     This function is called each time
     run() trigger an Exception
     """
-    params = cqu.get_params_in_query(sys.argv[2])
+    params = entrypoint_utils.get_params_in_query(sys.argv[2])
 
     # If it's an HTTPError
     if isinstance(exception, urlquick.HTTPError):

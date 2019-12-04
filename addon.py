@@ -20,8 +20,9 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from resources.lib import main
-from resources.lib.cq_utils import import_needed_module
+import importlib
+from codequick import run
+from resources.lib.entrypoint_utils import import_needed_module
 
 if __name__ == "__main__":
     """
@@ -36,6 +37,7 @@ if __name__ == "__main__":
     the correct function according to
     the Kodi URL
     """
-    exception = main.run()
+    exception = run()
     if isinstance(exception, Exception):
+        main = importlib.import_module('resources.lib.main')
         main.error_handler(exception)
