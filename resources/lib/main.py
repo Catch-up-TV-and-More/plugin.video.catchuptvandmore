@@ -40,7 +40,7 @@ from kodi_six import xbmcplugin
 from six import string_types
 
 # Local imports
-from resources.lib.labels import LABELS
+from resources.lib.labels import LABELS, save_labels_in_mem_storage
 from resources.lib import common
 import resources.lib.cq_utils as cqu
 from resources.lib import entrypoint_utils
@@ -151,6 +151,10 @@ def root(plugin):
     root is the entry point
     of Catch-up TV & More
     """
+    # Save LABELS dict in mem storage
+    # to improve addon navigation speed
+    save_labels_in_mem_storage()
+
     # First menu to build is the root menu
     # (see ROOT dictionnary in skeleton.py)
     return generic_menu(plugin, item_id='root')
