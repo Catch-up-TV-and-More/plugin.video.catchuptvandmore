@@ -19,11 +19,12 @@ with this software; if not, see <http://www.gnu.org/licenses/>.
 # Stolen from https://bitbucket.org/jfunk/python-xmltv/src/default/xmltv.py
 
 import os
+import re
 import pytz
 import time
 import datetime
 from tzlocal import get_localzone
-from xml.etree.ElementTree import ElementTree
+import xml.etree.ElementTree as ET
 try:
     from urllib.parse import urlparse
 except ImportError:
@@ -247,27 +248,50 @@ def elem_to_programme(elem):
     return d
 
 
-def read_current_programmes(fp=None, tree=None):
+def read_current_programmes(fp):
     """
-    read_programmes(fp=None, tree=None) -> list
+    read_current_programmes(fp) -> list
 
-    Return a list of programme dictionaries from file object 'fp' or the
-    ElementTree 'tree'
+    Return the list of current programmes from xmltv filepath 'fp'
     """
 
+    # Get the current UTC datetime
     current_utc_time = datetime.datetime.now(pytz.UTC)
     current_utc_time = int(current_utc_time.strftime(date_format_notz))
 
-    if fp:
-        et = ElementTree()
-        tree = et.parse(fp)
+    # Parse the xmltv file to only keep current programs
+    # It is faster to parse the xmltv file line by line and remove unwanted programmes
+    # than parsing the whole xmltv file with elementtree
+    # (x10 faster)
+    xmltv_l = []
+    with open(fp, 'r') as f:
+        take_line = True
+        for line in f.readlines():
+
+            # Match the beginning of a program
+            if '<programme ' in line:
+                start = int(re.search(r'start="(.*?)"', line).group(1))  # UTC start time
+                stop = int(re.search(r'stop="(.*?)"', line).group(1))  # UTC stop time
+                if current_utc_time >= start and current_utc_time <= stop:
+                    pass
+                else:
+                    take_line = False
+                    continue
+
+            # Keep this line if needed
+            if take_line:
+                xmltv_l.append(line)
+
+            # Match the end of a program
+            if '</programme>' in line:
+                take_line = True
+
+    # Parse the reduced xmltv string with elementtree
+    # and convert each programme to a dict
+    tree = ET.fromstring('\n'.join(xmltv_l))
     programmes = []
     for elem in tree.findall('programme'):
-        start = int(elem.get('start'))  # UTC start time
-        stop = int(elem.get('stop'))  # UTC stop time
-
-        if current_utc_time >= start and current_utc_time <= stop:
-            programmes.append(elem_to_programme(elem))
+        programmes.append(elem_to_programme(elem))
     return programmes
 
 
@@ -386,7 +410,7 @@ def grab_tv_guide(menu_id, menu):
             f.write(r.content)
 
     # Grab programmes in xmltv file
-    programmes = read_current_programmes(open(xmltv_fp, 'r'))
+    programmes = read_current_programmes(xmltv_fp)
 
     # Use the channel as key
     tv_guide = {}
