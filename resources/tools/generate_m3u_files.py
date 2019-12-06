@@ -66,7 +66,7 @@ PLUGIN_QUERY = "%s/?item_id=%s&item_module=%s&item_dict=%s"
 # arg2: module (resources.lib.channels.fr.mytf1, ...)
 # arg3: item_dict ({'language': 'FR'})
 
-PLUGIN_LIVE_BRIDGE_PATH = "plugin://plugin.video.catchuptvandmore/main/"
+PLUGIN_LIVE_BRIDGE_PATH = "plugin://plugin.video.catchuptvandmore/resources/lib/main/"
 
 M3U_ENTRY = '#EXTINF:-1 tvg-id="%s" tvg-logo="%s" group-title="%s",%s\n%s'
 # arg0: tgv_id
