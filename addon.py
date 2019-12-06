@@ -24,7 +24,8 @@ import importlib
 from codequick import run
 from resources.lib.entrypoint_utils import import_needed_module
 
-if __name__ == "__main__":
+
+def main():
     """
     Before calling run() function of
     codequick, we need to check if there
@@ -41,3 +42,7 @@ if __name__ == "__main__":
     if isinstance(exception, Exception):
         main = importlib.import_module('resources.lib.main')
         main.error_handler(exception)
+
+
+if __name__ == "__main__":
+    main()
