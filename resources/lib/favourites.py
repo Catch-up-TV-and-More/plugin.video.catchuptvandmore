@@ -122,7 +122,7 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
     with storage.PersistentDict("favourites.pickle") as db:
 
         # Compute hash value used as key in the DB
-        item_hash = md5(str(item_dict)).hexdigest()
+        item_hash = md5(str(item_dict).encode('utf-8')).hexdigest()
 
         item_dict['params']['order'] = len(db)
 
