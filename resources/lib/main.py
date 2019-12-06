@@ -383,7 +383,6 @@ def live_bridge(plugin, **kwargs):
                                   kwargs.get('item_dict', {}))
 
 
-
 @Script.register
 def move_item(plugin, direction, item_id, menu_id):
     # Callback function of move item conext menu
