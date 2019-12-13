@@ -47,7 +47,6 @@ def website_entry(plugin, item_id, **kwargs):
     return root(plugin, item_id)
 
 
-@Route.register
 def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
     """
