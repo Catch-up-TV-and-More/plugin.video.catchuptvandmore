@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta0"
+       version="0.2.17~beta01"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -22,7 +22,7 @@
   <extension point="xbmc.addon.metadata">
     <!-- Set reuselanguageinvoker to false while developing the addon, making it only true for the production version -->
     <!-- See https://kodi.wiki/view/Addon.xml#.3Creuselanguageinvoker.3E -->
-    <reuselanguageinvoker>true</reuselanguageinvoker>
+    <!-- <reuselanguageinvoker>true</reuselanguageinvoker> -->
     <summary lang="fr_FR">Catch-Up TV &amp; More : Replay TV, Live TV et bien plus encore.</summary>
     <description lang="fr_FR">Catch-Up TV &amp; More regroupe dans un même plugin Kodi l'ensemble des vidéos des différents services et chaînes de Replay TV (rattrapage TV) ainsi que l'accès au direct. De plus, cette extension vous permet d'accéder rapidement aux vidéos et contenus proposés par certains sites internet.</description>
     <disclaimer lang="fr_FR">Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.</disclaimer>
@@ -44,6 +44,7 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.2.17]
+[Fix] Live TV - NTV (CA)
     </news>
     <assets>
       <icon>icon.png</icon>
