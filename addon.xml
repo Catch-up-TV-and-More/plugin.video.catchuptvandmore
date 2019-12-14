@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.16"
+       version="0.2.17~beta0"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -43,24 +43,7 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.16]
-[Fix] Guide TV
-[Fix] Catchup-TV - RTBF Auvio (BE)
-[New] Use XMLTV with UTC time (If needed, clear cache in addon settings)
-[Fix] WebSite - Philharmonie de Paris (FR)
-[Add] Guide TV - UK
-[Add] Live TV - Free Sports (UK)
-[Add] Guide TV - IT
-[Fix] WebSite - National FFF (FR)
-[Fix] Catchup-TV - RMC Découverte (FR)
-[Fix] Catchup-TV - ICI Télé (CA)
-[Fix] Catchup-TV and Live TV - RMC Story (FR)
-[Add] Live TV - STV+1 (UK)
-[Fix] WebSite - 30 Millions d'Amis (FR)
-[Add] Settings - Delete favourites button
-[Improvement] Catchup-TV - Add playlist to 6play (FR)
-[Fix] Catchup-TV - France TV (FR) - Serie The Fix
-[Improvement] Best addon performance on Kodi 18 and later (reuselanguageinvoker)
+[Version 0.2.17]
     </news>
     <assets>
       <icon>icon.png</icon>
