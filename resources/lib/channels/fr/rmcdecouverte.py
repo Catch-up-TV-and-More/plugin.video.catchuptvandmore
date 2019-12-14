@@ -37,7 +37,7 @@ import urlquick
 # TODO
 # Get informations of replay ?
 
-URL_ROOT = 'http://rmcdecouverte.bfmtv.com'
+URL_ROOT = 'https://rmcdecouverte.bfmtv.com'
 
 # RMC Decouverte
 URL_REPLAY_RMCDECOUVERTE = URL_ROOT + '/mediaplayer-replay/'

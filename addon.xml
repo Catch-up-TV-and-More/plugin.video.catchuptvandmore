@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.15"
+       version="0.2.16"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -20,7 +20,9 @@
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <reuselanguageinvoker>false</reuselanguageinvoker>
+    <!-- Set reuselanguageinvoker to false while developing the addon, making it only true for the production version -->
+    <!-- See https://kodi.wiki/view/Addon.xml#.3Creuselanguageinvoker.3E -->
+    <reuselanguageinvoker>true</reuselanguageinvoker>
     <summary lang="fr_FR">Catch-Up TV &amp; More : Replay TV, Live TV et bien plus encore.</summary>
     <description lang="fr_FR">Catch-Up TV &amp; More regroupe dans un même plugin Kodi l'ensemble des vidéos des différents services et chaînes de Replay TV (rattrapage TV) ainsi que l'accès au direct. De plus, cette extension vous permet d'accéder rapidement aux vidéos et contenus proposés par certains sites internet.</description>
     <disclaimer lang="fr_FR">Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.</disclaimer>
@@ -41,11 +43,24 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.15]
-[Fix] Download Mode - France TV (FR)
-[Improvements] Live TV - MyTF1 (FR) - Add notification if live TV is not available in your region
-[Fix] Favourites
-[Hotfix] Show Live TV even is TV guide is KO
+[Version 0.2.16]
+[Fix] Guide TV
+[Fix] Catchup-TV - RTBF Auvio (BE)
+[New] Use XMLTV with UTC time (If needed, clear cache in addon settings)
+[Fix] WebSite - Philharmonie de Paris (FR)
+[Add] Guide TV - UK
+[Add] Live TV - Free Sports (UK)
+[Add] Guide TV - IT
+[Fix] WebSite - National FFF (FR)
+[Fix] Catchup-TV - RMC Découverte (FR)
+[Fix] Catchup-TV - ICI Télé (CA)
+[Fix] Catchup-TV and Live TV - RMC Story (FR)
+[Add] Live TV - STV+1 (UK)
+[Fix] WebSite - 30 Millions d'Amis (FR)
+[Add] Settings - Delete favourites button
+[Improvement] Catchup-TV - Add playlist to 6play (FR)
+[Fix] Catchup-TV - France TV (FR) - Serie The Fix
+[Improvement] Best addon performance on Kodi 18 and later (reuselanguageinvoker)
     </news>
     <assets>
       <icon>icon.png</icon>

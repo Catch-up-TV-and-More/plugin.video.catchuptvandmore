@@ -147,6 +147,9 @@ def live_entry(plugin, item_id, item_dict, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
+    if item_id == 'stv_plusone':
+        item_id = 'stv-plus-1'
+
     resp = urlquick.get(URL_LIVE_JSON % item_id)
     json_parser = json.loads(resp.text)
     return json_parser["results"]["streamUrl"]

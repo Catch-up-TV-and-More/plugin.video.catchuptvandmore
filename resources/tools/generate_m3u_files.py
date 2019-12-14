@@ -31,8 +31,10 @@ from builtins import str
 import polib
 import sys
 sys.path.append('..')
+sys.path.append('../..')
 
 import mock_codequick
+from codequick import Script, utils
 try:
     from urllib.parse import urlparse, urlencode
     from urllib.request import urlopen, Request
@@ -44,7 +46,6 @@ except ImportError:
 import importlib
 import os
 
-from lib.labels import LABELS
 
 LIVE_TV_M3U_ALL_FILEPATH = "../m3u/live_tv_all.m3u"
 
@@ -65,7 +66,7 @@ PLUGIN_QUERY = "%s/?item_id=%s&item_module=%s&item_dict=%s"
 # arg2: module (resources.lib.channels.fr.mytf1, ...)
 # arg3: item_dict ({'language': 'FR'})
 
-PLUGIN_LIVE_BRIDGE_PATH = "plugin://plugin.video.catchuptvandmore/main/"
+PLUGIN_LIVE_BRIDGE_PATH = "plugin://plugin.video.catchuptvandmore/resources/lib/main/"
 
 M3U_ENTRY = '#EXTINF:-1 tvg-id="%s" tvg-logo="%s" group-title="%s",%s\n%s'
 # arg0: tgv_id
@@ -100,6 +101,25 @@ MANUAL_LABELS = {
 }
 
 
+def get_labels_dict():
+    labels_py_fp = '../lib/labels.py'
+    lines = []
+    with open(labels_py_fp, 'r') as f:
+        take_line = False
+        for line in f.readlines():
+            if 'LABELS = {' in line:
+                take_line = True
+                line = '{'
+
+            if take_line:
+                lines.append(line)
+
+            if '}' in line:
+                take_line = False
+    labels_dict_s = '\n'.join(lines)
+    return eval(labels_dict_s)
+
+
 # Get image path/url
 def get_item_media_path(item_media_path):
     full_path = ''
@@ -120,8 +140,8 @@ def get_item_media_path(item_media_path):
 
 
 # Return string label from item_id
-def get_label(item_id):
-    label = LABELS[item_id]
+def get_label(item_id, labels):
+    label = labels[item_id]
 
     # strings.po case
     if isinstance(label, int):
@@ -150,7 +170,7 @@ def write_header(file):
 
 
 # Generate m3u files
-def generate_m3u_files():
+def generate_m3u_files(labels):
 
     m3u_entries = {}
 
@@ -158,7 +178,7 @@ def generate_m3u_files():
     live_tv = importlib.import_module('lib.skeletons.live_tv').menu
     for country_id, country_infos in list(live_tv.items()):
 
-        country_label = get_label(country_id)
+        country_label = get_label(country_id, labels)
         country_code = country_id.replace('_live', '')
 
         print('\ncountry_id: ' + country_id)
@@ -175,7 +195,7 @@ def generate_m3u_files():
                                                    country_id).menu
         for channel_id, channel_infos in list(country_channels.items()):
 
-            channel_label = get_label(channel_id)
+            channel_label = get_label(channel_id, labels)
             print('\n\tchannel_id: ' + channel_id)
             # print('\t\tchannel_label: ' + channel_label)
 
@@ -273,7 +293,7 @@ def generate_m3u_files():
 
             if channel_can_be_added:
 
-                channel_wo_label = get_label(channel_wo_id)
+                channel_wo_label = get_label(channel_wo_id, labels)
 
                 channel_m3u_dict = {}
 
@@ -407,8 +427,8 @@ def generate_m3u_files():
 
 
 def main():
-
-    generate_m3u_files()
+    labels = get_labels_dict()
+    generate_m3u_files(labels)
     print("\nM3U files generation done! :-D")
 
 

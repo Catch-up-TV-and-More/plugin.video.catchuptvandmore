@@ -486,6 +486,14 @@ msgctxt "#30372"
 msgid "Send Kodi log to the developers when an error occurred"
 msgstr "Envoyer le log de Kodi aux développeurs en cas d'erreur"
 
+msgctxt "#30373"
+msgid "Delete favourites"
+msgstr "Supprimer les favoris"
+
+msgctxt "#30374"
+msgid "Favourites deleted"
+msgstr "Favoris supprimés"
+
 
 # Reserved space for other tab/category in settins (from 30400 to 30499)
 
@@ -638,6 +646,14 @@ msgstr "Kodi 17.6 ou > est requis"
 msgctxt "#30721"
 msgid "Content requiring a subscription"
 msgstr "Contenu nécessitant un abonnement"
+
+msgctxt "#30722"
+msgid "TV guide"
+msgstr "Guide TV"
+
+msgctxt "#30723"
+msgid "An error occurred while getting TV guide"
+msgstr "Une erreur s'est produite lors de l'obtention du guide TV"
 
 
 # Favourites (from 30800 to 30859)

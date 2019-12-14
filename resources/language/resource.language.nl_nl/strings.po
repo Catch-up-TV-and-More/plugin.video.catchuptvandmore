@@ -471,6 +471,14 @@ msgctxt "#30361"
 msgid "Connect/Disconnect VPN"
 msgstr "Verbind/Verbreek VPN"
 
+msgctxt "#30722"
+msgid "TV guide"
+msgstr ""
+
+msgctxt "#30723"
+msgid "An error occurred while getting TV guide"
+msgstr ""
+
 
 # Advanced settings (from 30370 to 30399)
 
@@ -484,6 +492,14 @@ msgstr "Cache geleegd"
 
 msgctxt "#30372"
 msgid "Send Kodi log to the developers when an error occurred"
+msgstr ""
+
+msgctxt "#30373"
+msgid "Delete favourites"
+msgstr ""
+
+msgctxt "#30374"
+msgid "Favourites deleted"
 msgstr ""
 
 

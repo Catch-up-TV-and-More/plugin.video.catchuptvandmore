@@ -51,9 +51,12 @@ def get_random_ua():
 # code adapted from weather.weatherbit.io - Thanks Ronie
 def geoip():
     # list of alternative providers https://ahmadawais.com/best-api-geolocating-an-ip-address/)
-    resp = urlquick.get('http://ip-api.com/json', max_age=-1)
-    data = json.loads(resp.text)
-    if 'countryCode' in data:
-        return data['countryCode']
-    else:
+    try:
+        resp = urlquick.get('http://ip-api.com/json', max_age=-1)
+        data = json.loads(resp.text)
+        if 'countryCode' in data:
+            return data['countryCode']
+        else:
+            return None
+    except Exception:
         return None

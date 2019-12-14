@@ -265,12 +265,18 @@
             <setting label="5USA" type="bool" id="fiveusa" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="fiveusa.order" default="20"/>
 
-            <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-39,true)"/>
+            <setting label="Bristol TV" type="bool" id="bristoltv" default="true" visible="eq(-41,true)"/>
             <setting label="" type="number" visible="false" id="bristoltv.order" default="21"/>
 
             <!-- REMOVE CHANNEL - CONFIGURATION TO KEEP ORDER -->
             <setting label="Home" type="bool" id="home_uktvplay" default="false" visible="false"/>
             <setting label="" type="number" visible="false" id="home_uktvplay.order" default="22"/>
+
+            <setting label="Free Sports" type="bool" id="freesports" default="true" visible="eq(-45,true)"/>
+            <setting label="" type="number" visible="false" id="freesports.order" default="23"/>
+
+            <setting label="STV+1" type="bool" id="stv_plusone" default="true" visible="eq(-47,true)"/>
+            <setting label="" type="number" visible="false" id="stv_plusone.order" default="24"/>
         <!-- United Kingdom -->
 
 
@@ -1350,7 +1356,8 @@
     <!-- Advanced settings / Tools and other things to save -->
     <category label="30005">
         <setting label="30372" type="bool" id="log_pop_up" default="true"/>
-        <setting label="30370" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/main/clear_cache/)"/>
+        <setting label="30370" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/cq_utils/clear_cache/)"/>
+        <setting label="30373" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/favourites/delete_favourites/)"/>
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
         <setting label="" type="bool" id="show_live_tv_m3u_info" default="true" visible="false"/>
         <setting label="X-Forwarded-For" type="text" id="header_x-forwarded-for" default=""/>
