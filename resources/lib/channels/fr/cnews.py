@@ -136,7 +136,7 @@ def get_video_url(plugin,
     resp = urlquick.get(video_url,
                         headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
-    video_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(
+    video_id = re.compile(r'video_id\"\:\"(.*?)[\?\"]').findall(
         resp.text)[0]
     return resolver_proxy.get_stream_dailymotion(plugin, video_id,
                                                  download_mode, video_label)
@@ -152,6 +152,6 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
     resp = urlquick.get(URL_LIVE_CNEWS,
                         headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
-    live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]',
+    live_id = re.compile(r'video_id\"\:\"(.*?)[\?\"]',
                          re.DOTALL).findall(resp.text)[0]
     return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)

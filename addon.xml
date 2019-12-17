@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta02"
+       version="0.2.17~beta03"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -46,6 +46,7 @@
 [Version 0.2.17]
 [Fix] Live TV - NTV (CA)
 [Fix] Live TV - Sport En France (FR)
+[Fix] Live TV and Catchup TV - CNews (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
