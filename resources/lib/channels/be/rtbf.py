@@ -316,25 +316,26 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
             list_videos_datas = sub_category_dl_datas.findall('.//article')
 
             for video_datas in list_videos_datas:
+                data_card = video_datas.get('data-card')
+                if data_card:
+                    json_parser = json.loads(data_card)
+                    if json_parser["isVideo"]:
+                        video_title = json_parser["title"] + ' - ' + json_parser["subtitle"]
+                        video_image = json_parser["illustration"]["format1248"]
+                        video_id = json_parser["mediaId"]
 
-                json_parser = json.loads(video_datas.get('data-card'))
-                if json_parser["isVideo"]:
-                    video_title = json_parser["title"] + ' - ' + json_parser["subtitle"]
-                    video_image = json_parser["illustration"]["format1248"]
-                    video_id = json_parser["mediaId"]
+                        item = Listitem()
+                        item.label = video_title
+                        item.art['thumb'] = video_image
 
-                    item = Listitem()
-                    item.label = video_title
-                    item.art['thumb'] = video_image
-
-                    item.set_callback(get_video_url,
-                                      item_id=item_id,
-                                      video_label=LABELS[item_id] + ' - ' + item.label,
-                                      video_id=video_id)
-                    item_post_treatment(item,
-                                        is_playable=True,
-                                        is_downloadable=True)
-                    yield item
+                        item.set_callback(get_video_url,
+                                          item_id=item_id,
+                                          video_label=LABELS[item_id] + ' - ' + item.label,
+                                          video_id=video_id)
+                        item_post_treatment(item,
+                                            is_playable=True,
+                                            is_downloadable=True)
+                        yield item
 
 
 @Resolver.register

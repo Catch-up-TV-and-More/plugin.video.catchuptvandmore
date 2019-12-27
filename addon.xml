@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta04"
+       version="0.2.17~beta05"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -48,6 +48,7 @@
 [Fix] Live TV - Sport En France (FR)
 [Fix] Live TV and Catchup TV - CNews (FR)
 [Improvement] Favourites - Migrate from pickled to json data
+[Fix] Catch-Up TV - Auvio RTBF (BE)
     </news>
     <assets>
       <icon>icon.png</icon>
