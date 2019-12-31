@@ -90,8 +90,13 @@ def list_programs(plugin, item_id, **kwargs):
     for program_datas in json_parser['items']:
         program_title = json_parser['items'][str(program_datas)]["content"][
             "attributes"]["name"].replace(' - Navigation', '')
-        program_image = json_parser['items'][str(program_datas)]["content"][
-            "attributes"]["image-landscape-medium"]
+        attributes = json_parser['items'][str(program_datas)]["content"][
+            "attributes"]
+        program_image = ''
+        if "image-landscape-medium" in attributes:
+            program_image = attributes["image-landscape-medium"]
+        elif "image-background-medium" in attributes:
+            program_image = attributes["image-background-medium"]
         program_url = None
         if 'pageId' in json_parser['items'][str(program_datas)]["content"][
                 "attributes"]:
