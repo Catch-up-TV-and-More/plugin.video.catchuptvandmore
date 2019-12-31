@@ -273,6 +273,18 @@ def save_labels_in_mem_storage():
         'Connect/Disconnect VPN':
         30361,
 
+        # Menus settings
+        'Restore default order of all menus':
+        30400,
+        'Unmask all hidden items':
+        30401,
+        'Select item to unmask':
+        30406,
+        'Default order of all menus have been restored':
+        30407,
+        'All hidden items have been unmasked':
+        30408,
+
         # Context menu
         'Clear cache':
         30370,

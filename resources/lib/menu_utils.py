@@ -26,11 +26,14 @@
 from __future__ import unicode_literals
 
 # Core imports
+import os
+import json
 import importlib
 
 # Kodi imports
 from codequick import Script, utils
 from kodi_six import xbmc
+from kodi_six import xbmcvfs
 from kodi_six import xbmcgui
 
 # Local imports
@@ -38,6 +41,111 @@ from resources.lib.vpn import add_vpn_context
 from resources.lib.kodi_utils import get_kodi_version
 import resources.lib.favourites as fav
 from resources.lib.labels import LABELS
+from resources.lib.addon_utils import get_item_label
+from resources.lib.migration_utils import migrate_old_menus_settings
+
+
+MENUS_SETTINGS_FP = os.path.join(Script.get_info('profile'), "menus_settings.json")
+"""
+Json file that keeps, for each menu of the addon,
+what elements are hidden and the order of items in each menu
+
+"""
+
+
+"""Utility functions to deal with user menus settings
+
+"""
+
+
+def get_menus_settings():
+    """Get menus settings dict from json file
+
+    Returns:
+        dict: Menus settings
+    """
+    try:
+        migrate_old_menus_settings(MENUS_SETTINGS_FP)  # Migrate old Kodi settings (from settings.xml)
+    except Exception:
+        Script.log('Failed to migrate old settings to json file')
+    if not xbmcvfs.exists(MENUS_SETTINGS_FP):
+        return {}
+    with open(MENUS_SETTINGS_FP) as f:
+        return json.load(f)
+
+
+def save_menus_settings(j):
+    """Save menus settings dict in json file
+
+    Args:
+        j (dict): menus_settings dict to save
+    """
+    with open(MENUS_SETTINGS_FP, 'w') as f:
+        json.dump(j, f, indent=4)
+
+
+def is_item_hidden(item_id, menu_id):
+    """Check if item 'item_id' of menu 'menu_id' is hidden by the user setting
+
+    Args:
+        item_id (str): (e.g. live_tv)
+        menu_id (str): (e.g. root)
+    Returns:
+        bool
+    """
+    menus_settings = get_menus_settings()
+    return menus_settings.get(menu_id, {}).get(item_id, {}).get('hidden', False)
+
+
+def set_item_visibility(item_id, menu_id, is_hidden):
+    """Set item 'item_id' of menu 'menu_id' visibility in the menus_settings json file
+
+    Args:
+        item_id (str): (e.g. live_tv)
+        menu_id (str): (e.g. root)
+        is_hidden (bool): True if item_id must be hidden
+    """
+    menus_settings = get_menus_settings()
+    if menu_id not in menus_settings:
+        menus_settings[menu_id] = {}
+    if item_id not in menus_settings[menu_id]:
+        menus_settings[menu_id][item_id] = {}
+    menus_settings[menu_id][item_id]['hidden'] = is_hidden
+    save_menus_settings(menus_settings)
+
+
+def get_item_order(item_id, menu_id, item_infos):
+    """Get item 'item_id' order of menu 'menu_id'
+
+    Args:
+        item_id (str): (e.g. live_tv)
+        menu_id (str): (e.g. root)
+        item_infos (dict): Information from the skeleton 'menu' dict
+    Returns:
+        int
+    """
+    menus_settings = get_menus_settings()
+    item_order = menus_settings.get(menu_id, {}).get(item_id, {}).get('order', None)
+    if item_order is None:
+        item_order = item_infos['order']
+    return item_order
+
+
+def set_item_order(item_id, menu_id, order):
+    """Set item 'item_id' of menu 'menu_id' order in the menus_settings json file
+
+    Args:
+        item_id (str): (e.g. live_tv)
+        menu_id (str): (e.g. root)
+        order (int): (e.g. 3)
+    """
+    menus_settings = get_menus_settings()
+    if menu_id not in menus_settings:
+        menus_settings[menu_id] = {}
+    if item_id not in menus_settings[menu_id]:
+        menus_settings[menu_id][item_id] = {}
+    menus_settings[menu_id][item_id]['order'] = order
+    save_menus_settings(menus_settings)
 
 
 """Utility functions used to build a Kodi menu
@@ -85,19 +193,23 @@ def get_sorted_menu(plugin, menu_id):
 
         add_item = True
 
-        # If the item is enable
-        if not Script.setting.get_boolean(item_id):
+        # If the item is disabled in skeleton file
+        # (e.g. if a channel is not available anymore)
+        if item_infos['enabled'] is False:
             add_item = False
 
-        # If the desired language is not avaible
+        # If the item is hidden by the user setting
+        if is_item_hidden(item_id, menu_id):
+            add_item = False
+
+        # If the desired language is not available
         if 'available_languages' in item_infos:
             desired_language = utils.ensure_unicode(Script.setting[item_id + '.language'])
             if desired_language not in item_infos['available_languages']:
                 add_item = False
 
         if add_item:
-            # Get order value in settings file
-            item_order = Script.setting.get_int(item_id + '.order')
+            item_order = get_item_order(item_id, menu_id, item_infos)
 
             item = (item_order, item_id, item_infos)
 
@@ -138,7 +250,8 @@ def add_context_menus_to_item(item, item_id, item_index, menu_id, menu_len, is_p
     # Hide
     item.context.script(hide_item,
                         Script.localize(LABELS['Hide']),
-                        item_id=item_id)
+                        item_id=item_id,
+                        menu_id=menu_id)
 
     # Connect/Disconnect VPN
     add_vpn_context(item)
@@ -198,25 +311,25 @@ def move_item(plugin, direction, item_id, menu_id):
         offset = -1
 
     item_to_move_id = item_id
-    item_to_move_order = plugin.setting.get_int(item_to_move_id + '.order')
 
     menu = get_sorted_menu(plugin, menu_id)
 
     for k in range(0, len(menu)):
         item = menu[k]
+        item_order = item[0]
         item_id = item[1]
         if item_to_move_id == item_id:
             item_to_swap = menu[k + offset]
             item_to_swap_order = item_to_swap[0]
             item_to_swap_id = item_to_swap[1]
-            plugin.setting[item_to_move_id + '.order'] = item_to_swap_order
-            plugin.setting[item_to_swap_id + '.order'] = item_to_move_order
+            set_item_order(item_to_move_id, menu_id, item_to_swap_order)
+            set_item_order(item_to_swap_id, menu_id, item_order)
             xbmc.executebuiltin('XBMC.Container.Refresh()')
             break
 
 
 @Script.register
-def hide_item(plugin, item_id):
+def hide_item(plugin, item_id, menu_id):
     """Callback function of 'hide item' context menu
 
     Args:
@@ -231,5 +344,80 @@ def hide_item(plugin, item_id):
                 LABELS['To re-enable hidden items go to the plugin settings']))
         plugin.setting['show_hidden_items_information'] = False
 
-    plugin.setting[item_id] = False
+    set_item_visibility(item_id, menu_id, True)
     xbmc.executebuiltin('XBMC.Container.Refresh()')
+
+
+"""Settings callback functions
+
+
+"""
+
+
+@Script.register
+def restore_default_order(plugin):
+    """Callback function of 'Restore default order of all menus' setting button
+
+    Args:
+        plugin (codequick.script.Script)
+    """
+
+    menus_settings = get_menus_settings()
+    for menu_id, items in menus_settings.items():
+        for item_id, item in items.items():
+            item.pop('order', None)
+    save_menus_settings(menus_settings)
+    plugin.notify(plugin.localize(
+        LABELS['Default order of all menus have been restored']),
+        '')
+
+
+@Script.register
+def unmask_all_hidden_items(plugin):
+    """Callback function of 'Unmask all hidden items' setting button
+
+    Args:
+        plugin (codequick.script.Script)
+    """
+
+    menus_settings = get_menus_settings()
+    for menu_id, items in menus_settings.items():
+        for item_id, item in items.items():
+            item.pop('hidden', None)
+    save_menus_settings(menus_settings)
+    plugin.notify(plugin.localize(
+        LABELS['All hidden items have been unmasked']),
+        '')
+
+
+@Script.register
+def unmask_items(plugin, menu_id):
+    """Callback function of 'Unmask items' setting buttons
+
+    Args:
+        plugin (codequick.script.Script)
+        menu_id (str): Menu for which we cant to unmask items
+    """
+
+    menus_settings = get_menus_settings()
+    if menu_id not in menus_settings:
+        return
+
+    hidden_items = []
+    hidden_items_labels = []
+    for item_id, item in menus_settings[menu_id].items():
+        if item.get('hidden', False):
+            hidden_items.append(item_id)
+            hidden_items_labels.append(get_item_label(item_id))
+
+    if not hidden_items:
+        return
+
+    seleted_item = xbmcgui.Dialog().select(
+        plugin.localize(LABELS['Select item to unmask']),
+        hidden_items_labels)
+    if seleted_item == -1:
+        return
+
+    menus_settings[menu_id][hidden_items[seleted_item]].pop('hidden')
+    save_menus_settings(menus_settings)
