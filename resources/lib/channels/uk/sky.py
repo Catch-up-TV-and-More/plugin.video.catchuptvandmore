@@ -182,7 +182,7 @@ def get_video_url(plugin,
                   **kwargs):
 
     data_embed_token = urlquick.get(URL_PCODE_EMBED_TOKEN).text
-    pcode = re.compile('sas/embed_token/(.*?)/all').findall(
+    pcode = re.compile(r'sas\\/embed_token\\/(.*?)\\/all').findall(
         data_embed_token)[0]
     data_embed_token = quote_plus(data_embed_token.replace('"', ''))
     video_vod = urlquick.get(URL_OOYALA_VOD %
