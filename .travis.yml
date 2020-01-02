@@ -33,31 +33,19 @@ jobs:
       script: 
         - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
         - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
-        - cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log && tail -n 1000 log.log
+        - cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
     -
       name: "Explore random replay channel #2"
       script: 
         - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
         - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
-        - cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log && tail -n 1000 log.log
-    -
-      name: "Explore random replay channel #3"
-      script: 
-        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
-        - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
-        - cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log && tail -n 1000 log.log
-    -
-      name: "Explore random replay channel #4"
-      script: 
-        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
-        - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
-        - cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log && tail -n 1000 log.log
+        - cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
     -
       name: "Explore random website"
       script: 
         - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
         - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
-        - cd ../simul && ./main.py -c configs/6_explore_random_website.json &> log.log && tail -n 1000 log.log
+        - cd ../simul && ./main.py -c configs/6_explore_random_website.json &> log.log ; tail -n 1000 log.log
 
 notifications:
   email:
