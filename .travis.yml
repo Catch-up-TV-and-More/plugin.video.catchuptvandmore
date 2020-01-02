@@ -20,6 +20,7 @@ jobs:
     # Update repository.catchuptvandmore
     - stage: update-repo
       script: 
+        - pip install gitpython
         - git clone https://github.com/Catch-up-TV-and-More/repository.catchuptvandmore ../repo
         - cd ../repo
         - git config --global user.email "travis@travis-ci.org"
