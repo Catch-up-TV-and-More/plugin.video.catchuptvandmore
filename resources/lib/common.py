@@ -31,7 +31,10 @@ import time
 from codequick.script import Script
 from codequick.utils import ensure_native_str
 
+from kodi_six import xbmc
+
 from resources.lib.labels import LABELS
+from resources.lib.entrypoint_utils import get_params_in_query
 
 
 def get_item_label(item_id):
@@ -60,6 +63,36 @@ def get_item_media_path(item_media_path):
         full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
 
     return ensure_native_str(full_path)
+
+
+def get_selected_item_art():
+    art = {}
+    for art_type in ['thumb', 'poster', 'banner', 'fanart', 'clearart', 'clearlogo', 'landscape', 'icon']:
+        v = xbmc.getInfoLabel('ListItem.Art({})'.format(art_type))
+        art[art_type] = v
+    return art
+
+
+def get_selected_item_label():
+    return xbmc.getInfoLabel('ListItem.Label')
+
+
+def get_selected_item_params():
+    path = xbmc.getInfoLabel('ListItem.FilenameAndPath')
+    return get_params_in_query(path)
+
+
+def get_selected_item_stream():
+    stream = {}
+    stream['video_codec'] = xbmc.getInfoLabel('ListItem.VideoCodec')
+    stream['aspect'] = xbmc.getInfoLabel('ListItem.VideoAspect')
+    stream['aspect'] = float(stream['aspect']) if stream['aspect'] != '' else stream['aspect']
+    # stream['width'] (TODO)
+    # stream['channels'] (TODO)
+    stream['audio_codec'] = xbmc.getInfoLabel('ListItem.VideoCodec')
+    stream['audio_language'] = xbmc.getInfoLabel('ListItem.AudioLanguage')
+    stream['subtitle_language'] = xbmc.getInfoLabel('ListItem.SubtitleLanguage')
+    return stream
 
 
 def old_div(a, b):

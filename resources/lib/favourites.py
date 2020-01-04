@@ -38,8 +38,7 @@ from hashlib import md5
 
 from resources.lib.labels import LABELS
 import resources.lib.mem_storage as mem_storage
-from resources.lib.common import get_item_label, get_item_media_path
-from resources.lib.entrypoint_utils import get_params_in_query
+from resources.lib.common import get_item_label, get_item_media_path, get_selected_item_art, get_selected_item_label, get_selected_item_params, get_selected_item_stream
 
 
 FAV_JSON_FP = os.path.join(Script.get_info('profile'), "favourites.json")
@@ -124,26 +123,13 @@ def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
     # item_dict['subtitles'] = list(item.subtitles)
 
     # --> art
-    art = {}
-    for art_type in ['thumb', 'poster', 'banner', 'fanart', 'clearart', 'clearlogo', 'landscape', 'icon']:
-        v = xbmc.getInfoLabel('ListItem.Art({})'.format(art_type))
-        art[art_type] = v
-    item_dict['art'] = art
+    item_dict['art'] = get_selected_item_art()
 
     # --> info (TODO)
     item_dict['info'] = {}
 
     # --> stream
-    stream = {}
-    stream['video_codec'] = xbmc.getInfoLabel('ListItem.VideoCodec')
-    stream['aspect'] = xbmc.getInfoLabel('ListItem.VideoAspect')
-    stream['aspect'] = float(stream['aspect']) if stream['aspect'] != '' else stream['aspect']
-    # stream['width'] (TODO)
-    # stream['channels'] (TODO)
-    stream['audio_codec'] = xbmc.getInfoLabel('ListItem.VideoCodec')
-    stream['audio_language'] = xbmc.getInfoLabel('ListItem.AudioLanguage')
-    stream['subtitle_language'] = xbmc.getInfoLabel('ListItem.SubtitleLanguage')
-    item_dict['stream'] = stream
+    item_dict['stream'] = get_selected_item_stream()
 
     # --> context (TODO)
     item_dict['context'] = []
@@ -152,11 +138,10 @@ def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
     item_dict['properties'] = {}
 
     # --> params
-    path = xbmc.getInfoLabel('ListItem.FilenameAndPath')
-    item_dict['params'] = get_params_in_query(path)
+    item_dict['params'] = get_selected_item_params()
 
     # --> label
-    item_dict['label'] = xbmc.getInfoLabel('ListItem.Label')
+    item_dict['label'] = get_selected_item_label()
 
     if item_infos:
         # This item comes from tv_guide_menu
