@@ -32,7 +32,7 @@ import importlib
 import sys
 
 # Kodi imports
-from codequick import Route, Resolver, Listitem, Script, utils, storage
+from codequick import Route, Resolver, Listitem, Script, utils
 import urlquick
 from kodi_six import xbmc
 from kodi_six import xbmcgui
@@ -41,10 +41,10 @@ from six import string_types
 
 # Local imports
 from resources.lib.labels import LABELS, save_labels_in_mem_storage
-from resources.lib import common
+from resources.lib.common import get_item_label, get_item_media_path
 import resources.lib.cq_utils as cqu
 from resources.lib import entrypoint_utils
-from resources.lib.listitem_utils import item2dict, get_item_label
+from resources.lib.listitem_utils import item2dict
 from resources.lib.vpn import add_vpn_context
 import resources.lib.favourites as fav
 
@@ -184,10 +184,10 @@ def generic_menu(plugin, **kwargs):
 
         # Set item art
         if 'thumb' in item_infos:
-            item.art["thumb"] = common.get_item_media_path(item_infos['thumb'])
+            item.art["thumb"] = get_item_media_path(item_infos['thumb'])
 
         if 'fanart' in item_infos:
-            item.art["fanart"] = common.get_item_media_path(
+            item.art["fanart"] = get_item_media_path(
                 item_infos['fanart'])
 
         # Set item params
@@ -247,11 +247,11 @@ def tv_guide_menu(plugin, **kwargs):
 
         # Set item art
         if 'thumb' in channel_infos:
-            item.art["thumb"] = common.get_item_media_path(
+            item.art["thumb"] = get_item_media_path(
                 channel_infos['thumb'])
 
         if 'fanart' in channel_infos:
-            item.art["fanart"] = common.get_item_media_path(
+            item.art["fanart"] = get_item_media_path(
                 channel_infos['fanart'])
 
         # If this item requires a module to work, get
@@ -485,9 +485,6 @@ def favourites(plugin, start=0, **kwargs):
 
         item.is_folder = item_dict['params']['is_folder']
         item.is_playbale = item_dict['params']['is_playable']
-
-        # Hack for the rename feature
-        item.label = item_dict['label']
 
         # Rename
         item.context.script(fav.rename_favourite_item,

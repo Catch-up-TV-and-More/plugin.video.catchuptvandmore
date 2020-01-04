@@ -31,6 +31,17 @@ import time
 from codequick.script import Script
 from codequick.utils import ensure_native_str
 
+from resources.lib.labels import LABELS
+
+
+def get_item_label(item_id):
+    label = item_id
+    if item_id in LABELS:
+        label = LABELS[item_id]
+        if isinstance(label, int):
+            label = Script.localize(label)
+    return label
+
 
 def get_item_media_path(item_media_path):
     full_path = ''

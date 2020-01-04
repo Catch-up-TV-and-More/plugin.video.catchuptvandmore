@@ -37,8 +37,9 @@ from codequick import utils, storage, Script, listing
 from hashlib import md5
 
 from resources.lib.labels import LABELS
-from resources.lib import common
 import resources.lib.mem_storage as mem_storage
+from resources.lib.common import get_item_label, get_item_media_path
+
 
 FAV_JSON_FP = os.path.join(Script.get_info('profile'), "favourites.json")
 
@@ -116,27 +117,27 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
     if 'channel_infos' in kwargs and \
             kwargs['channel_infos'] is not None:
 
-        # This item come from tv_guide_menu
+        # This item comes from tv_guide_menu
         # We need to remove guide TV related
         # elements
 
-        item_id = item_dict['params']['item_id']
-        label = item_id
-        if item_id in LABELS:
-            label = LABELS[item_id]
-            if isinstance(label, int):
-                label = Script.localize(label)
-        item_dict['label'] = label
+        item_dict['info'] = {}
 
+        item_id = item_dict['params']['item_id']
+        label = get_item_label(item_id)
+        item_dict['label'] = label
+        item_dict['params']['_title_'] = label
+        item_dict['info']['title'] = label
+
+        item_dict['art']["thumb"] = ''
         if 'thumb' in kwargs['channel_infos']:
-            item_dict['art']["thumb"] = common.get_item_media_path(
+            item_dict['art']["thumb"] = get_item_media_path(
                 kwargs['channel_infos']['thumb'])
 
+        item_dict['art']["fanart"] = ''
         if 'fanart' in kwargs['channel_infos']:
-            item_dict['art']["fanart"] = common.get_item_media_path(
+            item_dict['art']["fanart"] = get_item_media_path(
                 kwargs['channel_infos']['fanart'])
-
-        item_dict['info'] = {}
 
     # Extract the callback
     item_path = xbmc.getInfoLabel('ListItem.Path')
@@ -155,12 +156,16 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
         label_proposal = prefix + ' - ' + label_proposal
 
     # Ask the user to edit the label
-    item_dict['label'] = utils.keyboard(
+    label = utils.keyboard(
         plugin.localize(LABELS['Favorite name']), label_proposal)
 
     # If user aborded do not add this item to favourite
     if item_dict['label'] == '':
         return False
+
+    item_dict['label'] = label
+    item_dict['params']['_title_'] = label
+    item_dict['info']['title'] = label
 
     # Compute fav hash
     item_hash = md5(str(item_dict).encode('utf-8')).hexdigest()
@@ -192,6 +197,8 @@ def rename_favourite_item(plugin, item_hash):
         return False
     fav_dict = get_fav_dict_from_json()
     fav_dict[item_hash]['label'] = item_label
+    fav_dict[item_hash]['params']['_title_'] = item_label
+    fav_dict[item_hash]['info']['title'] = item_label
     save_fav_dict_in_json(fav_dict)
     xbmc.executebuiltin('XBMC.Container.Refresh()')
 
