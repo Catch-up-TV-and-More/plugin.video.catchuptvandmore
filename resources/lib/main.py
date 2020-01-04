@@ -138,7 +138,7 @@ def add_context_menus_to_item(plugin, item, index, menu_id, menu_len,
         is_playable = True
 
     fav.add_fav_context(item,
-                        item2dict(item),
+                        item.params['item_dict'],
                         is_playable=is_playable,
                         channel_infos=kwargs.get('channel_infos', None))
 

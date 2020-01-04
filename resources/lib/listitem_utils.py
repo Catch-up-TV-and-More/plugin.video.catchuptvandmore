@@ -52,7 +52,7 @@ def item2dict(item):
     item_dict['context'] = list(item.context)
     item_dict['properties'] = dict(item.property)
     item_dict['params'] = dict(item.params)
-    item_dict['label'] = item.label
+    item_dict['label'] = item.info["title"]
     return item_dict
 
 
@@ -72,6 +72,11 @@ def item_post_treatment(item, **kwargs):
                             **item.params)
 
     # Add `Add to favourites` context menu to the item
-    add_fav_context(item, item2dict(item), **kwargs)
+    if 'item_dict' in item.params:
+        item_dict = item.params['item_dict']
+    else:
+        item_dict = item2dict(item)
+
+    add_fav_context(item, item_dict, **kwargs)
 
     return
