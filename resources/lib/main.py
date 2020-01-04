@@ -44,7 +44,6 @@ from resources.lib.labels import LABELS, save_labels_in_mem_storage
 from resources.lib.common import get_item_label, get_item_media_path
 import resources.lib.cq_utils as cqu
 from resources.lib import entrypoint_utils
-from resources.lib.listitem_utils import item2dict
 from resources.lib.vpn import add_vpn_context
 import resources.lib.favourites as fav
 
@@ -102,13 +101,12 @@ def get_sorted_menu(plugin, menu_id):
     return sorted(menu, key=lambda x: x[0])
 
 
-def add_context_menus_to_item(plugin, item, index, menu_id, menu_len,
-                              **kwargs):
+def add_context_menus_to_item(item, index, menu_id, menu_len, is_playable=False, item_infos={}):
 
     # Move up
     if index > 0:
         item.context.script(move_item,
-                            plugin.localize(LABELS['Move up']),
+                            Script.localize(LABELS['Move up']),
                             direction='up',
                             item_id=item.params['item_id'],
                             menu_id=menu_id)
@@ -116,31 +114,24 @@ def add_context_menus_to_item(plugin, item, index, menu_id, menu_len,
     # Move down
     if index < menu_len - 1:
         item.context.script(move_item,
-                            plugin.localize(LABELS['Move down']),
+                            Script.localize(LABELS['Move down']),
                             direction='down',
                             item_id=item.params['item_id'],
                             menu_id=menu_id)
 
     # Hide
     item.context.script(hide_item,
-                        plugin.localize(LABELS['Hide']),
+                        Script.localize(LABELS['Hide']),
                         item_id=item.params['item_id'])
 
     # Connect/Disconnect VPN
     add_vpn_context(item)
 
     # Add to add-on favourites
-    is_playable = False
-    if 'is_playable' in kwargs:
-        is_playable = kwargs['is_playable']
-    elif 'item_infos' in kwargs and \
-            kwargs['item_infos']['callback'] == 'live_bridge':
-        is_playable = True
-
-    fav.add_fav_context(item,
-                        item.params['item_dict'],
+    item.context.script(fav.add_item_to_favourites,
+                        Script.localize(LABELS['Add to add-on favourites']),
                         is_playable=is_playable,
-                        channel_infos=kwargs.get('channel_infos', None))
+                        item_infos=item_infos)
 
     return
 
@@ -197,19 +188,17 @@ def generic_menu(plugin, **kwargs):
             item.params['item_module'] = item_infos['module']
 
         item.params['item_id'] = item_id
-        item.params['item_dict'] = item2dict(item)
 
         # Get the next action to trigger if this
         # item will be selected by the user
         item_callback = eval(item_infos['callback'])
         item.set_callback(item_callback)
 
-        add_context_menus_to_item(plugin,
-                                  item,
+        add_context_menus_to_item(item,
                                   index,
                                   menu_id,
                                   len(menu),
-                                  item_infos=item_infos)
+                                  is_playable=(item_infos['callback'] == 'live_bridge'))
 
         yield item
 
@@ -308,19 +297,17 @@ def tv_guide_menu(plugin, **kwargs):
                 item.art["thumb"] = guide_infos['icon']
 
         item.params['item_id'] = channel_id
-        item.params['item_dict'] = item2dict(item)
 
         # Get the next action to trigger if this
         # item will be selected by the user
         item.set_callback(eval(channel_infos['callback']))
 
-        add_context_menus_to_item(plugin,
-                                  item,
+        add_context_menus_to_item(item,
                                   index,
                                   menu_id,
                                   len(menu),
                                   is_playable=True,
-                                  channel_infos=channel_infos)
+                                  item_infos=channel_infos)
 
         yield item
 

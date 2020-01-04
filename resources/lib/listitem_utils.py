@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 
 from codequick import Script
 
-from resources.lib.favourites import add_fav_context
+from resources.lib.favourites import add_item_to_favourites
 from resources.lib.labels import LABELS
 
 
@@ -63,11 +63,8 @@ def item_post_treatment(item, **kwargs):
                             **item.params)
 
     # Add `Add to favourites` context menu to the item
-    if 'item_dict' in item.params:
-        item_dict = item.params['item_dict']
-    else:
-        item_dict = item2dict(item)
-
-    add_fav_context(item, item_dict, **kwargs)
+    item.context.script(add_item_to_favourites,
+                        Script.localize(LABELS['Add to add-on favourites']),
+                        is_playable=kwargs.get('is_playable', False))
 
     return

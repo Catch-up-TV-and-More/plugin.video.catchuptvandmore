@@ -39,6 +39,7 @@ from hashlib import md5
 from resources.lib.labels import LABELS
 import resources.lib.mem_storage as mem_storage
 from resources.lib.common import get_item_label, get_item_media_path
+from resources.lib.entrypoint_utils import get_params_in_query
 
 
 FAV_JSON_FP = os.path.join(Script.get_info('profile'), "favourites.json")
@@ -107,37 +108,73 @@ def guess_fav_prefix(item_id):
 
 
 @Script.register
-def add_item_to_favourites(plugin, item_dict={}, **kwargs):
+def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
     """
     Callback function called when the user click
     on 'add item to favourite' from an item
     context menu
     """
 
-    if 'channel_infos' in kwargs and \
-            kwargs['channel_infos'] is not None:
+    # Need to use same keywords as
+    # https://scriptmodulecodequick.readthedocs.io/en/latest/_modules/codequick/listing.html#Listitem.from_dict
+    # in order to be able to directly use `Listitem.from_dict` later
+    item_dict = {}
 
+    # --> subtitles (TODO)
+    # item_dict['subtitles'] = list(item.subtitles)
+
+    # --> art
+    art = {}
+    for art_type in ['thumb', 'poster', 'banner', 'fanart', 'clearart', 'clearlogo', 'landscape', 'icon']:
+        v = xbmc.getInfoLabel('ListItem.Art({})'.format(art_type))
+        art[art_type] = v
+    item_dict['art'] = art
+
+    # --> info (TODO)
+    item_dict['info'] = {}
+
+    # --> stream
+    stream = {}
+    stream['video_codec'] = xbmc.getInfoLabel('ListItem.VideoCodec')
+    stream['aspect'] = xbmc.getInfoLabel('ListItem.VideoAspect')
+    stream['aspect'] = float(stream['aspect']) if stream['aspect'] != '' else stream['aspect']
+    # stream['width'] (TODO)
+    # stream['channels'] (TODO)
+    stream['audio_codec'] = xbmc.getInfoLabel('ListItem.VideoCodec')
+    stream['audio_language'] = xbmc.getInfoLabel('ListItem.AudioLanguage')
+    stream['subtitle_language'] = xbmc.getInfoLabel('ListItem.SubtitleLanguage')
+    item_dict['stream'] = stream
+
+    # --> context (TODO)
+    item_dict['context'] = []
+
+    # --> properties (TODO)
+    item_dict['properties'] = {}
+
+    # --> params
+    path = xbmc.getInfoLabel('ListItem.FilenameAndPath')
+    item_dict['params'] = get_params_in_query(path)
+
+    # --> label
+    item_dict['label'] = xbmc.getInfoLabel('ListItem.Label')
+
+    if item_infos:
         # This item comes from tv_guide_menu
         # We need to remove guide TV related
         # elements
 
-        item_dict['info'] = {}
-
         item_id = item_dict['params']['item_id']
-        label = get_item_label(item_id)
-        item_dict['label'] = label
-        item_dict['params']['_title_'] = label
-        item_dict['info']['title'] = label
+        item_dict['label'] = get_item_label(item_id)
 
         item_dict['art']["thumb"] = ''
-        if 'thumb' in kwargs['channel_infos']:
+        if 'thumb' in item_infos:
             item_dict['art']["thumb"] = get_item_media_path(
-                kwargs['channel_infos']['thumb'])
+                item_infos['thumb'])
 
         item_dict['art']["fanart"] = ''
-        if 'fanart' in kwargs['channel_infos']:
+        if 'fanart' in item_infos:
             item_dict['art']["fanart"] = get_item_media_path(
-                kwargs['channel_infos']['fanart'])
+                item_infos['fanart'])
 
     # Extract the callback
     item_path = xbmc.getInfoLabel('ListItem.Path')
@@ -160,12 +197,15 @@ def add_item_to_favourites(plugin, item_dict={}, **kwargs):
         plugin.localize(LABELS['Favorite name']), label_proposal)
 
     # If user aborded do not add this item to favourite
-    if item_dict['label'] == '':
+    if label == '':
         return False
 
     item_dict['label'] = label
     item_dict['params']['_title_'] = label
     item_dict['info']['title'] = label
+
+    item_dict['params']['is_playable'] = is_playable
+    item_dict['params']['is_folder'] = not is_playable
 
     # Compute fav hash
     item_hash = md5(str(item_dict).encode('utf-8')).hexdigest()
@@ -267,24 +307,6 @@ def move_favourite_item(plugin, direction, item_hash):
             break
 
     return False
-
-
-def add_fav_context(item, item_dict, **kwargs):
-    """
-    Add the 'Add to add-on favourites'
-    context menu to item
-    """
-    if kwargs.get('is_playable', False):
-        item_dict['params']['is_folder'] = False
-        item_dict['params']['is_playable'] = True
-    else:
-        item_dict['params']['is_folder'] = True
-        item_dict['params']['is_playable'] = False
-
-    item.context.script(add_item_to_favourites,
-                        Script.localize(LABELS['Add to add-on favourites']),
-                        item_dict=item_dict,
-                        **kwargs)
 
 
 def ask_to_delete_error_fav_item(params):
