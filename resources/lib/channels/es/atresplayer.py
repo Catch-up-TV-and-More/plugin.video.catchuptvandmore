@@ -31,7 +31,8 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
+from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 import inputstreamhelper
 import json
@@ -192,8 +193,7 @@ def list_video_more_infos(plugin, item_id, video_url_info, **kwargs):
     item.set_callback(get_video_url,
                       item_id=item_id,
                       video_url=video_url,
-                      video_label=LABELS[item_id] + ' - ' + item.label,
-                      item_dict=item2dict(item))
+                      video_label=LABELS[item_id] + ' - ' + item.label)
     item_post_treatment(item, is_playable=True, is_downloadable=True)
     yield item
 
@@ -202,7 +202,6 @@ def list_video_more_infos(plugin, item_id, video_url_info, **kwargs):
 def get_video_url(plugin,
                   item_id,
                   video_url,
-                  item_dict,
                   download_mode=False,
                   video_label=None,
                   **kwargs):
@@ -242,21 +241,21 @@ def get_video_url(plugin,
             item.path = json_parser["sources"][1]["src"]
             item.property['inputstreamaddon'] = 'inputstream.adaptive'
             item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.label = item_dict['label']
-            item.info.update(item_dict['info'])
-            item.art.update(item_dict['art'])
+            item.label = get_selected_item_label()
+            item.art.update(get_selected_item_art())
+            item.info.update(get_selected_item_info())
             return item
     # Add Notification
     plugin.notify('ERROR', plugin.localize(30719))
     return False
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, item_id.upper())
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, video_id, **kwargs):
 
     resp = urlquick.get(URL_ROOT,
                         headers={'User-Agent': web_utils.get_random_ua()},

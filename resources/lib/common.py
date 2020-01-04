@@ -95,6 +95,12 @@ def get_selected_item_stream():
     return stream
 
 
+def get_selected_item_info():
+    info = {}
+    info['plot'] = xbmc.getInfoLabel('ListItem.Plot')
+    return info
+
+
 def old_div(a, b):
     if isinstance(a, numbers.Integral) and isinstance(b, numbers.Integral):
         return a // b

@@ -38,7 +38,7 @@ from hashlib import md5
 
 from resources.lib.labels import LABELS
 import resources.lib.mem_storage as mem_storage
-from resources.lib.common import get_item_label, get_item_media_path, get_selected_item_art, get_selected_item_label, get_selected_item_params, get_selected_item_stream
+from resources.lib.common import get_item_label, get_item_media_path, get_selected_item_art, get_selected_item_label, get_selected_item_params, get_selected_item_stream, get_selected_item_info
 
 
 FAV_JSON_FP = os.path.join(Script.get_info('profile'), "favourites.json")
@@ -125,8 +125,8 @@ def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
     # --> art
     item_dict['art'] = get_selected_item_art()
 
-    # --> info (TODO)
-    item_dict['info'] = {}
+    # --> info
+    item_dict['info'] = get_selected_item_info()
 
     # --> stream
     item_dict['stream'] = get_selected_item_stream()

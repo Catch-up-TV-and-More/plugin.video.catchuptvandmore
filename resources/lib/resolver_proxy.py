@@ -290,7 +290,6 @@ def get_francetv_video_stream(plugin,
             return False
         json_parser2 = json.loads(
             urlquick.get(url_selected, max_age=-1).text)
-
         item = Listitem()
         item.path = json_parser2['url']
         item.property['inputstreamaddon'] = 'inputstream.adaptive'

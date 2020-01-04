@@ -32,7 +32,9 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
+from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
+
 import resources.lib.cq_utils as cqu
 
 import inputstreamhelper
@@ -264,8 +266,7 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
                 get_video_url,
                 item_id=item_id,
                 next_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                item_dict=item2dict(item))
+                video_label=LABELS[item_id] + ' - ' + item.label)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -306,8 +307,7 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
                 get_video_url,
                 item_id=item_id,
                 next_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                item_dict=item2dict(item))
+                video_label=LABELS[item_id] + ' - ' + item.label)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -329,8 +329,7 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
                 get_video_url,
                 item_id=item_id,
                 next_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                item_dict=item2dict(item))
+                video_label=LABELS[item_id] + ' - ' + item.label)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -363,8 +362,7 @@ def list_videos_seasons(plugin, item_id, next_url, **kwargs):
             get_video_url,
             item_id=item_id,
             next_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label,
-            item_dict=item2dict(item))
+            video_label=LABELS[item_id] + ' - ' + item.label)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -409,8 +407,7 @@ def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
                                 item_id=item_id,
                                 next_url=video_url,
                                 video_label=LABELS[item_id] + ' - ' +
-                                item.label,
-                                item_dict=item2dict(item))
+                                item.label)
                             item_post_treatment(
                                 item, is_playable=True, is_downloadable=True)
                             yield item
@@ -447,8 +444,7 @@ def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
                                 item_id=item_id,
                                 video_label=LABELS[item_id] + ' - ' +
                                 item.label,
-                                next_url=video_url,
-                                item_dict=item2dict(item))
+                                next_url=video_url)
                             item_post_treatment(
                                 item, is_playable=True, is_downloadable=True)
                             yield item
@@ -458,7 +454,6 @@ def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
 def get_video_url(plugin,
                   item_id,
                   next_url,
-                  item_dict=None,
                   download_mode=False,
                   video_label=None,
                   **kwargs):
@@ -562,9 +557,9 @@ def get_video_url(plugin,
 
                     item = Listitem()
                     item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
-                    item.label = item_dict['label']
-                    item.info.update(item_dict['info'])
-                    item.art.update(item_dict['art'])
+                    item.label = get_selected_item_label()
+                    item.art.update(get_selected_item_art())
+                    item.info.update(get_selected_item_info())
                     item.property['inputstreamaddon'] = 'inputstream.adaptive'
                     item.property['inputstream.adaptive.manifest_type'] = 'ism'
                     item.property[
@@ -653,9 +648,9 @@ def get_video_url(plugin,
 
                     item = Listitem()
                     item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
-                    item.label = item_dict['label']
-                    item.info.update(item_dict['info'])
-                    item.art.update(item_dict['art'])
+                    item.label = get_selected_item_label()
+                    item.art.update(get_selected_item_art())
+                    item.info.update(get_selected_item_info())
                     item.property['inputstreamaddon'] = 'inputstream.adaptive'
                     item.property['inputstream.adaptive.manifest_type'] = 'ism'
                     item.property[
@@ -697,12 +692,12 @@ def get_video_url(plugin,
     return stream_url
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, item_id.upper())
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, video_id, **kwargs):
 
     return resolver_proxy.get_stream_dailymotion(
         plugin, LIVE_DAILYMOTION_ID[item_id], False)

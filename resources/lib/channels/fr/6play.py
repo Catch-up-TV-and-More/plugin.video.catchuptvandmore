@@ -33,7 +33,9 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
+from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
+
 
 import inputstreamhelper
 import json
@@ -277,8 +279,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
             item.set_callback(get_video_url,
                               item_id=item_id,
                               video_id=video_id,
-                              video_label=LABELS[item_id] + ' - ' + item.label,
-                              item_dict=item2dict(item))
+                              video_label=LABELS[item_id] + ' - ' + item.label)
         item_post_treatment(item,
                             is_playable=True,
                             is_downloadable=is_downloadable)
@@ -289,7 +290,6 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
 def get_video_url(plugin,
                   item_id,
                   video_id,
-                  item_dict=None,
                   download_mode=False,
                   video_label=None,
                   **kwargs):
@@ -440,9 +440,9 @@ def get_video_url(plugin,
                 item.path = asset['full_physical_path']
                 if 'http' in subtitle_url:
                     item.subtitles.append(subtitle_url)
-                item.label = item_dict['label']
-                item.info.update(item_dict['info'])
-                item.art.update(item_dict['art'])
+                item.label = get_selected_item_label()
+                item.art.update(get_selected_item_art())
+                item.info.update(get_selected_item_info())
                 item.property['inputstreamaddon'] = 'inputstream.adaptive'
                 item.property['inputstream.adaptive.manifest_type'] = 'mpd'
                 item.property[
@@ -457,9 +457,9 @@ def get_video_url(plugin,
                     item.path = asset['full_physical_path']
                     if 'http' in subtitle_url:
                         item.subtitles.append(subtitle_url)
-                    item.label = item_dict['label']
-                    item.info.update(item_dict['info'])
-                    item.art.update(item_dict['art'])
+                    item.label = get_selected_item_label()
+                    item.art.update(get_selected_item_art())
+                    item.info.update(get_selected_item_info())
                     return item
         return False
 
@@ -494,8 +494,7 @@ def get_playlist_urls(plugin,
                 plugin,
                 item_id=item_id,
                 video_id=clip_id,
-                video_label=LABELS[item_id] + ' - ' + item.label,
-                item_dict=item2dict(item))
+                video_label=LABELS[item_id] + ' - ' + item.label)
 
             playlist_videos.append(video)
 
@@ -544,12 +543,9 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                 if 'http' in subtitle_url:
                     item.subtitles.append(subtitle_url)
 
-                if 'label' in item_dict:
-                    item.label = item_dict['label']
-                if 'info' in item_dict:
-                    item.info.update(item_dict['info'])
-                if 'art' in item_dict:
-                    item.art.update(item_dict['art'])
+                item.label = get_selected_item_label()
+                item.art.update(get_selected_item_art())
+                item.info.update(get_selected_item_info())
                 return item
         return False
 
@@ -662,19 +658,9 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
                 item.property[
                     'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
 
-                if item_dict:
-                    if 'label' in item_dict:
-                        item.label = item_dict['label']
-                    if 'info' in item_dict:
-                        item.info.update(item_dict['info'])
-                    if 'art' in item_dict:
-                        item.art.update(item_dict['art'])
-                else:
-                    item.label = LABELS[item_id]
-                    item.art["thumb"] = ""
-                    item.art["icon"] = ""
-                    item.art["fanart"] = ""
-                    item.info["plot"] = LABELS[item_id]
+                item.label = get_selected_item_label()
+                item.art.update(get_selected_item_art())
+                item.info.update(get_selected_item_info())
 
                 return item
         return False

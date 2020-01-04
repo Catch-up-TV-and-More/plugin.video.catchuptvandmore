@@ -34,6 +34,7 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
 from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 import json
 import re

@@ -34,7 +34,8 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 import resources.lib.cq_utils as cqu
 from resources.lib import download
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
+from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 import inputstreamhelper
 import json
@@ -218,8 +219,7 @@ def list_videos(plugin, item_id, program_id, program_season_number, **kwargs):
                                   item_id=item_id,
                                   video_id=video_id,
                                   video_label=LABELS[item_id] + ' - ' +
-                                  item.label,
-                                  item_dict=item2dict(item))
+                                  item.label)
                 item_post_treatment(item,
                                     is_playable=True,
                                     is_downloadable=True)
@@ -234,7 +234,6 @@ def list_videos(plugin, item_id, program_id, program_season_number, **kwargs):
 def get_video_url(plugin,
                   item_id,
                   video_id,
-                  item_dict,
                   download_mode=False,
                   video_label=None,
                   **kwargs):
@@ -268,9 +267,9 @@ def get_video_url(plugin,
 
         item = Listitem()
         item.path = json_parser["playback"]["streamUrlDash"]
-        item.label = item_dict['label']
-        item.info.update(item_dict['info'])
-        item.art.update(item_dict['art'])
+        item.label = get_selected_item_label()
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
         item.property['inputstreamaddon'] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
         item.property[
@@ -288,12 +287,12 @@ def get_video_url(plugin,
         return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, item_id.upper())
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
+def get_live_url(plugin, item_id, video_id, **kwargs):
 
     if cqu.get_kodi_version() < 18:
         xbmcgui.Dialog().ok('Info', plugin.localize(30602))
@@ -317,19 +316,9 @@ def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
 
             item = Listitem()
             item.path = live_url
-            if item_dict:
-                if 'label' in item_dict:
-                    item.label = item_dict['label']
-                if 'info' in item_dict:
-                    item.info.update(item_dict['info'])
-                if 'art' in item_dict:
-                    item.art.update(item_dict['art'])
-            else:
-                item.label = LABELS[item_id]
-                item.art["thumb"] = ""
-                item.art["icon"] = ""
-                item.art["fanart"] = ""
-                item.info["plot"] = LABELS[item_id]
+            item.label = get_selected_item_label()
+            item.art.update(get_selected_item_art())
+            item.info.update(get_selected_item_info())
             item.property['inputstreamaddon'] = 'inputstream.adaptive'
             item.property['inputstream.adaptive.manifest_type'] = 'mpd'
             item.property[
