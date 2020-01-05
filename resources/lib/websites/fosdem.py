@@ -28,7 +28,7 @@ import xml.etree.ElementTree as ET
 
 from resources.lib.labels import LABELS
 from resources.lib import download
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
 
 # TO DO
 # YEARS BEFORE 2012 (VIDEO in different format and accessible differently)

@@ -33,7 +33,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
 from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 import re
@@ -109,8 +109,7 @@ def list_videos(plugin, item_id, mode, page, **kwargs):
         item.set_callback(get_video_url,
                           item_id=item_id,
                           video_url=video_url,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
-                          item_dict=item2dict(item))
+                          video_label=LABELS[item_id] + ' - ' + item.label)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -123,7 +122,6 @@ def list_videos(plugin, item_id, mode, page, **kwargs):
 def get_video_url(plugin,
                   item_id,
                   video_url,
-                  item_dict=None,
                   download_mode=False,
                   video_label=None,
                   **kwargs):
@@ -136,7 +134,7 @@ def get_video_url(plugin,
         break
 
     return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
-                                                    item_dict, download_mode,
+                                                    download_mode,
                                                     video_label)
 
 

@@ -358,16 +358,20 @@ def live_bridge(plugin, **kwargs):
     """
 
     # If we come from a M3U file, we need to
-    # convert the string dict
-    # to the real dict object
+    # convert the string dict to the real dict object
+    # and get the language value
+    lang = ''
     if 'item_dict' in kwargs and \
             isinstance(kwargs['item_dict'], string_types):
         kwargs['item_dict'] = eval(kwargs['item_dict'])
+        lang = kwargs['item_dict'].get('language', '')
 
     # Let's go to the module file ...
     item_module = importlib.import_module(kwargs.get('item_module'))
-    return item_module.live_entry(plugin, kwargs.get('item_id'),
-                                  kwargs.get('item_dict', {}))
+    if lang == '':
+        return item_module.live_entry(plugin, kwargs.get('item_id'))
+    else:
+        return item_module.live_entry(plugin, kwargs.get('item_id'), language=lang)
 
 
 @Script.register

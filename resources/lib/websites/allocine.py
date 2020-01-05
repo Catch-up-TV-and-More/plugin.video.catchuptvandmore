@@ -32,7 +32,7 @@ from kodi_six import xbmcgui
 from resources.lib import resolver_proxy
 from resources.lib import download
 from resources.lib.labels import LABELS
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
 
 # TO DO
 # Get Last_Page (for Programs, Videos) / Fix Last_page

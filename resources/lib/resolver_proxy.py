@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import cq_utils
 from resources.lib import download
+from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 import inputstreamhelper
 import json
@@ -251,7 +252,6 @@ def get_mtvnservices_stream(plugin,
 # FranceTV, FranceTV Sport, France Info, ...
 def get_francetv_video_stream(plugin,
                               id_diffusion,
-                              item_dict=None,
                               download_mode=False,
                               video_label=None):
 
@@ -294,9 +294,9 @@ def get_francetv_video_stream(plugin,
         item.path = json_parser2['url']
         item.property['inputstreamaddon'] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.label = item_dict['label']
-        item.info.update(item_dict['info'])
-        item.art.update(item_dict['art'])
+        item.label = get_selected_item_label()
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
 
         return item
     else:

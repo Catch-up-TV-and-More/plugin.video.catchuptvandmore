@@ -28,7 +28,7 @@ import urlquick
 
 from resources.lib import download
 from resources.lib.labels import LABELS
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
 
 URL_ROOT = 'http://www.elle.fr'
 

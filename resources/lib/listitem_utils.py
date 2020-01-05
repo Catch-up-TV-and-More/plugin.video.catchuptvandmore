@@ -31,22 +31,6 @@ from resources.lib.favourites import add_item_to_favourites
 from resources.lib.labels import LABELS
 
 
-def item2dict(item):
-    # Need to use same keywords as
-    # https://scriptmodulecodequick.readthedocs.io/en/latest/_modules/codequick/listing.html#Listitem.from_dict
-    # in order to be able to directly use `Listitem.from_dict` later
-    item_dict = {}
-    item_dict['subtitles'] = list(item.subtitles)
-    item_dict['art'] = dict(item.art)
-    item_dict['info'] = dict(item.info)
-    item_dict['stream'] = dict(item.stream)
-    item_dict['context'] = list(item.context)
-    item_dict['properties'] = dict(item.property)
-    item_dict['params'] = dict(item.params)
-    item_dict['label'] = item.info["title"]
-    return item_dict
-
-
 def item_post_treatment(item, **kwargs):
     """
     Optional keyworded arguments:

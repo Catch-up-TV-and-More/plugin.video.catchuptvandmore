@@ -32,7 +32,7 @@ import urlquick
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
 
 import json
 
@@ -341,17 +341,8 @@ def get_video_url(plugin,
                                              video_label)
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-
-    final_language = LANG
-
-    # If we come from the M3U file and the language
-    # is set in the M3U URL, then we overwrite
-    # Catch Up TV & More language setting
-    if type(item_dict) is not dict:
-        item_dict = eval(item_dict)
-    if 'language' in item_dict:
-        final_language = item_dict['language']
+def live_entry(plugin, item_id, **kwargs):
+    final_language = kwargs.get('language', LANG)
 
     root_json_url = 'products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13'
     root_json_r = urlquick.get(URL_API(root_json_url),

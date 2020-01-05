@@ -52,6 +52,7 @@
 [Fix] Live TV - CBS News (USA)
 [Fix] Catch-Up TV - TVA (Canada)
 [Improvement] Catch-Up TV - TVA (Canada) - Add search feature
+[Improvement] Kill item2dict and item_dict
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -31,7 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
 
 import json
 import time
@@ -154,21 +154,13 @@ def get_video_url(plugin,
     return final_video_url
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper(), item_dict)
+def live_entry(plugin, item_id, **kwargs):
+    return get_live_url(plugin, item_id, item_id.upper())
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, item_dict, **kwargs):
-    desired_country = Script.setting[item_id + '.language']
-
-    # If we come from the M3U file and the language
-    # is set in the M3U URL, then we overwrite
-    # Catch Up TV & More language setting
-    if type(item_dict) is not dict:
-        item_dict = eval(item_dict)
-    if 'language' in item_dict:
-        desired_country = item_dict['language']
+def get_live_url(plugin, item_id, video_id, **kwargs):
+    desired_country = kwargs.get('language', Script.setting[item_id + '.language'])
 
     resp = urlquick.get(URL_LIVE_NHK % item_id)
     xmlElements = ET.XML(resp.text)

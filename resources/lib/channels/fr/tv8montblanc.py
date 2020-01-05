@@ -31,7 +31,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
-from resources.lib.listitem_utils import item_post_treatment, item2dict
+from resources.lib.listitem_utils import item_post_treatment
 
 import json
 import urlquick
@@ -44,7 +44,7 @@ URL_LIVES = 'https://api.dailymotion.com/user/%s/videos?fields=id,thumbnail_larg
 URL_REPLAY = 'https://api.dailymotion.com/user/%s/videos?fields=description,duration,id,taken_time,thumbnail_large_url,title&limit=20&sort=recent&page=1'
 
 
-def live_entry(plugin, item_id, item_dict, **kwargs):
+def live_entry(plugin, item_id, **kwargs):
     return get_live_url(plugin, item_id)
 
 
