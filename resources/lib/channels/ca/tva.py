@@ -127,7 +127,6 @@ def list_videos_search(plugin, item_id, search_query, page=1, **kwargs):
                               item_id=item_id,
                               data_account=data_account,
                               data_player=data_player,
-                              video_label=LABELS[item_id] + ' - ' + item.label,
                               data_video_id=video_id)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
@@ -208,7 +207,6 @@ def list_videos(plugin, item_id, next_url, **kwargs):
                               item_id=item_id,
                               data_account=data_account,
                               data_player=data_player,
-                              video_label=LABELS[item_id] + ' - ' + item.label,
                               data_video_id=video_id)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
@@ -221,12 +219,11 @@ def get_video_url(plugin,
                   data_player,
                   data_video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     return resolver_proxy.get_brightcove_video_json(plugin, data_account,
                                                     data_player, data_video_id,
-                                                    download_mode, video_label)
+                                                    download_mode)
 
 
 def live_entry(plugin, item_id, **kwargs):

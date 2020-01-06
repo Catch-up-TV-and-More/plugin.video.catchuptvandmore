@@ -211,7 +211,6 @@ def list_videos_programs(plugin, item_id, program_url, season_name, **kwargs):
                     item.set_callback(
                         get_video_url,
                         item_id=item_id,
-                        video_label=LABELS[item_id] + ' - ' + item.label,
                         video_id=video_id)
                     item_post_treatment(
                         item, is_playable=True, is_downloadable=False)
@@ -278,7 +277,6 @@ def list_videos_days(plugin, item_id, day_id, **kwargs):
                     item.set_callback(
                         get_video_url,
                         item_id=item_id,
-                        video_label=LABELS[item_id] + ' - ' + item.label,
                         video_id=video_id)
                     item_post_treatment(
                         item, is_playable=True, is_downloadable=False)
@@ -290,7 +288,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     if cqu.get_kodi_version() < 18:

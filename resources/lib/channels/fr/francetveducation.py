@@ -144,8 +144,7 @@ def list_videos(plugin, item_id, next_url, page, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_data_contenu=video_data_contenu,
-                          video_label=LABELS[item_id] + ' - ' + item.label)
+                          video_data_contenu=video_data_contenu)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -159,12 +158,10 @@ def get_video_url(plugin,
                   item_id,
                   video_data_contenu,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(URL_VIDEO_DATA_EDUCATION % video_data_contenu)
     id_diffusion = re.compile(r'videos.francetv.fr\/video\/(.*?)\@').findall(
         resp.text)[0]
     return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
-                                                    download_mode,
-                                                    video_label)
+                                                    download_mode)

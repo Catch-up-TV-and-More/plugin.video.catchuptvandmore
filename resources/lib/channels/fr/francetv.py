@@ -187,8 +187,7 @@ def list_videos_last(plugin, item_id, page=1, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          broadcast_id=broadcast_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label)
+                          broadcast_id=broadcast_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -239,8 +238,7 @@ def list_videos(plugin, item_id, program_part_url, filter_value, page=0, **kwarg
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          broadcast_id=broadcast_id,
-                          video_label=LABELS[item_id] + " - " + item.label)
+                          broadcast_id=broadcast_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -272,8 +270,7 @@ def list_videos_other(plugin, item_id, program_part_url, page=0, **kwargs):
 
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              broadcast_id=broadcast_id,
-                              video_label=LABELS[item_id] + " - " + item.label)
+                              broadcast_id=broadcast_id)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -393,8 +390,7 @@ def list_videos_search(plugin, item_id, search_query, page=0, **kwargs):
 
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              id_yatta=show['id'],
-                              video_label=LABELS[item_id] + " - " + item.label)
+                              id_yatta=show['id'])
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
         page = page + 1
@@ -412,7 +408,6 @@ def get_video_url(plugin,
                   broadcast_id=None,
                   id_yatta=None,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     if id_yatta is not None:
@@ -425,8 +420,7 @@ def get_video_url(plugin,
                 break
 
     return resolver_proxy.get_francetv_video_stream(plugin, broadcast_id,
-                                                    download_mode,
-                                                    video_label)
+                                                    download_mode)
 
 
 def live_entry(plugin, item_id, **kwargs):

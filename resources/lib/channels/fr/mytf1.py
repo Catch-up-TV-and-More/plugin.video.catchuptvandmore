@@ -213,7 +213,6 @@ def list_videos(plugin, item_id, program_slug, video_type_value, offset, **kwarg
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -230,7 +229,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     video_format = 'hls'
@@ -261,7 +259,7 @@ def get_video_url(plugin,
 
         final_video_url = json_parser["url"].replace('2800000', '4000000')
         if download_mode:
-            return download.download_video(final_video_url, video_label)
+            return download.download_video(final_video_url)
         return final_video_url
 
     else:

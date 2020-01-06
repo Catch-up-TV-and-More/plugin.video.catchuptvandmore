@@ -75,7 +75,6 @@ def list_videos(plugin, item_id, page, **kwargs):
 
         item.set_callback(get_video_url_first_video,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -91,7 +90,6 @@ def list_videos(plugin, item_id, page, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -105,7 +103,6 @@ def get_video_url(plugin,
                   item_id,
                   video_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
     """Get video URL and start video player"""
 
@@ -114,7 +111,7 @@ def get_video_url(plugin,
     video_id = re.compile(r'video: \"(.*?)\"').findall(video_html)[0]
 
     return resolver_proxy.get_stream_dailymotion(plugin, video_id,
-                                                 download_mode, video_label)
+                                                 download_mode)
 
 
 @Resolver.register
@@ -122,9 +119,8 @@ def get_video_url_first_video(plugin,
                               item_id,
                               video_id,
                               download_mode=False,
-                              video_label=None,
                               **kwargs):
     """Get video URL and start video player"""
 
     return resolver_proxy.get_stream_dailymotion(plugin, video_id,
-                                                 download_mode, video_label)
+                                                 download_mode)

@@ -198,7 +198,6 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -289,7 +288,6 @@ def list_videos_sub_category(plugin, item_id, category_url, sub_category_id,
 
                     item.set_callback(get_video_url,
                                       item_id=item_id,
-                                      video_label=LABELS[item_id] + ' - ' + item.label,
                                       video_id=video_id)
                     item_post_treatment(item,
                                         is_playable=True,
@@ -330,7 +328,6 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
 
                         item.set_callback(get_video_url,
                                           item_id=item_id,
-                                          video_label=LABELS[item_id] + ' - ' + item.label,
                                           video_id=video_id)
                         item_post_treatment(item,
                                             is_playable=True,
@@ -343,7 +340,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(URL_VIDEO_BY_ID % video_id, max_age=-1)
@@ -355,8 +351,7 @@ def get_video_url(plugin,
         if 'youtube.com' in json_parser["url"]:
             video_id = json_parser["url"].rsplit('/', 1)[1]
             return resolver_proxy.get_stream_youtube(plugin, video_id,
-                                                     download_mode,
-                                                     video_label)
+                                                     download_mode)
         else:
             return json_parser["url"]
     else:
@@ -365,7 +360,7 @@ def get_video_url(plugin,
             stream_url = json_parser["urlHlsAes128"]
 
     if download_mode:
-        return download.download_video(stream_url, video_label)
+        return download.download_video(stream_url)
     return stream_url
 
 

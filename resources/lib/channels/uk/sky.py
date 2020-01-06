@@ -158,7 +158,6 @@ def list_videos_sports(plugin, item_id, category_url, page, **kwargs):
 
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              video_label=LABELS[item_id] + ' - ' + item.label,
                               video_id=video_id_list[0])
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
@@ -178,7 +177,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     data_embed_token = urlquick.get(URL_PCODE_EMBED_TOKEN).text
@@ -195,7 +193,7 @@ def get_video_url(plugin,
         final_video_url = base64.standard_b64decode(url_base64)
 
         if download_mode:
-            return download.download_video(final_video_url, video_label)
+            return download.download_video(final_video_url)
 
         return final_video_url
     plugin.notify('ERROR', plugin.localize(30712))

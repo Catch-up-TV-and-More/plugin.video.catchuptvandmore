@@ -265,8 +265,7 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
-                next_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label)
+                next_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -306,8 +305,7 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
-                next_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label)
+                next_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -328,8 +326,7 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
-                next_url=video_url,
-                video_label=LABELS[item_id] + ' - ' + item.label)
+                next_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -361,8 +358,7 @@ def list_videos_seasons(plugin, item_id, next_url, **kwargs):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            next_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label)
+            next_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -405,9 +401,7 @@ def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
                             item.set_callback(
                                 get_video_url,
                                 item_id=item_id,
-                                next_url=video_url,
-                                video_label=LABELS[item_id] + ' - ' +
-                                item.label)
+                                next_url=video_url)
                             item_post_treatment(
                                 item, is_playable=True, is_downloadable=True)
                             yield item
@@ -442,8 +436,6 @@ def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
                             item.set_callback(
                                 get_video_url,
                                 item_id=item_id,
-                                video_label=LABELS[item_id] + ' - ' +
-                                item.label,
                                 next_url=video_url)
                             item_post_treatment(
                                 item, is_playable=True, is_downloadable=True)
@@ -455,7 +447,6 @@ def get_video_url(plugin,
                   item_id,
                   next_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(
@@ -688,7 +679,7 @@ def get_video_url(plugin,
             stream_url = stream_datas["videoURL"]
 
     if download_mode:
-        return download.download_video(stream_url, video_label)
+        return download.download_video(stream_url)
     return stream_url
 
 

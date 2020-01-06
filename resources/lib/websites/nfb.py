@@ -91,7 +91,6 @@ def list_videos(plugin, item_id, category_title, page, **kwargs):
 
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              video_label=LABELS[item_id] + ' - ' + item.label,
                               video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
@@ -111,7 +110,6 @@ def get_video_url(plugin,
                   item_id,
                   video_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
     """Get video URL and start video player"""
 
@@ -120,5 +118,4 @@ def get_video_url(plugin,
     video_url = re.compile(r'og\:video\:url" content="(.*?)"').findall(
         video_html)[0]
 
-    return resolver_proxy.get_stream_kaltura(plugin, video_url, download_mode,
-                                             video_label)
+    return resolver_proxy.get_stream_kaltura(plugin, video_url, download_mode)

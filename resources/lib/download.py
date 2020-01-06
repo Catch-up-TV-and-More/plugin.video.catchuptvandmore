@@ -29,9 +29,10 @@ import os
 from kodi_six import xbmcvfs
 from codequick import Script
 from resources.lib import cq_utils
+from resources.lib.common import get_selected_item_label
 
 
-def download_video(video_url, video_name=None):
+def download_video(video_url):
     #  print('URL Video to download ' + video_url)
 
     #  Now that we have video URL we can try to download this one
@@ -64,13 +65,13 @@ def download_video(video_url, video_name=None):
 
     if path != '' and \
             Script.setting.get_boolean('dl_item_filename') and \
-            video_name is not None and \
             download_ok:
 
         try:
             filename = os.path.basename(full_path_to_file)
             _, file_extension = os.path.splitext(full_path_to_file)
             current_filepath = os.path.join(path, filename)
+            video_name = get_selected_item_label()
             final_filepath = os.path.join(path, video_name + file_extension)
             xbmcvfs.rename(current_filepath, final_filepath)
         except Exception:

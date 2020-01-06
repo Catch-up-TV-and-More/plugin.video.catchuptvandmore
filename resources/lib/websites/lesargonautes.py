@@ -89,7 +89,6 @@ def list_videos(plugin, item_id, season_title, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -100,7 +99,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
     """Get video URL and start video player"""
 
@@ -114,5 +112,5 @@ def get_video_url(plugin,
     final_video_url = URL_STREAM % json_parser['media']['mediaId']
 
     if download_mode:
-        return download.download_video(final_video_url, video_label)
+        return download.download_video(final_video_url)
     return final_video_url

@@ -278,8 +278,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
             populate_item(item, video['clips'][0])
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              video_id=video_id,
-                              video_label=LABELS[item_id] + ' - ' + item.label)
+                              video_id=video_id)
         item_post_treatment(item,
                             is_playable=True,
                             is_downloadable=is_downloadable)
@@ -291,7 +290,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     if cqu.get_kodi_version() < 18:
@@ -350,7 +348,7 @@ def get_video_url(plugin,
                 final_video_url = all_datas_videos_path[0]
 
         if download_mode:
-            return download.download_video(final_video_url, video_label)
+            return download.download_video(final_video_url)
         return final_video_url
 
     else:
@@ -493,8 +491,7 @@ def get_playlist_urls(plugin,
             video = get_video_url(
                 plugin,
                 item_id=item_id,
-                video_id=clip_id,
-                video_label=LABELS[item_id] + ' - ' + item.label)
+                video_id=clip_id)
 
             playlist_videos.append(video)
 

@@ -254,8 +254,6 @@ def list_programs(plugin, item_id, sub_category_code_name, sub_category_url,
 
                     item.set_callback(get_video_url,
                                       item_id=item_id,
-                                      video_label=LABELS[item_id] + ' - ' +
-                                      item.label,
                                       video_id=video_id)
                     item_post_treatment(item,
                                         is_playable=True,
@@ -329,8 +327,6 @@ def list_videos_sub_category(plugin, item_id, sub_category_url,
 
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              video_label=LABELS[item_id] + ' - ' +
-                              item.label,
                               video_id=video_id)
             item_post_treatment(item,
                                 is_playable=True,
@@ -373,8 +369,6 @@ def list_videos_sub_category(plugin, item_id, sub_category_url,
 
                     item.set_callback(get_video_url,
                                       item_id=item_id,
-                                      video_label=LABELS[item_id] + ' - ' +
-                                      item.label,
                                       video_id=video_id)
                     item_post_treatment(item,
                                         is_playable=True,
@@ -422,7 +416,6 @@ def list_videos_program(plugin, item_id, sub_category_code_name, program_id,
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -458,8 +451,6 @@ def list_videos_program_concert(plugin, item_id, program_url,
 
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              video_label=LABELS[item_id] + ' - ' +
-                              item.label,
                               video_id=video_id)
             item_post_treatment(item,
                                 is_playable=True,
@@ -500,8 +491,6 @@ def list_videos_program_concert(plugin, item_id, program_url,
 
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              video_label=LABELS[item_id] + ' - ' +
-                              item.label,
                               video_id=video_id)
             item_post_treatment(item,
                                 is_playable=True,
@@ -518,7 +507,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(URL_REPLAY_ARTE % (DESIRED_LANGUAGE.lower(), video_id))
@@ -552,7 +540,7 @@ def get_video_url(plugin,
         url_selected = stream_datas['HTTPS_HQ_1']['url']
 
     if download_mode:
-        return download.download_video(url_selected, video_label)
+        return download.download_video(url_selected)
 
     return url_selected
 

@@ -184,7 +184,6 @@ def list_videos(plugin, item_id, program_id, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -195,7 +194,6 @@ def get_video_url(plugin,
                   item_id,
                   video_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
     url_root = video_url.replace('playlist.m3u8', '')
     m3u8_content = urlquick.get(
@@ -207,7 +205,7 @@ def get_video_url(plugin,
             last_url = line
 
     if download_mode:
-        return download.download_video(url_root + last_url, video_label)
+        return download.download_video(url_root + last_url)
     return url_root + last_url
 
 

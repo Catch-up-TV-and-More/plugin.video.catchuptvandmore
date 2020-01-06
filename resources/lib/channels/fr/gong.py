@@ -88,7 +88,6 @@ def list_videos(plugin, item_id, page, **kwargs):
         item.art['thumb'] = video_image
 
         item.set_callback(get_video_url,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           item_id=item_id,
                           video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
@@ -101,15 +100,13 @@ def list_videos(plugin, item_id, page, **kwargs):
 def get_video_url(plugin,
                   video_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(video_url,
                         headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
     video_id = re.compile(r'videoId: \'(.*?)\'').findall(resp.text)[0]
-    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode,
-                                             video_label)
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
 
 
 def live_entry(plugin, item_id, **kwargs):

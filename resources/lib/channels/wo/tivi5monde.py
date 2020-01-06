@@ -141,7 +141,6 @@ def list_videos(plugin, item_id, next_url, page, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -188,7 +187,6 @@ def get_video_url(plugin,
                   item_id,
                   video_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(video_url,
@@ -197,7 +195,7 @@ def get_video_url(plugin,
     stream_url = re.compile('contentUrl\"\: \"(.*?)\"').findall(resp.text)[0]
 
     if download_mode:
-        return download.download_video(stream_url, video_label)
+        return download.download_video(stream_url)
 
     return stream_url
 

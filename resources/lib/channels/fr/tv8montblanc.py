@@ -79,7 +79,6 @@ def list_videos(plugin, item_id, url, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_id=vid)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -98,7 +97,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
     return resolver_proxy.get_stream_dailymotion(plugin, video_id,
-                                                 download_mode, video_label)
+                                                 download_mode)

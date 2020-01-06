@@ -93,7 +93,6 @@ def list_videos(plugin, item_id, program_url, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -104,7 +103,6 @@ def get_video_url(plugin,
                   item_id,
                   video_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(video_url,
@@ -115,8 +113,7 @@ def get_video_url(plugin,
     if 'player.vimeo.com' in stream_url:
         video_id = re.compile(r'player.vimeo.com\/video/(.*?)\?').findall(
             stream_url)[0]
-        return resolver_proxy.get_stream_vimeo(plugin, video_id, download_mode,
-                                               video_label)
+        return resolver_proxy.get_stream_vimeo(plugin, video_id, download_mode)
     else:
         # TODO if new video hoster
         return False

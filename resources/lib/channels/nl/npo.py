@@ -281,7 +281,6 @@ def get_video_url(plugin,
                   item_id,
                   video_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     if cqu.get_kodi_version() < 18:

@@ -129,7 +129,6 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           program_id=program_id)
         item_post_treatment(item,
                             is_playable=True,
@@ -147,7 +146,6 @@ def get_video_url(plugin,
                   item_id,
                   program_id,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     if 'www.wat.tv/embedframe' in program_id:
@@ -219,7 +217,7 @@ def get_video_url(plugin,
         final_video_url = all_datas_videos_path[0]
 
     if download_mode:
-        return download.download_video(final_video_url, video_label)
+        return download.download_video(final_video_url)
     return final_video_url
 
 

@@ -106,8 +106,7 @@ def list_videos(plugin, item_id, category_url, page, **kwargs):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            video_url=video_url,
-            video_label=LABELS[item_id] + ' - ' + item.label)
+            video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -122,7 +121,6 @@ def get_video_url(plugin,
                   item_id,
                   video_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
@@ -133,4 +131,4 @@ def get_video_url(plugin,
         plugin.notify('ERROR', plugin.localize(30716))
         return False
     return resolver_proxy.get_francetv_video_stream(
-        plugin, id_diffusion, download_mode, video_label)
+        plugin, id_diffusion, download_mode)

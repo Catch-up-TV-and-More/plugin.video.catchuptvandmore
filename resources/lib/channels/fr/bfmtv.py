@@ -152,7 +152,6 @@ def list_videos(plugin, item_id, program_category, page, **kwargs):
         item.set_callback(get_video_url,
                           item_id=item_id,
                           video_id=video_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_id_ext=video_id_ext)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -168,7 +167,6 @@ def get_video_url(plugin,
                   video_id,
                   video_id_ext,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(URL_VIDEO % (item_id, get_token(item_id), video_id))
@@ -207,7 +205,7 @@ def get_video_url(plugin,
         final_video_url = json_parser['video']['video_url']
 
     if download_mode:
-        return download.download_video(final_video_url, video_label)
+        return download.download_video(final_video_url)
     return final_video_url
 
 

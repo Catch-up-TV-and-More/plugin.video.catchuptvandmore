@@ -155,7 +155,6 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_label=LABELS[item_id] + ' - ' + item.label,
                           video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
@@ -169,7 +168,6 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
 def get_video_url(plugin,
                   video_url,
                   download_mode=False,
-                  video_label=None,
                   **kwargs):
 
     resp = urlquick.get(video_url,
@@ -178,8 +176,7 @@ def get_video_url(plugin,
     video_id = re.compile(r'www.youtube.com/embed/(.*?)[\?\"]').findall(
         resp.text)[0]
 
-    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode,
-                                             video_label)
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
 
 
 def live_entry(plugin, item_id, **kwargs):
