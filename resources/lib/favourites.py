@@ -38,33 +38,11 @@ from hashlib import md5
 
 from resources.lib.labels import LABELS
 import resources.lib.mem_storage as mem_storage
+from resources.lib.migration_utils import migrate_from_pickled_fav
 from resources.lib.common import get_item_label, get_item_media_path, get_selected_item_art, get_selected_item_label, get_selected_item_params, get_selected_item_stream, get_selected_item_info
 
 
 FAV_JSON_FP = os.path.join(Script.get_info('profile'), "favourites.json")
-
-
-def migrate_from_pickled_fav():
-    # Move all pickled existing favs in json file
-    fav_pickle_fp = os.path.join(Script.get_info('profile'), "favourites.pickle")
-    if xbmcvfs.exists(fav_pickle_fp):
-        Script.log('Start favourites migration from pickle file to json file')
-        new_fav_dict = {}
-        with storage.PersistentDict("favourites.pickle") as db:
-            new_fav_dict = dict(db)
-        # Fix old fav
-        for item_hash, item_dict in new_fav_dict.items():
-            if 'params' in item_dict and isinstance(item_dict['params'], listing.Params):
-                new_fav_dict[item_hash]['params'] = dict(new_fav_dict[item_hash]['params'])
-                try:
-                    del new_fav_dict[item_hash]['params']['item_dict']['params']
-                except Exception:
-                    pass
-            if 'properties' in item_dict:
-                if isinstance(item_dict['properties'], listing.Property):
-                    new_fav_dict[item_hash]['properties'] = dict(new_fav_dict[item_hash]['properties'])
-        save_fav_dict_in_json(new_fav_dict)
-        xbmcvfs.delete(fav_pickle_fp)
 
 
 def get_fav_dict_from_json():
