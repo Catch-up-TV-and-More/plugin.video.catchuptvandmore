@@ -32,6 +32,14 @@ from codequick import Script
 
 
 def get_params_in_query(query_string):
+    """Get parameters dict from Kodi query (sys.argv[2])
+
+    Args:
+        query_string (str): Query string passed to the addon (e.g. ?foo=bar&baz=quux)
+    Returns:
+        dict: Paramters found in the query string
+    """
+
     params = parse_qs(query_string)
 
     # Unpickle pickled data
@@ -43,6 +51,14 @@ def get_params_in_query(query_string):
 
 
 def get_module_in_query(query_string):
+    """Get module from Kodi query (sys.argv[2]) in CodeQuick special case (Search feature)
+
+    Args:
+        query_string (str): Query string passed to the addon (e.g. ?foo=bar&baz=quux)
+    Returns:
+        str: Module to load after the Search window (e.g. resources.lib.channels.fr.francetv)
+    """
+
     module = ''
     params = get_params_in_query(query_string)
     # '_route': u'/resources/lib/channels/fr/francetv/list_videos_search/'
@@ -69,7 +85,14 @@ def get_module_in_query(query_string):
 
 
 def get_module_in_url(base_url):
-    # e.g. base_url = plugin://plugin.video.catchuptvandmore/resources/lib/websites/culturepub/list_shows
+    """Get module from Kodi base URL (sys.argv[0])
+
+    Args:
+        base_url (str): Base URL string passed to the addon (e.g. plugin://plugin.video.catchuptvandmore/resources/lib/websites/culturepub/list_shows)
+    Returns:
+        str: Module found in the base URL (e.g. resources.lib.websites.culturepub)
+    """
+
     if 'resources' not in base_url:
         return 'resources.lib.main'
 
@@ -87,13 +110,15 @@ def get_module_in_url(base_url):
 
     module_l.pop()  # Pop the function name (e.g. list_shows)
     module = '.'.join(module_l)
-    # Returned module: resources.lib.websites.culturepub
+
     return module
 
 
 def import_needed_module():
-    # Import needed module according to the
-    # base URL and query string (Fix for Kodi favorite item and search)
+    """Import needed module according to the Kodi base URL and query string
+
+    """
+
     modules_to_import = [get_module_in_url(sys.argv[0])]
     if 'codequick/search' in sys.argv[0]:
         modules_to_import.append(get_module_in_query(sys.argv[2]))
@@ -104,7 +129,7 @@ def import_needed_module():
 
         # Need to load additional module
         try:
-            Script.log('[cq_utils.import_needed_module] Import module {} on the fly'.format(module_to_import), lvl=Script.INFO)
+            Script.log('[import_needed_module] Import module {} on the fly'.format(module_to_import), lvl=Script.INFO)
             importlib.import_module(module_to_import)
         except Exception:
-            Script.log('[cq_utils.import_needed_module] Failed to import module {} on the fly'.format(module_to_import), lvl=Script.WARNING)
+            Script.log('[import_needed_module] Failed to import module {} on the fly'.format(module_to_import), lvl=Script.WARNING)
