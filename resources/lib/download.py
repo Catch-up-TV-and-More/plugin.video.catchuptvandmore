@@ -33,6 +33,12 @@ from resources.lib.common import get_selected_item_label
 
 
 def download_video(video_url):
+    """Callback function of the 'Download' context menu
+
+    Args:
+        video_url (str): URL of the video to download
+    """
+
     #  print('URL Video to download ' + video_url)
 
     #  Now that we have video URL we can try to download this one

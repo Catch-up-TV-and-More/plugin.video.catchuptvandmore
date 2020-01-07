@@ -48,20 +48,33 @@ PY3 = sys.version_info[0] >= 3
 
 
 def build_kodi_url(route_path, raw_params):
-    # route_path: /resources/lib/channels/fr/mytf1/get_video_url/
-    # raw_params: params dict
+    """Build a valid Kodi URL
+
+    Args:
+        route_path (str): (e.g. /resources/lib/channels/fr/mytf1/get_video_url/)
+        raw_params (dict): Paramters dict
+    Returns:
+        str: Valid kodi URL (e.g. plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/mytf1/get_video_url/?foo=bar&baz=quux)
+    """
     if raw_params:
         pickled = binascii.hexlify(
             pickle.dumps(raw_params, protocol=pickle.HIGHEST_PROTOCOL))
         query = "_pickle_={}".format(
             pickled.decode("ascii") if PY3 else pickled)
 
-    # Build kodi url
     return urlunsplit(
         ("plugin", "plugin.video.catchuptvandmore", route_path, query, ""))
 
 
 def get_quality_YTDL(download_mode=False):
+    """Get YoutTubeDL quality setting
+
+    Args:
+        download_mode (bool)
+    Returns:
+        int: YoutTubeDL quality
+    """
+
     # If not download mode get the 'quality' setting
     if not download_mode:
         quality = Script.setting.get_string('quality')
@@ -94,13 +107,22 @@ def get_quality_YTDL(download_mode=False):
 
 
 def get_kodi_version():
+    """Get Kodi major version
+
+    Returns:
+        int: Kodi major version (e.g. 18)
+    """
     xbmc_version = xbmc.getInfoLabel("System.BuildVersion")
     return int(xbmc_version.split('-')[0].split('.')[0])
 
 
 @Script.register
 def clear_cache(plugin):
-    # Callback function of clear cache setting button
+    """Callback function of clear cache setting button
+
+    Args:
+        plugin (codequick.script.Script)
+    """
 
     # Clear urlquick cache
     urlquick.cache_cleanup(-1)

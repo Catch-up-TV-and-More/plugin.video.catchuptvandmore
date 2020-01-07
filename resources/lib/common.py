@@ -38,6 +38,13 @@ from resources.lib.entrypoint_utils import get_params_in_query
 
 
 def get_item_label(item_id):
+    """Get (translated) label of 'item_id'
+
+    Args:
+        item_id (str)
+    Returns:
+        str: (translated) label of 'item_id'
+    """
     label = item_id
     if item_id in LABELS:
         label = LABELS[item_id]
@@ -47,6 +54,13 @@ def get_item_label(item_id):
 
 
 def get_item_media_path(item_media_path):
+    """Get full path or URL of an item_media
+
+    Args:
+        item_media_path (str or list): Partial media path of the item (e.g. channels/fr/tf1.png)
+    Returns:
+        str: Full path or URL of the item_pedia
+    """
     full_path = ''
 
     # Local image in ressources/media folder
@@ -66,6 +80,11 @@ def get_item_media_path(item_media_path):
 
 
 def get_selected_item_art():
+    """Get 'art' dict of the selected item in the current Kodi menu
+
+    Returns:
+        dict: Selected item 'art' dict
+    """
     art = {}
     for art_type in ['thumb', 'poster', 'banner', 'fanart', 'clearart', 'clearlogo', 'landscape', 'icon']:
         v = xbmc.getInfoLabel('ListItem.Art({})'.format(art_type))
@@ -74,15 +93,30 @@ def get_selected_item_art():
 
 
 def get_selected_item_label():
+    """Get label the selected item in the current Kodi menu
+
+    Returns:
+        str: Selected item label
+    """
     return xbmc.getInfoLabel('ListItem.Label')
 
 
 def get_selected_item_params():
+    """Get 'params' dict of the selected item in the current Kodi menu
+
+    Returns:
+        dict: Selected item 'params' dict
+    """
     path = xbmc.getInfoLabel('ListItem.FilenameAndPath')
     return get_params_in_query(path)
 
 
 def get_selected_item_stream():
+    """Get 'stream' dict of the selected item in the current Kodi menu
+
+    Returns:
+        dict: Selected item 'stream' dict
+    """
     stream = {}
     stream['video_codec'] = xbmc.getInfoLabel('ListItem.VideoCodec')
     stream['aspect'] = xbmc.getInfoLabel('ListItem.VideoAspect')
@@ -96,12 +130,20 @@ def get_selected_item_stream():
 
 
 def get_selected_item_info():
+    """Get 'info' dict of the selected item in the current Kodi menu
+
+    Returns:
+        dict: Selected item 'info' dict
+    """
     info = {}
     info['plot'] = xbmc.getInfoLabel('ListItem.Plot')
     return info
 
 
 def old_div(a, b):
+    """Python 2 and 3 Integer division cheat (https://python-future.org/compatible_idioms.html#division)
+
+    """
     if isinstance(a, numbers.Integral) and isinstance(b, numbers.Integral):
         return a // b
     else:
@@ -109,5 +151,9 @@ def old_div(a, b):
 
 
 def current_timestamp():
-    # This is the Unix time (the same given here https://timestamp.online)
+    """Get current timestamp (Unix time, the same given here https://timestamp.online)
+
+    Returns:
+        float: Current timestamp
+    """
     return time.time()

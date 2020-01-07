@@ -41,15 +41,30 @@ user_agents = [
 
 
 def get_ua():
+    """Get first user agent in the 'user_agents' list
+
+    Returns:
+        str: User agent
+    """
     return user_agents[0]
 
 
 def get_random_ua():
+    """Get a random user agent in the 'user_agents' list
+
+    Returns:
+        str: Random user agent
+    """
     return user_agents[randint(0, len(user_agents) - 1)]
 
 
 # code adapted from weather.weatherbit.io - Thanks Ronie
 def geoip():
+    """Get country code based on IP address
+
+    Returns:
+        str: Country code (e.g. FR)
+    """
     # list of alternative providers https://ahmadawais.com/best-api-geolocating-an-ip-address/)
     try:
         resp = urlquick.get('http://ip-api.com/json', max_age=-1)
