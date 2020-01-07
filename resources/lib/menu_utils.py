@@ -46,7 +46,7 @@ from resources.lib.labels import LABELS
 
 
 def get_sorted_menu(plugin, menu_id):
-    """Get ordered menu 'menu_id' without disabled and hidden items
+    """Get ordered 'menu_id' menu without disabled and hidden items
 
     Args:
         plugin (codequick.script.Script)
@@ -107,37 +107,38 @@ def get_sorted_menu(plugin, menu_id):
     return sorted(menu, key=lambda x: x[0])
 
 
-def add_context_menus_to_item(item, index, menu_id, menu_len, is_playable=False, item_infos={}):
+def add_context_menus_to_item(item, item_id, item_index, menu_id, menu_len, is_playable=False, item_infos={}):
     """Add basic context menus to the item
 
     Args:
         plugin (codequick.script.Script)
         item (codequick.listing.Listitem): Item for which we want to add context menus
-        index (int): Index of the item
+        item_id (str): Id of the item
+        item_index (int): Index of the item
         menu_id (str): Menu to get (e.g. root)
         menu_len (int): Length of the item menu
     """
 
     # Move up
-    if index > 0:
+    if item_index > 0:
         item.context.script(move_item,
                             Script.localize(LABELS['Move up']),
                             direction='up',
-                            item_id=item.params['item_id'],
+                            item_id=item_id,
                             menu_id=menu_id)
 
     # Move down
-    if index < menu_len - 1:
+    if item_index < menu_len - 1:
         item.context.script(move_item,
                             Script.localize(LABELS['Move down']),
                             direction='down',
-                            item_id=item.params['item_id'],
+                            item_id=item_id,
                             menu_id=menu_id)
 
     # Hide
     item.context.script(hide_item,
                         Script.localize(LABELS['Hide']),
-                        item_id=item.params['item_id'])
+                        item_id=item_id)
 
     # Connect/Disconnect VPN
     add_vpn_context(item)

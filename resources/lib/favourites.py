@@ -139,6 +139,8 @@ def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
             item_dict['art']["fanart"] = get_item_media_path(
                 item_infos['fanart'])
 
+        item_dict['info']['plot'] = ''
+
     # Extract the callback
     item_path = xbmc.getInfoLabel('ListItem.Path')
     item_dict['callback'] = item_path.replace(

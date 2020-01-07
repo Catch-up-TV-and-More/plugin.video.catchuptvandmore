@@ -32,9 +32,8 @@ import importlib
 import sys
 
 # Kodi imports
-from codequick import Route, Resolver, Listitem, Script, utils
+from codequick import Route, Resolver, Listitem, Script
 import urlquick
-from kodi_six import xbmc
 from kodi_six import xbmcgui
 from kodi_six import xbmcplugin
 from six import string_types
@@ -50,28 +49,41 @@ from resources.lib.menu_utils import get_sorted_menu, add_context_menus_to_item
 
 @Route.register
 def root(plugin):
+    """Build root menu of the addon (Live TV, Catch-up TV, Websites, ...)
+
+    Args:
+        plugin (codequick.script.Script)
+    Returns:
+        Iterator[codequick.listing.Listitem]: Kodi root menu
     """
-    root is the entry point
-    of Catch-up TV & More
-    """
+
     # Save LABELS dict in mem storage
     # to improve addon navigation speed
     save_labels_in_mem_storage()
 
     # First menu to build is the root menu
-    # (see ROOT dictionnary in skeleton.py)
-    return generic_menu(plugin, item_id='root')
+    # (see 'menu' dictionnary in root.py)
+    return generic_menu(plugin, 'root')
 
 
 @Route.register
-def generic_menu(plugin, **kwargs):
+def generic_menu(plugin, item_id):
+    """Build 'item_id' menu of the addon
+
+    Args:
+        plugin (codequick.script.Script)
+        item_id (str): Menu to build (e.g. root)
+    Returns:
+        Iterator[codequick.listing.Listitem]: Kodi 'item_id' menu
     """
-    Build a generic addon menu
-    with all not hidden items
-    """
+
+    menu_id = item_id
+
+    # If 'menu_id' menu contains only one item, directly open this item
     plugin.redirect_single_item = True
 
-    menu_id = kwargs.get('item_id')
+    # Get ordered 'menu_id' menu
+    # without disabled and hidden items
     menu = get_sorted_menu(plugin, menu_id)
 
     if not menu:
@@ -99,70 +111,53 @@ def generic_menu(plugin, **kwargs):
         if 'module' in item_infos:
             item.params['item_module'] = item_infos['module']
 
+        if 'xmltv_id' in item_infos:
+            item.params['xmltv_id'] = item_infos['xmltv_id']
+
         item.params['item_id'] = item_id
 
-        # Get the next action to trigger if this
-        # item will be selected by the user
+        # Get cllback function of this item
         item_callback = eval(item_infos['callback'])
         item.set_callback(item_callback)
 
+        # Add needed context menus to this item
         add_context_menus_to_item(item,
+                                  item_id,
                                   index,
                                   menu_id,
                                   len(menu),
-                                  is_playable=(item_infos['callback'] == 'live_bridge'))
+                                  is_playable=(item_infos['callback'] == 'live_bridge'),
+                                  item_infos=item_infos)
 
         yield item
 
 
 @Route.register
-def tv_guide_menu(plugin, **kwargs):
+def tv_guide_menu(plugin, item_id):
+    """Build 'item_id' menu of the addon and add TV guide information
+
+    Args:
+        plugin (codequick.script.Script)
+        item_id (str): Country live TV menu to build (e.g. fr_live)
+    Returns:
+        Iterator[codequick.listing.Listitem]: Kodi 'item_id' menu
+    """
+
+    live_country_id = item_id
 
     # Move up and move down action only work with this sort method
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
 
-    # Get sorted menu of this live TV country
-    menu_id = kwargs.get('item_id')
-    menu = get_sorted_menu(plugin, menu_id)
+    # Get tv_guide of this country
+    xmltv = importlib.import_module('resources.lib.xmltv')
+    tv_guide = xmltv.grab_tv_guide(live_country_id)
 
-    try:
-        # Load xmltv module
-        xmltv = importlib.import_module('resources.lib.xmltv')
+    # Treat this menu as a generic menu and add, if any, tv guide information
+    for item in generic_menu(plugin, live_country_id):
 
-        # Get tv_guide of this country
-        tv_guide = xmltv.grab_tv_guide(menu_id, menu)
-    except Exception as e:
-        Script.notify(
-            Script.localize(LABELS['TV guide']),
-            Script.localize(LABELS['An error occurred while getting TV guide']),
-            display_time=7000)
-        Script.log('xmltv module failed with error: {}'.format(e, lvl=Script.ERROR))
-        tv_guide = {}
-
-    for index, (channel_order, channel_id, channel_infos) in enumerate(menu):
-
-        item = Listitem()
-
-        # Set item label
-        item.label = get_item_label(channel_id)
-
-        # Set item art
-        if 'thumb' in channel_infos:
-            item.art["thumb"] = get_item_media_path(
-                channel_infos['thumb'])
-
-        if 'fanart' in channel_infos:
-            item.art["fanart"] = get_item_media_path(
-                channel_infos['fanart'])
-
-        # If this item requires a module to work, get
-        # the module path to be loaded
-        if 'module' in channel_infos:
-            item.params['item_module'] = channel_infos['module']
-
-        # If we have program infos from the grabber
-        if 'xmltv_id' in channel_infos and channel_infos['xmltv_id'] in tv_guide:
-            guide_infos = tv_guide[channel_infos['xmltv_id']]
+        # If we have program information from the grabber
+        if 'xmltv_id' in item.params and item.params['xmltv_id'] in tv_guide:
+            guide_infos = tv_guide[item.params['xmltv_id']]
 
             # Title
             if 'title' in guide_infos:
@@ -207,70 +202,73 @@ def tv_guide_menu(plugin, **kwargs):
             # Art
             if 'icon' in guide_infos:
                 item.art["thumb"] = guide_infos['icon']
-
-        item.params['item_id'] = channel_id
-
-        # Get the next action to trigger if this
-        # item will be selected by the user
-        item.set_callback(eval(channel_infos['callback']))
-
-        add_context_menus_to_item(item,
-                                  index,
-                                  menu_id,
-                                  len(menu),
-                                  is_playable=True,
-                                  item_infos=channel_infos)
-
         yield item
 
 
 @Route.register
-def replay_bridge(plugin, **kwargs):
-    """
-    replay_bridge is the bridge between the
-    addon.py file and each channel modules files.
-    Because each time the user enter in a new
-    menu level the PLUGIN.run() function is
-    executed.
-    So we have to load on the fly the corresponding
-    module of the channel.
+def replay_bridge(plugin, item_id, item_module):
+    """Bridge between main.py file and each channel modules files
+
+    Args:
+        plugin (codequick.script.Script)
+        item_id (str): Catch-up TV channel menu to build (e.g. tf1)
+        item_module (str): Channel module (e.g. resources.lib.channels.fr.mytf1)
+    Returns:
+        Iterator[codequick.listing.Listitem]: Kodi 'item_id' menu
     """
 
-    # Let's go to the module file ...
-    item_module = importlib.import_module(kwargs.get('item_module'))
-    return item_module.replay_entry(plugin, kwargs.get('item_id'))
+    module = importlib.import_module(item_module)
+    return module.replay_entry(plugin, item_id)
 
 
 @Route.register
-def website_bridge(plugin, **kwargs):
-    """
-    Like replay_bridge
+def website_bridge(plugin, item_id, item_module):
+    """Bridge between main.py file and each website modules files
+
+    Args:
+        plugin (codequick.script.Script)
+        item_id (str): Website menu to build (e.g. allocine)
+        item_module (str): Channel module (e.g. resources.lib.websites.allocine)
+    Returns:
+        Iterator[codequick.listing.Listitem]: Kodi 'item_id' menu
     """
 
-    # Let's go to the module file ...
-    item_module = importlib.import_module(kwargs.get('item_module'))
-    return item_module.website_entry(plugin, kwargs.get('item_id'))
+    module = importlib.import_module(item_module)
+    return module.website_entry(plugin, item_id)
 
 
 @Route.register
-def multi_live_bridge(plugin, **kwargs):
-    """
-    Like replay_bridge
+def multi_live_bridge(plugin, item_id, item_module):
+    """Bridge between main.py file and each channel modules files
+
+    Args:
+        plugin (codequick.script.Script)
+        item_id (str): Multi live TV channel menu to build (e.g. auvio)
+        item_module (str): Channel module (e.g. resources.lib.channels.be.rtbf)
+    Returns:
+        Iterator[codequick.listing.Listitem]: Kodi 'item_id' menu
     """
 
     # Let's go to the module file ...
-    item_module = importlib.import_module(kwargs.get('item_module'))
-    return item_module.multi_live_entry(plugin, kwargs.get('item_id'))
+    module = importlib.import_module(item_module)
+    return module.multi_live_entry(plugin, item_id)
 
 
 @Resolver.register
-def live_bridge(plugin, **kwargs):
-    """
-    Like replay_bridge
+def live_bridge(plugin, item_id, item_module, **kwargs):
+    """Bridge between main.py file and each channel modules files
+
+    Args:
+        plugin (codequick.script.Script)
+        item_id (str): Live TV channel menu to build (e.g. tf1)
+        item_module (str): Channel module (e.g. resources.lib.channels.fr.mytf1)
+        **kwargs: Arbitrary keyword arguments
+    Returns:
+        Iterator[codequick.listing.Listitem]: Kodi 'item_id' menu
     """
 
     # If we come from a M3U file, we need to
-    # convert the string dict to the real dict object
+    # convert the dict string to the real dict object
     # and get the language value
     lang = ''
     if 'item_dict' in kwargs and \
@@ -279,18 +277,23 @@ def live_bridge(plugin, **kwargs):
         lang = kwargs['item_dict'].get('language', '')
 
     # Let's go to the module file ...
-    item_module = importlib.import_module(kwargs.get('item_module'))
+    module = importlib.import_module(item_module)
     if lang == '':
-        return item_module.live_entry(plugin, kwargs.get('item_id'))
+        return module.live_entry(plugin, item_id)
     else:
-        return item_module.live_entry(plugin, kwargs.get('item_id'), language=lang)
+        return module.live_entry(plugin, item_id, language=lang)
 
 
 @Route.register
 def favourites(plugin, start=0, **kwargs):
-    """
-    Callback function called when the user enter in the
-    favourites folder
+    """Build 'favourites' menu of the addon ('favourites' menu callback function)
+
+    Args:
+        plugin (codequick.script.Script)
+        start (int): Index of the menu starting item (multiple pages support)
+        **kwargs: Arbitrary keyword arguments
+    Returns:
+        Iterator[codequick.listing.Listitem]: Kodi 'favourites' menu
     """
 
     # Get sorted items
@@ -311,6 +314,7 @@ def favourites(plugin, start=0, **kwargs):
 
     # Add each item in the listing
     cnt = 0
+
     for index, (item_order, item_hash, item_dict) in enumerate(sorted_menu):
         if index < start:
             continue
@@ -377,10 +381,13 @@ def favourites(plugin, start=0, **kwargs):
 
 
 def error_handler(exception):
+    """Callback function called when the run() triggers an error
+
+    Args:
+        exception (Exception)
     """
-    This function is called each time
-    run() trigger an Exception
-    """
+
+    # Parameters found in Kodi URL during this error
     params = entrypoint_utils.get_params_in_query(sys.argv[2])
 
     # If it's an HTTPError
