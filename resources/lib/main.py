@@ -418,7 +418,7 @@ def error_handler(exception):
     # If we come from fav menu we
     # suggest user to delete this item
     if 'from_fav' in params:
-        fav.ask_to_delete_error_fav_item(params)
+        fav.ask_to_delete_error_fav_item(params['item_hash'])
 
     # Else, we ask the user if he wants
     # to share his log to addon devs

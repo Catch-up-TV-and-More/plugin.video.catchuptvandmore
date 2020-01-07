@@ -46,6 +46,12 @@ FAV_JSON_FP = os.path.join(Script.get_info('profile'), "favourites.json")
 
 
 def get_fav_dict_from_json():
+    """Get favourites dict from favourites.json
+
+    Returns:
+        dict: Favourites dict
+    """
+
     migrate_from_pickled_fav()
     if not xbmcvfs.exists(FAV_JSON_FP):
         return {}
@@ -59,17 +65,22 @@ def get_fav_dict_from_json():
 
 
 def save_fav_dict_in_json(fav_dict):
+    """Dump favourites dict in favourites.json
+
+    Args:
+        fav_dict (dict): Favourites dict to save
+    """
+
     with open(FAV_JSON_FP, 'w') as f:
         json.dump(fav_dict, f, indent=4)
 
 
 def guess_fav_prefix(item_id):
+    """Keep in memory the current main category (e.g. Live TV, Catch-up TV, ...)
+    This category label will be used as a prefix when the user add a favourite
+
     """
-    When the use add a favourite,
-    guess the prefix to add for the
-    favourite label according to the
-    current main category
-    """
+
     prefix = 'empty'
     if item_id == 'live_tv':
         prefix = Script.localize(LABELS['live_tv'])
@@ -86,10 +97,12 @@ def guess_fav_prefix(item_id):
 
 @Script.register
 def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
-    """
-    Callback function called when the user click
-    on 'add item to favourite' from an item
-    context menu
+    """Callback function of the 'Add to add-on favourites' item context menu
+
+    Args:
+        plugin (codequick.script.Script)
+        is_playable (bool): If 'item' is playable
+        item_infos (dict)
     """
 
     # Need to use same keywords as
@@ -189,11 +202,13 @@ def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
 
 @Script.register
 def rename_favourite_item(plugin, item_hash):
+    """Callback function of the 'Rename' favourite item context menu
+
+    Args:
+        plugin (codequick.script.Script)
+        item_hash (str): Item hash of the favourite item to rename
     """
-    Callback function called when the user click
-    on 'rename' from a favourite item
-    context menu
-    """
+
     item_label = utils.keyboard(plugin.localize(LABELS['Favorite name']),
                                 xbmc.getInfoLabel('ListItem.Label'))
 
@@ -210,11 +225,13 @@ def rename_favourite_item(plugin, item_hash):
 
 @Script.register
 def remove_favourite_item(plugin, item_hash):
+    """Callback function of the 'Remove' favourite item context menu
+
+    Args:
+        plugin (codequick.script.Script)
+        item_hash (str): Item hash of the favourite item to remove
     """
-    Callback function called when the user click
-    on 'remove' from a favourite item
-    context menu
-    """
+
     fav_dict = get_fav_dict_from_json()
     del fav_dict[item_hash]
 
@@ -237,11 +254,14 @@ def remove_favourite_item(plugin, item_hash):
 
 @Script.register
 def move_favourite_item(plugin, direction, item_hash):
+    """Callback function of the 'Move Up/Down' favourite item context menu
+
+    Args:
+        plugin (codequick.script.Script)
+        direction (str): 'down' or 'up'
+        item_hash (str): Item hash of the favourite item to move
     """
-    Callback function called when the user click
-    on 'Move up/down' from a favourite item
-    context menu
-    """
+
     if direction == 'down':
         offset = 1
     elif direction == 'up':
@@ -274,22 +294,28 @@ def move_favourite_item(plugin, direction, item_hash):
     return False
 
 
-def ask_to_delete_error_fav_item(params):
-    """
+def ask_to_delete_error_fav_item(item_hash):
+    """Callback function if a favourite item trigger an error
+
     Suggest user to delete
-    the fav item that trigger the error
+    the fav item that trigger an error
+
+    Args:
+        item_hash (str): Item hash that trigger an error
     """
+
     r = xbmcgui.Dialog().yesno(Script.localize(LABELS['Information']),
                                Script.localize(30807))
     if r:
-        remove_favourite_item(plugin=None, item_hash=params['item_hash'])
+        remove_favourite_item(plugin=None, item_hash=item_hash)
 
 
 @Script.register
 def delete_favourites(plugin):
-    """
-    Callback function of 'Delete favourites'
-    setting button
+    """Callback function of 'Delete favourites' setting button
+
+    Args:
+        plugin (codequick.script.Script)
     """
 
     Script.log('Delete favourites db')

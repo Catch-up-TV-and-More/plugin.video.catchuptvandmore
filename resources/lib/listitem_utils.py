@@ -31,24 +31,26 @@ from resources.lib.favourites import add_item_to_favourites
 from resources.lib.labels import LABELS
 
 
-def item_post_treatment(item, **kwargs):
-    """
-    Optional keyworded arguments:
-    - is_playable (bool) (default: False)
-    - is_downloadable (bool) (default: False)
+def item_post_treatment(item, is_playable=False, is_downloadable=False):
+    """Add needed context menus to 'item'
+
+    Args:
+        is_playable (bool): If 'item' is playable
+        is_downloadable (bool): If 'item' is downloadable
+    Returns:
+        str: (translated) label of 'item_id'
     """
 
-    # Add `Download` context menu to the item
-    # if is_downloadable is given and True
-    if kwargs.get('is_downloadable', False):
+    # Add `Download` context menu to 'item' if 'item' is downloadable
+    if is_downloadable:
         item.context.script(item.path,
                             Script.localize(LABELS['Download']),
                             download_mode=True,
                             **item.params)
 
-    # Add `Add to favourites` context menu to the item
+    # Add `Add to add-on favourites` context menu to 'item'
     item.context.script(add_item_to_favourites,
                         Script.localize(LABELS['Add to add-on favourites']),
-                        is_playable=kwargs.get('is_playable', False))
+                        is_playable=is_playable)
 
     return
