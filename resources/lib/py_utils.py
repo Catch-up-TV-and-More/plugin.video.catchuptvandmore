@@ -25,32 +25,24 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-from codequick import Script
-
-from resources.lib.favourites import add_item_to_favourites
-from resources.lib.labels import LABELS
+import numbers
+import time
 
 
-def item_post_treatment(item, is_playable=False, is_downloadable=False):
-    """Add needed context menus to 'item'
+def old_div(a, b):
+    """Python 2 and 3 Integer division cheat (https://python-future.org/compatible_idioms.html#division)
 
-    Args:
-        is_playable (bool): If 'item' is playable
-        is_downloadable (bool): If 'item' is downloadable
-    Returns:
-        str: (translated) label of 'item_id'
     """
+    if isinstance(a, numbers.Integral) and isinstance(b, numbers.Integral):
+        return a // b
+    else:
+        return a / b
 
-    # Add `Download` context menu to 'item' if 'item' is downloadable
-    if is_downloadable:
-        item.context.script(item.path,
-                            Script.localize(LABELS['Download']),
-                            download_mode=True,
-                            **item.params)
 
-    # Add `Add to add-on favourites` context menu to 'item'
-    item.context.script(add_item_to_favourites,
-                        Script.localize(LABELS['Add to add-on favourites']),
-                        is_playable=is_playable)
+def current_timestamp():
+    """Get current timestamp (Unix time, the same given here https://timestamp.online)
 
-    return
+    Returns:
+        float: Current timestamp
+    """
+    return time.time()

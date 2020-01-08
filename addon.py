@@ -22,7 +22,7 @@
 
 import importlib
 from codequick import run
-from resources.lib.entrypoint_utils import import_needed_module
+from resources.lib.kodi_utils import import_needed_module
 
 
 def main():

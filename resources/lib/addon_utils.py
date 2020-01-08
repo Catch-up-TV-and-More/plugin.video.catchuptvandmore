@@ -25,45 +25,61 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
+# Core imports
 import os
-import sys
-import pickle
-import binascii
 
+# Kodi imports
 from kodi_six import xbmcgui
 from kodi_six import xbmc
 from kodi_six import xbmcvfs
-
-try:
-    from urllib.parse import urlunsplit
-except ImportError:
-    from urlparse import urlunsplit
-
+from codequick import Script, utils
 import urlquick
-from codequick import Script
+
+
+# Local imports
 from resources.lib.labels import LABELS
 
 
-PY3 = sys.version_info[0] >= 3
-
-
-def build_kodi_url(route_path, raw_params):
-    """Build a valid Kodi URL
+def get_item_label(item_id):
+    """Get (translated) label of 'item_id'
 
     Args:
-        route_path (str): (e.g. /resources/lib/channels/fr/mytf1/get_video_url/)
-        raw_params (dict): Paramters dict
+        item_id (str)
     Returns:
-        str: Valid kodi URL (e.g. plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/mytf1/get_video_url/?foo=bar&baz=quux)
+        str: (translated) label of 'item_id'
     """
-    if raw_params:
-        pickled = binascii.hexlify(
-            pickle.dumps(raw_params, protocol=pickle.HIGHEST_PROTOCOL))
-        query = "_pickle_={}".format(
-            pickled.decode("ascii") if PY3 else pickled)
+    label = item_id
+    if item_id in LABELS:
+        label = LABELS[item_id]
+        if isinstance(label, int):
+            label = Script.localize(label)
+    return label
 
-    return urlunsplit(
-        ("plugin", "plugin.video.catchuptvandmore", route_path, query, ""))
+
+def get_item_media_path(item_media_path):
+    """Get full path or URL of an item_media
+
+    Args:
+        item_media_path (str or list): Partial media path of the item (e.g. channels/fr/tf1.png)
+    Returns:
+        str: Full path or URL of the item_pedia
+    """
+    full_path = ''
+
+    # Local image in ressources/media folder
+    if type(item_media_path) is list:
+        full_path = os.path.join(Script.get_info("path"), "resources", "media",
+                                 *(item_media_path))
+
+    # Remote image with complete URL
+    elif 'http' in item_media_path:
+        full_path = item_media_path
+
+    # Remote image on our images repo
+    else:
+        full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
+
+    return utils.ensure_native_str(full_path)
 
 
 def get_quality_YTDL(download_mode=False):
@@ -104,16 +120,6 @@ def get_quality_YTDL(download_mode=False):
         if dl_quality == 'Highest available':
             return 3
         return 3
-
-
-def get_kodi_version():
-    """Get Kodi major version
-
-    Returns:
-        int: Kodi major version (e.g. 18)
-    """
-    xbmc_version = xbmc.getInfoLabel("System.BuildVersion")
-    return int(xbmc_version.split('-')[0].split('.')[0])
 
 
 @Script.register

@@ -32,9 +32,8 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import download
-import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item_post_treatment
-from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
+from resources.lib.menu_utils import item_post_treatment
+from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 
 import inputstreamhelper
@@ -265,7 +264,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
         item.label = video['title']
 
         is_downloadable = False
-        if cqu.get_kodi_version() < 18:
+        if get_kodi_version() < 18:
             is_downloadable = True
 
         if 'type' in video and video['type'] == 'playlist':
@@ -292,7 +291,7 @@ def get_video_url(plugin,
                   download_mode=False,
                   **kwargs):
 
-    if cqu.get_kodi_version() < 18:
+    if get_kodi_version() < 18:
         video_json = urlquick.get(URL_JSON_VIDEO % video_id,
                                   headers={
                                       'User-Agent': web_utils.get_random_ua(),
@@ -548,7 +547,7 @@ def get_live_url(plugin, item_id, video_id, **kwargs):
 
     else:
 
-        if cqu.get_kodi_version() < 18:
+        if get_kodi_version() < 18:
             xbmcgui.Dialog().ok('Info', plugin.localize(30602))
             return False
 

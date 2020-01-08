@@ -35,7 +35,7 @@ from kodi_six import xbmcgui
 
 # Local imports
 from resources.lib.vpn import add_vpn_context
-import resources.lib.cq_utils as cqu
+from resources.lib.kodi_utils import get_kodi_version
 import resources.lib.favourites as fav
 from resources.lib.labels import LABELS
 
@@ -63,7 +63,7 @@ def get_sorted_menu(plugin, menu_id):
 
     # Notify user for the new M3U Live TV feature
     if menu_id == "live_tv" and \
-            cqu.get_kodi_version() >= 18 and \
+            get_kodi_version() >= 18 and \
             plugin.setting.get_boolean('show_live_tv_m3u_info'):
 
         r = xbmcgui.Dialog().yesno(plugin.localize(LABELS['Information']),
@@ -148,6 +148,31 @@ def add_context_menus_to_item(item, item_id, item_index, menu_id, menu_len, is_p
                         Script.localize(LABELS['Add to add-on favourites']),
                         is_playable=is_playable,
                         item_infos=item_infos)
+
+    return
+
+
+def item_post_treatment(item, is_playable=False, is_downloadable=False):
+    """Add needed context menus to 'item'
+
+    Args:
+        is_playable (bool): If 'item' is playable
+        is_downloadable (bool): If 'item' is downloadable
+    Returns:
+        str: (translated) label of 'item_id'
+    """
+
+    # Add `Download` context menu to 'item' if 'item' is downloadable
+    if is_downloadable:
+        item.context.script(item.path,
+                            Script.localize(LABELS['Download']),
+                            download_mode=True,
+                            **item.params)
+
+    # Add `Add to add-on favourites` context menu to 'item'
+    item.context.script(fav.add_item_to_favourites,
+                        Script.localize(LABELS['Add to add-on favourites']),
+                        is_playable=is_playable)
 
     return
 

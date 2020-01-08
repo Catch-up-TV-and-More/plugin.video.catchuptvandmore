@@ -39,7 +39,8 @@ from hashlib import md5
 from resources.lib.labels import LABELS
 import resources.lib.mem_storage as mem_storage
 from resources.lib.migration_utils import migrate_from_pickled_fav
-from resources.lib.common import get_item_label, get_item_media_path, get_selected_item_art, get_selected_item_label, get_selected_item_params, get_selected_item_stream, get_selected_item_info
+from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_params, get_selected_item_stream, get_selected_item_info
+from resources.lib.addon_utils import get_item_label, get_item_media_path
 
 
 FAV_JSON_FP = os.path.join(Script.get_info('profile'), "favourites.json")

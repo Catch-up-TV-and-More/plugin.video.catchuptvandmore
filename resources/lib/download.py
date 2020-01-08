@@ -28,8 +28,8 @@ from __future__ import unicode_literals
 import os
 from kodi_six import xbmcvfs
 from codequick import Script
-from resources.lib import cq_utils
-from resources.lib.common import get_selected_item_label
+from resources.lib.addon_utils import get_quality_YTDL
+from resources.lib.kodi_utils import get_selected_item_label
 
 
 def download_video(video_url):
@@ -47,7 +47,7 @@ def download_video(video_url):
 
     vid = YDStreamExtractor.getVideoInfo(
         video_url,
-        quality=cq_utils.get_quality_YTDL(download_mode=True),
+        quality=get_quality_YTDL(download_mode=True),
         resolve_redirects=True)
 
     path = Script.setting.get_string('dl_folder')

@@ -27,15 +27,15 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from builtins import str
-from resources.lib.common import old_div
+from resources.lib.py_utils import old_div
 from codequick import Route, Resolver, Listitem, utils, Script
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
-import resources.lib.cq_utils as cqu
+from resources.lib.kodi_utils import get_kodi_version
 from resources.lib import download
-from resources.lib.listitem_utils import item_post_treatment
-from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
+from resources.lib.menu_utils import item_post_treatment
+from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 import inputstreamhelper
 import json
@@ -248,7 +248,7 @@ def get_video_url(plugin,
 
     if 'drmToken' in json_parser["playback"]:
 
-        if cqu.get_kodi_version() < 18:
+        if get_kodi_version() < 18:
             xbmcgui.Dialog().ok('Info', plugin.localize(30602))
             return False
 
@@ -291,7 +291,7 @@ def live_entry(plugin, item_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
-    if cqu.get_kodi_version() < 18:
+    if get_kodi_version() < 18:
         xbmcgui.Dialog().ok('Info', plugin.localize(30602))
         return False
 

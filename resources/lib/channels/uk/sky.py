@@ -33,7 +33,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
-from resources.lib.listitem_utils import item_post_treatment
+from resources.lib.menu_utils import item_post_treatment
 
 import base64
 import json

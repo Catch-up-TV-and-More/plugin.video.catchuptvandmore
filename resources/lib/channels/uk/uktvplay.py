@@ -31,9 +31,8 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
-import resources.lib.cq_utils as cqu
-from resources.lib.listitem_utils import item_post_treatment
-from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
+from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info
+from resources.lib.menu_utils import item_post_treatment
 
 
 import inputstreamhelper
@@ -270,7 +269,7 @@ def get_brightcove_policy_key(data_account, data_player):
 @Resolver.register
 def get_video_url(plugin, item_id, data_video_id, **kwargs):
 
-    if cqu.get_kodi_version() < 18:
+    if get_kodi_version() < 18:
         xbmcgui.Dialog().ok('Info', plugin.localize(30602))
         return False
 
@@ -341,7 +340,7 @@ def live_entry(plugin, item_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
-    if cqu.get_kodi_version() < 18:
+    if get_kodi_version() < 18:
         xbmcgui.Dialog().ok('Info', plugin.localize(30602))
         return False
 

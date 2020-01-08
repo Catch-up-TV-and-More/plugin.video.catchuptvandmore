@@ -40,11 +40,10 @@ from six import string_types
 
 # Local imports
 from resources.lib.labels import LABELS, save_labels_in_mem_storage
-from resources.lib.common import get_item_label, get_item_media_path
-import resources.lib.cq_utils as cqu
-from resources.lib import entrypoint_utils
+from resources.lib.kodi_utils import build_kodi_url, get_params_in_query
 import resources.lib.favourites as fav
 from resources.lib.menu_utils import get_sorted_menu, add_context_menus_to_item
+from resources.lib.addon_utils import get_item_label, get_item_media_path
 
 
 @Route.register
@@ -346,7 +345,7 @@ def favourites(plugin, start=0, **kwargs):
         item_dict['params']['item_hash'] = item_hash
 
         item = Listitem.from_dict(**item_dict)
-        url = cqu.build_kodi_url(item_dict['callback'], item_dict['params'])
+        url = build_kodi_url(item_dict['callback'], item_dict['params'])
 
         item.set_callback(url)
 
@@ -388,7 +387,7 @@ def error_handler(exception):
     """
 
     # Parameters found in Kodi URL during this error
-    params = entrypoint_utils.get_params_in_query(sys.argv[2])
+    params = get_params_in_query(sys.argv[2])
 
     # If it's an HTTPError
     if isinstance(exception, urlquick.HTTPError):

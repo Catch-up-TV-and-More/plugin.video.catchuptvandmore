@@ -27,12 +27,11 @@ import urlquick
 import json
 import re
 from kodi_six import xbmcgui
-import resources.lib.cq_utils as cqu
 
 from resources.lib.labels import LABELS
 from resources.lib import download
 from resources.lib import resolver_proxy
-from resources.lib.listitem_utils import item_post_treatment
+from resources.lib.menu_utils import item_post_treatment
 
 # TO DO
 # Fix Bonus

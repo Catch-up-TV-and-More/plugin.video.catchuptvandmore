@@ -32,10 +32,8 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
-from resources.lib.listitem_utils import item_post_treatment
-from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
-
-import resources.lib.cq_utils as cqu
+from resources.lib.menu_utils import item_post_treatment
+from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 import inputstreamhelper
 import re
@@ -466,7 +464,7 @@ def get_video_url(plugin,
 
         if xbmc.getCondVisibility('system.platform.android'):
 
-            if cqu.get_kodi_version() < 18:
+            if get_kodi_version() < 18:
                 xbmcgui.Dialog().ok('Info', plugin.localize(30602))
                 return False
 
@@ -557,7 +555,7 @@ def get_video_url(plugin,
                         'inputstream.adaptive.license_type'] = 'com.microsoft.playready'
                     return item
         else:
-            if cqu.get_kodi_version() < 18:
+            if get_kodi_version() < 18:
                 xbmcgui.Dialog().ok('Info', plugin.localize(30602))
                 return False
 

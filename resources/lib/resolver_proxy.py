@@ -29,9 +29,9 @@ from codequick import Script, Listitem
 
 from resources.lib.labels import LABELS
 from resources.lib import web_utils
-from resources.lib import cq_utils
+from resources.lib import addon_utils
 from resources.lib import download
-from resources.lib.common import get_selected_item_art, get_selected_item_label, get_selected_item_info
+from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info
 
 import inputstreamhelper
 import json
@@ -94,7 +94,7 @@ def get_stream_default(plugin,
     if download_mode:
         return download.download_video(video_url)
 
-    quality = cq_utils.get_quality_YTDL(download_mode=download_mode)
+    quality = addon_utils.get_quality_YTDL(download_mode=download_mode)
     return plugin.extract_source(video_url, quality)
 
 
