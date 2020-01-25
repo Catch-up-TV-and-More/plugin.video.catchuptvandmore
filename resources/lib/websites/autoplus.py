@@ -71,7 +71,7 @@ def list_videos(plugin, item_id, page, **kwargs):
 
         item.label = info_first_video_jsonparser["metadata"]["title"]
         item.art['thumb'] = info_first_video_jsonparser["metadata"][
-            "poster_url"]
+            "posters"]["1080"]
 
         item.set_callback(get_video_url_first_video,
                           item_id=item_id,

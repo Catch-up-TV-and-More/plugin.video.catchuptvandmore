@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta08"
+       version="0.2.17~beta09"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -53,6 +53,7 @@
 [Fix] Catch-Up TV - TVA (Canada)
 [Improvement] Catch-Up TV - TVA (Canada) - Add search feature
 [Improvement] Kill item2dict and item_dict
+[Fix] Website - Autoplus (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
