@@ -169,8 +169,6 @@ def migrate_old_menus_settings(menus_settings_fp):
                                 j[skeleton][setting_id] = {}
                             j[skeleton][setting_id]['hidden'] = True
 
-
-
     # Save new item settings json
     with open(menus_settings_fp, 'w') as f:
         json.dump(j, f, indent=4)
