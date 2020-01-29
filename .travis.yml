@@ -11,6 +11,14 @@ jobs:
         - pip install flake8
         - flake8 .
 
+    # Check if all Python files of the plugin can be imported
+    - stage: test-plugin-modules
+      name: "Try to load each Python files of the addons to detect errors"
+      script: 
+        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
+        - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
+        - cd ../simul && ./main.py -c configs/7_test_modules.json
+
     # Check the plugin with kodi-addon-checker
     - stage: kodi-addon-checker
       script:
