@@ -13,9 +13,9 @@ jobs:
 
     # Check if all Python files of the plugin can be imported
     - stage: test-plugin-modules
-      name: "Try to load each Python files of the addons to detect errors"
+      name: "Try to load each Python files of the addon to detect errors"
       script: 
-        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
+        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz
         - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
         - cd ../simul && ./main.py -c configs/7_test_modules.json
 
@@ -40,19 +40,19 @@ jobs:
     - stage: kodi-simulator
       name: "Explore random replay channel #1"
       script: 
-        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
+        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz
         - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
         - cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
     -
       name: "Explore random replay channel #2"
       script: 
-        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
+        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz
         - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
         - cd ../simul && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
     -
       name: "Explore random website"
       script: 
-        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl
+        - pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz
         - git clone https://github.com/Catch-up-TV-and-More/catchuptvandmore-test ../simul
         - cd ../simul && ./main.py -c configs/6_explore_random_website.json &> log.log ; tail -n 1000 log.log
 
