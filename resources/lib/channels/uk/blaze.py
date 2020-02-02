@@ -131,7 +131,7 @@ def list_videos(plugin, item_id, season_url, **kwargs):
     root = resp.parse()
 
     for video_datas in root.iterfind(
-            ".//a[@class='thumbnail video vod-REPLAY play-video-trigger']"):
+            ".//a[@class='thumbnail video vod-REPLAY play-video-trigger user-can-watch']"):
 
         video_title = video_datas.find('.//h3').get('title')
         video_image = video_datas.find('.//img').get('data-src')
