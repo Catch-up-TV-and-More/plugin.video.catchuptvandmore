@@ -277,8 +277,8 @@ def list_videos_sub_category(plugin, item_id, category_url, sub_category_id,
             for video_datas in list_videos_datas:
 
                 json_parser = json.loads(video_datas.get('data-card'))
-                if json_parser["isVideo"] :
-                    if "mediaId" in json_parser :
+                if json_parser["isVideo"]:
+                    if "mediaId" in json_parser:
                         video_title = json_parser["title"] + ' - ' + json_parser["subtitle"]
                         video_image = json_parser["illustration"]["format1248"]
                         video_id = json_parser["mediaId"]
