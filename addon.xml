@@ -57,6 +57,7 @@
 [Fix] Live TV - TV7 Bordeaux (FR)
 [Fix] Broken settings
 [Fix] Catch-up TV - RTBF (BE)
+[Change] Use FranceTV geolocalisation service
     </news>
     <assets>
       <icon>icon.png</icon>

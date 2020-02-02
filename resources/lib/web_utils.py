@@ -65,12 +65,12 @@ def geoip():
     Returns:
         str: Country code (e.g. FR)
     """
-    # list of alternative providers https://ahmadawais.com/best-api-geolocating-an-ip-address/)
+    # better service - https://geoftv-a.akamaihd.net/ws/edgescape.json
     try:
-        resp = urlquick.get('http://ip-api.com/json', max_age=-1)
+        resp = urlquick.get('https://geoftv-a.akamaihd.net/ws/edgescape.json', max_age=-1)
         data = json.loads(resp.text)
-        if 'countryCode' in data:
-            return data['countryCode']
+        if 'reponse' in data:
+            return data['reponse']['geo_info']['country_code']
         else:
             return None
     except Exception:
