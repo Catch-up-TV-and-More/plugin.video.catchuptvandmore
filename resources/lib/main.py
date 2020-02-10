@@ -66,7 +66,7 @@ def root(plugin):
 
 
 @Route.register
-def generic_menu(plugin, item_id):
+def generic_menu(plugin, item_id, **kwargs):
     """Build 'item_id' menu of the addon
 
     Args:
@@ -132,7 +132,7 @@ def generic_menu(plugin, item_id):
 
 
 @Route.register
-def tv_guide_menu(plugin, item_id):
+def tv_guide_menu(plugin, item_id, **kwargs):
     """Build 'item_id' menu of the addon and add TV guide information
 
     Args:
@@ -205,7 +205,7 @@ def tv_guide_menu(plugin, item_id):
 
 
 @Route.register
-def replay_bridge(plugin, item_id, item_module):
+def replay_bridge(plugin, item_id, item_module, **kwargs):
     """Bridge between main.py file and each channel modules files
 
     Args:
@@ -221,7 +221,7 @@ def replay_bridge(plugin, item_id, item_module):
 
 
 @Route.register
-def website_bridge(plugin, item_id, item_module):
+def website_bridge(plugin, item_id, item_module, **kwargs):
     """Bridge between main.py file and each website modules files
 
     Args:
@@ -237,7 +237,7 @@ def website_bridge(plugin, item_id, item_module):
 
 
 @Route.register
-def multi_live_bridge(plugin, item_id, item_module):
+def multi_live_bridge(plugin, item_id, item_module, **kwargs):
     """Bridge between main.py file and each channel modules files
 
     Args:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta11"
+       version="0.2.17~beta12"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -59,6 +59,7 @@
 [Fix] Catch-up TV - RTBF (BE)
 [Change] Use FranceTV geolocalisation service
 [Fix] Catch-up TV - Blaze TV (UK) - Need more work (Cors implementation required ?)
+[Fix] Kodi skin - Fix Aura (and others?) widgets
     </news>
     <assets>
       <icon>icon.png</icon>
