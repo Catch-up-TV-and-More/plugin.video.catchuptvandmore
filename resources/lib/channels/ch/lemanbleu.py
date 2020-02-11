@@ -71,7 +71,7 @@ def list_programs(plugin, item_id, **kwargs):
     - Les Programmes
     - ...
     """
-    resp = resp = urlquick.get(URL_REPLAY)
+    resp = urlquick.get(URL_REPLAY)
     root = resp.parse("ul", attrs={"id": "itemFilters"})
 
     for program_datas in root.iterfind(".//li"):
