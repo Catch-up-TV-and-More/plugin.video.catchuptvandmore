@@ -71,7 +71,7 @@ def list_programs(plugin, item_id, **kwargs):
     - Les Programmes
     - ...
     """
-    resp = resp = urlquick.get(URL_REPLAY)
+    resp = urlquick.get(URL_REPLAY)
     root = resp.parse("ul", attrs={"id": "itemFilters"})
 
     for program_datas in root.iterfind(".//li"):
@@ -92,7 +92,7 @@ def list_programs(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, program_id, page, **kwargs):
 
-    resp = resp = urlquick.get(URL_VIDEOS % (program_id, page))
+    resp = urlquick.get(URL_VIDEOS % (program_id, page))
     root = resp.parse()
 
     for video_datas in root.iterfind(".//li[@class='item']"):
