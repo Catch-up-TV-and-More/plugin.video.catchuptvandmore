@@ -83,7 +83,7 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_programs(plugin, item_id, **kwargs):
 
-    resp = resp = urlquick.get(URL_EMISSIONS)
+    resp = urlquick.get(URL_EMISSIONS)
     root = resp.parse()
 
     for program_datas in root.iterfind(".//div[@class='col-sm-4']"):

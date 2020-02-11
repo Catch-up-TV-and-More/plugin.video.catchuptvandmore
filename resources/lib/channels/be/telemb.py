@@ -59,7 +59,7 @@ def replay_entry(plugin, item_id, **kwargs):
 @Route.register
 def list_programs(plugin, item_id, **kwargs):
 
-    resp = resp = urlquick.get(URL_ROOT)
+    resp = urlquick.get(URL_ROOT)
     root = resp.parse()
     root2 = root.findall(".//li[@class='we-mega-menu-li dropdown-menu']")[3]
 
