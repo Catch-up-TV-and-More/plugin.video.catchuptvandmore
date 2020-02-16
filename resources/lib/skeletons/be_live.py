@@ -202,5 +202,23 @@ menu = {
         'm3u_group': 'Belgique fr',
         'enabled': True,
         'order': 20
+    },
+    'abxplore': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/abxplore.png',
+        'fanart': 'channels/be/abxplore_fanart.jpg',
+        'module': 'resources.lib.channels.be.abbe',
+        'm3u_group': 'Belgique fr',
+        'enabled': True,
+        'order': 21
+    },
+    'ab3': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/ab3.png',
+        'fanart': 'channels/be/ab3_fanart.jpg',
+        'module': 'resources.lib.channels.be.abbe',
+        'm3u_group': 'Belgique fr',
+        'enabled': True,
+        'order': 22
     }
 }

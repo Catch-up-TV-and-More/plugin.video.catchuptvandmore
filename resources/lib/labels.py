@@ -431,6 +431,10 @@ def save_labels_in_mem_storage():
         'TV Com',
         'canalc':
         'Canal C',
+        'abxplore':
+        'ABXPLORE',
+        'ab3':
+        'AB3',
 
         # Canadian channels / live TV
         'tv5':

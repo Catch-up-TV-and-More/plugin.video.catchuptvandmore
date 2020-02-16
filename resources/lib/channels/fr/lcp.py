@@ -50,6 +50,8 @@ URL_ROOT = 'http://www.lcp.fr'
 
 URL_LIVE_SITE = 'http://www.lcp.fr/le-direct'
 
+URL_API = 'http://lcp.prod.api.viatorlab.com'
+
 URL_VIDEO_REPLAY = 'http://play1.qbrick.com/config/avp/v1/player/' \
                    'media/%s/darkmatter/%s/'
 # VideoID, AccountId
@@ -119,6 +121,18 @@ def list_categories(plugin, item_id, **kwargs):
                               next_url=category_url)
             item_post_treatment(item)
             yield item
+
+    """
+    Seems to be broken in current CodeQuick version
+    yield Listitem.recent(
+        list_videos_last,
+        item_id = item_id)
+    """
+    item = Listitem()
+    item.label = "Recent"
+    item.set_callback(list_videos_last, item_id=item_id)
+    item_post_treatment(item)
+    yield item
 
 
 @Route.register
@@ -287,6 +301,32 @@ def list_videos_program(plugin, item_id, next_url, page, **kwargs):
                              page=str(int(page) + 1))
 
 
+@Route.register
+def list_videos_last(plugin, item_id, page=1, **kwargs):
+    url_last = URL_API + "/tv_episodes?page=%s" % page
+    resp = urlquick.get(url_last)
+    json_parser = json.loads(resp.text)
+
+    for video in json_parser['hydra:member']:
+        video_url = URL_API + video['@id']
+        item = Listitem()
+        item.label = video['name']
+        item.art['thumb'] = ''
+        item.info['duration'] = ''
+        #item.info.date(date_value, '%Y-%m-%d')
+
+        item.set_callback(get_video_url_api,
+                          item_id=item_id,
+                          video_url=video_url)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        yield item
+
+    # More videos...
+    if json_parser['hydra:nextPage'] is not None:
+        yield Listitem.next_page(item_id=item_id,
+                                 page=json_parser['hydra:nextPage'].split('=')[1])
+
+
 @Resolver.register
 def get_video_url(plugin,
                   item_id,
@@ -323,6 +363,15 @@ def get_video_url(plugin,
         if download_mode:
             return download.download_video(url)
         return url
+
+
+@Resolver.register
+def get_video_url_api(plugin,
+                  item_id,
+                  video_url,
+                  download_mode=False,
+                  **kwargs):
+    return False
 
 
 def live_entry(plugin, item_id, **kwargs):

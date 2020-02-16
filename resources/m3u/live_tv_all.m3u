@@ -1043,6 +1043,16 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=t
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/canalc.png" group-title="Belgium",Canal C
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=canalc&item_module=resources.lib.channels.be.canalc&item_dict={}
 
+##	ABXPLORE
+##	abxplore
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/abxplore.png" group-title="Belgium",ABXPLORE
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=abxplore&item_module=resources.lib.channels.be.abbe&item_dict={}
+
+##	AB3
+##	ab3
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/ab3.png" group-title="Belgium",AB3
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=ab3&item_module=resources.lib.channels.be.abbe&item_dict={}
+
 
 
 # Japan
