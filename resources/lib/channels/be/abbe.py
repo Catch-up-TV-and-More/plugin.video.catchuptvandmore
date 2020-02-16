@@ -102,4 +102,8 @@ def get_live_url(plugin, item_id, video_id, **kwargs):
 
     resp3 = session_requests.get(URL_LIVES % item_id)
 
-    return re.compile(r'file\: \"(.*?)\"').findall(resp3.text)[0]
+    if len(re.compile(r'file\: \"(.*?)\"').findall(resp3.text)) > 0:
+        return re.compile(r'file\: \"(.*?)\"').findall(resp3.text)[0]
+    else:
+        plugin.notify('ERROR', plugin.localize(30891))
+        return False
