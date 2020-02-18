@@ -50,5 +50,5 @@ def live_entry(plugin, item_id, **kwargs):
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
     resp = urlquick.get(
-        URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
+        URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, verify=False, max_age=-1)
     return re.compile(r'base_m3u8_url \= \"(.*?)\"').findall(resp.text)[0]
