@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta15"
+       version="0.2.17~beta16"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -63,6 +63,7 @@
 [Fix] Backport typo from master
 [Add] Live TV - ABXPLORE / AB3 (BE)
 [Add] Catch-up TV - Okoo - France TV (FR)
+[Fix] Live TV - NRJ 12 / Cherie 25 (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

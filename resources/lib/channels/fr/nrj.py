@@ -47,9 +47,9 @@ URL_ROOT = 'https://www.nrj-play.fr'
 URL_REPLAY = URL_ROOT + '/%s/replay'
 # channel_name (nrj12, ...)
 
-URL_COMPTE_LOGIN_MODAL = URL_ROOT + '/compte/loginmodal'
+#URL_COMPTE_LOGIN_MODAL = URL_ROOT + '/loginmodal'
 
-URL_COMPTE_LOGIN = URL_ROOT + '/compte/connexion'
+URL_COMPTE_LOGIN = 'https://user-api2.nrj.fr/api/5/login'
 # TO DO add account for using Live Direct
 
 URL_LIVE_WITH_TOKEN = URL_ROOT + '/compte/live?channel=%s'
@@ -197,28 +197,15 @@ def get_live_url(plugin, item_id, video_id, **kwargs):
     # KO - session_urlquick = urlquick.Session()
     session_requests = requests.session()
 
-    # Get Token
-    # KO - resp = session_urlquick.get(URL_COMPTE_LOGIN)
-    resp = session_requests.get(URL_COMPTE_LOGIN_MODAL)
-    token_form_login = re.compile(
-        r'name=\"login_form\[_token\]\" value=\"(.*?)\"').findall(resp.text)[0]
-
-    if plugin.setting.get_string('nrj.login') == '' or\
-            plugin.setting.get_string('nrj.password') == '':
-        xbmcgui.Dialog().ok(
-            'Info',
-            plugin.localize(30604) % ('NRJ', 'http://www.nrj-play.fr'))
-        return False
-
     # Build PAYLOAD
     payload = {
-        "login_form[email]": plugin.setting.get_string('nrj.login'),
-        "login_form[password]": plugin.setting.get_string('nrj.password'),
-        "login_form[_token]": token_form_login
+        "email": plugin.setting.get_string('nrj.login'),
+        "password": plugin.setting.get_string('nrj.password')
     }
     headers = {
         'accept': 'application/json, text/javascript, */*; q=0.01',
-        'referer': 'https://www.nrj-play.fr/%s' % item_id
+        'origin': 'https://www.nrj-play.fr',
+        'referer': 'https://www.nrj-play.fr/'
     }
 
     # LOGIN
