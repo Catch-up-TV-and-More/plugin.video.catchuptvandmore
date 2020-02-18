@@ -717,6 +717,8 @@ def save_labels_in_mem_storage():
         'DiCi TV',
         'franceinter':
         'France Inter',
+        'enfants':
+        'Okoo (France TV)',
 
         # Japan channels / live TV
         'nhknews':

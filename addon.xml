@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta14"
+       version="0.2.17~beta15"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -62,6 +62,7 @@
 [Fix] Kodi skin - Fix Aura (and others?) widgets
 [Fix] Backport typo from master
 [Add] Live TV - ABXPLORE / AB3 (BE)
+[Add] Catch-up TV - Okoo - France TV (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -636,5 +636,13 @@ menu = {
         'module': 'resources.lib.channels.fr.bfmlyon',
         'enabled': True,
         'order': 107
+    },
+    'enfants': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/okoo.png',
+        'fanart': 'channels/fr/okoo_fanart.jpg',
+        'module': 'resources.lib.channels.fr.francetv',
+        'enabled': True,
+        'order': 117
     }
 }
