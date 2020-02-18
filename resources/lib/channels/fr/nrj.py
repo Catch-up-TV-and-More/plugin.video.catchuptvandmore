@@ -47,8 +47,6 @@ URL_ROOT = 'https://www.nrj-play.fr'
 URL_REPLAY = URL_ROOT + '/%s/replay'
 # channel_name (nrj12, ...)
 
-#URL_COMPTE_LOGIN_MODAL = URL_ROOT + '/loginmodal'
-
 URL_COMPTE_LOGIN = 'https://user-api2.nrj.fr/api/5/login'
 # TO DO add account for using Live Direct
 
