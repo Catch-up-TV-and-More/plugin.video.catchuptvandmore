@@ -51,4 +51,5 @@ def get_live_url(plugin, item_id, video_id, **kwargs):
 
     resp = urlquick.get(
         URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
+    # TODO get ORIG stream live working
     return re.compile(r'source src=\"(.*?)\"').findall(resp.text)[0]

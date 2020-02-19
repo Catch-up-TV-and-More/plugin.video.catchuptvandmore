@@ -621,20 +621,20 @@ menu = {
         'enabled': True,
         'order': 97
     },
-    'grandlilletv': {
+    'bfmlille': {
         'callback': 'live_bridge',
-        'thumb': 'channels/fr/grandlilletv.png',
-        'fanart': 'channels/fr/grandlilletv_fanart.jpg',
-        'module': 'resources.lib.channels.fr.grandlilletv',
+        'thumb': 'channels/fr/bfmlille.png',
+        'fanart': 'channels/fr/bfmlille_fanart.jpg',
+        'module': 'resources.lib.channels.fr.bfmlille',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 98
     },
-    'grandlitorraltv': {
+    'bfmlitorral': {
         'callback': 'live_bridge',
-        'thumb': 'channels/fr/grandlitorraltv.png',
-        'fanart': 'channels/fr/grandlitorraltv_fanart.jpg',
-        'module': 'resources.lib.channels.fr.grandlitorraltv',
+        'thumb': 'channels/fr/bfmlitorral.png',
+        'fanart': 'channels/fr/bfmlitorral_fanart.jpg',
+        'module': 'resources.lib.channels.fr.bfmlitorral',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 99

@@ -681,10 +681,10 @@ def save_labels_in_mem_storage():
         'Azur TV',
         'biptv':
         'BIP TV',
-        'grandlilletv':
-        'Grand Lille TV',
-        'grandlitorraltv':
-        'Grand Litorral TV',
+        'bfmlille':
+        'BFM Lille',
+        'bfmlitorral':
+        'BFM Litorral',
         'lachainenormande':
         'La Chaine Normande',
         'sportenfrance':

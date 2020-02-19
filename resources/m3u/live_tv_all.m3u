@@ -438,15 +438,15 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=a
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/biptv.png" group-title="France",BIP TV
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=biptv&item_module=resources.lib.channels.fr.biptv&item_dict={}
 
-##	Grand Lille TV
-##	grandlilletv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/grandlilletv.png" group-title="France",Grand Lille TV
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=grandlilletv&item_module=resources.lib.channels.fr.grandlilletv&item_dict={}
+##	BFM Lille
+##	bfmlille
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmlille.png" group-title="France",BFM Lille
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmlille&item_module=resources.lib.channels.fr.bfmlille&item_dict={}
 
-##	Grand Litorral TV
-##	grandlitorraltv
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/grandlitorraltv.png" group-title="France",Grand Litorral TV
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=grandlitorraltv&item_module=resources.lib.channels.fr.grandlitorraltv&item_dict={}
+##	BFM Litorral
+##	bfmlitorral
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmlitorral.png" group-title="France",BFM Litorral
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmlitorral&item_module=resources.lib.channels.fr.bfmlitorral&item_dict={}
 
 ##	La Chaine Normande
 ##	lachainenormande

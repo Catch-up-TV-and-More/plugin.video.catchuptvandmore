@@ -41,6 +41,8 @@ TODO info videos replay (dates)
 
 URL_ROOT = 'http://www.tl7.fr'
 
+URL_LIVE = URL_ROOT + '/direct.html'
+
 URL_REPLAY = URL_ROOT + '/replay.html'
 
 URL_VIDEOS = URL_ROOT + '/views/htmlFragments/replayDetail_pages.php?page=%s&elementsPerPage=10&idEmission=%s'
@@ -129,8 +131,8 @@ def live_entry(plugin, item_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
-    resp = urlquick.get(URL_ROOT,
+    resp = urlquick.get(URL_LIVE,
                         headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
-    live_id = re.compile(r'video\: \'(.*?)\'').findall(resp.text)[0]
+    live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
     return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
