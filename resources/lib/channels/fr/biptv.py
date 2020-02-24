@@ -31,6 +31,7 @@ from resources.lib.labels import LABELS
 from resources.lib import web_utils
 from resources.lib.menu_utils import item_post_treatment
 
+import os
 import re
 import urlquick
 
@@ -51,5 +52,16 @@ def get_live_url(plugin, item_id, video_id, **kwargs):
 
     resp = urlquick.get(
         URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
-    # TODO get ORIG stream live working
-    return re.compile(r'source src=\"(.*?)\"').findall(resp.text)[0]
+    url_m3u8 = re.compile(r'source src=\"(.*?)\"').findall(resp.text)[0]
+    root = os.path.dirname(url_m3u8)
+    manifest = urlquick.get(
+        url_m3u8,
+        headers={'User-Agent': web_utils.get_random_ua()},
+        max_age=-1)
+
+    real_stream = ''
+    lines = manifest.text.splitlines()
+    for k in range(0, len(lines) - 1):
+        if 'biptvstream_orig' in lines[k]:
+            real_stream = root + '/' + lines[k]
+    return real_stream
