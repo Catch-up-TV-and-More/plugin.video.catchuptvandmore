@@ -464,7 +464,7 @@ menu = {
         'fanart': 'channels/fr/canal10_fanart.jpg',
         'module': 'resources.lib.channels.fr.canal10',
         'm3u_group': 'Région',
-        'enabled': True,
+        'enabled': False,
         'order': 68
     },
     'rtl2': {
