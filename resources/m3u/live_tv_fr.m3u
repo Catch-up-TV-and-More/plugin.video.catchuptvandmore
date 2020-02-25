@@ -353,11 +353,6 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=v
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/ouatchtv.png" group-title="France Satellite/FAI",Ouatch TV
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=ouatchtv&item_module=resources.lib.channels.fr.ouatchtv&item_dict={}
 
-##	Canal 10
-##	canal10
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/canal10.png" group-title="France Région",Canal 10
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=canal10&item_module=resources.lib.channels.fr.canal10&item_dict={}
-
 ##	RTL 2
 ##	rtl2
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/rtl2.png" group-title="France Radio",RTL 2
