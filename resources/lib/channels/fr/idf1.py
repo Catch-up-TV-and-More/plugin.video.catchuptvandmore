@@ -43,10 +43,7 @@ URL_ROOT = 'http://www.idf1.fr'
 # LIVE :
 URL_LIVE = URL_ROOT + '/live'
 # Get Id
-JSON_LIVE = 'https://json.dacast.com/b/%s/%s/%s'
-# Id in 3 part
-JSON_LIVE_TOKEN = 'https://services.dacast.com/token/i/b/%s/%s/%s'
-
+JSON_LIVE = 'https://playback.dacast.com/content/access?contentId=%s&provider=dacast'
 # Id in 3 part
 
 
@@ -58,19 +55,12 @@ def live_entry(plugin, item_id, **kwargs):
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    list_id_values = re.compile(r'player.js\" id=\"(.*?)\"').findall(
-        resp.text)[0].split('_')
+    list_id_values = re.compile(r'contentId\=(.*?)\"').findall(resp.text)[0]
 
+    # json with token
     resp2 = urlquick.get(
-        JSON_LIVE % (list_id_values[0], list_id_values[1], list_id_values[2]),
+        JSON_LIVE % (list_id_values),
         max_age=-1)
     live_json_parser = json.loads(resp2.text)
 
-    # json with token
-    resp3 = urlquick.get(
-        JSON_LIVE_TOKEN % (list_id_values[0], list_id_values[1],
-                           list_id_values[2]),
-        max_age=-1)
-    token_json_parser = json.loads(resp3.text)
-
-    return live_json_parser["hls"] + token_json_parser["token"]
+    return live_json_parser["hls"]
