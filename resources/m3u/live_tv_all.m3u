@@ -321,7 +321,7 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=g
 ##	BFM Paris
 ##	bfmparis
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmparis.png" group-title="France",BFM Paris
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmparis&item_module=resources.lib.channels.fr.bfmparis&item_dict={}
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmparis&item_module=resources.lib.channels.fr.bfmregion&item_dict={}
 
 ##	Fun Radio
 ##	fun_radio
@@ -436,12 +436,12 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=b
 ##	BFM Lille
 ##	bfmlille
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmlille.png" group-title="France",BFM Lille
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmlille&item_module=resources.lib.channels.fr.bfmlille&item_dict={}
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmlille&item_module=resources.lib.channels.fr.bfmregion&item_dict={}
 
-##	BFM Litorral
-##	bfmlitorral
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmlitorral.png" group-title="France",BFM Litorral
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmlitorral&item_module=resources.lib.channels.fr.bfmlitorral&item_dict={}
+##	BFM Littoral
+##	bfmgrandlittoral
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmgrandlittoral.png" group-title="France",BFM Littoral
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmgrandlittoral&item_module=resources.lib.channels.fr.bfmregion&item_dict={}
 
 ##	La Chaine Normande
 ##	lachainenormande
@@ -476,7 +476,7 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=t
 ##	BFM Lyon
 ##	bfmlyon
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/bfmlyon.png" group-title="France",BFM Lyon
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmlyon&item_module=resources.lib.channels.fr.bfmlyon&item_dict={}
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bfmlyon&item_module=resources.lib.channels.fr.bfmregion&item_dict={}
 
 ##	TLC
 ##	tlc
