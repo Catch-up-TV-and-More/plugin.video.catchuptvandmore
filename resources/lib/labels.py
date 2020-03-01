@@ -719,6 +719,8 @@ def save_labels_in_mem_storage():
         'Okoo (France TV)',
         'rtl':
         'RTL',
+        'courses':
+        'M6 Courses (6play)',
 
         # Japan channels / live TV
         'nhknews':

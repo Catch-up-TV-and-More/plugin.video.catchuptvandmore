@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta26"
+       version="0.2.17~beta27"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -80,6 +80,7 @@
 [Fix] Live TV - NHK World (WO)
 [Fix] Live TV - Télé MB (BE)
 [Add] Live TV - RTL (FR)
+[Add] Catch-up TV - M6 Courses (6play) (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

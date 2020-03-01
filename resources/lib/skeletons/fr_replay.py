@@ -660,5 +660,13 @@ menu = {
         'module': 'resources.lib.channels.fr.francetv',
         'enabled': True,
         'order': 117
+    },
+    'courses': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/m6courses.png',
+        'fanart': 'channels/fr/m6courses_fanart.jpg',
+        'module': 'resources.lib.channels.fr.6play',
+        'enabled': True,
+        'order': 119
     }
 }
