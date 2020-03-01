@@ -90,7 +90,7 @@ def list_videos(plugin, item_id, program_id, page, **kwargs):
     resp = urlquick.get(URL_VIDEOS % (page, program_id))
     root = resp.parse()
 
-    for video_datas in root.iterfind(".//div[@class='replay campton-light']"):
+    for video_datas in root.iterfind(".//div[@class='replay']"):
         video_title = video_datas.find('.//a').get('title')
         video_image = video_datas.find('.//img').get('src')
         video_url = URL_ROOT + '/' + video_datas.find('.//a').get('href')
