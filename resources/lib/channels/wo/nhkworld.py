@@ -37,11 +37,10 @@ import json
 import time
 import re
 import urlquick
-import xml.etree.ElementTree as ET
 
 URL_ROOT = 'http://www3.nhk.or.jp/'
 
-URL_LIVE_NHK = 'http://www3.nhk.or.jp/%s/app/tv/hlslive_tv.xml'
+URL_LIVE_NHK = 'https://www3.nhk.or.jp/nhkworld/app/tv/hlslive_web.json'
 # Channel_Name...
 
 URL_COMMONJS_NHK = 'http://www3.nhk.or.jp/%s/common/js/common.js'
@@ -160,11 +159,11 @@ def live_entry(plugin, item_id, **kwargs):
 def get_live_url(plugin, item_id, video_id, **kwargs):
     desired_country = kwargs.get('language', Script.setting[item_id + '.language'])
 
-    resp = urlquick.get(URL_LIVE_NHK % item_id)
-    xmlElements = ET.XML(resp.text)
+    resp = urlquick.get(URL_LIVE_NHK)
+    json_parser = json.loads(resp.text)
     stream_url = ''
     if desired_country == 'Outside Japan':
-        stream_url = xmlElements.find("tv_url").findtext("wstrm")
+        stream_url = json_parser["main"]["wstrm"]
     else:
-        stream_url = xmlElements.find("tv_url").findtext("jstrm")
+        stream_url = json_parser["main"]["jstrm"]
     return stream_url

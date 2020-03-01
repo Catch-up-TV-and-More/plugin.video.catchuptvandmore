@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta24"
+       version="0.2.17~beta25"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -77,6 +77,7 @@
 [Fix] Catch-up TV - LCP (FR)
 [Fix] Catch-up TV - Luxe.TV (FR)
 [Rework] Catch-up TV - TV5 Unis (CA)
+[Fix] Live TV - NHK World (WO)
     </news>
     <assets>
       <icon>icon.png</icon>
