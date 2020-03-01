@@ -56,25 +56,19 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
     resp = urlquick.get(URL_ROOT)
-    root = resp.parse()
+    root = resp.parse("div", attrs={"id": "menu_right_replay"})
 
-    for category_datas in root.iterfind(".//a[@class='un_bloc_bloc']"):
-        if 'catch-up' in category_datas.get('href'):
-            category_title = category_datas.find(
-                ".//div[@class='un_bloc_btn']").text.strip()
-            category_image = re.compile(r'background\:url\(\'(.*?)\'').findall(
-                category_datas.find(".//div[@class='un_bloc_img_zoom']").get(
-                    'style'))[0]
-            category_url = category_datas.get('href')
+    for category_datas in root.iterfind(".//a"):
+        category_title = category_datas.text
+        category_url = category_datas.get('href')
 
-            item = Listitem()
-            item.label = category_title
-            item.art['thumb'] = category_image
-            item.set_callback(list_videos,
-                              item_id=item_id,
-                              category_url=category_url)
-            item_post_treatment(item)
-            yield item
+        item = Listitem()
+        item.label = category_title
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          category_url=category_url)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
