@@ -51,6 +51,7 @@ URL_STREAM_SEASON_EPISODE = URL_ROOT + '/videos/%s/saisons/%s/episodes/%s'
 URL_STREAM = URL_ROOT + '/videos/%s'
 # slug_video
 
+
 def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
@@ -71,7 +72,7 @@ def list_categories(plugin, item_id, **kwargs):
     json_datas = re.compile(
         r'\/json\"\>\{(.*?)\}\<\/script\>').findall(resp.text)[0]
     json_parser = json.loads('{' + json_datas + '}')
-    
+
     json_entry = json_parser["props"]["apolloState"]
     for json_key in list(json_entry.keys()):
         if "__typename" in json_entry[json_key]:
@@ -94,7 +95,7 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
     json_datas = re.compile(
         r'\/json\"\>\{(.*?)\}\<\/script\>').findall(resp.text)[0]
     json_parser = json.loads('{' + json_datas + '}')
-    
+
     json_entry = json_parser["props"]["apolloState"]
     for json_key in list(json_entry.keys()):
         if "__typename" in json_entry[json_key]:
@@ -117,7 +118,6 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                             program_image = json_entry[program_image_id]["url"]
                             program_plot = json_entry[product_id]["shortSummary"]
                             program_type = json_entry[product_id]["productType"]
-                            
 
                             item = Listitem()
                             item.label = program_title
@@ -131,7 +131,7 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                                 elif json_entry[product_id]['collection'] is not None:
                                     video_slug = json_entry[product_slug_id]['slug']
                                     isVideo = True
-                                if isVideo == True:
+                                if isVideo:
                                     video_season_number = ''
                                     if json_entry[product_id]["seasonNumber"] is not None:
                                         video_season_number = str(json_entry[product_id]["seasonNumber"])
@@ -204,7 +204,7 @@ def get_video_url(plugin,
             video_slug, video_season_number, video_episode_number))
     list_urls = re.compile(
         r'url\"\:\"(.*?)\"').findall(resp.text)
-    
+
     streamurl = ''
     for url_m3u8 in list_urls:
         if 'm3u8' in url_m3u8:
