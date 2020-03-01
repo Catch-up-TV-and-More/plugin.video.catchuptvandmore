@@ -683,8 +683,8 @@ def save_labels_in_mem_storage():
         'BIP TV',
         'bfmlille':
         'BFM Lille',
-        'bfmlitorral':
-        'BFM Litorral',
+        'bfmgrandlittoral':
+        'BFM Littoral',
         'lachainenormande':
         'La Chaine Normande',
         'sportenfrance':

@@ -417,7 +417,7 @@ menu = {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/bfmparis.png',
         'fanart': 'channels/fr/bfmparis_fanart.jpg',
-        'module': 'resources.lib.channels.fr.bfmparis',
+        'module': 'resources.lib.channels.fr.bfmregion',
         'enabled': True,
         'order': 56
     },
@@ -621,6 +621,22 @@ menu = {
         'enabled': True,
         'order': 94
     },
+    'bfmlille': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/bfmlille.png',
+        'fanart': 'channels/fr/bfmlille_fanart.jpg',
+        'module': 'resources.lib.channels.fr.bfmregion',
+        'enabled': True,
+        'order': 98
+    },
+    'bfmgrandlittoral': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/bfmgrandlittoral.png',
+        'fanart': 'channels/fr/bfmgrandlittoral_fanart.jpg',
+        'module': 'resources.lib.channels.fr.bfmregion',
+        'enabled': True,
+        'order': 99
+    },
     'tebesud': {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/tebesud.png',
@@ -633,7 +649,7 @@ menu = {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/bfmlyon.png',
         'fanart': 'channels/fr/bfmlyon_fanart.jpg',
-        'module': 'resources.lib.channels.fr.bfmlyon',
+        'module': 'resources.lib.channels.fr.bfmregion',
         'enabled': True,
         'order': 107
     },

@@ -408,7 +408,7 @@ menu = {
         'callback': 'live_bridge',
         'thumb': 'channels/fr/bfmparis.png',
         'fanart': 'channels/fr/bfmparis_fanart.jpg',
-        'module': 'resources.lib.channels.fr.bfmparis',
+        'module': 'resources.lib.channels.fr.bfmregion',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 56
@@ -625,16 +625,16 @@ menu = {
         'callback': 'live_bridge',
         'thumb': 'channels/fr/bfmlille.png',
         'fanart': 'channels/fr/bfmlille_fanart.jpg',
-        'module': 'resources.lib.channels.fr.bfmlille',
+        'module': 'resources.lib.channels.fr.bfmregion',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 98
     },
-    'bfmlitorral': {
+    'bfmgrandlittoral': {
         'callback': 'live_bridge',
-        'thumb': 'channels/fr/bfmlitorral.png',
-        'fanart': 'channels/fr/bfmlitorral_fanart.jpg',
-        'module': 'resources.lib.channels.fr.bfmlitorral',
+        'thumb': 'channels/fr/bfmgrandlittoral.png',
+        'fanart': 'channels/fr/bfmgrandlittoral_fanart.jpg',
+        'module': 'resources.lib.channels.fr.bfmregion',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 99
@@ -697,7 +697,7 @@ menu = {
         'callback': 'live_bridge',
         'thumb': 'channels/fr/bfmlyon.png',
         'fanart': 'channels/fr/bfmlyon_fanart.jpg',
-        'module': 'resources.lib.channels.fr.bfmlyon',
+        'module': 'resources.lib.channels.fr.bfmregion',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 107

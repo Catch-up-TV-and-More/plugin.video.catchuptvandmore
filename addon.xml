@@ -73,6 +73,7 @@
 [Fix] Live TV - IDF 1 (FR)
 [Fix] Catch-up TV - Noovo (CA)
 [Fix] Catch-up TV - TV5 Monde (WO)
+[Change/Add] Refactoring BFM Region (Paris, Lyon, Lille, Grand Littoral) - Add Catch-up TV (Lille, Grand Littoral) (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
     Catch-up TV & More
     Copyright (C) 2019  SylvainCecchetto
 
@@ -18,7 +18,7 @@
     You should have received a copy of the GNU General Public License along
     with Catch-up TV & More; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-'''
+"""
 
 # The unicode_literals import only has
 # an effect on Python 2.
@@ -39,11 +39,13 @@ import urlquick
 # TODO
 # Add more button
 
-URL_ROOT = 'https://www.bfmtv.com/lyon'
+URL_ROOT = 'https://www.bfmtv.com'
 
-URL_LIVE_BFM_LYON = URL_ROOT + '/en-direct/'
+URL_ROOT_REGION = 'https://www.bfmtv.com/%s'
 
-URL_REPLAY_BFM_LYON = URL_ROOT + '/videos/?page=%s'
+URL_LIVE_BFM_REGION = URL_ROOT_REGION + '/en-direct/'
+
+URL_REPLAY_BFM_REGION = URL_ROOT_REGION + '/videos/?page=%s'
 
 
 def replay_entry(plugin, item_id, **kwargs):
@@ -72,8 +74,14 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, page, **kwargs):
 
-    resp = urlquick.get(URL_REPLAY_BFM_LYON % page,
-                        headers={'User-Agent': web_utils.get_random_ua()})
+    if 'paris' in item_id:
+        resp = urlquick.get(URL_ROOT + '/mediaplayer/videos-bfm-paris/?page=%s' % page,
+                            headers={'User-Agent': web_utils.get_random_ua()},
+                            max_age=-1)
+    else:
+        resp = urlquick.get(URL_REPLAY_BFM_REGION % (item_id.replace('bfm', ''), page),
+                            headers={'User-Agent': web_utils.get_random_ua()},
+                            max_age=-1)
     root = resp.parse()
 
     for video_datas in root.iterfind(
@@ -126,9 +134,14 @@ def live_entry(plugin, item_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
-    resp = urlquick.get(URL_LIVE_BFM_LYON,
-                        headers={'User-Agent': web_utils.get_random_ua()},
-                        max_age=-1)
+    if 'paris' in item_id:
+        resp = urlquick.get(URL_ROOT + '/mediaplayer/live-bfm-paris/',
+                            headers={'User-Agent': web_utils.get_random_ua()},
+                            max_age=-1)
+    else:
+        resp = urlquick.get(URL_LIVE_BFM_REGION % item_id.replace('bfm', ''),
+                            headers={'User-Agent': web_utils.get_random_ua()},
+                            max_age=-1)
 
     root = resp.parse()
     live_datas = root.find(".//div[@class='next-player']")
