@@ -37,21 +37,13 @@ the addon's tree architecture.
 """
 
 menu = {
-    'tv5': {
+    'tv5unis': {
         'callback': 'replay_bridge',
-        'thumb': 'channels/ca/tv5.png',
-        'fanart': 'channels/ca/tv5_fanart.jpg',
-        'module': 'resources.lib.channels.ca.tv5',
+        'thumb': 'channels/ca/tv5unis.png',
+        'fanart': 'channels/ca/tv5unis_fanart.jpg',
+        'module': 'resources.lib.channels.ca.tv5unis',
         'enabled': True,
         'order': 1
-    },
-    'unis': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/ca/unis.png',
-        'fanart': 'channels/ca/unis_fanart.jpg',
-        'module': 'resources.lib.channels.ca.tv5',
-        'enabled': True,
-        'order': 2
     },
     'telequebec': {
         'callback': 'replay_bridge',

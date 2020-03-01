@@ -437,10 +437,8 @@ def save_labels_in_mem_storage():
         'AB3',
 
         # Canadian channels / live TV
-        'tv5':
-        'TV5',
-        'unis':
-        'UNIS',
+        'tv5unis':
+        'TV5 Unis',
         'telequebec':
         'Télé-Québec',
         'tva':
