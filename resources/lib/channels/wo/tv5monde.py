@@ -112,7 +112,11 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
     root = resp.parse()
 
     for video_datas in root.iterfind(".//div[@class='bloc-episode-content']"):
-        video_title = video_datas.find('.//h2').text.strip()
+        if video_datas.find('.//h3') is not None:
+            video_title = video_datas.find('.//h2').text.strip() + \
+                ' - ' + video_datas.find('.//h3').text.strip()
+        else:
+            video_title = video_datas.find('.//h2').text.strip()
         if 'http' in video_datas.find('.//img').get('src'):
             video_image = video_datas.find('.//img').get('src')
         else:
@@ -143,7 +147,11 @@ def list_videos_category(plugin, item_id, page, **kwargs):
     root = resp.parse()
 
     for video_datas in root.iterfind(".//div[@class='bloc-episode-content']"):
-        video_title = video_datas.find('.//h2').text.strip()
+        if video_datas.find('.//h3') is not None:
+            video_title = video_datas.find('.//h2').text.strip() + \
+                ' - ' + video_datas.find('.//h3').text.strip()
+        else:
+            video_title = video_datas.find('.//h2').text.strip()
         if 'http' in video_datas.find('.//img').get('src'):
             video_image = video_datas.find('.//img').get('src')
         else:
