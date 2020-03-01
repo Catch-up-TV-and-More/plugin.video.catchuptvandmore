@@ -39,6 +39,7 @@ import urlquick
 # TO DO
 # Add Pseudo Live TV (like RTBF and France TV Sport)
 # Add info video (duration)
+# Fix video date
 
 URL_ROOT = 'https://noovo.ca'
 # Channel Name
@@ -123,7 +124,7 @@ def list_videos(plugin, item_id, season_url, page, **kwargs):
             video_plot = video_datas.find(
                 ".//p[@class='card__description']").find(".//p").text
         video_url = video_datas.find(".//a").get('href')
-        video_date = video_datas.find(".//time").text
+        # video_date = video_datas.find(".//time").text
         video_duration = 0
 
         item = Listitem()
@@ -131,7 +132,7 @@ def list_videos(plugin, item_id, season_url, page, **kwargs):
         item.art['thumb'] = video_image
         item.info['plot'] = video_plot
         item.info['duration'] = video_duration
-        item.info.date(video_date, "%Y-%m-%d")
+        # item.info.date(video_date, "%Y-%m-%d")
 
         item.set_callback(
             get_video_url,
