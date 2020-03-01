@@ -201,7 +201,7 @@ def get_video_url(plugin,
     else:
         resp = urlquick.get(
             URL_STREAM_SEASON_EPISODE % (
-            video_slug, video_season_number, video_episode_number))
+                video_slug, video_season_number, video_episode_number))
     list_urls = re.compile(
         r'url\"\:\"(.*?)\"').findall(resp.text)
 
