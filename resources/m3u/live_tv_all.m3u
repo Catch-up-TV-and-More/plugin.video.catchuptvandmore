@@ -523,6 +523,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=v
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/franceinter.png" group-title="France",France Inter
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=franceinter&item_module=resources.lib.channels.fr.franceinter&item_dict={}
 
+##	RTL
+##	rtl
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/rtl.png" group-title="France",RTL
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=rtl&item_module=resources.lib.channels.fr.rtl&item_dict={}
+
 
 
 # Switzerland

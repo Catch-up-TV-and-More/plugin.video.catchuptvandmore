@@ -717,6 +717,8 @@ def save_labels_in_mem_storage():
         'France Inter',
         'enfants':
         'Okoo (France TV)',
+        'rtl':
+        'RTL',
 
         # Japan channels / live TV
         'nhknews':

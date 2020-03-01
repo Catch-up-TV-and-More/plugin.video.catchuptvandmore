@@ -528,6 +528,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=v
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/franceinter.png" group-title="France Radio",France Inter
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=franceinter&item_module=resources.lib.channels.fr.franceinter&item_dict={}
 
+##	RTL
+##	rtl
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/rtl.png" group-title="France Radio",RTL
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=rtl&item_module=resources.lib.channels.fr.rtl&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/wo/euronews.png" group-title="France",Euronews

@@ -782,5 +782,14 @@ menu = {
         'm3u_group': 'Radio',
         'enabled': True,
         'order': 116
+    },
+    'rtl': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/fr/rtl.png',
+        'fanart': 'channels/fr/rtl_fanart.jpg',
+        'module': 'resources.lib.channels.fr.rtl',
+        'm3u_group': 'Radio',
+        'enabled': True,
+        'order': 118
     }
 }
