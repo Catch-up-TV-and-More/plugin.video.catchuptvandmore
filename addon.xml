@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.17~beta21"
+       version="0.2.17~beta22"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -72,6 +72,7 @@
 [Remove] Live TV - Canal 10 (FR)
 [Fix] Live TV - IDF 1 (FR)
 [Fix] Catch-up TV - Noovo (CA)
+[Fix] Catch-up TV - TV5 Monde (WO)
     </news>
     <assets>
       <icon>icon.png</icon>
