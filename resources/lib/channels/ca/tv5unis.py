@@ -136,6 +136,10 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                                     video_slug = json_entry[product_slug_id]['slug']
                                     isVideo = True
                                 if isVideo == True:
+                                    video_duration = ''
+                                    if 'duration' in json_entry[product_id]:
+                                        video_duration = json_entry[product_id]['duration']
+                                    item.info['duration'] = video_duration
                                     video_season_number = ''
                                     if json_entry[product_id]["seasonNumber"] is not None:
                                         video_season_number = str(json_entry[product_id]["seasonNumber"])
@@ -201,11 +205,15 @@ def list_videos(plugin, item_id, program_slug, program_season_number, **kwargs):
                 video_plot = ''
                 if 'shortSummary' in json_entry[json_key]:
                     video_plot = json_entry[json_key]["shortSummary"]
+                video_duration = ''
+                if 'duration' in json_entry[json_key]:
+                    video_duration = json_entry[json_key]['duration']
 
                 item = Listitem()
                 item.label = video_title
                 item.art['thumb'] = video_image
                 item.info['plot'] = video_plot
+                item.info['duration'] = video_duration
                 item.set_callback(
                     get_video_url,
                     item_id=item_id,
