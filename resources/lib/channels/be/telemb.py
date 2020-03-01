@@ -135,5 +135,11 @@ def get_live_url(plugin, item_id, video_id, **kwargs):
     live_id = re.compile(r'telemb.fcst.tv/player/embed\/(.*?)[\?\"]').findall(
         resp.text)[0]
     resp2 = urlquick.get(URL_STREAM_LIVE % live_id, max_age=-1)
-    return 'https://tvl-live.l3.freecaster.net/live/telemb/telemb.m3u8?token=' + re.compile(
-        r'\?token\=(.*?)\"').findall(resp2.text)[0]
+    list_streams = re.compile(
+        r'file\"\:\"(.*?)\"').findall(resp2.text)
+
+    url_stream = 'https:'
+    for url_stream_datas in list_streams:
+        if 'm3u8' in url_stream_datas:
+            url_stream = url_stream + url_stream_datas.replace('/', '')
+    return url_stream
