@@ -1,5 +1,5 @@
 # Catch-up TV & More
-![Catch-up TV & More](https://github.com/SylvainCecchetto/plugin.video.catchuptvandmore/raw/master/icon.png)
+![Catch-up TV & More](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/plugin.video.catchuptvandmore/icon.png)
 
 [![Build Status](https://travis-ci.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore.svg?branch=dev)](https://travis-ci.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore)
 
