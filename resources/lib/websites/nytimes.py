@@ -75,22 +75,23 @@ def root(plugin, item_id, **kwargs):
 def list_videos(plugin, item_id, category_url, **kwargs):
     """Build videos listing"""
 
-    videos_json = urlquick.get(URL_PLAYLIST % category_playlist).text
-    videos_jsonparser = json.loads(videos_json)
+    return False
+    # videos_json = urlquick.get(URL_PLAYLIST % category_playlist).text
+    # videos_jsonparser = json.loads(videos_json)
 
-    for video_data in videos_jsonparser["videos"]:
-        item = Listitem()
-        item.label = video_data["headline"]
-        video_id = str(video_data["id"])
-        for image in video_data["images"]:
-            item.art['thumb'] = URL_ROOT + '/' + image["url"]
-        item.info['plot'] = video_data["summary"]
+    # for video_data in videos_jsonparser["videos"]:
+    #     item = Listitem()
+    #     item.label = video_data["headline"]
+    #     video_id = str(video_data["id"])
+    #     for image in video_data["images"]:
+    #         item.art['thumb'] = URL_ROOT + '/' + image["url"]
+    #     item.info['plot'] = video_data["summary"]
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_id=video_id)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+    #     item.set_callback(get_video_url,
+    #                       item_id=item_id,
+    #                       video_id=video_id)
+    #     item_post_treatment(item, is_playable=True, is_downloadable=True)
+    #     yield item
 
 
 @Resolver.register
@@ -100,15 +101,16 @@ def get_video_url(plugin,
                   download_mode=False,
                   **kwargs):
     """Get video URL and start video player"""
-    video_json = urlquick.get(URL_STREAM % video_id).text
-    video_jsonparser = json.loads(video_json)
+    return False
+    # video_json = urlquick.get(URL_STREAM % video_id).text
+    # video_jsonparser = json.loads(video_json)
 
-    video_url = ''
-    for video in video_jsonparser["renditions"]:
-        if video["type"] == 'hls':
-            video_url = video["url"]
+    # video_url = ''
+    # for video in video_jsonparser["renditions"]:
+    #     if video["type"] == 'hls':
+    #         video_url = video["url"]
 
-    if download_mode:
-        return download.download_video(video_url)
+    # if download_mode:
+    #     return download.download_video(video_url)
 
-    return video_url
+    # return video_url
