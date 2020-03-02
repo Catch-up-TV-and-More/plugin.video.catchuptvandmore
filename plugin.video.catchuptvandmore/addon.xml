@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.18~beta0"
+       version="0.2.18~beta01"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -19,6 +19,7 @@
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
   </extension>
+  <extension point="xbmc.service" library="service.py"/>
   <extension point="xbmc.addon.metadata">
     <!-- Set reuselanguageinvoker to false while developing the addon, making it only true for the production version -->
     <!-- See https://kodi.wiki/view/Addon.xml#.3Creuselanguageinvoker.3E -->
@@ -44,6 +45,7 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.2.18]
+[Add] Setting to autorun the plugin when Kodi starts
     </news>
     <assets>
       <icon>icon.png</icon>

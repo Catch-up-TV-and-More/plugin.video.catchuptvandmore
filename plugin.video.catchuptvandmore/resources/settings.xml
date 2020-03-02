@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 
+    <!-- General -->
+    <category label="30009">
+        <setting label="30430" type="bool" id="auto_run" default="false"/>
+        <setting label="30373" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/favourites/delete_favourites/)"/>
+    </category>
+    <!-- General -->
+
+
     <!-- Menus -->
     <category label="30008">
         
@@ -251,7 +259,6 @@
     <category label="30005">
         <setting label="30372" type="bool" id="log_pop_up" default="true"/>
         <setting label="30370" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/addon_utils/clear_cache/)"/>
-        <setting label="30373" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/favourites/delete_favourites/)"/>
         <setting label="" type="bool" id="show_hidden_items_information" default="true" visible="false"/>
         <setting label="" type="bool" id="show_live_tv_m3u_info" default="true" visible="false"/>
         <setting label="X-Forwarded-For" type="text" id="header_x-forwarded-for" default=""/>
