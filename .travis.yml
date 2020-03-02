@@ -9,7 +9,7 @@ jobs:
     - stage: flake
       script:
         - pip install flake8
-        - flake8 .
+        - flake8 ./plugin.video.catchuptvandmore
 
     # Check if all Python files of the plugin can be imported
     - stage: test-plugin-modules
@@ -23,7 +23,7 @@ jobs:
     - stage: kodi-addon-checker
       script:
         - pip install kodi-addon-checker
-        - kodi-addon-checker --branch krypton --allow-folder-id-mismatch .
+        - kodi-addon-checker --branch krypton --allow-folder-id-mismatch ./plugin.video.catchuptvandmore
 
     # Update repository.catchuptvandmore
     - stage: update-repo
