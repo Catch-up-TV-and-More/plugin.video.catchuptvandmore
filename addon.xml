@@ -47,11 +47,10 @@
 [Fix] Live TV - NTV (CA)
 [Fix] Live TV - Sport En France (FR)
 [Fix] Live TV and Catchup TV - CNews (FR)
-[Improvement] Favourites - Migrate from pickled to json data
+[Improvement] Migrate from pickled fav to json data and kill item2dict and item_dict
 [Fix] Catch-Up TV - Auvio RTBF (BE)
 [Fix] Live TV - CBS News (USA)
 [Fix/Improvement] Catch-Up TV - TVA (Canada) - Add search feature
-[Improvement] Kill item2dict and item_dict
 [Fix] Website - Autoplus (FR)
 [Fix] Live TV - TV7 Bordeaux (FR)
 [Fix] Broken settings
