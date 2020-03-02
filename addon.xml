@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.16"
+       version="0.2.17~beta27"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -22,7 +22,7 @@
   <extension point="xbmc.addon.metadata">
     <!-- Set reuselanguageinvoker to false while developing the addon, making it only true for the production version -->
     <!-- See https://kodi.wiki/view/Addon.xml#.3Creuselanguageinvoker.3E -->
-    <reuselanguageinvoker>true</reuselanguageinvoker>
+    <!-- <reuselanguageinvoker>true</reuselanguageinvoker> -->
     <summary lang="fr_FR">Catch-Up TV &amp; More : Replay TV, Live TV et bien plus encore.</summary>
     <description lang="fr_FR">Catch-Up TV &amp; More regroupe dans un même plugin Kodi l'ensemble des vidéos des différents services et chaînes de Replay TV (rattrapage TV) ainsi que l'accès au direct. De plus, cette extension vous permet d'accéder rapidement aux vidéos et contenus proposés par certains sites internet.</description>
     <disclaimer lang="fr_FR">Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.</disclaimer>
@@ -43,24 +43,42 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.16]
-[Fix] Guide TV
-[Fix] Catchup-TV - RTBF Auvio (BE)
-[New] Use XMLTV with UTC time (If needed, clear cache in addon settings)
-[Fix] WebSite - Philharmonie de Paris (FR)
-[Add] Guide TV - UK
-[Add] Live TV - Free Sports (UK)
-[Add] Guide TV - IT
-[Fix] WebSite - National FFF (FR)
-[Fix] Catchup-TV - RMC Découverte (FR)
-[Fix] Catchup-TV - ICI Télé (CA)
-[Fix] Catchup-TV and Live TV - RMC Story (FR)
-[Add] Live TV - STV+1 (UK)
-[Fix] WebSite - 30 Millions d'Amis (FR)
-[Add] Settings - Delete favourites button
-[Improvement] Catchup-TV - Add playlist to 6play (FR)
-[Fix] Catchup-TV - France TV (FR) - Serie The Fix
-[Improvement] Best addon performance on Kodi 18 and later (reuselanguageinvoker)
+[Version 0.2.17]
+[Fix] Live TV - NTV (CA)
+[Fix] Live TV - Sport En France (FR)
+[Fix] Live TV and Catchup TV - CNews (FR)
+[Improvement] Migrate from pickled fav to json data and kill item2dict and item_dict
+[Fix] Catch-Up TV - Auvio RTBF (BE)
+[Fix] Live TV - CBS News (USA)
+[Fix/Improvement] Catch-Up TV - TVA (Canada) - Add search feature
+[Fix] Website - Autoplus (FR)
+[Fix] Live TV - TV7 Bordeaux (FR)
+[Fix] Broken settings
+[Fix] Catch-up TV - RTBF (BE)
+[Change] Use FranceTV geolocalisation service
+[Fix] Catch-up TV - Blaze TV (UK) - Need more work (Cors implementation required ?)
+[Fix] Kodi skin - Fix Aura (and others?) widgets
+[Fix] Backport typo from master
+[Add] Live TV - ABXPLORE / AB3 (BE)
+[Add] Catch-up TV - Okoo - France TV (FR)
+[Fix] Live TV - NRJ 12 / Cherie 25 (FR)
+[Fix] Live TV - TVR (FR)
+[Fix] Catch-up TV and Live TV - TL7 (FR)
+[Fix] Catch-up TV - Arte (WO)
+[Fix] Live TV - Bip TV (FR)
+[Remove] Live TV - Canal 10 (FR)
+[Fix] Live TV - IDF 1 (FR)
+[Fix] Catch-up TV - Noovo (CA)
+[Fix] Catch-up TV - TV5 Monde (WO)
+[Rename/Change/Add] Refactoring BFM Region (Paris, Lyon, Lille, Grand Littoral) - Add Catch-up TV (BFM Lille, BFM Grand Littoral) (FR) - Anciennement Grand Lille et Grand Littoral TV
+[Fix] Catch-up TV - LCP (FR)
+[Fix] Catch-up TV - Luxe.TV (FR)
+[Rework] Catch-up TV - TV5 Unis (CA)
+[Fix] Live TV - NHK World (WO)
+[Fix] Live TV - Télé MB (BE)
+[Add] Live TV - RTL (FR)
+[Add] Catch-up TV - M6 Courses (6play) (FR)
+[Add] Website - Fosdem 2020 (BE)
     </news>
     <assets>
       <icon>icon.png</icon>

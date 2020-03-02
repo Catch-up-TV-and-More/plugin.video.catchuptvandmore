@@ -273,6 +273,18 @@ def save_labels_in_mem_storage():
         'Connect/Disconnect VPN':
         30361,
 
+        # Menus settings
+        'Restore default order of all menus':
+        30400,
+        'Unmask all hidden items':
+        30401,
+        'Select item to unmask':
+        30406,
+        'Default order of all menus have been restored':
+        30407,
+        'All hidden items have been unmasked':
+        30408,
+
         # Context menu
         'Clear cache':
         30370,
@@ -419,12 +431,14 @@ def save_labels_in_mem_storage():
         'TV Com',
         'canalc':
         'Canal C',
+        'abxplore':
+        'ABXPLORE',
+        'ab3':
+        'AB3',
 
         # Canadian channels / live TV
-        'tv5':
-        'TV5',
-        'unis':
-        'UNIS',
+        'tv5unis':
+        'TV5 Unis',
         'telequebec':
         'Télé-Québec',
         'tva':
@@ -665,10 +679,10 @@ def save_labels_in_mem_storage():
         'Azur TV',
         'biptv':
         'BIP TV',
-        'grandlilletv':
-        'Grand Lille TV',
-        'grandlitorraltv':
-        'Grand Litorral TV',
+        'bfmlille':
+        'BFM Lille',
+        'bfmgrandlittoral':
+        'BFM Littoral',
         'lachainenormande':
         'La Chaine Normande',
         'sportenfrance':
@@ -701,6 +715,12 @@ def save_labels_in_mem_storage():
         'DiCi TV',
         'franceinter':
         'France Inter',
+        'enfants':
+        'Okoo (France TV)',
+        'rtl':
+        'RTL',
+        'courses':
+        'M6 Courses (6play)',
 
         # Japan channels / live TV
         'nhknews':

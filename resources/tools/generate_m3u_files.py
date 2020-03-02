@@ -206,6 +206,10 @@ def generate_m3u_files(labels):
             # Key: Label to append
             # Value: custom item_dict
 
+            if 'enabled' in channel_infos:
+                if not channel_infos['enabled']:
+                    continue
+
             if 'available_languages' in channel_infos:
                 for language in channel_infos['available_languages']:
                     languages.append({
