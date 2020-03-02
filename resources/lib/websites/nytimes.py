@@ -55,27 +55,24 @@ def website_entry(plugin, item_id, **kwargs):
 
 def root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
-    categories_html = urlquick.get(URL_VIDEOS).text
-    categories_datas = re.compile(r'var navData =(.*?)\;').findall(
-        categories_html)[0]
-    # print 'categories_datas value : ' + categories_datas
-    categories_jsonparser = json.loads(categories_datas)
+    resp = urlquick.get(URL_VIDEOS)
+    root = resp.parse()
 
-    for category in categories_jsonparser:
+    for category_datas in root.iterfind(".//a[@class='css-1fxy2ba']"):
         item = Listitem()
 
-        item.label = category["display_name"]
-        category_playlist = category["knews_id"]
+        item.label = category_datas.text
+        category_url = URL_ROOT + category_datas.get('href')
 
         item.set_callback(list_videos,
                           item_id=item_id,
-                          category_playlist=category_playlist)
+                          category_url=category_url)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, category_playlist, **kwargs):
+def list_videos(plugin, item_id, category_url, **kwargs):
     """Build videos listing"""
 
     videos_json = urlquick.get(URL_PLAYLIST % category_playlist).text

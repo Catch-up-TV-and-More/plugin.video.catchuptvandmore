@@ -50,8 +50,7 @@
 [Improvement] Favourites - Migrate from pickled to json data
 [Fix] Catch-Up TV - Auvio RTBF (BE)
 [Fix] Live TV - CBS News (USA)
-[Fix] Catch-Up TV - TVA (Canada)
-[Improvement] Catch-Up TV - TVA (Canada) - Add search feature
+[Fix/Improvement] Catch-Up TV - TVA (Canada) - Add search feature
 [Improvement] Kill item2dict and item_dict
 [Fix] Website - Autoplus (FR)
 [Fix] Live TV - TV7 Bordeaux (FR)
@@ -65,7 +64,6 @@
 [Add] Catch-up TV - Okoo - France TV (FR)
 [Fix] Live TV - NRJ 12 / Cherie 25 (FR)
 [Fix] Live TV - TVR (FR)
-[Rename] Grand Lille TV to BFM Lille and also for Grand Littoral TV to BFM Littoral (FR)
 [Fix] Catch-up TV and Live TV - TL7 (FR)
 [Fix] Catch-up TV - Arte (WO)
 [Fix] Live TV - Bip TV (FR)
@@ -73,7 +71,7 @@
 [Fix] Live TV - IDF 1 (FR)
 [Fix] Catch-up TV - Noovo (CA)
 [Fix] Catch-up TV - TV5 Monde (WO)
-[Change/Add] Refactoring BFM Region (Paris, Lyon, Lille, Grand Littoral) - Add Catch-up TV (Lille, Grand Littoral) (FR)
+[Rename/Change/Add] Refactoring BFM Region (Paris, Lyon, Lille, Grand Littoral) - Add Catch-up TV (BFM Lille, BFM Grand Littoral) (FR) - Anciennement Grand Lille et Grand Littoral TV
 [Fix] Catch-up TV - LCP (FR)
 [Fix] Catch-up TV - Luxe.TV (FR)
 [Rework] Catch-up TV - TV5 Unis (CA)
