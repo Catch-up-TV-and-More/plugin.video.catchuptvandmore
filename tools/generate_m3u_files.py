@@ -30,8 +30,9 @@ from __future__ import print_function
 from builtins import str
 import polib
 import sys
-sys.path.append('..')
-sys.path.append('../..')
+sys.path.append('../plugin.video.catchuptvandmore')
+sys.path.append('../plugin.video.catchuptvandmore/resources')
+sys.path.append('../plugin.video.catchuptvandmore/resources/lib')
 
 import mock_codequick
 from codequick import Script, utils
@@ -47,12 +48,12 @@ import importlib
 import os
 
 
-LIVE_TV_M3U_ALL_FILEPATH = "../m3u/live_tv_all.m3u"
+LIVE_TV_M3U_ALL_FILEPATH = "../plugin.video.catchuptvandmore/resources/m3u/live_tv_all.m3u"
 
-LIVE_TV_M3U_COUTRY_FILEPATH = "../m3u/live_tv_%s.m3u"
+LIVE_TV_M3U_COUTRY_FILEPATH = "../plugin.video.catchuptvandmore/resources/m3u/live_tv_%s.m3u"
 # arg0: country_code (fr, nl, jp, ...)
 
-EN_STRINGS_PO_FILEPATH = "../language/resource.language.en_gb/strings.po"
+EN_STRINGS_PO_FILEPATH = "../plugin.video.catchuptvandmore/resources/language/resource.language.en_gb/strings.po"
 
 # NOT USED ANYMORE
 # LOGO_URL = "https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/%s/resources/media/channels/%s/%s"
@@ -102,7 +103,7 @@ MANUAL_LABELS = {
 
 
 def get_labels_dict():
-    labels_py_fp = '../lib/labels.py'
+    labels_py_fp = '../plugin.video.catchuptvandmore/resources/lib/labels.py'
     lines = []
     with open(labels_py_fp, 'r') as f:
         take_line = False
