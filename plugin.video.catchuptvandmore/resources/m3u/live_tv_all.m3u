@@ -703,6 +703,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=f
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/stv_plusone.png" group-title="United Kingdom",STV+1
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=stv_plusone&item_module=resources.lib.channels.uk.stv&item_dict={}
 
+##	EDGE Sport
+##	edgesport
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/uk/edgesport.png" group-title="United Kingdom",EDGE Sport
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=edgesport&item_module=resources.lib.channels.uk.stv&item_dict={}
+
 
 
 # International

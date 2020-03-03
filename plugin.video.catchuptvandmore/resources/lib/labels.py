@@ -796,6 +796,8 @@ def save_labels_in_mem_storage():
         'Free Sports',
         'stv_plusone':
         'STV+1',
+        'edgesport':
+        'EDGE Sport',
 
         # International channels / live TV
         'tv5mondeafrique':
