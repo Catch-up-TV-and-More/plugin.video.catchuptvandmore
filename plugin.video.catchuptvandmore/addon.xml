@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.18~beta02"
+       version="0.2.18~beta03"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -47,6 +47,7 @@
 [Version 0.2.18]
 [Add] Setting to autorun the plugin when Kodi starts
 [Add] Live TV - EDGE Sport (UK)
+[Add] Live TV - ICI Télé (CA) - Add Live TV for each Region (Vancouver|Regina|Toronto|Edmonton|Rimouski|Québec|Winnipeg|Moncton|Ottawa|Montréal)
     </news>
     <assets>
       <icon>icon.png</icon>

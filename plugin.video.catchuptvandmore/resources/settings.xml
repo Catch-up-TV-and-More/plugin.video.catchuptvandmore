@@ -180,6 +180,12 @@
 
                 <setting label="30167" type="labelenum" id="tvp3.language" values="Białystok|Bydgoszcz|Gdańsk|Gorzów Wielkopolski|Katowice|Kielce|Kraków|Lublin|Łódź|Olsztyn|Opole|Poznań|Rzeszów|Szczecin|Warszawa|Wrocław" default="Białystok"/>
 
+            <!-- Canadian channels -->
+            <setting label="30086" type="lsep" subsetting="true" visible="eq(1,true)"/>
+            <!--<setting label="" type="bool" id="pl" default="true" visible="false"/>-->
+
+                <setting label="30164" type="labelenum" id="icitele.language" values="Vancouver|Regina|Toronto|Edmonton|Rimouski|Québec|Winnipeg|Moncton|Ottawa|Montréal" default="Montréal"/>
+
     </category>
     <!-- Quality and Content -->
 

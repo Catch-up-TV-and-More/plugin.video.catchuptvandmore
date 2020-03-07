@@ -58,6 +58,11 @@ menu = {
         'thumb': 'channels/ca/icitele.png',
         'fanart': 'channels/ca/icitele_fanart.jpg',
         'module': 'resources.lib.channels.ca.icitele',
+        'available_languages': [
+            'Vancouver', 'Regina', 'Toronto', 'Edmonton', 'Rimouski',
+            'Québec', 'Winnipeg', 'Moncton', 'Ottawa',
+            'Montréal'
+        ],
         'enabled': True,
         'order': 6
     },

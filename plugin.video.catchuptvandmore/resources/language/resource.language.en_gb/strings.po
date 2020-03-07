@@ -307,7 +307,7 @@ msgid "CGTN: Choose Channel"
 msgstr ""
 
 msgctxt "#30164"
-msgid "Paramount Channel: Choose Channel"
+msgid "ICI Télé: Choose region"
 msgstr ""
 
 msgctxt "#30165"

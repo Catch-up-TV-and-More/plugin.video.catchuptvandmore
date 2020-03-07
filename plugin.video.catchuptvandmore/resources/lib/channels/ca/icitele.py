@@ -43,7 +43,7 @@ import urlquick
 
 URL_API = 'https://api.radio-canada.ca/validationMedia/v1/Validation.html'
 
-URL_LIVE = URL_API + '?connectionType=broadband&output=json&multibitrate=true&deviceType=ipad&appCode=medianetlive&idMedia=cbuft'
+URL_LIVE = URL_API + '?connectionType=broadband&output=json&multibitrate=true&deviceType=ipad&appCode=medianetlive&idMedia=%s'
 
 URL_ROOT = 'https://ici.radio-canada.ca'
 
@@ -54,6 +54,19 @@ URL_EMISSION_VIDEOS = URL_ROOT + '/v35/Component/EpisodeSummaries/Content?season
 
 URL_STREAM_REPLAY = URL_API + '?connectionType=broadband&output=json&multibitrate=true&deviceType=ipad&appCode=medianet&idMedia=%s'
 # VideoId
+
+LIVE_ICI_TELE_REGIONS = {
+    "Vancouver": "cbuft",
+    "Regina": "cbkft",
+    "Toronto": "cblft",
+    "Edmonton": "cbxft",
+    "Rimouski": "cjbr",
+    "Québec": "cbvt",
+    "Winnipeg": "cbwft",
+    "Moncton": "cbaft",
+    "Ottawa": "cboft",
+    "Montréal": "cbft"
+}
 
 
 def replay_entry(plugin, item_id, **kwargs):
@@ -149,6 +162,9 @@ def live_entry(plugin, item_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
-    resp = urlquick.get(URL_LIVE)
+    final_region = kwargs.get('language', Script.setting['icitele.language'])
+    region = utils.ensure_unicode(final_region)
+
+    resp = urlquick.get(URL_LIVE % LIVE_ICI_TELE_REGIONS[region])
     json_parser = json.loads(resp.text)
     return json_parser["url"]

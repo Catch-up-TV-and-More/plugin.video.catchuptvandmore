@@ -307,12 +307,12 @@ msgid "CGTN: Choose Channel"
 msgstr "CGTN : Choix de la chaîne"
 
 msgctxt "#30164"
-msgid "Paramount Channel: Choose Channel"
-msgstr "Paramount Channel : Choix de la chaîne"
+msgid "ICI Télé: Choose region"
+msgstr "ICI Télé : Choix de la région"
 
 msgctxt "#30165"
 msgid "Realmadrid TV: Choose Channel"
-msgstr "Realmadrid TV : Choix de la chaîn"
+msgstr "Realmadrid TV : Choix de la chaîne"
 
 msgctxt "#30166"
 msgid "RT: Choose Channel"

@@ -98,7 +98,8 @@ MANUAL_LABELS = {
     'paramountchannel': 'Paramount Channel',
     'rt': 'RT',
     'tvp3': 'TVP 3',
-    'realmadridtv': 'Realmadrid TV'
+    'realmadridtv': 'Realmadrid TV',
+    'icitele': 'ICI Télé'
 }
 
 

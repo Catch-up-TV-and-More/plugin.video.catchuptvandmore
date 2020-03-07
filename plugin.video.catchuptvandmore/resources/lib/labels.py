@@ -444,7 +444,8 @@ def save_labels_in_mem_storage():
         'tva':
         'TVA',
         'icitele':
-        'ICI Télé',
+        'ICI Télé (' +
+        utils.ensure_unicode(Script.setting['icitele.language']) + ')',
         'ntvca':
         'NTV',
         'icitoutv':

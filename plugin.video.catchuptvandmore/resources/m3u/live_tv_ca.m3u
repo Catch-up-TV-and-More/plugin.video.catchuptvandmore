@@ -13,10 +13,55 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=t
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/tva.png" group-title="Canada",TVA
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=tva&item_module=resources.lib.channels.ca.tva&item_dict={}
 
-##	ICI Télé
+##	ICI Télé Vancouver
 ##	icitele
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={}
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Vancouver
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Vancouver"}
+
+##	ICI Télé Regina
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Regina
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Regina"}
+
+##	ICI Télé Toronto
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Toronto
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Toronto"}
+
+##	ICI Télé Edmonton
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Edmonton
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Edmonton"}
+
+##	ICI Télé Rimouski
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Rimouski
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Rimouski"}
+
+##	ICI Télé Québec
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Québec
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Québec"}
+
+##	ICI Télé Winnipeg
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Winnipeg
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Winnipeg"}
+
+##	ICI Télé Moncton
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Moncton
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Moncton"}
+
+##	ICI Télé Ottawa
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Ottawa
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Ottawa"}
+
+##	ICI Télé Montréal
+##	icitele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/icitele.png" group-title="Canada",ICI Télé Montréal
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=icitele&item_module=resources.lib.channels.ca.icitele&item_dict={"language":"Montréal"}
 
 ##	NTV
 ##	ntvca
