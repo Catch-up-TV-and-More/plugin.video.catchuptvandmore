@@ -43,7 +43,11 @@ import urlquick
 
 URL_API = 'https://api.radio-canada.ca/validationMedia/v1/Validation.html'
 
-URL_LIVE = URL_API + '?connectionType=broadband&output=json&multibitrate=true&deviceType=ipad&appCode=medianetlive&idMedia=%s'
+URL_API_2 = 'https://services.radio-canada.ca/media'
+
+URL_CLIENT_VALUE = URL_API_2 + '/player/client/radiocanadaca_unit'
+
+URL_LIVE = URL_API_2 + '/validation/v2/?connectionType=hd&output=json&multibitrate=true&deviceType=ipad&appCode=medianetlive&idMedia=%s'
 
 URL_ROOT = 'https://ici.radio-canada.ca'
 
@@ -162,9 +166,20 @@ def live_entry(plugin, item_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
+    resp2 = urlquick.get(URL_CLIENT_VALUE,
+                         headers={
+                            'User-Agent': web_utils.get_random_ua()
+                         })
+    client_id_value = re.compile(
+        r'clientKey\:\"(.*?)\"').findall(resp2.text)[0]
+
     final_region = kwargs.get('language', Script.setting['icitele.language'])
     region = utils.ensure_unicode(final_region)
 
-    resp = urlquick.get(URL_LIVE % LIVE_ICI_TELE_REGIONS[region])
+    resp = urlquick.get(URL_LIVE % LIVE_ICI_TELE_REGIONS[region],
+                        headers={
+                            'User-Agent': web_utils.get_random_ua(),
+                            'Authorization': 'Client-Key %s' % client_id_value
+                        })
     json_parser = json.loads(resp.text)
     return json_parser["url"]
