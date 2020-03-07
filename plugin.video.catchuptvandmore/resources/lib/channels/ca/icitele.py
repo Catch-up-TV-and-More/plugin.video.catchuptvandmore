@@ -166,20 +166,22 @@ def live_entry(plugin, item_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
-    resp2 = urlquick.get(URL_CLIENT_VALUE,
-                         headers={
-                            'User-Agent': web_utils.get_random_ua()
-                         })
+    resp2 = urlquick.get(
+        URL_CLIENT_VALUE,
+        headers={
+            'User-Agent': web_utils.get_random_ua()
+        })
     client_id_value = re.compile(
         r'clientKey\:\"(.*?)\"').findall(resp2.text)[0]
 
     final_region = kwargs.get('language', Script.setting['icitele.language'])
     region = utils.ensure_unicode(final_region)
 
-    resp = urlquick.get(URL_LIVE % LIVE_ICI_TELE_REGIONS[region],
-                        headers={
-                            'User-Agent': web_utils.get_random_ua(),
-                            'Authorization': 'Client-Key %s' % client_id_value
-                        })
+    resp = urlquick.get(
+        URL_LIVE % LIVE_ICI_TELE_REGIONS[region],
+        headers={
+            'User-Agent': web_utils.get_random_ua(),
+            'Authorization': 'Client-Key %s' % client_id_value
+        })
     json_parser = json.loads(resp.text)
     return json_parser["url"]
