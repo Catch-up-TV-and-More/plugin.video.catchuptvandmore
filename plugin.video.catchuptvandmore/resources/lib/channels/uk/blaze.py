@@ -40,8 +40,12 @@ import urlquick
 # Fix Replay (DRM)
 
 URL_ROOT = 'http://www.blaze.tv'
+
+URL_API = 'https://watch.blaze.tv'
 # Live
-URL_LIVE_JSON = URL_ROOT + '/stream/live/widevine/%s'
+URL_LIVE = URL_API + '/live/'
+URL_LIVE_JSON = 'https://live.blaze.tv/stream-live.php?key=%s&platform=chrome'
+# Key
 
 # Replay
 URL_SHOWS = URL_ROOT + '/series'
@@ -176,20 +180,23 @@ def live_entry(plugin, item_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
-    resp = urlquick.get(URL_ROOT)
-    live_id = re.compile(r'href\=\"\/live\/(.*?)\"').findall(resp.text)[0]
+    resp = urlquick.get(URL_LIVE)
+    live_id = re.compile(
+        r'data-player-key\=\"(.*?)\"').findall(resp.text)[0]
+    token_value = re.compile(
+        r'data-player-token\=\"(.*?)\"').findall(resp.text)[0]
+    token_expiry_value = re.compile(
+        r'data-player-expiry\=\"(.*?)\"').findall(resp.text)[0]
+    uvid_value = re.compile(
+        r'data-player-uvid\=\"(.*?)\"').findall(resp.text)[0]
     resp2 = urlquick.get(
         URL_LIVE_JSON % live_id,
-        headers={"x-requested-with": "XMLHttpRequest"},
-        max_age=-1)
-    json_parser2 = json.loads(resp2.text)
-    resp3 = urlquick.get(
-        json_parser2["tokenizer"]["url"],
         headers={
-            "Token": json_parser2["tokenizer"]["token"],
-            "Token-Expiry": json_parser2["tokenizer"]["expiry"],
-            "Uvid": "blaze"
+            'User-Agent': web_utils.get_random_ua(),
+            'token': token_value,
+            'token-expiry': token_expiry_value,
+            'uvid': uvid_value
         },
         max_age=-1)
-    json_parser3 = json.loads(resp3.text)
-    return json_parser3["Streams"]["Adaptive"]
+    json_parser2 = json.loads(resp2.text)
+    return json_parser2["Streams"]["Adaptive"]
