@@ -435,6 +435,8 @@ def save_labels_in_mem_storage():
         'ABXPLORE',
         'ab3':
         'AB3',
+        'ln24':
+        'LN24',
 
         # Canadian channels / live TV
         'tv5unis':

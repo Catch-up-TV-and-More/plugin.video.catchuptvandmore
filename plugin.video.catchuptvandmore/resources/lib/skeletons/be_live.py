@@ -220,5 +220,14 @@ menu = {
         'm3u_group': 'Belgique fr',
         'enabled': True,
         'order': 22
+    },
+    'ln24': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/ln24.png',
+        'fanart': 'channels/be/ln24_fanart.jpg',
+        'module': 'resources.lib.channels.be.ln24',
+        'm3u_group': 'Belgique fr',
+        'enabled': True,
+        'order': 23
     }
 }
