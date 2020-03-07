@@ -1063,6 +1063,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=a
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/ab3.png" group-title="Belgium",AB3
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=ab3&item_module=resources.lib.channels.be.abbe&item_dict={}
 
+##	LN24
+##	ln24
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/ln24.png" group-title="Belgium",LN24
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=ln24&item_module=resources.lib.channels.be.ln24&item_dict={}
+
 
 
 # Japan
