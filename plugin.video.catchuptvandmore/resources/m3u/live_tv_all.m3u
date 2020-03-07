@@ -528,6 +528,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=f
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/rtl.png" group-title="France",RTL
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=rtl&item_module=resources.lib.channels.fr.rtl&item_dict={}
 
+##	Europe 1
+##	europe1
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/fr/europe1.png" group-title="France",Europe 1
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=europe1&item_module=resources.lib.channels.fr.europe1&item_dict={}
+
 
 
 # Switzerland

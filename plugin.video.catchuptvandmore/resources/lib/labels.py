@@ -722,6 +722,8 @@ def save_labels_in_mem_storage():
         'RTL',
         'courses':
         'M6 Courses (6play)',
+        'europe1':
+        'Europe 1',
 
         # Japan channels / live TV
         'nhknews':
