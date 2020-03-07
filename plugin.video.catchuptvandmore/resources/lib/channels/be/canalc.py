@@ -133,8 +133,8 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
             item.label = video_title
             item.art['thumb'] = video_image
             item.set_callback(get_video_url,
-                            item_id=item_id,
-                            video_url=video_url)
+                              item_id=item_id,
+                              video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 

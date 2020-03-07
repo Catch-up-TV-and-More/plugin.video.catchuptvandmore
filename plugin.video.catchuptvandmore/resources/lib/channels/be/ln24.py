@@ -55,5 +55,5 @@ def live_entry(plugin, item_id, **kwargs):
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    return  re.compile(
+    return re.compile(
         r'source src\=\"(.*?)\"').findall(resp.text)[0]
