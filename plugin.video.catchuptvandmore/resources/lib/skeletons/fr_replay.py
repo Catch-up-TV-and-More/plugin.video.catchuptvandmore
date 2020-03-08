@@ -325,22 +325,6 @@ menu = {
         'enabled': True,
         'order': 44
     },
-    'studio-4': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/fr/studio4.png',
-        'fanart': 'channels/fr/studio4_fanart.jpg',
-        'module': 'resources.lib.channels.fr.nouvellesecritures',
-        'enabled': True,
-        'order': 45
-    },
-    'irl': {
-        'callback': 'replay_bridge',
-        'thumb': 'channels/fr/irl.png',
-        'fanart': 'channels/fr/irl_fanart.jpg',
-        'module': 'resources.lib.channels.fr.nouvellesecritures',
-        'enabled': True,
-        'order': 46
-    },
     'seasons': {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/seasons.png',

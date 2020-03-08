@@ -140,7 +140,7 @@ def list_videos(plugin, item_id, next_url, **kwargs):
     for video_data in root.iterfind(".//a"):
         video_title = video_data.find(".//div[@class='capsule-text']/p").text.strip()
         video_image = video_data.find(".//img").get('data-src')
-        video_url = URL_ROOT_EDUCATION + video_data.get('href') 
+        video_url = URL_ROOT_EDUCATION + video_data.get('href')
 
         item = Listitem()
         item.label = video_title

@@ -584,10 +584,6 @@ def save_labels_in_mem_storage():
         'TV Breizh',
         'ushuaiatv':
         'Ushuaïa TV',
-        'studio-4':
-        'Studio 4 (francetv)',
-        'irl':
-        'IRL (francetv)',
         'seasons':
         'Seasons',
         'comedie':
