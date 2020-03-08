@@ -330,6 +330,10 @@ msgctxt "#30169"
 msgid "Enable Subtitle if present in the content"
 msgstr "Activeer ondertiteling wanneer beschikbaar"
 
+msgctxt "#30170"
+msgid "CBC: Choose region"
+msgstr "CBC : Kies regio"
+
 
 # Download (from 30200 to 30239)
 

@@ -81,5 +81,19 @@ menu = {
         'module': 'resources.lib.channels.ca.telemag',
         'enabled': True,
         'order': 9
+    },
+    'cbc': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/ca/cbc.png',
+        'fanart': 'channels/ca/cbc_fanart.jpg',
+        'module': 'resources.lib.channels.ca.cbc',
+        'available_languages': [
+            'Ottawa', 'Montreal', 'Charlottetown', 'Fredericton',
+            'Halifax', 'Windsor', 'Yellowknife', 'Winnipeg',
+            'Regina', 'Calgary', 'Edmonton', 'Vancouver',
+            'Toronto', 'St. John\'s'
+        ],
+        'enabled': True,
+        'order': 6
     }
 }

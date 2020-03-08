@@ -456,6 +456,9 @@ def save_labels_in_mem_storage():
         'Télé-Mag',
         'noovo':
         'NOOVO',
+        'cbc':
+        'CBC (' +
+        utils.ensure_unicode(Script.setting['cbc.language']) + ')',
 
         # Switzerland channels / live TV
         'rts':

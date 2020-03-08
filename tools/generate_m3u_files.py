@@ -99,7 +99,8 @@ MANUAL_LABELS = {
     'rt': 'RT',
     'tvp3': 'TVP 3',
     'realmadridtv': 'Realmadrid TV',
-    'icitele': 'ICI Télé'
+    'icitele': 'ICI Télé',
+    'cbc': 'CBC'
 }
 
 
