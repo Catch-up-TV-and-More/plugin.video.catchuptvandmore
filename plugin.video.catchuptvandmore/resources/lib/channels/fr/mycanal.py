@@ -474,7 +474,7 @@ def get_video_url(plugin,
         quality_value = ''
         for stream_datas in value_datas_jsonparser["available"]:
             if 'Widevine' in stream_datas["drmType"]:
-                comMode_value =  stream_datas['comMode']
+                comMode_value = stream_datas['comMode']
                 contentId_value = stream_datas['contentId']
                 distMode_value = stream_datas['distMode']
                 distTechnology_value = stream_datas['distTechnology']
