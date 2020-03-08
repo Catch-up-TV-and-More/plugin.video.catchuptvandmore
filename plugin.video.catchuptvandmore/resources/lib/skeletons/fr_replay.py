@@ -397,11 +397,11 @@ menu = {
         'enabled': True,
         'order': 53
     },
-    'francetveducation': {
+    'lumni': {
         'callback': 'replay_bridge',
-        'thumb': 'channels/fr/francetveducation.png',
-        'fanart': 'channels/fr/francetveducation_fanart.jpg',
-        'module': 'resources.lib.channels.fr.francetveducation',
+        'thumb': 'channels/fr/lumni.png',
+        'fanart': 'channels/fr/lumni_fanart.jpg',
+        'module': 'resources.lib.channels.fr.lumni',
         'enabled': True,
         'order': 54
     },

@@ -602,8 +602,8 @@ def save_labels_in_mem_storage():
         'INFOSPORT+',
         'gameone':
         'Game One',
-        'francetveducation':
-        'France TV Education (francetv)',
+        'lumni':
+        'Lumni (francetv)',
         'gong':
         'Gong',
         'onzeo':
