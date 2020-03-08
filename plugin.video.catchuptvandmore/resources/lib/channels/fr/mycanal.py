@@ -524,43 +524,42 @@ def get_video_url(plugin,
             jsonparser_stream_datas['@medias'], headers=headers)
         jsonparser_real_stream_datas = json.loads(
             resp_real_stream_datas.text)
-        jsonparser_real_stream_datas = jsonparser_real_stream_datas
-        # item = Listitem()
-        # item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
-        # item.label = get_selected_item_label()
-        # item.art.update(get_selected_item_art())
-        # item.info.update(get_selected_item_info())
-        # item.property['inputstreamaddon'] = 'inputstream.adaptive'
-        # item.property['inputstream.adaptive.manifest_type'] = 'ism'
-        # item.property[
-        #     'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        # value_pass_token = 'PASS Token="%s"' % pass_token
-        # headers2 = {
-        #     'Accept':
-        #     'application/json, text/plain, */*',
-        #     'Authorization':
-        #     value_pass_token,
-        #     'Content-Type':
-        #     'text/plain',
-        #     'User-Agent':
-        #     web_utils.get_random_ua(),
-        #     'Origin':
-        #     'https://www.mycanal.fr',
-        #     'XX-DEVICE':
-        #     'pc %s' % device_id,
-        #     'XX-DOMAIN':
-        #     'cpfra',
-        #     'XX-OPERATOR':
-        #     'pc',
-        #     'XX-Profile-Id':
-        #     '0',
-        #     'XX-SERVICE':
-        #     'mycanal',
-        # }
-        # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
-        # item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|R{SSM}|' % urlencode(headers2) # (TODO https://github.com/peak3d/inputstream.adaptive/issues/267)
-        # return item
 
+        item = Listitem()
+        item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
+        item.label = get_selected_item_label()
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'ism'
+        item.property[
+            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        value_pass_token = 'PASS Token="%s"' % pass_token
+        headers2 = {
+            'Accept':
+            'application/json, text/plain, */*',
+            'Authorization':
+            value_pass_token,
+            'Content-Type':
+            'text/plain',
+            'User-Agent':
+            web_utils.get_random_ua(),
+            'Origin':
+            'https://www.mycanal.fr',
+            'XX-DEVICE':
+            'pc %s' % device_id,
+            'XX-DOMAIN':
+            'cpfra',
+            'XX-OPERATOR':
+            'pc',
+            'XX-Profile-Id':
+            '0',
+            'XX-SERVICE':
+            'mycanal',
+        }
+        # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
+        item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|R{SSM}|' % urlencode(headers2)
+        # return item
         Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
                       Script.NOTIFY_INFO)
         return False
