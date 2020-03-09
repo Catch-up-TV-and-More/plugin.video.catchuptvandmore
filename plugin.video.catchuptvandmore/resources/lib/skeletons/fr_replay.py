@@ -652,5 +652,13 @@ menu = {
         'module': 'resources.lib.channels.fr.6play',
         'enabled': True,
         'order': 119
+    },
+    '100foot': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/100foot.png',
+        'fanart': 'channels/fr/100foot_fanart.jpg',
+        'module': 'resources.lib.channels.fr.6play',
+        'enabled': True,
+        'order': 121
     }
 }

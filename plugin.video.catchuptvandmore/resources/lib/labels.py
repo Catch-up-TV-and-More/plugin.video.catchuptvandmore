@@ -725,6 +725,8 @@ def save_labels_in_mem_storage():
         'M6 Courses (6play)',
         'europe1':
         'Europe 1',
+        '100foot':
+        '100% Foot (6play)',
 
         # Japan channels / live TV
         'nhknews':

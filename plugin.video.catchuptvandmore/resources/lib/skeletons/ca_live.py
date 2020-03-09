@@ -82,6 +82,14 @@ menu = {
         'enabled': True,
         'order': 9
     },
+    'noovo': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/ca/noovo.png',
+        'fanart': 'channels/ca/noovo_fanart.jpg',
+        'module': 'resources.lib.channels.ca.noovo',
+        'enabled': True,
+        'order': 10
+    },
     'cbc': {
         'callback': 'live_bridge',
         'thumb': 'channels/ca/cbc.png',
@@ -94,6 +102,6 @@ menu = {
             'Toronto', 'St. John\'s'
         ],
         'enabled': True,
-        'order': 6
+        'order': 11
     }
 }

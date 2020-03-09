@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.18~beta06"
+       version="0.2.18~beta07"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -56,6 +56,8 @@
 [Rename/Fix] Catch-up TV - Lumni (FR) - Previously FranceTV Education
 [Remove] Catch-up TV - IRL and Studio 4 (FR) - Contents are available in France TV Slash
 [Add] Live TV - CBC (CA) (Ottawa|Montreal|Charlottetown|Fredericton|Halifax|Windsor|Yellowknife|Winnipeg|Regina|Calgary|Edmonton|Vancouver|Toronto|St. John's)
+[Add] Catch-up TV - 100% Foot - 6play (FR)
+[Add] Live TV - NOVOO (CA)
     </news>
     <assets>
       <icon>icon.png</icon>

@@ -799,6 +799,6 @@ menu = {
         'module': 'resources.lib.channels.fr.europe1',
         'm3u_group': 'Radio',
         'enabled': True,
-        'order': 119
+        'order': 120
     }
 }
