@@ -263,7 +263,7 @@ def vpn_item_callback(plugin):
         elif db['status'] == "connected":
             disconnect_openvpn()
         db.flush()
-        xbmc.executebuiltin('XBMC.Container.Refresh()')
+        xbmc.executebuiltin('Container.Refresh()')
 
 
 def add_vpn_context(item):

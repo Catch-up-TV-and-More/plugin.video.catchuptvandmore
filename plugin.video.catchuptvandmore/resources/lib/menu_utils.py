@@ -324,7 +324,7 @@ def move_item(plugin, direction, item_id, menu_id):
             item_to_swap_id = item_to_swap[1]
             set_item_order(item_to_move_id, menu_id, item_to_swap_order)
             set_item_order(item_to_swap_id, menu_id, item_order)
-            xbmc.executebuiltin('XBMC.Container.Refresh()')
+            xbmc.executebuiltin('Container.Refresh()')
             break
 
 
@@ -345,7 +345,7 @@ def hide_item(plugin, item_id, menu_id):
         plugin.setting['show_hidden_items_information'] = False
 
     set_item_visibility(item_id, menu_id, True)
-    xbmc.executebuiltin('XBMC.Container.Refresh()')
+    xbmc.executebuiltin('Container.Refresh()')
 
 
 """Settings callback functions

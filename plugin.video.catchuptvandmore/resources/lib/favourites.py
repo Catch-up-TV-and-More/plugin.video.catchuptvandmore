@@ -221,7 +221,7 @@ def rename_favourite_item(plugin, item_hash):
     fav_dict[item_hash]['params']['_title_'] = item_label
     fav_dict[item_hash]['info']['title'] = item_label
     save_fav_dict_in_json(fav_dict)
-    xbmc.executebuiltin('XBMC.Container.Refresh()')
+    xbmc.executebuiltin('Container.Refresh()')
 
 
 @Script.register
@@ -250,7 +250,7 @@ def remove_favourite_item(plugin, item_hash):
         item_hash = item[1]
         fav_dict[item_hash]['params']['order'] = k
     save_fav_dict_in_json(fav_dict)
-    xbmc.executebuiltin('XBMC.Container.Refresh()')
+    xbmc.executebuiltin('Container.Refresh()')
 
 
 @Script.register
@@ -289,7 +289,7 @@ def move_favourite_item(plugin, direction, item_hash):
             fav_dict[item_to_move_id]['params']['order'] = item_to_swap_order
             fav_dict[item_to_swap_id]['params']['order'] = item_to_move_order
             save_fav_dict_in_json(fav_dict)
-            xbmc.executebuiltin('XBMC.Container.Refresh()')
+            xbmc.executebuiltin('Container.Refresh()')
             break
 
     return False
