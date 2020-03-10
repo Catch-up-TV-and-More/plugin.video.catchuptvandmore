@@ -43,7 +43,7 @@ from kodi_six import xbmcgui
 
 DESIRED_QUALITY = Script.setting['quality']
 
-URL_LIVE_DATAS = 'http://indalo.mediaset.es/mmc-player/api/mmc/v1/%s/live/flash.json'
+URL_LIVE_DATAS = 'http://indalo.mediaset.es/mmc-player/api/mmc/v1/%s/live/html5.json'
 # channel name
 
 URL_LIVE_STREAM = 'https://pubads.g.doubleclick.net/ssai/event/%s/streams'

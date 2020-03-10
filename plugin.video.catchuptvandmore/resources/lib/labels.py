@@ -876,6 +876,20 @@ def save_labels_in_mem_storage():
         'TVP Poland IN',
 
         # Spanish channels / live TV
+        'telecinco':
+        'Telecinco',
+        'cuatro':
+        'Cuatro',
+        'fdf':
+        'Factoria de Ficcion',
+        'boing':
+        'Boing',
+        'energy':
+        'Energy TV',
+        'divinity':
+        'Divinity',
+        'bemad':
+        'Be Mad',
         'realmadridtv':
         'Realmadrid TV (' + Script.setting['realmadridtv.language'] + ')',
         'paramountchannel_es':
