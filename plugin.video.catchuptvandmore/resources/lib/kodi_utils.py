@@ -232,6 +232,8 @@ def get_module_in_url(base_url):
 def import_needed_module():
     """Import needed module according to the Kodi base URL and query string
 
+    TODO: Remove this import 'hack' when CodeQuick 0.9.11 will be released
+
     """
 
     modules_to_import = [get_module_in_url(sys.argv[0])]
