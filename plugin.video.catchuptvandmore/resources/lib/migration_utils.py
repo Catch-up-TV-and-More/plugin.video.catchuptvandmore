@@ -31,7 +31,6 @@ import importlib
 from builtins import str
 from builtins import range
 from kodi_six import xbmcvfs
-import xml.etree.ElementTree as ET
 
 
 from codequick import storage, Script, listing
@@ -84,11 +83,6 @@ def migrate_old_menus_settings(menus_settings_fp):
     if xbmcvfs.exists(menus_settings_fp):
         return
 
-    # We directly read the XML setting file (faster than 'xbmcaddon.Addon().getSetting(s)')
-    addon_settings_fp = os.path.join(Script.get_info('profile'), "settings.xml")
-    if not xbmcvfs.exists(addon_settings_fp):
-        return
-
     Script.log('Start item settings migration to json file')
     j = {}
 
@@ -126,48 +120,32 @@ def migrate_old_menus_settings(menus_settings_fp):
         "cn_replay"
     ]
 
-    tree = ET.parse(addon_settings_fp)
-    old_settings = {}
-    for elem in tree.findall('setting'):
-        if 'id' in elem.attrib:
-            setting_id = elem.attrib['id']
-            if 'value' in elem.attrib:
-                # Kodi 17 case
-                setting_value = elem.attrib['value']
-            else:
-                # Kodi 18 and 19 case
-                setting_value = elem.text
-            # try:
-            #     print('Setting: "{}" --> "{}"'.format(setting_id, setting_value))
-            # except Exception:
-            #     pass
-            old_settings[setting_id] = setting_value
-
     for skeleton in skeletons:
         current_menu = importlib.import_module('resources.lib.skeletons.' +
                                                skeleton).menu
-        for setting_id, setting_value in old_settings.items():
-            order = False
-            if '.order' in setting_id:
-                setting_id = setting_id.split('.')[0]
-                order = True
-            if setting_id in current_menu:
-                item_infos = current_menu[setting_id]
-                if setting_value != "":
-                    if order:
-                        if item_infos['order'] != int(setting_value):
-                            if skeleton not in j:
-                                j[skeleton] = {}
-                            if setting_id not in j[skeleton]:
-                                j[skeleton][setting_id] = {}
-                            j[skeleton][setting_id]['order'] = int(setting_value)
-                    else:
-                        if setting_value.lower() == "false" and item_infos['enabled'] is True:
-                            if skeleton not in j:
-                                j[skeleton] = {}
-                            if setting_id not in j[skeleton]:
-                                j[skeleton][setting_id] = {}
-                            j[skeleton][setting_id]['hidden'] = True
+
+        for item_id, item_infos in current_menu.items():
+            # Migrate old order
+            old_order = Script.setting.get_string(item_id + '.order')
+            try:
+                old_order = int(old_order)
+                if item_infos['order'] != old_order:
+                    if skeleton not in j:
+                        j[skeleton] = {}
+                    if item_id not in j[skeleton]:
+                        j[skeleton][item_id] = {}
+                    j[skeleton][item_id]['order'] = old_order
+            except Exception:
+                pass
+
+            # Migrate old visibility
+            old_visibility = Script.setting.get_string(item_id)
+            if old_visibility.lower() == 'false' and item_infos['enabled'] is True:
+                if skeleton not in j:
+                    j[skeleton] = {}
+                if item_id not in j[skeleton]:
+                    j[skeleton][item_id] = {}
+                j[skeleton][item_id]['hidden'] = True
 
     # Save new item settings json
     with open(menus_settings_fp, 'w') as f:
