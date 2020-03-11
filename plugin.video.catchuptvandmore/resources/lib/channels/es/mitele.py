@@ -149,9 +149,9 @@ def list_sub_programs(plugin, item_id, program_url, **kwargs):
             item = Listitem()
             item.label = sub_program_title
             item.set_callback(list_videos,
-                            item_id=item_id,
-                            sub_program_part_url=sub_program_part_url,
-                            sub_program_id=sub_program_id)
+                              item_id=item_id,
+                              sub_program_part_url=sub_program_part_url,
+                              sub_program_id=sub_program_id)
             item_post_treatment(item)
             yield item
 
@@ -187,7 +187,6 @@ def list_videos(plugin, item_id, sub_program_part_url, sub_program_id, **kwargs)
                           content_id=content_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
-
 
 
 @Resolver.register
@@ -231,9 +230,7 @@ def get_video_url(plugin,
     }
     resp4 = session.post(json_parser2["cerbero"],
                          json=payload,
-                         headers={
-                             'User-Agent': web_utils.get_random_ua()
-                         },
+                         headers={'User-Agent': web_utils.get_random_ua()},
                          max_age=-1)
     json_parser4 = json.loads(resp4.text)
     return url_stream + '?' + json_parser4["tokens"]["2"]["cdn"]

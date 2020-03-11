@@ -82,10 +82,10 @@ menu = {
         'enabled': True,
         'order': 9
     },
-    'noovo': {
+    'v_noovo': {
         'callback': 'live_bridge',
-        'thumb': 'channels/ca/noovo.png',
-        'fanart': 'channels/ca/noovo_fanart.jpg',
+        'thumb': 'channels/ca/v_noovo.png',
+        'fanart': 'channels/ca/v_noovo_fanart.jpg',
         'module': 'resources.lib.channels.ca.noovo',
         'enabled': True,
         'order': 10
