@@ -222,7 +222,7 @@ def get_video_url(plugin,
     resp3 = session.get(URL_MAB, params=datas)
     json_parser3 = json.loads(resp3.text)
 
-    session.get(json_parser2["cerbero"] + '/geo')
+    session.get(json_parser2["cerbero"] + '/geo', headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
 
     payload = {
         'bbx': json_parser2["bbx"],

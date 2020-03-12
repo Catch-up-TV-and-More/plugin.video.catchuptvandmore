@@ -73,10 +73,10 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=n
 #EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/telemag.png" group-title="Canada",Télé-Mag
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=telemag&item_module=resources.lib.channels.ca.telemag&item_dict={}
 
-##	V (NOOVO)
-##	v_noovo
-#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/v_noovo.png" group-title="Canada",V (NOOVO)
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=v_noovo&item_module=resources.lib.channels.ca.noovo&item_dict={}
+##	V Télé
+##	vtele
+#EXTINF:-1 tvg-id="" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/ca/vtele.png" group-title="Canada",V Télé
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=vtele&item_module=resources.lib.channels.ca.noovo&item_dict={}
 
 ##	CBC Ottawa
 ##	cbc

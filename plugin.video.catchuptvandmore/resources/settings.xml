@@ -81,6 +81,9 @@
             <!-- Chinese channels -->
             <setting label="30093" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/menu_utils/unmask_items/?menu_id=cn_live)"/>
 
+            <!-- Cameroon channels -->
+            <setting label="30094" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/menu_utils/unmask_items/?menu_id=cm_live)"/>
+
        <!-- Unmask replay TV channels -->
         <setting label="30020" type="lsep" />
 
@@ -125,6 +128,9 @@
 
             <!-- Chinese channels -->
             <setting label="30093" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/menu_utils/unmask_items/?menu_id=cn_replay)"/>
+
+            <!-- Cameroon channels -->
+            <setting label="30094" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/menu_utils/unmask_items/?menu_id=cm_replay)"/>
 
     </category>
     <!-- Menus -->

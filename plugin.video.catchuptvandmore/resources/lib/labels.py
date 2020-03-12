@@ -138,6 +138,10 @@ def save_labels_in_mem_storage():
         30063,
         'cn_live':
         30063,
+        'cm_replay':
+        30064,
+        'cm_live':
+        30064,
         'French channels':
         30080,
         'Belgian channels':
@@ -166,6 +170,8 @@ def save_labels_in_mem_storage():
         30092,
         'Chinese channels':
         30093,
+        'Cameroon channels':
+        30094,
 
         # Settings again
         'Video quality':
@@ -459,8 +465,8 @@ def save_labels_in_mem_storage():
         'cbc':
         'CBC (' +
         utils.ensure_unicode(Script.setting['cbc.language']) + ')',
-        'v_noovo':
-        'V (NOOVO)',
+        'vtele':
+        'V Télé',
 
         # Switzerland channels / live TV
         'rts':
@@ -1000,6 +1006,12 @@ def save_labels_in_mem_storage():
         'CCTV-14 少儿',
         'cctv15':
         'CCTV-15 音乐',
+
+        # Cameroon channels / live TV
+        'crtv':
+        'CRTV',
+        'crtvnews':
+        'CRTV News',
 
         # Websites
         'allocine':

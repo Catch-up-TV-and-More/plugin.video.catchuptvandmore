@@ -184,6 +184,10 @@ msgctxt "#30063"
 msgid "China"
 msgstr "Chine"
 
+msgctxt "#30064"
+msgid "Cameroon"
+msgstr "Cameroun"
+
 
 # Channels (from 30080 to 30129)
 
@@ -243,6 +247,9 @@ msgctxt "#30093"
 msgid "Chinese channels"
 msgstr "Chaînes chinoises"
 
+msgctxt "#30094"
+msgid "Cameroon channels"
+msgstr "Chaînes Camerounaise"
 
 # Websites (from 30130 to 30149)
 
