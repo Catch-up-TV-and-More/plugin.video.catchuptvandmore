@@ -123,21 +123,28 @@ def get_labels_dict():
     return eval(labels_dict_s)
 
 
-# Get image path/url
 def get_item_media_path(item_media_path):
+    """Get full path or URL of an item_media
+
+    Args:
+        item_media_path (str or list): Partial media path of the item (e.g. channels/fr/tf1.png)
+    Returns:
+        str: Full path or URL of the item_pedia
+    """
     full_path = ''
 
     # Local image in ressources/media folder
     if type(item_media_path) is list:
-        full_path = os.path.join("..", "media", *(item_media_path))
+        full_path = os.path.join(Script.get_info("path"), "resources", "media",
+                                 *(item_media_path))
 
     # Remote image with complete URL
     elif 'http' in item_media_path:
         full_path = item_media_path
 
-    # Remote image on our images repo
+    # Image in our resource.images add-on
     else:
-        full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
+        full_path = 'resource://resource.images.catchuptvandmore/' + item_media_path
 
     return full_path
 
