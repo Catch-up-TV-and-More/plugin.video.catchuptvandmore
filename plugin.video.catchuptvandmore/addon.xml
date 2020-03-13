@@ -61,6 +61,7 @@
 [Add] Live TV - V Télé (CA)
 [ReAdd] Live TV - MiTele (Télécinco, Cuatro, ...) (ES)
 [Add] Live TV - CRTV and CRTV News (CM)
+[Fix] Catch-up TV - Paramount Channel (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
