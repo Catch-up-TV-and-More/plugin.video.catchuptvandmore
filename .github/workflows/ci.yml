@@ -1,3 +1,5 @@
+name: CI
+
 # Controls when the action will run.
 on:
   push:
