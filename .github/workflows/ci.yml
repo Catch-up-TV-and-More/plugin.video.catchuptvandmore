@@ -79,7 +79,7 @@ jobs:
   
   # Test the plugin with our Kodi simulator
   kodi-simulator-1:
-    name: "Explore random replay channel #1"
+    name: "Explore random replay channel"
     needs: update-repo
     runs-on: ubuntu-latest
     steps:
@@ -94,25 +94,9 @@ jobs:
           cd .. && wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
           cd catchuptvandmore-test-master && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
   
-  kodi-simulator-2:
-    name: "Explore random replay channel #2"
-    needs: update-repo
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - name: Start catchuptvandmore-test with test_modules config
-        run: |
-          pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
-          cd .. && wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
-          cd catchuptvandmore-test-master && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
- 
   kodi-simulator-3:
     name: "Explore random website"
-    needs: update-repo
+    needs: kodi-simulator-1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
