@@ -92,7 +92,7 @@ jobs:
         run: |
           pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
           cd .. && wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
-          cd catchuptvandmore-test-master && /main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
+          cd catchuptvandmore-test-master && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
   
   kodi-simulator-2:
     name: "Explore random replay channel #2"
