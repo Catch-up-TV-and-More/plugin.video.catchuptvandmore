@@ -93,6 +93,33 @@ menu = {
         'enabled': True,
         'order': 8
     },
+    'laune': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/laune.jpg',
+        'fanart': 'channels/be/laune_fanart.jpg',
+        'module': 'resources.lib.channels.be.rtbf',
+        'xmltv_id': 'C164.api.telerama.fr',
+        'enabled': True,
+        'order': 9
+    },
+    'ladeux': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/ladeux.jpg',
+        'fanart': 'channels/be/ladeux_fanart.jpg',
+        'module': 'resources.lib.channels.be.rtbf',
+        'xmltv_id': 'C187.api.telerama.fr',
+        'enabled': True,
+        'order': 10
+    },
+    'latrois': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/latrois.jpg',
+        'fanart': 'channels/be/latrois_fanart.jpg',
+        'module': 'resources.lib.channels.be.rtbf',
+        'xmltv_id': 'C892.api.telerama.fr',
+        'enabled': True,
+        'order': 11
+    },
     'tvlux': {
         'callback': 'live_bridge',
         'thumb': 'channels/be/tvlux.png',
@@ -100,7 +127,7 @@ menu = {
         'module': 'resources.lib.channels.be.tvlux',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 9
+        'order': 12
     },
     'rtl_info': {
         'callback': 'live_bridge',
@@ -109,7 +136,7 @@ menu = {
         'module': 'resources.lib.channels.be.rtlplaybe',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 10
+        'order': 13
     },
     'bel_rtl': {
         'callback': 'live_bridge',
@@ -118,7 +145,7 @@ menu = {
         'module': 'resources.lib.channels.be.rtlplaybe',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 11
+        'order': 14
     },
     'contact': {
         'callback': 'live_bridge',
@@ -127,7 +154,7 @@ menu = {
         'module': 'resources.lib.channels.be.rtlplaybe',
         'm3u_group': 'Belgique fr Radio',
         'enabled': True,
-        'order': 12
+        'order': 15
     },
     'bx1': {
         'callback': 'live_bridge',
@@ -136,7 +163,7 @@ menu = {
         'module': 'resources.lib.channels.be.bx1',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 13
+        'order': 16
     },
     'een': {
         'callback': 'live_bridge',
@@ -146,7 +173,7 @@ menu = {
         'xmltv_id': 'C23.api.telerama.fr',
         'm3u_group': 'België nl',
         'enabled': True,
-        'order': 14
+        'order': 17
     },
     'canvas': {
         'callback': 'live_bridge',
@@ -155,7 +182,7 @@ menu = {
         'module': 'resources.lib.channels.be.vrt',
         'm3u_group': 'België nl',
         'enabled': True,
-        'order': 15
+        'order': 18
     },
     'ketnet': {
         'callback': 'live_bridge',
@@ -165,7 +192,7 @@ menu = {
         'xmltv_id': 'C1280.api.telerama.fr',
         'm3u_group': 'België nl',
         'enabled': True,
-        'order': 16
+        'order': 19
     },
     'nrjhitstvbe': {
         'callback': 'live_bridge',
@@ -174,7 +201,7 @@ menu = {
         'module': 'resources.lib.channels.be.nrjhitstvbe',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 17
+        'order': 20
     },
     'rtl_sport': {
         'callback': 'live_bridge',
@@ -183,7 +210,7 @@ menu = {
         'module': 'resources.lib.channels.be.rtlplaybe',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 18
+        'order': 21
     },
     'tvcom': {
         'callback': 'live_bridge',
@@ -192,7 +219,7 @@ menu = {
         'module': 'resources.lib.channels.be.tvcom',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 19
+        'order': 22
     },
     'canalc': {
         'callback': 'live_bridge',
@@ -201,7 +228,7 @@ menu = {
         'module': 'resources.lib.channels.be.canalc',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 20
+        'order': 23
     },
     'abxplore': {
         'callback': 'live_bridge',
@@ -210,7 +237,7 @@ menu = {
         'module': 'resources.lib.channels.be.abbe',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 21
+        'order': 24
     },
     'ab3': {
         'callback': 'live_bridge',
@@ -219,7 +246,7 @@ menu = {
         'module': 'resources.lib.channels.be.abbe',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 22
+        'order': 25
     },
     'ln24': {
         'callback': 'live_bridge',
@@ -228,6 +255,6 @@ menu = {
         'module': 'resources.lib.channels.be.ln24',
         'm3u_group': 'Belgique fr',
         'enabled': True,
-        'order': 23
+        'order': 26
     }
 }
