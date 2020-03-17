@@ -39,7 +39,7 @@ jobs:
         run: |
           pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
           cd .. && wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
-          cd catchuptvandmore-test-master && ./main.py -c configs/7_test_modules.json
+          cd catchuptvandmore-test-master && python main.py -c configs/7_test_modules.json
   
   # Check the plugin with kodi-addon-checker
   kodi-addon-checker:
@@ -92,9 +92,9 @@ jobs:
         run: |
           pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
           cd .. && wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
-          cd catchuptvandmore-test-master && ./main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
+          cd catchuptvandmore-test-master && python main.py -c configs/5_explore_random_replay_channel_random_country.json &> log.log ; tail -n 1000 log.log
   
-  kodi-simulator-3:
+  kodi-simulator-2:
     name: "Explore random website"
     needs: kodi-simulator-1
     runs-on: ubuntu-latest
@@ -108,4 +108,4 @@ jobs:
         run: |
           pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
           cd .. && wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
-          cd catchuptvandmore-test-master && ./main.py -c configs/6_explore_random_website.json &> log.log ; tail -n 1000 log.log
+          cd catchuptvandmore-test-master && python main.py -c configs/6_explore_random_website.json &> log.log ; tail -n 1000 log.log
