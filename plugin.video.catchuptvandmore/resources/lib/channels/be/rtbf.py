@@ -62,6 +62,10 @@ URL_ROOT_IMAGE_RTBF = 'https://ds1.static.rtbf.be'
 URL_JSON_LIVE = 'https://www.rtbf.be/api/partner/generic/live/' \
                 'planninglist?target_site=media&origin_site=media&category_id=0&' \
                 'start_date=&offset=0&limit=15&partner_key=%s&v=8'
+
+URL_JSON_LIVE_CHANNEL = 'http://www.rtbf.be/api/partner/generic/live/' \
+                        'planningcurrent?v=8&channel=%s&target_site=mediaz&partner_key=%s'
+
 # partener_key
 
 URL_ROOT_LIVE = 'https://www.rtbf.be/auvio/direct#/'
@@ -371,6 +375,41 @@ def multi_live_entry(plugin, item_id, **kwargs):
     First executed function after replay_bridge
     """
     return list_lives(plugin, item_id)
+
+def live_entry(plugin, item_id, **kwargs):
+    """
+    First executed function after replay_bridge
+    """
+    return set_live_url(plugin, item_id, item_id.upper())
+
+@Resolver.register
+def set_live_url(plugin, item_id, video_id, **kwargs):
+
+    resp = urlquick.get(URL_JSON_LIVE_CHANNEL % (item_id, get_partener_key()), max_age=-1)
+    json_parser = json.loads(resp.text)
+
+    if "url_streaming" in json_parser:
+        live_url = json_parser["url_streaming"]["url_hls"]
+    live_channel_title = json_parser["channel"]["label"]
+    start_time_value = format_hours(json_parser["start_date"])
+    end_time_value = format_hours(json_parser["end_date"])
+    date_value = format_day(json_parser["start_date"])
+    live_title = live_channel_title + " - " + json_parser["title"]
+    if json_parser['subtitle']:
+        live_title += " - " + json_parser['subtitle']
+    live_plot = 'Début le %s à %s (CET)' % (date_value, start_time_value) + \
+        '\n\r' + 'Fin le %s à %s (CET)' % (date_value, end_time_value) + '\n\r' + \
+        'Accessibilité: ' + json_parser["geolock"]["title"] + '\n\r' + \
+        json_parser["description"]
+    live_image = json_parser["images"]["illustration"]["16x9"]["1248x702"]
+
+    item = Listitem()
+    item.label = live_title
+    item.art['thumb'] = live_image
+    item.info['plot'] = live_plot
+    item.set_callback(get_live_url, item_id=item_id, live_url=live_url)
+    item_post_treatment(item, is_playable=True)
+    yield item
 
 
 @Route.register
