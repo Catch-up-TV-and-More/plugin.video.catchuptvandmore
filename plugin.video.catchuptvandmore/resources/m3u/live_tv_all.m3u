@@ -618,6 +618,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=t
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/ch/lemanbleu.png" group-title="Switzerland",Léman Bleu
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=lemanbleu&item_module=resources.lib.channels.ch.lemanbleu&item_dict={}
 
+##	Tele M1
+##	telem1
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/ch/telem1.png" group-title="Switzerland",Tele M1
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=telem1&item_module=resources.lib.channels.ch.telem1&item_dict={}
+
 
 
 # United Kingdom

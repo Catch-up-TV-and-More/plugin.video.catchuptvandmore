@@ -513,6 +513,8 @@ def save_labels_in_mem_storage():
         'Teleticino',
         'lemanbleu':
         'Léman Bleu',
+        'telem1':
+        'Tele M1',
 
         # French channels / live TV
         'tf1':
