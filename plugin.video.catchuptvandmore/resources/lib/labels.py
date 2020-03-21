@@ -279,7 +279,7 @@ def save_labels_in_mem_storage():
         30360,
         'Connect/Disconnect VPN':
         30361,
-        # delete_for_submission_stop
+        # delete_for_submission_end
 
         # Menus settings
         'Restore default order of all menus':
