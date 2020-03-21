@@ -79,7 +79,7 @@ jobs:
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'github@noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Catch-up-TV-and-More/repository.catchuptvandmore.git
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_ACTIONS_ACCESS_TOKEN }}@github.com/Catch-up-TV-and-More/repository.catchuptvandmore.git
       - name: Update all repositories
         working-directory: ./repo
         run: ./update_all_repos.sh
