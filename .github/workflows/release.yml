@@ -1,0 +1,99 @@
+name: Release
+
+on:
+  issue_comment:
+    types: created    
+
+
+jobs:
+  release:
+    name: Trigger release
+    runs-on: ubuntu-latest
+    if: github.event.comment.body == 'Trigger release' && (github.actor == 'SylvainCecchetto' || github.actor == 'wwark')
+    env: 
+     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+       - name: Set env
+         run: |
+            wget https://raw.github.com/$GITHUB_REPOSITORY/dev/plugin.video.catchuptvandmore/addon.xml -q
+            echo ::set-env name=CURRENT_DEV_VERSION::$(cat addon.xml|grep "<addon"|sed "s/.* version=\"\(.*\)\" .*/\1/")
+            echo ::set-env name=RELEASE_VERSION::$(cat addon.xml|grep "<addon"|sed "s/.* version=\"\(.*\)~.*/\1/")
+            echo ::set-env name=NEXT_DEV_VERSION::$(MINOR=$(cat addon.xml|grep "<addon"|sed "s/.* version=\"\(.*\)~.*/\1/"|cut -d. -f3) && echo "0.2.$((MINOR+1))~beta00")
+            echo ::set-env name=PLUGIN_CHANGELOG::$(cat addon.xml|sed -n '/<news>/,/<\/news>/p'|sed 's#<news>##g'|sed 's#</news>##g'|sed '/^ *$/d'|tr '\n' '@'|sed 's#@#<br />#g')
+       - name: Clone dev branch in ../dev
+         run: git clone -b dev https://github.com/$GITHUB_REPOSITORY ../dev
+       
+       - name: Clone master branch ../master
+         run: git clone -b master https://github.com/$GITHUB_REPOSITORY ../master
+       
+       - name: Update master code with dev code
+         run: |
+           rm -rf ../master/plugin.video.catchuptvandmore/
+           cp -r ../dev/plugin.video.catchuptvandmore/ ../master/plugin.video.catchuptvandmore/
+       
+       - name: Set release version on master addon.xml file
+         working-directory: ../master
+         run: sed -i "s#version=\"$CURRENT_DEV_VERSION\"#version=\"$RELEASE_VERSION\"#g" ./plugin.video.catchuptvandmore/addon.xml
+       
+       - name: Commit release on master branch
+         working-directory: ../master
+         run: |
+           git config --global user.name 'GitHub Actions'
+           git config --global user.email 'github@noreply.github.com'
+           git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
+           git add --all
+           git commit -m "Release v$RELEASE_VERSION"
+           git push origin
+       
+       - name: Create plugin zip file for Kodi
+         id: prepare_zip
+         working-directory: ../master
+         run: |
+            sed -i 's#<reuselanguageinvoker>false</reuselanguageinvoker>#<reuselanguageinvoker>true</reuselanguageinvoker>#g' plugin.video.catchuptvandmore/addon.xml
+            zip -r plugin.video.catchuptvandmore.zip plugin.video.catchuptvandmore
+            echo "::set-output name=zip_filepath::$(realpath plugin.video.catchuptvandmore.zip)"
+       
+       - name: Prepare dev branch for next beta
+         working-directory: ../dev
+         run: |
+           git config --global user.name 'GitHub Actions'
+           git config --global user.email 'github@noreply.github.com'
+           git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
+           sed -i "s#version=\"$CURRENT_DEV_VERSION\"#version=\"$NEXT_DEV_VERSION\"#g" ./plugin.video.catchuptvandmore/addon.xml
+           git add --all
+           git commit -m "Move dev to v$NEXT_DEV_VERSION"
+           git push origin
+       
+       - name: Checkout code for release
+         uses: actions/checkout@master
+       
+       - name: Prepare GitHub release
+         id: prepare_release
+         run: |
+           echo "::set-output name=tag_name::$(echo v$RELEASE_VERSION)"
+           echo "::set-output name=release_name::$(echo v$RELEASE_VERSION)"
+           echo "::set-output name=body::$(echo $PLUGIN_CHANGELOG)"
+       
+       - name: Create Release
+         id: create_release
+         uses: actions/create-release@latest
+         with:
+          tag_name: ${{ steps.prepare_release.outputs.tag_name }}
+          release_name: ${{ steps.prepare_release.outputs.release_name }}
+          body: ${{ steps.prepare_release.outputs.body }}
+          draft: false
+          prerelease: false
+       
+       - name: Upload release zip file
+         uses: actions/upload-release-asset@v1
+         with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }} 
+            asset_path: ${{ steps.prepare_zip.outputs.zip_filepath }}
+            asset_name: plugin.video.catchuptvandmore.zip
+            asset_content_type: application/zip
+        
+           
+           
+           
+           
+           
