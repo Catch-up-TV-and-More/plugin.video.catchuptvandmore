@@ -232,7 +232,7 @@ menu = {
     },
     'laune': {
         'callback': 'live_bridge',
-        'thumb': 'channels/be/laune.jpg',
+        'thumb': 'channels/be/laune.png',
         'fanart': 'channels/be/laune_fanart.jpg',
         'module': 'resources.lib.channels.be.rtbf',
         'xmltv_id': 'C164.api.telerama.fr',
@@ -241,7 +241,7 @@ menu = {
     },
     'ladeux': {
         'callback': 'live_bridge',
-        'thumb': 'channels/be/ladeux.jpg',
+        'thumb': 'channels/be/ladeux.png',
         'fanart': 'channels/be/ladeux_fanart.jpg',
         'module': 'resources.lib.channels.be.rtbf',
         'xmltv_id': 'C187.api.telerama.fr',
@@ -250,7 +250,7 @@ menu = {
     },
     'latrois': {
         'callback': 'live_bridge',
-        'thumb': 'channels/be/latrois.jpg',
+        'thumb': 'channels/be/latrois.png',
         'fanart': 'channels/be/latrois_fanart.jpg',
         'module': 'resources.lib.channels.be.rtbf',
         'xmltv_id': 'C892.api.telerama.fr',
