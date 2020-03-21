@@ -1068,6 +1068,21 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=a
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/be/ab3.png" group-title="Belgium",AB3
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=ab3&item_module=resources.lib.channels.be.abbe&item_dict={}
 
+## La Une
+## laune
+#EXTINF:-1 tvg-id="C164.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/laune.jpg" group-title="Belgium",La Une
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=laune&item_module=resources.lib.channels.be.rtbf&item_dict={}
+
+## La Deux
+## ladeux
+#EXTINF:-1 tvg-id="C187.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/ladeux.jpg" group-title="Belgium",La Deux
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=ladeux&item_module=resources.lib.channels.be.rtbf&item_dict={}
+
+## La Trois
+## latrois
+#EXTINF:-1 tvg-id="C892.api.telerama.fr" tvg-logo="https://github.com/Catch-up-TV-and-More/images/raw/master/channels/be/latrois.jpg" group-title="Belgium",La Trois
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=latrois&item_module=resources.lib.channels.be.rtbf&item_dict={}
+
 ##	LN24
 ##	ln24
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/be/ln24.png" group-title="Belgium",LN24

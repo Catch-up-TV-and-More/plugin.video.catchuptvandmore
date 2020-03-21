@@ -399,6 +399,12 @@ def save_labels_in_mem_storage():
         # Belgium channels / live TV
         'auvio':
         'RTBF Auvio',
+        'laune':
+        'La Une',
+        'ladeux':
+        'La Deux',
+        'latrois':
+        'La Trois',
         'brf':
         'BRF Mediathek',
         'rtl_tvi':

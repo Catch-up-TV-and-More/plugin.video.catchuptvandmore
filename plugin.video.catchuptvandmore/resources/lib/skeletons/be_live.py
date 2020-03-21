@@ -229,5 +229,32 @@ menu = {
         'm3u_group': 'Belgique fr',
         'enabled': True,
         'order': 23
+    },
+    'laune': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/laune.jpg',
+        'fanart': 'channels/be/laune_fanart.jpg',
+        'module': 'resources.lib.channels.be.rtbf',
+        'xmltv_id': 'C164.api.telerama.fr',
+        'enabled': True,
+        'order': 24
+    },
+    'ladeux': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/ladeux.jpg',
+        'fanart': 'channels/be/ladeux_fanart.jpg',
+        'module': 'resources.lib.channels.be.rtbf',
+        'xmltv_id': 'C187.api.telerama.fr',
+        'enabled': True,
+        'order': 25
+    },
+    'latrois': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/latrois.jpg',
+        'fanart': 'channels/be/latrois_fanart.jpg',
+        'module': 'resources.lib.channels.be.rtbf',
+        'xmltv_id': 'C892.api.telerama.fr',
+        'enabled': True,
+        'order': 26
     }
 }
