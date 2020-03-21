@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.catchuptvandmore"
        name="Catch-up TV &amp; More"
-       version="0.2.18~beta10"
+       version="0.2.18~beta11"
        provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -63,6 +63,7 @@
 [Add] Live TV - CRTV and CRTV News (CM)
 [Fix] Catch-up TV - Paramount Channel (FR)
 [Add] Live TV - Tele M1 (CH)
+[Add] Live TV - Yoopa, LCN (CA)
     </news>
     <assets>
       <icon>icon.png</icon>

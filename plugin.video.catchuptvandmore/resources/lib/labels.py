@@ -467,6 +467,10 @@ def save_labels_in_mem_storage():
         utils.ensure_unicode(Script.setting['cbc.language']) + ')',
         'vtele':
         'V Télé',
+        'lcn':
+        'LCN',
+        'yoopa':
+        'Yoopa',
 
         # Switzerland channels / live TV
         'rts':

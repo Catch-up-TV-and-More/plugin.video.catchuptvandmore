@@ -103,5 +103,21 @@ menu = {
         ],
         'enabled': True,
         'order': 11
+    },
+    'lcn': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/ca/lcn.png',
+        'fanart': 'channels/ca/lcn_fanart.jpg',
+        'module': 'resources.lib.channels.ca.tva',
+        'enabled': True,
+        'order': 12
+    },
+    'yoopa': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/ca/yoopa.png',
+        'fanart': 'channels/ca/yoopa_fanart.jpg',
+        'module': 'resources.lib.channels.ca.tva',
+        'enabled': True,
+        'order': 13
     }
 }

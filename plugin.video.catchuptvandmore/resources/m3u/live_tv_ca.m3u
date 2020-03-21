@@ -148,3 +148,13 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=c
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/ca/cbc.png" group-title="Canada",CBC St. John's
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=cbc&item_module=resources.lib.channels.ca.cbc&item_dict={"language":"St. John's"}
 
+##	LCN
+##	lcn
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/ca/lcn.png" group-title="Canada",LCN
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=lcn&item_module=resources.lib.channels.ca.tva&item_dict={}
+
+##	Yoopa
+##	yoopa
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/ca/yoopa.png" group-title="Canada",Yoopa
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=yoopa&item_module=resources.lib.channels.ca.tva&item_dict={}
+
