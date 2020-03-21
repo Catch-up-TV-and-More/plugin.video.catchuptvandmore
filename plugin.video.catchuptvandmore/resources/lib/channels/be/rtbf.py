@@ -376,11 +376,13 @@ def multi_live_entry(plugin, item_id, **kwargs):
     """
     return list_lives(plugin, item_id)
 
+
 def live_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
     return set_live_url(plugin, item_id, item_id.upper())
+
 
 @Resolver.register
 def set_live_url(plugin, item_id, video_id, **kwargs):
