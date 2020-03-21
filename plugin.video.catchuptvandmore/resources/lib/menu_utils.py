@@ -37,7 +37,9 @@ from kodi_six import xbmcvfs
 from kodi_six import xbmcgui
 
 # Local imports
+# delete_for_submission_start
 from resources.lib.vpn import add_vpn_context
+# delete_for_submission_end
 from resources.lib.kodi_utils import get_kodi_version
 import resources.lib.favourites as fav
 from resources.lib.labels import LABELS
@@ -253,8 +255,10 @@ def add_context_menus_to_item(item, item_id, item_index, menu_id, menu_len, is_p
                         item_id=item_id,
                         menu_id=menu_id)
 
+    # delete_for_submission_start
     # Connect/Disconnect VPN
     add_vpn_context(item)
+    # delete_for_submission_end
 
     # Add to add-on favourites
     item.context.script(fav.add_item_to_favourites,

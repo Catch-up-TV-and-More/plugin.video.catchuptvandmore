@@ -233,6 +233,7 @@ def save_labels_in_mem_storage():
         'RTLplay Password':
         30247,
 
+        # delete_for_submission_start
         # VPN
         'Enable VPN feature':
         30340,
@@ -278,6 +279,7 @@ def save_labels_in_mem_storage():
         30360,
         'Connect/Disconnect VPN':
         30361,
+        # delete_for_submission_stop
 
         # Menus settings
         'Restore default order of all menus':
