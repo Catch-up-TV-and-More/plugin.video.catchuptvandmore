@@ -87,7 +87,7 @@ def list_videos(plugin, item_id, **kwargs):
         if video_datas.find('.//h3') is not None:
             video_title = video_datas.find('.//h3').text
         if video_datas.find(".//span[@class='pull-left']") is not None:
-            video_title = video_title + ' - '  + video_datas.find(".//span[@class='pull-left']").text
+            video_title = video_title + ' - ' + video_datas.find(".//span[@class='pull-left']").text
         video_image = video_datas.find('.//img').get('data-src')
         video_url = URL_API + video_datas.find('.//a').get('href')
 
