@@ -45,14 +45,21 @@ jobs:
            git commit -m "Release v$RELEASE_VERSION"
            git push origin
        
-       - name: Create plugin zip file for Kodi
+       - name: Create plugin zip files for Kodi
          id: prepare_zip
          working-directory: ../master
          run: |
             sed -i 's#<reuselanguageinvoker>false</reuselanguageinvoker>#<reuselanguageinvoker>true</reuselanguageinvoker>#g' plugin.video.catchuptvandmore/addon.xml
             zip -r plugin.video.catchuptvandmore.zip plugin.video.catchuptvandmore
             echo "::set-output name=zip_filepath::$(realpath plugin.video.catchuptvandmore.zip)"
-       
+            rm plugin.video.catchuptvandmore/resources/lib/openvpn.py
+            rm plugin.video.catchuptvandmore/resources/lib/vpn.py
+            find plugin.video.catchuptvandmore -name '*.py' -exec sed -i '/# delete_for_submission_start/,/# delete_for_submission_end/d' {} \;
+            find plugin.video.catchuptvandmore -name '*.po' -exec sed -i '/# delete_for_submission_start/,/# delete_for_submission_end/d' {} \;
+            find plugin.video.catchuptvandmore -name '*.xml' -exec sed -i '/<!-- delete_for_submission_start -->/,/<!-- delete_for_submission_end -->/d' {} \;
+            zip -r plugin.video.catchuptvandmore-no-openvpn.zip plugin.video.catchuptvandmore
+            echo "::set-output name=zip_no_openvpn_filepath::$(realpath plugin.video.catchuptvandmore-no-openvpn.zip)"
+            
        - name: Prepare dev branch for next beta
          working-directory: ../dev
          run: |
@@ -90,6 +97,14 @@ jobs:
             upload_url: ${{ steps.create_release.outputs.upload_url }} 
             asset_path: ${{ steps.prepare_zip.outputs.zip_filepath }}
             asset_name: plugin.video.catchuptvandmore.zip
+            asset_content_type: application/zip
+      
+       - name: Upload no openvpn release zip file
+         uses: actions/upload-release-asset@v1
+         with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }} 
+            asset_path: ${{ steps.prepare_zip.outputs.zip_no_openvpn_filepath }}
+            asset_name: plugin.video.catchuptvandmore-no-openvpn.zip
             asset_content_type: application/zip
         
            
