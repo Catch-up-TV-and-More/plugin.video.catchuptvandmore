@@ -138,6 +138,10 @@ def save_labels_in_mem_storage():
         30063,
         'cn_live':
         30063,
+        'cm_replay':
+        30064,
+        'cm_live':
+        30064,
         'French channels':
         30080,
         'Belgian channels':
@@ -166,6 +170,8 @@ def save_labels_in_mem_storage():
         30092,
         'Chinese channels':
         30093,
+        'Cameroon channels':
+        30094,
 
         # Settings again
         'Video quality':
@@ -227,6 +233,7 @@ def save_labels_in_mem_storage():
         'RTLplay Password':
         30247,
 
+        # delete_for_submission_start
         # VPN
         'Enable VPN feature':
         30340,
@@ -272,6 +279,7 @@ def save_labels_in_mem_storage():
         30360,
         'Connect/Disconnect VPN':
         30361,
+        # delete_for_submission_end
 
         # Menus settings
         'Restore default order of all menus':
@@ -393,6 +401,12 @@ def save_labels_in_mem_storage():
         # Belgium channels / live TV
         'auvio':
         'RTBF Auvio',
+        'laune':
+        'La Une',
+        'ladeux':
+        'La Deux',
+        'latrois':
+        'La Trois',
         'brf':
         'BRF Mediathek',
         'rtl_tvi':
@@ -435,6 +449,8 @@ def save_labels_in_mem_storage():
         'ABXPLORE',
         'ab3':
         'AB3',
+        'ln24':
+        'LN24',
 
         # Canadian channels / live TV
         'tv5unis':
@@ -444,7 +460,8 @@ def save_labels_in_mem_storage():
         'tva':
         'TVA',
         'icitele':
-        'ICI Télé',
+        'ICI Télé (' +
+        utils.ensure_unicode(Script.setting['icitele.language']) + ')',
         'ntvca':
         'NTV',
         'icitoutv':
@@ -453,6 +470,15 @@ def save_labels_in_mem_storage():
         'Télé-Mag',
         'noovo':
         'NOOVO',
+        'cbc':
+        'CBC (' +
+        utils.ensure_unicode(Script.setting['cbc.language']) + ')',
+        'vtele':
+        'V Télé',
+        'lcn':
+        'LCN',
+        'yoopa':
+        'Yoopa',
 
         # Switzerland channels / live TV
         'rts':
@@ -499,6 +525,8 @@ def save_labels_in_mem_storage():
         'Teleticino',
         'lemanbleu':
         'Léman Bleu',
+        'telem1':
+        'Tele M1',
 
         # French channels / live TV
         'tf1':
@@ -581,10 +609,6 @@ def save_labels_in_mem_storage():
         'TV Breizh',
         'ushuaiatv':
         'Ushuaïa TV',
-        'studio-4':
-        'Studio 4 (francetv)',
-        'irl':
-        'IRL (francetv)',
         'seasons':
         'Seasons',
         'comedie':
@@ -599,8 +623,8 @@ def save_labels_in_mem_storage():
         'INFOSPORT+',
         'gameone':
         'Game One',
-        'francetveducation':
-        'France TV Education (francetv)',
+        'lumni':
+        'Lumni (francetv)',
         'gong':
         'Gong',
         'onzeo':
@@ -721,6 +745,10 @@ def save_labels_in_mem_storage():
         'RTL',
         'courses':
         'M6 Courses (6play)',
+        'europe1':
+        'Europe 1',
+        '100foot':
+        '100% Foot (6play)',
 
         # Japan channels / live TV
         'nhknews':
@@ -796,6 +824,8 @@ def save_labels_in_mem_storage():
         'Free Sports',
         'stv_plusone':
         'STV+1',
+        'edgesport':
+        'EDGE Sport',
 
         # International channels / live TV
         'tv5mondeafrique':
@@ -868,6 +898,20 @@ def save_labels_in_mem_storage():
         'TVP Poland IN',
 
         # Spanish channels / live TV
+        'telecinco':
+        'Telecinco',
+        'cuatro':
+        'Cuatro',
+        'fdf':
+        'Factoria de Ficcion',
+        'boing':
+        'Boing',
+        'energy':
+        'Energy TV',
+        'divinity':
+        'Divinity',
+        'bemad':
+        'Be Mad',
         'realmadridtv':
         'Realmadrid TV (' + Script.setting['realmadridtv.language'] + ')',
         'paramountchannel_es':
@@ -976,6 +1020,12 @@ def save_labels_in_mem_storage():
         'CCTV-14 少儿',
         'cctv15':
         'CCTV-15 音乐',
+
+        # Cameroon channels / live TV
+        'crtv':
+        'CRTV',
+        'crtvnews':
+        'CRTV News',
 
         # Websites
         'allocine':

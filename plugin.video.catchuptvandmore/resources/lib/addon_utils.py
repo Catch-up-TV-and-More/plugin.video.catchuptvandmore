@@ -75,9 +75,9 @@ def get_item_media_path(item_media_path):
     elif 'http' in item_media_path:
         full_path = item_media_path
 
-    # Remote image on our images repo
+    # Image in our resource.images add-on
     else:
-        full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
+        full_path = 'resource://resource.images.catchuptvandmore/' + item_media_path
 
     return utils.ensure_native_str(full_path)
 
