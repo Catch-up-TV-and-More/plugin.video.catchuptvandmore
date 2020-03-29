@@ -106,9 +106,26 @@ jobs:
             asset_path: ${{ steps.prepare_zip.outputs.zip_no_openvpn_filepath }}
             asset_name: plugin.video.catchuptvandmore-no-openvpn.zip
             asset_content_type: application/zip
-        
-           
-           
-           
-           
-           
+       
+       - name: Set up Python 3.8
+         uses: actions/setup-python@v1
+         with:
+            python-version: 3.8
+      
+       - name: Install gitpython
+         run: pip install gitpython
+         
+       - name: Clone repository.catchuptvandmore
+         run: git clone https://github.com/Catch-up-TV-and-More/repository.catchuptvandmore ../repo
+         
+       - name: Configure git
+         working-directory: ../repo
+         run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github@noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_ACTIONS_ACCESS_TOKEN }}@github.com/Catch-up-TV-and-More/repository.catchuptvandmore.git
+       
+       - name: Update all repositories
+         working-directory: ../repo
+         run: ./update_all_repos.sh
+       
