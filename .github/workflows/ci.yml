@@ -56,7 +56,7 @@ jobs:
         with:
           python-version: 3.8
       - name: Install kodi-addon-checker
-        run: pip install kodi-addon-checker
+        run: pip install kodi-addon-checker==0.0.16
       - name: Run kodi-addon-checker
         run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch ./plugin.video.catchuptvandmore
   
