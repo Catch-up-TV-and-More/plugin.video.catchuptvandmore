@@ -115,7 +115,7 @@ def get_stream_dailymotion(plugin,
     # TODO reactivate when youtubedl is fixed
     # url_dailymotion = URL_DAILYMOTION_EMBED % video_id
     # return get_stream_default(plugin, url_dailymotion, download_mode)
-    if download_mode == True:
+    if download_mode:
         return False
     url_dmotion = URL_DAILYMOTION_EMBED_2 % (video_id)
     resp = urlquick.get(url_dmotion, max_age=-1)
