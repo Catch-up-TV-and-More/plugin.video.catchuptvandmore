@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.19~beta01" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.19~beta02" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
@@ -44,6 +44,8 @@
     <news>
 [Version 0.2.19]
 [Fix] Download mode - NRJ12 (FR)
+[Fix] Catch-up TV - Public Sénat (FR)
+[Fix] Dailymotion Playback - Dowload mode return False for dailymotion video
     </news>
     <assets>
       <icon>icon.png</icon>
