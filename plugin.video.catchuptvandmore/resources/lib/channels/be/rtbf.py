@@ -163,7 +163,7 @@ def list_programs(plugin, item_id, **kwargs):
         item = Listitem()
         item.label = program_title
 
-        item.art['thumb'] = program_image
+        item.art['thumb'] = item.art['landscape'] = program_image
         item.set_callback(list_videos_program,
                           item_id=item_id,
                           program_id=program_id)
@@ -195,7 +195,7 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
 
         item = Listitem()
         item.label = video_title
-        item.art['thumb'] = video_image
+        item.art['thumb'] = item.art['landscape'] = video_image
         item.info['plot'] = video_plot
         item.info['duration'] = video_duration
         item.info.date(date_value, '%d-%m-%Y')
@@ -290,7 +290,7 @@ def list_videos_sub_category(plugin, item_id, category_url, sub_category_id,
 
                             item = Listitem()
                             item.label = video_title
-                            item.art['thumb'] = video_image
+                            item.art['thumb'] = item.art['landscape'] = video_image
 
                             item.set_callback(get_video_url,
                                               item_id=item_id,
@@ -332,7 +332,7 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
 
                                 item = Listitem()
                                 item.label = video_title
-                                item.art['thumb'] = video_image
+                                item.art['thumb'] = item.art['landscape'] = video_image
 
                                 item.set_callback(get_video_url,
                                                   item_id=item_id,
@@ -409,7 +409,7 @@ def set_live_url(plugin, item_id, video_id, **kwargs):
 
     item = Listitem()
     item.label = live_title
-    item.art['thumb'] = live_image
+    item.art['thumb'] = item.art['landscape'] = live_image
     item.info['plot'] = live_plot
     item.set_callback(get_live_url, item_id=item_id, live_url=live_url)
     item_post_treatment(item, is_playable=True)
@@ -447,7 +447,7 @@ def list_lives(plugin, item_id, **kwargs):
 
         item = Listitem()
         item.label = live_title
-        item.art['thumb'] = live_image
+        item.art['thumb'] = item.art['landscape'] = live_image
         item.info['plot'] = live_plot
         # commented this line because othrewie sorting is made by date and then by title
         # and doesn't help to find the direct
