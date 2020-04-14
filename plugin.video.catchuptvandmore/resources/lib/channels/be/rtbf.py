@@ -381,7 +381,7 @@ def multi_live_entry(plugin, item_id, **kwargs):
 
 def live_entry(plugin, item_id, **kwargs):
     """
-    First executed function after replay_bridge
+    First executed function after live_bridge
     """
     return set_live_url(plugin, item_id, item_id.upper())
 
@@ -401,10 +401,7 @@ def set_live_url(plugin, item_id, video_id, **kwargs):
     live_title = live_channel_title + " - " + json_parser["title"]
     if json_parser['subtitle']:
         live_title += " - " + json_parser['subtitle']
-    live_plot = 'Début le %s à %s (CET)' % (date_value, start_time_value) + \
-        '\n\r' + 'Fin le %s à %s (CET)' % (date_value, end_time_value) + '\n\r' + \
-        'Accessibilité: ' + json_parser["geolock"]["title"] + '\n\r' + \
-        json_parser["description"]
+    live_plot = json_parser["description"]
     live_image = json_parser["images"]["illustration"]["16x9"]["1248x702"]
 
     item = Listitem()
@@ -432,7 +429,8 @@ def list_lives(plugin, item_id, **kwargs):
             live_channel_title = live_datas["channel"]["label"]
         else:
             live_channel_title = 'Exclu Auvio'
-
+        if live_channel_title in ['La Une', 'La Deux', 'La Trois']:
+            continue
         start_time_value = format_hours(live_datas["start_date"])
         end_time_value = format_hours(live_datas["end_date"])
         date_value = format_day(live_datas["start_date"])
