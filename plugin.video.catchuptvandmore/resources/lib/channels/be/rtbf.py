@@ -395,9 +395,9 @@ def set_live_url(plugin, item_id, video_id, **kwargs):
     if "url_streaming" in json_parser:
         live_url = json_parser["url_streaming"]["url_hls"]
     live_channel_title = json_parser["channel"]["label"]
-    start_time_value = format_hours(json_parser["start_date"])
-    end_time_value = format_hours(json_parser["end_date"])
-    date_value = format_day(json_parser["start_date"])
+    # start_time_value = format_hours(json_parser["start_date"])
+    # end_time_value = format_hours(json_parser["end_date"])
+    # date_value = format_day(json_parser["start_date"])
     live_title = live_channel_title + " - " + json_parser["title"]
     if json_parser['subtitle']:
         live_title += " - " + json_parser['subtitle']
