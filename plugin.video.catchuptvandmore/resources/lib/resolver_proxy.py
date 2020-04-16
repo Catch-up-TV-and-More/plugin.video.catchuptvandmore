@@ -150,7 +150,7 @@ def get_stream_dailymotion(plugin,
     for k in range(0, len(lines) - 1):
         if 'RESOLUTION=' in lines[k]:
             inside_m3u8 = lines[k + 1]
-    return inside_m3u8
+    return inside_m3u8.split('#cell')[0]
 
 
 # Vimeo Part
