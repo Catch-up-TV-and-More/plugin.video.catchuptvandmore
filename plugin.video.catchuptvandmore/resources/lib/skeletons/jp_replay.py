@@ -124,5 +124,22 @@ menu = {
         'module': 'resources.lib.channels.jp.tver',
         'enabled': True,
         'order': 13
+    },
+    'tvo': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/jp/tvo.png',
+        'fanart': 'channels/jp/tvo_fanart.jpg',
+        'module': 'resources.lib.channels.jp.tver',
+        'enabled': True,
+        'order': 15
+    },
+    'nhk': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/jp/nhk.png',
+        'fanart': 'channels/jp/nhk_fanart.jpg',
+        'module': 'resources.lib.channels.jp.tver',
+        'enabled': True,
+        'order': 16
     }
+
 }

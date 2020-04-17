@@ -780,6 +780,10 @@ def save_labels_in_mem_storage():
         '関西テレビ',
         'weathernewsjp':
         '株式会社ウェザーニューズ',
+        'nhk':
+        'NHK',
+        'tvo':
+        'テレビ大阪株式会社',
 
         # United Kingdom channels / live TV
         'blaze':
