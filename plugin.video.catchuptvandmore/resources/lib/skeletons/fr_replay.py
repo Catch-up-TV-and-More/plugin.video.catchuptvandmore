@@ -629,6 +629,14 @@ menu = {
         'enabled': True,
         'order': 103
     },
+    'telegrenoble': {
+        'callback': 'replay_bridge',
+        'thumb': 'channels/fr/telegrenoble.png',
+        'fanart': 'channels/fr/telegrenoble_fanart.jpg',
+        'module': 'resources.lib.channels.fr.telegrenoble',
+        'enabled': True,
+        'order': 105
+    },
     'bfmlyon': {
         'callback': 'replay_bridge',
         'thumb': 'channels/fr/bfmlyon.png',
