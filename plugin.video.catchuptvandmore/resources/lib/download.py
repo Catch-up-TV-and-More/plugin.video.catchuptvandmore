@@ -50,6 +50,10 @@ def download_video(video_url):
         quality=get_quality_YTDL(download_mode=True),
         resolve_redirects=True)
 
+    if vid is None:
+        Script.log('YDStreamExtractor.getVideoInfo() failed for video URL: %s' % video_url)
+        return False
+
     path = Script.setting.get_string('dl_folder')
     download_ok = False
     with YDStreamUtils.DownloadProgress() as prog:
