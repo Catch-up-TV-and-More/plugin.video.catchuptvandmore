@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.21~beta02" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.21~beta03" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
@@ -45,6 +45,8 @@
 [Version 0.2.21]
 [Fix/Add] Catch-up TV - Japaneses channels (JP)
 [Add] Catch-up TV - Télé Grenoble (FR)
+[Fix] Catch-up TV - Arte (WO)
+[Fix] Add check for download mode
     </news>
     <assets>
       <icon>icon.png</icon>
