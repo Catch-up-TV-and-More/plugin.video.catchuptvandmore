@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.21~beta04" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.21~beta05" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
@@ -48,6 +48,7 @@
 [Fix] Catch-up TV - Arte (WO)
 [Fix] Add check for download mode
 [Fix] Disable reuselanguageinvoker to fix Youtube-DL download feature
+[Fix] Catch-up TV - La 1ère (FR)
     </news>
     <assets>
       <icon>icon.png</icon>
