@@ -21,7 +21,7 @@
 """
 
 import importlib
-from codequick import run
+from resources.lib.codequick import run
 from resources.lib.kodi_utils import import_needed_module
 
 

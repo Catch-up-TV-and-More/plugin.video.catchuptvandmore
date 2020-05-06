@@ -25,7 +25,7 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-from codequick import Script, utils
+from resources.lib.codequick import Script, utils
 
 import resources.lib.mem_storage as mem_storage
 
