@@ -30,20 +30,15 @@ from __future__ import print_function
 from builtins import str
 import polib
 import sys
+import mock
+
 sys.path.append('../plugin.video.catchuptvandmore')
 sys.path.append('../plugin.video.catchuptvandmore/resources')
 sys.path.append('../plugin.video.catchuptvandmore/resources/lib')
 
-import mock_codequick
-from codequick import Script, utils
-try:
-    from urllib.parse import urlparse, urlencode
-    from urllib.request import urlopen, Request
-    from urllib.error import HTTPError
-except ImportError:
-    from urlparse import urlparse
-    from urllib import urlencode
-    from urllib2 import urlopen, Request, HTTPError
+mock_codequick = mock.MagicMock()
+sys.modules['codequick'] = mock_codequick
+
 import importlib
 import os
 
@@ -114,6 +109,9 @@ def get_labels_dict():
                 take_line = True
                 line = '{'
 
+            if 'Script.' in line:
+                line = "'FOO',"
+
             if take_line:
                 lines.append(line)
 
@@ -133,13 +131,8 @@ def get_item_media_path(item_media_path):
     """
     full_path = ''
 
-    # Local image in ressources/media folder
-    if type(item_media_path) is list:
-        full_path = os.path.join(Script.get_info("path"), "resources", "media",
-                                 *(item_media_path))
-
     # Remote image with complete URL
-    elif 'http' in item_media_path:
+    if 'http' in item_media_path:
         full_path = item_media_path
 
     # Image in our resource.images add-on
