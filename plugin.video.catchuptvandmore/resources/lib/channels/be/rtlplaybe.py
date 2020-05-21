@@ -517,7 +517,6 @@ def get_live_url(plugin, item_id, video_id, **kwargs):
                               'User-Agent': web_utils.get_random_ua(),
                               'referer': 'https://www.rtlplay.be/connexion'
                           })
-    print(repr('value resp2: ' + resp2.text))
     json_parser = json.loads(
         resp2.text.replace('gigya.callback(', '').replace(');', ''))
 
