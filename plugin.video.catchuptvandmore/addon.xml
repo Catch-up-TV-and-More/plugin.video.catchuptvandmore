@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.21~beta06" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.21~beta07" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
@@ -50,6 +50,7 @@
 [Fix] Disable reuselanguageinvoker to fix Youtube-DL download feature
 [Fix] Catch-up TV - La 1ère (FR)
 [Other] Include Codequick framework
+[Fix] Live TV - RTLPLAY BE (BE)
     </news>
     <assets>
       <icon>icon.png</icon>
