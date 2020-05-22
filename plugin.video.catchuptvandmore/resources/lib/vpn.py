@@ -27,7 +27,7 @@ from kodi_six import xbmc
 from kodi_six import xbmcgui
 from resources.lib import openvpn as vpnlib
 from resources.lib.labels import LABELS
-from codequick import Route, utils, Script, storage
+from resources.lib.codequick import Route, utils, Script, storage
 
 ip = "127.0.0.1"
 port = 1337
