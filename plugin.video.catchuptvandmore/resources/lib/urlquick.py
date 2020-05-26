@@ -585,13 +585,13 @@ class ConnectionManager(CacheAdapter):
 class Request(object):
     """A Request Object"""
 
-    def __init__(self, method, url, headers, data=None, json=None, params=None, referer=None):
+    def __init__(self, method, url, headers, data=None, json=None, params=None, referer=None, unquote_url=False):
         #: Tuple of (username, password) for basic authentication.
         self.auth = None
 
         # Convert url into a fully ascii unicode string using urlencoding
         self._referer_url = referer
-        self._urlparts = urlparts = self._parse_url(url, params)
+        self._urlparts = urlparts = self._parse_url(url, params, unquote_url=unquote_url)
 
         # Ensure that method is always unicode
         if isinstance(method, bytes):
@@ -636,7 +636,7 @@ class Request(object):
         #: Request body, to send to the server.
         self.data = data
 
-    def _parse_url(self, url, params=None, scheme=u"http"):
+    def _parse_url(self, url, params=None, scheme=u"http", unquote_url=False):
         """
         Parse a URL into it's individual components.
 
@@ -666,6 +666,9 @@ class Request(object):
         self.auth, netloc = self._ascii_netloc(netloc)
         path = self._ascii_path(path) if path else u"/"
         query = self._ascii_query(query, params)
+
+        if unquote_url:
+            query = unquote(query)
 
         # noinspection PyArgumentList
         return SplitResult(scheme, netloc, path, query, u"")
@@ -953,7 +956,7 @@ class Session(ConnectionManager):
         return self.request(u"DELETE", url, **kwargs)
 
     def request(self, method, url, params=None, data=None, headers=None, cookies=None, auth=None,
-                timeout=10, allow_redirects=None, verify=True, json=None, raise_for_status=None, max_age=None):
+                timeout=10, allow_redirects=None, verify=True, json=None, raise_for_status=None, max_age=None, unquote_url=False):
         """
         Make request for remote resource.
 
@@ -971,6 +974,7 @@ class Session(ConnectionManager):
         :param bool raise_for_status: [opt] Raise's HTTPError if status code is > 400. Defaults to ``False``.
         :param int max_age: [opt] Age the 'cache' can be, before it’s considered stale. -1 will disable caching.
                             Defaults to :data:`MAX_AGE <urlquick.MAX_AGE>`
+        :param bool unquote_url: [opt] Replace %xx escapes by their single-character equivalent
 
         :return: A requests like Response object.
         :rtype: urlquick.Response
@@ -999,7 +1003,7 @@ class Session(ConnectionManager):
         max_age = (-1 if self.max_age is None else self.max_age) if max_age is None else max_age
 
         # Parse url into it's individual components including params if given
-        req = Request(method, url, req_headers, data, json, req_params)
+        req = Request(method, url, req_headers, data, json, req_params, unquote_url=unquote_url)
         logger.debug("Requesting resource: %s", req.url)
         logger.debug("Request headers: %s", req.headers)
         if data:
@@ -1033,9 +1037,9 @@ class Session(ConnectionManager):
                 # Create new request for redirect
                 location = resp.headers.get(u"location")
                 if resp.status_code == 307:
-                    req = Request(req.method, location, req_headers, req.data, referer=req.url)
+                    req = Request(req.method, location, req_headers, req.data, referer=req.url, unquote_url=unquote_url)
                 else:
-                    req = Request(u"GET", location, req_headers, referer=req.url)
+                    req = Request(u"GET", location, req_headers, referer=req.url, unquote_url=unquote_url)
                 logger.debug("Redirecting to = %s", unquote(req.url))
 
             # And Authorization Credentials if needed
@@ -1377,7 +1381,7 @@ class Response(object):
 
 
 def request(method, url, params=None, data=None, headers=None, cookies=None, auth=None,
-            timeout=10, allow_redirects=None, verify=True, json=None, raise_for_status=None, max_age=None):
+            timeout=10, allow_redirects=None, verify=True, json=None, raise_for_status=None, max_age=None, unquote_url=False):
     """
     Make request for remote resource.
 
@@ -1395,6 +1399,7 @@ def request(method, url, params=None, data=None, headers=None, cookies=None, aut
     :param bool raise_for_status: [opt] Raise's HTTPError if status code is > 400. Defaults to ``False``.
     :param int max_age: [opt] Age the 'cache' can be, before it’s considered stale. -1 will disable caching.
                         Defaults to :data:`MAX_AGE <urlquick.MAX_AGE>`
+    :param bool unquote_url: [opt] Replace %xx escapes by their single-character equivalent
 
     :return: A requests like Response object.
     :rtype: urlquick.Response
@@ -1407,7 +1412,7 @@ def request(method, url, params=None, data=None, headers=None, cookies=None, aut
     """
     with Session() as session:
         return session.request(method, url, params, data, headers, cookies, auth, timeout,
-                               allow_redirects, verify, json, raise_for_status, max_age)
+                               allow_redirects, verify, json, raise_for_status, max_age, unquote_url)
 
 
 def get(url, params=None, **kwargs):

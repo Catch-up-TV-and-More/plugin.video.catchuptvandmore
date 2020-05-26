@@ -34,21 +34,10 @@ from resources.lib.menu_utils import item_post_treatment
 
 import json
 from resources.lib import urlquick
-import requests
 import socket
-# Working for Python 2/3
-try:
-    from urllib.parse import urlparse, urlencode
-    from urllib.request import urlopen, Request
-    from urllib.error import HTTPError
-except ImportError:
-    from urlparse import urlparse
-    from urllib import urlencode
-    from urllib2 import urlopen, Request, HTTPError
 
 # TO DO
 # Add Replay
-# Ask Wilforde to add an option not to encode (params) - use requests for the moment
 
 URL_LIVE = "https://vdn.live.cntv.cn/api2/liveHtml5.do"
 
@@ -74,11 +63,12 @@ def live_entry(plugin, item_id, **kwargs):
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
     live_id = 'cctv_p2p_hd%s' % item_id
-    resp = requests.get(
+    resp = urlquick.get(
         URL_LIVE + '?channel=pa://%s&client=html5&ip=%s' % (live_id, get_ip()),
         headers={
             'Cache-Control': 'max-age=-1, public'
-        })
+        },
+        unquote_url=True)
     json_parser = json.loads(
         resp.text.replace('var html5VideoData=\'', '').replace(
             '\';getHtml5VideoData(html5VideoData);', ''))
