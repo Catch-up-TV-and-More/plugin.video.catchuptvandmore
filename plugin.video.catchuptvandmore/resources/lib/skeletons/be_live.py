@@ -256,5 +256,13 @@ menu = {
         'xmltv_id': 'C892.api.telerama.fr',
         'enabled': True,
         'order': 26
+    },
+    'actv': {
+        'callback': 'live_bridge',
+        'thumb': 'channels/be/actv.png',
+        'fanart': 'channels/be/actv_fanart.jpg',
+        'module': 'resources.lib.channels.be.actv',
+        'enabled': True,
+        'order': 27
     }
 }

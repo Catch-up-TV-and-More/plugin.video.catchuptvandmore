@@ -451,6 +451,8 @@ def save_labels_in_mem_storage():
         'AB3',
         'ln24':
         'LN24',
+        'actv':
+        'Antenne Centre TV',
 
         # Canadian channels / live TV
         'tv5unis':
