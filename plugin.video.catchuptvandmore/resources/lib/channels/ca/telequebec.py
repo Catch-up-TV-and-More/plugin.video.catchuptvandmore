@@ -127,4 +127,9 @@ def live_entry(plugin, item_id, **kwargs):
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    return 'https:' + re.compile(r'm3U8Url:"(.*?)"').findall(resp.text)[0]
+    list_live_datas = re.compile(r'liveGPManifestUrl":"(.*?)"').findall(resp.text)
+    url_stream = ''
+    for live_datas in list_live_datas:
+        if 'm3u8' in live_datas:
+            url_stream = live_datas
+    return url_stream
