@@ -34,6 +34,7 @@ import sys
 # Kodi imports
 from resources.lib.codequick import Route, Resolver, Listitem, Script
 from resources.lib import urlquick
+from kodi_six import xbmc
 from kodi_six import xbmcgui
 from kodi_six import xbmcplugin
 from six import string_types
@@ -66,7 +67,7 @@ def root(plugin):
 
 
 @Route.register
-def generic_menu(plugin, item_id, **kwargs):
+def generic_menu(plugin, item_id=None, **kwargs):
     """Build 'item_id' menu of the addon
 
     Args:
@@ -76,59 +77,65 @@ def generic_menu(plugin, item_id, **kwargs):
         Iterator[codequick.listing.Listitem]: Kodi 'item_id' menu
     """
 
-    menu_id = item_id
-
-    # If 'menu_id' menu contains only one item, directly open this item
-    plugin.redirect_single_item = True
-
-    # Get ordered 'menu_id' menu
-    # without disabled and hidden items
-    menu = get_sorted_menu(plugin, menu_id)
-
-    if not menu:
-        # If the selected menu is empty just reload the current menu
+    if item_id is None:
+        # Fix https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/issues/304
+        xbmc.executebuiltin("Action(Back,%s)" % xbmcgui.getCurrentWindowId())
         yield False
 
-    for index, (item_order, item_id, item_infos) in enumerate(menu):
+    else:
+        menu_id = item_id
 
-        item = Listitem()
+        # If 'menu_id' menu contains only one item, directly open this item
+        plugin.redirect_single_item = True
 
-        # Set item label
-        item.label = get_item_label(item_id)
+        # Get ordered 'menu_id' menu
+        # without disabled and hidden items
+        menu = get_sorted_menu(plugin, menu_id)
 
-        # Set item art
-        if 'thumb' in item_infos:
-            item.art["thumb"] = get_item_media_path(item_infos['thumb'])
+        if not menu:
+            # If the selected menu is empty just reload the current menu
+            yield False
 
-        if 'fanart' in item_infos:
-            item.art["fanart"] = get_item_media_path(
-                item_infos['fanart'])
+        for index, (item_order, item_id, item_infos) in enumerate(menu):
 
-        # Set item params
-        # If this item requires a module to work, get
-        # the module path to be loaded
-        if 'module' in item_infos:
-            item.params['item_module'] = item_infos['module']
+            item = Listitem()
 
-        if 'xmltv_id' in item_infos:
-            item.params['xmltv_id'] = item_infos['xmltv_id']
+            # Set item label
+            item.label = get_item_label(item_id)
 
-        item.params['item_id'] = item_id
+            # Set item art
+            if 'thumb' in item_infos:
+                item.art["thumb"] = get_item_media_path(item_infos['thumb'])
 
-        # Get cllback function of this item
-        item_callback = eval(item_infos['callback'])
-        item.set_callback(item_callback)
+            if 'fanart' in item_infos:
+                item.art["fanart"] = get_item_media_path(
+                    item_infos['fanart'])
 
-        # Add needed context menus to this item
-        add_context_menus_to_item(item,
-                                  item_id,
-                                  index,
-                                  menu_id,
-                                  len(menu),
-                                  is_playable=(item_infos['callback'] == 'live_bridge'),
-                                  item_infos=item_infos)
+            # Set item params
+            # If this item requires a module to work, get
+            # the module path to be loaded
+            if 'module' in item_infos:
+                item.params['item_module'] = item_infos['module']
 
-        yield item
+            if 'xmltv_id' in item_infos:
+                item.params['xmltv_id'] = item_infos['xmltv_id']
+
+            item.params['item_id'] = item_id
+
+            # Get cllback function of this item
+            item_callback = eval(item_infos['callback'])
+            item.set_callback(item_callback)
+
+            # Add needed context menus to this item
+            add_context_menus_to_item(item,
+                                      item_id,
+                                      index,
+                                      menu_id,
+                                      len(menu),
+                                      is_playable=(item_infos['callback'] == 'live_bridge'),
+                                      item_infos=item_infos)
+
+            yield item
 
 
 @Route.register
