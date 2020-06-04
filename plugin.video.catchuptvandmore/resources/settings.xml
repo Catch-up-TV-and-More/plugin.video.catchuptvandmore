@@ -84,6 +84,9 @@
             <!-- Cameroon channels -->
             <setting label="30094" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/menu_utils/unmask_items/?menu_id=cm_live)"/>
 
+            <!-- Slovanian channels -->
+            <setting label="30095" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/menu_utils/unmask_items/?menu_id=si_live)"/>
+
        <!-- Unmask replay TV channels -->
         <setting label="30020" type="lsep" />
 

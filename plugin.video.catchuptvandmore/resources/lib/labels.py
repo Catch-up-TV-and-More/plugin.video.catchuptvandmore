@@ -142,6 +142,8 @@ def save_labels_in_mem_storage():
         30064,
         'cm_live':
         30064,
+        'si_live':
+        30065,
         'French channels':
         30080,
         'Belgian channels':
@@ -1028,6 +1030,20 @@ def save_labels_in_mem_storage():
         'CRTV',
         'crtvnews':
         'CRTV News',
+
+        # Slovenian channels / live TV
+        'slo1':
+        'TV SLO 1',
+        'slo2':
+        'TV SLO 2',
+        'slo3':
+        'TV SLO 3',
+        'koper':
+        'Koper',
+        'maribor':
+        'Maribor',
+        'mmc':
+        'MMC',
 
         # Websites
         'allocine':

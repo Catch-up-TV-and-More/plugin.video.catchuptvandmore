@@ -132,5 +132,11 @@ menu = {
         'thumb': 'channels/cm.png',
         'enabled': True,
         'order': 15
+    },
+    'si_live': {
+        'callback': 'generic_menu',
+        'thumb': 'channels/si.png',
+        'enabled': True,
+        'order': 16
     }
 }
