@@ -33,6 +33,8 @@ from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
 
+from kodi_six import xbmcplugin
+
 import json
 import time
 from resources.lib import urlquick
@@ -220,6 +222,7 @@ def list_videos_cat(plugin, item_id, program_part_url, **kwargs):
 
 @Route.register
 def list_videos(plugin, item_id, program_part_url, filter_value, page=0, **kwargs):
+    plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
 
     # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
     url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
@@ -251,6 +254,7 @@ def list_videos(plugin, item_id, program_part_url, filter_value, page=0, **kwarg
 
 @Route.register
 def list_videos_other(plugin, item_id, program_part_url, page=0, **kwargs):
+    plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
 
     # URL example: http://api-front.yatta.francetv.fr/standard/publish/taxonomies/france-2_cash-investigation/contents/?size=20&page=0&sort=begin_date:desc&filter=with-no-vod,only-visible
     url_program = "standard/publish/taxonomies/%s/contents/" % program_part_url
@@ -486,7 +490,10 @@ def populate_item(item, video, include_program_name=True, **kwargs):
                     image_url = URL_API(image['urls']['w:1024'])
 
     # 2018-09-20T05:03:01+02:00
-    publication_date = video['first_publication_date'].split("T")[0]
+    try:
+        publication_date = video['content_has_medias'][0]['media']['begin_date'].split("T")[0]
+    except Exception:
+        publication_date = video['first_publication_date'].split("T")[0]
     item.info.date(publication_date, "%Y-%m-%d")
 
     if "text" in video and video['text']:
