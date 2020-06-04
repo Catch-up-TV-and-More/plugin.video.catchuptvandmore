@@ -50,6 +50,7 @@
 [Add] Live TV - RTVSLO channels (SI) (fix #308)
 [Fix] Catch-up - Africa 24 (WO)
 [Fix] Catch-up - NHK World (WO)
+[Remove] Catch-up - 6play 100% Foot (FR)
     </news>
     <assets>
       <icon>icon.png</icon>

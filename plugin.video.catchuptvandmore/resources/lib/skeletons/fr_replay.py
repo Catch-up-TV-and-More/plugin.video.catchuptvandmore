@@ -666,7 +666,7 @@ menu = {
         'thumb': 'channels/fr/100foot.png',
         'fanart': 'channels/fr/100foot_fanart.jpg',
         'module': 'resources.lib.channels.fr.6play',
-        'enabled': True,
+        'enabled': False,
         'order': 121
     }
 }
