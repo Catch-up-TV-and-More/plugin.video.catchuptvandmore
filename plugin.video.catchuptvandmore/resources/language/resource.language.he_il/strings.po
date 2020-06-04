@@ -189,7 +189,7 @@ msgid "Cameroon"
 msgstr ""
 
 msgctxt "#30065"
-msgid "Slovania"
+msgid "Slovenia"
 msgstr ""
 
 
@@ -256,7 +256,7 @@ msgid "Cameroon channels"
 msgstr ""
 
 msgctxt "#30095"
-msgid "Slovanian channels"
+msgid "Slovenian channels"
 msgstr ""
 
 # Websites (from 30130 to 30149)
