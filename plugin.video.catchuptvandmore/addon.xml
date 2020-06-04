@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.22~beta05" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.22~beta06" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
@@ -49,6 +49,7 @@
 [Improve] France TV - Add default sorting order (fix #302)
 [Add] Live TV - RTVSLO channels (SI) (fix #308)
 [Fix] Catch-up - Africa 24 (WO)
+[Fix] Catch-up - NHK World (WO)
     </news>
     <assets>
       <icon>icon.png</icon>
