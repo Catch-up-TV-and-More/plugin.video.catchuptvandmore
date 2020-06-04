@@ -48,6 +48,7 @@
 [Fix] Live TV - Télé Quebec (CA)
 [Improve] France TV - Add default sorting order (fix #302)
 [Add] Live TV - RTVSLO channels (SI) (fix #308)
+[Fix] Catch-up - Africa 24 (WO)
     </news>
     <assets>
       <icon>icon.png</icon>

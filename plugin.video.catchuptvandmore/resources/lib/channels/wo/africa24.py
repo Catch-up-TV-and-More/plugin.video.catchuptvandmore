@@ -119,11 +119,11 @@ def list_programs(plugin, item_id, category_emission_url, **kwargs):
 def list_videos(plugin, item_id, program_url, page, **kwargs):
 
     resp = urlquick.get(program_url + "?page=%s" % page)
-    root = resp.parse("div", attrs={"class": "region region-video-home"})
+    root = resp.parse("aside", attrs={"class": "col-xs-12 col-lg-12 col-sm-12"})
 
-    for video_datas in root.iterfind(".//div"):
+    for video_datas in root.findall(".//div"):
         if video_datas.get("class") is not None:
-            if "col-xs-omar col-xs-6 col-md-4 col-sm-4 col-lg-4" in video_datas.get(
+            if "col-xs-12 col-md-12 col-lg-12" in video_datas.get(
                     "class"):
                 video_title = video_datas.findall(".//span/a")[1].text
                 video_image = video_datas.find(".//img").get("src")
