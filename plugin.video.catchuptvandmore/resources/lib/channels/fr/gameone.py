@@ -66,7 +66,7 @@ def list_programs(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_PROGRAMS)
     root = resp.parse()
 
-    for program_datas in root.iterfind(".//li[@class='item poster css-1u1rran-Wrapper e19yuxbf0']"):
+    for program_datas in root.iterfind(".//li[@class='item poster css-q2f74n-Wrapper e19yuxbf0']"):
         program_title = program_datas.find(".//div[@class='header']/span").text
         program_image = ''
         list_images = program_datas.findall(".//img")
