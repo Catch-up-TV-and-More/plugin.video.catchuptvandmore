@@ -298,31 +298,6 @@ def save_labels_in_mem_storage():
         'http_code_404':
         30895,
 
-        # Canadian channels / live TV
-        'tv5unis':
-        'TV5 Unis',
-        'telequebec':
-        'Télé-Québec',
-        'tva':
-        'TVA',
-        'icitele':
-        'ICI Télé (' + utils.ensure_unicode(Script.setting['icitele.language']) + ')',
-        'ntvca':
-        'NTV',
-        'icitoutv':
-        'ICI Tou.tv',
-        'telemag':
-        'Télé-Mag',
-        'noovo':
-        'NOOVO',
-        'cbc':
-        'CBC (' + utils.ensure_unicode(Script.setting['cbc.language']) + ')',
-        'vtele':
-        'V Télé',
-        'lcn':
-        'LCN',
-        'yoopa':
-        'Yoopa',
 
         # Switzerland channels / live TV
         'rts':
