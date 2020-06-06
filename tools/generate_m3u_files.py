@@ -143,8 +143,13 @@ def get_item_media_path(item_media_path):
 
 
 # Return string label from item_id
-def get_label(item_id, labels):
-    label = labels[item_id]
+def get_label(item_id, labels, item_infos={}):
+    if 'label' in item_infos:
+        label = item_infos['label']
+    elif item_id in labels:
+        label = labels[item_id]
+    else:
+        label = item_id
 
     # strings.po case
     if isinstance(label, int):
@@ -181,7 +186,7 @@ def generate_m3u_files(labels):
     live_tv = importlib.import_module('lib.skeletons.live_tv').menu
     for country_id, country_infos in list(live_tv.items()):
 
-        country_label = get_label(country_id, labels)
+        country_label = get_label(country_id, labels, country_infos)
         country_code = country_id.replace('_live', '')
 
         print('\ncountry_id: ' + country_id)
@@ -198,7 +203,7 @@ def generate_m3u_files(labels):
                                                    country_id).menu
         for channel_id, channel_infos in list(country_channels.items()):
 
-            channel_label = get_label(channel_id, labels)
+            channel_label = get_label(channel_id, labels, channel_infos)
             print('\n\tchannel_id: ' + channel_id)
             # print('\t\tchannel_label: ' + channel_label)
 
@@ -300,7 +305,7 @@ def generate_m3u_files(labels):
 
             if channel_can_be_added:
 
-                channel_wo_label = get_label(channel_wo_id, labels)
+                channel_wo_label = get_label(channel_wo_id, labels, channel_wo_infos)
 
                 channel_m3u_dict = {}
 

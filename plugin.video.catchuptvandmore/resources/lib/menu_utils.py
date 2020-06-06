@@ -407,12 +407,14 @@ def unmask_items(plugin, menu_id):
     if menu_id not in menus_settings:
         return
 
+    menu = importlib.import_module('resources.lib.skeletons.' + menu_id).menu
+
     hidden_items = []
     hidden_items_labels = []
     for item_id, item in menus_settings[menu_id].items():
         if item.get('hidden', False):
             hidden_items.append(item_id)
-            hidden_items_labels.append(get_item_label(item_id))
+            hidden_items_labels.append(get_item_label(item_id, menu[item_id]))
 
     if not hidden_items:
         return

@@ -84,11 +84,11 @@ def guess_fav_prefix(item_id):
 
     prefix = 'empty'
     if item_id == 'live_tv':
-        prefix = Script.localize(LABELS['live_tv'])
+        prefix = Script.localize(30030)
     elif item_id == 'replay':
-        prefix = Script.localize(LABELS['replay'])
+        prefix = Script.localize(30031)
     elif item_id == 'websites':
-        prefix = Script.localize(LABELS['websites'])
+        prefix = Script.localize(30032)
     elif item_id == 'root':
         prefix = ''
     if prefix != 'empty':
@@ -141,7 +141,7 @@ def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
         # elements
 
         item_id = item_dict['params']['item_id']
-        item_dict['label'] = get_item_label(item_id)
+        item_dict['label'] = get_item_label(item_id, item_infos)
 
         item_dict['art']["thumb"] = ''
         if 'thumb' in item_infos:
