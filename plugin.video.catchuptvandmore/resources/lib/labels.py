@@ -298,62 +298,6 @@ def save_labels_in_mem_storage():
         'http_code_404':
         30895,
 
-        # Belgium channels / live TV
-        'auvio':
-        'RTBF Auvio',
-        'laune':
-        'La Une',
-        'ladeux':
-        'La Deux',
-        'latrois':
-        'La Trois',
-        'brf':
-        'BRF Mediathek',
-        'rtl_tvi':
-        'RTL-TVI',
-        'plug_rtl':
-        'PLUG RTL',
-        'club_rtl':
-        'CLUB RTL',
-        'vrt':
-        'VRT NU',
-        'telemb':
-        'Télé MB',
-        'rtc':
-        'RTC Télé Liège',
-        'tvlux':
-        'TV Lux',
-        'contact':
-        'Contact',
-        'bel_rtl':
-        'BEL RTL',
-        'rtl_info':
-        'RTL INFO',
-        'bx1':
-        'BX1',
-        'een':
-        'Één',
-        'canvas':
-        'Canvas',
-        'ketnet':
-        'Ketnet',
-        'nrjhitstvbe':
-        'NRJ Hits TV',
-        'rtl_sport':
-        'RTL Sport',
-        'tvcom':
-        'TV Com',
-        'canalc':
-        'Canal C',
-        'abxplore':
-        'ABXPLORE',
-        'ab3':
-        'AB3',
-        'ln24':
-        'LN24',
-        'actv':
-        'Antenne Centre TV',
-
         # Canadian channels / live TV
         'tv5unis':
         'TV5 Unis',
