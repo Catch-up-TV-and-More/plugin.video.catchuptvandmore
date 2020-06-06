@@ -138,5 +138,11 @@ menu = {
         'thumb': 'channels/si.png',
         'enabled': True,
         'order': 16
+    },
+    'et_live': {
+        'callback': 'generic_menu',
+        'thumb': 'channels/et.png',
+        'enabled': True,
+        'order': 17
     }
 }

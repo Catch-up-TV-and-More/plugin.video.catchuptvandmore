@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.22~beta06" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.22~beta07" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
@@ -56,6 +56,7 @@
 [Fix] Catch-up - GameOne (FR)
 [Fix] Catch-up - Paramount Channel (FR)
 [Fix] Catch-up - Caledonia (FR)
+[Add] Live TV - Ethiopian channels (ET) (fix #305)
     </news>
     <assets>
       <icon>icon.png</icon>

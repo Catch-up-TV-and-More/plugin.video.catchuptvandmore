@@ -144,6 +144,8 @@ def save_labels_in_mem_storage():
         30064,
         'si_live':
         30065,
+        'et_live':
+        30066,
         'French channels':
         30080,
         'Belgian channels':
@@ -1044,6 +1046,74 @@ def save_labels_in_mem_storage():
         'Maribor',
         'mmc':
         'MMC',
+
+        # Ethiopian channels / live TV
+        'ectv':
+        'ECTV',
+        'amma':
+        'Amhara TV',
+        'walta':
+        'Walta TV',
+        'fbctv':
+        'Fana TV',
+        'etvz':
+        'EBC ZENA',
+        'etvm':
+        'EBC MEZINAGNA',
+        'etvq':
+        'EBC QUANQUAWOCH',
+        'ltv':
+        'LTV',
+        'arts':
+        'ARTS TV',
+        'moe':
+        'MoE',
+        'nahoo':
+        'Nahoo TV',
+        'obn':
+        'OBN',
+        'obs':
+        'OBS',
+        'tigrai':
+        'Tigrai TV',
+        'jtv':
+        'JTV ETHIOPIA',
+        'esat':
+        'ESAT',
+        'omn':
+        'OMN',
+        'aleph':
+        'Aleph TV',
+        'bisrat':
+        'Bisrat TV',
+        'onn':
+        'ONN TV',
+        'dws':
+        'DW TV',
+        'adis':
+        'Addis TV',
+        'estv':
+        'ES TV',
+        'south':
+        'Southern TV',
+        'eritr':
+        'Eritrea TV',
+        'afri':
+        'Afrihealth',
+        'asham':
+        'Asham TV',
+        'ahadu':
+        'Ahadu TV',
+        'balage':
+        'Balageru',
+        'ava':
+        'AVA TV',
+        'asrat':
+        'ASRAT MEDIA',
+        'holys':
+        'Holy Spirit TV',
+        'gloryg':
+        'Glory of GOD TV',
 
         # Websites
         'allocine':

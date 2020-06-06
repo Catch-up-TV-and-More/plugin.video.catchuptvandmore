@@ -192,6 +192,10 @@ msgctxt "#30065"
 msgid "Slovenia"
 msgstr "Slovénie"
 
+msgctxt "#30066"
+msgid "Ethiopia"
+msgstr "Ethiopie"
+
 
 # Channels (from 30080 to 30129)
 
@@ -258,6 +262,10 @@ msgstr "Chaînes Camerounaise"
 msgctxt "#30095"
 msgid "Slovenian channels"
 msgstr "Chaînes slovène"
+
+msgctxt "#30096"
+msgid "Chaînes ethiopiennes"
+msgstr ""
 
 # Websites (from 30130 to 30149)
 
