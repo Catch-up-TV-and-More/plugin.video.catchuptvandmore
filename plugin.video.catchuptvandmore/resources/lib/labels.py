@@ -298,55 +298,6 @@ def save_labels_in_mem_storage():
         'http_code_404':
         30895,
 
-
-        # Switzerland channels / live TV
-        'rts':
-        'RTS',
-        'rsi':
-        'RSI',
-        'srf':
-        'SRF',
-        'rtr':
-        'RTR',
-        'swissinfo':
-        'SWISSINFO',
-        'rougetv':
-        'Rouge TV',
-        'tvm3':
-        'TVM3',
-        'becurioustv':
-        'BeCurious TV',
-        'rtsun':
-        'RTS Un',
-        'rtsdeux':
-        'RTS Deux',
-        'rtsinfo':
-        'RTS Info',
-        'rtscouleur3':
-        'RTS Couleur 3',
-        'rsila1':
-        'RSI La 1',
-        'rsila2':
-        'RSI La 2',
-        'srf1':
-        'SRF 1',
-        'srfinfo':
-        'SRF Info',
-        'srfzwei':
-        'SRF Zwei',
-        'rtraufsrf1':
-        'RTR auf SRF 1',
-        'rtraufsrf2':
-        'RTR auf SRF 2',
-        'rtraufsrfinfo':
-        'RTR auf SRF Info',
-        'teleticino':
-        'Teleticino',
-        'lemanbleu':
-        'Léman Bleu',
-        'telem1':
-        'Tele M1',
-
         # French channels / live TV
         'tf1':
         'TF1',
