@@ -40,19 +40,24 @@ from resources.lib import urlquick
 from resources.lib.labels import LABELS
 
 
-def get_item_label(item_id):
+def get_item_label(item_id, item_infos={}):
     """Get (translated) label of 'item_id'
 
     Args:
         item_id (str)
+        item_infos (dict): Information from the skeleton 'menu' dict
     Returns:
         str: (translated) label of 'item_id'
     """
-    label = item_id
-    if item_id in LABELS:
+    if 'label' in item_infos:
+        label = item_infos['label']
+    elif item_id in LABELS:
         label = LABELS[item_id]
-        if isinstance(label, int):
-            label = Script.localize(label)
+    else:
+        label = item_id
+
+    if isinstance(label, int):
+        label = Script.localize(label)
     return label
 
 

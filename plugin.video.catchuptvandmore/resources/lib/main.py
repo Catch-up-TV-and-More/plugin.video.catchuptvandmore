@@ -101,7 +101,7 @@ def generic_menu(plugin, item_id=None, **kwargs):
             item = Listitem()
 
             # Set item label
-            item.label = get_item_label(item_id)
+            item.label = get_item_label(item_id, item_infos)
 
             # Set item art
             if 'thumb' in item_infos:
