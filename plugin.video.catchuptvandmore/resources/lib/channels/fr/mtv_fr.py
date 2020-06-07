@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 
 from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
 
-from resources.lib.labels import LABELS
+
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
@@ -64,7 +64,7 @@ def list_categories(plugin, item_id, **kwargs):
     # Prepare All videos
     resp = urlquick.get(URL_JSON_MTV % URL_VIDEOS)
     json_parser = json.loads(resp.text)
-    category_title = plugin.localize(LABELS['All videos'])
+    category_title = plugin.localize(30701)
     category_url = json_parser["manifest"]["zones"]["t4_lc_promo1"]["feed"]
 
     item = Listitem()

@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 
 from resources.lib.codequick import Route, Resolver, Listitem, youtube
 
-from resources.lib.labels import LABELS
+
 from resources.lib.menu_utils import item_post_treatment
 
 

@@ -39,6 +39,7 @@ the addon's tree architecture.
 menu = {
     'mitele': {
         'callback': 'replay_bridge',
+        'label': 'mitele',
         'thumb': 'channels/es/mitele.png',
         'fanart': 'channels/es/mitele_fanart.jpg',
         'module': 'resources.lib.channels.es.mitele',

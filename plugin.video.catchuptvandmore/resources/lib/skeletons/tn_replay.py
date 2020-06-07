@@ -39,6 +39,7 @@ the addon's tree architecture.
 menu = {
     'nessma': {
         'callback': 'replay_bridge',
+        'label': 'نسمة تي في',
         'thumb': 'channels/tn/nessma.png',
         'fanart': 'channels/tn/nessma_fanart.jpg',
         'module': 'resources.lib.channels.tn.nessma',

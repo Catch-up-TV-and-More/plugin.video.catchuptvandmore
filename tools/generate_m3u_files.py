@@ -99,28 +99,6 @@ MANUAL_LABELS = {
 }
 
 
-def get_labels_dict():
-    labels_py_fp = '../plugin.video.catchuptvandmore/resources/lib/labels.py'
-    lines = []
-    with open(labels_py_fp, 'r') as f:
-        take_line = False
-        for line in f.readlines():
-            if 'LABELS = {' in line:
-                take_line = True
-                line = '{'
-
-            if 'Script.' in line:
-                line = "'FOO',"
-
-            if take_line:
-                lines.append(line)
-
-            if '}' in line:
-                take_line = False
-    labels_dict_s = '\n'.join(lines)
-    return eval(labels_dict_s)
-
-
 def get_item_media_path(item_media_path):
     """Get full path or URL of an item_media
 
@@ -143,11 +121,9 @@ def get_item_media_path(item_media_path):
 
 
 # Return string label from item_id
-def get_label(item_id, labels, item_infos={}):
+def get_label(item_id, item_infos={}):
     if 'label' in item_infos:
         label = item_infos['label']
-    elif item_id in labels:
-        label = labels[item_id]
     else:
         label = item_id
 
@@ -178,7 +154,7 @@ def write_header(file):
 
 
 # Generate m3u files
-def generate_m3u_files(labels):
+def generate_m3u_files():
 
     m3u_entries = {}
 
@@ -186,7 +162,7 @@ def generate_m3u_files(labels):
     live_tv = importlib.import_module('lib.skeletons.live_tv').menu
     for country_id, country_infos in list(live_tv.items()):
 
-        country_label = get_label(country_id, labels, country_infos)
+        country_label = get_label(country_id, country_infos)
         country_code = country_id.replace('_live', '')
 
         print('\ncountry_id: ' + country_id)
@@ -203,7 +179,7 @@ def generate_m3u_files(labels):
                                                    country_id).menu
         for channel_id, channel_infos in list(country_channels.items()):
 
-            channel_label = get_label(channel_id, labels, channel_infos)
+            channel_label = get_label(channel_id, channel_infos)
             print('\n\tchannel_id: ' + channel_id)
             # print('\t\tchannel_label: ' + channel_label)
 
@@ -305,7 +281,7 @@ def generate_m3u_files(labels):
 
             if channel_can_be_added:
 
-                channel_wo_label = get_label(channel_wo_id, labels, channel_wo_infos)
+                channel_wo_label = get_label(channel_wo_id, channel_wo_infos)
 
                 channel_m3u_dict = {}
 
@@ -439,8 +415,7 @@ def generate_m3u_files(labels):
 
 
 def main():
-    labels = get_labels_dict()
-    generate_m3u_files(labels)
+    generate_m3u_files()
     print("\nM3U files generation done! :-D")
 
 

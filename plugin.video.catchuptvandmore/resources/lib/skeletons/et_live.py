@@ -39,6 +39,7 @@ the addon's tree architecture.
 menu = {
     'ectv': {
         'callback': 'live_bridge',
+        'label': 'ECTV',
         'thumb': 'channels/et/ectv.png',
         'fanart': 'channels/et/ectv_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -47,6 +48,7 @@ menu = {
     },
     'amma': {
         'callback': 'live_bridge',
+        'label': 'Amhara TV',
         'thumb': 'channels/et/amma.png',
         'fanart': 'channels/et/amma_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -55,6 +57,7 @@ menu = {
     },
     'fbctv': {
         'callback': 'live_bridge',
+        'label': 'Fana TV',
         'thumb': 'channels/et/fbctv.png',
         'fanart': 'channels/et/fbctv_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -63,6 +66,7 @@ menu = {
     },
     'walta': {
         'callback': 'live_bridge',
+        'label': 'Walta TV',
         'thumb': 'channels/et/walta.png',
         'fanart': 'channels/et/walta_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -71,6 +75,7 @@ menu = {
     },
     'etvz': {
         'callback': 'live_bridge',
+        'label': 'EBC ZENA',
         'thumb': 'channels/et/etvz.png',
         'fanart': 'channels/et/etvz_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -79,6 +84,7 @@ menu = {
     },
     'etvm': {
         'callback': 'live_bridge',
+        'label': 'EBC MEZINAGNA',
         'thumb': 'channels/et/etvm.png',
         'fanart': 'channels/et/etvz_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -87,6 +93,7 @@ menu = {
     },
     'etvq': {
         'callback': 'live_bridge',
+        'label': 'EBC QUANQUAWOCH',
         'thumb': 'channels/et/etvq.png',
         'fanart': 'channels/et/etvq_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -95,6 +102,7 @@ menu = {
     },
     'ltv': {
         'callback': 'live_bridge',
+        'label': 'LTV',
         'thumb': 'channels/et/ltv.png',
         'fanart': 'channels/et/ltv_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -103,6 +111,7 @@ menu = {
     },
     'arts': {
         'callback': 'live_bridge',
+        'label': 'ARTS TV',
         'thumb': 'channels/et/arts.png',
         'fanart': 'channels/et/arts_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -111,6 +120,7 @@ menu = {
     },
     'moe': {
         'callback': 'live_bridge',
+        'label': 'MoE',
         'thumb': 'channels/et/moe.png',
         'fanart': 'channels/et/moe_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -119,6 +129,7 @@ menu = {
     },
     'nahoo': {
         'callback': 'live_bridge',
+        'label': 'Nahoo TV',
         'thumb': 'channels/et/nahoo.png',
         'fanart': 'channels/et/nahoo_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -127,6 +138,7 @@ menu = {
     },
     'obn': {
         'callback': 'live_bridge',
+        'label': 'OBN',
         'thumb': 'channels/et/obn.png',
         'fanart': 'channels/et/obn_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -135,6 +147,7 @@ menu = {
     },
     'obs': {
         'callback': 'live_bridge',
+        'label': 'OBS',
         'thumb': 'channels/et/obs.png',
         'fanart': 'channels/et/obs_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -143,6 +156,7 @@ menu = {
     },
     'tigrai': {
         'callback': 'live_bridge',
+        'label': 'Tigrai TV',
         'thumb': 'channels/et/tigrai.png',
         'fanart': 'channels/et/tigrai_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -151,6 +165,7 @@ menu = {
     },
     'jtv': {
         'callback': 'live_bridge',
+        'label': 'JTV ETHIOPIA',
         'thumb': 'channels/et/jtv.png',
         'fanart': 'channels/et/jtv_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -159,6 +174,7 @@ menu = {
     },
     'esat': {
         'callback': 'live_bridge',
+        'label': 'ESAT',
         'thumb': 'channels/et/esat.png',
         'fanart': 'channels/et/esat_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -167,6 +183,7 @@ menu = {
     },
     'omn': {
         'callback': 'live_bridge',
+        'label': 'OMN',
         'thumb': 'channels/et/omn.png',
         'fanart': 'channels/et/omn_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -175,6 +192,7 @@ menu = {
     },
     'aleph': {
         'callback': 'live_bridge',
+        'label': 'Aleph TV',
         'thumb': 'channels/et/aleph.png',
         'fanart': 'channels/et/aleph_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -183,6 +201,7 @@ menu = {
     },
     'bisrat': {
         'callback': 'live_bridge',
+        'label': 'Bisrat TV',
         'thumb': 'channels/et/bisrat.png',
         'fanart': 'channels/et/bisrat_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -191,6 +210,7 @@ menu = {
     },
     'onn': {
         'callback': 'live_bridge',
+        'label': 'ONN TV',
         'thumb': 'channels/et/onn.png',
         'fanart': 'channels/et/onn_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -199,6 +219,7 @@ menu = {
     },
     'dws': {
         'callback': 'live_bridge',
+        'label': 'DW TV',
         'thumb': 'channels/et/dws.png',
         'fanart': 'channels/et/dws_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -207,6 +228,7 @@ menu = {
     },
     'adis': {
         'callback': 'live_bridge',
+        'label': 'Addis TV',
         'thumb': 'channels/et/adis.png',
         'fanart': 'channels/et/adis_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -215,6 +237,7 @@ menu = {
     },
     'estv': {
         'callback': 'live_bridge',
+        'label': 'ES TV',
         'thumb': 'channels/et/estv.png',
         'fanart': 'channels/et/estv_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -223,6 +246,7 @@ menu = {
     },
     'south': {
         'callback': 'live_bridge',
+        'label': 'Southern TV',
         'thumb': 'channels/et/south.png',
         'fanart': 'channels/et/south_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -231,6 +255,7 @@ menu = {
     },
     'eritr': {
         'callback': 'live_bridge',
+        'label': 'Eritrea TV',
         'thumb': 'channels/et/eritr.png',
         'fanart': 'channels/et/eritr_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -239,6 +264,7 @@ menu = {
     },
     'afri': {
         'callback': 'live_bridge',
+        'label': 'Afrihealth',
         'thumb': 'channels/et/afri.png',
         'fanart': 'channels/et/afri_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -247,6 +273,7 @@ menu = {
     },
     'asham': {
         'callback': 'live_bridge',
+        'label': 'Asham TV',
         'thumb': 'channels/et/asham.png',
         'fanart': 'channels/et/asham_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -255,6 +282,7 @@ menu = {
     },
     'ahadu': {
         'callback': 'live_bridge',
+        'label': 'Ahadu TV',
         'thumb': 'channels/et/ahadu.png',
         'fanart': 'channels/et/ahadu_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -263,6 +291,7 @@ menu = {
     },
     'balage': {
         'callback': 'live_bridge',
+        'label': 'Balageru',
         'thumb': 'channels/et/balage.png',
         'fanart': 'channels/et/balage_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -271,6 +300,7 @@ menu = {
     },
     'ava': {
         'callback': 'live_bridge',
+        'label': 'AVA TV',
         'thumb': 'channels/et/ava.png',
         'fanart': 'channels/et/ava_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -279,6 +309,7 @@ menu = {
     },
     'asrat': {
         'callback': 'live_bridge',
+        'label': 'ASRAT MEDIA',
         'thumb': 'channels/et/asrat.png',
         'fanart': 'channels/et/asrat_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -287,6 +318,7 @@ menu = {
     },
     'holys': {
         'callback': 'live_bridge',
+        'label': 'Holy Spirit TV',
         'thumb': 'channels/et/holys.png',
         'fanart': 'channels/et/holys_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',
@@ -295,6 +327,7 @@ menu = {
     },
     'gloryg': {
         'callback': 'live_bridge',
+        'label': 'Glory of GOD TV',
         'thumb': 'channels/et/gloryg.png',
         'fanart': 'channels/et/gloryg_fanart.jpg',
         'module': 'resources.lib.channels.et.video2b',

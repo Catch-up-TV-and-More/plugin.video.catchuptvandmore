@@ -26,7 +26,7 @@ import re
 from resources.lib.codequick import Route, Resolver, Listitem, utils
 from resources.lib import urlquick
 
-from resources.lib.labels import LABELS
+
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
 
@@ -139,7 +139,7 @@ def list_videos_1(plugin, item_id, category_url, page, **kwargs):
                                  category_url=category_url,
                                  page=page + 1)
     else:
-        plugin.notify(plugin.localize(LABELS['No videos found']), '')
+        plugin.notify(plugin.localize(30718), '')
         yield False
 
 

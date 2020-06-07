@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 
 from resources.lib.codequick import Script, Listitem
 
-from resources.lib.labels import LABELS
+
 from resources.lib import web_utils
 from resources.lib import addon_utils
 from resources.lib import download

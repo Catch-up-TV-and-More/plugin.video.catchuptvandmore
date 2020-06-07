@@ -35,7 +35,7 @@ from kodi_six import xbmcvfs
 from resources.lib.codequick import Script
 from resources.lib import urlquick
 
-from resources.lib.labels import LABELS
+
 
 
 # The Python-XMLTV version
@@ -424,8 +424,8 @@ def grab_tv_guide(menu_id):
         return tv_guide
     except Exception as e:
         Script.notify(
-            Script.localize(LABELS['TV guide']),
-            Script.localize(LABELS['An error occurred while getting TV guide']),
+            Script.localize(30722),
+            Script.localize(30723),
             display_time=7000)
         Script.log('xmltv module failed with error: {}'.format(e, lvl=Script.ERROR))
         return {}

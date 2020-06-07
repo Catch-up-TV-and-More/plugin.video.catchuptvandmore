@@ -37,8 +37,6 @@ from resources.lib import urlquick
 
 
 # Local imports
-from resources.lib.labels import LABELS
-
 
 def get_item_label(item_id, item_infos={}):
     """Get (translated) label of 'item_id'
@@ -51,8 +49,6 @@ def get_item_label(item_id, item_infos={}):
     """
     if 'label' in item_infos:
         label = item_infos['label']
-    elif item_id in LABELS:
-        label = LABELS[item_id]
     else:
         label = item_id
 
@@ -106,7 +102,7 @@ def get_quality_YTDL(download_mode=False):
         elif quality == 'DIALOG':
             youtubeDL_qualiy = ['SD', '720p', '1080p', 'Highest Available']
             seleted_item = xbmcgui.Dialog().select(
-                Script.localize(LABELS['choose_video_quality']),
+                Script.localize(30709),
                 youtubeDL_qualiy)
             return seleted_item
 

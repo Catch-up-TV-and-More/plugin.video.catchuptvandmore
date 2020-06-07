@@ -24,7 +24,7 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
-from resources.lib.codequick import Script, utils
+from resources.lib.codequick import Script
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -237,7 +237,7 @@ menu = {
     },
     'la_1ere': {
         'callback': 'replay_bridge',
-        'label': 'La 1ère (' + utils.ensure_unicode(Script.setting['la_1ere.language']) + ')',
+        'label': 'La 1ère (' + Script.setting['la_1ere.language'] + ')',
         'thumb': 'channels/fr/la1ere.png',
         'fanart': 'channels/fr/la1ere_fanart.jpg',
         'module': 'resources.lib.channels.fr.la_1ere',
@@ -318,7 +318,7 @@ menu = {
     },
     'france3regions': {
         'callback': 'replay_bridge',
-        'label': 'France 3 Régions (' + utils.ensure_unicode(Script.setting['france3regions.language']) + ')',
+        'label': 'France 3 Régions (' + Script.setting['france3regions.language'] + ')',
         'thumb': 'channels/fr/france3regions.png',
         'fanart': 'channels/fr/france3regions_fanart.jpg',
         'module': 'resources.lib.channels.fr.france3regions',

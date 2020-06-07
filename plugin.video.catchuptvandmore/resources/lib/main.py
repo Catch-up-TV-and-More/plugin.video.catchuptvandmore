@@ -40,7 +40,7 @@ from kodi_six import xbmcplugin
 from six import string_types
 
 # Local imports
-from resources.lib.labels import LABELS, save_labels_in_mem_storage
+
 from resources.lib.kodi_utils import build_kodi_url, get_params_in_query
 import resources.lib.favourites as fav
 from resources.lib.menu_utils import get_sorted_menu, add_context_menus_to_item
@@ -56,10 +56,6 @@ def root(plugin):
     Returns:
         Iterator[codequick.listing.Listitem]: Kodi root menu
     """
-
-    # Save LABELS dict in mem storage
-    # to improve addon navigation speed
-    save_labels_in_mem_storage()
 
     # First menu to build is the root menu
     # (see 'menu' dictionnary in root.py)
@@ -362,25 +358,25 @@ def favourites(plugin, start=0, **kwargs):
 
         # Rename
         item.context.script(fav.rename_favourite_item,
-                            plugin.localize(LABELS['Rename']),
+                            plugin.localize(30804),
                             item_hash=item_hash)
 
         # Remove
         item.context.script(fav.remove_favourite_item,
-                            plugin.localize(LABELS['Remove']),
+                            plugin.localize(30802),
                             item_hash=item_hash)
 
         # Move up
         if item_dict['params']['order'] > 0:
             item.context.script(fav.move_favourite_item,
-                                plugin.localize(LABELS['Move up']),
+                                plugin.localize(30501),
                                 direction='up',
                                 item_hash=item_hash)
 
         # Move down
         if item_dict['params']['order'] < len(fav_dict) - 1:
             item.context.script(fav.move_favourite_item,
-                                plugin.localize(LABELS['Move down']),
+                                plugin.localize(30500),
                                 direction='down',
                                 item_hash=item_hash)
 
@@ -407,11 +403,20 @@ def error_handler(exception):
 
         # Build dialog message
         dialog_message = msg
-        if 'http_code_' + str(code) in LABELS:
-            dialog_message = Script.localize(LABELS['http_code_' + str(code)])
+
+        http_code_msg = {
+            500: 30891,
+            401: 30892,
+            403: 30893,
+            402: 30894,
+            404: 30895
+        }
+
+        if code in http_code_msg:
+            dialog_message = Script.localize(http_code_msg[code])
 
         # Build dialog title
-        dialog_title = Script.localize(LABELS['HTTP Error code']) + ' ' + str(code)
+        dialog_title = Script.localize(30890) + ' ' + str(code)
 
         # Show xbmc dialog
         xbmcgui.Dialog().ok(dialog_title, dialog_message)

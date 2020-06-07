@@ -39,6 +39,7 @@ the addon's tree architecture.
 menu = {
     'slo1': {
         'callback': 'live_bridge',
+        'label': 'TV SLO 1',
         'thumb': 'channels/si/slo1.png',
         'fanart': 'channels/si/slo1_fanart.jpg',
         'module': 'resources.lib.channels.si.rtvslo',
@@ -47,6 +48,7 @@ menu = {
     },
     'slo2': {
         'callback': 'live_bridge',
+        'label': 'TV SLO 2',
         'thumb': 'channels/si/slo2.png',
         'fanart': 'channels/si/slo2_fanart.jpg',
         'module': 'resources.lib.channels.si.rtvslo',
@@ -55,6 +57,7 @@ menu = {
     },
     'slo3': {
         'callback': 'live_bridge',
+        'label': 'TV SLO 3',
         'thumb': 'channels/si/slo3.png',
         'fanart': 'channels/si/slo3_fanart.jpg',
         'module': 'resources.lib.channels.si.rtvslo',
@@ -63,6 +66,7 @@ menu = {
     },
     'koper': {
         'callback': 'live_bridge',
+        'label': 'Koper',
         'thumb': 'channels/si/koper.png',
         'fanart': 'channels/si/koper_fanart.jpg',
         'module': 'resources.lib.channels.si.rtvslo',
@@ -71,6 +75,7 @@ menu = {
     },
     'maribor': {
         'callback': 'live_bridge',
+        'label': 'Maribor',
         'thumb': 'channels/si/maribor.png',
         'fanart': 'channels/si/maribor_fanart.jpg',
         'module': 'resources.lib.channels.si.rtvslo',
@@ -79,6 +84,7 @@ menu = {
     },
     'mmc': {
         'callback': 'live_bridge',
+        'label': 'MMC',
         'thumb': 'channels/si/mmc.png',
         'fanart': 'channels/si/mmc_fanart.jpg',
         'module': 'resources.lib.channels.si.rtvslo',

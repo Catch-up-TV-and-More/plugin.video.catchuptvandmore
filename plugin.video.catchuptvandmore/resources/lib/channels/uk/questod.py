@@ -30,7 +30,7 @@ from builtins import str
 from resources.lib.py_utils import old_div
 from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
 
-from resources.lib.labels import LABELS
+
 from resources.lib import web_utils
 from resources.lib.kodi_utils import get_kodi_version
 from resources.lib import download
@@ -224,7 +224,7 @@ def list_videos(plugin, item_id, program_id, program_season_number, **kwargs):
                 yield item
 
     if not at_least_one_item:
-        plugin.notify(plugin.localize(LABELS['No videos found']), '')
+        plugin.notify(plugin.localize(30718), '')
         yield False
 
 

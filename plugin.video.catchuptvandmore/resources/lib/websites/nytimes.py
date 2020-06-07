@@ -27,7 +27,7 @@ from resources.lib import urlquick
 import json
 
 from resources.lib import download
-from resources.lib.labels import LABELS
+
 from resources.lib.menu_utils import item_post_treatment
 
 # TO DO

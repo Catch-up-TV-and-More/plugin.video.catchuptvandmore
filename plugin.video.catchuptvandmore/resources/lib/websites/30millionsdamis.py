@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 
 from resources.lib.codequick import Route, Resolver, Listitem
 
-from resources.lib.labels import LABELS
+
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
 
@@ -88,7 +88,7 @@ def list_videos(plugin, item_id, page, category_url, **kwargs):
                                  category_url=category_url,
                                  page=page + 1)
     else:
-        plugin.notify(plugin.localize(LABELS['No videos found']), '')
+        plugin.notify(plugin.localize(30718), '')
         yield False
 
 

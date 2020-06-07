@@ -28,7 +28,7 @@ from __future__ import unicode_literals
 
 from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
 
-from resources.lib.labels import LABELS
+
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib import download
@@ -560,7 +560,7 @@ def get_video_url(plugin,
         # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
         item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|R{SSM}|' % urlencode(headers2)
         # return item
-        Script.notify("INFO", plugin.localize(LABELS['drm_notification']),
+        Script.notify("INFO", plugin.localize(30702),
                       Script.NOTIFY_INFO)
         return False
 

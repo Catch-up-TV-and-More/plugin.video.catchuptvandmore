@@ -24,7 +24,7 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
-from resources.lib.codequick import Script, utils
+from resources.lib.codequick import Script
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -57,7 +57,7 @@ menu = {
     },
     'icitele': {
         'callback': 'live_bridge',
-        'label': 'ICI Télé (' + utils.ensure_unicode(Script.setting['icitele.language']) + ')',
+        'label': 'ICI Télé (' + Script.setting['icitele.language'] + ')',
         'thumb': 'channels/ca/icitele.png',
         'fanart': 'channels/ca/icitele_fanart.jpg',
         'module': 'resources.lib.channels.ca.icitele',
@@ -98,7 +98,7 @@ menu = {
     },
     'cbc': {
         'callback': 'live_bridge',
-        'label': 'CBC (' + utils.ensure_unicode(Script.setting['cbc.language']) + ')',
+        'label': 'CBC (' + Script.setting['cbc.language'] + ')',
         'thumb': 'channels/ca/cbc.png',
         'fanart': 'channels/ca/cbc_fanart.jpg',
         'module': 'resources.lib.channels.ca.cbc',

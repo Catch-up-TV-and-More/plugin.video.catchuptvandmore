@@ -30,7 +30,7 @@ import htmlement
 from resources.lib.codequick import Route, Resolver, Listitem, utils
 
 from resources.lib import download
-from resources.lib.labels import LABELS
+
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib import urlquick
 
@@ -164,7 +164,7 @@ def list_alpha2(plugin, js_file, mode, range_elt, page=1, **kwargs):
             range_elt=range_elt,
             page=page + 1)
     elif cnt == 0:
-        plugin.notify(plugin.localize(LABELS['No videos found']), '')
+        plugin.notify(plugin.localize(30718), '')
         yield False
 
 
@@ -252,7 +252,7 @@ def list_videos(plugin, url, content_type, sort_method,
             madelen_page = True
 
     if madelen_page:
-        plugin.notify(plugin.localize(LABELS['Video with an account needed']), '')
+        plugin.notify(plugin.localize(30712), '')
         yield False
     else:
         query_l = [
@@ -328,7 +328,7 @@ def list_videos(plugin, url, content_type, sort_method,
                 sort_method_order=sort_method_order,
                 start=start + 48)
         elif cnt == 0:
-            plugin.notify(plugin.localize(LABELS['No videos found']), '')
+            plugin.notify(plugin.localize(30718), '')
             yield False
 
 

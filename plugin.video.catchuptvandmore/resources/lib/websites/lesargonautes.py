@@ -26,7 +26,7 @@ from resources.lib.codequick import Route, Resolver, Listitem, utils
 from resources.lib import urlquick
 import json
 
-from resources.lib.labels import LABELS
+
 from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment

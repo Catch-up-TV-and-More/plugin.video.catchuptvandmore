@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 
 from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
 
-from resources.lib.labels import LABELS
+
 from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
@@ -525,7 +525,7 @@ def get_video_url(plugin,
                 all_datas_videos_path.append(datas['url'])
 
         seleted_item = xbmcgui.Dialog().select(
-            plugin.localize(LABELS['choose_video_quality']),
+            plugin.localize(30709),
             all_datas_videos_quality)
         if seleted_item > -1:
             url_selected = all_datas_videos_path[seleted_item]

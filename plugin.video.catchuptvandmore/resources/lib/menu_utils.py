@@ -42,7 +42,7 @@ from resources.lib.vpn import add_vpn_context
 # delete_for_submission_end
 from resources.lib.kodi_utils import get_kodi_version
 import resources.lib.favourites as fav
-from resources.lib.labels import LABELS
+
 from resources.lib.addon_utils import get_item_label
 from resources.lib.migration_utils import migrate_old_menus_settings
 
@@ -176,7 +176,7 @@ def get_sorted_menu(plugin, menu_id):
             get_kodi_version() >= 18 and \
             plugin.setting.get_boolean('show_live_tv_m3u_info'):
 
-        r = xbmcgui.Dialog().yesno(plugin.localize(LABELS['Information']),
+        r = xbmcgui.Dialog().yesno(plugin.localize(30600),
                                    plugin.localize(30605),
                                    plugin.localize(30606))
         if not r:
@@ -236,7 +236,7 @@ def add_context_menus_to_item(item, item_id, item_index, menu_id, menu_len, is_p
     # Move up
     if item_index > 0:
         item.context.script(move_item,
-                            Script.localize(LABELS['Move up']),
+                            Script.localize(30501),
                             direction='up',
                             item_id=item_id,
                             menu_id=menu_id)
@@ -244,14 +244,14 @@ def add_context_menus_to_item(item, item_id, item_index, menu_id, menu_len, is_p
     # Move down
     if item_index < menu_len - 1:
         item.context.script(move_item,
-                            Script.localize(LABELS['Move down']),
+                            Script.localize(30500),
                             direction='down',
                             item_id=item_id,
                             menu_id=menu_id)
 
     # Hide
     item.context.script(hide_item,
-                        Script.localize(LABELS['Hide']),
+                        Script.localize(30502),
                         item_id=item_id,
                         menu_id=menu_id)
 
@@ -262,7 +262,7 @@ def add_context_menus_to_item(item, item_id, item_index, menu_id, menu_len, is_p
 
     # Add to add-on favourites
     item.context.script(fav.add_item_to_favourites,
-                        Script.localize(LABELS['Add to add-on favourites']),
+                        Script.localize(30800),
                         is_playable=is_playable,
                         item_infos=item_infos)
 
@@ -282,13 +282,13 @@ def item_post_treatment(item, is_playable=False, is_downloadable=False):
     # Add `Download` context menu to 'item' if 'item' is downloadable
     if is_downloadable:
         item.context.script(item.path,
-                            Script.localize(LABELS['Download']),
+                            Script.localize(30503),
                             download_mode=True,
                             **item.params)
 
     # Add `Add to add-on favourites` context menu to 'item'
     item.context.script(fav.add_item_to_favourites,
-                        Script.localize(LABELS['Add to add-on favourites']),
+                        Script.localize(30800),
                         is_playable=is_playable)
 
     return
@@ -343,9 +343,8 @@ def hide_item(plugin, item_id, menu_id):
     """
     if plugin.setting.get_boolean('show_hidden_items_information'):
         xbmcgui.Dialog().ok(
-            plugin.localize(LABELS['Information']),
-            plugin.localize(
-                LABELS['To re-enable hidden items go to the plugin settings']))
+            plugin.localize(30600),
+            plugin.localize(30601))
         plugin.setting['show_hidden_items_information'] = False
 
     set_item_visibility(item_id, menu_id, True)
@@ -371,9 +370,7 @@ def restore_default_order(plugin):
         for item_id, item in items.items():
             item.pop('order', None)
     save_menus_settings(menus_settings)
-    plugin.notify(plugin.localize(
-        LABELS['Default order of all menus have been restored']),
-        '')
+    plugin.notify(plugin.localize(30407), '')
 
 
 @Script.register
@@ -389,9 +386,7 @@ def unmask_all_hidden_items(plugin):
         for item_id, item in items.items():
             item.pop('hidden', None)
     save_menus_settings(menus_settings)
-    plugin.notify(plugin.localize(
-        LABELS['All hidden items have been unmasked']),
-        '')
+    plugin.notify(plugin.localize(30408), '')
 
 
 @Script.register
@@ -420,7 +415,7 @@ def unmask_items(plugin, menu_id):
         return
 
     seleted_item = xbmcgui.Dialog().select(
-        plugin.localize(LABELS['Select item to unmask']),
+        plugin.localize(30406),
         hidden_items_labels)
     if seleted_item == -1:
         return
