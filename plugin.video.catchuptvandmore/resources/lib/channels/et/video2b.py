@@ -35,42 +35,7 @@ from resources.lib import urlquick
 
 @Resolver.register
 def live_entry(plugin, item_id, **kwargs):
-    urls = {
-        'ectv': 'http://video2b.vixtream.net/tv/v/ectv',
-        'amma': 'http://video2b.vixtream.net/tv/v/amma',
-        'fbctv': 'http://video2b.vixtream.net/tv/v/fbctv',
-        'walta': 'http://video2b.vixtream.net/tv/v/walta',
-        'etvz': 'http://video2b.vixtream.net/tv/v/etvz',
-        'etvm': 'http://video2b.vixtream.net/tv/v/etvm',
-        'etvq': 'http://video2b.vixtream.net/tv/v/etvq',
-        'ltv': 'http://video2b.vixtream.net/tv/v/ltv',
-        'arts': 'http://video2b.vixtream.net/tv/v/arts',
-        'moe': 'http://video2b.vixtream.net/tv/v/moe',
-        'nahoo': 'http://video2b.vixtream.net/tv/v/nahoo',
-        'obn': 'http://video2b.vixtream.net/tv/v/obn',
-        'obs': 'http://video2b.vixtream.net/tv/v/obs',
-        'tigrai': 'http://video2b.vixtream.net/tv/v/tigrai',
-        'jtv': 'http://video2b.vixtream.net/tv/v/jtv',
-        'esat': 'http://video2b.vixtream.net/tv/v/esat',
-        'omn': 'http://video2b.vixtream.net/tv/v/omn',
-        'aleph': 'http://video2b.vixtream.net/tv/v/aleph',
-        'bisrat': 'http://video2b.vixtream.net/tv/v/bisrat',
-        'onn': 'http://video2b.vixtream.net/tv/v/onn',
-        'dws': 'http://video2b.vixtream.net/tv/v/dws',
-        'adis': 'http://video2b.vixtream.net/tv/v/adis',
-        'estv': 'http://video2b.vixtream.net/tv/v/estv',
-        'south': 'http://video2b.vixtream.net/tv/v/south',
-        'eritr': 'http://video2b.vixtream.net/tv/v/eritr',
-        'afri': 'http://video2b.vixtream.net/tv/v/afri',
-        'asham': 'http://video2b.vixtream.net/tv/v/asham',
-        'ahadu': 'http://video2b.vixtream.net/tv/v/ahadu',
-        'balage': 'http://video2b.vixtream.net/tv/v/balage',
-        'ava': 'http://video2b.vixtream.net/tv/v/ava',
-        'asrat': 'http://video2b.vixtream.net/tv/v/asrat',
-        'holys': 'http://video2b.vixtream.net/tv/v/holys',
-        'gloryg': 'http://video2b.vixtream.net/tv/v/gloryg'
-    }
-    html = urlquick.get(urls[item_id]).text.encode('utf-8')
+    html = urlquick.get('http://video2b.vixtream.net/tv/v/%s' % item_id).text.encode('utf-8')
     m3u8_url = re.compile(r'var src=\'(.*?)\';').findall(html)
     if m3u8_url:
         m3u8_url = m3u8_url[0]
