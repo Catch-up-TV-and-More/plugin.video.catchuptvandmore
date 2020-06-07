@@ -34,8 +34,6 @@ import pyqrcode
 from resources.lib.codequick import Script
 from resources.lib import urlquick
 
-
-
 PROFILE = Script.get_info('profile')
 CWD = Script.get_info('path')
 URL = 'https://paste.kodi.tv/'

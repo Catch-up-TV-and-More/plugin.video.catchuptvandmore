@@ -28,8 +28,6 @@ from __future__ import unicode_literals
 from builtins import str
 from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
 
-
-
 from resources.lib import web_utils
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment

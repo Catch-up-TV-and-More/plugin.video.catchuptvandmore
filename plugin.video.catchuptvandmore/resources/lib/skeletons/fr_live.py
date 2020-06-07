@@ -304,7 +304,7 @@ menu = {
     'la_1ere': {
         'callback':
         'live_bridge',
-        'label': 'La 1ère ('+ Script.setting['la_1ere.language'] + ')',
+        'label': 'La 1ère (' + Script.setting['la_1ere.language'] + ')',
         'thumb':
         'channels/fr/la1ere.png',
         'fanart':

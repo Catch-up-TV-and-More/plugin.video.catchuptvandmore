@@ -43,7 +43,6 @@ from resources.lib.codequick.utils import ensure_native_str, parse_qs
 from kodi_six import xbmc
 
 
-
 PY3 = sys.version_info[0] >= 3
 
 """Kodi InfoLabel functions

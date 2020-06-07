@@ -36,8 +36,6 @@ from resources.lib.codequick import Script
 from resources.lib import urlquick
 
 
-
-
 # The Python-XMLTV version
 VERSION = "1.4.3"
 
