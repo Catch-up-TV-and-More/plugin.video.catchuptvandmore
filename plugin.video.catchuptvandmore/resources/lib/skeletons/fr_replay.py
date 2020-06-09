@@ -222,7 +222,7 @@ menu = {
         'label': 'RMC Story',
         'thumb': 'channels/fr/rmcstory.png',
         'fanart': 'channels/fr/rmcstory_fanart.jpg',
-        'module': 'resources.lib.channels.fr.rmcstory',
+        'module': 'resources.lib.channels.fr.rmc',
         'enabled': True,
         'order': 21
     },
@@ -303,7 +303,7 @@ menu = {
         'label': 'RMC Découverte',
         'thumb': 'channels/fr/rmcdecouverte.png',
         'fanart': 'channels/fr/rmcdecouverte_fanart.jpg',
-        'module': 'resources.lib.channels.fr.rmcdecouverte',
+        'module': 'resources.lib.channels.fr.rmc',
         'enabled': True,
         'order': 32
     },
