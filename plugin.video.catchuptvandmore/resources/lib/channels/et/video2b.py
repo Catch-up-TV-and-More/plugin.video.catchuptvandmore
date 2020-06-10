@@ -51,6 +51,7 @@ def live_entry(plugin, item_id, **kwargs):
     # We need to check and only select streams that works
     # Else, Kodi fail if at least one stream returns 404 error
     # (instead of ignore this stream and take another one...)
+    all_stream_are_ok = True
     for line in m3u8_text.splitlines():
         if '#EXT' not in line:
             url = root_url + line
@@ -58,12 +59,14 @@ def live_entry(plugin, item_id, **kwargs):
                 r = urlquick.get(root_url + line, max_age=-1)
                 if r.status_code != 404:
                     working_stream.append(url)
+                else:
+                    all_stream_are_ok = False
             except Exception:
-                pass
+                all_stream_are_ok = False
 
-    if working_stream:
-        # TODO: Select stream based on 'prefered quality' setting
-        # need to check bandwich value
+    if all_stream_are_ok:
+        return m3u8_url
+    elif working_stream:
         return working_stream[0]
     else:
         return False
