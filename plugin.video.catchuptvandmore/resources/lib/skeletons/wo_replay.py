@@ -24,7 +24,7 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
-from resources.lib.codequick import Script
+from resources.lib.codequick import Script, utils
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -48,7 +48,7 @@ menu = {
     },
     'arte': {
         'callback': 'replay_bridge',
-        'label': 'Arte (' + Script.setting['arte.language'] + ')',
+        'label': 'Arte (' + utils.ensure_unicode(Script.setting['arte.language']) + ')',
         'thumb': 'channels/wo/arte.png',
         'fanart': 'channels/wo/arte_fanart.jpg',
         'module': 'resources.lib.channels.wo.arte',
@@ -57,7 +57,7 @@ menu = {
     },
     'france24': {
         'callback': 'replay_bridge',
-        'label': 'France 24 (' + Script.setting['france24.language'] + ')',
+        'label': 'France 24 (' + utils.ensure_unicode(Script.setting['france24.language']) + ')',
         'thumb': 'channels/wo/france24.png',
         'fanart': 'channels/wo/france24_fanart.jpg',
         'module': 'resources.lib.channels.wo.france24',
@@ -66,7 +66,7 @@ menu = {
     },
     'nhkworld': {
         'callback': 'replay_bridge',
-        'label': 'NHK World (' + Script.setting['nhkworld.language'] + ')',
+        'label': 'NHK World (' + utils.ensure_unicode(Script.setting['nhkworld.language']) + ')',
         'thumb': 'channels/wo/nhkworld.png',
         'fanart': 'channels/wo/nhkworld_fanart.jpg',
         'module': 'resources.lib.channels.wo.nhkworld',
@@ -138,7 +138,7 @@ menu = {
     },
     'rt': {
         'callback': 'replay_bridge',
-        'label': 'RT (' + Script.setting['rt.language'] + ')',
+        'label': 'RT (' + utils.ensure_unicode(Script.setting['rt.language']) + ')',
         'thumb': 'channels/wo/rt.png',
         'fanart': 'channels/wo/rt_fanart.jpg',
         'module': 'resources.lib.channels.wo.rt',

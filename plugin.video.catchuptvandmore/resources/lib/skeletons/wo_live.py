@@ -24,7 +24,7 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
-from resources.lib.codequick import Script
+from resources.lib.codequick import Script, utils
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -40,7 +40,7 @@ menu = {
     'euronews': {
         'callback':
         'live_bridge',
-        'label': 'Euronews (' + Script.setting['euronews.language'] + ')',
+        'label': 'Euronews (' + utils.ensure_unicode(Script.setting['euronews.language']) + ')',
         'thumb':
         'channels/wo/euronews.png',
         'fanart':
@@ -56,7 +56,7 @@ menu = {
     },
     'arte': {
         'callback': 'live_bridge',
-        'label': 'Arte (' + Script.setting['arte.language'] + ')',
+        'label': 'Arte (' + utils.ensure_unicode(Script.setting['arte.language']) + ')',
         'thumb': 'channels/wo/arte.png',
         'fanart': 'channels/wo/arte_fanart.jpg',
         'module': 'resources.lib.channels.wo.arte',
@@ -75,7 +75,7 @@ menu = {
     },
     'france24': {
         'callback': 'live_bridge',
-        'label': 'France 24 (' + Script.setting['france24.language'] + ')',
+        'label': 'France 24 (' + utils.ensure_unicode(Script.setting['france24.language']) + ')',
         'thumb': 'channels/wo/france24.png',
         'fanart': 'channels/wo/france24_fanart.jpg',
         'module': 'resources.lib.channels.wo.france24',
@@ -85,7 +85,7 @@ menu = {
     },
     'nhkworld': {
         'callback': 'live_bridge',
-        'label': 'NHK World (' + Script.setting['nhkworld.language'] + ')',
+        'label': 'NHK World (' + utils.ensure_unicode(Script.setting['nhkworld.language']) + ')',
         'thumb': 'channels/wo/nhkworld.png',
         'fanart': 'channels/wo/nhkworld_fanart.jpg',
         'module': 'resources.lib.channels.wo.nhkworld',
@@ -131,7 +131,7 @@ menu = {
     },
     'dw': {
         'callback': 'live_bridge',
-        'label': 'DW (' + Script.setting['dw.language'] + ')',
+        'label': 'DW (' + utils.ensure_unicode(Script.setting['dw.language']) + ')',
         'thumb': 'channels/wo/dw.png',
         'fanart': 'channels/wo/dw_fanart.jpg',
         'module': 'resources.lib.channels.wo.dw',
@@ -141,7 +141,7 @@ menu = {
     },
     'qvc': {
         'callback': 'live_bridge',
-        'label': 'QVC (' + Script.setting['qvc.language'] + ')',
+        'label': 'QVC (' + utils.ensure_unicode(Script.setting['qvc.language']) + ')',
         'thumb': 'channels/wo/qvc.png',
         'fanart': 'channels/wo/qvc_fanart.jpg',
         'module': 'resources.lib.channels.wo.qvc',
@@ -160,7 +160,7 @@ menu = {
     },
     'cgtn': {
         'callback': 'live_bridge',
-        'label': 'CGTN (' + Script.setting['cgtn.language'] + ')',
+        'label': 'CGTN (' + utils.ensure_unicode(Script.setting['cgtn.language']) + ')',
         'thumb': 'channels/wo/cgtn.png',
         'fanart': 'channels/wo/cgtn_fanart.jpg',
         'module': 'resources.lib.channels.wo.cgtn',
@@ -215,7 +215,7 @@ menu = {
     },
     'rt': {
         'callback': 'live_bridge',
-        'label': 'RT (' + Script.setting['rt.language'] + ')',
+        'label': 'RT (' + utils.ensure_unicode(Script.setting['rt.language']) + ')',
         'thumb': 'channels/wo/rt.png',
         'fanart': 'channels/wo/rt_fanart.jpg',
         'module': 'resources.lib.channels.wo.rt',
