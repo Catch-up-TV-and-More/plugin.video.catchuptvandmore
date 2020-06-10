@@ -24,7 +24,7 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
-from resources.lib.codequick import Script
+from resources.lib.codequick import Script, utils
 """
 The following dictionaries describe
 the addon's tree architecture.
@@ -40,7 +40,7 @@ menu = {
     'tvp3': {
         'callback':
         'live_bridge',
-        'label': 'TVP 3 (' + Script.setting['tvp3.language'] + ')',
+        'label': 'TVP 3 (' + utils.ensure_unicode(Script.setting['tvp3.language']) + ')',
         'thumb':
         'channels/pl/tvp3.png',
         'fanart':
