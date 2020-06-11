@@ -287,7 +287,7 @@ menu = {
         'thumb': 'channels/be/actv.png',
         'fanart': 'channels/be/actv_fanart.jpg',
         'module': 'resources.lib.channels.be.actv',
-        'enabled': False,
+        'enabled': True,
         'order': 27
     }
 }
