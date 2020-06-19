@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 
 
 from builtins import str
-from resources.lib.codequick import Route, Resolver, Listitem, utils, Script, youtube
+from codequick import Route, Resolver, Listitem, utils, Script, youtube
 
 
 from resources.lib import web_utils
@@ -43,7 +43,7 @@ try:
     from urllib.parse import quote_plus
 except ImportError:
     from urllib import quote_plus
-from resources.lib import urlquick
+import urlquick
 
 # TO DO
 # Some video Sky sports required account (add account)

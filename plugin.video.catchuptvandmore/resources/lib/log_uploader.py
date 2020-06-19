@@ -31,8 +31,8 @@ from kodi_six import xbmcvfs
 from kodi_six import xbmcgui
 import pyqrcode
 
-from resources.lib.codequick import Script
-from resources.lib import urlquick
+from codequick import Script
+import urlquick
 
 PROFILE = Script.get_info('profile')
 CWD = Script.get_info('path')

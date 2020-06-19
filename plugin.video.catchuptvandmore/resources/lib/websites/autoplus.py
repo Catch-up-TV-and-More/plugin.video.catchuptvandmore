@@ -23,8 +23,8 @@ from __future__ import unicode_literals
 import re
 import json
 
-from resources.lib.codequick import Route, Resolver, Listitem, Script
-from resources.lib import urlquick
+from codequick import Route, Resolver, Listitem, Script
+import urlquick
 
 
 from resources.lib import resolver_proxy

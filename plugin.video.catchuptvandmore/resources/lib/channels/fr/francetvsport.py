@@ -27,7 +27,7 @@
 from __future__ import unicode_literals
 
 from builtins import str
-from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
+from codequick import Route, Resolver, Listitem, utils, Script
 
 
 from resources.lib import web_utils
@@ -38,7 +38,7 @@ from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_la
 import re
 import json
 import time
-from resources.lib import urlquick
+import urlquick
 '''
 Channels:
     * France TV Sport

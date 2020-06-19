@@ -27,12 +27,12 @@ import string
 import xml.etree.ElementTree as ET
 import htmlement
 
-from resources.lib.codequick import Route, Resolver, Listitem, utils
+from codequick import Route, Resolver, Listitem, utils
 
 from resources.lib import download
 
 from resources.lib.menu_utils import item_post_treatment
-from resources.lib import urlquick
+import urlquick
 
 # TO DO
 # Add Premium Account (purchase an account to test)

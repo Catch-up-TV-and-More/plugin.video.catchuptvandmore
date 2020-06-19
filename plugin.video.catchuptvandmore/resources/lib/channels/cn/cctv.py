@@ -26,15 +26,16 @@
 from __future__ import unicode_literals
 
 
-from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
+from codequick import Route, Resolver, Listitem, utils, Script
 
 
 from resources.lib import web_utils
 from resources.lib.menu_utils import item_post_treatment
 
 import json
-from resources.lib import urlquick
+import urlquick
 import socket
+import requests
 
 # TO DO
 # Add Replay
@@ -63,12 +64,11 @@ def live_entry(plugin, item_id, **kwargs):
 def get_live_url(plugin, item_id, video_id, **kwargs):
 
     live_id = 'cctv_p2p_hd%s' % item_id
-    resp = urlquick.get(
+    resp = requests.get(
         URL_LIVE + '?channel=pa://%s&client=html5&ip=%s' % (live_id, get_ip()),
         headers={
             'Cache-Control': 'max-age=-1, public'
-        },
-        unquote_url=True)
+        })
     json_parser = json.loads(
         resp.text.replace('var html5VideoData=\'', '').replace(
             '\';getHtml5VideoData(html5VideoData);', ''))

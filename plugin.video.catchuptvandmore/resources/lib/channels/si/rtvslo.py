@@ -25,7 +25,7 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
+from codequick import Route, Resolver, Listitem, utils, Script
 
 
 @Resolver.register

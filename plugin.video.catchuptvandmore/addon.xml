@@ -2,6 +2,7 @@
 <addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.22~beta10" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
+    <import addon="script.module.codequick" version="0.9.12"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
     <import addon="script.module.requests" version="2.12.4"/>
     <import addon="script.module.pytz" version="2014.2"/>
@@ -11,7 +12,6 @@
     <import addon="script.module.tzlocal" version="2.0.0"/>
     <import addon="script.module.future" version="0.17.1"/>
     <import addon="script.module.kodi-six" version="0.0.4"/>
-    <import addon="script.module.htmlement" version="0.2.3"/>
     <import addon="resource.images.catchuptvandmore" version="1.0.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">

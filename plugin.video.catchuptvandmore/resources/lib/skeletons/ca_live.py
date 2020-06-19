@@ -24,7 +24,7 @@
 # an effect on Python 2.
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
-from resources.lib.codequick import Script, utils
+from codequick import Script, utils
 """
 The following dictionaries describe
 the addon's tree architecture.

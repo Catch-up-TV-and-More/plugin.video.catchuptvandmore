@@ -28,7 +28,7 @@ from __future__ import division
 
 from builtins import str
 import sys
-from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
+from codequick import Route, Resolver, Listitem, utils, Script
 
 
 from resources.lib import web_utils
@@ -40,7 +40,7 @@ from resources.lib.py_utils import old_div
 import json
 import time
 import re
-from resources.lib import urlquick
+import urlquick
 from kodi_six import xbmcgui
 
 # TO DO

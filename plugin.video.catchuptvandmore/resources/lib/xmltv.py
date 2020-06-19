@@ -32,8 +32,8 @@ except ImportError:
 
 from kodi_six import xbmcvfs
 
-from resources.lib.codequick import Script
-from resources.lib import urlquick
+from codequick import Script
+import urlquick
 
 
 # The Python-XMLTV version

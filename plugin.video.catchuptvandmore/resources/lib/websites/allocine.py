@@ -25,8 +25,8 @@ import json
 import re
 import requests
 
-from resources.lib.codequick import Route, Resolver, Listitem, Script, utils
-from resources.lib import urlquick
+from codequick import Route, Resolver, Listitem, Script, utils
+import urlquick
 from kodi_six import xbmcgui
 
 from resources.lib import resolver_proxy

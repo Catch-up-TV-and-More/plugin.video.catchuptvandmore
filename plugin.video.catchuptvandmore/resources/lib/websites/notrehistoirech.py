@@ -20,14 +20,14 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-from resources.lib.codequick import Route, Resolver, Listitem
+from codequick import Route, Resolver, Listitem
 
 
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
 
 import re
-from resources.lib import urlquick
+import urlquick
 
 # TO DO
 # Download Mode

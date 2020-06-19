@@ -26,8 +26,8 @@
 # It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
 
-from resources.lib.codequick import Route, Resolver, Listitem, utils, Script, youtube
-from resources.lib import urlquick
+from codequick import Route, Resolver, Listitem, utils, Script, youtube
+import urlquick
 
 
 from resources.lib import web_utils

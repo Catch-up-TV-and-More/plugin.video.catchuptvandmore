@@ -37,7 +37,6 @@ sys.path.append('../plugin.video.catchuptvandmore/resources')
 sys.path.append('../plugin.video.catchuptvandmore/resources/lib')
 
 sys.modules['codequick'] = mock.MagicMock()
-sys.modules['resources.lib.codequick'] = mock.MagicMock()
 
 import importlib
 import os

@@ -27,8 +27,8 @@ from __future__ import unicode_literals
 
 import re
 
-from resources.lib.codequick import Route, Resolver, Listitem, utils, Script
-from resources.lib import urlquick
+from codequick import Route, Resolver, Listitem, utils, Script
+import urlquick
 
 # Source: https://ethiov.com/live-channels
 

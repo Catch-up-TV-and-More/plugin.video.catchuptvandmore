@@ -32,8 +32,8 @@ import os
 from kodi_six import xbmcgui
 from kodi_six import xbmc
 from kodi_six import xbmcvfs
-from resources.lib.codequick import Script, utils
-from resources.lib import urlquick
+from codequick import Script, utils
+import urlquick
 
 
 # Local imports
