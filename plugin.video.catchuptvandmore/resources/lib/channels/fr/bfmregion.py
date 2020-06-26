@@ -91,7 +91,7 @@ def list_videos(plugin, item_id, page, **kwargs):
             video_url = URL_ROOT + video_datas.find('.//a').get('href')
         else:
             video_url = video_datas.find('.//a').get('href')
-        video_image = '' # TODO image
+        video_image = ''  # TODO image
         video_title = video_datas.find('.//img').get('alt')
 
         item = Listitem()
