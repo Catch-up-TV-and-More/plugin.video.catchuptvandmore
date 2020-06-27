@@ -538,6 +538,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=r
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/europe1.png" group-title="France Radio",Europe 1
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=europe1&item_module=resources.lib.channels.fr.europe1&item_dict={}
 
+##	01Net TV
+##	01net
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/01net.png" group-title="France Satellite/FAI",01Net TV
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=01net&item_module=resources.lib.channels.fr.01net&item_dict={}
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/wo/euronews.png" group-title="France",Euronews
