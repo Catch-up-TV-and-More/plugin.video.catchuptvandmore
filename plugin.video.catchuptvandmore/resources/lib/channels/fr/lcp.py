@@ -132,7 +132,7 @@ def list_videos_programs(plugin, item_id, videos_url, page, **kwargs):
     all_videos_link = URL_ROOT + root.findall(".//div[@class='more-link']")[0].find(".//a").get('href')
 
     resp2 = urlquick.get(all_videos_link + '?page=%s' % page)
-    root2 = resp2.parse("main",attrs={"class":"layout-3col__left-content"})
+    root2 = resp2.parse("main", attrs={"class": "layout-3col__left-content"})
 
     for video_datas in root2.iterfind(".//div[@class='views-row']"):
         video_label = video_datas.findall(".//span[@class='field-content']")[0].text
