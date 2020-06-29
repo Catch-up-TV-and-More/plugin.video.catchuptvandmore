@@ -614,7 +614,7 @@ menu = {
         'fanart': 'channels/fr/mblivetv_fanart.jpg',
         'module': 'resources.lib.channels.fr.mblivetv',
         'm3u_group': 'Satellite/FAI',
-        'enabled': True,
+        'enabled': False,
         'order': 84
     },
     'tv8montblanc': {
