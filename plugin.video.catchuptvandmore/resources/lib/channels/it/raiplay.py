@@ -93,7 +93,7 @@ def list_programs(plugin, item_id, letter_title, **kwargs):
             program_image = ''
             if "images" in program_datas:
                 if 'landscape' in program_datas["images"]:
-                    program_image = program_datas["images"][
+                    program_image = URL_ROOT + program_datas["images"][
                         "landscape"].replace('/resizegd/[RESOLUTION]', '')
             program_url = program_datas["PathID"]
 

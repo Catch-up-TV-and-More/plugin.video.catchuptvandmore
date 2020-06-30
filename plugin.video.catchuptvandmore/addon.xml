@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.23~beta04" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.23~beta05" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.codequick" version="0.9.12"/>
@@ -50,6 +50,7 @@
 [Update] YT-dl - Reactivate Dailymotion stream and Download mode
 [Fix] Catchup TV - Jack (mycanal) (FR)
 [Remove] Live TV - Mont Blanc Live TV (FR)
+[Fix] Live TV - NPO channels (NL)
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
     <assets>
