@@ -96,6 +96,8 @@ def list_programs(plugin, item_id, letter_title, **kwargs):
                     program_image = program_datas["images"][
                         "landscape"].replace('/resizegd/[RESOLUTION]', '')
             program_url = program_datas["PathID"]
+            # replace trailing '/?json' by '.json'
+            program_url = '.'.join(program_url.rsplit('/?'))
 
             item = Listitem()
             item.label = program_title
@@ -114,13 +116,13 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     json_parser = json.loads(resp.text)
 
     # Get Program Name and Program Plot
-    program_name = json_parser["Name"]
-    program_plot = json_parser["infoProg"]["description"]
+    program_name = json_parser["name"]
+    program_plot = json_parser["program_info"]["description"]
 
     has_contents = False
 
     try:
-        url_videos = URL_ROOT + json_parser["Blocks"][0]["Sets"][0]["url"]
+        url_videos = URL_ROOT + json_parser["blocks"][0]["sets"][0]["path_id"]
         has_contents = True
     except Exception:
         pass
@@ -142,7 +144,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
             elif len(duration_value) > 1:
                 video_duration = int(duration_value[0]) * 60 + int(
                     duration_value[1])
-            video_url = URL_ROOT + video_datas['pathID']
+            video_url = video_datas['video_url']
 
             item = Listitem()
             item.label = video_title
@@ -164,12 +166,9 @@ def get_video_url(plugin,
                   download_mode=False,
                   **kwargs):
 
-    resp = urlquick.get(video_url)
-    json_parser = json.loads(resp.text)
-
     if download_mode:
-        return download.download_video(json_parser["video"]["contentUrl"])
-    return json_parser["video"]["contentUrl"]
+        return download.download_video(video_url)
+    return video_url
 
 
 def live_entry(plugin, item_id, **kwargs):
