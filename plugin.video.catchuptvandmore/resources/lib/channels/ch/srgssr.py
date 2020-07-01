@@ -157,28 +157,25 @@ def list_programs(plugin, item_id, category_url, **kwargs):
     """
     resp = urlquick.get(category_url)
     json_value = re.compile(
-        r'data-alphabetical-sections=\\\"(.*?)\\\"').findall(resp.text)[0]
-    json_value = json_value.replace('&quot;', '"')
-    json_value = json_value.replace('\\\\"', ' ')
+        r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
     json_parser = json.loads(json_value)
-    for list_letter in json_parser:
-        for program_datas in list_letter["showTeaserList"]:
-            program_title = program_datas["title"]
-            if 'rts.ch' in program_datas["imageUrl"]:
-                program_image = program_datas["imageUrl"] + \
-                    '/scale/width/448'
-            else:
-                program_image = program_datas["imageUrl"]
-            program_id = program_datas["id"]
+    for program_datas in json_parser["initialData"]["shows"]:
+        program_title = program_datas["title"]
+        if 'rts.ch' in program_datas["imageUrl"]:
+            program_image = program_datas["imageUrl"] + \
+                '/scale/width/448'
+        else:
+            program_image = program_datas["imageUrl"]
+        program_id = program_datas["id"]
 
-            item = Listitem()
-            item.label = program_title
-            item.art['thumb'] = item.art['landscape'] = program_image
-            item.set_callback(list_videos_program,
-                              item_id=item_id,
-                              program_id=program_id)
-            item_post_treatment(item)
-            yield item
+        item = Listitem()
+        item.label = program_title
+        item.art['thumb'] = item.art['landscape'] = program_image
+        item.set_callback(list_videos_program,
+                          item_id=item_id,
+                          program_id=program_id)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
