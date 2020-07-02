@@ -30,20 +30,14 @@ from __future__ import print_function
 from builtins import str
 import polib
 import sys
+import mock
+
 sys.path.append('../plugin.video.catchuptvandmore')
 sys.path.append('../plugin.video.catchuptvandmore/resources')
 sys.path.append('../plugin.video.catchuptvandmore/resources/lib')
 
-import mock_codequick
-from codequick import Script, utils
-try:
-    from urllib.parse import urlparse, urlencode
-    from urllib.request import urlopen, Request
-    from urllib.error import HTTPError
-except ImportError:
-    from urlparse import urlparse
-    from urllib import urlencode
-    from urllib2 import urlopen, Request, HTTPError
+sys.modules['codequick'] = mock.MagicMock()
+
 import importlib
 import os
 
@@ -98,51 +92,39 @@ MANUAL_LABELS = {
     'paramountchannel': 'Paramount Channel',
     'rt': 'RT',
     'tvp3': 'TVP 3',
-    'realmadridtv': 'Realmadrid TV'
+    'realmadridtv': 'Realmadrid TV',
+    'icitele': 'ICI Télé',
+    'cbc': 'CBC'
 }
 
 
-def get_labels_dict():
-    labels_py_fp = '../plugin.video.catchuptvandmore/resources/lib/labels.py'
-    lines = []
-    with open(labels_py_fp, 'r') as f:
-        take_line = False
-        for line in f.readlines():
-            if 'LABELS = {' in line:
-                take_line = True
-                line = '{'
-
-            if take_line:
-                lines.append(line)
-
-            if '}' in line:
-                take_line = False
-    labels_dict_s = '\n'.join(lines)
-    return eval(labels_dict_s)
-
-
-# Get image path/url
 def get_item_media_path(item_media_path):
+    """Get full path or URL of an item_media
+
+    Args:
+        item_media_path (str or list): Partial media path of the item (e.g. channels/fr/tf1.png)
+    Returns:
+        str: Full path or URL of the item_pedia
+    """
     full_path = ''
 
-    # Local image in ressources/media folder
-    if type(item_media_path) is list:
-        full_path = os.path.join("..", "media", *(item_media_path))
-
     # Remote image with complete URL
-    elif 'http' in item_media_path:
+    if 'http' in item_media_path:
         full_path = item_media_path
 
-    # Remote image on our images repo
+    # Image in our resource.images add-on
     else:
-        full_path = 'https://github.com/Catch-up-TV-and-More/images/raw/master/' + item_media_path
+        full_path = 'resource://resource.images.catchuptvandmore/' + item_media_path
 
     return full_path
 
 
 # Return string label from item_id
-def get_label(item_id, labels):
-    label = labels[item_id]
+def get_label(item_id, item_infos={}):
+    if 'label' in item_infos:
+        label = item_infos['label']
+    else:
+        label = item_id
 
     # strings.po case
     if isinstance(label, int):
@@ -171,7 +153,7 @@ def write_header(file):
 
 
 # Generate m3u files
-def generate_m3u_files(labels):
+def generate_m3u_files():
 
     m3u_entries = {}
 
@@ -179,7 +161,7 @@ def generate_m3u_files(labels):
     live_tv = importlib.import_module('lib.skeletons.live_tv').menu
     for country_id, country_infos in list(live_tv.items()):
 
-        country_label = get_label(country_id, labels)
+        country_label = get_label(country_id, country_infos)
         country_code = country_id.replace('_live', '')
 
         print('\ncountry_id: ' + country_id)
@@ -196,7 +178,7 @@ def generate_m3u_files(labels):
                                                    country_id).menu
         for channel_id, channel_infos in list(country_channels.items()):
 
-            channel_label = get_label(channel_id, labels)
+            channel_label = get_label(channel_id, channel_infos)
             print('\n\tchannel_id: ' + channel_id)
             # print('\t\tchannel_label: ' + channel_label)
 
@@ -298,7 +280,7 @@ def generate_m3u_files(labels):
 
             if channel_can_be_added:
 
-                channel_wo_label = get_label(channel_wo_id, labels)
+                channel_wo_label = get_label(channel_wo_id, channel_wo_infos)
 
                 channel_m3u_dict = {}
 
@@ -432,8 +414,7 @@ def generate_m3u_files(labels):
 
 
 def main():
-    labels = get_labels_dict()
-    generate_m3u_files(labels)
+    generate_m3u_files()
     print("\nM3U files generation done! :-D")
 
 

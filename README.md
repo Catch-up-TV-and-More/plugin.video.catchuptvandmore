@@ -1,7 +1,7 @@
 # Catch-up TV & More
-![Catch-up TV & More](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/master/plugin.video.catchuptvandmore/icon.png)
+![Catch-up TV & More](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/plugin.video.catchuptvandmore/icon.png)
 
-![CI](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/workflows/CI/badge.svg?branch=master)
+![CI](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/workflows/CI/badge.svg?branch=dev)
 
 ## Descritpion
 [Catch-Up TV & More](https://kodi.tv/addon/plugins-video-add-ons/catch-tv-more) est un plugin vidéo pour le media center Kodi (ex XBMC).
