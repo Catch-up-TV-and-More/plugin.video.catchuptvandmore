@@ -138,12 +138,8 @@ def get_video_url(plugin,
                                                     download_mode)
 
 
-def live_entry(plugin, item_id, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper())
-
-
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     if item_id == 'stv_plusone':
         item_id = 'stv-plus-1'

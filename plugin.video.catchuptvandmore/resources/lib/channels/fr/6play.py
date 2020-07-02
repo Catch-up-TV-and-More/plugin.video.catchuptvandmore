@@ -109,13 +109,6 @@ URL_LIVE_JSON = 'https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/s
 DESIRED_QUALITY = Script.setting['quality']
 
 
-def replay_entry(plugin, item_id, **kwargs):
-    """
-    First executed function after replay_bridge
-    """
-    return sixplay_root(plugin)
-
-
 @Route.register
 def sixplay_root(plugin, **kwargs):
 
@@ -523,12 +516,8 @@ def get_playlist_urls(plugin,
         return playlist_videos
 
 
-def live_entry(plugin, item_id, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper())
-
-
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     if item_id == 'fun_radio' or \
             item_id == 'rtl2' or \
