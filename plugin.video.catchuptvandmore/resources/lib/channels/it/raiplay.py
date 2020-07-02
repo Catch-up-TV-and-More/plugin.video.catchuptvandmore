@@ -97,7 +97,7 @@ def list_programs(plugin, item_id, letter_title, **kwargs):
                         "landscape"].replace('/resizegd/[RESOLUTION]', '')
             program_url = program_datas["PathID"]
             # replace trailing '/?json' by '.json'
-            program_url = '.'.join(program_url.rsplit('/?'))
+            program_url = '.'.join(program_url.rsplit('/?', 1))
 
             item = Listitem()
             item.label = program_title
@@ -151,6 +151,18 @@ def list_videos(plugin, item_id, program_url, **kwargs):
             item.art['thumb'] = item.art['landscape'] = video_image
             item.info['duration'] = video_duration
             item.info['plot'] = program_plot
+            item.params['title'] = video_title
+
+            # subtitles
+            try:
+                weblink = video_datas['weblink']
+                weblink = weblink.rsplit('.', 1)[0] + '.json'
+                resp3 = urlquick.get(URL_ROOT + weblink)
+                json_parser3 = json.loads(resp3.text)
+                subtitles = json_parser3['video']['subtitlesArray']
+                item.params['subtitles'] = subtitles
+            except Exception as e:
+                Script.log('railplay.it unable to reach subtitles webpage.')
 
             item.set_callback(get_video_url,
                               item_id=item_id,
@@ -168,7 +180,13 @@ def get_video_url(plugin,
 
     if download_mode:
         return download.download_video(video_url)
-    return video_url
+
+    item = Listitem()
+    item.label = kwargs.get('title', 'unknown')
+    item.path = video_url
+    if kwargs.get('subtitles') and plugin.setting.get_boolean('active_subtitle'):
+        item.subtitles = [URL_ROOT + sub['url'] for sub in kwargs['subtitles']]
+    return item
 
 
 def live_entry(plugin, item_id, **kwargs):
