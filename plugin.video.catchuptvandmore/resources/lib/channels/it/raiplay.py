@@ -162,7 +162,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
                 subtitles = json_parser3['video']['subtitlesArray']
                 item.params['subtitles'] = subtitles
             except Exception as e:
-                Script.log('railplay.it unable to reach subtitles webpage.')
+                Script.log('[raiplay.py] Problem getting subtitles.')
 
             item.set_callback(get_video_url,
                               item_id=item_id,
