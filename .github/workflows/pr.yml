@@ -26,7 +26,7 @@ jobs:
   branch:
     name: Branch
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/dev'
+    if: github.base_ref != 'refs/heads/dev'
     steps:
       - name: Branch dev check
         run: |
