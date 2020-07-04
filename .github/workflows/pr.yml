@@ -9,7 +9,7 @@ jobs:
   
   # Flake
   flake:
-    name: Flake8
+    name: Flake8 check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,11 +24,11 @@ jobs:
 
   # Branch check
   branch:
-    name: Branch
+    name: Base branch check
     runs-on: ubuntu-latest
-    if: github.base_ref != 'refs/heads/dev'
+    if: github.base_ref != 'dev'
     steps:
       - name: Branch dev check
         run: |
-          echo "Pull request need to be done on dev branch"
+          echo "Pull request need to be done on dev branch and not on ${{ github.base_ref }}"
           exit 1
