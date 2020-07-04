@@ -21,3 +21,14 @@ jobs:
         run: pip install flake8
       - name: Lint with flake8 
         run: flake8 ./plugin.video.catchuptvandmore
+
+  # Branch check
+  branch:
+    name: Branch
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/dev'
+    steps:
+      - name: Branch dev check
+        run: |
+          echo "Pull request need to be done on dev branch"
+          exit 1
