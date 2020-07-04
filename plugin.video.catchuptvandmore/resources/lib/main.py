@@ -48,6 +48,7 @@ from resources.lib.addon_utils import get_item_label, get_item_media_path
 
 # test PR again
 
+
 @Route.register
 def root(plugin):
     """Build root menu of the addon (Live TV, Catch-up TV, Websites, ...)
