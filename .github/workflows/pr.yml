@@ -32,3 +32,9 @@ jobs:
         run: |
           echo "Pull request need to be done on dev branch and not on ${{ github.base_ref }}"
           exit 1
+    if: github.base_ref == 'dev'
+    steps:
+      - name: Branch dev check
+        run: |
+          echo "Pull request on dev branch, it's ok ;-)"
+          exit 0
