@@ -161,7 +161,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
                 json_parser3 = json.loads(resp3.text)
                 subtitles = json_parser3['video']['subtitlesArray']
                 item.params['subtitles'] = subtitles
-            except Exception as e:
+            except Exception:
                 Script.log('[raiplay.py] Problem getting subtitles.')
 
             item.set_callback(get_video_url,
