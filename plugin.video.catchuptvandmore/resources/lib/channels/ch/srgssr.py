@@ -46,12 +46,12 @@ from kodi_six import xbmcgui
 # Add More Video_button (for emissions)
 # Add Quality Mode / test Download Mode
 
-URL_ROOT = 'https://%s.%s.ch'
-# (www or play), channel_name
+URL_ROOT = 'https://www.%s.ch'
+# channel_name
 
 # Replay
-URL_CATEGORIES_JSON = 'https://%s.%s.ch/play/v2/tv/topicList?layout=json'
-# (www or play), channel_name
+URL_CATEGORIES_JSON = 'https://www.%s.ch/play/v2/tv/topicList?layout=json'
+# channel_name
 
 URL_EMISSIONS = 'https://www.%s.ch/play/tv/%s?index=all'
 # channel_name, name_emission
@@ -63,9 +63,9 @@ URL_LIST_EPISODES = 'https://www.%s.ch/play/v2/tv/show/%s/' \
 
 # Live
 URL_LIVE_JSON = 'http://www.%s.ch/play/v2/tv/live/overview?layout=json'
-# channel_name
+# (www or play) channel_name
 
-URL_API_V3 = 'https://www.%s.ch/play/v3/api/%s/production/%s'
+URL_API_V3 = 'https://%s.%s.ch/play/v3/api/%s/production/%s'
 # channel_name, channel_name, API method
 
 URL_TOKEN = 'https://tp.srgssr.ch/akahd/token?acl=%s'
@@ -98,6 +98,14 @@ LIVE_LIVE_CHANNEL_NAME = {
     "rtraufsrf2": "RTR auf SRF 2"
 }
 
+SWISSINFO_TOPICS = {
+    'Business': 1,
+    'Culrure': 2,
+    'Politics': 4,
+    'Sci & Tech': 5,
+    'Society': 6
+}
+
 
 def replay_entry(plugin, item_id, **kwargs):
     """
@@ -115,9 +123,17 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-
-    # Emissions
-    if 'swissinfo' not in item_id:
+    if item_id == 'swissinfo':
+        for topic_name, topic_id in SWISSINFO_TOPICS.items():
+            item = Listitem()
+            item.label = topic_name
+            item.set_callback(list_videos_category,
+                              item_id=item_id,
+                              category_id=topic_id)
+            item_post_treatment(item)
+            yield item
+    else:
+        # Emission
         category = EMISSIONS_NAME[item_id]
         category_url = URL_EMISSIONS % (item_id, category[1])
 
@@ -129,27 +145,22 @@ def list_categories(plugin, item_id, **kwargs):
         item_post_treatment(item)
         yield item
 
-    if 'swissinfo' in item_id:
-        first_part_fqdn = 'play'
-    else:
-        first_part_fqdn = 'www'
+        # Other categories (Info, Kids, ...)
+        resp = urlquick.get(URL_CATEGORIES_JSON % item_id)
+        json_parser = json.loads(resp.text)
 
-    # Other categories (Info, Kids, ...)
-    resp = urlquick.get(URL_CATEGORIES_JSON % (first_part_fqdn, item_id))
-    json_parser = json.loads(resp.text)
+        for category_datas in json_parser:
+            item = Listitem()
+            item.label = category_datas['title']
+            category_url = URL_ROOT % item_id + \
+                category_datas["latestModuleUrl"]
 
-    for category_datas in json_parser:
-        item = Listitem()
-        item.label = category_datas['title']
-        category_url = URL_ROOT % (first_part_fqdn, item_id) + \
-            category_datas["latestModuleUrl"]
-
-        item.set_callback(list_videos_category,
-                          item_id=item_id,
-                          category_url=category_url,
-                          category_id=category_datas['id'])
-        item_post_treatment(item)
-        yield item
+            item.set_callback(list_videos_category,
+                              item_id=item_id,
+                              category_id=category_datas['id'],
+                              category_url=category_url)
+            item_post_treatment(item)
+            yield item
 
 
 @Route.register
@@ -208,7 +219,7 @@ def list_programs(plugin, item_id, category_url, **kwargs):
 
 
 @Route.register
-def list_videos_category(plugin, item_id, category_url, category_id, next_page='', **kwargs):
+def list_videos_category(plugin, item_id, category_id, category_url=None, next_page=None, **kwargs):
     if item_id == 'rsi':
         resp = urlquick.get(category_url)
         json_value = re.compile(r'data-teaser=\"(.*?)\"').findall(resp.text)[0]
@@ -239,7 +250,12 @@ def list_videos_category(plugin, item_id, category_url, category_id, next_page='
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
     else:
-        url = URL_API_V3 % (item_id, item_id, 'latest-media-by-topic')
+
+        url = URL_API_V3 % (
+            'play' if item_id == 'swissinfo' else 'www',
+            item_id,
+            'swi' if item_id == 'swissinfo' else item_id,
+            'latest-media-by-topic')
         params = {'topicId': category_id}
         if next_page:
             params['next'] = next_page
