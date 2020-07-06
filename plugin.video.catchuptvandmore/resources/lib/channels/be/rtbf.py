@@ -490,6 +490,10 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
             xbmcgui.Dialog().ok('Info', plugin.localize(30602))
             return False
 
+        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not is_helper.check_inputstream():
+            return False
+
         token_url = URL_TOKEN % (live_id, get_partener_key())
         token_value = urlquick.get(token_url, max_age=-1)
         json_parser_token = json.loads(token_value.text)

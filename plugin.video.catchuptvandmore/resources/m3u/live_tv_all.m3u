@@ -1578,10 +1578,10 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=n
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/nl/npo2.png" group-title="Netherlands",NPO 2
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=npo-2&item_module=resources.lib.channels.nl.npo&item_dict={}
 
-##	NPO Zapp
-##	npo-zapp
-#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/nl/npozapp.png" group-title="Netherlands",NPO Zapp
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=npo-zapp&item_module=resources.lib.channels.nl.npo&item_dict={}
+##	NPO 3
+##	npo-3zapp
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/nl/npozapp.png" group-title="Netherlands",NPO 3
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=npo-3zapp&item_module=resources.lib.channels.nl.npo&item_dict={}
 
 ##	NPO 1 Extra
 ##	npo-1-extra
