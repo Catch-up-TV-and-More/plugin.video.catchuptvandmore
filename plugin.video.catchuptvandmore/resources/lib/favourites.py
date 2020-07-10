@@ -38,7 +38,6 @@ from hashlib import md5
 
 
 import resources.lib.mem_storage as mem_storage
-from resources.lib.migration_utils import migrate_from_pickled_fav
 from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_params, get_selected_item_stream, get_selected_item_info
 from resources.lib.addon_utils import get_item_label, get_item_media_path
 
@@ -53,7 +52,6 @@ def get_fav_dict_from_json():
         dict: Favourites dict
     """
 
-    migrate_from_pickled_fav()
     if not xbmcvfs.exists(FAV_JSON_FP):
         return {}
     try:
