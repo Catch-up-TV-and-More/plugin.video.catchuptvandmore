@@ -383,29 +383,28 @@ def list_videos_emissions_2(plugin, item_id, page, show_url, last_page,
     for episode in episodes:
         item = Listitem()
         if episode.find('.//h3') is not None:
-            item.label = episode.find('.//h3').find('.//span').find(
+            video_title = episode.find('.//h3').find('.//span').find(
                 './/a').find('.//strong').text.strip() + ' - ' + episode.find(
                     './/h3').find('.//span').find('.//a').find(
                         './/strong').tail.strip()
         else:
             if episode.find('.//h2/span/a/strong') is not None:
-                item.label = episode.find('.//h2/span/a/strong').text.strip() \
+                video_title = episode.find('.//h2/span/a/strong').text.strip() \
                     + ' - ' + episode.find('.//h2/span/a/strong').tail.strip()
             elif episode.find('.//h2/span/span') is not None:
-                item.label = episode.find('.//h2/span/span').text.strip()
+                video_title = episode.find('.//h2/span/span').text.strip()
             elif episode.find('.//h2/span/a') is not None:
-                item.label = episode.find('.//h2/span/a').text.strip()
+                video_title = episode.find('.//h2/span/a').text.strip()
             else:
-                item.label = ''
+                video_title = ''
+        item.label = video_title
 
-        if episode.find('.//a') is not None:
-            if '?cmedia=' in episode.find('.//a').get('href'):
-                video_url = URL_ROOT + episode.find('.//a').get('href')
-            elif 'cfilm=' in episode.find('.//a').get('href') or \
-                    'cserie=' in episode.find('.//a').get('href'):
-                video_url = URL_ROOT + episode.find('.//h2').find('.//span').find('.//a').get('href')
-            else:
-                video_url = URL_ROOT + episode.find('.//a').get('href')
+        if episode.find(".//a") is not None:
+            video_urls_datas = episode.findall(".//a")
+            video_url = ''
+            for video_url_datas in video_urls_datas:
+                if 'program' not in video_url_datas.get('href'):
+                    video_url = URL_ROOT + video_url_datas.get('href')
         else:
             # TODO: ↪ Root menu (1) ➡ Websites (3) ➡ Allociné (1) ➡ Les émissions (1) ➡ Stars (6) ➡ Clips musicaux (3) ➡ # Les videos (1) ➡ [B]Next page 2[/B]
             continue
@@ -489,8 +488,42 @@ def get_video_url(plugin,
             return 'https:' + json_parser["videos"][0]["sources"]["high"]
         else:
             return json_parser["videos"][0]["sources"]["standard"]
-    else:
-        return None
+    elif root.find(".//div[@class='more-overlay-item social-export light']") is not None:
+        stream_datas_json = root.find(".//div[@class='more-overlay-item social-export light']").get('data-model')
+        print(repr(stream_datas_json))
+        json_parser = json.loads(stream_datas_json)
+        if 'code' in json_parser["videos"][0]["sources"]:
+            url_video_resolver = json_parser["videos"][0]["sources"]["code"]
+            if 'youtube' in url_video_resolver:
+                video_id = re.compile(r'www.youtube.com/embed/(.*?)[\?\"\&]'
+                                        ).findall(url_video_resolver)[0]
+                return resolver_proxy.get_stream_youtube(
+                    plugin, video_id, download_mode)
+
+            # Case DailyMotion
+            elif 'dailymotion' in url_video_resolver:
+                video_id = re.compile(r'embed/video/(.*?)[\"\?]').findall(
+                    url_video_resolver)[0]
+                return resolver_proxy.get_stream_dailymotion(
+                    plugin, video_id, download_mode)
+
+            # Case Facebook
+            elif 'facebook' in url_video_resolver:
+                video_id = re.compile('www.facebook.com/allocine/videos/(.*?)/'
+                                        ).findall(url_video_resolver)[0]
+                return resolver_proxy.get_stream_facebook(
+                    plugin, video_id, download_mode)
+
+            # Case Vimeo
+            elif 'vimeo' in url_video_resolver:
+                video_id = re.compile('player.vimeo.com/video/(.*?)[\?\"]'
+                                        ).findall(url_video_resolver)[0]
+                return resolver_proxy.get_stream_vimeo(plugin, video_id,
+                                                        download_mode)
+
+        # TO DO ? (return an error)
+        else:
+            return False
 
 
 @Route.register
