@@ -495,8 +495,8 @@ def get_video_url(plugin,
         if 'code' in json_parser["videos"][0]["sources"]:
             url_video_resolver = json_parser["videos"][0]["sources"]["code"]
             if 'youtube' in url_video_resolver:
-                video_id = re.compile(r'www.youtube.com/embed/(.*?)[\?\"\&]'
-                                        ).findall(url_video_resolver)[0]
+                video_id = re.compile(
+                    r'www.youtube.com/embed/(.*?)[\?\"\&]').findall(url_video_resolver)[0]
                 return resolver_proxy.get_stream_youtube(
                     plugin, video_id, download_mode)
 
@@ -509,17 +509,17 @@ def get_video_url(plugin,
 
             # Case Facebook
             elif 'facebook' in url_video_resolver:
-                video_id = re.compile('www.facebook.com/allocine/videos/(.*?)/'
-                                        ).findall(url_video_resolver)[0]
+                video_id = re.compile(
+                    r'www.facebook.com/allocine/videos/(.*?)/').findall(url_video_resolver)[0]
                 return resolver_proxy.get_stream_facebook(
                     plugin, video_id, download_mode)
 
             # Case Vimeo
             elif 'vimeo' in url_video_resolver:
-                video_id = re.compile('player.vimeo.com/video/(.*?)[\?\"]'
-                                        ).findall(url_video_resolver)[0]
-                return resolver_proxy.get_stream_vimeo(plugin, video_id,
-                                                        download_mode)
+                video_id = re.compile(
+                    r'player.vimeo.com/video/(.*?)[\?\"]').findall(url_video_resolver)[0]
+                return resolver_proxy.get_stream_vimeo(
+                    plugin, video_id, download_mode)
 
         # TO DO ? (return an error)
         else:
