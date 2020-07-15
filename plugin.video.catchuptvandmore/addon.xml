@@ -50,6 +50,7 @@
 [Fix] Live TV - BFM Business (FR)
 [Fix] Website - Allocine (FR)
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
+[Move] Catch-Up TV - France TV (FR) - All France TV channels are now in 'france.tv' folder like the official website
     </news>
     <assets>
       <icon>icon.png</icon>
