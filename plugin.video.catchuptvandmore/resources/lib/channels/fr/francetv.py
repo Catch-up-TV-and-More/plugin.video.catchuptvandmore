@@ -100,6 +100,7 @@ def channels(plugin):
         ('channels/france-3', 'France 3', 'france3.png', 'france3_fanart.jpg'),
         ('channels/france-4', 'France 4', 'france4.png', 'france4_fanart.jpg'),
         ('channels/france-5', 'France 5', 'france5.png', 'france5_fanart.jpg'),
+        ('channels/france-o', 'France Ô', 'franceo.png', 'franceo_fanart.jpg'),
         ('regions/outre-mer', 'Outre-mer la 1ère', 'la1ere.png', 'la1ere_fanart.jpg'),
         ('channels/franceinfo', 'franceinfo:', 'franceinfo.png', 'franceinfo_fanart.jpg'),
         ('channels/slash', 'France tv Slash', 'slash.png', 'slash_fanart.jpg'),
