@@ -109,29 +109,33 @@ def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
     # in order to be able to directly use `Listitem.from_dict` later
     item_dict = {}
 
-    # --> subtitles (TODO)
-    # item_dict['subtitles'] = list(item.subtitles)
+    # --> callback (string)
+    item_dict['callback'] = xbmc.getInfoLabel('ListItem.Path').replace(
+        'plugin://plugin.video.catchuptvandmore', '')
 
-    # --> art
+    # --> label (string)
+    item_dict['label'] = get_selected_item_label()
+
+    # --> art (dict)
     item_dict['art'] = get_selected_item_art()
 
-    # --> info
+    # --> info (dict)
     item_dict['info'] = get_selected_item_info()
 
-    # --> stream
+    # --> stream (dict)
     item_dict['stream'] = get_selected_item_stream()
 
-    # --> context (TODO)
+    # --> context (list) (TODO)
     item_dict['context'] = []
 
-    # --> properties (TODO)
+    # --> properties (dict) (TODO)
     item_dict['properties'] = {}
 
-    # --> params
+    # --> params (dict)
     item_dict['params'] = get_selected_item_params()
 
-    # --> label
-    item_dict['label'] = get_selected_item_label()
+    # --> subtitles (list) (TODO)
+    item_dict['subtitles'] = []
 
     if item_infos:
         # This item comes from tv_guide_menu
@@ -153,17 +157,11 @@ def add_item_to_favourites(plugin, is_playable=False, item_infos={}):
 
         item_dict['info']['plot'] = ''
 
-    # Extract the callback
-    item_path = xbmc.getInfoLabel('ListItem.Path')
-    item_dict['callback'] = item_path.replace(
-        'plugin://plugin.video.catchuptvandmore', '')
-
     s = mem_storage.MemStorage('fav')
-    prefix = ''
     try:
         prefix = s['prefix']
     except KeyError:
-        pass
+        prefix = ''
 
     label_proposal = item_dict['label']
     if prefix != '':
@@ -318,6 +316,5 @@ def delete_favourites(plugin):
     """
 
     Script.log('Delete favourites db')
-    xbmcvfs.delete(os.path.join(Script.get_info('profile'), 'favourites.pickle'))
     xbmcvfs.delete(os.path.join(Script.get_info('profile'), 'favourites.json'))
     Script.notify(Script.localize(30374), '')

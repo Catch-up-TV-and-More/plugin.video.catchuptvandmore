@@ -298,7 +298,7 @@ def favourites(plugin, start=0, **kwargs):
     # We sort the menu according to the item_order values
     sorted_menu = sorted(menu, key=lambda x: x[0])
 
-    # Notify the user if there is not item in favourites
+    # Notify the user if there is no item in favourites
     if len(sorted_menu) == 0:
         Script.notify(Script.localize(30033), Script.localize(30806), display_time=7000)
         yield False
@@ -316,30 +316,16 @@ def favourites(plugin, start=0, **kwargs):
             break
 
         cnt += 1
-        # Listitem.from_dict fails with subtitles
-        # See https://github.com/willforde/script.module.codequick/issues/30
-        if 'subtitles' in item_dict:
-            item_dict.pop('subtitles')
-
-        # Listitem.from_dict only works if context is a list
-        if 'context' in item_dict and not isinstance(item_dict['context'], list):
-            item_dict.pop('context')
-
-        # Remove original move and hide contexts:
-        if 'context' in item_dict:
-            new_context = []
-            for context in item_dict['context']:
-                if 'move_item' not in context[1] and 'hide' not in context[1]:
-                    new_context.append(context)
-            item_dict['context'] = new_context
 
         item_dict['params']['from_fav'] = True
         item_dict['params']['item_hash'] = item_hash
 
+        # Build item from dict
         item = Listitem.from_dict(**item_dict)
-        url = build_kodi_url(item_dict['callback'], item_dict['params'])
 
-        item.set_callback(url)
+        # Generate a valid callback
+        url = build_kodi_url(item_dict['callback'], item_dict['params'])
+        item.set_callback(url, is_folder=item_dict['params']['is_folder'], is_playbale=item_dict['params']['is_playable'])
 
         item.is_folder = item_dict['params']['is_folder']
         item.is_playbale = item_dict['params']['is_playable']
