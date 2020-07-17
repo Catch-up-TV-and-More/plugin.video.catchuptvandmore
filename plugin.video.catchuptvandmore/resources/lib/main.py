@@ -320,41 +320,44 @@ def favourites(plugin, start=0, **kwargs):
         item_dict['params']['from_fav'] = True
         item_dict['params']['item_hash'] = item_hash
 
-        # Build item from dict
-        item = Listitem.from_dict(**item_dict)
+        try:
+            # Build item from dict
+            item = Listitem.from_dict(**item_dict)
 
-        # Generate a valid callback
-        url = build_kodi_url(item_dict['callback'], item_dict['params'])
-        item.set_callback(url, is_folder=item_dict['params']['is_folder'], is_playbale=item_dict['params']['is_playable'])
+            # Generate a valid callback
+            url = build_kodi_url(item_dict['callback'], item_dict['params'])
+            item.set_callback(url, is_folder=item_dict['params']['is_folder'], is_playbale=item_dict['params']['is_playable'])
 
-        item.is_folder = item_dict['params']['is_folder']
-        item.is_playbale = item_dict['params']['is_playable']
+            item.is_folder = item_dict['params']['is_folder']
+            item.is_playbale = item_dict['params']['is_playable']
 
-        # Rename
-        item.context.script(fav.rename_favourite_item,
-                            plugin.localize(30804),
-                            item_hash=item_hash)
-
-        # Remove
-        item.context.script(fav.remove_favourite_item,
-                            plugin.localize(30802),
-                            item_hash=item_hash)
-
-        # Move up
-        if item_dict['params']['order'] > 0:
-            item.context.script(fav.move_favourite_item,
-                                plugin.localize(30501),
-                                direction='up',
+            # Rename
+            item.context.script(fav.rename_favourite_item,
+                                plugin.localize(30804),
                                 item_hash=item_hash)
 
-        # Move down
-        if item_dict['params']['order'] < len(fav_dict) - 1:
-            item.context.script(fav.move_favourite_item,
-                                plugin.localize(30500),
-                                direction='down',
+            # Remove
+            item.context.script(fav.remove_favourite_item,
+                                plugin.localize(30802),
                                 item_hash=item_hash)
 
-        yield item
+            # Move up
+            if item_dict['params']['order'] > 0:
+                item.context.script(fav.move_favourite_item,
+                                    plugin.localize(30501),
+                                    direction='up',
+                                    item_hash=item_hash)
+
+            # Move down
+            if item_dict['params']['order'] < len(fav_dict) - 1:
+                item.context.script(fav.move_favourite_item,
+                                    plugin.localize(30500),
+                                    direction='down',
+                                    item_hash=item_hash)
+
+            yield item
+        except Exception:
+            fav.remove_favourite_item(plugin, item_hash)
 
 
 def error_handler(exception):
