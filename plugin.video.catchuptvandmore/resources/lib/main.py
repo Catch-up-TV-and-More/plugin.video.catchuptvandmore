@@ -270,21 +270,9 @@ def live_bridge(plugin, item_id, item_module, **kwargs):
         Iterator[codequick.listing.Listitem]: Kodi 'item_id' menu
     """
 
-    # If we come from a M3U file, we need to
-    # convert the dict string to the real dict object
-    # and get the language value
-    lang = ''
-    if 'item_dict' in kwargs and \
-            isinstance(kwargs['item_dict'], string_types):
-        kwargs['item_dict'] = eval(kwargs['item_dict'])
-        lang = kwargs['item_dict'].get('language', '')
-
     # Let's go to the module file ...
     module = importlib.import_module(item_module)
-    if lang == '':
-        return module.live_entry(plugin, item_id)
-    else:
-        return module.live_entry(plugin, item_id, language=lang)
+    return module.live_entry(plugin, item_id, **kwargs)
 
 
 @Route.register
