@@ -886,5 +886,15 @@ menu = {
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
         'order': 121
+    },
+    'equidia': {
+        'callback': 'live_bridge',
+        'label': 'Equidia',
+        'thumb': 'channels/fr/equidia.png',
+        'fanart': 'channels/fr/equidia_fanart.jpg',
+        'module': 'resources.lib.channels.fr.equidia',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 122
     }
 }

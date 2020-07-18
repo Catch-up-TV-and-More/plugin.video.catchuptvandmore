@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.24~beta06" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.24~beta07" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.codequick" version="0.9.12"/>
@@ -49,8 +49,10 @@
 [Rename] Live TV - NPO Zapp to NPO 3 (NL) - Need more work
 [Fix] Live TV - BFM Business (FR)
 [Fix] Website - Allocine (FR)
-Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
 [Move] Catch-Up TV - France TV (FR) - All France TV channels are now in 'france.tv' folder like the official website
+[Add] Live TV - Equidia (FR)
+----
+Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
     <assets>
       <icon>icon.png</icon>

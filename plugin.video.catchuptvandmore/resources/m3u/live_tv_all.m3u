@@ -533,6 +533,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=e
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/01net.png" group-title="France",01Net TV
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=01net&item_module=resources.lib.channels.fr.01net
 
+##	Equidia
+##	equidia
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/equidia.png" group-title="France",Equidia
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=equidia&item_module=resources.lib.channels.fr.equidia
+
 
 
 # Switzerland
