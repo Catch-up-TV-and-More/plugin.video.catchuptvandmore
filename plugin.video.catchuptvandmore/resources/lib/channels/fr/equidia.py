@@ -57,7 +57,8 @@ def get_live_url(plugin, item_id, video_id, **kwargs):
     json_parser = json.loads(resp.text)
     url_stream_datas = ''
     for stream_datas in json_parser:
-        url_stream_datas = stream_datas["streamUrl"]
+        if 'EQUIDIA' in stream_datas['title']:
+            url_stream_datas = stream_datas["streamUrl"]
     resp2 = urlquick.get(
         url_stream_datas, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
     json_parser2 = json.loads(resp2.text)
