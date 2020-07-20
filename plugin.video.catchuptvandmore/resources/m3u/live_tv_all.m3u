@@ -538,6 +538,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=0
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/equidia.png" group-title="France",Equidia
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=equidia&item_module=resources.lib.channels.fr.equidia
 
+##	B Smart
+##	bsmart
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/bsmart.png" group-title="France",B Smart
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=bsmart&item_module=resources.lib.channels.fr.bsmart
+
 
 
 # Switzerland
