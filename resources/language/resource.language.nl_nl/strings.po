@@ -376,6 +376,10 @@ msgctxt "#30203"
 msgid "Automatically rename the video (download directory required)"
 msgstr "Hernoem de video automatisch (download map vereist)"
 
+msgctxt "#30204"
+msgid "Ffmpeg executable directory"
+msgstr "Ffmpeg uitvoerbare map"
+
 
 # Accounts (from 30240 to 30259)
 

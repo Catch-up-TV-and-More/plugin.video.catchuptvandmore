@@ -27,6 +27,10 @@ def download_video(video_url):
     YDStreamUtils = __import__('YDStreamUtils')
     YDStreamExtractor = __import__('YDStreamExtractor')
 
+    ffmpeg_folder = Script.setting.get_string('ffmpeg_folder')
+    if ffmpeg_folder:
+        YDStreamExtractor.overrideParam("ffmpeg_location", ffmpeg_folder)
+
     vid = YDStreamExtractor.getVideoInfo(
         video_url,
         quality=get_quality_YTDL(download_mode=True),
