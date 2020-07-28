@@ -332,7 +332,7 @@ def outre_mer_root(plugin, region_path):
     for menu_item in menu_items:
         item = Listitem()
         item.label = menu_item[0]
-        item.set_callback(grab_json_collections, URL_API_MOBILE(menu_item[1] % region_path))
+        item.set_callback(grab_json_collections, URL_API_MOBILE(menu_item[1] % region_path), page=0, collection_position=0)
         item_post_treatment(item)
         yield item
 
