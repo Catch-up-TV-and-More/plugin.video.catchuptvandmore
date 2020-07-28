@@ -231,7 +231,7 @@ def populate_video_item(item, video):
     begin_date = time.strftime('%Y-%m-%d', time.localtime(video['begin_date']))
     item.info.date(begin_date, "%Y-%m-%d")
 
-    if 'program' in video and 'label' in video['program']:
+    if 'program' in video and video['program'] is not None and 'label' in video['program']:
         item.label = video['program']['label'] + ' - ' + item.label
 
     type_ = video['type']
