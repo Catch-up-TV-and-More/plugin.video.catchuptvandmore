@@ -162,7 +162,7 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         return True
 
     elif type_ == 'region':
-        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/regions/%s/outre-mer' % j['region_path']))
+        item.set_callback(outre_mer_root, j['region_path'])
         item_post_treatment(item)
         return True
 
@@ -318,6 +318,20 @@ def categories(plugin):
 
 
 @Route.register
+def outre_mer_root(plugin, region_path):
+    menu_items = [
+        ('Les dernières vidéos', '/generic/taxonomy/%s/contents'),
+        ('Les programmes', '/apps/regions/%s/programs')
+    ]
+    for menu_item in menu_items:
+        item = Listitem()
+        item.label = menu_item[0]
+        item.set_callback(grab_json_collections, URL_API_MOBILE(menu_item[1] % region_path))
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register
 def list_generic_items(plugin, generic_items, next_page_item):
     """
     List items of a generic type
@@ -342,7 +356,11 @@ def grab_json_collections(plugin, json_url, page=0, collection_position=None):
     j = json.loads(r.text)
     cnt = -1
     items = []
-    for collection in j['collections']:
+    if 'collections' in j:
+        collections = j['collections']
+    else:
+        collections = [j]
+    for collection in collections:
         cnt = cnt + 1
         next_page_item = None
         if 'cursor' in collection:
