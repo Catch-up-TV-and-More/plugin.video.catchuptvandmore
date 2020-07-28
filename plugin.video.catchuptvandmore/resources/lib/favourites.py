@@ -79,19 +79,15 @@ def guess_fav_prefix(item_id):
     This category label will be used as a prefix when the user add a favourite
 
     """
-
-    prefix = 'empty'
-    if item_id == 'live_tv':
-        prefix = Script.localize(30030)
-    elif item_id == 'replay':
-        prefix = Script.localize(30031)
-    elif item_id == 'websites':
-        prefix = Script.localize(30032)
-    elif item_id == 'root':
-        prefix = ''
-    if prefix != 'empty':
+    prefixes = {
+        'root': '',
+        'live_tv': Script.localize(30030),
+        'replay': Script.localize(30031),
+        'websites': Script.localize(30032)
+    }
+    if item_id in prefixes:
         s = mem_storage.MemStorage('fav')
-        s['prefix'] = prefix
+        s['prefix'] = prefixes[item_id]
 
 
 @Script.register
