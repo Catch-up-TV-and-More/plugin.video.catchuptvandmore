@@ -221,12 +221,18 @@ def populate_images(item, images):
 
 
 def populate_video_item(item, video):
-    item.label = video['title']
+    if 'episode_title' in video:
+        item.label = video['episode_title']
+    else:
+        item.label = video['title']
     description = video['description']
     if description:
         item.info['plot'] = TAG_RE.sub('', HTML_PARSER.unescape(description))
     begin_date = time.strftime('%Y-%m-%d', time.localtime(video['begin_date']))
     item.info.date(begin_date, "%Y-%m-%d")
+
+    if 'program' in video and 'label' in video['program']:
+        item.label = video['program']['label'] + ' - ' + item.label
 
     type_ = video['type']
     if type_ == 'extrait':
