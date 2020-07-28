@@ -42,22 +42,7 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.24]
-[Fix/DRM] Live TV - RTBF (LaUne, LaDeux, ...) (BE)
-[Fix] Live TV - Télé Quebec (CA)
-[Remove] Live TV - Yoopa and LCN (CA) - No present in the website of TVA.ca
-[Rename] Live TV - NPO Zapp to NPO 3 (NL) - Need more work
-[Fix] Live TV - BFM Business (FR)
-[Fix] Website - Allocine (FR)
-[Move] Catch-Up TV - France TV (FR) - All France TV channels are now in 'france.tv' folder like the official website
-[Add] Live TV - Equidia (FR)
-[Fix] Website - Têtes à claques (CA) - Add Zarbi videos
-[Fix] Live TV - Nessan (TN)
-[Fix] Catch-Up TV - Guilli (FR)
-[Add] Live TV - B Smart (FR)
-[Fix] Catch-up TV - NYC Media (US)
-[Fix] Cathc-up TV - Arte Concert (FR)
-[Move] Catch-Up TV - France TV (FR) - FR3 régions and 1ère outre-mer are now in 'france.tv' folder
+[Version 0.2.25]
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

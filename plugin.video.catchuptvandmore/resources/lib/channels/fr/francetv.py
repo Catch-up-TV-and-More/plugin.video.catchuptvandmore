@@ -71,14 +71,14 @@ def francetv_root(plugin):
 
     # Channels
     item = Listitem()
-    item.label = 'Chaînes'
+    item.label = Script.localize(30006)
     item.set_callback(channels)
     item_post_treatment(item)
     yield item
 
     # Categories
     item = Listitem()
-    item.label = 'Catégories'
+    item.label = Script.localize(30725)
     item.set_callback(categories)
     item_post_treatment(item)
     yield item
@@ -322,8 +322,8 @@ def categories(plugin):
 @Route.register
 def outre_mer_root(plugin, region_path):
     menu_items = [
-        ('Les dernières vidéos', '/generic/taxonomy/%s/contents'),
-        ('Les programmes', '/apps/regions/%s/programs')
+        (Script.localize(30704), '/generic/taxonomy/%s/contents'),  # Last videos
+        (Script.localize(30717), '/apps/regions/%s/programs')  # All programs
     ]
     for menu_item in menu_items:
         item = Listitem()
@@ -382,7 +382,7 @@ def grab_json_collections(plugin, json_url, page=0, collection_position=None):
                 items.append(item)
     if 'item' in j and 'program_path' in j['item']:
         item = Listitem()
-        item.label = 'Toutes les vidéos'
+        item.label = Script.localize(30701)  # All videos
         item.set_callback(grab_json_collections, URL_API_MOBILE('/generic/taxonomy/%s/contents' % j['item']['program_path']), page=0, collection_position=0)
         item_post_treatment(item)
         items.append(item)

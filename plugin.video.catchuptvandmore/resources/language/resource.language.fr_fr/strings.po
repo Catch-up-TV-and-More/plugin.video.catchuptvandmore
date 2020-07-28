@@ -758,6 +758,10 @@ msgctxt "#30724"
 msgid "Failed to guess your country based on your IP"
 msgstr "Impossible de deviner votre pays en fonction de votre adresse IP"
 
+msgctxt "#30725"
+msgid "Categories"
+msgstr "Catégories"
+
 
 # Favourites (from 30800 to 30859)
 
