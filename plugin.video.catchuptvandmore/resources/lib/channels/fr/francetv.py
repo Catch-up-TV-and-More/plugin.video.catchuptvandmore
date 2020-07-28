@@ -144,6 +144,9 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
     else:
         item.label = 'No title'
 
+    if 'description' in j:
+        item.info['plot'] = j['description']
+
     # Second, try to populate images
     if 'images' in j:
         populate_images(item, j['images'])
@@ -166,18 +169,6 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         item_post_treatment(item)
         return True
 
-    # We already have all items
-    elif type_ in [
-        'playlist_video',
-        'playlist_program',
-        'mise_en_avant',
-        'playlist_program_auto',
-        'playlist_video_auto'
-    ]:
-        item.set_callback(list_generic_items, j['items'], next_page_item)
-        item_post_treatment(item)
-        return True
-
     elif type_ == 'categories':
         item.label = 'Les sous-catégories'
         item.set_callback(list_generic_items, j['items'], next_page_item)
@@ -190,6 +181,11 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         item.set_callback(get_video_url,
                           broadcast_id=si_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
+        return True
+
+    elif 'items' in j:
+        item.set_callback(list_generic_items, j['items'], next_page_item)
+        item_post_treatment(item)
         return True
 
     return False
@@ -384,6 +380,13 @@ def grab_json_collections(plugin, json_url, page=0, collection_position=None):
             item = Listitem()
             if set_item_callback_based_on_type(item, collection['type'], collection, next_page_item):
                 items.append(item)
+    if 'item' in j and 'program_path' in j['item']:
+        item = Listitem()
+        item.label = 'Toutes les vidéos'
+        item.set_callback(grab_json_collections, URL_API_MOBILE('/generic/taxonomy/%s/contents' % j['item']['program_path']), page=0, collection_position=0)
+        item_post_treatment(item)
+        items.append(item)
+
     return items
 
 
