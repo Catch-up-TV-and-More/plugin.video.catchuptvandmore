@@ -205,7 +205,7 @@ menu = {
         'thumb': 'channels/fr/la1ere.png',
         'fanart': 'channels/fr/la1ere_fanart.jpg',
         'module': 'resources.lib.channels.fr.la_1ere',
-        'enabled': True,
+        'enabled': False,
         'order': 23
     },
     'franceinfo': {
@@ -286,7 +286,7 @@ menu = {
         'thumb': 'channels/fr/france3regions.png',
         'fanart': 'channels/fr/france3regions_fanart.jpg',
         'module': 'resources.lib.channels.fr.france3regions',
-        'enabled': True,
+        'enabled': False,
         'order': 40
     },
     'francetvsport': {
