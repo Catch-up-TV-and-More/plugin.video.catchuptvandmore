@@ -37,11 +37,11 @@ the addon's tree architecture.
 """
 
 menu = {
-    'tf1': {
+    'mytf1': {
         'callback': 'replay_bridge',
-        'label': 'TF1',
-        'thumb': 'channels/fr/tf1.png',
-        'fanart': 'channels/fr/tf1_fanart.jpg',
+        'label': 'MYTF1',
+        'thumb': 'channels/fr/mytf1.png',
+        'fanart': 'channels/fr/mytf1_fanart.jpg',
         'module': 'resources.lib.channels.fr.mytf1',
         'enabled': True,
         'order': 1
@@ -91,24 +91,6 @@ menu = {
         'enabled': True,
         'order': 8
     },
-    'tmc': {
-        'callback': 'replay_bridge',
-        'label': 'TMC',
-        'thumb': 'channels/fr/tmc.png',
-        'fanart': 'channels/fr/tmc_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mytf1',
-        'enabled': True,
-        'order': 9
-    },
-    'tfx': {
-        'callback': 'replay_bridge',
-        'label': 'TFX',
-        'thumb': 'channels/fr/tfx.png',
-        'fanart': 'channels/fr/tfx_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mytf1',
-        'enabled': True,
-        'order': 10
-    },
     'nrj12': {
         'callback': 'replay_bridge',
         'label': 'NRJ 12',
@@ -153,15 +135,6 @@ menu = {
         'module': 'resources.lib.channels.fr.gulli',
         'enabled': True,
         'order': 16
-    },
-    'tf1-series-films': {
-        'callback': 'replay_bridge',
-        'label': 'TF1 Séries Films',
-        'thumb': 'channels/fr/tf1seriesfilms.png',
-        'fanart': 'channels/fr/tf1seriesfilms_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mytf1',
-        'enabled': True,
-        'order': 18
     },
     'lequipe': {
         'callback': 'replay_bridge',
