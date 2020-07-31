@@ -55,11 +55,11 @@ menu = {
         'enabled': True,
         'order': 2
     },
-    'canalplus': {
+    'mycanal': {
         'callback': 'replay_bridge',
-        'label': 'Canal +',
-        'thumb': 'channels/fr/canalplus.png',
-        'fanart': 'channels/fr/canalplus_fanart.jpg',
+        'label': 'myCANAL',
+        'thumb': 'channels/fr/mycanal.png',
+        'fanart': 'channels/fr/mycanal_fanart.jpg',
         'module': 'resources.lib.channels.fr.mycanal',
         'enabled': True,
         'order': 4
@@ -72,15 +72,6 @@ menu = {
         'module': 'resources.lib.channels.fr.6play',
         'enabled': True,
         'order': 6
-    },
-    'c8': {
-        'callback': 'replay_bridge',
-        'label': 'C8',
-        'thumb': 'channels/fr/c8.png',
-        'fanart': 'channels/fr/c8_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 7
     },
     'nrj12': {
         'callback': 'replay_bridge',
@@ -108,15 +99,6 @@ menu = {
         'module': 'resources.lib.channels.fr.cnews',
         'enabled': True,
         'order': 14
-    },
-    'cstar': {
-        'callback': 'replay_bridge',
-        'label': 'CStar',
-        'thumb': 'channels/fr/cstar.png',
-        'fanart': 'channels/fr/cstar_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 15
     },
     'gulli': {
         'callback': 'replay_bridge',
@@ -280,60 +262,6 @@ menu = {
         'enabled': True,
         'order': 44
     },
-    'seasons': {
-        'callback': 'replay_bridge',
-        'label': 'Seasons',
-        'thumb': 'channels/fr/seasons.png',
-        'fanart': 'channels/fr/seasons_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 47
-    },
-    'comedie': {
-        'callback': 'replay_bridge',
-        'label': 'Comédie +',
-        'thumb': 'channels/fr/comedie.png',
-        'fanart': 'channels/fr/comedie_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 48
-    },
-    'les-chaines-planete': {
-        'callback': 'replay_bridge',
-        'label': 'Les chaînes planètes +',
-        'thumb': 'channels/fr/leschainesplanete.png',
-        'fanart': 'channels/fr/leschainesplanete_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 49
-    },
-    'golfplus': {
-        'callback': 'replay_bridge',
-        'label': 'Golf +',
-        'thumb': 'channels/fr/golfplus.png',
-        'fanart': 'channels/fr/golfplus_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 50
-    },
-    'cineplus': {
-        'callback': 'replay_bridge',
-        'label': 'Ciné +',
-        'thumb': 'channels/fr/cineplus.png',
-        'fanart': 'channels/fr/cineplus_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 51
-    },
-    'infosportplus': {
-        'callback': 'replay_bridge',
-        'label': 'INFOSPORT+',
-        'thumb': 'channels/fr/infosportplus.png',
-        'fanart': 'channels/fr/infosportplus_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 52
-    },
     'gameone': {
         'callback': 'replay_bridge',
         'label': 'Game One',
@@ -369,15 +297,6 @@ menu = {
         'module': 'resources.lib.channels.fr.bfmregion',
         'enabled': True,
         'order': 56
-    },
-    'polar-plus': {
-        'callback': 'replay_bridge',
-        'label': 'Polar+',
-        'thumb': 'channels/fr/polarplus.png',
-        'fanart': 'channels/fr/polarplus_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 61
     },
     'kto': {
         'callback': 'replay_bridge',
@@ -513,33 +432,6 @@ menu = {
         'module': 'resources.lib.channels.fr.tvpifr',
         'enabled': True,
         'order': 89
-    },
-    'cliquetv': {
-        'callback': 'replay_bridge',
-        'label': 'Clique TV',
-        'thumb': 'channels/fr/cliquetv.png',
-        'fanart': 'channels/fr/cliquetv_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 90
-    },
-    'piwiplus': {
-        'callback': 'replay_bridge',
-        'label': 'Piwi +',
-        'thumb': 'channels/fr/piwiplus.png',
-        'fanart': 'channels/fr/piwiplus_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 91
-    },
-    'teletoonplus': {
-        'callback': 'replay_bridge',
-        'label': 'TéléToon +',
-        'thumb': 'channels/fr/teletoonplus.png',
-        'fanart': 'channels/fr/teletoonplus_fanart.jpg',
-        'module': 'resources.lib.channels.fr.mycanal',
-        'enabled': True,
-        'order': 92
     },
     'paramountchannel_fr': {
         'callback': 'replay_bridge',
