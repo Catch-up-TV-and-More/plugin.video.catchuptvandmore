@@ -503,6 +503,10 @@ def get_video_url(plugin,
         hash_value = ''
         idKey_value = ''
         quality_value = ''
+
+        if 'available' not in value_datas_jsonparser:
+            return False
+
         for stream_datas in value_datas_jsonparser["available"]:
             if 'Widevine' in stream_datas["drmType"]:
                 comMode_value = stream_datas['comMode']
