@@ -34,7 +34,7 @@ from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info
-
+from resources.lib.addon_utils import get_item_media_path
 
 import inputstreamhelper
 import json
@@ -113,7 +113,31 @@ def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
-    return list_categories(plugin, item_id)
+    return sixplay_root(plugin)
+
+
+@Route.register
+def sixplay_root(plugin):
+
+    # (item_id, label, thumb, fanart)
+    channels = [
+        ('m6', 'M6', 'm6.png', 'm6_fanart.jpg'),
+        ('w9', 'W9', 'w9.png', 'w9_fanart.jpg'),
+        ('6ter', '6ter', '6ter.png', '6ter_fanart.jpg'),
+        ('fun_radio', 'Fun Radio', 'funradio.png', 'funradio_fanart.jpg'),
+        ('rtl2', 'RTL 2', 'rtl2.png', 'rtl2_fanart.jpg')
+        # ('courses', 'M6 Courses', 'm6courses.png', 'm6courses_fanart.jpg'),
+        # ('100foot', '100%% Foot', '100foot.png', '100foot_fanart.jpg')
+    ]
+
+    for channel_infos in channels:
+        item = Listitem()
+        item.label = channel_infos[1]
+        item.art["thumb"] = get_item_media_path('channels/fr/' + channel_infos[2])
+        item.art["fanart"] = get_item_media_path('channels/fr/' + channel_infos[3])
+        item.set_callback(list_categories, channel_infos[0])
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register

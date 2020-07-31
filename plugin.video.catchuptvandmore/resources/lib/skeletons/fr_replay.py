@@ -64,11 +64,11 @@ menu = {
         'enabled': True,
         'order': 4
     },
-    'm6': {
+    '6play': {
         'callback': 'replay_bridge',
-        'label': 'M6',
-        'thumb': 'channels/fr/m6.png',
-        'fanart': 'channels/fr/m6_fanart.jpg',
+        'label': '6play',
+        'thumb': 'channels/fr/6play.png',
+        'fanart': 'channels/fr/6play_fanart.jpg',
         'module': 'resources.lib.channels.fr.6play',
         'enabled': True,
         'order': 6
@@ -81,15 +81,6 @@ menu = {
         'module': 'resources.lib.channels.fr.mycanal',
         'enabled': True,
         'order': 7
-    },
-    'w9': {
-        'callback': 'replay_bridge',
-        'label': 'W9',
-        'thumb': 'channels/fr/w9.png',
-        'fanart': 'channels/fr/w9_fanart.jpg',
-        'module': 'resources.lib.channels.fr.6play',
-        'enabled': True,
-        'order': 8
     },
     'nrj12': {
         'callback': 'replay_bridge',
@@ -144,15 +135,6 @@ menu = {
         'module': 'resources.lib.channels.fr.lequipe',
         'enabled': True,
         'order': 19
-    },
-    '6ter': {
-        'callback': 'replay_bridge',
-        'label': '6ter',
-        'thumb': 'channels/fr/6ter.png',
-        'fanart': 'channels/fr/6ter_fanart.jpg',
-        'module': 'resources.lib.channels.fr.6play',
-        'enabled': True,
-        'order': 20
     },
     'rmcstory': {
         'callback': 'replay_bridge',
@@ -388,15 +370,6 @@ menu = {
         'enabled': True,
         'order': 56
     },
-    'fun_radio': {
-        'callback': 'replay_bridge',
-        'label': 'Fun Radio',
-        'thumb': 'channels/fr/funradio.png',
-        'fanart': 'channels/fr/funradio_fanart.jpg',
-        'module': 'resources.lib.channels.fr.6play',
-        'enabled': True,
-        'order': 58
-    },
     'polar-plus': {
         'callback': 'replay_bridge',
         'label': 'Polar+',
@@ -432,15 +405,6 @@ menu = {
         'module': 'resources.lib.channels.fr.ouatchtv',
         'enabled': True,
         'order': 67
-    },
-    'rtl2': {
-        'callback': 'replay_bridge',
-        'label': 'RTL 2',
-        'thumb': 'channels/fr/rtl2.png',
-        'fanart': 'channels/fr/rtl2_fanart.jpg',
-        'module': 'resources.lib.channels.fr.6play',
-        'enabled': True,
-        'order': 69
     },
     'lachainemeteo': {
         'callback': 'replay_bridge',
@@ -639,23 +603,5 @@ menu = {
         'module': 'resources.lib.channels.fr.bfmregion',
         'enabled': True,
         'order': 107
-    },
-    'courses': {
-        'callback': 'replay_bridge',
-        'label': 'M6 Courses (6play)',
-        'thumb': 'channels/fr/m6courses.png',
-        'fanart': 'channels/fr/m6courses_fanart.jpg',
-        'module': 'resources.lib.channels.fr.6play',
-        'enabled': True,
-        'order': 119
-    },
-    '100foot': {
-        'callback': 'replay_bridge',
-        'label': '100% Foot (6play)',
-        'thumb': 'channels/fr/100foot.png',
-        'fanart': 'channels/fr/100foot_fanart.jpg',
-        'module': 'resources.lib.channels.fr.6play',
-        'enabled': False,
-        'order': 121
     }
 }
