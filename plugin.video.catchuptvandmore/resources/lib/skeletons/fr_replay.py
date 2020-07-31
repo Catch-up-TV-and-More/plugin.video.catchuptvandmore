@@ -73,11 +73,11 @@ menu = {
         'enabled': True,
         'order': 6
     },
-    'nrj12': {
+    'nrjplay': {
         'callback': 'replay_bridge',
-        'label': 'NRJ 12',
-        'thumb': 'channels/fr/nrj12.png',
-        'fanart': 'channels/fr/nrj12_fanart.jpg',
+        'label': 'NRJ Play',
+        'thumb': 'channels/fr/nrjplay.png',
+        'fanart': 'channels/fr/nrjplay_fanart.jpg',
         'module': 'resources.lib.channels.fr.nrj',
         'enabled': True,
         'order': 11
@@ -126,15 +126,6 @@ menu = {
         'module': 'resources.lib.channels.fr.rmc',
         'enabled': True,
         'order': 21
-    },
-    'cherie25': {
-        'callback': 'replay_bridge',
-        'label': 'Chérie 25',
-        'thumb': 'channels/fr/cherie25.png',
-        'fanart': 'channels/fr/cherie25_fanart.jpg',
-        'module': 'resources.lib.channels.fr.nrj',
-        'enabled': True,
-        'order': 22
     },
     'la_1ere': {
         'callback': 'replay_bridge',
