@@ -56,20 +56,20 @@ except ImportError:
 URL_EMISSIONS_AUVIO = 'https://www.rtbf.be/auvio/emissions'
 
 URL_JSON_EMISSION_BY_ID2 = 'https://www.rtbf.be/api/media/video?' \
-                          'method=getVideoListByEmissionOrdered&args[]=%s'
-                      
-#I made the choice to select video only because it seems that some audio and video program have the same id but are different                      
+                           'method=getVideoListByEmissionOrdered&args[]=%s'
+
+# I made the choice to select video only because it seems that some audio and video program have the same id but are different
 URL_JSON_EMISSION_BY_ID = 'https://www.rtbf.be/api/partner/generic/media/'\
-                           'objectlist?v=8&program_id=%s&content_type=complete'\
-                           '&type=video&target_site=mediaz&limit=100&partner_key=%s'
+                          'objectlist?v=8&program_id=%s&content_type=complete'\
+                          '&type=video&target_site=mediaz&limit=100&partner_key=%s'
 
 # emission_id
 
 URL_CATEGORIES2 = 'https://www.rtbf.be/news/api/menu?site=media'
 URL_CATEGORIES = 'https://www.rtbf.be/api/partner/generic/embed/'\
-                  'category?method=getTree&v=1&partnerID=%s'
+                 'category?method=getTree&v=1&partnerID=%s'
 
-#Doesn't contains all the TV Show              
+# Doesn't contains all the TV Show
 URL_PROGRAMS2 = 'https://www.rtbf.be/api/partner/generic/embed/program?v=1&partnerID=%s'
 
 URL_LIST_TV_CHANNELS = 'https://www.rtbf.be/api/partner/generic/epg/channellist?v=7&type=tv&partner_key=%s'
@@ -122,8 +122,10 @@ def get_partener_key():
     # print 'partener_key_value : ' + partener_key_value
     return partener_key_value
 
+
 # partener_key
 PARTNER_KEY = get_partener_key()
+
 
 def format_hours(date, **kwargs):
     """Format hours"""
@@ -145,16 +147,15 @@ def replay_entry(plugin, item_id, **kwargs):
     """
     return list_categories(plugin, item_id)
 
-    
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
 
-    item = Listitem.search(list_videos_search, item_id=item_id, page = '0')
+    item = Listitem.search(list_videos_search, item_id=item_id, page='0')
     item_post_treatment(item)
     yield item
-    
-    item = Listitem.search(list_videos_search_prog, item_id=item_id, page= '0')
+
+    item = Listitem.search(list_videos_search_prog, item_id=item_id, page='0')
     item.label = plugin.localize(30715)
     item_post_treatment(item)
     yield item
@@ -164,7 +165,7 @@ def list_categories(plugin, item_id, **kwargs):
     item.set_callback(list_programs, item_id=item_id)
     item_post_treatment(item)
     yield item
-    
+
     resp = urlquick.get(URL_CATEGORIES % PARTNER_KEY)
     json_parser = json.loads(resp.text)
 
@@ -175,9 +176,9 @@ def list_categories(plugin, item_id, **kwargs):
         item.label = category_title
         if "subCategory" in category_datas:
             item.set_callback(list_sub_categories,
-                            item_id=item_id,
-                            category_datas=category_datas,
-                            category_id=category_id)
+                              item_id=item_id,
+                              category_datas=category_datas,
+                              category_id=category_id)
         else:
             item.set_callback(list_videos_category,
                               item_id=item_id,
@@ -185,9 +186,10 @@ def list_categories(plugin, item_id, **kwargs):
         item_post_treatment(item)
         yield item
 
+
 @Route.register
 def list_videos_search(plugin, search_query, item_id, page, **kwargs):
-    resp = urlquick.get(URL_LIST_SEARCH % (search_query,PARTNER_KEY))
+    resp = urlquick.get(URL_LIST_SEARCH % (search_query, PARTNER_KEY))
     json_parser = json.loads(resp.text)
     for results_datas in json_parser["results"]:
         video_datas = results_datas["data"]
@@ -201,7 +203,6 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
             video_plot = video_datas["description"]
         video_duration = video_datas["duration"]
         date_value = format_day(video_datas["date_publish_from"])
-        video_id = video_datas["id"]
         video_url = ""
         if "url_streaming" in video_datas:
             if "url_hls" in video_datas["url_streaming"]:
@@ -212,7 +213,6 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                 video_url = video_datas["url_streaming"]["url"]
         else:
             video_url = video_datas["url_embed"]
-            
 
         item = Listitem()
         item.label = video_title
@@ -221,8 +221,8 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
         item.info['duration'] = video_duration
         item.info.date(date_value, '%Y/%m/%d')
         item.set_callback(get_video_url,
-                        item_id=item_id,
-                        video_url=video_url)
+                          item_id=item_id,
+                          video_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
