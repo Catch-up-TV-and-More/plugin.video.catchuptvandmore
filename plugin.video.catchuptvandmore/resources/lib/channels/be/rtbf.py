@@ -226,9 +226,10 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
+
 @Route.register
 def list_videos_search_prog(plugin, search_query, item_id, page, **kwargs):
-    resp = urlquick.get(URL_LIST_SEARCH_PROG % (search_query,PARTNER_KEY))        
+    resp = urlquick.get(URL_LIST_SEARCH_PROG % (search_query, PARTNER_KEY))
     json_parser = json.loads(resp.text)
 
     for search_datas in json_parser["results"]:
@@ -239,19 +240,19 @@ def list_videos_search_prog(plugin, search_query, item_id, page, **kwargs):
         item.label = search_title
         item.art['thumb'] = item.art['landscape'] = search_image
         item.set_callback(list_videos_program,
-                        item_id=item_id,
-                        program_id=search_id)
+                          item_id=item_id,
+                          program_id=search_id)
         item_post_treatment(item)
         yield item
-            
 
-#Not used at the moment but could be used if we want to display all the programs per channel via API
-#(doesn't work at the moment because display folders that are empties)
+
+# Not used at the moment but could be used if we want to display all the programs per channel via API
+# (doesn't work at the moment because display folders that are empties)
 @Route.register
 def list_channels(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIST_TV_CHANNELS % PARTNER_KEY)
     json_parser = json.loads(resp.text)
-    
+
     for channel_datas in json_parser:
         channel_title = channel_datas["name"]
         channel_image = channel_datas["images"]["illustration"]["16x9"]["1248x702"]
@@ -264,7 +265,7 @@ def list_channels(plugin, item_id, **kwargs):
                           channel_key=channel_key)
         item_post_treatment(item)
         yield item
-        
+
 
 @Route.register
 def list_programs(plugin, item_id, **kwargs):
@@ -297,6 +298,7 @@ def list_programs(plugin, item_id, **kwargs):
         item_post_treatment(item)
         yield item
 
+
 @Route.register
 def list_videos_program(plugin, item_id, program_id, **kwargs):
 
@@ -315,7 +317,6 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
             video_plot = video_datas["description"]
         video_duration = video_datas["duration"]
         date_value = format_day(video_datas["date_publish_from"])
-        video_id = video_datas["id"]
         video_url = ""
         if "url_streaming" in video_datas:
             if "url_hls" in video_datas["url_streaming"]:
@@ -326,7 +327,6 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
                 video_url = video_datas["url_streaming"]["url"]
         else:
             video_url = video_datas["url_embed"]
-            
 
         item = Listitem()
         item.label = video_title
@@ -340,6 +340,7 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
+
 @Route.register
 def list_sub_categories(plugin, item_id, category_datas, category_id, **kwargs):
     for sub_category_datas in category_datas["subCategory"]:
@@ -349,14 +350,13 @@ def list_sub_categories(plugin, item_id, category_datas, category_id, **kwargs):
         item = Listitem()
         item.label = sub_category_title
         item.set_callback(list_videos_category,
-                        item_id=item_id,
-                        cat_id=sub_category_id)
+                          item_id=item_id,
+                          cat_id=sub_category_id)
         item_post_treatment(item)
         yield item
-    
+
     category_url = 'https://www.rtbf.be/auvio/categorie?id=' + str(category_id)
     resp = urlquick.get(category_url)
-    root = resp.parse()
 
     list_data_uuid = re.compile(r'data-uuid\=\"(.*?)\"').findall(resp.text)
     for sub_category_data_uuid in list_data_uuid:
@@ -390,11 +390,12 @@ def list_sub_categories(plugin, item_id, category_datas, category_id, **kwargs):
                     sub_category_id=sub_category_dl_id)
                 item_post_treatment(item)
                 yield item
-                
-@Route.register
-def list_videos_category(plugin, item_id, cat_id,**kwargs):
 
-    resp = urlquick.get(URL_VIDEOS_BY_CAT_ID % (cat_id,PARTNER_KEY))
+
+@Route.register
+def list_videos_category(plugin, item_id, cat_id, **kwargs):
+
+    resp = urlquick.get(URL_VIDEOS_BY_CAT_ID % (cat_id, PARTNER_KEY))
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser:
@@ -408,7 +409,6 @@ def list_videos_category(plugin, item_id, cat_id,**kwargs):
             video_plot = video_datas["description"]
         video_duration = video_datas["duration"]
         date_value = format_day(video_datas["date_publish_from"])
-        video_id = video_datas["id"]
         video_url = ""
         if "url_streaming" in video_datas:
             if "url_hls" in video_datas["url_streaming"]:
@@ -417,12 +417,12 @@ def list_videos_category(plugin, item_id, cat_id,**kwargs):
                     video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
             else:
                 video_url = video_datas["url_streaming"]["url"]
-        
-        #is_downloadable = False
-        #if video_datas["url_download"]:
-            #is_downloadable = True
-            #video_url = video_datas["url_download"]
-            
+
+        # is_downloadable = False
+        # if video_datas["url_download"]:
+            # is_downloadable = True
+            # video_url = video_datas["url_download"]
+
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = item.art['landscape'] = video_image
@@ -435,11 +435,12 @@ def list_videos_category(plugin, item_id, cat_id,**kwargs):
         item.art['thumb'] = item.art['landscape'] = video_image
 
         item.set_callback(get_video_url,
-                            item_id=item_id,
-                            video_url=video_url)
+                          item_id=item_id,
+                          video_url=video_url)
         item_post_treatment(item,
                             is_playable=True)
         yield item
+
 
 @Route.register
 def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
@@ -496,12 +497,13 @@ def get_video_url(plugin,
     else:
         return video_url
 
+
 @Resolver.register
 def get_video_url2(plugin,
-                  item_id,
-                  video_id,
-                  download_mode=False,
-                  **kwargs):
+                   item_id,
+                   video_id,
+                   download_mode=False,
+                   **kwargs):
 
     resp = urlquick.get(URL_VIDEO_BY_ID % video_id, max_age=-1)
     json_parser = json.loads(
@@ -523,6 +525,7 @@ def get_video_url2(plugin,
     if download_mode:
         return download.download_video(stream_url)
     return stream_url
+
 
 def multi_live_entry(plugin, item_id, **kwargs):
     """
