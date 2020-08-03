@@ -243,10 +243,10 @@ plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=f
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Côte d'Azur
 plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&language=C%C3%B4te+d%27Azur
 
-##	France 3 Régions Franche-Compté
+##	France 3 Régions Franche-Comté
 ##	france3regions
-#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Franche-Compté
-plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&language=Franche-Compt%C3%A9
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/france3regions.png" group-title="France Région",France 3 Régions Franche-Comté
+plugin://plugin.video.catchuptvandmore/resources/lib/main/live_bridge/?item_id=france3regions&item_module=resources.lib.channels.fr.france3regions&language=Franche-Comt%C3%A9
 
 ##	France 3 Régions Languedoc-Roussillon
 ##	france3regions
