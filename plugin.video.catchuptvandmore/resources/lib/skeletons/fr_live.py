@@ -407,7 +407,7 @@ menu = {
         'available_languages': [
             'Alpes', 'Alsace', 'Aquitaine', 'Auvergne', 'Bourgogne',
             'Bretagne', 'Centre-Val de Loire', 'Chapagne-Ardenne', 'Corse',
-            "Côte d'Azur", 'Franche-Compté', 'Languedoc-Roussillon',
+            "Côte d'Azur", 'Franche-Comté', 'Languedoc-Roussillon',
             'Limousin', 'Lorraine', 'Midi-Pyrénées', 'Nord-Pas-de-Calais',
             'Basse-Normandie', 'Haute-Normandie', 'Paris Île-de-France',
             'Pays de la Loire', 'Picardie', 'Poitou-Charentes',

@@ -63,7 +63,7 @@ LIVE_FR3_REGIONS = {
     "Chapagne-Ardenne": "champagne-ardenne",
     "Corse": "corse",
     "Côte d'Azur": "cote-d-azur",
-    "Franche-Compté": "franche-comte",
+    "Franche-Comté": "franche-comte",
     "Haute-Normandie": "haute-normandie",
     "Languedoc-Roussillon": "languedoc-roussillon",
     "Limousin": "limousin",

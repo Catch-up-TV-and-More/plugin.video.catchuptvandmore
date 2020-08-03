@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.25~beta02" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.25~beta03" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.codequick" version="0.9.12"/>
@@ -48,6 +48,7 @@
 [FR - 6play] Move all M6 group channels in 6play folder
 [FR - myCANAL] Move all Canal+ group channels in myCANAL folder
 [FR - NRJ Play] Move NRJ 12 and Chérie 25 in NRJ Play folder
+[FR - FR3 Régions] Fix typo Franche-Comté
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
