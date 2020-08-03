@@ -117,7 +117,7 @@ def replay_entry(plugin, item_id, **kwargs):
 
 
 @Route.register
-def sixplay_root(plugin):
+def sixplay_root(plugin, **kwargs):
 
     # (item_id, label, thumb, fanart)
     channels = [

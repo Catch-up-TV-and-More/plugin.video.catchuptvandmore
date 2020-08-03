@@ -83,7 +83,7 @@ def replay_entry(plugin, item_id, **kwargs):
 
 
 @Route.register
-def mytf1_root(plugin):
+def mytf1_root(plugin, **kwargs):
 
     # (item_id, label, thumb, fanart)
     channels = [
@@ -145,7 +145,7 @@ def list_categories(plugin, item_id, **kwargs):
 
 
 @Route.register
-def search(plugin, search_query):
+def search(plugin, search_query, **kwargs):
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
     headers = {
         'content-type': 'application/json',

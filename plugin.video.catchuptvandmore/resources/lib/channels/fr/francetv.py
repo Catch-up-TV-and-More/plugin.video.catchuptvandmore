@@ -67,7 +67,7 @@ def replay_entry(plugin, item_id, **kwargs):
 
 
 @Route.register
-def francetv_root(plugin):
+def francetv_root(plugin, **kwargs):
 
     # Channels
     item = Listitem()
@@ -90,7 +90,7 @@ def francetv_root(plugin):
 
 
 @Route.register
-def channels(plugin):
+def channels(plugin, **kwargs):
     """
     List all france.tv channels
     """
@@ -119,7 +119,7 @@ def channels(plugin):
 
 
 @Route.register
-def channel_homepage(plugin, item_id):
+def channel_homepage(plugin, item_id, **kwargs):
     """
     List channel homepage elements
     (e.g. https://www.france.tv/france-2/)

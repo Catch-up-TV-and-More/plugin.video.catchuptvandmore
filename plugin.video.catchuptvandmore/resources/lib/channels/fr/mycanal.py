@@ -94,7 +94,7 @@ def replay_entry(plugin, item_id, **kwargs):
 
 
 @Route.register
-def mycanal_root(plugin):
+def mycanal_root(plugin, **kwargs):
 
     # (item_id, label, thumb, fanart)
     channels = [
