@@ -34,6 +34,7 @@ from resources.lib import web_utils
 from resources.lib import download
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info
 from resources.lib.menu_utils import item_post_treatment
+from resources.lib.addon_utils import get_item_media_path
 
 import inputstreamhelper
 import json
@@ -111,7 +112,31 @@ def replay_entry(plugin, item_id, **kwargs):
     """
     First executed function after replay_bridge
     """
-    return list_categories(plugin, item_id)
+    return rtlplay_root(plugin)
+
+
+@Route.register
+def rtlplay_root(plugin, **kwargs):
+
+    # (item_id, label, thumb, fanart)
+    channels = [
+        ('rtl_tvi', 'RTL TVI', 'rtltvi.png', 'rtltvi_fanart.jpg'),
+        ('club_rtl', 'CLUB RTL', 'clubrtl.png', 'clubrtl_fanart.jpg'),
+        ('plug_rtl', 'PLUG RTL', 'plugrtl.png', 'plugrtl_fanart.jpg'),
+        ('rtl_info', 'RTL INFO', 'rtlinfo.png', 'rtlinfo_fanart.jpg'),
+        ('rtl_sport', 'RTL Sport', 'rtlsport.png', 'rtlsport_fanart.jpg'),
+        ('bel_rtl', 'BEL RTL', 'belrtl.png', 'belrtl_fanart.jpg'),
+        ('contact', 'Contact', 'contact.png', 'contact_fanart.jpg')
+    ]
+
+    for channel_infos in channels:
+        item = Listitem()
+        item.label = channel_infos[1]
+        item.art["thumb"] = get_item_media_path('channels/be/' + channel_infos[2])
+        item.art["fanart"] = get_item_media_path('channels/be/' + channel_infos[3])
+        item.set_callback(list_categories, channel_infos[0])
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register

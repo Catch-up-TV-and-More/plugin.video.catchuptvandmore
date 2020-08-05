@@ -46,32 +46,14 @@ menu = {
         'enabled': True,
         'order': 1
     },
-    'rtl_tvi': {
+    'rtlplay': {
         'callback': 'replay_bridge',
-        'label': 'RTL TVI',
-        'thumb': 'channels/be/rtltvi.png',
-        'fanart': 'channels/be/rtltvi_fanart.jpg',
+        'label': 'RTLplay',
+        'thumb': 'channels/be/rtlplay.png',
+        'fanart': 'channels/be/rtlplay_fanart.jpg',
         'module': 'resources.lib.channels.be.rtlplaybe',
         'enabled': True,
         'order': 2
-    },
-    'plug_rtl': {
-        'callback': 'replay_bridge',
-        'label': 'PLUG RTL',
-        'thumb': 'channels/be/plugrtl.png',
-        'fanart': 'channels/be/plugrtl_fanart.jpg',
-        'module': 'resources.lib.channels.be.rtlplaybe',
-        'enabled': True,
-        'order': 3
-    },
-    'club_rtl': {
-        'callback': 'replay_bridge',
-        'label': 'CLUB RTL',
-        'thumb': 'channels/be/clubrtl.png',
-        'fanart': 'channels/be/clubrtl_fanart.jpg',
-        'module': 'resources.lib.channels.be.rtlplaybe',
-        'enabled': True,
-        'order': 4
     },
     'vrt': {
         'callback': 'replay_bridge',
@@ -118,33 +100,6 @@ menu = {
         'enabled': True,
         'order': 9
     },
-    'rtl_info': {
-        'callback': 'replay_bridge',
-        'label': 'RTL INFO',
-        'thumb': 'channels/be/rtlinfo.png',
-        'fanart': 'channels/be/rtlinfo_fanart.jpg',
-        'module': 'resources.lib.channels.be.rtlplaybe',
-        'enabled': True,
-        'order': 10
-    },
-    'bel_rtl': {
-        'callback': 'replay_bridge',
-        'label': 'BEL RTL',
-        'thumb': 'channels/be/belrtl.png',
-        'fanart': 'channels/be/belrtl_fanart.jpg',
-        'module': 'resources.lib.channels.be.rtlplaybe',
-        'enabled': True,
-        'order': 11
-    },
-    'contact': {
-        'callback': 'replay_bridge',
-        'label': 'Contact',
-        'thumb': 'channels/be/contact.png',
-        'fanart': 'channels/be/contact_fanart.jpg',
-        'module': 'resources.lib.channels.be.rtlplaybe',
-        'enabled': True,
-        'order': 12
-    },
     'bx1': {
         'callback': 'replay_bridge',
         'label': 'BX1',
@@ -162,15 +117,6 @@ menu = {
         'module': 'resources.lib.channels.be.nrjhitstvbe',
         'enabled': True,
         'order': 17
-    },
-    'rtl_sport': {
-        'callback': 'replay_bridge',
-        'label': 'RTL Sport',
-        'thumb': 'channels/be/rtlsport.png',
-        'fanart': 'channels/be/rtlsport_fanart.jpg',
-        'module': 'resources.lib.channels.be.rtlplaybe',
-        'enabled': True,
-        'order': 18
     },
     'tvcom': {
         'callback': 'replay_bridge',
