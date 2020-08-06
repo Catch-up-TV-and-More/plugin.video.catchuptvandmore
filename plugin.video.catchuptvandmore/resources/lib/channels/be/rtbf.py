@@ -510,6 +510,7 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
         }
         item.property[
             'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
+        item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
