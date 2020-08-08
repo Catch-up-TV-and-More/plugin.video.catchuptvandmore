@@ -435,5 +435,13 @@ menu = {
         'fanart': 'channels/fr/bfmlyon_fanart.jpg',
         'enabled': True,
         'order': 107
+    },
+    'equidia': {
+        'route': '/resources/lib/channels/fr/equidia:list_categories',
+        'label': 'Equidia',
+        'thumb': 'channels/fr/equidia.png',
+        'fanart': 'channels/fr/equidia_fanart.jpg',
+        'enabled': True,
+        'order': 122
     }
 }
