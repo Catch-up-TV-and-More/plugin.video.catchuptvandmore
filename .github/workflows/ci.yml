@@ -10,7 +10,7 @@ jobs:
     name: Run flake8 linter
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Git repository
+      - name: Check out plugin repository
         uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
@@ -31,19 +31,22 @@ jobs:
     needs: flake
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+        with:
+          path: plugin
+      - name: Check out simulator repository
+        uses: actions/checkout@v2
+        with:
+          repository: catchuptvandmore-test
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Install deps
-        run: pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
-      - name: Download catchuptvandmore-test
-        working-directory: ..
-        run: wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
       - name: Start catchuptvandmore-test with test_modules config
-        working-directory: ../catchuptvandmore-test-master
-        run: python main.py -c configs/7_test_modules.json
+        run: python main.py --test-modules -a ../plugin/plugin.video.catchuptvandmore/plugin.video.catchuptvandmore
   
   # Check the plugin with kodi-addon-checker
   kodi-addon-checker:
