@@ -7,18 +7,23 @@ jobs:
   
   # Flake
   flake:
-    name: Flake8
+    name: Run flake8 linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
       - name: Install flake8
         run: pip install flake8
-      - name: Lint with flake8 
-        run: flake8 ./plugin.video.catchuptvandmore
+      - name: Run flake8
+        uses: wearerequired/lint-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          flake8: true
+          flake8_dir: plugin.video.catchuptvandmore/
           
   # Test add-on python files
   test-plugin-modules:
@@ -26,19 +31,25 @@ jobs:
     needs: flake
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+        with:
+          path: plugin
+      - name: Check out simulator repository
+        uses: actions/checkout@v2
+        with:
+          path: simulator
+          repository: Catch-up-TV-and-More/catchuptvandmore-test
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Install deps
-        run: pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
-      - name: Download catchuptvandmore-test
-        working-directory: ..
-        run: wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
+      - name: Install dependencies
+        working-directory: simulator
+        run: pip install -r requirements.txt
       - name: Start catchuptvandmore-test with test_modules config
-        working-directory: ../catchuptvandmore-test-master
-        run: python main.py -c configs/7_test_modules.json
+        working-directory: simulator
+        run: python main.py --test-modules -a ../plugin/plugin.video.catchuptvandmore
   
   # Check the plugin with kodi-addon-checker
   kodi-addon-checker:
@@ -46,7 +57,8 @@ jobs:
     needs: test-plugin-modules
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -56,28 +68,52 @@ jobs:
       - name: Run kodi-addon-checker
         run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch ./plugin.video.catchuptvandmore
   
+  # Update M3U files
+  update-m3u-files:
+    name: Update M3U files
+    needs: kodi-addon-checker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install -r tools/generate_m3u_files_requirements.txt
+      - name: Start M3U files generator
+        run: python tools/generate_m3u_files.py
+      - name: Push changes
+        run: |
+          git config user.name 'M3U files generator'
+          git config user.email 'github@noreply.github.com'
+          git add plugin.video.catchuptvandmore/resources/m3u
+          git commit -m "Update M3U files" || echo "No changes to commit"
+          git push
+  
   # Update repository.catchuptvandmore
   update-repo:
     name: Update repository.catchuptvandmore
-    needs: kodi-addon-checker
+    needs: update-m3u-files
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Install gitpython
-        run: pip install gitpython
-      - name: Clone repository.catchuptvandmore
-        run: git clone https://github.com/Catch-up-TV-and-More/repository.catchuptvandmore repo
+      - name: Check out repository.catchuptvandmore repository
+        uses: actions/checkout@v2
+        with:
+          repository: Catch-up-TV-and-More/repository.catchuptvandmore
+          token: ${{ secrets.GITHUB_ACTIONS_ACCESS_TOKEN }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
       - name: Configure git
-        working-directory: ./repo
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'github@noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_ACTIONS_ACCESS_TOKEN }}@github.com/Catch-up-TV-and-More/repository.catchuptvandmore.git
+          git config user.name 'GitHub Actions'
+          git config user.email 'github@noreply.github.com'
       - name: Update all repositories
-        working-directory: ./repo
         run: ./update_all_repos.sh
   
   # Test the plugin with our Kodi simulator
@@ -86,18 +122,24 @@ jobs:
     needs: update-repo
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+        with:
+          path: plugin.video.catchuptvandmore
+      - name: Check out simulator repository
+        uses: actions/checkout@v2
+        with:
+          path: simulator
+          repository: Catch-up-TV-and-More/catchuptvandmore-test
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Install deps
-        run: pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
-      - name: Download catchuptvandmore-test
-        working-directory: ..
-        run: wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
+      - name: Install dependencies
+        working-directory: simulator
+        run: pip install -r requirements.txt
       - name: Start catchuptvandmore-test
-        working-directory: ../catchuptvandmore-test-master
+        working-directory: simulator
         run: python main.py -c configs/5_explore_random_replay_channel_random_country.json
       
   kodi-simulator-2:
@@ -105,16 +147,22 @@ jobs:
     needs: kodi-simulator-1
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+        with:
+          path: plugin.video.catchuptvandmore
+      - name: Check out simulator repository
+        uses: actions/checkout@v2
+        with:
+          path: simulator
+          repository: Catch-up-TV-and-More/catchuptvandmore-test
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Install deps
-        run: pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
-      - name: Download catchuptvandmore-test
-        working-directory: ..
-        run: wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
+      - name: Install dependencies
+        working-directory: simulator
+        run: pip install -r requirements.txt
       - name: Start catchuptvandmore-test
-        working-directory: ../catchuptvandmore-test-master
+        working-directory: simulator
         run: python main.py -c configs/6_explore_random_website.json
