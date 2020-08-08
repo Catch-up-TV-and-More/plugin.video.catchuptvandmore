@@ -21,6 +21,7 @@ jobs:
       - name: Run flake8
         uses: wearerequired/lint-action@v1
         with:
+          github_token: ${{ secrets.GITHUB_ACTIONS_ACCESS_TOKEN }}
           flake8: true
           flake8_dir: plugin.video.catchuptvandmore/
           
