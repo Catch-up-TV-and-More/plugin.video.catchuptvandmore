@@ -7,18 +7,22 @@ jobs:
   
   # Flake
   flake:
-    name: Flake8
+    name: Run flake8 linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out Git repository
+        uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
       - name: Install flake8
         run: pip install flake8
-      - name: Lint with flake8 
-        run: flake8 ./plugin.video.catchuptvandmore
+      - name: Run flake8
+        uses: wearerequired/lint-action@v1
+        with:
+          flake8: true
+          flake8_dir: plugin.video.catchuptvandmore/
           
   # Test add-on python files
   test-plugin-modules:
