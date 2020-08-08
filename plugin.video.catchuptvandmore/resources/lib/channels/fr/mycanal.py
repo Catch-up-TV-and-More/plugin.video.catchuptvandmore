@@ -86,13 +86,6 @@ LIVE_DAILYMOTION_ID = {
 }
 
 
-def replay_entry(plugin, item_id, **kwargs):
-    """
-    First executed function after replay_bridge
-    """
-    return mycanal_root(plugin)
-
-
 @Route.register
 def mycanal_root(plugin, **kwargs):
 
@@ -607,12 +600,8 @@ def get_video_url(plugin,
         return json_parser["detail"]["informations"]["playsets"]["available"][0]["videoURL"]
 
 
-def live_entry(plugin, item_id, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper())
-
-
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     return resolver_proxy.get_stream_dailymotion(
         plugin, LIVE_DAILYMOTION_ID[item_id], False)

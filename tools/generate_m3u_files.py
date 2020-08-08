@@ -51,7 +51,7 @@ LIVE_TV_M3U_COUTRY_FILEPATH = "../plugin.video.catchuptvandmore/resources/m3u/li
 EN_STRINGS_PO_FILEPATH = "../plugin.video.catchuptvandmore/resources/language/resource.language.en_gb/strings.po"
 
 
-PLUGIN_LIVE_BRIDGE_PATH = "plugin://plugin.video.catchuptvandmore/resources/lib/main/"
+PLUGIN_PATH = "plugin://plugin.video.catchuptvandmore"
 
 M3U_ENTRY = '#EXTINF:-1 tvg-id="%s" tvg-logo="%s" group-title="%s",%s\n%s'
 # arg0: tgv_id
@@ -170,7 +170,7 @@ def generate_m3u_files():
                 continue
 
             # If this channel is a folder (e.g. multi live) --> ignore this channel
-            if channel_infos.get('callback') != 'live_bridge':
+            if 'resolver' not in channel_infos:
                 continue
 
             channel_label = get_label(channel_id, channel_infos)
@@ -186,12 +186,11 @@ def generate_m3u_files():
             for language in languages:
 
                 channel_m3u = {
-                    'callback': channel_infos['callback'],
+                    'resolver': channel_infos['resolver'].replace(':', '/'),
                     'logo': get_item_media_path(channel_infos["thumb"]),
                     'label': channel_label,
                     'params': {
-                        'item_id': channel_id,
-                        'item_module': channel_infos['module']
+                        'item_id': channel_id
                     },
                     'xmltv_id': channel_infos.get('xmltv_id', ''),
                     'group': country_label if 'm3u_group' not in channel_infos else country_label + ' ' + channel_infos['m3u_group'],
@@ -276,10 +275,10 @@ def generate_m3u_files():
             channel_group = channel_dict['group']
             channel_group_all = channel_dict['group_all']
             channel_xmltv_id = channel_dict['xmltv_id']
-            channel_callback = channel_dict['callback']
+            channel_resolver = channel_dict['resolver']
 
             query = urllib.parse.urlencode(channel_params)
-            channel_url = PLUGIN_LIVE_BRIDGE_PATH + channel_callback + '/?' + query
+            channel_url = PLUGIN_PATH + channel_resolver + '/?' + query
 
             channel_m3u_entry_country = M3U_ENTRY % (
                 channel_xmltv_id, channel_logo, channel_group,

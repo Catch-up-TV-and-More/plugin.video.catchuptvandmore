@@ -2,7 +2,7 @@
 <addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.25~beta05" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="script.module.codequick" version="0.9.12"/>
+    <import addon="script.module.codequick" version="0.9.13"/>
     <import addon="script.module.youtube.dl" version="18.225.0"/>
     <import addon="script.module.requests" version="2.12.4"/>
     <import addon="script.module.pytz" version="2014.2"/>
@@ -52,6 +52,7 @@
 [BE - RTLplay] Move all RTL group channels in RTLplay folder
 [BE - RTBF] Fix Live TV with no audio (DRM)
 [CH - RTS] Fix Live TV with no audio (DRM)
+[Core] Bump CodeQuick 0.9.13 - Kill xxxx_bridge functions
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

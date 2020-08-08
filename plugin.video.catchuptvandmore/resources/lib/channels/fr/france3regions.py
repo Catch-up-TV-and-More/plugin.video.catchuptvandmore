@@ -95,13 +95,6 @@ CORRECT_MONTH = {
 }
 
 
-def replay_entry(plugin, item_id, **kwargs):
-    """
-    First executed function after replay_bridge
-    """
-    return list_programs(plugin, item_id)
-
-
 @Route.register
 def list_programs(plugin, item_id, **kwargs):
     """
@@ -183,10 +176,6 @@ def get_video_url(plugin,
 
     return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
                                                     download_mode)
-
-
-def live_entry(plugin, item_id, **kwargs):
-    return get_live_url(plugin, item_id, **kwargs)
 
 
 @Resolver.register
