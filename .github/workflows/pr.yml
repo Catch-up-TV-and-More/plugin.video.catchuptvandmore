@@ -9,18 +9,66 @@ jobs:
   
   # Flake
   flake:
-    name: Flake8 check
+    name: Run flake8 linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
       - name: Install flake8
         run: pip install flake8
-      - name: Lint with flake8 
-        run: flake8 ./plugin.video.catchuptvandmore
+      - name: Run flake8
+        uses: wearerequired/lint-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          flake8: true
+          flake8_dir: plugin.video.catchuptvandmore/
+
+  # Test add-on python files
+  test-plugin-modules:
+    name: Load each Python files of the addon to detect errors
+    needs: flake
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+        with:
+          path: plugin
+      - name: Check out simulator repository
+        uses: actions/checkout@v2
+        with:
+          path: simulator
+          repository: Catch-up-TV-and-More/catchuptvandmore-test
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        working-directory: simulator
+        run: pip install -r requirements.txt
+      - name: Start catchuptvandmore-test with test_modules config
+        working-directory: simulator
+        run: python main.py --test-modules -a ../plugin/plugin.video.catchuptvandmore
+  
+  # Check the plugin with kodi-addon-checker
+  kodi-addon-checker:
+    name: Kodi-addon-checker
+    needs: test-plugin-modules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install kodi-addon-checker
+        run: pip install kodi-addon-checker==0.0.16
+      - name: Run kodi-addon-checker
+        run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch ./plugin.video.catchuptvandmore
 
   # Branch check
   branch:
