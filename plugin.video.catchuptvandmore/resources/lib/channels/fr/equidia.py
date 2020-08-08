@@ -97,7 +97,7 @@ def list_videos_emissions(plugin, item_id, category_url, page, **kwargs):
         video_title = video_datas["name"]
         video_image = URL_IMAGE % video_datas["episode"]["media"]["slug"]
         video_url = URL_ROOT + '/programmes/' + \
-            video_datas["program"]["slug"]  + '/' +  video_datas["episode"]["slug"]
+            video_datas["program"]["slug"] + '/' + video_datas["episode"]["slug"]
 
         item = Listitem()
         item.label = video_title
@@ -149,10 +149,10 @@ def list_videos_courses(plugin, item_id, category_url, page, **kwargs):
 
 @Resolver.register
 def get_video_emission_url(plugin,
-                  item_id,
-                  video_url,
-                  download_mode=False,
-                  **kwargs):
+                           item_id,
+                           video_url,
+                           download_mode=False,
+                           **kwargs):
 
     resp = urlquick.get(video_url,
                         headers={'User-Agent': web_utils.get_random_ua()},
@@ -170,10 +170,10 @@ def get_video_emission_url(plugin,
 
 @Resolver.register
 def get_video_course_url(plugin,
-                  item_id,
-                  video_url,
-                  download_mode=False,
-                  **kwargs):
+                         item_id,
+                         video_url,
+                         download_mode=False,
+                         **kwargs):
 
     resp = urlquick.get(video_url,
                         headers={'User-Agent': web_utils.get_random_ua()},
