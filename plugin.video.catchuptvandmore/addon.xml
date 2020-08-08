@@ -53,6 +53,7 @@
 [BE - RTBF] Fix Live TV with no audio (DRM)
 [CH - RTS] Fix Live TV with no audio (DRM)
 [Core] Bump CodeQuick 0.9.13 - Kill xxxx_bridge functions
+[NL - NPO] Fix Lives TV (Audio drop, NPO 1 and 2, Rename NPO 3 to NPO Zapp)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

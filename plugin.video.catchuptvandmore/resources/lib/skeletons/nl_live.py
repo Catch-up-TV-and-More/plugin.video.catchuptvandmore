@@ -52,9 +52,9 @@ menu = {
         'enabled': True,
         'order': 2
     },
-    'npo-3zapp': {
+    'npo-zapp': {
         'resolver': '/resources/lib/channels/nl/npo:get_live_url',
-        'label': 'NPO 3',
+        'label': 'NPO Zapp',
         'thumb': 'channels/nl/npozapp.png',
         'fanart': 'channels/nl/npozapp_fanart.jpg',
         'enabled': True,
