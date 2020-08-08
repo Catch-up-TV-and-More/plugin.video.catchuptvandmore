@@ -27,31 +27,30 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
+import importlib
+import os
 from builtins import str
 import polib
 import sys
 import mock
 import urllib.parse
 
-sys.path.append('../plugin.video.catchuptvandmore')
-sys.path.append('../plugin.video.catchuptvandmore/resources')
-sys.path.append('../plugin.video.catchuptvandmore/resources/lib')
+PLUGIN_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../plugin.video.catchuptvandmore'
+
+sys.path.append(PLUGIN_PATH)
+sys.path.append(PLUGIN_PATH + '/resources')
+sys.path.append(PLUGIN_PATH + '/resources/lib')
 
 sys.modules['codequick'] = mock.MagicMock()
 
-import importlib
-import os
+LIVE_TV_M3U_ALL_FILEPATH = PLUGIN_PATH + "/resources/m3u/live_tv_all.m3u"
 
-
-LIVE_TV_M3U_ALL_FILEPATH = "../plugin.video.catchuptvandmore/resources/m3u/live_tv_all.m3u"
-
-LIVE_TV_M3U_COUTRY_FILEPATH = "../plugin.video.catchuptvandmore/resources/m3u/live_tv_%s.m3u"
+LIVE_TV_M3U_COUTRY_FILEPATH = PLUGIN_PATH + "/resources/m3u/live_tv_%s.m3u"
 # arg0: country_code (fr, nl, jp, ...)
 
-EN_STRINGS_PO_FILEPATH = "../plugin.video.catchuptvandmore/resources/language/resource.language.en_gb/strings.po"
+EN_STRINGS_PO_FILEPATH = PLUGIN_PATH + "/resources/language/resource.language.en_gb/strings.po"
 
-
-PLUGIN_PATH = "plugin://plugin.video.catchuptvandmore"
+PLUGIN_KODI_PATH = "plugin://plugin.video.catchuptvandmore"
 
 M3U_ENTRY = '#EXTINF:-1 tvg-id="%s" tvg-logo="%s" group-title="%s",%s\n%s'
 # arg0: tgv_id
@@ -278,7 +277,7 @@ def generate_m3u_files():
             channel_resolver = channel_dict['resolver']
 
             query = urllib.parse.urlencode(channel_params)
-            channel_url = PLUGIN_PATH + channel_resolver + '/?' + query
+            channel_url = PLUGIN_KODI_PATH + channel_resolver + '/?' + query
 
             channel_m3u_entry_country = M3U_ENTRY % (
                 channel_xmltv_id, channel_logo, channel_group,
