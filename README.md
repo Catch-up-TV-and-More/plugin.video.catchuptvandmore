@@ -1,5 +1,8 @@
 # Catch-up TV & More
-![Catch-up TV & More](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/plugin.video.catchuptvandmore/icon.png)
+
+<p align="center">
+  <img src="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/plugin.video.catchuptvandmore/icon.png" alt="Catch-up TV & More logo">
+</p>
 
 ![CI](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/workflows/CI/badge.svg?branch=dev)
 
@@ -12,34 +15,26 @@ Catch-Up TV & More est compatible avec les versions de Kodi "17 Krypton" et sup�
 *This plugin brings together all the videos of the various services and channels of catch-up TV. Furthermore, this addon allows you to quickly access the videos and content offered by certain websites.*
 Catch-Up TV & More is compatible with Kodi "17 Krypton" and higher versions.
 
-## Tutoriel pour installer Catch-up TV & More — *Tutorial to install Catch-up TV & More*
-### Français — *French*
-<https://catch-up-tv-and-more.github.io/fr/installation/>
+## Comment installer Catch-up TV & More — *How-to install Catch-up TV & More*
 
-### Anglais — *English*
-<https://catch-up-tv-and-more.github.io/installation/>
+* **Français**: <https://catch-up-tv-and-more.github.io/fr/installation/>
+* **English**: <https://catch-up-tv-and-more.github.io/installation/>
 
 ## Chaînes disponibles — *Available channels*
-### Français — *French*
-<https://catch-up-tv-and-more.github.io/fr/channels/>
 
-### Anglais — *English*
-<https://catch-up-tv-and-more.github.io/channels/>
+* **Français**: <https://catch-up-tv-and-more.github.io/fr/channels/>
+* **English**: <https://catch-up-tv-and-more.github.io/channels/>
 
 ## Sites internet disponibles — *Available Websites*
-### Français — *French*
-<https://catch-up-tv-and-more.github.io/fr/websites/>
 
-### Anglais — *English*
-<https://catch-up-tv-and-more.github.io/websites/>
+* **Français**: <https://catch-up-tv-and-more.github.io/fr/websites/>
+* **English**: <https://catch-up-tv-and-more.github.io/websites/>
 
 ## Bugs et améliorations — *Bugs and improvements*
 Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.
 *Bug reports, suggestions for improvements or content additions are welcome! GitHub or e-mail.*
 
 ## Forums
-### Français — *French*
-<https://forum.mpdb.tv/index.php/topic,35713.0.html>
 
-### Anglais — *English*
-<https://forum.kodi.tv/showthread.php?tid=307107>
+* **Français**: <https://forum.mpdb.tv/index.php/topic,35713.0.html>
+* **English**: <https://forum.kodi.tv/showthread.php?tid=307107>
