@@ -225,7 +225,7 @@ def favourites(plugin, start=0, **kwargs):
     sorted_menu = []
     fav_dict = fav.get_fav_dict_from_json()
     menu = []
-    for item_hash, item_dict in list(fav_dict.items()):
+    for item_hash, item_dict in list(fav_dict['items'].items()):
         item = (item_dict['params']['order'], item_hash, item_dict)
         menu.append(item)
 
