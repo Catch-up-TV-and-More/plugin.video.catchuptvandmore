@@ -31,21 +31,15 @@ jobs:
     needs: flake
     runs-on: ubuntu-latest
     steps:
-      - name: Debug1
-        run: pwd
       - name: Check out plugin repository
         uses: actions/checkout@v2
         with:
           path: plugin
-      - name: Debug2
-        run: pwd && ls plugin
       - name: Check out simulator repository
         uses: actions/checkout@v2
         with:
           path: simulator
           repository: Catch-up-TV-and-More/catchuptvandmore-test
-      - name: Debug3
-        run: pwd
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -63,7 +57,8 @@ jobs:
     needs: test-plugin-modules
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -83,18 +78,18 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Install gitpython
-        run: pip install gitpython
-      - name: Clone repository.catchuptvandmore
-        run: git clone https://github.com/Catch-up-TV-and-More/repository.catchuptvandmore repo
+      - name: Check out repository.catchuptvandmore repository
+        uses: actions/checkout@v2
+        with:
+          repository: Catch-up-TV-and-More/repository.catchuptvandmore
+          token: ${{ secrets.GITHUB_ACTIONS_ACCESS_TOKEN }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
       - name: Configure git
-        working-directory: ./repo
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'github@noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_ACTIONS_ACCESS_TOKEN }}@github.com/Catch-up-TV-and-More/repository.catchuptvandmore.git
+          git config user.name 'GitHub Actions'
+          git config user.email 'github@noreply.github.com'
       - name: Update all repositories
-        working-directory: ./repo
         run: ./update_all_repos.sh
   
   # Test the plugin with our Kodi simulator
@@ -103,18 +98,24 @@ jobs:
     needs: update-repo
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+        with:
+          path: plugin.video.catchuptvandmore
+      - name: Check out simulator repository
+        uses: actions/checkout@v2
+        with:
+          path: simulator
+          repository: Catch-up-TV-and-More/catchuptvandmore-test
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Install deps
-        run: pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
-      - name: Download catchuptvandmore-test
-        working-directory: ..
-        run: wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
+      - name: Install dependencies
+        working-directory: simulator
+        run: pip install -r requirements.txt
       - name: Start catchuptvandmore-test
-        working-directory: ../catchuptvandmore-test-master
+        working-directory: simulator
         run: python main.py -c configs/5_explore_random_replay_channel_random_country.json
       
   kodi-simulator-2:
@@ -122,16 +123,22 @@ jobs:
     needs: kodi-simulator-1
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out plugin repository
+        uses: actions/checkout@v2
+        with:
+          path: plugin.video.catchuptvandmore
+      - name: Check out simulator repository
+        uses: actions/checkout@v2
+        with:
+          path: simulator
+          repository: Catch-up-TV-and-More/catchuptvandmore-test
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Install deps
-        run: pip install git+https://github.com/willforde/urlquick.git polib mock htmlement colorama requests youtube_dl pytz six
-      - name: Download catchuptvandmore-test
-        working-directory: ..
-        run: wget https://github.com/Catch-up-TV-and-More/catchuptvandmore-test/archive/master.zip && unzip master.zip
+      - name: Install dependencies
+        working-directory: simulator
+        run: pip install -r requirements.txt
       - name: Start catchuptvandmore-test
-        working-directory: ../catchuptvandmore-test-master
+        working-directory: simulator
         run: python main.py -c configs/6_explore_random_website.json
