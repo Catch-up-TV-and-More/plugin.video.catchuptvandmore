@@ -55,7 +55,7 @@ menu = {
         'xmltv_id': 'C4.api.telerama.fr',
         'm3u_group': 'TNT',
         'm3u_order': 2,
-        'enabled': True,
+        'enabled': False,
         'order': 2
     },
     'france-3': {
