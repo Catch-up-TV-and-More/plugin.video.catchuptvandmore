@@ -38,7 +38,7 @@ jobs:
       - name: Check out simulator repository
         uses: actions/checkout@v2
         with:
-          repository: catchuptvandmore-test
+          repository: Catch-up-TV-and-More/catchuptvandmore-test
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
