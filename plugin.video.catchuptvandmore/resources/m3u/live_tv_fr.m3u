@@ -8,11 +8,6 @@
 #EXTINF:-1 tvg-id="C192.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/tf1.png" group-title="France TNT",TF1
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/mytf1/get_live_url/?item_id=tf1
 
-##	France 2
-##	france-2
-#EXTINF:-1 tvg-id="C4.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/france2.png" group-title="France TNT",France 2
-plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/francetv/get_live_url/?item_id=france-2
-
 ##	France 3
 ##	france-3
 #EXTINF:-1 tvg-id="C80.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/france3.png" group-title="France TNT",France 3
