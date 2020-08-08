@@ -538,6 +538,16 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/europe1/get_liv
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/01net.png" group-title="France Satellite/FAI",01Net TV
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/01net/get_live_url/?item_id=01net
 
+##	Equidia
+##	equidia
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/equidia.png" group-title="France Satellite/FAI",Equidia
+plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/equidia/get_live_url/?item_id=equidia
+
+##	B Smart
+##	bsmart
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/bsmart.png" group-title="France Satellite/FAI",B Smart
+plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/bsmart/get_live_url/?item_id=bsmart
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/wo/euronews.png" group-title="France",Euronews

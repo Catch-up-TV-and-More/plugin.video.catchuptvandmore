@@ -42,12 +42,8 @@ URL_API = "https://equidia-vodce-players.hexaglobe.net"
 URL_LIVE_DATAS = URL_API + '/mf_data/%s.json'
 
 
-def live_entry(plugin, item_id, **kwargs):
-    return get_live_url(plugin, item_id, item_id.upper())
-
-
 @Resolver.register
-def get_live_url(plugin, item_id, video_id, **kwargs):
+def get_live_url(plugin, item_id, **kwargs):
 
     # Get date of Today
     today = date.today()

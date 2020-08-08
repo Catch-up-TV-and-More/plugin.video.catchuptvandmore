@@ -806,21 +806,19 @@ menu = {
         'order': 121
     },
     'equidia': {
-        'callback': 'live_bridge',
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
         'label': 'Equidia',
         'thumb': 'channels/fr/equidia.png',
         'fanart': 'channels/fr/equidia_fanart.jpg',
-        'module': 'resources.lib.channels.fr.equidia',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
         'order': 122
     },
     'bsmart': {
-        'callback': 'live_bridge',
+        'resolver': '/resources/lib/channels/fr/bsmart:get_live_url',
         'label': 'B Smart',
         'thumb': 'channels/fr/bsmart.png',
         'fanart': 'channels/fr/bsmart_fanart.jpg',
-        'module': 'resources.lib.channels.fr.bsmart',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
         'order': 123
