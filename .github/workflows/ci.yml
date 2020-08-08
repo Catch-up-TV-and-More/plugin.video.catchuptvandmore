@@ -31,14 +31,21 @@ jobs:
     needs: flake
     runs-on: ubuntu-latest
     steps:
+      - name: Debug1
+        run: pwd
       - name: Check out plugin repository
         uses: actions/checkout@v2
         with:
           path: plugin
+      - name: Debug2
+        run: pwd
       - name: Check out simulator repository
         uses: actions/checkout@v2
         with:
+          path: simulator
           repository: Catch-up-TV-and-More/catchuptvandmore-test
+      - name: Debug3
+        run: pwd
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
