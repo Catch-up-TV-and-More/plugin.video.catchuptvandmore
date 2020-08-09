@@ -195,12 +195,20 @@ def list_videos_franchise(plugin, item_id, program_url, **kwargs):
         json_parser = json.loads(resp.text)
 
         for video_datas in json_parser["items"]:
-            if 'seasonNumber' in video_datas and video_datas['seasonNumber'] is not None:
-                video_title = video_datas["title"] + " - S%sE%s" % (
-                    str(video_datas['seasonNumber']),
-                    str(video_datas['episodeNumber']))
-            else:
-                video_title = video_datas["title"]
+            if 'title' not in video_datas:
+                continue
+
+            if not video_datas['title']:
+                continue
+
+            subtitle = ''
+            if 'seasonNumber' in video_datas and 'episodeNumber' in video_datas:
+                if video_datas['seasonNumber'] is not None and video_datas['episodeNumber'] is not None:
+                    subtitle = " - S%sE%s" % (
+                        str(video_datas['seasonNumber']),
+                        str(video_datas['episodeNumber']))
+
+            video_title = video_datas["title"] + subtitle
             if 'header' in video_datas["images"]:
                 video_image = URL_IMAGE % video_datas["images"]["header"]["id"]
             else:
