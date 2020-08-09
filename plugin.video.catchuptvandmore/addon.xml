@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.25~beta07" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.25~beta08" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -56,6 +56,7 @@
 [NL - NPO] Fix Lives TV (Audio drop, NPO 1 and 2, Rename NPO 3 to NPO Zapp)
 [FR - Equidia] Add Catchup-TV (Courses and Emissions)
 [CA - NOOVO.TV] Fix Catchup-TV
+[UK - STV] Fix catch up entry error
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

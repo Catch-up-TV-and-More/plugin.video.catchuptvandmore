@@ -61,7 +61,7 @@ menu = {
         'order': 7
     },
     'stv': {
-        'route': '/resources/lib/channels/uk/stv:list_categories',
+        'route': '/resources/lib/channels/uk/stv:list_programs',
         'label': 'STV',
         'thumb': 'channels/uk/stv.png',
         'fanart': 'channels/uk/stv_fanart.jpg',
