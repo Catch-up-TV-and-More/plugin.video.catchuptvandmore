@@ -108,13 +108,6 @@ URL_LIVE_JSON = 'https://pc.middleware.6play.fr/6play/v2/platforms/m6group_web/s
 DESIRED_QUALITY = Script.setting['quality']
 
 
-def replay_entry(plugin, item_id, **kwargs):
-    """
-    First executed function after replay_bridge
-    """
-    return rtlplay_root(plugin)
-
-
 @Route.register
 def rtlplay_root(plugin, **kwargs):
 
