@@ -112,7 +112,7 @@ def list_videos(plugin, item_id, season_url, page, **kwargs):
         root = resp.parse()
 
     for video_datas in root.iterfind(
-            ".//div[@class='card card--video card--sm u-shadow-1']"):
+            ".//div[@class='card card--video']"):
         video_title = video_datas.find(".//img").get('alt')
         video_image = video_datas.find(".//img").get('src')
         video_plot = ''
