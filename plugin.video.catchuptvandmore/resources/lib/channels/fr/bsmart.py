@@ -106,7 +106,7 @@ def list_videos_program(plugin, item_id, next_url, **kwargs):
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["videos"]:
-        video_title = video_datas["program"]["title"] + ' - ' +  video_datas["title"]
+        video_title = video_datas["program"]["title"] + ' - ' + video_datas["title"]
         video_image = video_datas["asset"]["dailymotion"]["thumb"]
         video_id = video_datas["asset"]["dailymotion"]["id"]
 
@@ -128,7 +128,7 @@ def list_videos(plugin, item_id, next_url, page, **kwargs):
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["results"]:
-        video_title = video_datas["program"]["title"] + ' - ' +  video_datas["title"]
+        video_title = video_datas["program"]["title"] + ' - ' + video_datas["title"]
         video_image = video_datas["asset"]["dailymotion"]["thumb"]
         video_id = video_datas["asset"]["dailymotion"]["id"]
 
@@ -150,10 +150,10 @@ def list_videos(plugin, item_id, next_url, page, **kwargs):
 
 @Resolver.register
 def get_video_url(plugin,
-                         item_id,
-                         video_id,
-                         download_mode=False,
-                         **kwargs):
+                  item_id,
+                  video_id,
+                  download_mode=False,
+                  **kwargs):
 
     return resolver_proxy.get_stream_dailymotion(plugin,
                                                  video_id,
