@@ -51,6 +51,5 @@ def get_live_url(plugin, item_id, **kwargs):
         live_datas.get('src'), headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
     stream_url = ''
     for url in re.compile(r'videoUrl \= \'(.*?)\'').findall(resp2.text):
-        if 'm3u8' in url:
-            stream_url = url
+        stream_url = url + '_720p/playlist.m3u8'
     return stream_url
