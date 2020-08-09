@@ -443,5 +443,13 @@ menu = {
         'fanart': 'channels/fr/equidia_fanart.jpg',
         'enabled': True,
         'order': 122
+    },
+    'bsmart': {
+        'route': '/resources/lib/channels/fr/bsmart:list_categories',
+        'label': 'B Smart',
+        'thumb': 'channels/fr/bsmart.png',
+        'fanart': 'channels/fr/bsmart_fanart.jpg',
+        'enabled': True,
+        'order': 123
     }
 }
