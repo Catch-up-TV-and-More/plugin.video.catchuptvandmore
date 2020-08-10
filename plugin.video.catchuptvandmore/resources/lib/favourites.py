@@ -74,8 +74,14 @@ def get_fav_dict_from_json():
         dict: Favourites dict
     """
 
+    def get_fresh_dict():
+        return {
+            'items': {},
+            'format_version': FAV_FORMAT_VERSION
+        }
+
     if not xbmcvfs.exists(FAV_JSON_FP):
-        return {}
+        return get_fresh_dict()
     try:
         with open(FAV_JSON_FP) as f:
             fav_dict = json.load(f)
@@ -86,7 +92,7 @@ def get_fav_dict_from_json():
     except Exception:
         Script.log('Failed to load favourites json data')
         xbmcvfs.delete(FAV_JSON_FP)
-        return {}
+        return get_fresh_dict()
 
 
 def save_fav_dict_in_json(fav_dict):
