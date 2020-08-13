@@ -82,7 +82,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     for script_data in root.iterfind(".//script[@type='text/javascript']"):
         if script_data.text and "__abcnews__" in script_data.text:
             script = script_data.text
-            page_data = script[script.find('{'):script.rfind('}')+1]
+            page_data = script[script.find('{'):script.rfind('}') + 1]
             json_parser = json.loads(page_data)
             for element in json_parser['page']['content']['section']['bands']:
                 try:
