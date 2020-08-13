@@ -44,8 +44,8 @@ URL_LIVE_DATAS = URL_ROOT + "/static/js/bundle.%s.js"
 URL_API = 'https://api.bsmart.fr/api'
 
 CATEGORIES_BSMART = {
-    '/programs/': 'Emissions',
-    '/videos/': 'Vidéos'
+    '/programs/': Script.localize(20343),  # TV shows
+    '/videos/': Script.localize(3)  # Videos
 }
 
 

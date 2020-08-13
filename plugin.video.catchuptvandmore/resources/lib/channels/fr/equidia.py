@@ -53,8 +53,8 @@ URL_REPLAY_DATAS = 'https://api.equidia.fr/api/public/videos-store/player/%s'
 # VideoId
 
 CATEGORIES_VIDEOS_EQUIDIA = {
-    '/search/emissions': 'Emissions',
-    '/search/courses': 'Courses'
+    '/search/emissions': Script.localize(20343),  # TV shows
+    '/search/courses': Script.localize(30726)  # Races
 }
 
 
