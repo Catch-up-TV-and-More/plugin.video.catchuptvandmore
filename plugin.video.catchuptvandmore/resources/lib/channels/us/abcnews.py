@@ -107,7 +107,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
                             item_post_treatment(item,
                                                 is_playable=True,
                                                 is_downloadable=True)
-                            yield ite
+                            yield item
                         break
                 except KeyError:
                     continue
