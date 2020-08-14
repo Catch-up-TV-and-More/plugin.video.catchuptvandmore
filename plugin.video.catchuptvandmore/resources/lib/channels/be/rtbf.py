@@ -141,13 +141,6 @@ def format_day(date, **kwargs):
     return date_dmy
 
 
-def replay_entry(plugin, item_id, **kwargs):
-    """
-    First executed function after replay_bridge
-    """
-    return list_categories(plugin, item_id)
-
-
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
 
@@ -417,7 +410,9 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
                     video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
             else:
                 video_url = video_datas["url_streaming"]["url"]
-
+        else:
+            video_url = video_datas["url_embed"]
+            
         # is_downloadable = False
         # if video_datas["url_download"]:
             # is_downloadable = True
@@ -430,15 +425,12 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
         item.info['duration'] = video_duration
         item.info.date(date_value, '%Y/%m/%d')
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
-
         item.set_callback(get_video_url,
                           item_id=item_id,
                           video_url=video_url)
         item_post_treatment(item,
-                            is_playable=True)
+                            is_playable=True,
+                            is_downloadable=True)
         yield item
 
 
@@ -527,22 +519,8 @@ def get_video_url2(plugin,
     return stream_url
 
 
-def multi_live_entry(plugin, item_id, **kwargs):
-    """
-    First executed function after replay_bridge
-    """
-    return list_lives(plugin, item_id)
-
-
-def live_entry(plugin, item_id, **kwargs):
-    """
-    First executed function after live_bridge
-    """
-    return set_live_url(plugin, item_id, item_id.upper())
-
-
 @Resolver.register
-def set_live_url(plugin, item_id, video_id, **kwargs):
+def set_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_JSON_LIVE_CHANNEL % (item_id, PARTNER_KEY), max_age=-1)
     json_parser = json.loads(resp.text)
@@ -652,6 +630,7 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
         }
         item.property[
             'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
+        item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
