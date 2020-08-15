@@ -220,10 +220,8 @@ def list_programs(plugin, item_id, next_url, **kwargs):
             video_plot = ''
             if 'summary' in video_datas:
                 video_plot = video_datas['summary']
-            tokencms_value = ''
             if 'contentAvailability' in video_datas:
                 video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
-                # find tokencms_value
             else:
                 video_url = video_datas["URLMedias"]
 
@@ -235,8 +233,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
-                next_url=video_url,
-                tokencms_value=tokencms_value)
+                next_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -275,10 +272,8 @@ def list_programs(plugin, item_id, next_url, **kwargs):
             video_plot = ''
             if 'summary' in video_datas:
                 video_plot = video_datas['summary']
-            tokencms_value = ''
             if 'contentAvailability' in video_datas:
                 video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
-                # find tokencms_value
             else:
                 video_url = video_datas["URLMedias"]
 
@@ -290,8 +285,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
-                next_url=video_url,
-                tokencms_value=tokencms_value)
+                next_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -366,10 +360,8 @@ def list_videos(plugin, item_id, next_url, **kwargs):
         video_plot = ''
         if 'summary' in video_datas:
             video_plot = video_datas['summary']
-        tokencms_value = ''
         if 'contentAvailability' in video_datas:
             video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
-            # find tokencms_value
         else:
             video_url = video_datas["URLMedias"]
 
@@ -381,8 +373,7 @@ def list_videos(plugin, item_id, next_url, **kwargs):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            next_url=video_url,
-            tokencms_value=tokencms_value)
+            next_url=video_url)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -395,13 +386,183 @@ def list_videos(plugin, item_id, next_url, **kwargs):
 def get_video_url(plugin,
                   item_id,
                   next_url,
-                  tokencms_value,
                   download_mode=False,
                   **kwargs):
 
     if 'tokenCMS' in next_url:
-        # TODO get TOKENCMS_VALUE
-        return False
+        if get_kodi_version() < 18:
+            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+            return False
+
+        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not is_helper.check_inputstream():
+            return False
+
+        if download_mode:
+            xbmcgui.Dialog().ok('Info', plugin.localize(30603))
+            return False
+
+        # Get DeviceId
+        header_device_id = {
+            'referer':
+            'https://secure-player.canal-plus.com/one/prod/v2/',
+        }
+        resp_device_id = urlquick.get(URL_DEVICE_ID, headers=header_device_id, max_age=-1)
+        device_id = re.compile(
+            r'deviceId\"\:\"(.*?)\"').findall(resp_device_id.text)[0]
+
+        # Get Portail Id
+        session_requests = requests.session()
+        resp_app_config = session_requests.get(URL_REPLAY % item_id)
+        json_app_config = re.compile('window.app_config=(.*?)};').findall(
+            resp_app_config.text)[0]
+        json_app_config_parser = json.loads(json_app_config + ('}'))
+        portail_id = json_app_config_parser["api"]["pass"][
+            "portailIdEncrypted"]
+
+        # Get PassToken
+        payload = {
+            'deviceId': 'unknown',
+            'vect': 'INTERNET',
+            'media': 'PC',
+            'portailId': portail_id
+        }
+        resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload)
+        json_token_parser = json.loads(resp_token_mycanal.text)
+        pass_token = json_token_parser["response"]["passToken"]
+
+        video_id = next_url.split('/')[-1].split('.json')[0]
+        headers = {
+            'Accept':
+            'application/json, text/plain, */*',
+            'Authorization':
+            'PASS Token="%s"' % pass_token,
+            'Content-Type':
+            'application/json; charset=UTF-8',
+            'XX-DEVICE':
+            'pc %s' % device_id,
+            'XX-DOMAIN':
+            'cpfra',
+            'XX-OPERATOR':
+            'pc',
+            'XX-Profile-Id':
+            '0',
+            'XX-SERVICE':
+            'mycanal',
+            'User-Agent':
+            web_utils.get_random_ua()
+        }
+        value_datas_json = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers)
+        value_datas_jsonparser = json.loads(value_datas_json.text)
+
+        print('value_datas_json.text: ' + repr(value_datas_json.text))
+
+        comMode_value = ''
+        contentId_value = ''
+        distMode_value = ''
+        distTechnology_value = ''
+        drmType_value = ''
+        functionalType_value = ''
+        hash_value = ''
+        idKey_value = ''
+        quality_value = ''
+
+        if 'available' not in value_datas_jsonparser:
+            return False
+
+        for stream_datas in value_datas_jsonparser["available"]:
+            comMode_value = stream_datas['comMode']
+            contentId_value = stream_datas['contentId']
+            distMode_value = stream_datas['distMode']
+            distTechnology_value = stream_datas['distTechnology']
+            drmType_value = stream_datas['drmType']
+            functionalType_value = stream_datas['functionalType']
+            hash_value = stream_datas['hash']
+            idKey_value = stream_datas['idKey']
+            quality_value = stream_datas['quality']
+
+        payload = {
+            'comMode': comMode_value,
+            'contentId': contentId_value,
+            'distMode': distMode_value,
+            'distTechnology': distTechnology_value,
+            'drmType': drmType_value,
+            'functionalType': functionalType_value,
+            'hash': hash_value,
+            'idKey': idKey_value,
+            'quality': quality_value
+        }
+        payload = json.dumps(payload)
+        headers = {
+            'Accept':
+            'application/json, text/plain, */*',
+            'Authorization':
+            'PASS Token="%s"' % pass_token,
+            'Content-Type':
+            'application/json; charset=UTF-8',
+            'XX-DEVICE':
+            'pc %s' % device_id,
+            'XX-DOMAIN':
+            'cpfra',
+            'XX-OPERATOR':
+            'pc',
+            'XX-Profile-Id':
+            '0',
+            'XX-SERVICE':
+            'mycanal',
+            'User-Agent':
+            web_utils.get_random_ua()
+        }
+        resp_stream_datas = session_requests.put(
+            URL_STREAM_DATAS, data=payload, headers=headers)
+        jsonparser_stream_datas = json.loads(resp_stream_datas.text)
+
+        resp_real_stream_datas = session_requests.get(
+            jsonparser_stream_datas['@medias'], headers=headers)
+        jsonparser_real_stream_datas = json.loads(
+            resp_real_stream_datas.text)
+
+        # Case without DRM
+        item = Listitem()
+        item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
+        item.label = get_selected_item_label()
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
+        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'ism'
+        if 'Widevine' in drmType_value:
+            Script.notify("INFO", plugin.localize(30702), Script.NOTIFY_INFO)
+            return False
+            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            item.property[
+                'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            value_pass_token = 'PASS Token="%s"' % pass_token
+            headers2 = {
+                'Accept':
+                'application/json, text/plain, */*',
+                'Authorization':
+                value_pass_token,
+                'Content-Type':
+                'text/plain',
+                'User-Agent':
+                web_utils.get_random_ua(),
+                'Origin':
+                'https://www.mycanal.fr',
+                'XX-DEVICE':
+                'pc %s' % device_id,
+                'XX-DOMAIN':
+                'cpfra',
+                'XX-OPERATOR':
+                'pc',
+                'XX-Profile-Id':
+                '0',
+                'XX-SERVICE':
+                'mycanal',
+            }
+            # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
+            item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|R{SSM}|' % urlencode(headers2)
+        return item
+
     else:
         resp = urlquick.get(
             next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
