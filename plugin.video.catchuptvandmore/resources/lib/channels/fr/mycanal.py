@@ -91,19 +91,19 @@ def mycanal_root(plugin, **kwargs):
 
     # (item_id, label, thumb, fanart)
     channels = [
-        ('canalplus', 'Canal +', 'canalplus.png', 'canalplus_fanart.jpg'),
+        ('canalplus-en-clair', 'Canal +', 'canalplus.png', 'canalplus_fanart.jpg'),
         ('c8', 'C8', 'c8.png', 'c8_fanart.jpg'),
         ('cstar', 'CStar', 'cstar.png', 'cstar_fanart.jpg'),
         ('seasons', 'Seasons', 'seasons.png', 'seasons_fanart.jpg'),
         ('comedie', 'Comédie +', 'comedie.png', 'comedie_fanart.jpg'),
         ('les-chaines-planete', 'Les chaînes planètes +', 'leschainesplanete.png', 'leschainesplanete_fanart.jpg'),
         ('golfplus', 'Golf +', 'golfplus.png', 'golfplus_fanart.jpg'),
-        ('cineplus', 'Ciné +', 'cineplus.png', 'cineplus_fanart.jpg'),
+        ('cineplus-en-clair', 'Ciné +', 'cineplus.png', 'cineplus_fanart.jpg'),
         ('infosportplus', 'INFOSPORT+', 'infosportplus.png', 'infosportplus_fanart.jpg'),
         ('polar-plus', 'Polar+', 'polarplus.png', 'polarplus_fanart.jpg'),
-        ('cliquetv', 'Clique TV', 'cliquetv.png', 'cliquetv_fanart.jpg'),
-        ('piwiplus', 'Piwi +', 'piwiplus.png', 'piwiplus_fanart.jpg'),
-        ('teletoonplus', 'TéléToon +', 'teletoonplus.png', 'teletoonplus_fanart.jpg'),
+        ('clique-tv', 'Clique TV', 'cliquetv.png', 'cliquetv_fanart.jpg'),
+        ('piwi', 'Piwi +', 'piwiplus.png', 'piwiplus_fanart.jpg'),
+        ('teletoon', 'TéléToon +', 'teletoonplus.png', 'teletoonplus_fanart.jpg'),
     ]
 
     for channel_infos in channels:
@@ -126,147 +126,106 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
 
-    channel_mycanal_id = ''
-    if 'piwiplus' in item_id:
-        channel_mycanal_id = 'Piwi+'
-    elif 'teletoonplus' in item_id:
-        channel_mycanal_id = 'Télétoon+'
-    else:
-        channel_mycanal_id = item_id
-
-    resp = urlquick.get(URL_REPLAY % channel_mycanal_id)
+    resp = urlquick.get(URL_REPLAY % item_id)
     json_replay = re.compile(
         r'window.__data\=(.*?)\; window.app_config').findall(resp.text)[0]
     json_parser = json.loads(json_replay)
 
     for category in json_parser["templates"]["landing"]["strates"]:
-        if category["type"] == "contentRow" or category["type"] == "contentGrid":
+        if category["type"] == "carrousel":
+            title = category['context']['context_page_title']
+            key_value = category['key']
+            item = Listitem()
+            item.label = title
+            item.set_callback(
+                list_contents, item_id=item_id, key_value=key_value)
+            item_post_treatment(item)
+            yield item
+        elif category["type"] == "contentRow":
             if 'title' in category:
                 title = category['title']
             else:
                 title = json_parser["page"]["displayName"]
-
+            key_value = category['key']
             item = Listitem()
             item.label = title
             item.set_callback(
-                list_contents, item_id=item_id, title_value=title)
+                list_contents, item_id=item_id, key_value=key_value)
             item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_contents(plugin, item_id, title_value, **kwargs):
+def list_contents(plugin, item_id, key_value, **kwargs):
 
-    channel_mycanal_id = ''
-    if 'piwiplus' in item_id:
-        channel_mycanal_id = 'Piwi+'
-    elif 'teletoonplus' in item_id:
-        channel_mycanal_id = 'Télétoon+'
-    else:
-        channel_mycanal_id = item_id
-
-    resp = urlquick.get(URL_REPLAY % channel_mycanal_id)
+    resp = urlquick.get(URL_REPLAY % item_id)
     json_replay = re.compile(
         r'window.__data\=(.*?)\; window.app_config').findall(resp.text)[0]
     json_parser = json.loads(json_replay)
 
     for category in json_parser["templates"]["landing"]["strates"]:
-        if category["type"] == "contentRow" or category["type"] == "contentGrid":
-            if 'title' in category:
-                title = category['title']
-            else:
-                title = json_parser["page"]["displayName"]
-
-            if title_value == title:
-                for content in category["contents"]:
-                    if content["type"] == 'article':
-                        continue
+        if category['key'] == key_value:
+            for content in category["contents"]:
+                if content["type"] != 'article':
+                    content_title = content["onClick"]["displayName"]
+                    if 'http' in content["URLImageOptimizedRegular"]:
+                        content_image = content["URLImageOptimizedRegular"]
                     else:
-                        if 'subtitle' in content:
-                            program_title = content["onClick"]["displayName"] + ' (' + content["subtitle"] + ')'
-                        else:
-                            program_title = content["onClick"]["displayName"]
-                        program_image = content['URLImage']
-                        program_url = content["onClick"]["URLPage"]
+                        content_image = content["URLImage"]
+                    content_url = content["onClick"]["URLPage"]
 
-                        item = Listitem()
-                        item.label = program_title
-                        item.art['thumb'] = item.art['landscape'] = program_image
-                        item.set_callback(
-                            list_sub_programs,
-                            item_id=item_id,
-                            next_url=program_url)
-                        item_post_treatment(item)
-                        yield item
+                    item = Listitem()
+                    item.label = content_title
+                    item.art['thumb'] = item.art['landscape'] = content_image
+                    item.set_callback(
+                        list_programs,
+                        item_id=item_id,
+                        next_url=content_url)
+                    item_post_treatment(item)
+                    yield item
 
 
 @Route.register
-def list_sub_programs(plugin, item_id, next_url, **kwargs):
+def list_programs(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     json_parser = json.loads(resp.text)
 
     if 'strates' in json_parser:
-        for sub_program_datas in json_parser["strates"]:
 
-            if 'title' in sub_program_datas:
-                sub_program_title = sub_program_datas["title"]
-            else:
-                sub_program_title = json_parser["currentPage"]["displayName"]
+        program_title = json_parser['currentPage']['displayName']
 
-            item = Listitem()
-            item.label = sub_program_title
-            item.set_callback(
-                list_videos,
-                item_id=item_id,
-                next_url=next_url,
-                sub_program_title=sub_program_title)
-            item_post_treatment(item)
-            yield item
-
-    elif 'parentShow' in json_parser:
-        if 'seasons' in json_parser['parentShow']:
-            for seasons_datas in json_parser['parentShow']['seasons']:
-                season_title = seasons_datas['onClick']['displayName']
-                season_url = seasons_datas['onClick']['URLPage']
+        for strate in json_parser["strates"]:
+            if strate["type"] == "contentRow" or strate["type"] == "contentGrid":
+                strate_title = program_title + ' - ' + strate["title"]
 
                 item = Listitem()
-                item.label = season_title
+                item.label = strate_title
+
                 item.set_callback(
-                    list_videos_seasons, item_id=item_id, next_url=season_url)
+                    list_sub_programs,
+                    item_id=item_id,
+                    next_url=next_url,
+                    strate_title=strate_title)
                 item_post_treatment(item)
                 yield item
 
-    elif 'detail' in json_parser:
+    elif 'episodes' in json_parser:
 
-        if 'seasons' in json_parser['detail']:
-            for seasons_datas in json_parser['detail']['seasons']:
-                season_title = seasons_datas['onClick']['displayName']
-                season_url = seasons_datas['onClick']['URLPage']
+        program_title = json_parser['currentPage']['displayName']
 
-                item = Listitem()
-                item.label = season_title
-                item.set_callback(
-                    list_videos_seasons, item_id=item_id, next_url=season_url)
-                item_post_treatment(item)
-                yield item
-        else:
-            # Case just one video
-            program_title = json_parser['currentPage']['displayName']
-            video_datas = json_parser['detail']['informations']
-
-            if 'subtitle' in video_datas:
-                video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
-            else:
-                video_title = program_title + ' ' + video_datas['title']
+        for video_datas in json_parser["episodes"]['contents']:
+            video_title = program_title + ' - ' + video_datas['title']
             video_image = video_datas['URLImage']
             video_plot = ''
             if 'summary' in video_datas:
                 video_plot = video_datas['summary']
-            if 'URLMedias' in video_datas:
-                video_url = video_datas['URLMedias']
+            tokencms_value = ''
+            if 'contentAvailability' in video_datas:
+                video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
+                # find tokencms_value
             else:
-                video_url = URL_ROOT_SITE + json_parser['currentPage']['path']
+                video_url = video_datas["URLMedias"]
 
             item = Listitem()
             item.label = video_title
@@ -276,50 +235,143 @@ def list_sub_programs(plugin, item_id, next_url, **kwargs):
             item.set_callback(
                 get_video_url,
                 item_id=item_id,
-                next_url=video_url)
+                next_url=video_url,
+                tokencms_value=tokencms_value)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
+
+        if json_parser["episodes"]["paging"]["hasNextPage"]:
+            yield Listitem.next_page(item_id=item_id,
+                                     next_url=json_parser["episodes"]["paging"]["URLPage"])
+
+    elif 'detail' in json_parser:
+
+        if 'seasons' in json_parser['detail']:
+            for seasons_datas in json_parser['detail']['seasons']:
+                if 'seasonNumber' in seasons_datas:
+                    season_title = seasons_datas['onClick']['displayName'] + \
+                        ' (Saison ' + str(seasons_datas["seasonNumber"]) + ')'
+                else:
+                    season_title = seasons_datas['onClick']['displayName']
+                season_url = seasons_datas['onClick']['URLPage']
+
+                item = Listitem()
+                item.label = season_title
+                item.set_callback(
+                    list_videos, item_id=item_id, next_url=season_url)
+                item_post_treatment(item)
+                yield item
+
+        else:
+            # Case just one video
+            program_title = json_parser['currentPage']['displayName']
+            video_datas = json_parser['detail']['informations']
+
+            if 'subtitle' in video_datas:
+                video_title = program_title + ' - ' + video_datas['title'] + ' - ' + video_datas['subtitle']
+            else:
+                video_title = program_title + ' - ' + video_datas['title']
+            video_image = video_datas['URLImage']
+            video_plot = ''
+            if 'summary' in video_datas:
+                video_plot = video_datas['summary']
+            tokencms_value = ''
+            if 'contentAvailability' in video_datas:
+                video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
+                # find tokencms_value
+            else:
+                video_url = video_datas["URLMedias"]
+
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = item.art['landscape'] = video_image
+            item.info['plot'] = video_plot
+
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                next_url=video_url,
+                tokencms_value=tokencms_value)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
     elif 'contents' in json_parser:
 
-        for video_datas in json_parser['contents']:
-            if 'subtitle' in video_datas:
-                video_title = video_datas['title'] + ' ' + video_datas['subtitle']
-            else:
-                video_title = video_datas['title']
-            video_image = video_datas['URLImage']
-            video_url = URL_ROOT_SITE + video_datas['onClick']['path']
+        for content_datas in json_parser['contents']:
+            if content_datas["type"] != 'article':
+                if 'subtitle' in content_datas:
+                    content_title = content_datas['title'] + \
+                        ' - ' + content_datas['subtitle']
+                else:
+                    content_title = content_datas['title']
+                content_image = content_datas['URLImage']
+                content_url = content_datas['onClick']['URLPage']
 
-            item = Listitem()
-            item.label = video_title
-            item.art['thumb'] = item.art['landscape'] = video_image
+                item = Listitem()
+                item.label = content_title
+                item.art['thumb'] = item.art['landscape'] = content_image
 
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                next_url=video_url)
-            item_post_treatment(item, is_playable=True, is_downloadable=True)
-            yield item
+                item.set_callback(
+                    list_videos,
+                    item_id=item_id,
+                    next_url=content_url)
+                item_post_treatment(item)
+                yield item
 
 
 @Route.register
-def list_videos_seasons(plugin, item_id, next_url, **kwargs):
+def list_sub_programs(plugin, item_id, next_url, strate_title, **kwargs):
+
+    resp = urlquick.get(next_url)
+    json_parser = json.loads(resp.text)
+
+    if 'strates' in json_parser:
+
+        for strate in json_parser["strates"]:
+            if strate["type"] == "contentRow" or strate["type"] == "contentGrid":
+                if strate["title"] in strate_title:
+                    for content_datas in strate['contents']:
+                        if content_datas["type"] != 'article':
+                            if 'subtitle' in content_datas:
+                                content_title = content_datas['title'] + \
+                                    ' - ' + content_datas['subtitle']
+                            else:
+                                content_title = content_datas['title']
+                            content_image = content_datas['URLImage']
+                            content_url = content_datas['onClick']['URLPage']
+
+                            item = Listitem()
+                            item.label = content_title
+                            item.art['thumb'] = item.art['landscape'] = content_image
+
+                            item.set_callback(
+                                list_programs,
+                                item_id=item_id,
+                                next_url=content_url)
+                            item_post_treatment(item)
+                            yield item
+
+
+@Route.register
+def list_videos(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
     json_parser = json.loads(resp.text)
 
     program_title = json_parser['currentPage']['displayName']
 
-    for video_datas in json_parser['episodes']['contents']:
-        if 'subtitle' in video_datas:
-            video_title = program_title + ' ' + video_datas['title'] + ' ' + video_datas['subtitle']
-        else:
-            video_title = program_title + ' ' + video_datas['title']
+    for video_datas in json_parser["episodes"]['contents']:
+        video_title = program_title + ' - ' + video_datas['title']
         video_image = video_datas['URLImage']
         video_plot = ''
         if 'summary' in video_datas:
             video_plot = video_datas['summary']
-        video_url = URL_ROOT_SITE + video_datas['path']
+        tokencms_value = ''
+        if 'contentAvailability' in video_datas:
+            video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
+            # find tokencms_value
+        else:
+            video_url = video_datas["URLMedias"]
 
         item = Listitem()
         item.label = video_title
@@ -329,269 +381,27 @@ def list_videos_seasons(plugin, item_id, next_url, **kwargs):
         item.set_callback(
             get_video_url,
             item_id=item_id,
-            next_url=video_url)
+            next_url=video_url,
+            tokencms_value=tokencms_value)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
-
-@Route.register
-def list_videos(plugin, item_id, next_url, sub_program_title, **kwargs):
-
-    resp = urlquick.get(next_url)
-    json_parser = json.loads(resp.text)
-
-    for sub_program_datas in json_parser["strates"]:
-        if 'title' in sub_program_datas:
-            if sub_program_title == sub_program_datas["title"]:
-                if 'contents' in sub_program_datas:
-                    for video_datas in sub_program_datas["contents"]:
-                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD' or video_datas["type"] == 'detailPage':
-                            if 'title' in video_datas:
-                                if 'subtitle' in video_datas:
-                                    video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
-                                else:
-                                    video_title = video_datas['title']
-                            else:
-                                video_title = video_datas["onClick"][
-                                    "displayName"]
-                            video_image = video_datas['URLImage']
-                            video_url = ''
-                            if video_datas["type"] == 'quicktime':
-                                video_url = video_datas["onClick"]["URLMedias"]
-                            else:
-                                resp2 = urlquick.get(
-                                    video_datas["onClick"]["URLPage"])
-                                json_parser2 = json.loads(resp2.text)
-                                video_url = json_parser2['detail'][
-                                    'informations']['URLMedias']
-
-                            item = Listitem()
-                            item.label = video_title
-                            item.art['thumb'] = item.art['landscape'] = video_image
-
-                            item.set_callback(
-                                get_video_url,
-                                item_id=item_id,
-                                next_url=video_url)
-                            item_post_treatment(
-                                item, is_playable=True, is_downloadable=True)
-                            yield item
-        else:
-            if sub_program_title == json_parser["currentPage"]["displayName"]:
-                if 'contents' in sub_program_datas:
-                    for video_datas in sub_program_datas["contents"]:
-                        if video_datas["type"] == 'quicktime' or video_datas["type"] == 'pfv' or video_datas["type"] == 'VoD' or video_datas["type"] == 'detailPage':
-                            if 'title' in video_datas:
-                                if 'subtitle' in video_datas:
-                                    video_title = video_datas['subtitle'] + ' - ' + video_datas['title']
-                                else:
-                                    video_title = video_datas['title']
-                            else:
-                                video_title = video_datas["onClick"][
-                                    "displayName"]
-                            video_image = video_datas['URLImage']
-                            video_url = ''
-                            if video_datas["type"] == 'quicktime':
-                                video_url = video_datas["onClick"]["URLMedias"]
-                            else:
-                                resp2 = urlquick.get(
-                                    video_datas["onClick"]["URLPage"])
-                                json_parser2 = json.loads(resp2.text)
-                                video_url = json_parser2['detail'][
-                                    'informations']['URLMedias']
-
-                            item = Listitem()
-                            item.label = video_title
-                            item.art['thumb'] = item.art['landscape'] = video_image
-
-                            item.set_callback(
-                                get_video_url,
-                                item_id=item_id,
-                                next_url=video_url)
-                            item_post_treatment(
-                                item, is_playable=True, is_downloadable=True)
-                            yield item
+    if json_parser["episodes"]["paging"]["hasNextPage"]:
+        yield Listitem.next_page(item_id=item_id,
+                                 next_url=json_parser["episodes"]["paging"]["URLPage"])
 
 
 @Resolver.register
 def get_video_url(plugin,
                   item_id,
                   next_url,
+                  tokencms_value,
                   download_mode=False,
                   **kwargs):
 
-    if 'www.mycanal.fr' in next_url:
-
-        if get_kodi_version() < 18:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
-            return False
-
-        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-        if not is_helper.check_inputstream():
-            return False
-
-        if download_mode:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30603))
-            return False
-
-        # Get DeviceId
-        header_device_id = {
-            'referer':
-            'https://secure-player.canal-plus.com/one/prod/v2/',
-        }
-        resp_device_id = urlquick.get(URL_DEVICE_ID, headers=header_device_id, max_age=-1)
-        device_id = re.compile(
-            r'deviceId\"\:\"(.*?)\"').findall(resp_device_id.text)[0]
-
-        # Get Portail Id
-        session_requests = requests.session()
-        resp_app_config = session_requests.get(URL_REPLAY % item_id)
-        json_app_config = re.compile('window.app_config=(.*?)};').findall(
-            resp_app_config.text)[0]
-        json_app_config_parser = json.loads(json_app_config + ('}'))
-        portail_id = json_app_config_parser["api"]["pass"][
-            "portailIdEncrypted"]
-
-        # Get PassToken
-        payload = {
-            'deviceId': 'unknown',
-            'vect': 'INTERNET',
-            'media': 'PC',
-            'portailId': portail_id
-        }
-        resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload)
-        json_token_parser = json.loads(resp_token_mycanal.text)
-        pass_token = json_token_parser["response"]["passToken"]
-
-        video_id = next_url.split('/')[-1]
-        headers = {
-            'Accept':
-            'application/json, text/plain, */*',
-            'Authorization':
-            'PASS Token="%s"' % pass_token,
-            'Content-Type':
-            'application/json; charset=UTF-8',
-            'XX-DEVICE':
-            'pc %s' % device_id,
-            'XX-DOMAIN':
-            'cpfra',
-            'XX-OPERATOR':
-            'pc',
-            'XX-Profile-Id':
-            '0',
-            'XX-SERVICE':
-            'mycanal',
-            'User-Agent':
-            web_utils.get_random_ua()
-        }
-        value_datas_json = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers)
-        value_datas_jsonparser = json.loads(value_datas_json.text)
-
-        comMode_value = ''
-        contentId_value = ''
-        distMode_value = ''
-        distTechnology_value = ''
-        drmType_value = ''
-        functionalType_value = ''
-        hash_value = ''
-        idKey_value = ''
-        quality_value = ''
-
-        if 'available' not in value_datas_jsonparser:
-            return False
-
-        for stream_datas in value_datas_jsonparser["available"]:
-            if 'Widevine' in stream_datas["drmType"]:
-                comMode_value = stream_datas['comMode']
-                contentId_value = stream_datas['contentId']
-                distMode_value = stream_datas['distMode']
-                distTechnology_value = stream_datas['distTechnology']
-                drmType_value = stream_datas['drmType']
-                functionalType_value = stream_datas['functionalType']
-                hash_value = stream_datas['hash']
-                idKey_value = stream_datas['idKey']
-                quality_value = stream_datas['quality']
-
-        payload = {
-            'comMode': comMode_value,
-            'contentId': contentId_value,
-            'distMode': distMode_value,
-            'distTechnology': distTechnology_value,
-            'drmType': drmType_value,
-            'functionalType': functionalType_value,
-            'hash': hash_value,
-            'idKey': idKey_value,
-            'quality': quality_value
-        }
-        payload = json.dumps(payload)
-        headers = {
-            'Accept':
-            'application/json, text/plain, */*',
-            'Authorization':
-            'PASS Token="%s"' % pass_token,
-            'Content-Type':
-            'application/json; charset=UTF-8',
-            'XX-DEVICE':
-            'pc %s' % device_id,
-            'XX-DOMAIN':
-            'cpfra',
-            'XX-OPERATOR':
-            'pc',
-            'XX-Profile-Id':
-            '0',
-            'XX-SERVICE':
-            'mycanal',
-            'User-Agent':
-            web_utils.get_random_ua()
-        }
-        resp_stream_datas = session_requests.put(
-            URL_STREAM_DATAS, data=payload, headers=headers)
-        jsonparser_stream_datas = json.loads(resp_stream_datas.text)
-
-        resp_real_stream_datas = session_requests.get(
-            jsonparser_stream_datas['@medias'], headers=headers)
-        jsonparser_real_stream_datas = json.loads(
-            resp_real_stream_datas.text)
-
-        item = Listitem()
-        item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
-        item.label = get_selected_item_label()
-        item.art.update(get_selected_item_art())
-        item.info.update(get_selected_item_info())
-        item.property['inputstreamaddon'] = 'inputstream.adaptive'
-        item.property['inputstream.adaptive.manifest_type'] = 'ism'
-        item.property[
-            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        value_pass_token = 'PASS Token="%s"' % pass_token
-        headers2 = {
-            'Accept':
-            'application/json, text/plain, */*',
-            'Authorization':
-            value_pass_token,
-            'Content-Type':
-            'text/plain',
-            'User-Agent':
-            web_utils.get_random_ua(),
-            'Origin':
-            'https://www.mycanal.fr',
-            'XX-DEVICE':
-            'pc %s' % device_id,
-            'XX-DOMAIN':
-            'cpfra',
-            'XX-OPERATOR':
-            'pc',
-            'XX-Profile-Id':
-            '0',
-            'XX-SERVICE':
-            'mycanal',
-        }
-        # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
-        item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|R{SSM}|' % urlencode(headers2)
-        # return item
-        Script.notify("INFO", plugin.localize(30702),
-                      Script.NOTIFY_INFO)
+    if 'tokenCMS' in next_url:
+        # TODO get TOKENCMS_VALUE
         return False
-
     else:
         resp = urlquick.get(
             next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
