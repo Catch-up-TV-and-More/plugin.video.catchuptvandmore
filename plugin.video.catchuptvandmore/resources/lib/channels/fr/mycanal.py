@@ -306,7 +306,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
                 item.art['thumb'] = item.art['landscape'] = content_image
 
                 item.set_callback(
-                    list_videos,
+                    list_programs,
                     item_id=item_id,
                     next_url=content_url)
                 item_post_treatment(item)
@@ -471,15 +471,17 @@ def get_video_url(plugin,
             return False
 
         for stream_datas in value_datas_jsonparser["available"]:
-            comMode_value = stream_datas['comMode']
-            contentId_value = stream_datas['contentId']
-            distMode_value = stream_datas['distMode']
-            distTechnology_value = stream_datas['distTechnology']
-            drmType_value = stream_datas['drmType']
-            functionalType_value = stream_datas['functionalType']
-            hash_value = stream_datas['hash']
-            idKey_value = stream_datas['idKey']
-            quality_value = stream_datas['quality']
+            if 'stream' in stream_datas['distTechnology']:
+                if 'Widevine' in stream_datas['drmType'] or 'DRM' not in stream_datas['drmType']:
+                    comMode_value = stream_datas['comMode']
+                    contentId_value = stream_datas['contentId']
+                    distMode_value = stream_datas['distMode']
+                    distTechnology_value = stream_datas['distTechnology']
+                    drmType_value = stream_datas['drmType']
+                    functionalType_value = stream_datas['functionalType']
+                    hash_value = stream_datas['hash']
+                    idKey_value = stream_datas['idKey']
+                    quality_value = stream_datas['quality']
 
         payload = {
             'comMode': comMode_value,
