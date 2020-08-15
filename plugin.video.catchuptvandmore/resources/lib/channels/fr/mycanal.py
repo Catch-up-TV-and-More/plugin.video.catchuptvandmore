@@ -455,8 +455,6 @@ def get_video_url(plugin,
         value_datas_json = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers)
         value_datas_jsonparser = json.loads(value_datas_json.text)
 
-        print('value_datas_json.text: ' + repr(value_datas_json.text))
-
         comMode_value = ''
         contentId_value = ''
         distMode_value = ''
@@ -470,9 +468,10 @@ def get_video_url(plugin,
         if 'available' not in value_datas_jsonparser:
             return False
 
+        is_video_drm = True
         for stream_datas in value_datas_jsonparser["available"]:
             if 'stream' in stream_datas['distTechnology']:
-                if 'Widevine' in stream_datas['drmType'] or 'DRM' not in stream_datas['drmType']:
+                if 'DRM' not in stream_datas['drmType']:
                     comMode_value = stream_datas['comMode']
                     contentId_value = stream_datas['contentId']
                     distMode_value = stream_datas['distMode']
@@ -482,6 +481,21 @@ def get_video_url(plugin,
                     hash_value = stream_datas['hash']
                     idKey_value = stream_datas['idKey']
                     quality_value = stream_datas['quality']
+                    is_video_drm = False
+
+        if is_video_drm:
+            for stream_datas in value_datas_jsonparser["available"]:
+                if 'stream' in stream_datas['distTechnology']:
+                    if 'Widevine' in stream_datas['drmType']:
+                        comMode_value = stream_datas['comMode']
+                        contentId_value = stream_datas['contentId']
+                        distMode_value = stream_datas['distMode']
+                        distTechnology_value = stream_datas['distTechnology']
+                        drmType_value = stream_datas['drmType']
+                        functionalType_value = stream_datas['functionalType']
+                        hash_value = stream_datas['hash']
+                        idKey_value = stream_datas['idKey']
+                        quality_value = stream_datas['quality']
 
         payload = {
             'comMode': comMode_value,
@@ -562,7 +576,7 @@ def get_video_url(plugin,
                 'mycanal',
             }
             # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
-            item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmType=DRM%20Widevine' + '|%s|R{SSM}|' % urlencode(headers2)
+            item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmConfig=mkpl::false' + '|%s|R{SSM}|' % urlencode(headers2)
         return item
 
     else:
