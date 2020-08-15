@@ -486,8 +486,49 @@ def get_video_url(plugin,
         video_id = video_url.rsplit('/', 1)[1]
         return resolver_proxy.get_stream_youtube(plugin, video_id,
                                                  download_mode)
+    elif 'arte.tv' in video_url:
+        video_id = re.compile("(?<=fr%2F)(.*)(?=&autostart)").findall(video_url)[0]
+        return get_arte_video_url(video_id, download_mode)
     else:
         return video_url
+
+
+def get_arte_video_url(video_id, download_mode=False):
+    URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
+    resp = urlquick.get(URL_REPLAY_ARTE % ('fr', video_id))
+    json_parser = json.loads(resp.text)
+
+    url_selected = ''
+    stream_datas = json_parser['videoJsonPlayer']['VSR']
+    DESIRED_QUALITY = Script.setting['quality']
+    if DESIRED_QUALITY == "DIALOG":
+        all_datas_videos_quality = []
+        all_datas_videos_path = []
+
+        for video in stream_datas:
+            if not video.find("HLS"):
+                datas = json_parser['videoJsonPlayer']['VSR'][video]
+                all_datas_videos_quality.append(datas['mediaType'] + " (" +
+                                                datas['versionLibelle'] + ")")
+                all_datas_videos_path.append(datas['url'])
+
+        seleted_item = xbmcgui.Dialog().select(
+            plugin.localize(30709),
+            all_datas_videos_quality)
+        if seleted_item > -1:
+            url_selected = all_datas_videos_path[seleted_item]
+        else:
+            return False
+
+    elif DESIRED_QUALITY == "BEST":
+        url_selected = stream_datas['HTTPS_SQ_1']['url']
+    else:
+        url_selected = stream_datas['HTTPS_HQ_1']['url']
+
+    if download_mode:
+        return download.download_video(url_selected)
+
+    return url_selected
 
 
 @Resolver.register
