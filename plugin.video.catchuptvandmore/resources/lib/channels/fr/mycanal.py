@@ -402,13 +402,13 @@ def get_video_url(plugin,
             xbmcgui.Dialog().ok('Info', plugin.localize(30603))
             return False
 
-        # Get DeviceId
+        # Get DeviceId (not a good device ID => TODO find the good one to fix to get licence key)
         header_device_id = {
             'referer':
             'https://secure-player.canal-plus.com/one/prod/v2/',
         }
         resp_device_id = urlquick.get(URL_DEVICE_ID, headers=header_device_id, max_age=-1)
-        device_id = re.compile(
+        device_id_first = re.compile(
             r'deviceId\"\:\"(.*?)\"').findall(resp_device_id.text)[0]
 
         # Get Portail Id
@@ -422,7 +422,7 @@ def get_video_url(plugin,
 
         # Get PassToken
         payload = {
-            'deviceId': 'unknown',
+            'deviceId': device_id_first,
             'vect': 'INTERNET',
             'media': 'PC',
             'portailId': portail_id
@@ -430,6 +430,7 @@ def get_video_url(plugin,
         resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload)
         json_token_parser = json.loads(resp_token_mycanal.text)
         pass_token = json_token_parser["response"]["passToken"]
+        device_id = json_token_parser["response"]["userData"]["deviceId"].split(':')[0]
 
         video_id = next_url.split('/')[-1].split('.json')[0]
         headers = {
@@ -466,6 +467,8 @@ def get_video_url(plugin,
         quality_value = ''
 
         if 'available' not in value_datas_jsonparser:
+            # Some videos required an account
+            # Get error
             return False
 
         is_video_drm = True
@@ -538,15 +541,29 @@ def get_video_url(plugin,
         jsonparser_real_stream_datas = json.loads(
             resp_real_stream_datas.text)
 
-        # Case without DRM
+        subtitle_url = ''
         item = Listitem()
-        item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
+        if 'VM' in jsonparser_real_stream_datas:
+            item.path = jsonparser_real_stream_datas["VM"][0]["media"][0]["distribURL"] + '/manifest'
+            if plugin.setting.get_boolean('active_subtitle'):
+                for asset in jsonparser_real_stream_datas["VM"][0]["files"]:
+                    if 'vtt' in asset["mimeType"]:
+                        subtitle_url = asset['distribURL']
+        else:
+            item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
+            if plugin.setting.get_boolean('active_subtitle'):
+                for asset in jsonparser_real_stream_datas["VF"][0]["files"]:
+                    if 'vtt' in asset["mimeType"]:
+                        subtitle_url = asset['distribURL']
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
         item.property['inputstreamaddon'] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'ism'
+        if 'http' in subtitle_url:
+            item.subtitles.append(subtitle_url)
         if 'Widevine' in drmType_value:
+            # DRM Message (TODO to find a way to get licence key)
             Script.notify("INFO", plugin.localize(30702), Script.NOTIFY_INFO)
             return False
             item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
