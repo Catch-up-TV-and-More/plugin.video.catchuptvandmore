@@ -139,6 +139,6 @@ def get_live_url(plugin, item_id, **kwargs):
     live_datas_url = root.find('.//iframe').get('src')
     resp2 = urlquick.get(live_datas_url, max_age=-1)
     if 'http' in re.compile(r'OVSPlayer.URL \= \'(.*?)\'').findall(resp2.text)[0]:
-        return re.compile(r'OVSPlayer.URL \= \'(.*?)\'').findall(resresp2p.text)[0]
+        return re.compile(r'OVSPlayer.URL \= \'(.*?)\'').findall(resp2.text)[0]
     else:
         return 'https:' + re.compile(r'OVSPlayer.URL \= \'(.*?)\'').findall(resp2.text)[0]
