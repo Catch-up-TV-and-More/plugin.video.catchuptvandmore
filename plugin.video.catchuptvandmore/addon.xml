@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.26~beta01" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.26~beta02" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -46,6 +46,7 @@
 [US - ABC News] Fix Catch-Up TV
 [WO - France 24] Fix Catch-Up TV
 [FR - MyCanal] Fix Catch-up TV (More videos are available - DRM still not working)
+[FR - Tébéo/TébéSud] Fix Live TV
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
