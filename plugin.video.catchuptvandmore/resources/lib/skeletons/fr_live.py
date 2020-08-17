@@ -505,7 +505,7 @@ menu = {
         'fanart': 'channels/fr/mb_fanart.jpg',
         'xmltv_id': 'C184.api.telerama.fr',
         'm3u_group': 'Satellite/FAI',
-        'enabled': True,
+        'enabled': False,
         'order': 78
     },
     'vialmtv': {
