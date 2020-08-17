@@ -368,11 +368,6 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/via/get_live_ur
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/tebeo.png" group-title="France",Tébéo
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/tebeo/get_live_url/?item_id=tebeo
 
-##	M6 Boutique
-##	mb
-#EXTINF:-1 tvg-id="C184.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/mb.png" group-title="France",M6 Boutique
-plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/6play/get_live_url/?item_id=mb
-
 ##	viàLMTv Sarthe
 ##	vialmtv
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/vialmtv.png" group-title="France",viàLMTv Sarthe
