@@ -517,11 +517,11 @@ menu = {
         'enabled': True,
         'order': 79
     },
-    'viamirabelle': {
+    'viamoselle': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
-        'label': 'viàMirabelle',
-        'thumb': 'channels/fr/viamirabelle.png',
-        'fanart': 'channels/fr/viamirabelle_fanart.jpg',
+        'label': 'viàMoselle',
+        'thumb': 'channels/fr/viamoselle.png',
+        'fanart': 'channels/fr/viamoselle_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 80
