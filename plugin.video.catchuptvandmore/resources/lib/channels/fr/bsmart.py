@@ -62,7 +62,7 @@ def list_categories(plugin, item_id, **kwargs):
     )):
         category_url = URL_API + category_context
         item = Listitem()
-        if 'Vidéos' in category_title:
+        if 'videos' in category_context:
             next_value = 'list_videos'
         else:
             next_value = 'list_programs'
