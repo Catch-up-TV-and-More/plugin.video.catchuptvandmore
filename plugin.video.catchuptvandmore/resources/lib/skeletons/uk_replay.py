@@ -84,11 +84,11 @@ menu = {
         'enabled': True,
         'order': 17
     },
-    'fiveusa': {
-        'route': '/resources/lib/channels/uk/my5:list_programs',
-        'label': '5USA',
-        'thumb': 'channels/uk/fiveusa.png',
-        'fanart': 'channels/uk/fiveusa_fanart.jpg',
+    'my5': {
+        'route': '/resources/lib/channels/uk/my5:channels',
+        'label': 'My 5',
+        'thumb': 'channels/uk/my5.png',
+        'fanart': 'channels/uk/my5_fanart.jpg',
         'enabled': False,
         'order': 20
     },
