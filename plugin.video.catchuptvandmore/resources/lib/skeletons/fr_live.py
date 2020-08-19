@@ -450,7 +450,7 @@ menu = {
         'thumb': 'channels/fr/ouatchtv.png',
         'fanart': 'channels/fr/ouatchtv_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
-        'enabled': True,
+        'enabled': False,
         'order': 67
     },
     'canal10': {
