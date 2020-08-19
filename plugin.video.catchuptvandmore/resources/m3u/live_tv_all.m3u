@@ -343,11 +343,6 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/antennereunion/
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/viaoccitanie.png" group-title="France",viàOccitanie
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/via/get_live_url/?item_id=viaoccitanie
 
-##	Ouatch TV
-##	ouatchtv
-#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/ouatchtv.png" group-title="France",Ouatch TV
-plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/ouatchtv/get_live_url/?item_id=ouatchtv
-
 ##	RTL 2
 ##	rtl2
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/rtl2.png" group-title="France",RTL 2
