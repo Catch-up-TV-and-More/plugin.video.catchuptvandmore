@@ -108,5 +108,37 @@ menu = {
         'fanart': 'channels/es/paramountchannel_es_fanart.jpg',
         'enabled': True,
         'order': 16
+    },
+    'la1': {
+        'resolver': '/resources/lib/channels/es/rtve:get_live_url',
+        'label': 'La 1',
+        'thumb': 'channels/es/la1.png',
+        'fanart': 'channels/es/la1_fanart.jpg',
+        'enabled': True,
+        'order': 17
+    },
+    'la2': {
+        'resolver': '/resources/lib/channels/es/rtve:get_live_url',
+        'label': 'La 2',
+        'thumb': 'channels/es/la2.png',
+        'fanart': 'channels/es/la2_fanart.jpg',
+        'enabled': True,
+        'order': 18
+    },
+    'tdp': {
+        'resolver': '/resources/lib/channels/es/rtve:get_live_url',
+        'label': 'Teledeporte',
+        'thumb': 'channels/es/tdp.png',
+        'fanart': 'channels/es/tdp_fanart.jpg',
+        'enabled': True,
+        'order': 19
+    },
+    '24h': {
+        'resolver': '/resources/lib/channels/es/rtve:get_live_url',
+        'label': 'Canal 24 horas',
+        'thumb': 'channels/es/24h.png',
+        'fanart': 'channels/es/24h_fanart.jpg',
+        'enabled': True,
+        'order': 20
     }
 }
