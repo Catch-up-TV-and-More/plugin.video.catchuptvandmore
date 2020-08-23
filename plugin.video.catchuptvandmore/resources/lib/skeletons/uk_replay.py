@@ -92,11 +92,11 @@ menu = {
         'enabled': False,
         'order': 20
     },
-    'bristoltv': {
-        'route': '/resources/lib/channels/uk/bristoltv:list_categories',
-        'label': 'Bristol TV',
-        'thumb': 'channels/uk/bristoltv.png',
-        'fanart': 'channels/uk/bristoltv_fanart.jpg',
+    'uklocaltv': {
+        'route': '/resources/lib/channels/uk/uklocaltv:channels',
+        'label': 'UK Local TV',
+        'thumb': 'channels/uk/uklocaltv.png',
+        'fanart': 'channels/uk/uklocaltv_fanart.jpg',
         'enabled': True,
         'order': 21
     }
