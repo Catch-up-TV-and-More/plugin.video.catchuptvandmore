@@ -191,12 +191,10 @@ def list_videos(plugin, item_id, season_id, **kwargs):
 @Resolver.register
 def get_video_url(plugin, item_id, video_id, **kwargs):
 
-    # TO UNCOMMENT
-    # resp = urlquick.get(URL_VIDEO_DATAS % video_id)
-    # json_parser = json.loads(resp.text)
+    resp = urlquick.get(URL_VIDEO_DATAS % video_id)
+    json_parser = json.loads(resp.text)
 
-    # stream_id = json_parser["CustomId"]
-
+    stream_id = json_parser["CustomId"]
     return False
     # TODO get information of MPD and DRM
 

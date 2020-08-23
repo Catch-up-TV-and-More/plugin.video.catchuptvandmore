@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.26~beta04" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.26~beta05" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -56,6 +56,7 @@
 [CH - BeCurious TV] Remove Channel - DNS Error to access https://becurious.ch
 [FR - Ouatch TV] Remove Channel
 [FR - france.tv] Add 'All videos/programs' items
+[FR - B Smart] Fix Live TV And Catch-up TV
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
