@@ -140,5 +140,13 @@ menu = {
         'fanart': 'channels/es/24h_fanart.jpg',
         'enabled': True,
         'order': 20
+    },
+    'trece': {
+        'resolver': '/resources/lib/channels/es/trece:get_live_url',
+        'label': 'Trece',
+        'thumb': 'channels/es/trece.png',
+        'fanart': 'channels/es/trece_fanart.jpg',
+        'enabled': True,
+        'order': 20
     }
 }
