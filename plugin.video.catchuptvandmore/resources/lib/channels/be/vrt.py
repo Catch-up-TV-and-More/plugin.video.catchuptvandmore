@@ -299,6 +299,10 @@ def get_video_url(plugin,
         resp4 = session_requests.get(URL_STREAM_JSON % (publicationid, videoid, vrtplayertoken))
         json_parser4 = json.loads(resp4.text)
 
+        if "targetUrls" not in json_parser4:
+            plugin.notify('ERROR', plugin.localize(30713))
+            return False
+
         for stream_datas in json_parser4['targetUrls']:
             if 'hls' in stream_datas['type']:
                 stream_url = stream_datas['url']
