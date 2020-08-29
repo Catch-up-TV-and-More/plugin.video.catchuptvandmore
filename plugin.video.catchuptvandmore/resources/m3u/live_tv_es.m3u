@@ -38,6 +38,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/es/rtve/get_live_u
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/es/24h.png" group-title="Spain",Canal 24 horas
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/es/rtve/get_live_url/?item_id=24h
 
+##	Trece
+##	trece
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/es/trece.png" group-title="Spain",Trece
+plugin://plugin.video.catchuptvandmore/resources/lib/channels/es/trece/get_live_url/?item_id=trece
+
 ##	Euronews
 ##	euronews
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/wo/euronews.png" group-title="Spain",Euronews
