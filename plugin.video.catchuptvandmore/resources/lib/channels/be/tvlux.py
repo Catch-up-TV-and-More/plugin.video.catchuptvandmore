@@ -130,7 +130,8 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
-    list_streams_datas = re.compile(r'src\: "(.*?)"').findall(resp.text)
+    list_streams_datas = re.compile(
+        r'source src\=\"(.*?)\"').findall(resp.text)
     stream_url = ''
     for stream_datas in list_streams_datas:
         if 'm3u8' in stream_datas or \
