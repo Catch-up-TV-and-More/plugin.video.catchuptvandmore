@@ -64,6 +64,9 @@
 [BE - TV Lux] Fix Live TV And Catch-up TV
 [BE - TéléMB] Fix Live TV
 [BE - RTC Télé Liège] Fix Live TV
+[UK - Blaze TV] Fix Catch-up TV
+[BE - RTBF] Improvements used API
+[Change] Move Arte code to resolver_proxy
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
