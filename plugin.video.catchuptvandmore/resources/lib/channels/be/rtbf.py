@@ -412,7 +412,7 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
                 video_url = video_datas["url_streaming"]["url"]
         else:
             video_url = video_datas["url_embed"]
-            
+
         # is_downloadable = False
         # if video_datas["url_download"]:
             # is_downloadable = True
