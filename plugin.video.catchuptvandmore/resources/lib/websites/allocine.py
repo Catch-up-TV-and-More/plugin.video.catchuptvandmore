@@ -23,16 +23,15 @@ from __future__ import unicode_literals
 
 import json
 import re
-import requests
 
-from codequick import Route, Resolver, Listitem, Script, utils
+from codequick import Route, Resolver, Listitem
 import urlquick
-from kodi_six import xbmcgui
 
 from resources.lib import resolver_proxy
-from resources.lib import download
 
 from resources.lib.menu_utils import item_post_treatment
+
+import base64
 
 # TO DO
 # Get Last_Page (for Programs, Videos) / Fix Last_page
@@ -47,7 +46,7 @@ URL_API_MEDIA = 'http://api.allocine.fr/rest/v3/' \
 # videoId, PARTENER
 PARTNER = 'YW5kcm9pZC12Mg'
 
-URL_SEARCH_VIDEOS = URL_ROOT + '/recherche/18/?p=%s&q=%s'
+URL_SEARCH_VIDEOS = URL_ROOT + '/recherche/video/?q=%s&page=%s'
 # Page, Query
 
 
@@ -400,7 +399,8 @@ def list_videos_emissions_2(plugin, item_id, page, show_url, last_page,
                 if 'program' not in video_url_datas.get('href'):
                     video_url = URL_ROOT + video_url_datas.get('href')
         else:
-            # TODO: ↪ Root menu (1) ➡ Websites (3) ➡ Allociné (1) ➡ Les émissions (1) ➡ Stars (6) ➡ Clips musicaux (3) ➡ # Les videos (1) ➡ [B]Next page 2[/B]
+            # TODO: ↪ Root menu (1) ➡ Websites (3) ➡ Allociné (1) ➡ Les émissions (1) ➡
+            # Stars (6) ➡ Clips musicaux (3) ➡ # Les videos (1) ➡ [B]Next page 2[/B]
             continue
 
         for plot_value in episode.find(
@@ -432,35 +432,38 @@ def list_videos_emissions_2(plugin, item_id, page, show_url, last_page,
 
 @Route.register
 def list_videos_search(plugin, item_id, page, search_query, **kwargs):
-    resp = urlquick.get(URL_SEARCH_VIDEOS % (page, search_query))
-    root = resp.parse("table", attrs={"class": "totalwidth noborder purehtml"})
+    # TODO: return results for categories other than video
 
-    for episode in root.iterfind(".//tr"):
+    resp = urlquick.get(URL_SEARCH_VIDEOS % (search_query, page))
+    try:
+        root = resp.parse("section", attrs={"class": "section videos-results"})
+    except RuntimeError:
+        yield None
+        return
+
+    for episode in root.iterfind(".//div[@class='card video-card video-card-col mdl-fixed']"):
         if episode.find('.//img') is not None:
             item = Listitem()
             item.label = episode.find('.//img').get('alt')
-            video_id = ''
-            if '_cmedia=' in episode.find('.//a').get('href'):
-                video_id = re.compile(r'cmedia=(.*?)\&').findall(
-                    episode.find('.//a').get('href'))[0]
-            elif '?cmedia=' in episode.find('.//a').get('href'):
-                video_id = episode.find('.//a').get('href').split(
-                    '?cmedia=')[1]
-            elif 'video-' in episode.find('.//a').get('href'):
-                video_id = episode.find('.//a').get('href').split(
-                    '-')[1].replace('/', '')
-            item.art['thumb'] = item.art['landscape'] = episode.find('.//img').get('src')
 
+            b64_video_url = episode.find('.//div[@class="meta-title"]/span').get('class').split()[0]
+            video_url = URL_ROOT + base64.standard_b64decode(''.join(b64_video_url.split("ACr")))
+
+            item.art['thumb'] = item.art['landscape'] = episode.find('.//img').get('data-src')
             item.set_callback(get_video_url,
                               item_id=item_id,
-                              video_url=video_id)
+                              video_url=video_url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
     # More videos...
-    yield Listitem.next_page(item_id=item_id,
-                             page=page + 1,
-                             search_query=search_query)
+    try:
+        resp.parse("nav", attrs={"class": "pagination cf"})
+        yield Listitem.next_page(item_id=item_id,
+                                 page=page + 1,
+                                 search_query=search_query)
+    except RuntimeError:
+        pass
 
 
 @Resolver.register
@@ -469,21 +472,25 @@ def get_video_url(plugin,
                   video_url,
                   download_mode=False,
                   **kwargs):
-    """Get video URL and start video player"""
 
+    """Get video URL and start video player"""
     resp = urlquick.get(video_url, max_age=-1)
     root = resp.parse()
 
     if root.find(".//figure[@class='player player-auto-play js-player']") is not None:
-        stream_datas_json = root.find(".//figure[@class='player player-auto-play js-player']").get('data-model')
+        stream_datas_json = root.find(
+            ".//figure[@class='player player-auto-play js-player']").get('data-model')
         json_parser = json.loads(stream_datas_json)
 
         if 'high' in json_parser["videos"][0]["sources"]:
             return 'https:' + json_parser["videos"][0]["sources"]["high"]
+        elif 'medium' in json_parser["videos"][0]["sources"]:
+            return 'https:' + json_parser["videos"][0]["sources"]["medium"]
         else:
             return json_parser["videos"][0]["sources"]["standard"]
     elif root.find(".//div[@class='more-overlay-item social-export light']") is not None:
-        stream_datas_json = root.find(".//div[@class='more-overlay-item social-export light']").get('data-model')
+        stream_datas_json = root.find(
+            ".//div[@class='more-overlay-item social-export light']").get('data-model')
         print(repr(stream_datas_json))
         json_parser = json.loads(stream_datas_json)
         if 'code' in json_parser["videos"][0]["sources"]:
