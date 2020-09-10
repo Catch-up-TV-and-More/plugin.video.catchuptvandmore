@@ -598,10 +598,10 @@ def list_search_videos(plugin, item_id, search_url, page, **kwargs):
 
         try:
             video_url = URL_ROOT + unobfuscated(video_data.find(
-                    './/*[@class="meta-title"]/span').get('class'))
+                './/*[@class="meta-title"]/span').get('class'))
         except AttributeError:
             video_url = URL_ROOT + video_data.find(
-                    './/*[@class="meta-title"]/a').get('href')
+                './/*[@class="meta-title"]/a').get('href')
 
         # if not '/empty/' in image_src:
         item.label = video_data.find('.//img').get('alt')
