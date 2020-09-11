@@ -218,8 +218,8 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
         item.set_callback(get_video_url,
                           item_id=item_id,
                           video_url=video_url,
-                          video_id = video_id,
-                          is_drm = is_drm)
+                          video_id=video_id,
+                          is_drm=is_drm)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -336,8 +336,8 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         item.set_callback(get_video_url,
                           item_id=item_id,
                           video_url=video_url,
-                          video_id = video_id,
-                          is_drm = is_drm)
+                          video_id=video_id,
+                          is_drm=is_drm)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -424,8 +424,8 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
         video_id = video_datas["id"]
         # is_downloadable = False
         # if video_datas["url_download"]:
-            # is_downloadable = True
-            # video_url = video_datas["url_download"]
+        # is_downloadable = True
+        # video_url = video_datas["url_download"]
 
         item = Listitem()
         item.label = video_title
@@ -437,8 +437,8 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
         item.set_callback(get_video_url,
                           item_id=item_id,
                           video_url=video_url,
-                          video_id = video_id,
-                          is_drm = is_drm)
+                          video_id=video_id,
+                          is_drm=is_drm)
         item_post_treatment(item,
                             is_playable=True,
                             is_downloadable=True)
@@ -515,7 +515,7 @@ def get_video_url(plugin,
             if not is_helper.check_inputstream():
                 return False
 
-            token_url = URL_TOKEN % ('media_id',video_id, PARTNER_KEY)
+            token_url = URL_TOKEN % ('media_id', video_id, PARTNER_KEY)
             token_value = urlquick.get(token_url, max_age=-1)
             json_parser_token = json.loads(token_value.text)
 
@@ -664,7 +664,7 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
         if not is_helper.check_inputstream():
             return False
 
-        token_url = URL_TOKEN % ('planning_id',live_id, PARTNER_KEY)
+        token_url = URL_TOKEN % ('planning_id', live_id, PARTNER_KEY)
         token_value = urlquick.get(token_url, max_age=-1)
         json_parser_token = json.loads(token_value.text)
 
