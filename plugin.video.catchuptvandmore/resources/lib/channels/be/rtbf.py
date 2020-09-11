@@ -98,7 +98,7 @@ URL_JSON_LIVE_CHANNEL = 'http://www.rtbf.be/api/partner/generic/live/' \
 
 URL_LICENCE_KEY = 'https://wv-keyos.licensekeyserver.com/|%s|R{SSM}|'
 
-URL_TOKEN = 'https://www.rtbf.be/api/partner/generic/drm/encauthxml?planning_id=%s&partner_key=%s'
+URL_TOKEN = 'https://www.rtbf.be/api/partner/generic/drm/encauthxml?%s=%s&partner_key=%s'
 
 
 URL_ROOT_LIVE = 'https://www.rtbf.be/auvio/direct#/'
@@ -198,15 +198,17 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
         date_value = format_day(video_datas["date_publish_from"])
         video_url = ""
         if "url_streaming" in video_datas:
-            if "url_hls" in video_datas["url_streaming"]:
-                video_url = video_datas["url_streaming"]["url_hls"]
-                if "drm" in video_url:
-                    video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
+            if "url_dash" in video_datas["url_streaming"]:
+                video_url = video_datas["url_streaming"]["url_dash"]
+                is_drm = True
             else:
                 video_url = video_datas["url_streaming"]["url"]
+                is_drm = False
         else:
             video_url = video_datas["url_embed"]
+            is_drm = False
 
+        video_id = video_datas["id"]
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = item.art['landscape'] = video_image
@@ -215,7 +217,9 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
         item.info.date(date_value, '%Y/%m/%d')
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_url=video_url)
+                          video_url=video_url,
+                          video_id = video_id,
+                          is_drm = is_drm)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -312,15 +316,17 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         date_value = format_day(video_datas["date_publish_from"])
         video_url = ""
         if "url_streaming" in video_datas:
-            if "url_hls" in video_datas["url_streaming"]:
-                video_url = video_datas["url_streaming"]["url_hls"]
-                if "drm" in video_url:
-                    video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
+            if "url_dash" in video_datas["url_streaming"]:
+                video_url = video_datas["url_streaming"]["url_dash"]
+                is_drm = True
             else:
                 video_url = video_datas["url_streaming"]["url"]
+                is_drm = False
         else:
             video_url = video_datas["url_embed"]
+            is_drm = False
 
+        video_id = video_datas["id"]
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = item.art['landscape'] = video_image
@@ -329,7 +335,9 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         item.info.date(date_value, '%Y/%m/%d')
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_url=video_url)
+                          video_url=video_url,
+                          video_id = video_id,
+                          is_drm = is_drm)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -404,15 +412,16 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
         date_value = format_day(video_datas["date_publish_from"])
         video_url = ""
         if "url_streaming" in video_datas:
-            if "url_hls" in video_datas["url_streaming"]:
-                video_url = video_datas["url_streaming"]["url_hls"]
-                if "drm" in video_url:
-                    video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
+            if "url_dash" in video_datas["url_streaming"]:
+                video_url = video_datas["url_streaming"]["url_dash"]
+                is_drm = True
             else:
                 video_url = video_datas["url_streaming"]["url"]
+                is_drm = False
         else:
             video_url = video_datas["url_embed"]
-
+            is_drm = False
+        video_id = video_datas["id"]
         # is_downloadable = False
         # if video_datas["url_download"]:
             # is_downloadable = True
@@ -427,7 +436,9 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
 
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_url=video_url)
+                          video_url=video_url,
+                          video_id = video_id,
+                          is_drm = is_drm)
         item_post_treatment(item,
                             is_playable=True,
                             is_downloadable=True)
@@ -480,6 +491,8 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
 def get_video_url(plugin,
                   item_id,
                   video_url,
+                  video_id,
+                  is_drm,
                   download_mode=False,
                   **kwargs):
     if 'youtube.com' in video_url:
@@ -493,7 +506,38 @@ def get_video_url(plugin,
                                                     video_id,
                                                     download_mode)
     else:
-        return video_url
+        if is_drm:
+            if get_kodi_version() < 18:
+                xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+                return False
+
+            is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+            if not is_helper.check_inputstream():
+                return False
+
+            token_url = URL_TOKEN % ('media_id',video_id, PARTNER_KEY)
+            token_value = urlquick.get(token_url, max_age=-1)
+            json_parser_token = json.loads(token_value.text)
+
+            item = Listitem()
+            item.path = video_url
+            item.property['inputstreamaddon'] = 'inputstream.adaptive'
+            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+            item.property[
+                'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            headers2 = {
+                'customdata':
+                json_parser_token["auth_encoded_xml"],
+            }
+            item.property[
+                'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
+            item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
+            item.label = get_selected_item_label()
+            item.art.update(get_selected_item_art())
+            item.info.update(get_selected_item_info())
+            return item
+        else:
+            return video_url
 
 
 @Resolver.register
@@ -620,7 +664,7 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
         if not is_helper.check_inputstream():
             return False
 
-        token_url = URL_TOKEN % (live_id, PARTNER_KEY)
+        token_url = URL_TOKEN % ('planning_id',live_id, PARTNER_KEY)
         token_value = urlquick.get(token_url, max_age=-1)
         json_parser_token = json.loads(token_value.text)
 
