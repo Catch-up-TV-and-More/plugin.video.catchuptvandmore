@@ -81,11 +81,12 @@ def list_programs(plugin, item_id, **kwargs):
     json_parser = json.loads(json_value)
 
     # All programs
-    for programs_datas in json_parser["pages"]["teleShowsList"]["pageModel"][
+    for programs_datas in json_parser["pagesV2"]["pages"]["/tele/emissions"][
             "data"]["programmes"]:
 
         if '/tele/' in programs_datas["url"]:
             program_title = programs_datas["title"]
+            program_image = programs_datas["picture"]["url"]
             program_url = ''
             if 'telejournal-22h' in programs_datas["url"] or \
                     'telejournal-18h' in programs_datas["url"]:
@@ -97,6 +98,7 @@ def list_programs(plugin, item_id, **kwargs):
 
             item = Listitem()
             item.label = program_title
+            item.art['thumb'] = item.art['landscape'] = program_image
             item.set_callback(list_videos,
                               item_id=item_id,
                               program_url=program_url,
