@@ -61,13 +61,13 @@ def list_categories(plugin, item_id, **kwargs):
     category_referenceId = json_parser["components"]["menu"][0]["referenceId"]
 
     resp2 = urlquick.get(URL_TV5MONDEPLUS_COMPONENT_API % (category_referenceId, LANG))
-    json_parser = json.loads(resp2.text)
+    json_parser2 = json.loads(resp2.text)
 
-    for menu_category_datas in json_parser["components"]["menuItems"]:
+    for menu_category_datas in json_parser2["components"]["menuItems"]:
         if 'appSubType' in menu_category_datas:
             if 'Component' in menu_category_datas["appSubType"]:
                 if "" == menu_category_datas["presentation"]["fallback"]["title"]:
-                    menu_category_title = "Acceuil" # TODO Localized
+                    menu_category_title = json_parser["components"]["homePage"][0]["name"]
                 else:
                     menu_category_title = menu_category_datas["presentation"]["fallback"]["title"]
                 menu_category_referenceId = menu_category_datas["actions"]["default"]["componentId"]
@@ -170,8 +170,6 @@ def list_seasons(plugin, item_id, program_assetId, **kwargs):
     resp2 = urlquick.get(URL_VIDEOS_DATAS, params=payload2)
     json_parser2 = json.loads(resp2.text)
 
-    print('value list season ' + repr(resp2.text))
-
     for season_datas in json_parser2["data"]["lookupContent"]["seasons"]["items"]:
         season_title = 'Season %s' % str(season_datas["seasonNumber"])
         season_id = season_datas["id"]
@@ -250,7 +248,6 @@ def get_video_url(plugin,
                   download_mode=False,
                   **kwargs):
 
-
     if get_kodi_version() < 18:
         xbmcgui.Dialog().ok('Info', plugin.localize(30602))
         return False
@@ -260,17 +257,17 @@ def get_video_url(plugin,
         return False
 
     # Get info_poste ?
-    info_poste={
-      'height': 1080,
-      'width': 1920,
-      'model': 'Netscape',
-      'name': 'Gecko',
-      'os': 'Linux x86_64',
-      'osVersion': '5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36","manufacturer":"Google Inc.',
-      'type': 'WEB'
+    info_poste = {
+        'height': 1080,
+        'width': 1920,
+        'model': 'Netscape',
+        'name': 'Gecko',
+        'os': 'Linux x86_64',
+        'osVersion': '5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36","manufacturer":"Google Inc.',
+        'type': 'WEB'
     }
     # Get DeviveId ?
-    payload={
+    payload = {
         'deviceId': 'WEB_450118664537368504183835373631080192024',
         'device': info_poste,
         'rememberMe': False,
@@ -281,7 +278,7 @@ def get_video_url(plugin,
     json_parser = json.loads(resp.text)
 
     headers = {
-        'authorization': 
+        'authorization':
         'Bearer %s' % json_parser["sessionToken"],
     }
     resp2 = urlquick.get(URL_STREAM_DATAS % video_id, headers=headers)
@@ -295,7 +292,7 @@ def get_video_url(plugin,
         'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     # Get Licence Key HTTP 500 - {"code":100000,"message":"An error has occurred. See logs for details."}
     headers2 = {
-        'authorization': 
+        'authorization':
         'Bearer %s' % json_parser2["playToken"],
         'referer':
         'https://www.tv5mondeplus.com/',
