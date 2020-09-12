@@ -626,7 +626,7 @@ def list_lives(plugin, item_id, **kwargs):
             live_channel_title = live_datas["channel"]["label"]
         else:
             live_channel_title = 'Exclu Auvio'
-        if live_channel_title in ['La Une', 'La Deux', 'La Trois']:
+        if live_channel_title in ['La Une', 'Tipik', 'La Trois']:
             continue
         start_time_value = format_hours(live_datas["start_date"])
         end_time_value = format_hours(live_datas["end_date"])
