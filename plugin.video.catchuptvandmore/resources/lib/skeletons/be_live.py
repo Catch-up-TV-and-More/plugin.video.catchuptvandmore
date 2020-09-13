@@ -238,7 +238,7 @@ menu = {
         'enabled': True,
         'order': 24
     },
-    'tipik': {
+    'tipiktv': {
         'resolver': '/resources/lib/channels/be/rtbf:set_live_url',
         'label': 'Tipik',
         'thumb': 'channels/be/tipik.png',
