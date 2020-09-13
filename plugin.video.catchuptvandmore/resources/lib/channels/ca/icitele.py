@@ -116,7 +116,6 @@ def list_programs(plugin, item_id, **kwargs):
                               page='1')
             item_post_treatment(item)
             yield item
-    
 
 
 @Route.register
