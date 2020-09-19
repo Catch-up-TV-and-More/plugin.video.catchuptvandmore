@@ -263,5 +263,13 @@ menu = {
         'fanart': 'channels/be/actv_fanart.jpg',
         'enabled': True,
         'order': 27
+    },
+    'telesambre': {
+        'resolver': '/resources/lib/channels/be/telesambre:get_live_url',
+        'label': 'Télésambre',
+        'thumb': 'channels/be/telesambre.png',
+        'fanart': 'channels/be/telesambre_fanart.jpg',
+        'enabled': True,
+        'order': 28
     }
 }
