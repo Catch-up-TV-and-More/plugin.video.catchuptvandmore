@@ -411,9 +411,8 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
             video_plot = video_datas["description"]
         video_duration = video_datas["duration"]
         date_value = format_day(video_datas["date_publish_from"])
-        is_drm = False
-        if "drm" in video_datas:
-            is_drm = video_datas["drm"]    
+
+        is_drm = video_datas.get("drm", False)    
         video_url = ""
         if "url_streaming" in video_datas:
             if is_drm and "url_dash" in video_datas["url_streaming"]:
