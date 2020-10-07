@@ -149,7 +149,9 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
         elif 'playlists' in sub_category_datas['code']['name'] or \
                 'collections' in sub_category_datas['code']['name'] or \
                 'magazines' in sub_category_datas['code']['name'] or \
-                'ARTE_CONCERT' in sub_category_datas['code']['name']:
+                'ARTE_CONCERT' in sub_category_datas['code']['name'] or \
+                'highlights_category' in sub_category_datas['code']['name'] or \
+                '-' in sub_category_datas['code']['name']:
             sub_category_title = sub_category_datas['title']
             sub_category_code_name = sub_category_datas['code']['name']
             sub_category_url = category_url
