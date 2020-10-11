@@ -309,9 +309,9 @@ def get_francetv_video_stream(plugin,
     # Implementer Caption (found case)
     # Implement DRM (found case)
     if video_datas['drm'] is not None:
-        all_video_datas.append((video_datas['format'], 'True', video_datas['token']))
+        all_video_datas.append((video_datas['format'], video_datas['drm'], video_datas['token']))
     else:
-        all_video_datas.append((video_datas['format'], 'False', video_datas['token']))
+        all_video_datas.append((video_datas['format'], None, video_datas['token']))
 
     url_selected = all_video_datas[0][2]
     if 'hls' in all_video_datas[0][0]:
@@ -330,20 +330,25 @@ def get_francetv_video_stream(plugin,
         if not is_helper.check_inputstream():
             return False
 
-        token_request = json.loads('{"id": "%s", "drm_type": "%s", "license_type": "%s"}' % (id_diffusion, video_datas['drm_type'], video_datas['license_type']))
-        token = urlquick.post(video_datas['token'], json=token_request).json()['token']
-        license_request = '{"token": "%s", "drm_info": [D{SSM}]}' % token
-        license_key = 'https://widevine-proxy.drm.technology/proxy|Content-Type=application%%2Fjson|%s|' % quote_plus(license_request)
-
         item = Listitem()
-        item.path = video_datas['url']
         item.property['inputstreamaddon'] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property['inputstream.adaptive.license_key'] = license_key
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
+
+        if all_video_datas[0][1]:
+            item.path = video_datas['url']
+            token_request = json.loads('{"id": "%s", "drm_type": "%s", "license_type": "%s"}' % (id_diffusion, video_datas['drm_type'], video_datas['license_type']))
+            token = urlquick.post(video_datas['token'], json=token_request).json()['token']
+            license_request = '{"token": "%s", "drm_info": [D{SSM}]}' % token
+            license_key = 'https://widevine-proxy.drm.technology/proxy|Content-Type=application%%2Fjson|%s|' % quote_plus(license_request)
+            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            item.property['inputstream.adaptive.license_key'] = license_key
+        else:
+            json_parser2 = json.loads(
+                urlquick.get(url_selected, max_age=-1).text)
+            item.path = json_parser2['url']
 
         return item
     else:
