@@ -126,9 +126,9 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    list_live_datas = re.compile(r'liveGPManifestUrl:"(.*?)"').findall(resp.text)
-    url_stream = ''
-    for live_datas in list_live_datas:
-        if 'm3u8' in live_datas:
-            url_stream = live_datas
-    return url_stream
+
+    data_account = re.compile(r'accountId:"(.*?)"').findall(resp.text)[0]
+    data_player = re.compile(r'livePlayerId:"(.*?)"').findall(resp.text)[0]
+    data_live_id = re.compile(r'liveVideoId:"(.*?)"').findall(resp.text)[0]
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_live_id)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.27~beta06" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.27~beta07" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -50,8 +50,10 @@
 [BE - Télésambre] Add Live TV
 [BE - RTBF] Fix HTTP 400 during play catchup TV
 [CA - Noovo] Fix Live TV and Rename V Télé to Noovo
-[CH - RTS] Add DRM management for catchup TV
+[CH - RTS] Add DRM support for catchup TV
 [WO - Arte] Fix some sub-categories not shown on Catchup TV
+[FR - FranceTV] Add DRM support for catchup TV
+[CA - TeleQuebec] Fix Live TV
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
