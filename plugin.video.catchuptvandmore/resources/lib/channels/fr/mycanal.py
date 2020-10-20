@@ -62,7 +62,7 @@ URL_REPLAY = URL_ROOT_SITE + '/chaines/%s'
 
 URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken'
 
-URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset?contentId=%s'
+URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
 
