@@ -60,8 +60,6 @@ URL_VIDEOS = URL_ROOT + '/api/show-detail/%s'
 URL_STREAM = URL_ROOT + '/api/video-playback/%s'
 # path
 
-URL_LIVE = 'https://www.questod.co.uk/channel/%s'
-
 URL_LICENCE_KEY = 'https://lic.caas.conax.com/nep/wv/license|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&PreAuthorization=%s&Host=lic.caas.conax.com|R{SSM}|'
 # videoId
 
@@ -275,42 +273,3 @@ def get_video_url(plugin,
             return download.download_video(final_video_url)
 
         return final_video_url
-
-
-@Resolver.register
-def get_live_url(plugin, item_id, **kwargs):
-
-    if get_kodi_version() < 18:
-        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
-        return False
-
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
-
-    if item_id == 'questtv':
-        resp = urlquick.get(URL_LIVE % 'quest', max_age=-1)
-    elif item_id == 'questred':
-        resp = urlquick.get(URL_LIVE % 'quest-red', max_age=-1)
-
-    if len(re.compile(r'drmToken\"\:\"(.*?)\"').findall(resp.text)) > 0:
-        token = re.compile(r'drmToken\"\:\"(.*?)\"').findall(resp.text)[0]
-        if len(re.compile(r'streamUrlDash\"\:\"(.*?)\"').findall(
-                resp.text)) > 0:
-            live_url = re.compile(r'streamUrlDash\"\:\"(.*?)\"').findall(
-                resp.text)[0]
-
-            item = Listitem()
-            item.path = live_url
-            item.label = get_selected_item_label()
-            item.art.update(get_selected_item_art())
-            item.info.update(get_selected_item_info())
-            item.property['inputstreamaddon'] = 'inputstream.adaptive'
-            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.property[
-                'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            item.property[
-                'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
-            return item
-    plugin.notify('ERROR', plugin.localize(30713))
-    return False
