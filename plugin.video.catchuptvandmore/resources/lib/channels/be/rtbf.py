@@ -582,8 +582,7 @@ def get_video_url2(plugin,
 
 @Resolver.register
 def set_live_url(plugin, item_id, **kwargs):
-    
-    xbmcgui.Dialog().ok('Info', 'item_id: '+item_id)
+
     resp = urlquick.get(URL_JSON_LIVE_CHANNEL % (item_id, PARTNER_KEY), max_age=-1)
     json_parser = json.loads(resp.text)
 
