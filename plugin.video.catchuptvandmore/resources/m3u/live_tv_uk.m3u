@@ -153,9 +153,9 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/uk/uklocaltv/get_l
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/uk/really.png" group-title="United Kingdom",Really
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/uk/dplay/get_live_url/?item_id=really
 
-##	Food Netword
+##	Food Network
 ##	food-network
-#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/uk/foodnetwork.png" group-title="United Kingdom",Food Netword
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/uk/foodnetwork.png" group-title="United Kingdom",Food Network
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/uk/dplay/get_live_url/?item_id=food-network
 
 ##	DMAX
