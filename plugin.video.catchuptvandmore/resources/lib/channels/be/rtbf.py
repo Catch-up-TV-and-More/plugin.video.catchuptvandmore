@@ -197,14 +197,17 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
         video_duration = video_datas["duration"]
         date_value = format_day(video_datas["date_publish_from"])
         video_url = ""
-
         if "url_streaming" in video_datas:
-            if "url_dash" in video_datas["url_streaming"]:
-                video_url = video_datas["url_streaming"]["url_dash"]
-                is_drm = True
+            is_drm = video_datas["drm"]
+            if is_drm:
+                if "url_dash" in video_datas["url_streaming"]:
+                    video_url = video_datas["url_streaming"]["url_dash"]
+                    is_drm = video_datas["drm"]
+                else:
+                    video_url = video_datas["url_streaming"]["url"]
+                    is_drm = False
             else:
-                video_url = video_datas["url_streaming"]["url"]
-                is_drm = False
+                video_url = video_datas["url_streaming"]["url_hls"]
         else:
             video_url = video_datas["url_embed"]
             is_drm = False
@@ -317,12 +320,15 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         date_value = format_day(video_datas["date_publish_from"])
         video_url = ""
         if "url_streaming" in video_datas:
-            if "url_dash" in video_datas["url_streaming"]:
-                video_url = video_datas["url_streaming"]["url_dash"]
-                is_drm = True
+            is_drm = video_datas["drm"]
+            if is_drm:
+                if "url_dash" in video_datas["url_streaming"]:
+                    video_url = video_datas["url_streaming"]["url_dash"]
+                else:
+                    video_url = video_datas["url_streaming"]["url"]
+                    is_drm = False
             else:
-                video_url = video_datas["url_streaming"]["url"]
-                is_drm = False
+                video_url = video_datas["url_streaming"]["url_hls"]
         else:
             video_url = video_datas["url_embed"]
             is_drm = False
@@ -411,16 +417,21 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
             video_plot = video_datas["description"]
         video_duration = video_datas["duration"]
         date_value = format_day(video_datas["date_publish_from"])
-
-        is_drm = video_datas.get("drm", False)
         video_url = ""
         if "url_streaming" in video_datas:
-            if is_drm and "url_dash" in video_datas["url_streaming"]:
-                video_url = video_datas["url_streaming"]["url_dash"]
+            is_drm = video_datas["drm"]
+            if is_drm:
+                if "url_dash" in video_datas["url_streaming"]:
+                    video_url = video_datas["url_streaming"]["url_dash"]
+                    is_drm = video_datas["drm"]
+                else:
+                    video_url = video_datas["url_streaming"]["url"]
+                    is_drm = False
             else:
-                video_url = video_datas["url_streaming"]["url"]
+                video_url = video_datas["url_streaming"]["url_hls"]
         else:
             video_url = video_datas["url_embed"]
+            is_drm = False
         video_id = video_datas["id"]
         # is_downloadable = False
         # if video_datas["url_download"]:
@@ -495,7 +506,6 @@ def get_video_url(plugin,
                   is_drm,
                   download_mode=False,
                   **kwargs):
-
     if 'youtube.com' in video_url:
         video_id = video_url.rsplit('/', 1)[1]
         return resolver_proxy.get_stream_youtube(plugin, video_id,
@@ -577,14 +587,19 @@ def set_live_url(plugin, item_id, **kwargs):
     json_parser = json.loads(resp.text)
 
     if "url_streaming" in json_parser:
-        if 'url_dash' in json_parser["url_streaming"]:
-            live_url = json_parser["url_streaming"]["url_dash"]
-            live_id = json_parser["id"]
-            is_drm = True
+        is_drm = json_parser["drm"]
+        if is_drm:
+            if 'url_dash' in json_parser["url_streaming"]:
+                live_url = json_parser["url_streaming"]["url_dash"]
+                live_id = json_parser["id"]
+                
+            else:
+                live_url = json_parser["url_streaming"]["url_hls"]
+                live_id = json_parser["id"]
+                is_drm = False
         else:
             live_url = json_parser["url_streaming"]["url_hls"]
             live_id = json_parser["id"]
-            is_drm = False
     live_channel_title = json_parser["channel"]["label"]
     # start_time_value = format_hours(json_parser["start_date"])
     # end_time_value = format_hours(json_parser["end_date"])
@@ -613,16 +628,20 @@ def list_lives(plugin, item_id, **kwargs):
     for live_datas in json_parser:
 
         if "url_streaming" in live_datas:
-            # check if we can add prochainnement if stream is not present
-            if 'url_dash' in live_datas["url_streaming"]:
-                live_url = live_datas["url_streaming"]["url_dash"]
-                live_id = live_datas["id"]
-                is_drm = True
+            is_drm = live_datas["drm"]
+            if is_drm:
+                # check if we can add prochainnement if stream is not present
+                if 'url_dash' in live_datas["url_streaming"]:
+                    live_url = live_datas["url_streaming"]["url_dash"]
+                    live_id = live_datas["id"]
+                    
+                else:
+                    live_url = live_datas["url_streaming"]["url_hls"]
+                    live_id = live_datas["id"]
+                    is_drm = False
             else:
                 live_url = live_datas["url_streaming"]["url_hls"]
                 live_id = live_datas["id"]
-                is_drm = False
-
         if type(live_datas["channel"]) is dict:
             live_channel_title = live_datas["channel"]["label"]
         else:
