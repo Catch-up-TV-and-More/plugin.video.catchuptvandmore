@@ -291,7 +291,7 @@ menu = {
     },
     'food-network': {
         'resolver': '/resources/lib/channels/uk/dplay:get_live_url',
-        'label': 'Food Netword',
+        'label': 'Food Network',
         'thumb': 'channels/uk/foodnetwork.png',
         'fanart': 'channels/uk/foodnetwork_fanart.jpg',
         'enabled': True,

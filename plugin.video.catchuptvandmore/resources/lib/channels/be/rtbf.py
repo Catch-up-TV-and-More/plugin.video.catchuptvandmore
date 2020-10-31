@@ -592,7 +592,6 @@ def set_live_url(plugin, item_id, **kwargs):
             if 'url_dash' in json_parser["url_streaming"]:
                 live_url = json_parser["url_streaming"]["url_dash"]
                 live_id = json_parser["id"]
-                
             else:
                 live_url = json_parser["url_streaming"]["url_hls"]
                 live_id = json_parser["id"]
@@ -634,7 +633,6 @@ def list_lives(plugin, item_id, **kwargs):
                 if 'url_dash' in live_datas["url_streaming"]:
                     live_url = live_datas["url_streaming"]["url_dash"]
                     live_id = live_datas["id"]
-                    
                 else:
                     live_url = live_datas["url_streaming"]["url_hls"]
                     live_id = live_datas["id"]
