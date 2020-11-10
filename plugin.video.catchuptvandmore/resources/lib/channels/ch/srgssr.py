@@ -358,7 +358,7 @@ def get_video_url(plugin,
 
     if is_drm:
         if get_kodi_version() < 18:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+            xbmcgui.Dialog().ok(plugin.localize(14116), plugin.localize(30602))
             return False
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
@@ -443,7 +443,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     if is_drm:
         if get_kodi_version() < 18:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+            xbmcgui.Dialog().ok(plugin.localize(14116), plugin.localize(30602))
             return False
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')

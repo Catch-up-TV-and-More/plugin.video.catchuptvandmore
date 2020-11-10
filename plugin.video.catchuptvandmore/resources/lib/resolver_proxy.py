@@ -323,7 +323,7 @@ def get_francetv_video_stream(plugin,
         return final_video_url
     elif 'dash' in all_video_datas[0][0]:
         if download_mode:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30603))
+            xbmcgui.Dialog().ok(plugin.localize(14116), plugin.localize(30603))
             return False
 
         is_helper = inputstreamhelper.Helper('mpd')
