@@ -154,4 +154,4 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp2 = urlquick.get(URL_LIVE_DATAS % list_live_datas, max_age=-1)
     return re.compile(
-        r'file\"\:\"(.*?)\"').findall(resp2.text.replace('\\',''))[1]
+        r'file\"\:\"(.*?)\"').findall(resp2.text.replace('\\', ''))[1]
