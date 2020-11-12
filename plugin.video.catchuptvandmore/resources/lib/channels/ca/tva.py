@@ -47,13 +47,15 @@ except ImportError:
 
 URL_ROOT = 'https://videos.tva.ca'
 
-URL_LIVE = URL_ROOT + '/page/direct'
-
 URL_EMISSIONS = URL_ROOT + '/page/touslescontenus'
 
 URL_VIDEOS = URL_ROOT + '/page/rattrapage'
 
 URL_SEARCH = URL_ROOT + '/search'
+
+URL_ROOT_2 = 'https://www.qub.ca/tvaplus'
+
+URL_LIVE = URL_ROOT_2 + '/%s/en-direct'
 
 
 @Route.register
@@ -222,17 +224,6 @@ def get_video_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(URL_LIVE)
-    json_parser = json.loads(
-        re.compile(r'__INITIAL_STATE__ = (.*?)\}\;').findall(resp.text)[0] +
-        '}')
-
-    asset_id_value = ''
-    for id_stream_datas in list(json_parser["items"].keys()):
-        if item_id.upper() in json_parser["items"][id_stream_datas]["content"]["attributes"]["title"]:
-            asset_id_value = json_parser["items"][id_stream_datas]["content"]["attributes"]["assetId"]
-
-    data_account = re.compile(r'accountId":"(.*?)"').findall(resp.text)[0]
-    data_player = re.compile(r'playerId":"(.*?)"').findall(resp.text)[0]
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
-                                                    data_player, asset_id_value)
+    resp = urlquick.get(URL_LIVE % item_id)
+    return re.compile(
+        r'videoSourceUrl\"\:\"(.*?)\"').findall(resp.text)[0]
