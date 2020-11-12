@@ -207,7 +207,10 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                     video_url = video_datas["url_streaming"]["url"]
                     is_drm = False
             else:
-                video_url = video_datas["url_streaming"]["url_hls"]
+                if "url_hls" in video_datas["url_streaming"]:
+                    video_url = video_datas["url_streaming"]["url_hls"]
+                else:
+                    video_url = video_datas["url_streaming"]["url"]
         else:
             video_url = video_datas["url_embed"]
             is_drm = False
@@ -328,7 +331,10 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
                     video_url = video_datas["url_streaming"]["url"]
                     is_drm = False
             else:
-                video_url = video_datas["url_streaming"]["url_hls"]
+                if "url_hls" in video_datas["url_streaming"]:
+                    video_url = video_datas["url_streaming"]["url_hls"]
+                else:
+                    video_url = video_datas["url_streaming"]["url"]
         else:
             video_url = video_datas["url_embed"]
             is_drm = False
@@ -428,7 +434,10 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
                     video_url = video_datas["url_streaming"]["url"]
                     is_drm = False
             else:
-                video_url = video_datas["url_streaming"]["url_hls"]
+                if "url_hls" in video_datas["url_streaming"]:
+                    video_url = video_datas["url_streaming"]["url_hls"]
+                else:
+                    video_url = video_datas["url_streaming"]["url"]
         else:
             video_url = video_datas["url_embed"]
             is_drm = False
