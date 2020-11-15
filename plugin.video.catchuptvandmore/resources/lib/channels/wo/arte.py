@@ -108,7 +108,6 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    # import web_pdb; web_pdb.set_trace()
 
     resp = urlquick.get(category_url)
     json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(
