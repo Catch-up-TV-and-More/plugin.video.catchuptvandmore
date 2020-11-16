@@ -20,7 +20,7 @@ from resources.lib import web_utils
 from resources.lib.kodi_utils import get_kodi_version
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
-from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info
+from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.addon_utils import get_item_media_path
 
 import inputstreamhelper
@@ -277,7 +277,7 @@ def get_video_url(plugin,
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
-        item.property['inputstreamaddon'] = 'inputstream.adaptive'
+        item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
         item.property[
             'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
@@ -319,7 +319,7 @@ def get_live_url(plugin, item_id, **kwargs):
             item.label = get_selected_item_label()
             item.art.update(get_selected_item_art())
             item.info.update(get_selected_item_info())
-            item.property['inputstreamaddon'] = 'inputstream.adaptive'
+            item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
             item.property['inputstream.adaptive.manifest_type'] = 'mpd'
             item.property[
                 'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
