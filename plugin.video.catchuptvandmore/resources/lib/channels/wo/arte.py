@@ -289,8 +289,8 @@ def list_programs(plugin, item_id, sub_category_title, sub_category_code_name, s
         value_code = json_parser['pages']['currentCode']
         for sub_category_datas in json_parser['pages']['list'][value_code][
                 'zones']:
-            if (sub_category_datas['code']['name'] == sub_category_code_name and
-                sub_category_title == sub_category_datas['title']):
+            if (sub_category_datas['code']['name'] == sub_category_code_name and \
+                    sub_category_title == sub_category_datas['title']):
 
                 for program_datas in sub_category_datas['data']:
                     if program_datas["kind"]["isCollection"]:
@@ -383,6 +383,7 @@ def list_programs(plugin, item_id, sub_category_title, sub_category_code_name, s
                         sub_category_title=sub_category_title,
                         sub_category_code_name=sub_category_code_name,
                         sub_category_url=sub_category_datas['nextPage'])
+
 
 @Route.register
 def list_programs_concert(plugin, item_id, sub_category_code_name, sub_category_url,
