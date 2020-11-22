@@ -53,7 +53,7 @@ menu = {
         'order': 4
     },
     'tva': {
-        'route': '/resources/lib/channels/ca/tva:list_categories',
+        'route': '/resources/lib/channels/ca/tva:tva_root',
         'label': 'TVA',
         'thumb': 'channels/ca/tva.png',
         'fanart': 'channels/ca/tva_fanart.jpg',
