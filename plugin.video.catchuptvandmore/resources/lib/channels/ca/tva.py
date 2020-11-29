@@ -164,16 +164,18 @@ def list_seasons(plugin, item_id, program_slug, **kwargs):
     resp = urlquick.get(URL_API + '/entities?slug=%s' % program_slug)
     json_parser = json.loads(resp.text)
 
-    for season_datas in json_parser['knownEntities']['seasons']['associatedEntities']:
+    if 'seasons' in json_parser['knownEntities']:
+        for season_datas in json_parser['knownEntities']['seasons']['associatedEntities']:
 
-        season_name = json_parser['knownEntities']['seasons']['name'] + ' ' + str(season_datas['seasonNumber'])
-        season_number = str(season_datas['seasonNumber'])
+            season_name = json_parser['knownEntities']['seasons']['name'] + ' ' + str(season_datas['seasonNumber'])
+            season_number = str(season_datas['seasonNumber'])
 
-        item = Listitem()
-        item.label = season_name
-        item.set_callback(list_videos_categories, item_id=item_id, program_slug=program_slug, season_number=season_number)
-        item_post_treatment(item)
-        yield item
+            item = Listitem()
+            item.label = season_name
+            item.set_callback(
+                list_videos_categories, item_id=item_id, program_slug=program_slug, season_number=season_number)
+            item_post_treatment(item)
+            yield item
 
 
 @Route.register
@@ -185,15 +187,16 @@ def list_videos_categories(plugin, item_id, program_slug, season_number, **kwarg
     for season_datas in json_parser['knownEntities']['seasons']['associatedEntities']:
         if season_number == str(season_datas['seasonNumber']):
             for video_category_datas in season_datas['associatedEntities']:
-                video_category_name = video_category_datas['name']
-                video_category_slug = video_category_datas['slug']
+                if len(video_category_datas['associatedEntities']) > 0:
+                    video_category_name = video_category_datas['name']
+                    video_category_slug = video_category_datas['slug']
 
-                item = Listitem()
-                item.label = video_category_name
-                item.set_callback(
-                    list_videos, item_id=item_id, video_category_slug=video_category_slug)
-                item_post_treatment(item)
-                yield item
+                    item = Listitem()
+                    item.label = video_category_name
+                    item.set_callback(
+                        list_videos, item_id=item_id, video_category_slug=video_category_slug)
+                    item_post_treatment(item)
+                    yield item
 
 
 @Route.register
@@ -205,7 +208,9 @@ def list_videos(plugin, item_id, video_category_slug, **kwargs):
     for video_datas in json_parser['associatedEntities']:
         video_name = video_datas['secondaryLabel'] + ' - ' + video_datas['label']
         video_image = video_datas['mainImage']['url']
-        video_plot = video_datas['description']
+        video_plot = ''
+        if 'description' in video_datas:
+            video_plot = video_datas['description']
         video_duration = video_datas['durationMillis'] / 1000
         video_slug = video_datas['slug']
 
