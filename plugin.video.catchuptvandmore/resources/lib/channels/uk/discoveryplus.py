@@ -32,7 +32,7 @@ from kodi_six import xbmcgui
 
 # TO DO
 
-URL_ROOT = 'https://www.dplay.co.uk'
+URL_ROOT = 'https://www.discoveryplus.co.uk'
 
 URL_SHOWS = URL_ROOT + '/api/shows/%s'
 # mode
@@ -63,7 +63,7 @@ CATEGORIES_MODE_AZ = {'A-Z': '-az'}
 
 
 @Route.register
-def dplay_root(plugin, **kwargs):
+def discoveryplus_root(plugin, **kwargs):
 
     # (item_id, label, thumb, fanart)
     channels = [
