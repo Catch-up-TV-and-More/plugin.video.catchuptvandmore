@@ -98,8 +98,8 @@ def list_categories(plugin, item_id, **kwargs):
             item = Listitem()
             item.label = category_title
             item.set_callback(list_programs,
-                            item_id=item_id,
-                            category_title=category_title)
+                              item_id=item_id,
+                              category_title=category_title)
             item_post_treatment(item)
             yield item
 
