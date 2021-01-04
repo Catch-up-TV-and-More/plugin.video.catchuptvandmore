@@ -41,7 +41,7 @@ menu = {
         'label': 'Télé-Québec',
         'thumb': 'channels/ca/telequebec.png',
         'fanart': 'channels/ca/telequebec_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 4
     },
     'tva': {

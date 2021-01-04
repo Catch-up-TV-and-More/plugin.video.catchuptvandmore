@@ -168,8 +168,12 @@ def list_contents(plugin, item_id, key_value, **kwargs):
             for content in category["contents"]:
                 if content["type"] != 'article':
                     content_title = content["onClick"]["displayName"]
-                    if 'http' in content["URLImageOptimizedRegular"]:
-                        content_image = content["URLImageOptimizedRegular"]
+                    content_image = ''
+                    if 'URLImageOptimizedRegular' in content_image:
+                        if 'http' in content["URLImageOptimizedRegular"]:
+                            content_image = content["URLImageOptimizedRegular"]
+                        else:
+                            content_image = content["URLImage"]
                     else:
                         content_image = content["URLImage"]
                     content_url = content["onClick"]["URLPage"]
