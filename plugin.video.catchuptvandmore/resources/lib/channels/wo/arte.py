@@ -46,7 +46,9 @@ from kodi_six import xbmcgui
 URL_ROOT = 'https://www.arte.tv/%s/'
 # Language
 
-URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v1/livestream/%s'
+URL_TOKEN = 'https://static-cdn.arte.tv/guide/manifest.js'
+
+URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/LIVE'
 # Langue, ...
 
 # URL_VIDEOS = 'http://www.arte.tv/hbbtvv2/services/web/index.php/OPA/v3/videos/subcategory/%s/page/%s/limit/100/%s'
@@ -643,6 +645,24 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', DESIRED_LANGUAGE)
 
-    resp = urlquick.get(URL_LIVE_ARTE % final_language.lower())
-    json_parser = json.loads(resp.text)
-    return json_parser["videoJsonPlayer"]["VSR"]["HLS_SQ_1"]["url"]
+    resp = urlquick.get(URL_TOKEN)
+    token = re.compile(r'token\"\:\"(.*?)\"').findall(resp.text)[0]
+
+    headers = {
+        'Authorization': 'Bearer %s' % token
+    }
+    resp2 = urlquick.get(URL_LIVE_ARTE % final_language.lower(), headers=headers)
+    json_parser = json.loads(resp2.text)
+    url_stream = json_parser["data"]["attributes"]["streams"][0]["url"]
+
+    manifest = urlquick.get(
+        url_stream,
+        headers={'User-Agent': web_utils.get_random_ua()},
+        max_age=-1)
+    lines = manifest.text.splitlines()
+    final_url = ''
+    for k in range(0, len(lines) - 1):
+        if 'RESOLUTION=' in lines[k]:
+            final_url = lines[k + 1]
+
+    return final_url
