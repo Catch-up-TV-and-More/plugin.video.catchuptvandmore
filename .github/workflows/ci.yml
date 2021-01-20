@@ -54,7 +54,7 @@ jobs:
   # Check the plugin with kodi-addon-checker
   kodi-addon-checker:
     name: Kodi-addon-checker
-    needs: test-plugin-modules
+    # needs: test-plugin-modules
     runs-on: ubuntu-latest
     steps:
       - name: Check out plugin repository
