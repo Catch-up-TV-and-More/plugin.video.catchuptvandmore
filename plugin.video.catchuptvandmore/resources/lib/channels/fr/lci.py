@@ -104,7 +104,7 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
     if page == '1':
         resp = urlquick.get(program_url)
     else:
-        resp = urlquick.get(program_url + '/%s/' % page)
+        resp = urlquick.get(program_url + '%s/' % page)
     root = resp.parse()
 
     for replay in root.iterfind(
