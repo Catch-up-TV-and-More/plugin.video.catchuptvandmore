@@ -33,18 +33,18 @@ jobs:
 
           CURRENT_DEV_VERSION=$(cat $DEV_ADDON_XML_FP|grep "<addon"|sed "s/.* version=\"\(.*\)\" .*/\1/")
           echo "* Current dev version: $CURRENT_DEV_VERSION"
-          echo ::set-env name=CURRENT_DEV_VERSION::$CURRENT_DEV_VERSION
+          echo "CURRENT_DEV_VERSION=$CURRENT_DEV_VERSION" >> $GITHUB_ENV
           
           RELEASE_VERSION=$(cat $DEV_ADDON_XML_FP|grep "<addon"|sed "s/.* version=\"\(.*\)~.*/\1/")
-          echo ::set-env name=RELEASE_VERSION::$RELEASE_VERSION
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
           echo "* Next release version: $RELEASE_VERSION"
 
           NEXT_DEV_VERSION=$(MINOR=$(cat $DEV_ADDON_XML_FP|grep "<addon"|sed "s/.* version=\"\(.*\)~.*/\1/"|cut -d. -f3) && echo "0.2.$((MINOR+1))~beta00")
-          echo ::set-env name=NEXT_DEV_VERSION::$NEXT_DEV_VERSION
+          echo "NEXT_DEV_VERSION=$NEXT_DEV_VERSION" >> $GITHUB_ENV
           echo "* Next beta version: $NEXT_DEV_VERSION"
 
           PLUGIN_CHANGELOG=$(cat $DEV_ADDON_XML_FP|sed -n '/<news>/,/<\/news>/p'|sed 's#<news>##g'|sed 's#</news>##g'|sed '/^ *$/d'|tr '\n' '@'|sed 's#@#<br />#g')
-          echo ::set-env name=PLUGIN_CHANGELOG::$PLUGIN_CHANGELOG
+          echo "PLUGIN_CHANGELOG=$PLUGIN_CHANGELOG" >> $GITHUB_ENV
           echo "* Changelog: $PLUGIN_CHANGELOG"
               
       - name: Update master code with dev code
