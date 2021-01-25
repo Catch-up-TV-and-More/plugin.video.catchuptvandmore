@@ -220,7 +220,7 @@ menu = {
         'xmltv_id': 'C160.api.telerama.fr',
         'm3u_group': 'TNT',
         'm3u_order': 19,
-        'enabled': True,
+        'enabled': False,
         'order': 17
     },
     'tf1-series-films': {
