@@ -93,11 +93,6 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/mycanal/get_liv
 #EXTINF:-1 tvg-id="C482.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/gulli.png" group-title="France",Gulli
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/gulli/get_live_url/?item_id=gulli
 
-##	France Ô
-##	france-o
-#EXTINF:-1 tvg-id="C160.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/franceo.png" group-title="France",France Ô
-plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/francetv/get_live_url/?item_id=france-o
-
 ##	TF1 Séries Films
 ##	tf1-series-films
 #EXTINF:-1 tvg-id="C1404.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/tf1seriesfilms.png" group-title="France",TF1 Séries Films
