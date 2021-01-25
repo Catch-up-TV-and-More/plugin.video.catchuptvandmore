@@ -117,10 +117,10 @@ def sixplay_root(plugin, **kwargs):
         ('m6', 'M6', 'm6.png', 'm6_fanart.jpg'),
         ('w9', 'W9', 'w9.png', 'w9_fanart.jpg'),
         ('6ter', '6ter', '6ter.png', '6ter_fanart.jpg'),
+        ('gulli', 'Gulli', 'gulli.png', 'gulli_fanart.jpg'),
         ('fun_radio', 'Fun Radio', 'funradio.png', 'funradio_fanart.jpg'),
         ('rtl2', 'RTL 2', 'rtl2.png', 'rtl2_fanart.jpg'),
-        ('cage_warriors', 'Cage Warriors', 'cagewarriors.png', 'cagewarriors_fanart.jpg'),
-        # ('100foot', '100%% Foot', '100foot.png', '100foot_fanart.jpg')
+        ('cage_warriors', 'Cage Warriors', 'cagewarriors.png', 'cagewarriors_fanart.jpg')
     ]
 
     for channel_infos in channels:
@@ -145,7 +145,8 @@ def list_categories(plugin, item_id, **kwargs):
     if item_id == 'rtl2' or \
             item_id == 'fun_radio' or \
             item_id == 'courses' or \
-            item_id == 'cage_warriors':
+            item_id == 'cage_warriors' or\
+            item_id == 'gulli':
         resp = urlquick.get(URL_ROOT % item_id)
     else:
         resp = urlquick.get(URL_ROOT % (item_id + 'replay'))
@@ -581,7 +582,8 @@ def get_live_url(plugin, item_id, **kwargs):
             headers=payload_headers,
             max_age=-1)
     elif item_id == 'fun_radio' or \
-            item_id == 'rtl2':
+            item_id == 'rtl2' or \
+            item_id == 'gulli':
         token_json = urlquick.get(
             URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % item_id),
             headers=payload_headers,
@@ -602,7 +604,8 @@ def get_live_url(plugin, item_id, **kwargs):
         json_parser = json.loads(video_json.text)
         video_assets = json_parser['6T'][0]['live']['assets'][::-1]
     elif item_id == 'fun_radio' or \
-            item_id == 'rtl2':
+            item_id == 'rtl2' or \
+            item_id == 'gulli':
         video_json = urlquick.get(
             URL_LIVE_JSON % (item_id),
             headers={'User-Agent': web_utils.get_random_ua()},

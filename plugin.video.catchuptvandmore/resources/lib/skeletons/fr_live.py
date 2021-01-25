@@ -202,7 +202,7 @@ menu = {
         'order': 15
     },
     'gulli': {
-        'resolver': '/resources/lib/channels/fr/gulli:get_live_url',
+        'resolver': '/resources/lib/channels/fr/6play:get_live_url',
         'label': 'Gulli',
         'thumb': 'channels/fr/gulli.png',
         'fanart': 'channels/fr/gulli_fanart.jpg',
