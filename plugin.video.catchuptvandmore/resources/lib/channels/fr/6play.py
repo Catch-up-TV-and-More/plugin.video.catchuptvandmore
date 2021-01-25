@@ -567,7 +567,6 @@ def get_live_url(plugin, item_id, **kwargs):
     if not is_helper.check_inputstream():
         return False
 
-
     # Build PAYLOAD headers
     payload_headers = {
         'x-auth-gigya-signature': account_signature,
@@ -582,7 +581,7 @@ def get_live_url(plugin, item_id, **kwargs):
             headers=payload_headers,
             max_age=-1)
     elif item_id == 'fun_radio' or \
-        item_id == 'rtl2':
+            item_id == 'rtl2':
         token_json = urlquick.get(
             URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % item_id),
             headers=payload_headers,
@@ -603,7 +602,7 @@ def get_live_url(plugin, item_id, **kwargs):
         json_parser = json.loads(video_json.text)
         video_assets = json_parser['6T'][0]['live']['assets'][::-1]
     elif item_id == 'fun_radio' or \
-        item_id == 'rtl2':
+            item_id == 'rtl2':
         video_json = urlquick.get(
             URL_LIVE_JSON % (item_id),
             headers={'User-Agent': web_utils.get_random_ua()},
