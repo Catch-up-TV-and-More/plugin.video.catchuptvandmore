@@ -96,7 +96,7 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/mycanal/get_liv
 ##	Gulli
 ##	gulli
 #EXTINF:-1 tvg-id="C482.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/fr/gulli.png" group-title="France TNT",Gulli
-plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/gulli/get_live_url/?item_id=gulli
+plugin://plugin.video.catchuptvandmore/resources/lib/channels/fr/6play/get_live_url/?item_id=gulli
 
 ##	TF1 Séries Films
 ##	tf1-series-films
