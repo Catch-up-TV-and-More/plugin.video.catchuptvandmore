@@ -32,24 +32,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out plugin repository
-       uses: actions/checkout@v2
-       with:
-         path: plugin
+        uses: actions/checkout@v2
+        with:
+          path: plugin
       - name: Check out simulator repository
-       uses: actions/checkout@v2
-       with:
-         path: simulator
-         repository: Catch-up-TV-and-More/catchuptvandmore-test
+        uses: actions/checkout@v2
+        with:
+          path: simulator
+          repository: Catch-up-TV-and-More/catchuptvandmore-test
       - name: Set up Python 3.8
-       uses: actions/setup-python@v1
-       with:
-         python-version: 3.8
-     - name: Install dependencies
-       working-directory: simulator
-       run: pip install -r requirements.txt
-     - name: Start catchuptvandmore-test with test_modules config
-       working-directory: simulator
-       run: python main.py --test-modules -a ../plugin/plugin.video.catchuptvandmore
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        working-directory: simulator
+        run: pip install -r requirements.txt
+      - name: Start catchuptvandmore-test with test_modules config
+        working-directory: simulator
+        run: python main.py --test-modules -a ../plugin/plugin.video.catchuptvandmore
   
   # Check the plugin with kodi-addon-checker
   kodi-addon-checker:
