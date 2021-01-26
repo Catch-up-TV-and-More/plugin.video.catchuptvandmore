@@ -120,7 +120,7 @@ def sixplay_root(plugin, **kwargs):
         ('gulli', 'Gulli', 'gulli.png', 'gulli_fanart.jpg'),
         ('fun_radio', 'Fun Radio', 'funradio.png', 'funradio_fanart.jpg'),
         ('rtl2', 'RTL 2', 'rtl2.png', 'rtl2_fanart.jpg'),
-        ('cage_warriors', 'Cage Warriors', 'cagewarriors.png', 'cagewarriors_fanart.jpg')
+        ('courses', 'Cage Warriors', 'cagewarriors.png', 'cagewarriors_fanart.jpg')
     ]
 
     for channel_infos in channels:
@@ -145,7 +145,6 @@ def list_categories(plugin, item_id, **kwargs):
     if item_id == 'rtl2' or \
             item_id == 'fun_radio' or \
             item_id == 'courses' or \
-            item_id == 'cage_warriors' or\
             item_id == 'gulli':
         resp = urlquick.get(URL_ROOT % item_id)
     else:
