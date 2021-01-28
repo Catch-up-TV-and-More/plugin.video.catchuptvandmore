@@ -203,7 +203,7 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                 if "url_hls" in video_datas["url_streaming"]:
                     video_url = video_datas["url_streaming"]["url_hls"]
                     if "master.m3u8" in video_url:
-                        video_url = video_url.replace('/master.m3u8','-aes/master.m3u8')
+                        video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
                     is_drm = False
                 elif "url_dash" in video_datas["url_streaming"]:
                     video_url = video_datas["url_streaming"]["url_dash"]
@@ -333,7 +333,7 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
                 if "url_hls" in video_datas["url_streaming"]:
                     video_url = video_datas["url_streaming"]["url_hls"]
                     if "master.m3u8" in video_url:
-                        video_url = video_url.replace('/master.m3u8','-aes/master.m3u8')
+                        video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
                     is_drm = False
                 elif "url_dash" in video_datas["url_streaming"]:
                     video_url = video_datas["url_streaming"]["url_dash"]
@@ -441,7 +441,7 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
                 if "url_hls" in video_datas["url_streaming"]:
                     video_url = video_datas["url_streaming"]["url_hls"]
                     if "master.m3u8" in video_url:
-                        video_url = video_url.replace('/master.m3u8','-aes/master.m3u8')
+                        video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
                     is_drm = False
                 elif "url_dash" in video_datas["url_streaming"]:
                     video_url = video_datas["url_streaming"]["url_dash"]
@@ -617,7 +617,7 @@ def set_live_url(plugin, item_id, **kwargs):
             if 'url_hls' in json_parser["url_streaming"]:
                 live_url = json_parser["url_streaming"]["url_hls"]
                 if "_drm.m3u8" in live_url:
-                    live_url = live_url.replace('_drm.m3u8','_aes.m3u8')
+                    live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
                 live_id = json_parser["id"]
                 is_drm = False
             elif 'url_dash' in json_parser["url_streaming"]:
@@ -664,7 +664,7 @@ def list_lives(plugin, item_id, **kwargs):
                 if 'url_hls' in json_parser["url_streaming"]:
                     live_url = json_parser["url_streaming"]["url_hls"]
                     if "_drm.m3u8" in live_url:
-                        live_url = live_url.replace('_drm.m3u8','_aes.m3u8')
+                        live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
                     live_id = json_parser["id"]
                     is_drm = False
                 elif 'url_dash' in json_parser["url_streaming"]:
