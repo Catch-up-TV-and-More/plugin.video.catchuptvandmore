@@ -31,4 +31,4 @@ from codequick import Resolver
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    return 'https://hls-origin01-bruzz.cdn02.rambla.be/main/adliveorigin-bruzz/_definst_/V3n5YY.smil/playlist.m3u8'
+    return 'https://hls-origin01-bruzz.cdn02.rambla.be/main/adliveorigin-bruzz/_definst_/V3n5YY.smil/playlist.m3u8|referer=https://player.cdn01.rambla.be/players/video-js/'

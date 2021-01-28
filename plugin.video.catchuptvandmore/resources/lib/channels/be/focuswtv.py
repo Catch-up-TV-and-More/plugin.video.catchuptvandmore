@@ -31,4 +31,4 @@ from codequick import Resolver
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    return 'https://hls-origin01-focus-wtv.cdn01.rambla.be/main/adliveorigin-focus-wtv/_definst_/ARXpX7.smil/playlist.m3u8'
+    return 'https://hls-origin01-focus-wtv.cdn01.rambla.be/main/adliveorigin-focus-wtv/_definst_/ARXpX7.smil/playlist.m3u8|referer=http://player.clevercast.com/players/video-js/'
