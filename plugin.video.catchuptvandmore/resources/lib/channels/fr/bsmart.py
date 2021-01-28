@@ -109,18 +109,21 @@ def list_videos_program(plugin, item_id, next_url, **kwargs):
 
     for video_datas in json_parser["videos"]:
         video_title = video_datas["program"]["title"] + ' - ' + video_datas["title"]
-        video_image = video_datas["asset"]["dailymotion"]["thumb"]
-        video_id = video_datas["asset"]["dailymotion"]["id"]
+        if 'dailymotion' in video_datas["providers"]:
+            video_image = ''
+            if 'thumb' in video_datas["providers"]["dailymotion"]:
+                video_image = video_datas["providers"]["dailymotion"]["thumb"]
+            video_id = video_datas["providers"]["dailymotion"]["id"]
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = item.art['landscape'] = video_image
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_id=video_id)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+            item.set_callback(get_video_url,
+                            item_id=item_id,
+                            video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
 
 @Route.register
@@ -131,18 +134,21 @@ def list_videos(plugin, item_id, next_url, page, **kwargs):
 
     for video_datas in json_parser["results"]:
         video_title = video_datas["program"]["title"] + ' - ' + video_datas["title"]
-        video_image = video_datas["asset"]["dailymotion"]["thumb"]
-        video_id = video_datas["asset"]["dailymotion"]["id"]
+        if 'dailymotion' in video_datas["providers"]:
+            video_image = ''
+            if 'thumb' in video_datas["providers"]["dailymotion"]:
+                video_image = video_datas["providers"]["dailymotion"]["thumb"]
+            video_id = video_datas["providers"]["dailymotion"]["id"]
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = item.art['landscape'] = video_image
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_id=video_id)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+            item.set_callback(get_video_url,
+                            item_id=item_id,
+                            video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
     # More videos...
     yield Listitem.next_page(item_id=item_id,
