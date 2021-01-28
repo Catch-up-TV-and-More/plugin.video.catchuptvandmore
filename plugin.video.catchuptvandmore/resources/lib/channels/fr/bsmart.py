@@ -120,8 +120,8 @@ def list_videos_program(plugin, item_id, next_url, **kwargs):
             item.art['thumb'] = item.art['landscape'] = video_image
 
             item.set_callback(get_video_url,
-                            item_id=item_id,
-                            video_id=video_id)
+                              item_id=item_id,
+                              video_id=video_id)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
@@ -145,8 +145,8 @@ def list_videos(plugin, item_id, next_url, page, **kwargs):
             item.art['thumb'] = item.art['landscape'] = video_image
 
             item.set_callback(get_video_url,
-                            item_id=item_id,
-                            video_id=video_id)
+                              item_id=item_id,
+                              video_id=video_id)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
