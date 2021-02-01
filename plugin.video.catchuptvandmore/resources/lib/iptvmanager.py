@@ -208,7 +208,7 @@ class IPTVManager:
                     json_stream['id'] = channel_infos['xmltv_id']
                 if 'm3u_orders' in channel_infos:
                     json_stream['preset'] = channel_infos['m3u_orders']
-                json_stream['logo'] = get_item_media_path(channel_infos['thumb'])
+                json_stream['logo'] = os.path.join('special://home/addons/resource.images.catchuptvandmore/resources/', channel_infos['thumb'])
 
                 channels_list.append(json_stream)
 
