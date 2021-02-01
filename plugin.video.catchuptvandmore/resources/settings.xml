@@ -131,11 +131,28 @@
     <!-- Accounts -->
 
 
+    <!--TV integration -->
+    <category label="30270"> 
+        <!-- Kodi Live TV integration -->
+        <setting label="30271" type="lsep"/>
+            <!-- Install IPTV Manager add-on -->
+            <setting label="30272" type="action" action="InstallAddon(service.iptv.manager)" option="close" visible="!System.HasAddon(service.iptv.manager)"/>
+            <!-- Enable Kodi Live TV integration -->
+            <setting label="30273" type="bool" id="iptv.enabled" default="true" visible="System.HasAddon(service.iptv.manager)"/>
+            <!-- Select channels to enable -->
+            <setting label="30275" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/iptvmanager/select_channels/)" enable="eq(-1,true)" visible="System.HasAddon(service.iptv.manager)" subsetting="true"/>
+            <!-- Open IPTV Manager settings -->
+            <setting label="30274" type="action" action="Addon.OpenSettings(service.iptv.manager)" enable="eq(-2,true)" option="close" visible="System.HasAddon(service.iptv.manager)" subsetting="true"/>
+
+            <setting type="text" id="iptv.channels_uri" default="plugin://plugin.video.catchuptvandmore/resources/lib/iptvmanager/channels/" visible="false"/>
+            <setting type="text" id="iptv.epg_uri" default="plugin://plugin.video.catchuptvandmore/resources/lib/iptvmanager/epg/" visible="false"/>
+    </category>
+
+
 
 
     <!-- delete_for_submission_start -->
     <!-- OpenVPN -->
-        <!-- OpenVPN -->
     <category label="OpenVPN">
         <setting label="30340" type="bool" id="vpn.hide" default="true"/>
         <setting label="30361" type="action" action="RunPlugin(plugin://plugin.video.catchuptvandmore/resources/lib/vpn/vpn_item_callback/)"  visible="eq(-1,true)"/>
