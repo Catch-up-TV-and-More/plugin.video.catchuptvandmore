@@ -77,8 +77,8 @@ def get_all_live_tv_channels():
     """Explore each live_tv skeleton files to retrieve all sorted live tv channels
 
     Returns:
-        list: Format: (coutry_order, country_id, country_infos, country_label, [channels]),
-                      Channel format: (channel_order, channel_id, channel_infos)
+        list: Format: (coutry_order, country_id, country_label, country_infos, [channels]),
+                      Channel format: (channel_order, channel_id, channel_label, channel_infos)
     """
     country_channels = []
     live_tv_dict = importlib.import_module('resources.lib.skeletons.live_tv').menu
@@ -92,10 +92,10 @@ def get_all_live_tv_channels():
             # If this channel is a folder (e.g. multi live) --> ignore this channel
             if 'resolver' not in channel_infos:
                 continue
-            channels.append((channel_infos['order'], channel_id, channel_infos))
-        channels = sorted(channels, key=lambda x: x[0])
-        country_channels.append((country_infos['order'], country_id, country_infos, sorted(channels, key=lambda x: x[0])))
-    return sorted(country_channels, key=lambda x: x[0])
+            channels.append((channel_infos['order'], channel_id, get_item_label(channel_id, channel_infos), channel_infos))
+        channels = sorted(channels, key=lambda x: x[2])
+        country_channels.append((country_infos['order'], country_id, get_item_label(country_id, country_infos), country_infos, sorted(channels, key=lambda x: x[0])))
+    return sorted(country_channels, key=lambda x: x[2])
 
 
 @Script.register
@@ -119,15 +119,15 @@ def select_channels(plugin):
     preselect = []
     selected_channels_map = []
     cnt = 0
-    for (country_order, country_id, country_infos, channels) in country_channels:
+    for (country_order, country_id, country_label, country_infos, channels) in country_channels:
         if country_id not in tv_integration_settings['enabled_channels']:
             tv_integration_settings['enabled_channels'][country_id] = {}
 
-        for (channel_order, channel_id, channel_infos) in channels:
+        for (channel_order, channel_id, channel_label, channel_infos) in channels:
             if channel_id not in tv_integration_settings['enabled_channels'][country_id]:
                 tv_integration_settings['enabled_channels'][country_id][channel_id] = {'enabled': False}
 
-            label = get_item_label(country_id, country_infos) + ' - ' + get_item_label(channel_id, channel_infos)
+            label = country_label + ' - ' + channel_label
             options.append(label)
             selected_channels_map.append((country_id, channel_id))
             if tv_integration_settings['enabled_channels'][country_id][channel_id]['enabled']:
@@ -191,8 +191,8 @@ class IPTVManager:
         if 'enabled_channels' not in tv_integration_settings:
             tv_integration_settings['enabled_channels'] = {}
 
-        for (country_order, country_id, country_infos, channels) in country_channels:
-            for (channel_order, channel_id, channel_infos) in channels:
+        for (country_order, country_id, country_label, country_infos, channels) in country_channels:
+            for (channel_order, channel_id, channel_label, channel_infos) in channels:
                 if not tv_integration_settings['enabled_channels'].get(country_id, {}).get(channel_id, {}).get('enabled', False):
                     continue
 
