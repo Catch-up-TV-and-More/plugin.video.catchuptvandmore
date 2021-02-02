@@ -822,5 +822,13 @@ menu = {
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
         'order': 123
+    },
+    'spectacles-et-culture': {
+        'resolver': '/resources/lib/channels/fr/francetv:get_live_url',
+        'label': 'Culturebox',
+        'thumb': 'channels/fr/culturebox.png',
+        'fanart': 'channels/fr/culturebox_fanart.jpg',
+        'enabled': True,
+        'order': 124
     }
 }

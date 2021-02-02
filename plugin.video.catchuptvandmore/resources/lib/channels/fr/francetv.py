@@ -431,6 +431,13 @@ def get_video_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    broadcast_id = 'SIM_France%s'
-    return resolver_proxy.get_francetv_live_stream(
-        plugin, broadcast_id % item_id.split('-')[1])
+    if item_id == 'spectacles-et-culture':
+        # TODO get broadcast_id
+        # SIM_culturebox return HTTP 404
+        broadcast_id = 'b1b38602-78ec-48bf-be5d-f6f755b76e12'
+        return resolver_proxy.get_francetv_live_stream(
+            plugin, broadcast_id)
+    else:
+        broadcast_id = 'SIM_France%s'
+        return resolver_proxy.get_francetv_live_stream(
+            plugin, broadcast_id % item_id.split('-')[1])
