@@ -1,0 +1,25 @@
+[MESSAGES CONTROL]
+disable=
+    bad-option-value,
+    duplicate-code,  # Integration tests tend to test similar things
+    fixme,  # Allow FIXMEs in code is a useful practice
+    import-outside-toplevel,  # Done on purpose to reduce overhead at startup
+    old-style-class,
+    super-with-arguments,
+    too-few-public-methods,
+    too-many-arguments,
+    too-many-branches,
+    too-many-function-args,
+    too-many-instance-attributes,
+    too-many-lines,
+    too-many-locals,
+    too-many-public-methods,
+    too-many-return-statements,
+    too-many-statements,
+    broad-except,  # FIX LATER
+    import-error,   # FIX LATER
+    invalid-name,  # FIX LATER
+    missing-docstring,  # FIX LATER
+    unused-argument,  # FIX LATER
+    unused-variable,  # FIX LATER
+max-line-length=160
