@@ -23,7 +23,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           flake8: true
-          flake8_dir: plugin.video.catchuptvandmore/
           
   # Test add-on python files
   test-plugin-modules:
@@ -49,7 +48,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Start catchuptvandmore-test with test_modules config
         working-directory: simulator
-        run: python main.py --test-modules -a ../plugin/plugin.video.catchuptvandmore
+        run: python main.py --test-modules -a ..
   
   # Check the plugin with kodi-addon-checker
   kodi-addon-checker:
@@ -66,7 +65,7 @@ jobs:
       - name: Install kodi-addon-checker
         run: pip install kodi-addon-checker
       - name: Run kodi-addon-checker
-        run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch ./plugin.video.catchuptvandmore
+        run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch .
   
   # Update M3U files
   update-m3u-files:
@@ -88,7 +87,7 @@ jobs:
         run: |
           git config user.name 'M3U files generator'
           git config user.email 'github@noreply.github.com'
-          git add plugin.video.catchuptvandmore/resources/m3u
+          git add resources/m3u
           git commit -m "Update M3U files" || echo "No changes to commit"
           git push
   
