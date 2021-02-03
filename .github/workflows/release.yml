@@ -28,7 +28,7 @@ jobs:
 
       - name: Set env
         run: |
-          DEV_ADDON_XML_FP=dev/plugin.video.catchuptvandmore/addon.xml
+          DEV_ADDON_XML_FP=dev/addon.xml
           echo "* addon.xml filepath of dev branch: $DEV_ADDON_XML_FP"
 
           CURRENT_DEV_VERSION=$(cat $DEV_ADDON_XML_FP|grep "<addon"|sed "s/.* version=\"\(.*\)\" .*/\1/")
@@ -54,7 +54,7 @@ jobs:
        
       - name: Set release version on master addon.xml file
         working-directory: master
-        run: sed -i "s#version=\"$CURRENT_DEV_VERSION\"#version=\"$RELEASE_VERSION\"#g" ./plugin.video.catchuptvandmore/addon.xml
+        run: sed -i "s#version=\"$CURRENT_DEV_VERSION\"#version=\"$RELEASE_VERSION\"#g" ./addon.xml
        
       - name: Commit release on master branch
         working-directory: master
@@ -69,6 +69,14 @@ jobs:
         id: prepare_zip
         working-directory: master
         run: |
+          mkdir plugin.video.catchuptvandmore
+          mv addon.py plugin.video.catchuptvandmore
+          mv addon.xml plugin.video.catchuptvandmore
+          mv fanart.jpg plugin.video.catchuptvandmore
+          mv icon.png plugin.video.catchuptvandmore
+          mv LICENSE.txt plugin.video.catchuptvandmore
+          mv service.py plugin.video.catchuptvandmore
+          mv resources plugin.video.catchuptvandmore
           sed -i 's#<reuselanguageinvoker>false</reuselanguageinvoker>#<reuselanguageinvoker>true</reuselanguageinvoker>#g' plugin.video.catchuptvandmore/addon.xml
           zip -r plugin.video.catchuptvandmore.zip plugin.video.catchuptvandmore
           echo "::set-output name=zip_filepath::$(realpath plugin.video.catchuptvandmore.zip)"
@@ -85,7 +93,7 @@ jobs:
         run: |
           git config user.name 'Release workflow'
           git config user.email 'github@noreply.github.com'
-          sed -i "s#version=\"$CURRENT_DEV_VERSION\"#version=\"$NEXT_DEV_VERSION\"#g" ./plugin.video.catchuptvandmore/addon.xml
+          sed -i "s#version=\"$CURRENT_DEV_VERSION\"#version=\"$NEXT_DEV_VERSION\"#g" ./addon.xml
           git add --all
           git commit -m "Version bump ($NEXT_DEV_VERSION)"
           git push origin
