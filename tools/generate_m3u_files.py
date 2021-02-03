@@ -35,7 +35,7 @@ import sys
 import mock
 import urllib.parse
 
-PLUGIN_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../plugin.video.catchuptvandmore'
+PLUGIN_PATH = os.path.dirname(os.path.abspath(__file__)) + '/..'
 
 sys.path.append(PLUGIN_PATH)
 sys.path.append(PLUGIN_PATH + '/resources')
