@@ -35,6 +35,8 @@ the addon's tree architecture.
     - fanart: Item fanart path relative to "meia" folder
 """
 
+root = 'live_tv'
+
 menu = {
     'rougetv': {
         'resolver': '/resources/lib/channels/ch/rougetv:get_live_url',

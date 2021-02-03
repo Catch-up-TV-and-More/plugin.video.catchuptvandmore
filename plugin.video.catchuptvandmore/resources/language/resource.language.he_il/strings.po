@@ -20,11 +20,11 @@ msgstr ""
 # Settings tabs/categories (from 30000 to 30019)
 
 msgctxt "#30000"
-msgid "Main menu"
-msgstr "תפריט ראשי"
+msgid ""
+msgstr ""
 
 msgctxt "#30001"
-msgid "Countries"
+msgid ""
 msgstr ""
 
 msgctxt "#30002"
@@ -48,11 +48,11 @@ msgid "Channels"
 msgstr "ערוצים"
 
 msgctxt "#30007"
-msgid "Websites"
-msgstr "אתרי רשת"
+msgid ""
+msgstr ""
 
 msgctxt "#30008"
-msgid "Menus"
+msgid ""
 msgstr ""
 
 msgctxt "#30009"
@@ -548,7 +548,7 @@ msgid "Favourites deleted"
 msgstr ""
 
 
-# Settings of 'Menus' category (from 30400 to 30429)
+# Settings of 'General' category (from 30400 to 30429)
 
 msgctxt "#30400"
 msgid "Restore default order of all menus"
@@ -559,23 +559,23 @@ msgid "Unmask all hidden items"
 msgstr ""
 
 msgctxt "#30402"
-msgid "Main menu items"
+msgid "Select items to unmask"
 msgstr ""
 
 msgctxt "#30403"
-msgid "Live TV countries"
+msgid "Menu items"
 msgstr ""
 
 msgctxt "#30404"
-msgid "Catch-up TV countries"
+msgid ""
 msgstr ""
 
 msgctxt "#30405"
-msgid "Websites"
+msgid ""
 msgstr ""
 
 msgctxt "#30406"
-msgid "Select item to unmask"
+msgid ""
 msgstr ""
 
 msgctxt "#30407"

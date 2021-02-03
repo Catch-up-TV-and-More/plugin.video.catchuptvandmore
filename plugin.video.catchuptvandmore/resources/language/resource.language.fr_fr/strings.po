@@ -20,12 +20,12 @@ msgstr ""
 # Settings tabs/categories (from 30000 to 30019)
 
 msgctxt "#30000"
-msgid "Main menu"
-msgstr "Menu principal"
+msgid ""
+msgstr ""
 
 msgctxt "#30001"
-msgid "Countries"
-msgstr "Pays"
+msgid ""
+msgstr ""
 
 msgctxt "#30002"
 msgid "Quality and content"
@@ -48,11 +48,11 @@ msgid "Channels"
 msgstr "Chaînes"
 
 msgctxt "#30007"
-msgid "Websites"
-msgstr "Sites internet"
+msgid ""
+msgstr ""
 
 msgctxt "#30008"
-msgid "Menus"
+msgid ""
 msgstr ""
 
 msgctxt "#30009"
@@ -548,7 +548,7 @@ msgid "Favourites deleted"
 msgstr "Favoris supprimés"
 
 
-# Settings of 'Menus' category (from 30400 to 30429)
+# Settings of 'General' category (from 30400 to 30429)
 
 msgctxt "#30400"
 msgid "Restore default order of all menus"
@@ -559,24 +559,24 @@ msgid "Unmask all hidden items"
 msgstr "Démasquez tous les éléments cachés"
 
 msgctxt "#30402"
-msgid "Main menu items"
-msgstr "Éléments du menu principal"
+msgid "Select items to unmask"
+msgstr "Sélectionner les éléments à démasquer"
 
 msgctxt "#30403"
-msgid "Live TV countries"
-msgstr "Pays de la TV en direct"
+msgid "Menu items"
+msgstr "Éléments des menus"
 
 msgctxt "#30404"
-msgid "Catch-up TV countries"
-msgstr "Pays du replay TV"
+msgid ""
+msgstr ""
 
 msgctxt "#30405"
-msgid "Websites"
-msgstr "Sites internet"
+msgid ""
+msgstr ""
 
 msgctxt "#30406"
-msgid "Select item to unmask"
-msgstr "Sélectionnez un élément à démasquer"
+msgid ""
+msgstr ""
 
 msgctxt "#30407"
 msgid "Default order of all menus have been restored"
