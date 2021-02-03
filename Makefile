@@ -31,7 +31,7 @@ check: check-pylint check-translations
 
 check-pylint:
 	@printf "$(white)=$(blue) Starting sanity pylint test$(reset)\n"
-	$(PYTHON) -m pylint resources/lib/ tests/
+	$(PYTHON) -m pylint addon.py service.py resources/lib/ tests/
 
 check-translations:
 	@printf "$(white)=$(blue) Starting language test$(reset)\n"
@@ -44,29 +44,20 @@ check-addon: clean
 	kodi-addon-checker . --branch=krypton
 	kodi-addon-checker . --branch=leia
 
-kill-proxy:
-	-pkill -ef '$(PYTHON) -m proxy'
-
 unit: test-unit
 run: test-run
 
-test-unit: clean kill-proxy
+test-unit: clean
 	@printf "$(white)=$(blue) Starting unit tests$(reset)\n"
-	-$(PYTHON) -m proxy --hostname 127.0.0.1 --log-level DEBUG &
 	$(PYTHON) -m unittest discover -v
-	-pkill -ef '$(PYTHON) -m proxy'
 
 test-service:
 	@printf "$(white)=$(blue) Run service$(reset)\n"
-	$(PYTHON) resources/lib/service_entry.py
+	$(PYTHON) service.py
 
 test-run:
 	@printf "$(white)=$(blue) Run CLI$(reset)\n"
 	$(PYTHON) tests/run.py $(path)
-
-profile:
-	@printf "$(white)=$(blue) Profiling $(white)$(path)$(reset)\n"
-	$(PYTHON) -m cProfile -o profiling_stats-$(git_branch)-$(git_hash).bin tests/run.py $(path)
 
 build: clean
 	@printf "$(white)=$(blue) Building new package$(reset)\n"
@@ -88,4 +79,4 @@ clean:
 	find . -name '*.py[cod]' -type f -delete
 	find . -name '__pycache__' -type d -delete
 	rm -rf .pytest_cache/
-	rm -f *.log tests/userdata/tokens/*.tkn
+	rm -f *.log
