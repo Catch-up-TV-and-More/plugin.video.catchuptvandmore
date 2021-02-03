@@ -33,7 +33,7 @@ jobs:
       - name: Check out plugin repository
         uses: actions/checkout@v2
         with:
-          path: plugin
+          path: plugin.video.catchuptvandmore
       - name: Check out simulator repository
         uses: actions/checkout@v2
         with:
@@ -48,7 +48,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Start catchuptvandmore-test with test_modules config
         working-directory: simulator
-        run: python main.py --test-modules -a ../plugin
+        run: python main.py --test-modules -a ../plugin.video.catchuptvandmore
   
   # Check the plugin with kodi-addon-checker
   kodi-addon-checker:
