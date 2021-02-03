@@ -375,6 +375,72 @@ def programme_post_treatment(programme):
     return programme
 
 
+def programme_post_treatment_iptvmanager(programme):
+    """Prepare the programme to be used by IPTV Manager
+
+    """
+    # Titles, etc..
+    for k in ['title', 'desc', 'sub-title', 'country', 'category']:
+        if k in programme:
+            s = ''
+            for t in programme[k]:
+                s = s + t[0] + ' - '
+            s = s[:-3]
+            programme[k] = s
+
+    # Icon
+    if 'icon' in programme:
+        programme['icon'] = programme['icon'][0]['src']
+
+    # Episode (e.g 'episode-num': [('0.9.', 'xmltv_ns')])
+    if 'episode-num' in programme:
+        for episode_num, episode_format in programme['episode-num']:
+            if episode_format == 'xmltv_ns':
+                splitted_episode_num = episode_num.split('.')
+                season = splitted_episode_num[0]
+                episode = splitted_episode_num[1]
+                part = splitted_episode_num[2]
+
+                final_string = ''
+                if season != '':
+                    season = int(season) + 1
+                    final_string += 'S' + str(season).zfill(2)
+                if episode != '':
+                    episode = int(episode) + 1
+                    final_string += 'E' + str(episode).zfill(2)
+                if part != '':
+                    part = int(part) + 1
+                    final_string += '/' + str(part).zfill(2)
+                programme['episode'] = final_string
+                break
+
+    # For start and stop we use ISO-8601 format in UTC
+    # (e.g YYYY-MM-DDTHH:MM:SS)
+    ISO_8601_FORMAT = '%Y-%m-%dT%H:%M:%S'
+
+    # But in our xmltv file we have datetime in
+    # %Y%m%d%H%M%S format (e.g. 20210202224100)
+
+    # Get UTC start and stop datetime
+    start_s = programme['start']
+    stop_s = programme['stop']
+
+    # Convert start and stop on naive datetime object
+    start_dt = datetime_strptime(start_s, date_format_notz)
+    stop_dt = datetime_strptime(stop_s, date_format_notz)
+
+    # Add UTC timezone to start and stop
+    utc_tz = pytz.UTC
+    start_dt = utc_tz.localize(start_dt)
+    stop_dt = utc_tz.localize(stop_dt)
+
+    # Use correct format
+    programme['start'] = start_dt.strftime(ISO_8601_FORMAT)
+    programme['stop'] = stop_dt.strftime(ISO_8601_FORMAT)
+
+    return programme
+
+
 xmltv_infos = {
     'fr_live':
         {
@@ -453,6 +519,32 @@ def download_xmltv_file(country_id, day_delta=0):
         with open(xmltv_fp, 'wb') as f:
             f.write(r.content)
     return xmltv_fp
+
+
+def grab_programmes(country_id, day_delta):
+    """Retrieve programmes of channels of country_id at day today + day_detla.
+
+    Args:
+        country_id (str)
+        day_delta (int)
+    Returns:
+        list: Programmes.
+    """
+    if country_id not in xmltv_infos:
+        return []
+    try:
+        # Download, if needed, xmltv file
+        xmltv_fp = download_xmltv_file(country_id, day_delta=day_delta)
+
+        # Grab programmes in xmltv file
+        programmes = read_programmes(xmltv_fp, only_current_programmes=False)
+        programmes_post_treated = []
+        for programme in programmes:
+            programmes_post_treated.append(programme_post_treatment_iptvmanager(programme))
+        return programmes_post_treated
+    except Exception as e:
+        Script.log('xmltv module failed with error: {}'.format(e), lvl=Script.ERROR)
+        return []
 
 
 def grab_current_programmes(country_id):

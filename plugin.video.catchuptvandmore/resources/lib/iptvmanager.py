@@ -26,6 +26,7 @@ from kodi_six import xbmcgui
 
 # Local imports
 from resources.lib.addon_utils import get_item_label, get_item_media_path
+from resources.lib.xmltv import grab_programmes
 
 PLUGIN_KODI_PATH = "plugin://plugin.video.catchuptvandmore"
 
@@ -46,9 +47,12 @@ def get_tv_integration_settings():
     """
     try:
         with open(TV_INTEGRATION_SETTINGS_FP) as f:
-            return json.load(f)
+            settings = json.load(f)
     except Exception:
-        return {}
+        settings = {}
+    if 'enabled_channels' not in settings:
+        settings['enabled_channels'] = {}
+    return settings
 
 
 def save_tv_integration_settings(j):
@@ -111,8 +115,6 @@ def select_channels(plugin):
 
     # Grab current user settings
     tv_integration_settings = get_tv_integration_settings()
-    if 'enabled_channels' not in tv_integration_settings:
-        tv_integration_settings['enabled_channels'] = {}
 
     # Build the multi-select dialog
     options = []
@@ -188,8 +190,6 @@ class IPTVManager:
 
         # Grab current user settings
         tv_integration_settings = get_tv_integration_settings()
-        if 'enabled_channels' not in tv_integration_settings:
-            tv_integration_settings['enabled_channels'] = {}
 
         for (country_order, country_id, country_label, country_infos, channels) in country_channels:
             for (channel_order, channel_id, channel_label, channel_infos) in channels:
@@ -206,9 +206,9 @@ class IPTVManager:
                 json_stream['stream'] = PLUGIN_KODI_PATH + resolver + '/?' + query
                 if 'xmltv_id' in channel_infos:
                     json_stream['id'] = channel_infos['xmltv_id']
-                if 'm3u_orders' in channel_infos:
-                    json_stream['preset'] = channel_infos['m3u_orders']
-                json_stream['logo'] = os.path.join('special://home/addons/resource.images.catchuptvandmore/resources/', channel_infos['thumb'])
+                if 'm3u_order' in channel_infos:
+                    json_stream['preset'] = channel_infos['m3u_order']
+                json_stream['logo'] = get_item_media_path(channel_infos['thumb'])
 
                 channels_list.append(json_stream)
 
@@ -217,7 +217,46 @@ class IPTVManager:
     @via_socket
     def send_epg(self):
         """Return JSON-EPG formatted python data structure to IPTV Manager"""
-        return dict(version=1, epg={})
+        epg_channels = {}
+
+        # Grab current user settings
+        tv_integration_settings = get_tv_integration_settings()
+
+        country_tv_guides = {}
+
+        # Ierate over each country and enabled channels to grab needed programmes
+        for country_id in tv_integration_settings['enabled_channels']:
+            for channel_id in tv_integration_settings['enabled_channels'][country_id]:
+                if not tv_integration_settings['enabled_channels'][country_id][channel_id]['enabled']:
+                    continue
+
+                # Check if we have programmes for this country
+                if country_id in country_tv_guides:
+                    continue
+
+                programmes = []
+                for day_delta in range(0, 4):
+                    programmes.extend(grab_programmes(country_id, day_delta))
+                country_tv_guides[country_id] = programmes
+
+        # Send each programme
+        for country_id, programmes in country_tv_guides.items():
+            for p in programmes:
+                epg = dict(
+                    start=p.get('start'),
+                    stop=p.get('stop'),
+                    title=p.get('title'),
+                    description=p.get('desc'),
+                    subtitle=p.get('sub-title'),
+                    episode=p.get('episode'),
+                    genre=p.get('category'),
+                    image=p.get('icon'),
+                    # credits=p.get('credits'), TODO: fix this in programme_post_treatment_iptvmanager
+                )
+                if p['channel'] not in epg_channels:
+                    epg_channels[p['channel']] = []
+                epg_channels[p['channel']].append(epg)
+        return dict(version=1, epg=epg_channels)
 
 
 """Functions called by IPTV Manager
