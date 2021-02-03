@@ -12,8 +12,8 @@ try:
 except ImportError:
     import pickle
 from collections import MutableMapping
-from kodi_six import xbmcgui
 from six import string_types
+from kodi_six import xbmcgui
 
 
 class MemStorage(MutableMapping):
