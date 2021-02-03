@@ -267,6 +267,7 @@ msgctxt "#30096"
 msgid "Chaînes ethiopiennes"
 msgstr ""
 
+
 # Websites (from 30130 to 30149)
 
 
@@ -428,7 +429,43 @@ msgid "UKTVPlay Password"
 msgstr "Mot de passe UKTVPlay"
 
 
-# Reserved space for other tab/category in settins (from 30260 to 30339)
+# TV integration (from 30270 to 30289)
+
+msgctxt "#30270"
+msgid "TV integration"
+msgstr "Intégration TV"
+
+msgctxt "#30271"
+msgid "Kodi Live TV integration"
+msgstr "Intégration de la TV en direct dans Kodi"
+
+msgctxt "#30272"
+msgid "Install IPTV Manager add-on"
+msgstr "Installer le plugin IPTV Manager"
+
+msgctxt "#30273"
+msgid "Enable Kodi Live TV integration"
+msgstr "Activer la TV en direct dans Kodi"
+
+msgctxt "#30274"
+msgid "Open IPTV Manager settings"
+msgstr "Ouvrir les paramètres de IPTV Manager"
+
+msgctxt "#30275"
+msgid "Select channels to enable"
+msgstr "Sélectionner les chaînes TV à activer"
+
+msgctxt "#30276"
+msgid "Failed to save TV integration settings"
+msgstr "Échec lors de la sauvegarde des paramètres de l'intégration TV"
+
+msgctxt "#30277"
+msgid "Select channels to enable in Kodi Live TV"
+msgstr "Sélectionner les chaînes à activer dans la section Live TV de Kodi"
+
+
+
+# Reserved space for other tab/category in settins (from 30290 to 30339)
 
 
 
