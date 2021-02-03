@@ -428,7 +428,44 @@ msgid "UKTVPlay Password"
 msgstr ""
 
 
-# Reserved space for other tab/category in settins (from 30260 to 30339)
+
+# TV integration (from 30270 to 30289)
+
+msgctxt "#30270"
+msgid "TV integration"
+msgstr ""
+
+msgctxt "#30271"
+msgid "Kodi Live TV integration"
+msgstr ""
+
+msgctxt "#30272"
+msgid "Install IPTV Manager add-on"
+msgstr ""
+
+msgctxt "#30273"
+msgid "Enable Kodi Live TV integration"
+msgstr ""
+
+msgctxt "#30274"
+msgid "Open IPTV Manager settings"
+msgstr ""
+
+msgctxt "#30275"
+msgid "Select channels to enable"
+msgstr ""
+
+msgctxt "#30276"
+msgid "Failed to save TV integration settings"
+msgstr ""
+
+msgctxt "#30277"
+msgid "Select channels to enable in Kodi Live TV"
+msgstr ""
+
+
+
+# Reserved space for other tab/category in settins (from 30290 to 30339)
 
 
 

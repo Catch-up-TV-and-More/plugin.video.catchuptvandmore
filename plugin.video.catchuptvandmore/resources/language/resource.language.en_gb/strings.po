@@ -468,6 +468,7 @@ msgstr ""
 # Reserved space for other tab/category in settins (from 30290 to 30339)
 
 
+
 # delete_for_submission_start
 # OpenVPN (from 30340 to 30369)
 
@@ -559,6 +560,7 @@ msgctxt "#30361"
 msgid "Connect/Disconnect VPN"
 msgstr ""
 # delete_for_submission_end
+
 
 # Advanced settings (from 30370 to 30399)
 
