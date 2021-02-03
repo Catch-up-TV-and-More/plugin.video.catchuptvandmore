@@ -1,7 +1,7 @@
 # Catch-up TV & More
 
 <p align="center">
-  <img src="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/plugin.video.catchuptvandmore/icon.png" alt="Catch-up TV & More logo">
+  <img src="https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/raw/dev/icon.png" alt="Catch-up TV & More logo">
 </p>
 
 ![CI](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/workflows/CI/badge.svg?branch=dev)
