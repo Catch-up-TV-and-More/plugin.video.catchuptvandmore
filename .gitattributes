@@ -1,0 +1,7 @@
+.github/ export-ignore
+.not_to_push/ export-ignore
+tools/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+README.cfg export-ignore
+setup.cfg export-ignore
