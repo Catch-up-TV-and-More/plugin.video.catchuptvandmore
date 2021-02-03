@@ -3,5 +3,5 @@
 tools/ export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
-README.cfg export-ignore
+README.md export-ignore
 setup.cfg export-ignore
