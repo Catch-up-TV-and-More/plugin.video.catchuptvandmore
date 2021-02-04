@@ -169,31 +169,31 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         item_post_treatment(item)
         return True
 
-    elif type_ == 'sous_categorie':
+    if type_ == 'sous_categorie':
         item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/sub-categories/%s' % j['url_complete']))
         item_post_treatment(item)
         return True
 
-    elif type_ == 'region':
+    if type_ == 'region':
         item.set_callback(outre_mer_root, j['region_path'])
         item_post_treatment(item)
         return True
 
-    elif type_ == 'categories':
+    if type_ == 'categories':
         item.label = 'Les sous-catégories'
         item.set_callback(list_generic_items, j['items'], next_page_item)
         item_post_treatment(item)
         return True
 
     # This is a video
-    elif type_ == 'integrale' or type_ == 'extrait' or type_ == 'unitaire':
+    if type_ == 'integrale' or type_ == 'extrait' or type_ == 'unitaire':
         si_id = populate_video_item(item, j)
         item.set_callback(get_video_url,
                           broadcast_id=si_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         return True
 
-    elif 'items' in j:
+    if 'items' in j:
         item.set_callback(list_generic_items, j['items'], next_page_item)
         item_post_treatment(item)
         return True
@@ -386,10 +386,11 @@ def grab_json_collections(plugin, json_url, page=0, collection_position=None, **
         # If we are not in page 0, directly print items
         if collection_position is not None and cnt == collection_position:
             return list_generic_items(plugin, collection['items'], next_page_item)
-        else:
-            item = Listitem()
-            if set_item_callback_based_on_type(item, collection['type'], collection, next_page_item):
-                items.append(item)
+
+        item = Listitem()
+        if set_item_callback_based_on_type(item, collection['type'], collection, next_page_item):
+            items.append(item)
+
     if 'item' in j:
         if 'program_path' in j['item'] or 'url_complete' in j['item']:
             if 'program_path' in j['item']:
@@ -425,27 +426,16 @@ def get_video_url(plugin,
                 broadcast_id = medium['media']['si_id']
                 break
 
-    return resolver_proxy.get_francetv_video_stream(plugin, broadcast_id,
-                                                    download_mode)
+    return resolver_proxy.get_francetv_video_stream(plugin, broadcast_id, download_mode)
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    if item_id == 'spectacles-et-culture' or \
-            item_id == 'france-2' or \
-            item_id == 'france-3' or \
-            item_id == 'france-4' or \
-            item_id == 'france-5':
+    if item_id in('spectacles-et-culture', 'france-2', 'france-3', 'france-4', 'france-5'):
+        resp = urlquick.get(URL_LIVE % item_id, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
+        broadcast_id = re.compile(r'videoId\"\:\"(.*?)\"', re.DOTALL).findall(resp.text)[0]
+        return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
 
-        resp = urlquick.get(URL_LIVE % item_id,
-                            headers={'User-Agent': web_utils.get_random_ua()},
-                            max_age=-1)
-        broadcast_id = re.compile(r'videoId\"\:\"(.*?)\"',
-                                  re.DOTALL).findall(resp.text)[0]
-        return resolver_proxy.get_francetv_live_stream(
-            plugin, broadcast_id)
-    else:
-        broadcast_id = 'SIM_France%s'
-        return resolver_proxy.get_francetv_live_stream(
-            plugin, broadcast_id % item_id.split('-')[1])
+    broadcast_id = 'SIM_France%s'
+    return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id % item_id.split('-')[1])

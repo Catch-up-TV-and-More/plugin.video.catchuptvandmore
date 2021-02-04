@@ -151,52 +151,53 @@ def get_live_url(plugin, item_id, **kwargs):
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
         return item
-    else:
-        if item_id == 'viamoselle':
-            live_html = urlquick.get(
-                URL_LIVE_VIAMOSELLE % item_id,
-                headers={'User-Agent': web_utils.get_random_ua()},
-                max_age=-1)
-        else:
-            live_html = urlquick.get(
-                URL_LIVE % item_id,
-                headers={'User-Agent': web_utils.get_random_ua()},
-                max_age=-1)
-        root = live_html.parse()
-        list_lives_datas = root.findall('.//iframe')
-        live_id = ''
-        for live_datas in list_lives_datas:
-            src_datas = live_datas.get('src')
-            break
 
-        if 'dailymotion' in src_datas:
-            live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]'
-                                 ).findall(src_datas)[0]
-            return resolver_proxy.get_stream_dailymotion(
-                plugin, live_id, False)
-        elif 'infomaniak' in src_datas:
-            player_id = src_datas.split('player=')[1]
-            resp2 = urlquick.get(
-                URL_STREAM_INFOMANIAK % player_id,
-                headers={'User-Agent': web_utils.get_random_ua()},
-                max_age=-1)
-            json_parser = json.loads(resp2.text)
-            return 'https://' + json_parser["sPlaylist"]
-        elif 'creacast' in src_datas:
-            resp2 = urlquick.get(
-                src_datas,
-                headers={'User-Agent': web_utils.get_random_ua()},
-                max_age=-1)
-            return re.compile(r'file\: \"(.*?)\"').findall(resp2.text)[0]
-        else:
-            live_id = re.compile(r'v=(.*?)\&').findall(src_datas)[0]
-            stream_json = urlquick.post(
-                URL_STREAM,
-                data={
-                    'action': 'video_info',
-                    'refvideo': live_id
-                },
-                headers={'User-Agent': web_utils.get_random_ua()},
-                max_age=-1)
-            stream_jsonparser = json.loads(stream_json.text)
-            return stream_jsonparser["data"]["bitrates"]["hls"]
+    if item_id == 'viamoselle':
+        live_html = urlquick.get(
+            URL_LIVE_VIAMOSELLE % item_id,
+            headers={'User-Agent': web_utils.get_random_ua()},
+            max_age=-1)
+    else:
+        live_html = urlquick.get(
+            URL_LIVE % item_id,
+            headers={'User-Agent': web_utils.get_random_ua()},
+            max_age=-1)
+    root = live_html.parse()
+    list_lives_datas = root.findall('.//iframe')
+    live_id = ''
+    for live_datas in list_lives_datas:
+        src_datas = live_datas.get('src')
+        break
+
+    if 'dailymotion' in src_datas:
+        live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]'
+                             ).findall(src_datas)[0]
+        return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
+
+    if 'infomaniak' in src_datas:
+        player_id = src_datas.split('player=')[1]
+        resp2 = urlquick.get(
+            URL_STREAM_INFOMANIAK % player_id,
+            headers={'User-Agent': web_utils.get_random_ua()},
+            max_age=-1)
+        json_parser = json.loads(resp2.text)
+        return 'https://' + json_parser["sPlaylist"]
+
+    if 'creacast' in src_datas:
+        resp2 = urlquick.get(
+            src_datas,
+            headers={'User-Agent': web_utils.get_random_ua()},
+            max_age=-1)
+        return re.compile(r'file\: \"(.*?)\"').findall(resp2.text)[0]
+
+    live_id = re.compile(r'v=(.*?)\&').findall(src_datas)[0]
+    stream_json = urlquick.post(
+        URL_STREAM,
+        data={
+            'action': 'video_info',
+            'refvideo': live_id
+        },
+        headers={'User-Agent': web_utils.get_random_ua()},
+        max_age=-1)
+    stream_jsonparser = json.loads(stream_json.text)
+    return stream_jsonparser["data"]["bitrates"]["hls"]

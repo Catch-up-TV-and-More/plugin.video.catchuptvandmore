@@ -135,8 +135,7 @@ def get_video_url(plugin,
                   **kwargs):
 
     if 'youtube' in video_source:
-        return resolver_proxy.get_stream_youtube(plugin, video_id,
-                                                 download_mode)
-    elif 'dailymotion' in video_source:
-        return resolver_proxy.get_stream_dailymotion(
-            plugin, video_id, download_mode)
+        return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
+
+    if 'dailymotion' in video_source:
+        return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode)

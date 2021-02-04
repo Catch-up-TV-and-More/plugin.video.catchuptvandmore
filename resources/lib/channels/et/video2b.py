@@ -37,10 +37,10 @@ import urlquick
 def get_live_url(plugin, item_id, **kwargs):
     html = urlquick.get('http://video2b.vixtream.net/tv/v/%s' % item_id).text.encode('utf-8')
     m3u8_url = re.compile(r'var src=\'(.*?)\';').findall(html)
-    if m3u8_url:
-        m3u8_url = m3u8_url[0]
-    else:
+    if not m3u8_url:
         return False
+
+    m3u8_url = m3u8_url[0]
     root_url = m3u8_url.split('playlist.m3u8')[0]
     m3u8_text = urlquick.get(m3u8_url).text.encode('utf-8')
 
@@ -66,7 +66,8 @@ def get_live_url(plugin, item_id, **kwargs):
 
     if all_stream_are_ok:
         return m3u8_url
-    elif working_stream:
+
+    if working_stream:
         return working_stream[0]
-    else:
-        return False
+
+    return False

@@ -535,45 +535,44 @@ def get_video_url(plugin,
         video_id = video_url.rsplit('/', 1)[1]
         return resolver_proxy.get_stream_youtube(plugin, video_id,
                                                  download_mode)
-    elif 'arte.tv' in video_url:
+
+    if 'arte.tv' in video_url:
         video_id = re.compile("(?<=fr%2F)(.*)(?=&autostart)").findall(video_url)[0]
         return resolver_proxy.get_arte_video_stream(plugin,
                                                     'fr',
                                                     video_id,
                                                     download_mode)
-    else:
-        if is_drm:
-            if get_kodi_version() < 18:
-                xbmcgui.Dialog().ok('Info', plugin.localize(30602))
-                return False
 
-            is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-            if not is_helper.check_inputstream():
-                return False
+    if is_drm:
+        if get_kodi_version() < 18:
+            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+            return False
 
-            token_url = URL_TOKEN % ('media_id', video_id, PARTNER_KEY)
-            token_value = urlquick.get(token_url, max_age=-1)
-            json_parser_token = json.loads(token_value.text)
+        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not is_helper.check_inputstream():
+            return False
 
-            item = Listitem()
-            item.path = video_url
-            item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.property[
-                'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            headers2 = {
-                'customdata':
-                json_parser_token["auth_encoded_xml"],
-            }
-            item.property[
-                'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
-            item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
-            item.label = get_selected_item_label()
-            item.art.update(get_selected_item_art())
-            item.info.update(get_selected_item_info())
-            return item
-        else:
-            return video_url
+        token_url = URL_TOKEN % ('media_id', video_id, PARTNER_KEY)
+        token_value = urlquick.get(token_url, max_age=-1)
+        json_parser_token = json.loads(token_value.text)
+
+        item = Listitem()
+        item.path = video_url
+        item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        headers2 = {
+            'customdata':
+            json_parser_token["auth_encoded_xml"],
+        }
+        item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
+        item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
+        item.label = get_selected_item_label()
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
+        return item
+
+    return video_url
 
 
 @Resolver.register
@@ -593,12 +592,11 @@ def get_video_url2(plugin,
             video_id = json_parser["url"].rsplit('/', 1)[1]
             return resolver_proxy.get_stream_youtube(plugin, video_id,
                                                      download_mode)
-        else:
-            return json_parser["url"]
-    else:
-        stream_url = json_parser["urlHls"]
-        if 'drm' in stream_url:
-            stream_url = json_parser["urlHlsAes128"]
+        return json_parser["url"]
+
+    stream_url = json_parser["urlHls"]
+    if 'drm' in stream_url:
+        stream_url = json_parser["urlHlsAes128"]
 
     if download_mode:
         return download.download_video(stream_url)
@@ -740,5 +738,5 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
         return item
-    else:
-        return live_url
+
+    return live_url

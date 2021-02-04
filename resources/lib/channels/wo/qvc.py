@@ -66,21 +66,26 @@ def get_live_url(plugin, item_id, **kwargs):
             if live_datas["targetMediaPlatform"] == "HttpLiveStreaming":
                 stream_url = live_datas["mobileUrl"]
         return stream_url
-    elif final_language == 'JP':
+
+    if final_language == 'JP':
         resp = urlquick.get(URL_LIVE_QVC_JP)
         resp.encoding = "shift_jis"
-        return 'https:' + re.compile(
-            r'url\"\:\"(.*?)\"').findall(resp.text)[0]
-    elif final_language == 'DE' or\
-            final_language == 'UK' or\
-            final_language == 'US':
-        if final_language == 'DE':
-            resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % '.de')
-        elif final_language == 'UK':
-            resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % 'uk.com')
-        elif final_language == 'US':
-            resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % '.com')
-        live_datas_json = re.compile(r'oLiveStreams=(.*?)}},').findall(
-            resp.text)[0] + '}}'
+        return 'https:' + re.compile(r'url\"\:\"(.*?)\"').findall(resp.text)[0]
+
+    if final_language == 'DE':
+        resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % '.de')
+        live_datas_json = re.compile(r'oLiveStreams=(.*?)}},').findall(resp.text)[0] + '}}'
         json_parser = json.loads(live_datas_json)
         return 'http:' + json_parser["QVC"]["url"]
+
+    if final_language == 'UK':
+        resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % 'uk.com')
+        live_datas_json = re.compile(r'oLiveStreams=(.*?)}},').findall(resp.text)[0] + '}}'
+        json_parser = json.loads(live_datas_json)
+        return 'http:' + json_parser["QVC"]["url"]
+
+    # Use US by default
+    resp = urlquick.get(URL_LIVE_QVC_DE_UK_US % '.com')
+    live_datas_json = re.compile(r'oLiveStreams=(.*?)}},').findall(resp.text)[0] + '}}'
+    json_parser = json.loads(live_datas_json)
+    return 'http:' + json_parser["QVC"]["url"]

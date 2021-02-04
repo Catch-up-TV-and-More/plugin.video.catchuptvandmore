@@ -326,36 +326,34 @@ def get_video_url(plugin,
         item.info.update(get_selected_item_info())
         return item
 
-    else:
-        stream_url = ''
-        for stream_datas in json_parser["chapterList"]:
-            if video_id in stream_datas["id"]:
-                is_token = False
-                for stream_datas_url in stream_datas["resourceList"]:
-                    if stream_datas_url['tokenType'] == 'NONE':
-                        stream_url = stream_datas_url['url']
-                    else:
-                        is_token = True
-                        if 'HD' in stream_datas_url["quality"] and \
-                                'mpegURL' in stream_datas_url["mimeType"]:
-                            stream_url = stream_datas_url["url"]
-                            break
-                        else:
-                            if 'mpegURL' in stream_datas_url["mimeType"]:
-                                stream_url = stream_datas_url["url"]
-                if is_token:
-                    acl_value = '/i/%s/*' % (re.compile(r'\/i\/(.*?)\/master').findall(stream_url)[0])
-                    token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
-                    token_jsonparser = json.loads(token_datas.text)
-                    token = token_jsonparser["token"]["authparams"]
-                    if '?' in stream_datas_url['url']:
-                        stream_url = stream_url + '&' + token
-                    else:
-                        stream_url = stream_url + '?' + token
+    stream_url = ''
+    for stream_datas in json_parser["chapterList"]:
+        if video_id in stream_datas["id"]:
+            is_token = False
+            for stream_datas_url in stream_datas["resourceList"]:
+                if stream_datas_url['tokenType'] == 'NONE':
+                    stream_url = stream_datas_url['url']
+                else:
+                    is_token = True
+                    if 'HD' in stream_datas_url["quality"] and \
+                            'mpegURL' in stream_datas_url["mimeType"]:
+                        stream_url = stream_datas_url["url"]
+                        break
+                    if 'mpegURL' in stream_datas_url["mimeType"]:
+                        stream_url = stream_datas_url["url"]
+            if is_token:
+                acl_value = '/i/%s/*' % (re.compile(r'\/i\/(.*?)\/master').findall(stream_url)[0])
+                token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
+                token_jsonparser = json.loads(token_datas.text)
+                token = token_jsonparser["token"]["authparams"]
+                if '?' in stream_datas_url['url']:
+                    stream_url = stream_url + '&' + token
+                else:
+                    stream_url = stream_url + '?' + token
 
-        if download_mode:
-            return download.download_video(stream_url)
-        return stream_url
+    if download_mode:
+        return download.download_video(stream_url)
+    return stream_url
 
 
 @Resolver.register
@@ -415,25 +413,23 @@ def get_live_url(plugin, item_id, **kwargs):
         item.info.update(get_selected_item_info())
         return item
 
-    else:
-        for stream_datas in json_parser2["chapterList"]:
-            if live_id in stream_datas["id"]:
-                for stream_datas_url in stream_datas["resourceList"]:
-                    if 'HD' in stream_datas_url["quality"] and \
-                            'mpegURL' in stream_datas_url["mimeType"]:
-                        stream_url = stream_datas_url["url"]
-                        break
-                    else:
-                        if 'mpegURL' in stream_datas_url["mimeType"]:
-                            stream_url = stream_datas_url["url"]
+    for stream_datas in json_parser2["chapterList"]:
+        if live_id in stream_datas["id"]:
+            for stream_datas_url in stream_datas["resourceList"]:
+                if 'HD' in stream_datas_url["quality"] and \
+                        'mpegURL' in stream_datas_url["mimeType"]:
+                    stream_url = stream_datas_url["url"]
+                    break
 
-        acl_value = '/i/%s/*' % (
-            re.compile(r'\/i\/(.*?)\/').findall(stream_url)[0])
-        token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
-        token_jsonparser = json.loads(token_datas.text)
-        token = token_jsonparser["token"]["authparams"]
-        if '?' in stream_url:
-            final_video_url = stream_url + '&' + token
-        else:
-            final_video_url = stream_url + '?' + token
-        return final_video_url
+                if 'mpegURL' in stream_datas_url["mimeType"]:
+                    stream_url = stream_datas_url["url"]
+
+    acl_value = '/i/%s/*' % (re.compile(r'\/i\/(.*?)\/').findall(stream_url)[0])
+    token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
+    token_jsonparser = json.loads(token_datas.text)
+    token = token_jsonparser["token"]["authparams"]
+    if '?' in stream_url:
+        final_video_url = stream_url + '&' + token
+    else:
+        final_video_url = stream_url + '?' + token
+    return final_video_url

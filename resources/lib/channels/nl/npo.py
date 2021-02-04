@@ -315,7 +315,8 @@ def get_video_url(plugin,
     if "html" in json_parser2 and "Dit programma mag niet bekeken worden vanaf jouw locatie (33)." in json_parser2["html"]:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
-    elif "html" in json_parser2 and "Dit programma is niet (meer) beschikbaar (15)." in json_parser2["html"]:
+
+    if "html" in json_parser2 and "Dit programma is niet (meer) beschikbaar (15)." in json_parser2["html"]:
         plugin.notify('ERROR', plugin.localize(30710))
         return False
 

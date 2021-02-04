@@ -341,37 +341,37 @@ def get_video_url(plugin,
             resp.text)[0]
         return resolver_proxy.get_stream_youtube(plugin, video_id,
                                                  download_mode)
-    else:
-        final_url = re.compile(r'file\: \"(.*?)\"').findall(resp.text)
-        if download_mode:
-            return download.download_video(final_url)
 
-        return final_url
+    final_url = re.compile(r'file\: \"(.*?)\"').findall(resp.text)
+    if download_mode:
+        return download.download_video(final_url)
+
+    return final_url
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', DESIRED_LANGUAGE)
 
-    if final_language == 'EN':
-        url_live = URL_LIVE_EN
-        resp = urlquick.get(url_live, max_age=-1)
-        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(
-            resp.text)[0]
-        return resolver_proxy.get_stream_youtube(plugin, live_id, False)
-    elif final_language == 'AR':
+    if final_language == 'AR':
         url_live = URL_LIVE_AR
         resp = urlquick.get(url_live, max_age=-1)
-        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(
-            resp.text)[0]
+        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(resp.text)[0]
         return resolver_proxy.get_stream_youtube(plugin, live_id, False)
-    elif final_language == 'FR':
+
+    if final_language == 'FR':
         url_live = URL_LIVE_FR
         resp = urlquick.get(url_live, max_age=-1)
         return re.compile(r'file\: \"(.*?)\"').findall(resp.text)[0]
-    elif final_language == 'ES':
+
+    if final_language == 'ES':
         url_live = URL_LIVE_ES
         resp = urlquick.get(url_live, max_age=-1)
-        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(
-            resp.text)[0]
+        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(resp.text)[0]
         return resolver_proxy.get_stream_youtube(plugin, live_id, False)
+
+    # Use EN by default
+    url_live = URL_LIVE_EN
+    resp = urlquick.get(url_live, max_age=-1)
+    live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(resp.text)[0]
+    return resolver_proxy.get_stream_youtube(plugin, live_id, False)

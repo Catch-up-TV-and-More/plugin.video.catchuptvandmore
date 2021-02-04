@@ -601,16 +601,13 @@ def get_video_url(plugin,
             item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmConfig=mkpl::false' + '|%s|R{SSM}|' % urlencode(headers2)
         return item
 
-    else:
-        resp = urlquick.get(
-            next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
-        json_parser = json.loads(resp.text)
+    resp = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
+    json_parser = json.loads(resp.text)
 
-        return json_parser["detail"]["informations"]["playsets"]["available"][0]["videoURL"]
+    return json_parser["detail"]["informations"]["playsets"]["available"][0]["videoURL"]
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    return resolver_proxy.get_stream_dailymotion(
-        plugin, LIVE_DAILYMOTION_ID[item_id], False)
+    return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION_ID[item_id], False)

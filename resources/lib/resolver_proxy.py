@@ -321,7 +321,8 @@ def get_francetv_video_stream(plugin,
         if download_mode:
             return download.download_video(final_video_url)
         return final_video_url
-    elif 'dash' in all_video_datas[0][0]:
+
+    if 'dash' in all_video_datas[0][0]:
         if download_mode:
             xbmcgui.Dialog().ok(plugin.localize(14116), plugin.localize(30603))
             return False
@@ -351,9 +352,9 @@ def get_francetv_video_stream(plugin,
             item.path = json_parser2['url']
 
         return item
-    else:
-        # Return info the format is not known
-        return False
+
+    # Return info the format is not known
+    return False
 
 
 def get_francetv_live_stream(plugin, live_id):

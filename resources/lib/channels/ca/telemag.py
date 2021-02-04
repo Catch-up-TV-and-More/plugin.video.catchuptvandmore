@@ -74,8 +74,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
     resp = urlquick.get(program_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(
-            ".//div[@class='bloc1_element_listeVideo']"):
+    for video_datas in root.iterfind(".//div[@class='bloc1_element_listeVideo']"):
         video_title = video_datas.find('.//a').get('title')
         video_image = URL_ROOT + video_datas.find('.//img').get('src')
         video_url = video_datas.find('.//a').get('href')
@@ -104,12 +103,11 @@ def get_video_url(plugin,
     root = resp.parse()
     stream_url = root.find(".//iframe[@id='main_video']").get('src')
     if 'player.vimeo.com' in stream_url:
-        video_id = re.compile(r'player.vimeo.com\/video/(.*?)\?').findall(
-            stream_url)[0]
+        video_id = re.compile(r'player.vimeo.com\/video/(.*?)\?').findall(stream_url)[0]
         return resolver_proxy.get_stream_vimeo(plugin, video_id, download_mode)
-    else:
-        # TODO if new video hoster
-        return False
+
+    # TODO if new video hoster
+    return False
 
 
 @Resolver.register
@@ -119,6 +117,5 @@ def get_live_url(plugin, item_id, **kwargs):
     root = resp.parse()
     live_datas = root.find('.//iframe')
     resp2 = urlquick.get(live_datas.get('src'))
-    live_id = re.compile(r'www.youtube.com\/watch\?v=(.*?)\"').findall(
-        resp2.text)[0]
+    live_id = re.compile(r'www.youtube.com\/watch\?v=(.*?)\"').findall(resp2.text)[0]
     return resolver_proxy.get_stream_youtube(plugin, live_id, False)
