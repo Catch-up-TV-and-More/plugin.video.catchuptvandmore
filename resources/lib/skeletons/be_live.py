@@ -334,4 +334,13 @@ menu = {
         'enabled': True,
         'order': 34,
     },
+    'hln_live': {
+        'resolver': '/resources/lib/channels/be/hln_live:get_live_url',
+        'label': 'HLN Live',
+        'thumb': 'channels/be/hln_live.png',
+        'fanart': 'channels/be/hln_live_fanart.jpg',
+        'm3u_group': 'België nl',
+        'enabled': True,
+        'order': 35,
+    },
 }
