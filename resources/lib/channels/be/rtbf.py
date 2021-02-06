@@ -494,33 +494,40 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
     parser.feed(json_parser["blocks"][sub_category_data_uuid])
     root = parser.close()
 
-    for sub_category_dl_datas in root.iterfind(
-            ".//section[@class='js-item-container']"):
-        if sub_category_dl_datas.get('id') == sub_category_id:
-            list_videos_datas = sub_category_dl_datas.findall('.//article')
+    for sub_category_dl_datas in root.iterfind(".//section[@class='js-item-container']"):
+        if sub_category_dl_datas.get('id') != sub_category_id:
+            continue
 
-            for video_datas in list_videos_datas:
-                if video_datas.get('data-card') is not None:
-                    data_card = video_datas.get('data-card')
-                    if data_card:
-                        json_parser = json.loads(data_card)
-                        if json_parser["isVideo"]:
-                            if "mediaId" in json_parser:
-                                video_title = json_parser["title"] + ' - ' + json_parser["subtitle"]
-                                video_image = json_parser["illustration"]["format1248"]
-                                video_id = json_parser["mediaId"]
+        list_videos_datas = sub_category_dl_datas.findall('.//article')
 
-                                item = Listitem()
-                                item.label = video_title
-                                item.art['thumb'] = item.art['landscape'] = video_image
+        for video_datas in list_videos_datas:
+            if video_datas.get('data-card') is None:
+                continue
 
-                                item.set_callback(get_video_url2,
-                                                  item_id=item_id,
-                                                  video_id=video_id)
-                                item_post_treatment(item,
-                                                    is_playable=True,
-                                                    is_downloadable=True)
-                                yield item
+            data_card = video_datas.get('data-card')
+            if not data_card:
+                continue
+
+            json_parser = json.loads(data_card)
+            if not json_parser["isVideo"]:
+                continue
+
+            if "mediaId" not in json_parser:
+                continue
+
+            video_title = json_parser["title"] + ' - ' + json_parser["subtitle"]
+            video_image = json_parser["illustration"]["format1248"]
+            video_id = json_parser["mediaId"]
+
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = item.art['landscape'] = video_image
+
+            item.set_callback(get_video_url2,
+                              item_id=item_id,
+                              video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
 
 @Resolver.register
@@ -725,14 +732,12 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
         item.path = live_url
         item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.property[
-            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
         headers2 = {
             'customdata':
             json_parser_token["auth_encoded_xml"],
         }
-        item.property[
-            'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
+        item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
         item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())

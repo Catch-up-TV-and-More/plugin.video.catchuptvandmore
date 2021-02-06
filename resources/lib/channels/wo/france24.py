@@ -345,25 +345,32 @@ def get_live_url(plugin, item_id, **kwargs):
 
     # code in JSON: FR, EN, ES and AR
     for json_language in json_languages:
-        if json_language['code'] == final_language:
-            json_tv = json_language['tv']
-            if 'direct_tv' in json_tv:
-                guid = json_tv['direct_tv']['guid']
-                json_url = 'products/get_product/%s' % guid
-                json_r = urlquick.get(
-                    URL_API(json_url),
-                    params={'token_application': TOKEN_APP},
-                    headers={'User-agent': web_utils.get_ua()})
-                json_v = json.loads(json_r.text)
-                try:
-                    json_channels = json_v['result']['channels']
-                except Exception:
-                    return False
+        if json_language['code'] != final_language:
+            continue
 
-                for json_channel in json_channels:
-                    if json_channel['code'] == 'direct_f24':
-                        for json_video in json_channel['videos']:
-                            for json_format in json_video['formats']:
-                                if json_format['code'] == 'hls_web':
-                                    return json_format['url']
+        json_tv = json_language['tv']
+        if 'direct_tv' not in json_tv:
+            continue
+
+        guid = json_tv['direct_tv']['guid']
+        json_url = 'products/get_product/%s' % guid
+        json_r = urlquick.get(
+            URL_API(json_url),
+            params={'token_application': TOKEN_APP},
+            headers={'User-agent': web_utils.get_ua()})
+        json_v = json.loads(json_r.text)
+        try:
+            json_channels = json_v['result']['channels']
+        except Exception:
+            return False
+
+        for json_channel in json_channels:
+            if json_channel['code'] != 'direct_f24':
+                continue
+
+            for json_video in json_channel['videos']:
+                for json_format in json_video['formats']:
+                    if json_format['code'] == 'hls_web':
+                        return json_format['url']
+
     return False

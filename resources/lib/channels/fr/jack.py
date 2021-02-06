@@ -64,16 +64,19 @@ def list_programs(plugin, item_id, **kwargs):
     json_parser = json.loads(resp.text)
 
     for program_datas in json_parser["blocks"]:
-        if program_datas["container"] == 'content':
-            if 'template' in program_datas["content"]:
-                program_title = program_datas["content"]["title"]
+        if program_datas["container"] != 'content':
+            continue
 
-                item = Listitem()
-                item.label = program_title
-                item.set_callback(
-                    list_videos, item_id=item_id, program_title=program_title)
-                item_post_treatment(item)
-                yield item
+        if 'template' not in program_datas["content"]:
+            continue
+
+        program_title = program_datas["content"]["title"]
+
+        item = Listitem()
+        item.label = program_title
+        item.set_callback(list_videos, item_id=item_id, program_title=program_title)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
@@ -90,40 +93,42 @@ def list_videos(plugin, item_id, program_title, **kwargs):
     json_parser = json.loads(resp.text)
 
     for program_datas in json_parser["blocks"]:
-        if program_datas["container"] == 'content':
-            if 'template' in program_datas["content"]:
-                if program_title == program_datas["content"]["title"]:
+        if program_datas["container"] != 'content':
+            continue
 
-                    for video_datas in program_datas["content"]["articles"]:
-                        if 'video' in video_datas:
-                            video_title = video_datas["title"]
-                            video_image = ''
-                            if 'links' in video_datas["mainMedia"]["default"]:
-                                video_image = video_datas["mainMedia"][
-                                    "default"]["links"][0]["href"]
-                                video_image = video_image.replace(
-                                    '{width}', '800').replace(
-                                        '{height}', '450')
-                            video_plot = video_datas["abstract"]
-                            video_id = video_datas["video"]["id"]
-                            video_source = video_datas["video"]["source"]
-                            date_value = video_datas["publishedAt"].split('T')[
-                                0]
+        if 'template' not in program_datas["content"]:
+            continue
 
-                            item = Listitem()
-                            item.label = video_title
-                            item.art['thumb'] = item.art['landscape'] = video_image
-                            item.info['plot'] = video_plot
-                            item.info.date(date_value, '%Y-%m-%d')
+        if program_title != program_datas["content"]["title"]:
+            continue
 
-                            item.set_callback(
-                                get_video_url,
-                                item_id=item_id,
-                                video_id=video_id,
-                                video_source=video_source)
-                            item_post_treatment(
-                                item, is_playable=True, is_downloadable=True)
-                            yield item
+        for video_datas in program_datas["content"]["articles"]:
+            if 'video' not in video_datas:
+                continue
+
+            video_title = video_datas["title"]
+            video_image = ''
+            if 'links' in video_datas["mainMedia"]["default"]:
+                video_image = video_datas["mainMedia"]["default"]["links"][0]["href"]
+                video_image = video_image.replace('{width}', '800').replace('{height}', '450')
+            video_plot = video_datas["abstract"]
+            video_id = video_datas["video"]["id"]
+            video_source = video_datas["video"]["source"]
+            date_value = video_datas["publishedAt"].split('T')[0]
+
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = item.art['landscape'] = video_image
+            item.info['plot'] = video_plot
+            item.info.date(date_value, '%Y-%m-%d')
+
+            item.set_callback(
+                get_video_url,
+                item_id=item_id,
+                video_id=video_id,
+                video_source=video_source)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
 
 @Resolver.register

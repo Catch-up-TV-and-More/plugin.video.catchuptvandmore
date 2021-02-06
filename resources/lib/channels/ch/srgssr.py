@@ -180,8 +180,7 @@ def list_programs(plugin, item_id, category_url, **kwargs):
     for program_datas in json_parser["initialData"]["shows"]:
         program_title = program_datas["title"]
         if 'rts.ch' in program_datas["imageUrl"]:
-            program_image = program_datas["imageUrl"] + \
-                '/scale/width/448'
+            program_image = program_datas["imageUrl"] + '/scale/width/448'
         else:
             program_image = program_datas["imageUrl"]
         program_id = program_datas["id"]
@@ -270,11 +269,7 @@ def list_videos_program(plugin, item_id, program_id, next_value=None, **kwargs):
 
 
 @Resolver.register
-def get_video_url(plugin,
-                  item_id,
-                  video_id,
-                  download_mode=False,
-                  **kwargs):
+def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
 
     if item_id == 'swissinfo':
         channel_name_value = 'swi'
@@ -305,22 +300,24 @@ def get_video_url(plugin,
 
         licence_drm_url = ''
         for stream_datas in json_parser["chapterList"]:
-            if video_id in stream_datas["id"]:
-                for stream_datas_url in stream_datas["resourceList"]:
-                    if 'DASH' in stream_datas_url["streaming"]:
-                        stream_url = stream_datas_url["url"]
-                        for licence_drm_datas in stream_datas_url["drmList"]:
-                            if 'WIDEVINE' in licence_drm_datas["type"]:
-                                licence_drm_url = licence_drm_datas["licenseUrl"]
+            if video_id not in stream_datas["id"]:
+                continue
+
+            for stream_datas_url in stream_datas["resourceList"]:
+                if 'DASH' not in stream_datas_url["streaming"]:
+                    continue
+
+                stream_url = stream_datas_url["url"]
+                for licence_drm_datas in stream_datas_url["drmList"]:
+                    if 'WIDEVINE' in licence_drm_datas["type"]:
+                        licence_drm_url = licence_drm_datas["licenseUrl"]
 
         item = Listitem()
         item.path = stream_url
         item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.property[
-            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property[
-            'inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property['inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
@@ -392,21 +389,21 @@ def get_live_url(plugin, item_id, **kwargs):
 
         licence_drm_url = ''
         for stream_datas in json_parser2["chapterList"]:
-            if live_id in stream_datas["id"]:
-                for stream_datas_url in stream_datas["resourceList"]:
-                    stream_url = stream_datas_url["url"]
-                    for licence_drm_datas in stream_datas_url["drmList"]:
-                        if 'WIDEVINE' in licence_drm_datas["type"]:
-                            licence_drm_url = licence_drm_datas["licenseUrl"]
+            if live_id not in stream_datas["id"]:
+                continue
+
+            for stream_datas_url in stream_datas["resourceList"]:
+                stream_url = stream_datas_url["url"]
+                for licence_drm_datas in stream_datas_url["drmList"]:
+                    if 'WIDEVINE' in licence_drm_datas["type"]:
+                        licence_drm_url = licence_drm_datas["licenseUrl"]
 
         item = Listitem()
         item.path = stream_url
         item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
         item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.property[
-            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property[
-            'inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+        item.property['inputstream.adaptive.license_key'] = licence_drm_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=srg.live.ott.irdeto.com|R{SSM}|'
         item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())

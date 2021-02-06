@@ -369,20 +369,23 @@ def get_francetv_live_stream(plugin, live_id):
     if not geoip_value:
         geoip_value = 'FR'
     for video in json_parser_liveId['videos']:
-        if 'format' in video:
-            if 'hls_v' in video['format'] or video['format'] == 'hls':
-                if video['geoblocage'] is not None:
-                    for value_geoblocage in video['geoblocage']:
-                        if geoip_value == value_geoblocage:
-                            final_url = video['url']
-                else:
+        if 'format' not in video:
+            continue
+
+        if 'hls_v' not in video['format'] and video['format'] != 'hls':
+            continue
+
+        if video['geoblocage'] is not None:
+            for value_geoblocage in video['geoblocage']:
+                if geoip_value == value_geoblocage:
                     final_url = video['url']
+        else:
+            final_url = video['url']
 
     if final_url == '':
         return None
 
-    json_parser2 = json.loads(
-        urlquick.get(URL_FRANCETV_HDFAUTH_URL % (final_url), max_age=-1).text)
+    json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % (final_url), max_age=-1).text)
 
     return json_parser2['url'] + '|user-agent=%s' % web_utils.get_random_ua()
 
