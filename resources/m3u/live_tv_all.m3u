@@ -1173,6 +1173,11 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/be/tvl/get_live_ur
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/be/tvoost.png" group-title="Belgium",TV Oost (Oost-Vlaanderen)
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/be/tvoost/get_live_url/?item_id=tvoost
 
+##	HLN Live
+##	hln_live
+#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/be/hln_live.png" group-title="Belgium",HLN Live
+plugin://plugin.video.catchuptvandmore/resources/lib/channels/be/hln_live/get_live_url/?item_id=hln_live
+
 
 
 # Japan
