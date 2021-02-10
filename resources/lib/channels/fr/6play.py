@@ -534,7 +534,7 @@ def get_live_url(plugin, item_id, **kwargs):
     if plugin.setting.get_string('6play.login') == '' or\
             plugin.setting.get_string('6play.password') == '':
         xbmcgui.Dialog().ok(
-            'Info',
+            plugin.localize(30600),
             plugin.localize(30604) % ('6play', 'https://www.6play.fr'))
         return False
 
