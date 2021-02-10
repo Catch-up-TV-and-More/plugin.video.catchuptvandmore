@@ -63,7 +63,7 @@ Channels:
 
 URL_API_MOBILE = utils.urljoin_partial("https://api-mobile.yatta.francetv.fr/")
 URL_API_FRONT = utils.urljoin_partial("http://api-front.yatta.francetv.fr")
-
+URL_LIVE = 'https://www.france.tv/%s/direct.html'
 
 @Route.register
 def francetv_root(plugin, **kwargs):
@@ -431,10 +431,17 @@ def get_video_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    if item_id == 'spectacles-et-culture':
-        # TODO get broadcast_id
-        # SIM_culturebox return HTTP 404
-        broadcast_id = 'b1b38602-78ec-48bf-be5d-f6f755b76e12'
+    if item_id == 'spectacles-et-culture' or \
+            item_id == 'france-2' or \
+            item_id == 'france-3' or \
+            item_id == 'france-4' or \
+            item_id == 'france-5':
+
+        resp = urlquick.get(URL_LIVE % item_id,
+                            headers={'User-Agent': web_utils.get_random_ua()},
+                            max_age=-1)
+        broadcast_id = re.compile(r'videoId\"\:\"(.*?)\"',
+                                  re.DOTALL).findall(resp.text)[0]
         return resolver_proxy.get_francetv_live_stream(
             plugin, broadcast_id)
     else:
