@@ -65,6 +65,7 @@ URL_API_MOBILE = utils.urljoin_partial("https://api-mobile.yatta.francetv.fr/")
 URL_API_FRONT = utils.urljoin_partial("http://api-front.yatta.francetv.fr")
 URL_LIVE = 'https://www.france.tv/%s/direct.html'
 
+
 @Route.register
 def francetv_root(plugin, **kwargs):
     # Channels
