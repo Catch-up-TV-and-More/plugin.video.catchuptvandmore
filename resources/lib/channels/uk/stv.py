@@ -122,8 +122,8 @@ def get_video_url(plugin,
 
     resp = urlquick.get(URL_BRIGHTCOVE_DATAS)
 
-    data_account = re.compile(r'ACCOUNT_ID\:\"(.*?)\"').findall(resp.text)[0]
-    data_player = re.compile(r'PLAYER_ID\:\"(.*?)\"').findall(resp.text)[0]
+    data_account = re.compile(r'ACCOUNT_ID\:\"(.*?)\"').findall(resp.text)[1]
+    data_player = re.compile(r'PLAYER_ID\:\"(.*?)\"').findall(resp.text)[1]
     data_video_id = video_id
 
     return resolver_proxy.get_brightcove_video_json(plugin, data_account,
