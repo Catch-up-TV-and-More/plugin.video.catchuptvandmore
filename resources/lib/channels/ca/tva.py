@@ -176,6 +176,15 @@ def list_seasons(plugin, item_id, program_slug, **kwargs):
                 list_videos_categories, item_id=item_id, program_slug=program_slug, season_number=season_number)
             item_post_treatment(item)
             yield item
+    else:
+        season_name = json_parser['name']
+        season_number = '-1'
+        item = Listitem()
+        item.label = season_name
+        item.set_callback(
+            list_videos_categories, item_id=item_id, program_slug=program_slug, season_number=season_number)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
@@ -184,9 +193,9 @@ def list_videos_categories(plugin, item_id, program_slug, season_number, **kwarg
     resp = urlquick.get(URL_API + '/entities?slug=%s' % program_slug)
     json_parser = json.loads(resp.text)
 
-    for season_datas in json_parser['knownEntities']['seasons']['associatedEntities']:
-        if season_number == str(season_datas['seasonNumber']):
-            for video_category_datas in season_datas['associatedEntities']:
+    if season_number == '-1':
+        for video_category_datas in json_parser['associatedEntities']:
+            if 'associatedEntities' in video_category_datas:
                 if len(video_category_datas['associatedEntities']) > 0:
                     video_category_name = video_category_datas['name']
                     video_category_slug = video_category_datas['slug']
@@ -197,6 +206,20 @@ def list_videos_categories(plugin, item_id, program_slug, season_number, **kwarg
                         list_videos, item_id=item_id, video_category_slug=video_category_slug)
                     item_post_treatment(item)
                     yield item
+    else:
+        for season_datas in json_parser['knownEntities']['seasons']['associatedEntities']:
+            if season_number == str(season_datas['seasonNumber']):
+                for video_category_datas in season_datas['associatedEntities']:
+                    if len(video_category_datas['associatedEntities']) > 0:
+                        video_category_name = video_category_datas['name']
+                        video_category_slug = video_category_datas['slug']
+
+                        item = Listitem()
+                        item.label = video_category_name
+                        item.set_callback(
+                            list_videos, item_id=item_id, video_category_slug=video_category_slug)
+                        item_post_treatment(item)
+                        yield item
 
 
 @Route.register
