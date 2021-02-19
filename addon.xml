@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.31~beta00" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.31~beta01" provider-name="SylvainCecchetto,wwark">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -42,32 +42,8 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.30]
-[BE - ATV] Add Live TV
-[BE - BRUZZ] Add Live TV
-[BE - Focus and WTV] Add Live TV
-[BE - Rob TV] Add Live TV
-[BE - TVL] Add Live TV
-[BE - TVOost] Add Live TV
-[BE - RTLPlay] Move to Android API
-[BE - RTBF] Fix Multi Lives
-[TN - watania1/watania2] Fix Live TV
-[BE - Telesambre] Fix Live TV
-[BE - ACTV] Fix Live TV
-[FR - TF1 Thematique] Fix Catch-up TV (Histoire, Breizh, Ushuaia)
-[FR - Culturebox] Add Live TV
-[FR - CNews] Possible fix to update video list
-[Live TV] Add IPTV Manager support
-[BE - HNL] Add Live TV
-[FR - Equipe TV] Fix Catch-up TV
-[BE - Fosdem] Add contents for 2021
-[FR - France TV] Fix Live TVs
-[BE - TVCom] Fix Live TV
-[FR - MyCanal] Fix missing image in MyCanal
-[UK - STV] Fix Catch-up TV
-[UK - Blaze TV] Fix Catch-up TV
-[CA - TeleQuebec] Readd Live TV
-[CA - TVA] Fix for Catch-up TV of Star Academie
+[Version 0.2.31]
+[CA - TVA] Fix Catch-up TV
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

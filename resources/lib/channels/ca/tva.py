@@ -101,14 +101,15 @@ def list_categories(plugin, item_id, **kwargs):
     json_parser = json.loads(resp.text)
 
     for category_datas in json_parser['associatedEntities']:
-        category_name = category_datas['name']
+        if 'name' in category_datas:
+            category_name = category_datas['name']
 
-        item = Listitem()
-        item.label = category_name
-        item.set_callback(
-            list_programs, item_id=item_id, category_name=category_name, next_url=None)
-        item_post_treatment(item)
-        yield item
+            item = Listitem()
+            item.label = category_name
+            item.set_callback(
+                list_programs, item_id=item_id, category_name=category_name, next_url=None)
+            item_post_treatment(item)
+            yield item
 
 
 @Route.register
@@ -119,23 +120,24 @@ def list_programs(plugin, item_id, category_name, next_url, **kwargs):
         json_parser = json.loads(resp.text)
 
         for category_datas in json_parser['associatedEntities']:
-            if category_name == category_datas['name']:
-                for program_datas in category_datas['associatedEntities']:
-                    program_name = program_datas['label']
-                    program_image = program_datas['mainImage']['url']
-                    program_slug = program_datas['slug']
+            if 'name' in category_datas:
+                if category_name == category_datas['name']:
+                    for program_datas in category_datas['associatedEntities']:
+                        program_name = program_datas['label']
+                        program_image = program_datas['mainImage']['url']
+                        program_slug = program_datas['slug']
 
-                    item = Listitem()
-                    item.label = program_name
-                    item.art['thumb'] = item.art['landscape'] = program_image
-                    item.set_callback(
-                        list_seasons, item_id=item_id, program_slug=program_slug)
-                    item_post_treatment(item)
-                    yield item
+                        item = Listitem()
+                        item.label = program_name
+                        item.art['thumb'] = item.art['landscape'] = program_image
+                        item.set_callback(
+                            list_seasons, item_id=item_id, program_slug=program_slug)
+                        item_post_treatment(item)
+                        yield item
 
-                if 'next' in category_datas:
-                    yield Listitem.next_page(
-                        item_id=item_id, category_name=category_name, next_url=URL_API + category_datas['next'])
+                    if 'next' in category_datas:
+                        yield Listitem.next_page(
+                            item_id=item_id, category_name=category_name, next_url=URL_API + category_datas['next'])
     else:
         resp = urlquick.get(next_url)
         json_parser = json.loads(resp.text)
