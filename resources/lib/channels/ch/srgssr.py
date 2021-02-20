@@ -111,8 +111,6 @@ def list_categories(plugin, item_id, **kwargs):
         # Emission
         category = EMISSIONS_NAME[item_id]
         category_url = URL_EMISSIONS % (item_id, category[1])
-        if item_id == 'rsi':
-            category_url = category_url.replace('?index=all', '')
 
         item = Listitem()
         item.label = category[0]
@@ -233,8 +231,7 @@ def list_videos_category(plugin, item_id, section_id, next_value=None, **kwargs)
         yield item
 
     if 'next' in json_parser["data"]:
-            yield Listitem.next_page(
-                item_id=item_id, section_id=section_id, next_value=json_parser['data']['next'])
+        yield Listitem.next_page(item_id=item_id, section_id=section_id, next_value=json_parser['data']['next'])
 
 
 @Route.register
@@ -269,8 +266,7 @@ def list_videos_program(plugin, item_id, program_id, next_value=None, **kwargs):
         yield item
 
     if 'next' in json_parser["data"]:
-            yield Listitem.next_page(
-                item_id=item_id, program_id=program_id, next_value=json_parser['data']['next'])
+        yield Listitem.next_page(item_id=item_id, program_id=program_id, next_value=json_parser['data']['next'])
 
 
 @Resolver.register
