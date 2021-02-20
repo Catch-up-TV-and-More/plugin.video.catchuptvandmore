@@ -96,14 +96,6 @@ LIVE_LIVE_CHANNEL_NAME = {
     "rtraufsrf2": "RTR auf SRF 2"
 }
 
-SWISSINFO_TOPICS = {
-    'Business': 1,
-    'Culrure': 2,
-    'Politics': 4,
-    'Sci & Tech': 5,
-    'Society': 6
-}
-
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
@@ -114,16 +106,8 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    if item_id == 'swissinfo':
-        for topic_name, topic_id in SWISSINFO_TOPICS.items():
-            item = Listitem()
-            item.label = topic_name
-            item.set_callback(list_videos_category,
-                              item_id=item_id,
-                              category_id=topic_id)
-            item_post_treatment(item)
-            yield item
-    else:
+
+    if item_id != 'swissinfo':
         # Emission
         category = EMISSIONS_NAME[item_id]
         category_url = URL_EMISSIONS % (item_id, category[1])
@@ -138,27 +122,29 @@ def list_categories(plugin, item_id, **kwargs):
         item_post_treatment(item)
         yield item
 
-        # Other categories (Info, Kids, ...)
-        resp = urlquick.get(URL_CATEGORIES_JSON % item_id)
-        json_value = re.compile(r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
-        json_parser = json.loads(json_value)
-        for category_datas in json_parser["initialData"]["topics"]:
-            category_title = category_datas["title"]
+    # Other categories (Info, Kids, ...)
+    resp = urlquick.get(URL_CATEGORIES_JSON % item_id)
+    json_value = re.compile(r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
+    json_parser = json.loads(json_value)
+    for category_datas in json_parser["initialData"]["topics"]:
+        category_title = category_datas["title"]
+        category_image = ''
+        if 'imageUrl' in category_datas:
             if 'rts.ch' in category_datas["imageUrl"]:
                 category_image = category_datas["imageUrl"] + \
                     '/scale/width/448'
             else:
                 category_image = category_datas["imageUrl"]
-            category_urn = category_datas['urn']
+        category_urn = category_datas['urn']
 
-            item = Listitem()
-            item.label = category_title
-            item.art['thumb'] = item.art['landscape'] = category_image
-            item.set_callback(list_sub_categories,
-                              item_id=item_id,
-                              category_urn=category_urn)
-            item_post_treatment(item)
-            yield item
+        item = Listitem()
+        item.label = category_title
+        item.art['thumb'] = item.art['landscape'] = category_image
+        item.set_callback(list_sub_categories,
+                          item_id=item_id,
+                          category_urn=category_urn)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
@@ -215,7 +201,10 @@ def list_programs(plugin, item_id, category_url, **kwargs):
 @Route.register
 def list_videos_category(plugin, item_id, section_id, **kwargs):
 
-    resp = urlquick.get(URL_LIST_VIDEOS % (item_id, item_id, section_id))
+    url_videos_datas = URL_LIST_VIDEOS % (item_id, item_id[:3], section_id)
+    if item_id == 'swissinfo':
+        url_videos_datas = url_videos_datas.replace('www', 'play')
+    resp = urlquick.get(url_videos_datas)
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["data"]["data"]:
