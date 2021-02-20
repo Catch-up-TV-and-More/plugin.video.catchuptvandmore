@@ -230,7 +230,8 @@ def list_videos_category(plugin, item_id, section_id, **kwargs):
         item.label = video_title
         item.art['thumb'] = item.art['landscape'] = video_image
         item.info['plot'] = video_plot
-        # item.info['duration'] = video_datas['duration']
+        item.info['duration'] = video_datas['duration'] / 1000
+        item.info.date(video_datas['date'].split('T')[0], "%Y-%m-%d")
 
         item.set_callback(get_video_url,
                           item_id=item_id,
@@ -257,7 +258,8 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         item.label = video_title
         item.art['thumb'] = item.art['landscape'] = video_image
         item.info['plot'] = video_plot
-        # item.info['duration'] = video_datas['duration']
+        item.info['duration'] = video_datas['duration'] / 1000
+        item.info.date(video_datas['date'].split('T')[0], "%Y-%m-%d")
 
         item.set_callback(get_video_url,
                           item_id=item_id,
@@ -342,7 +344,7 @@ def get_video_url(plugin,
                                 stream_url = stream_datas_url["url"]
                 if is_token:
                     acl_value = '/i/%s/*' % (re.compile(r'\/i\/(.*?)\/master').findall(stream_url)[0])
-                    token_datas = urlquick.get(URL_TOKEN % acl_value)
+                    token_datas = urlquick.get(URL_TOKEN % acl_value, max_age=-1)
                     token_jsonparser = json.loads(token_datas.text)
                     token = token_jsonparser["token"]["authparams"]
                     if '?' in stream_datas_url['url']:
