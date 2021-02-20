@@ -50,7 +50,7 @@ URL_ROOT = 'https://www.%s.ch'
 # channel_name
 
 # Replay
-URL_CATEGORIES_JSON = 'https://www.%s.ch/play/v2/tv/topicList?layout=json'
+URL_CATEGORIES_JSON = 'https://www.%s.ch/play/tv/'
 # channel_name
 
 URL_EMISSIONS = 'https://www.%s.ch/play/tv/%s?index=all'
@@ -59,19 +59,19 @@ URL_EMISSIONS = 'https://www.%s.ch/play/tv/%s?index=all'
 URL_LIST_EPISODES = 'https://www.%s.ch/play/v3/api/%s/production/videos-by-show-id?showId=%s'
 # channel_name, channel_name, IdEmission
 
+URL_LIST_VIDEOS = 'https://www.%s.ch/play/v3/api/%s/production/media-section?sectionId=%s&preview=false'
+# channel_name, channel_name, SectionId
+
 # Live
 URL_LIVE_JSON = 'http://www.%s.ch/play/v2/tv/live/overview?layout=json'
 # (www or play) channel_name
-
-URL_API_V3 = 'https://%s.%s.ch/play/v3/api/%s/production/%s'
-# channel_name, channel_name, API method
 
 URL_TOKEN = 'https://tp.srgssr.ch/akahd/token?acl=%s'
 # acl
 
 URL_INFO_VIDEO = 'https://il.srgssr.ch/integrationlayer' \
-                 '/2.0/%s/mediaComposition/video/%s.json' \
-                 '?onlyChapters=true&vector=portalplay'
+                 '/2.0/mediaComposition/byUrn/urn:%s:video:%s.json' \
+                 '?onlyChapters=false&vector=portalplay'
 # channel_name, video_id
 
 EMISSIONS_NAME = {
@@ -139,21 +139,50 @@ def list_categories(plugin, item_id, **kwargs):
         yield item
 
         # Other categories (Info, Kids, ...)
-        # resp = urlquick.get(URL_CATEGORIES_JSON % item_id)
-        # json_parser = json.loads(resp.text)
+        resp = urlquick.get(URL_CATEGORIES_JSON % item_id)
+        json_value = re.compile(
+        r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
+        json_parser = json.loads(json_value)
+        for category_datas in json_parser["initialData"]["topics"]:
+            category_title = category_datas["title"]
+            if 'rts.ch' in category_datas["imageUrl"]:
+                category_image = category_datas["imageUrl"] + \
+                    '/scale/width/448'
+            else:
+                category_image = category_datas["imageUrl"]
+            category_urn = category_datas['urn']
 
-        # for category_datas in json_parser:
-        #     item = Listitem()
-        #     item.label = category_datas['title']
-        #     category_url = URL_ROOT % item_id + \
-        #         category_datas["latestModuleUrl"]
+            item = Listitem()
+            item.label = category_title
+            item.art['thumb'] = item.art['landscape'] = category_image
+            item.set_callback(list_sub_categories,
+                              item_id=item_id,
+                              category_urn=category_urn)
+            item_post_treatment(item)
+            yield item
 
-        #     item.set_callback(list_videos_category,
-        #                       item_id=item_id,
-        #                       category_id=category_datas['id'],
-        #                       category_url=category_url)
-        #     item_post_treatment(item)
-        #     yield item
+
+@Route.register
+def list_sub_categories(plugin, item_id, category_urn, **kwargs):
+
+    resp = urlquick.get(URL_CATEGORIES_JSON % item_id)
+    json_value = re.compile(
+    r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
+    json_parser = json.loads(json_value)
+
+    for sub_category_datas in json_parser["initialData"]["pacPageConfigs"]["topicSections"][category_urn]:
+        sub_category_title = ''
+        if 'title' in sub_category_datas["representation"]:
+            sub_category_title = sub_category_datas["representation"]["title"]
+        section_id = sub_category_datas['id']
+
+        item = Listitem()
+        item.label = sub_category_title
+        item.set_callback(list_videos_category,
+                          item_id=item_id,
+                          section_id=section_id)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
@@ -187,88 +216,36 @@ def list_programs(plugin, item_id, category_url, **kwargs):
 
 
 @Route.register
-def list_videos_category(plugin, item_id, category_id, category_url=None, next_page=None, **kwargs):
+def list_videos_category(plugin, item_id, section_id, **kwargs):
 
-    return False
-    # if item_id == 'rsi':
-    #     resp = urlquick.get(category_url)
-    #     json_value = re.compile(r'data-teaser=\"(.*?)\"').findall(resp.text)[0]
-    #     json_value = json_value.replace('&quot;', '"')
-    #     json_parser = json.loads(json_value)
+    resp = urlquick.get(URL_LIST_VIDEOS % (item_id, item_id, section_id))
+    json_parser = json.loads(resp.text)
 
-    #     for video_datas in json_parser:
-    #         video_title = ''
-    #         if 'showTitle' in video_datas:
-    #             video_title = video_datas["showTitle"] + \
-    #                 ' - ' + video_datas["title"]
-    #         else:
-    #             video_title = video_datas["title"]
-    #         video_plot = ''
-    #         if 'description' in video_datas:
-    #             video_plot = video_datas["description"]
-    #         video_image = video_datas["imageUrl"] + '/scale/width/448'
-    #         video_url = video_datas["absoluteDetailUrl"]
+    for video_datas in json_parser["data"]["data"]:
+        video_title = video_datas['show']['title'] + ' - ' + video_datas['title']
+        video_plot = ''
+        if 'description' in video_datas:
+            video_plot = video_datas["description"]
+        video_image = video_datas["imageUrl"] + '/scale/width/448'
+        video_id = video_datas["id"]
 
-    #         item = Listitem()
-    #         item.label = video_title
-    #         item.art['thumb'] = item.art['landscape'] = video_image
-    #         item.info['plot'] = video_plot
+        item = Listitem()
+        item.label = video_title
+        item.art['thumb'] = item.art['landscape'] = video_image
+        item.info['plot'] = video_plot
+        # item.info['duration'] = video_datas['duration']
 
-    #         item.set_callback(get_video_url,
-    #                           item_id=item_id,
-    #                           video_url=video_url)
-    #         item_post_treatment(item, is_playable=True, is_downloadable=True)
-    #         yield item
-    # else:
-
-    #     url = URL_API_V3 % (
-    #         'play' if item_id == 'swissinfo' else 'www',
-    #         item_id,
-    #         'swi' if item_id == 'swissinfo' else item_id,
-    #         'latest-media-by-topic')
-    #     params = {'topicId': category_id}
-    #     if next_page:
-    #         params['next'] = next_page
-    #     resp = urlquick.get(url, params=params)
-    #     json_parser = json.loads(resp.text)
-
-    #     for video_datas in json_parser['data']['data']:
-    #         video_title = ''
-    #         if 'showTitle' in video_datas:
-    #             video_title = video_datas["showTitle"] + \
-    #                 ' - ' + video_datas["title"]
-    #         else:
-    #             video_title = video_datas["title"]
-    #         video_plot = ''
-    #         if 'description' in video_datas:
-    #             video_plot = video_datas["description"]
-    #         video_image = video_datas["imageUrl"] + '/scale/width/448'
-    #         video_id = video_datas['id']
-
-    #         item = Listitem()
-    #         item.label = video_title
-    #         item.art['thumb'] = item.art['landscape'] = video_image
-    #         item.info['plot'] = video_plot
-    #         item.info['duration'] = video_datas['duration'] / 1000
-    #         item.info.date(video_datas['date'].split('T')[0], "%Y-%m-%d")
-
-    #         item.set_callback(get_video_url,
-    #                           item_id=item_id,
-    #                           video_url='',
-    #                           video_id=video_id)
-    #         item_post_treatment(item, is_playable=True, is_downloadable=True)
-    #         yield item
-    #     if 'next' in json_parser['data']:
-    #         yield Listitem.next_page(item_id=item_id,
-    #                                  category_id=category_id,
-    #                                  next_page=json_parser['data']['next'])
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        yield item
 
 
 @Route.register
 def list_videos_program(plugin, item_id, program_id, **kwargs):
 
-    resp = urlquick.get(URL_LIST_EPISODES %
-                        (item_id, item_id, program_id))
+    resp = urlquick.get(URL_LIST_EPISODES % (item_id, item_id, program_id))
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["data"]["data"]:
@@ -277,7 +254,7 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         if 'description' in video_datas:
             video_plot = video_datas["description"]
         video_image = video_datas["imageUrl"] + '/scale/width/448'
-        video_id = video_datas["episodeId"]
+        video_id = video_datas["id"]
 
         item = Listitem()
         item.label = video_title
@@ -307,7 +284,6 @@ def get_video_url(plugin,
     json_parser = json.loads(resp.text)
 
     # build stream_url
-    stream_url = ''
     is_drm = False
     for stream_datas in json_parser["chapterList"]:
         if video_id in stream_datas["id"]:
@@ -349,31 +325,38 @@ def get_video_url(plugin,
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
         return item
+
     else:
+        stream_url = ''
         for stream_datas in json_parser["chapterList"]:
             if video_id in stream_datas["id"]:
+                is_token = False
                 for stream_datas_url in stream_datas["resourceList"]:
-                    if 'HD' in stream_datas_url["quality"] and \
-                            'mpegURL' in stream_datas_url["mimeType"]:
-                        stream_url = stream_datas_url["url"]
-                        break
+                    if stream_datas_url['tokenType'] == 'NONE':
+                        stream_url = stream_datas_url['url']
                     else:
-                        if 'mpegURL' in stream_datas_url["mimeType"]:
+                        is_token = True
+                        if 'HD' in stream_datas_url["quality"] and \
+                            'mpegURL' in stream_datas_url["mimeType"]:
                             stream_url = stream_datas_url["url"]
-        acl_value = '/i/%s/*' % (
-            re.compile(r'\/i\/(.*?)\/master').findall(stream_url)[0])
-        token_datas = urlquick.get(URL_TOKEN % acl_value)
-        token_jsonparser = json.loads(token_datas.text)
-        token = token_jsonparser["token"]["authparams"]
-
-        if '?' in stream_url:
-            final_video_url = stream_url + '&' + token
-        else:
-            final_video_url = stream_url + '?' + token
+                            break
+                        else:
+                            if 'mpegURL' in stream_datas_url["mimeType"]:
+                                stream_url = stream_datas_url["url"]
+                if is_token:
+                    acl_value = '/i/%s/*' % (
+                        re.compile(r'\/i\/(.*?)\/master').findall(stream_url)[0])
+                    token_datas = urlquick.get(URL_TOKEN % acl_value)
+                    token_jsonparser = json.loads(token_datas.text)
+                    token = token_jsonparser["token"]["authparams"]
+                    if '?' in stream_datas_url['url']:
+                        stream_url = stream_url + '&' + token
+                    else:
+                        stream_url = stream_url+ '?' + token
 
         if download_mode:
-            return download.download_video(final_video_url)
-        return final_video_url
+            return download.download_video(stream_url)
+        return stream_url
 
 
 @Resolver.register
