@@ -140,8 +140,7 @@ def list_categories(plugin, item_id, **kwargs):
 
         # Other categories (Info, Kids, ...)
         resp = urlquick.get(URL_CATEGORIES_JSON % item_id)
-        json_value = re.compile(
-        r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
+        json_value = re.compile(r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
         json_parser = json.loads(json_value)
         for category_datas in json_parser["initialData"]["topics"]:
             category_title = category_datas["title"]
@@ -166,8 +165,7 @@ def list_categories(plugin, item_id, **kwargs):
 def list_sub_categories(plugin, item_id, category_urn, **kwargs):
 
     resp = urlquick.get(URL_CATEGORIES_JSON % item_id)
-    json_value = re.compile(
-    r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
+    json_value = re.compile(r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
     json_parser = json.loads(json_value)
 
     for sub_category_datas in json_parser["initialData"]["pacPageConfigs"]["topicSections"][category_urn]:
@@ -193,8 +191,7 @@ def list_programs(plugin, item_id, category_url, **kwargs):
     - ...
     """
     resp = urlquick.get(category_url)
-    json_value = re.compile(
-        r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
+    json_value = re.compile(r'__SSR_DATA__ = (.*?)</script>').findall(resp.text)[0]
     json_parser = json.loads(json_value)
     for program_datas in json_parser["initialData"]["shows"]:
         program_title = program_datas["title"]
@@ -344,15 +341,14 @@ def get_video_url(plugin,
                             if 'mpegURL' in stream_datas_url["mimeType"]:
                                 stream_url = stream_datas_url["url"]
                 if is_token:
-                    acl_value = '/i/%s/*' % (
-                        re.compile(r'\/i\/(.*?)\/master').findall(stream_url)[0])
+                    acl_value = '/i/%s/*' % (re.compile(r'\/i\/(.*?)\/master').findall(stream_url)[0])
                     token_datas = urlquick.get(URL_TOKEN % acl_value)
                     token_jsonparser = json.loads(token_datas.text)
                     token = token_jsonparser["token"]["authparams"]
                     if '?' in stream_datas_url['url']:
                         stream_url = stream_url + '&' + token
                     else:
-                        stream_url = stream_url+ '?' + token
+                        stream_url = stream_url + '?' + token
 
         if download_mode:
             return download.download_video(stream_url)
