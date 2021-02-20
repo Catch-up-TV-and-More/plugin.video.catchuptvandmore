@@ -334,7 +334,7 @@ def get_video_url(plugin,
                     else:
                         is_token = True
                         if 'HD' in stream_datas_url["quality"] and \
-                            'mpegURL' in stream_datas_url["mimeType"]:
+                                'mpegURL' in stream_datas_url["mimeType"]:
                             stream_url = stream_datas_url["url"]
                             break
                         else:
