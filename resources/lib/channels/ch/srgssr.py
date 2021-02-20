@@ -56,10 +56,10 @@ URL_CATEGORIES_JSON = 'https://www.%s.ch/play/tv/'
 URL_EMISSIONS = 'https://www.%s.ch/play/tv/%s?index=all'
 # channel_name, name_emission
 
-URL_LIST_EPISODES = 'https://www.%s.ch/play/v3/api/%s/production/videos-by-show-id?showId=%s'
+URL_LIST_EPISODES = 'https://www.%s.ch/play/v3/api/%s/production/videos-by-show-id'
 # channel_name, channel_name, IdEmission
 
-URL_LIST_VIDEOS = 'https://www.%s.ch/play/v3/api/%s/production/media-section?sectionId=%s&preview=false'
+URL_LIST_VIDEOS = 'https://www.%s.ch/play/v3/api/%s/production/media-section'
 # channel_name, channel_name, SectionId
 
 # Live
@@ -199,12 +199,16 @@ def list_programs(plugin, item_id, category_url, **kwargs):
 
 
 @Route.register
-def list_videos_category(plugin, item_id, section_id, **kwargs):
+def list_videos_category(plugin, item_id, section_id, next_value=None, **kwargs):
 
-    url_videos_datas = URL_LIST_VIDEOS % (item_id, item_id[:3], section_id)
+    if next_value is not None:
+        payload = {'sectionId': section_id, 'preview': False, 'next': next_value}
+    else:
+        payload = {'sectionId': section_id, 'preview': False}
+    url_videos_datas = URL_LIST_VIDEOS % (item_id, item_id[:3])
     if item_id == 'swissinfo':
         url_videos_datas = url_videos_datas.replace('www', 'play')
-    resp = urlquick.get(url_videos_datas)
+    resp = urlquick.get(url_videos_datas, params=payload)
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["data"]["data"]:
@@ -228,15 +232,23 @@ def list_videos_category(plugin, item_id, section_id, **kwargs):
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
+    if 'next' in json_parser["data"]:
+            yield Listitem.next_page(
+                item_id=item_id, section_id=section_id, next_value=json_parser['data']['next'])
+
 
 @Route.register
-def list_videos_program(plugin, item_id, program_id, **kwargs):
+def list_videos_program(plugin, item_id, program_id, next_value=None, **kwargs):
 
-    resp = urlquick.get(URL_LIST_EPISODES % (item_id, item_id, program_id))
+    if next_value is not None:
+        payload = {'showId': program_id, 'next': next_value}
+    else:
+        payload = {'showId': program_id}
+    resp = urlquick.get(URL_LIST_EPISODES % (item_id, item_id), params=payload)
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["data"]["data"]:
-        video_title = video_datas['title']
+        video_title = video_datas['show']['title'] + ' - ' + video_datas['title']
         video_plot = ''
         if 'description' in video_datas:
             video_plot = video_datas["description"]
@@ -255,6 +267,10 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
                           video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
+
+    if 'next' in json_parser["data"]:
+            yield Listitem.next_page(
+                item_id=item_id, program_id=program_id, next_value=json_parser['data']['next'])
 
 
 @Resolver.register
