@@ -63,8 +63,8 @@ URL_LIST_VIDEOS = 'https://www.%s.ch/play/v3/api/%s/production/media-section?sec
 # channel_name, channel_name, SectionId
 
 # Live
-URL_LIVE_JSON = 'http://www.%s.ch/play/v2/tv/live/overview?layout=json'
-# (www or play) channel_name
+URL_LIVE_JSON = 'https://www.%s.ch/play/v3/api/%s/production/tv-livestreams'
+# channel_name, channel_name
 
 URL_TOKEN = 'https://tp.srgssr.ch/akahd/token?acl=%s'
 # acl
@@ -358,11 +358,12 @@ def get_video_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(URL_LIVE_JSON % item_id[:3])
+    resp = urlquick.get(URL_LIVE_JSON % (item_id[:3], item_id[:3]))
     json_parser = json.loads(resp.text)
+
     live_id = ''
-    for live_datas in json_parser["teaser"]:
-        if live_datas["channelName"] in LIVE_LIVE_CHANNEL_NAME[item_id]:
+    for live_datas in json_parser["data"]:
+        if live_datas["title"] in LIVE_LIVE_CHANNEL_NAME[item_id]:
             live_id = live_datas["id"]
     if live_id is None:
         # Add Notification
