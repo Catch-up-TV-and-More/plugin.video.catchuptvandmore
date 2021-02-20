@@ -88,7 +88,7 @@ menu = {
     },
     'rsila1': {
         'resolver': '/resources/lib/channels/ch/srgssr:get_live_url',
-        'label': 'RIS La 1',
+        'label': 'RSI La 1',
         'thumb': 'channels/ch/rsila1.png',
         'fanart': 'channels/ch/rsila1_fanart.jpg',
         'enabled': True,
@@ -96,7 +96,7 @@ menu = {
     },
     'rsila2': {
         'resolver': '/resources/lib/channels/ch/srgssr:get_live_url',
-        'label': 'RIS La 2',
+        'label': 'RSI La 2',
         'thumb': 'channels/ch/rsila2.png',
         'fanart': 'channels/ch/rsila2_fanart.jpg',
         'enabled': True,
