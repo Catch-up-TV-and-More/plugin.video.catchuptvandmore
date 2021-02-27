@@ -166,7 +166,7 @@ def get_sorted_menu(plugin, menu_id):
                                            menu_id).menu
 
     if menu_id == "root":
-        xbmcgui.Dialog().ok("Information : Kodi 19 - Matrix", "Le plugin Catch-Up TV and More n'est pas compatible avec Kodi 19. Nous sommes en attente de mise à jour de plugin tièrs utilisés dans ce plugin. Si vous voulez continuer à utiliser ce plugin, la dernière version supportée est le Kodi 18.9.", "The Catch-Up TV and More plugin is not compatible with Kodi 19. We are awaiting updates to third party plugins used in this plugin. If you want to continue using this plugin, the last supported version is Kodi 18.9.")
+        xbmcgui.Dialog().ok(plugin.localize(30607), plugin.localize(30608))
 
     # Notify user for the new M3U Live TV feature
     if menu_id == "live_tv" and \
