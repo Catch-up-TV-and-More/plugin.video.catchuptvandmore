@@ -6,7 +6,7 @@ on:
 
 
 jobs:
-  
+
   # Flake
   flake:
     name: Run flake8 linter
@@ -52,23 +52,23 @@ jobs:
       - name: Start catchuptvandmore-test with test_modules config
         working-directory: simulator
         run: python main.py --test-modules -a ../plugin/plugin.video.catchuptvandmore
-  
-  # Check the plugin with kodi-addon-checker
-  kodi-addon-checker:
-    name: Kodi-addon-checker
-    needs: test-plugin-modules
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out plugin repository
-        uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - name: Install kodi-addon-checker
-        run: pip install kodi-addon-checker==0.0.16
-      - name: Run kodi-addon-checker
-        run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch ./plugin.video.catchuptvandmore
+
+  # # Check the plugin with kodi-addon-checker
+  # kodi-addon-checker:
+  #   name: Kodi-addon-checker
+  #   needs: test-plugin-modules
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out plugin repository
+  #       uses: actions/checkout@v2
+  #     - name: Set up Python 3.8
+  #       uses: actions/setup-python@v1
+  #       with:
+  #         python-version: 3.8
+  #     - name: Install kodi-addon-checker
+  #       run: pip install kodi-addon-checker==0.0.16
+  #     - name: Run kodi-addon-checker
+  #       run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch ./plugin.video.catchuptvandmore
 
   # Branch check
   branch:

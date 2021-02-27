@@ -4,7 +4,7 @@ name: CI
 on: push
 
 jobs:
-  
+
   # Flake
   flake:
     name: Run flake8 linter
@@ -23,7 +23,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           flake8: true
-          
+
   # Test add-on python files
   test-plugin-modules:
     name: Load each Python files of the addon to detect errors
@@ -49,28 +49,28 @@ jobs:
       - name: Start catchuptvandmore-test with test_modules config
         working-directory: simulator
         run: python main.py --test-modules -a ../plugin.video.catchuptvandmore
-  
+
   # Check the plugin with kodi-addon-checker
-  kodi-addon-checker:
-    name: Kodi-addon-checker
-    needs: test-plugin-modules
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out plugin repository
-        uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - name: Install kodi-addon-checker
-        run: pip install kodi-addon-checker
-      - name: Run kodi-addon-checker
-        run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch .
-  
+  # kodi-addon-checker:
+  #   name: Kodi-addon-checker
+  #   needs: test-plugin-modules
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out plugin repository
+  #       uses: actions/checkout@v2
+  #     - name: Set up Python 3.8
+  #       uses: actions/setup-python@v1
+  #       with:
+  #         python-version: 3.8
+  #     - name: Install kodi-addon-checker
+  #       run: pip install kodi-addon-checker
+  #     - name: Run kodi-addon-checker
+  #       run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch .
+
   # Update M3U files
   update-m3u-files:
     name: Update M3U files
-    needs: kodi-addon-checker
+    needs: test-plugin-modules
     runs-on: ubuntu-latest
     steps:
       - name: Check out plugin repository
@@ -90,7 +90,7 @@ jobs:
           git add resources/m3u
           git commit -m "Update M3U files" || echo "No changes to commit"
           git push
-  
+
   # Update repository.catchuptvandmore
   update-repo:
     name: Update repository.catchuptvandmore
@@ -114,7 +114,7 @@ jobs:
           git config user.email 'github@noreply.github.com'
       - name: Update all repositories
         run: ./update_all_repos.sh
-  
+
   # Test the plugin with our Kodi simulator
   kodi-simulator-1:
     name: "Explore random replay channel #1"
@@ -140,7 +140,7 @@ jobs:
       - name: Start catchuptvandmore-test
         working-directory: simulator
         run: python main.py -c configs/5_explore_random_replay_channel_random_country.json
-      
+
   kodi-simulator-2:
     name: "Explore random website"
     needs: kodi-simulator-1
