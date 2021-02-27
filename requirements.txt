@@ -1,0 +1,16 @@
+coverage
+future
+git+git://github.com/emilsvennesson/script.module.inputstreamhelper.git@master#egg=inputstreamhelper
+kodi-addon-checker
+polib
+pylint
+pyqrcode
+pytest
+pytz
+requests
+sakee
+setuptools >= 41
+six
+#typing-extensions == 3.7.4.1; python_version != '2.7'
+tzlocal
+xmlschema == 1.0.18; python_version == '2.7'
