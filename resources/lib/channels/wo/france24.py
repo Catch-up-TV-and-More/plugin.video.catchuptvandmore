@@ -1,39 +1,18 @@
 # -*- coding: utf-8 -*-
-"""
-    Catch-up TV & More
-    Original work (C) JUL1EN094, SPM, SylvainCecchetto
-    Copyright (C) 2016  SylvainCecchetto
+# Copyright: (c) JUL1EN094, SPM, SylvainCecchetto
+# Copyright: (c) 2016, SylvainCecchetto
+# GNU General Public License v2.0+ (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 
-    This file is part of Catch-up TV & More.
+# This file is part of Catch-up TV & More
 
-    Catch-up TV & More is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Catch-up TV & More is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with Catch-up TV & More; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-"""
-
-# The unicode_literals import only has
-# an effect on Python 2.
-# It makes string literals as unicode like in Python 3
 from __future__ import unicode_literals
+import json
 
-from codequick import Route, Resolver, Listitem, utils, Script, youtube
+from codequick import Listitem, Resolver, Route, utils, Script
 import urlquick
 
-from resources.lib import web_utils
-from resources.lib import resolver_proxy
+from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
-
-import json
 
 LANG = Script.setting['france24.language']
 TOKEN_APP = '66b85dad-3ad5-40f3-ab32-2305fc2357ea'
@@ -107,11 +86,9 @@ def root_catchup_tv(plugin, item_id, **kwargs):
                             guid_program=json_shows['show_editions']['guid'])
                         item_post_treatment(item)
                         yield item
-                '''
 
-                if 'show_editions' in json_shows:
-                    menus_to_add.append(json_shows['show_editions'])
-                '''
+#                if 'show_editions' in json_shows:
+#                    menus_to_add.append(json_shows['show_editions'])
 
 
 @Route.register
@@ -133,14 +110,12 @@ def list_direct_tv_jts(plugin, item_id, guid, **kwargs):
         if code == 'live_audio':
             continue
         label = json_channel['title']
-        '''
 
-        for json_image in json_channel['images']['formats']:
-            if json_image['code'] == '1920x1080':
-                item.art['fanart'] = json_image['url']
-            if json_image['code'] == '720x405':
-                item.art['thumb'] = item.art['landscape'] = json_image['url'
-        '''
+#        for json_image in json_channel['images']['formats']:
+#            if json_image['code'] == '1920x1080':
+#                item.art['fanart'] = json_image['url']
+#            if json_image['code'] == '720x405':
+#                item.art['thumb'] = item.art['landscape'] = json_image['url'
 
         youtube_playlist_id = ''
         for json_video in json_channel['videos']:

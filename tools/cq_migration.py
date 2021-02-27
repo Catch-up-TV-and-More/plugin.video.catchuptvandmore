@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-    Copyright (C) 2016-2020 Team Catch-up TV & More
-    This file is part of Catch-up TV & More.
-    SPDX-License-Identifier: GPL-2.0-or-later
-"""
+# Copyright: (c) 2016-2020, Team Catch-up TV & More
+# GNU General Public License v2.0+ (see COPYING or https://www.gnu.org/licenses/gpl-2.0.txt)
+
+# This file is part of Catch-up TV & More
 
 import sys
 
