@@ -128,10 +128,9 @@ def get_video_url(plugin,
         if download_mode:
             return download.download_video(stream_url)
         return stream_url
-    else:
-        video_id = re.compile(
-            r'www.youtube.com\/embed\/(.*?)\"').findall(resp.text)[0]
-        return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
+
+    video_id = re.compile(r'www.youtube.com\/embed\/(.*?)\"').findall(resp.text)[0]
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
 
 
 @Resolver.register

@@ -203,21 +203,22 @@ def get_video_url(plugin,
     response = xbmc.executeJSONRPC(json.dumps(payload))
     responses_uni = text_type(response, 'utf-8', errors='ignore')
     response_serialized = json.loads(responses_uni)
-    if 'error' not in list(response_serialized.keys()):
-        result = response_serialized.get('result', {})
-        addon = result.get('addon', {})
-        if addon.get('enabled', False) is True:
-            item = Listitem()
-            item.path = json_parser["sources"][1]["src"]
-            item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.label = get_selected_item_label()
-            item.art.update(get_selected_item_art())
-            item.info.update(get_selected_item_info())
-            return item
-    # Add Notification
-    plugin.notify('ERROR', plugin.localize(30719))
-    return False
+    if 'error' in list(response_serialized.keys()):
+        # Add Notification
+        plugin.notify('ERROR', plugin.localize(30719))
+        return False
+
+    result = response_serialized.get('result', {})
+    addon = result.get('addon', {})
+    if addon.get('enabled', False) is True:
+        item = Listitem()
+        item.path = json_parser["sources"][1]["src"]
+        item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
+        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+        item.label = get_selected_item_label()
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
+        return item
 
 
 @Resolver.register
@@ -233,8 +234,8 @@ def get_live_url(plugin, item_id, **kwargs):
         headers={'User-Agent': web_utils.get_random_ua()},
         max_age=-1)
     live_stream_jsonparser = json.loads(live_stream_json.text)
-    if "sources" in live_stream_jsonparser:
-        return live_stream_jsonparser["sources"][0]["src"]
-    else:
+    if "sources" not in live_stream_jsonparser:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
+
+    return live_stream_jsonparser["sources"][0]["src"]

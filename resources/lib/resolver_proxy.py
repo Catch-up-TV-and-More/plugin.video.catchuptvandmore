@@ -299,7 +299,8 @@ def get_francetv_video_stream(plugin,
         if download_mode:
             return download.download_video(final_video_url)
         return final_video_url
-    elif 'dash' in all_video_datas[0][0]:
+
+    if 'dash' in all_video_datas[0][0]:
         if download_mode:
             xbmcgui.Dialog().ok(plugin.localize(14116), plugin.localize(30603))
             return False
@@ -329,9 +330,9 @@ def get_francetv_video_stream(plugin,
             item.path = json_parser2['url']
 
         return item
-    else:
-        # Return info the format is not known
-        return False
+
+    # Return info the format is not known
+    return False
 
 
 def get_francetv_live_stream(plugin, live_id):
@@ -346,20 +347,23 @@ def get_francetv_live_stream(plugin, live_id):
     if not geoip_value:
         geoip_value = 'FR'
     for video in json_parser_liveId['videos']:
-        if 'format' in video:
-            if 'hls_v' in video['format'] or video['format'] == 'hls':
-                if video['geoblocage'] is not None:
-                    for value_geoblocage in video['geoblocage']:
-                        if geoip_value == value_geoblocage:
-                            final_url = video['url']
-                else:
+        if 'format' not in video:
+            continue
+
+        if 'hls_v' not in video['format'] and video['format'] != 'hls':
+            continue
+
+        if video['geoblocage'] is not None:
+            for value_geoblocage in video['geoblocage']:
+                if geoip_value == value_geoblocage:
                     final_url = video['url']
+        else:
+            final_url = video['url']
 
     if final_url == '':
         return None
 
-    json_parser2 = json.loads(
-        urlquick.get(URL_FRANCETV_HDFAUTH_URL % (final_url), max_age=-1).text)
+    json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % (final_url), max_age=-1).text)
 
     return json_parser2['url'] + '|user-agent=%s' % web_utils.get_random_ua()
 

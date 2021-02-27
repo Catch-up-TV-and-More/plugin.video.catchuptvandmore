@@ -71,8 +71,8 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp3 = session_requests.get(URL_LIVES % item_id)
 
-    if len(re.compile(r'file\: \"(.*?)\"').findall(resp3.text)) > 0:
-        return re.compile(r'file\: \"(.*?)\"').findall(resp3.text)[0]
-    else:
+    if len(re.compile(r'file\: \"(.*?)\"').findall(resp3.text)) == 0:
         plugin.notify('ERROR', plugin.localize(30891))
         return False
+
+    return re.compile(r'file\: \"(.*?)\"').findall(resp3.text)[0]

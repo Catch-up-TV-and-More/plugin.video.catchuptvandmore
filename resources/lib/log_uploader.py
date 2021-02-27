@@ -68,10 +68,9 @@ def read_log(path):
                 break
             content = line + '\n' + content
         lf.close()
-        if content:
-            return True, content
-        else:
+        if not content:
             return False, "Log file is empty"
+        return True, content
     except Exception:
         return False, "Unable to read log file"
 
@@ -88,11 +87,12 @@ def post_log(data):
         if 'key' in response.json():
             result = URL + response.json()['key']
             return True, result
-        elif 'message' in response.json():
+
+        if 'message' in response.json():
             return False, "Unable to upload log file: " + response.json()['message']
-        else:
-            Script.log('error: %s' % response.text)
-            return False, "Unable to upload log file"
+
+        Script.log('error: %s' % response.text)
+        return False, "Unable to upload log file"
     except Exception:
         return False, "Unable to retrieve the paste url"
 

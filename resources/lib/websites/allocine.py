@@ -638,7 +638,8 @@ def get_video_url(plugin,
         if download_mode:
             return download.download_video(final_url)
         return final_url
-    elif root.find(".//div[@class='card entity-card entity-card-overview entity-card-list cf']") is not None:
+
+    if root.find(".//div[@class='card entity-card entity-card-overview entity-card-list cf']") is not None:
         if loop == 1:   # prevent infinite recursion
             resp2 = urlquick.get(video_url)
             root2 = resp2.parse("div", attrs={"class": "card entity-card entity-card-overview entity-card-list cf"})
@@ -664,21 +665,21 @@ def get_video_url(plugin,
                     plugin, video_id, download_mode)
 
             # Case DailyMotion
-            elif 'dailymotion' in url_video_resolver:
+            if 'dailymotion' in url_video_resolver:
                 video_id = re.compile(r'embed/video/(.*?)[\"\?]').findall(
                     url_video_resolver)[0]
                 return resolver_proxy.get_stream_dailymotion(
                     plugin, video_id, download_mode)
 
             # Case Facebook
-            elif 'facebook' in url_video_resolver:
+            if 'facebook' in url_video_resolver:
                 video_id = re.compile(
                     r'www.facebook.com/allocine/videos/(.*?)/').findall(url_video_resolver)[0]
                 return resolver_proxy.get_stream_facebook(
                     plugin, video_id, download_mode)
 
             # Case Vimeo
-            elif 'vimeo' in url_video_resolver:
+            if 'vimeo' in url_video_resolver:
                 video_id = re.compile(
                     r'player.vimeo.com/video/(.*?)[\?\"]').findall(url_video_resolver)[0]
                 return resolver_proxy.get_stream_vimeo(
@@ -750,14 +751,14 @@ def get_video_url_news_videos(plugin,
                                                  download_mode)
 
     # Case DailyMotion
-    elif 'dailymotion' in url_video_resolver:
+    if 'dailymotion' in url_video_resolver:
         video_id = re.compile(r'embed/video/(.*?)$').findall(
             url_video_resolver)[0]
         return resolver_proxy.get_stream_dailymotion(plugin, video_id,
                                                      download_mode)
 
     # Case Facebook
-    elif 'facebook' in url_video_resolver:
+    if 'facebook' in url_video_resolver:
         video_id = re.compile('www.facebook.com/allocine/videos/(.*?)/'
                               ).findall(url_video_resolver)[0]
         # print 'video_id facebook ' + video_id
@@ -765,10 +766,10 @@ def get_video_url_news_videos(plugin,
                                                   download_mode)
 
     # Case Vimeo
-    elif 'vimeo' in url_video_resolver:
+    if 'vimeo' in url_video_resolver:
         video_id = re.compile(r'player.vimeo.com/video/(.*?)$').findall(
             url_video_resolver)[0]
         return resolver_proxy.get_stream_vimeo(plugin, video_id, download_mode)
+
     # TO DO ? (return an error)
-    else:
-        return False
+    return False

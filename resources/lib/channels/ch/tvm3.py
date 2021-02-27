@@ -104,8 +104,7 @@ def get_video_url(plugin,
     if is_youtube:
         return resolver_proxy.get_stream_youtube(plugin, video_id,
                                                  download_mode)
-    else:
-        return resolver_proxy.get_stream_vimeo(plugin, video_id, download_mode)
+    return resolver_proxy.get_stream_vimeo(plugin, video_id, download_mode)
 
 
 @Resolver.register

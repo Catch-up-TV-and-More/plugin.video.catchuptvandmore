@@ -72,70 +72,79 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
 
     json_entry = json_parser["props"]["apolloState"]
     for json_key in list(json_entry.keys()):
-        if "__typename" in json_entry[json_key]:
-            if "ProductSet" in json_entry[json_key]["__typename"]:
-                if "slug" in json_entry[json_key]:
-                    if category_slug in json_entry[json_key]["slug"]:
-                        for item_data in json_entry[json_key]["items"]:
-                            product_ref = item_data["product"]["__ref"]
+        if "__typename" not in json_entry[json_key]:
+            continue
 
-                            product_slug_ref = ''
-                            if json_entry[product_ref]['collection'] is not None:
-                                product_slug_ref = json_entry[product_ref]['collection']['__ref']
-                                program_title = json_entry[product_slug_ref]['title'] + \
-                                    ' - ' + json_entry[product_ref]["title"]
-                            else:
-                                program_title = json_entry[product_ref]["title"]
+        if "ProductSet" not in json_entry[json_key]["__typename"]:
+            continue
 
-                            program_image = json_entry[product_ref]["mainLandscapeImage"]["url"]
-                            program_plot = json_entry[product_ref]["shortSummary"]
-                            program_type = json_entry[product_ref]["productType"]
+        if "slug" not in json_entry[json_key]:
+            continue
 
-                            item = Listitem()
-                            item.label = program_title
-                            item.art['thumb'] = item.art['landscape'] = program_image
-                            item.info['plot'] = program_plot
-                            if 'EPISODE' in program_type or 'MOVIE' in program_type or 'TRAILER' in program_type:
-                                isVideo = False
-                                if json_entry[product_ref]['slug'] is not None:
-                                    video_slug = json_entry[product_ref]['slug']
-                                    isVideo = True
-                                elif json_entry[product_ref]['collection'] is not None:
-                                    video_slug = json_entry[product_slug_ref]['slug']
-                                    isVideo = True
-                                if isVideo:
-                                    video_duration = ''
-                                    if 'duration' in json_entry[product_ref]:
-                                        video_duration = json_entry[product_ref]['duration']
-                                    item.info['duration'] = video_duration
-                                    video_season_number = ''
-                                    if json_entry[product_ref]["seasonNumber"] is not None:
-                                        video_season_number = str(json_entry[product_ref]["seasonNumber"])
-                                    video_episode_number = ''
-                                    if json_entry[product_ref]["episodeNumber"] is not None:
-                                        video_episode_number = str(json_entry[product_ref]["episodeNumber"])
-                                    item.set_callback(
-                                        get_video_url,
-                                        item_id=item_id,
-                                        video_slug=video_slug,
-                                        video_season_number=video_season_number,
-                                        video_episode_number=video_episode_number)
-                                    item_post_treatment(item, is_playable=True, is_downloadable=True)
-                                    yield item
-                            else:
-                                if json_entry[product_ref]['slug'] is not None:
-                                    program_slug = json_entry[product_ref]['slug']
-                                elif json_entry[product_ref]['collection'] is not None:
-                                    program_slug = json_entry[product_slug_ref]['slug']
-                                program_season_number = ''
-                                if json_entry[product_ref]["seasonNumber"] is not None:
-                                    program_season_number = str(json_entry[product_ref]["seasonNumber"])
-                                item.set_callback(list_videos,
-                                                  item_id=item_id,
-                                                  program_slug=program_slug,
-                                                  program_season_number=program_season_number)
-                                item_post_treatment(item)
-                                yield item
+        if category_slug not in json_entry[json_key]["slug"]:
+            continue
+
+        for item_data in json_entry[json_key]["items"]:
+            product_ref = item_data["product"]["__ref"]
+
+            product_slug_ref = ''
+            if json_entry[product_ref]['collection'] is not None:
+                product_slug_ref = json_entry[product_ref]['collection']['__ref']
+                program_title = json_entry[product_slug_ref]['title'] + ' - ' + json_entry[product_ref]["title"]
+            else:
+                program_title = json_entry[product_ref]["title"]
+
+            program_image = json_entry[product_ref]["mainLandscapeImage"]["url"]
+            program_plot = json_entry[product_ref]["shortSummary"]
+            program_type = json_entry[product_ref]["productType"]
+
+            item = Listitem()
+            item.label = program_title
+            item.art['thumb'] = item.art['landscape'] = program_image
+            item.info['plot'] = program_plot
+            if 'EPISODE' not in program_type and 'MOVIE' not in program_type and 'TRAILER' not in program_type:
+                continue
+
+            isVideo = False
+            if json_entry[product_ref]['slug'] is not None:
+                video_slug = json_entry[product_ref]['slug']
+                isVideo = True
+            elif json_entry[product_ref]['collection'] is not None:
+                video_slug = json_entry[product_slug_ref]['slug']
+                isVideo = True
+            if isVideo:
+                video_duration = ''
+                if 'duration' in json_entry[product_ref]:
+                    video_duration = json_entry[product_ref]['duration']
+                item.info['duration'] = video_duration
+                video_season_number = ''
+                if json_entry[product_ref]["seasonNumber"] is not None:
+                    video_season_number = str(json_entry[product_ref]["seasonNumber"])
+                video_episode_number = ''
+                if json_entry[product_ref]["episodeNumber"] is not None:
+                    video_episode_number = str(json_entry[product_ref]["episodeNumber"])
+                item.set_callback(
+                    get_video_url,
+                    item_id=item_id,
+                    video_slug=video_slug,
+                    video_season_number=video_season_number,
+                    video_episode_number=video_episode_number)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                yield item
+            else:
+                if json_entry[product_ref]['slug'] is not None:
+                    program_slug = json_entry[product_ref]['slug']
+                elif json_entry[product_ref]['collection'] is not None:
+                    program_slug = json_entry[product_slug_ref]['slug']
+                program_season_number = ''
+                if json_entry[product_ref]["seasonNumber"] is not None:
+                    program_season_number = str(json_entry[product_ref]["seasonNumber"])
+                item.set_callback(list_videos,
+                    item_id=item_id,
+                    program_slug=program_slug,
+                    program_season_number=program_season_number)
+                item_post_treatment(item)
+                yield item
 
 
 @Route.register
@@ -152,43 +161,46 @@ def list_videos(plugin, item_id, program_slug, program_season_number, **kwargs):
 
     json_entry = json_parser["props"]["apolloState"]
     for json_key in list(json_entry.keys()):
-        if "productType" in json_entry[json_key]:
-            if "EPISODE" in json_entry[json_key]["productType"] or "TRAILER" in json_entry[json_key]["productType"]:
+        if "productType" not in json_entry[json_key]:
+            continue
 
-                video_episode_number = ''
-                if json_entry[json_key]["episodeNumber"] is not None:
-                    video_episode_number = str(json_entry[json_key]["episodeNumber"])
-                product_slug_ref = ''
-                if json_entry[json_key]['collection'] is not None:
-                    product_slug_ref = json_entry[json_key]['collection']['__ref']
-                    video_title = json_entry[product_slug_ref]['title']
-                    if program_season_number != '':
-                        video_title = video_title + ' - S%sE%s' % (program_season_number, video_episode_number)
-                    if json_entry[json_key]["title"] is not None:
-                        video_title = video_title + ' - ' + json_entry[json_key]['title']
-                else:
-                    video_title = json_entry[json_key]["title"]
-                video_image = json_entry[json_key]["mainLandscapeImage"]["url"]
-                video_plot = ''
-                if 'shortSummary' in json_entry[json_key]:
-                    video_plot = json_entry[json_key]["shortSummary"]
-                video_duration = ''
-                if 'duration' in json_entry[json_key]:
-                    video_duration = json_entry[json_key]['duration']
+        if "EPISODE" not in json_entry[json_key]["productType"] and "TRAILER" not in json_entry[json_key]["productType"]:
+            continue
 
-                item = Listitem()
-                item.label = video_title
-                item.art['thumb'] = item.art['landscape'] = video_image
-                item.info['plot'] = video_plot
-                item.info['duration'] = video_duration
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_slug=program_slug,
-                    video_season_number=program_season_number,
-                    video_episode_number=video_episode_number)
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
-                yield item
+        video_episode_number = ''
+        if json_entry[json_key]["episodeNumber"] is not None:
+            video_episode_number = str(json_entry[json_key]["episodeNumber"])
+        product_slug_ref = ''
+        if json_entry[json_key]['collection'] is not None:
+            product_slug_ref = json_entry[json_key]['collection']['__ref']
+            video_title = json_entry[product_slug_ref]['title']
+            if program_season_number != '':
+                video_title = video_title + ' - S%sE%s' % (program_season_number, video_episode_number)
+            if json_entry[json_key]["title"] is not None:
+                video_title = video_title + ' - ' + json_entry[json_key]['title']
+        else:
+            video_title = json_entry[json_key]["title"]
+        video_image = json_entry[json_key]["mainLandscapeImage"]["url"]
+        video_plot = ''
+        if 'shortSummary' in json_entry[json_key]:
+            video_plot = json_entry[json_key]["shortSummary"]
+        video_duration = ''
+        if 'duration' in json_entry[json_key]:
+            video_duration = json_entry[json_key]['duration']
+
+        item = Listitem()
+        item.label = video_title
+        item.art['thumb'] = item.art['landscape'] = video_image
+        item.info['plot'] = video_plot
+        item.info['duration'] = video_duration
+        item.set_callback(
+            get_video_url,
+            item_id=item_id,
+            video_slug=program_slug,
+            video_season_number=program_season_number,
+            video_episode_number=video_episode_number)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        yield item
 
 
 @Resolver.register

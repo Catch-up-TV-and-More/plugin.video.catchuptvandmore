@@ -180,17 +180,20 @@ def get_video_url(plugin,
             method = 'id_diffusion'
             id_diffusion = media['catchupId']
             break
-        elif 'streams' in media:
+
+        if 'streams' in media:
             method = 'stream_videos'
             for stream in media['streams']:
                 urls.append((stream['format'], stream['url']))
             break
-        elif 'sourceUrl' in media:
+
+        if 'sourceUrl' in media:
             return media['sourceUrl']
+
     if method == 'id_diffusion':
-        return resolver_proxy.get_francetv_video_stream(
-            plugin, id_diffusion, download_mode)
-    elif method == 'stream_videos':
+        return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion, download_mode)
+
+    if method == 'stream_videos':
         url_hd = ''
         url_default = ''
         for url in urls:
@@ -220,8 +223,8 @@ def get_video_url(plugin,
         if download_mode:
             return download.download_video(url_selected)
         return url_selected
-    else:
-        return False
+
+    return False
 
 
 @Resolver.register

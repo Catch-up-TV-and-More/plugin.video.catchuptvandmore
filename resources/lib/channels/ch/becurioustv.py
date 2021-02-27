@@ -89,10 +89,10 @@ def get_video_url(plugin,
         return resolver_proxy.get_stream_youtube(plugin, video_id,
                                                  download_mode)
     # Case Vimeo
-    elif 'vimeo' in stream_datas:
+    if 'vimeo' in stream_datas:
         video_id = re.compile('player.vimeo.com/video/(.*?)[\?\"]').findall(
             stream_datas)[0]
         return resolver_proxy.get_stream_vimeo(plugin, video_id, download_mode)
-    else:
-        # Add Notification
-        return False
+
+    # Add Notification
+    return False

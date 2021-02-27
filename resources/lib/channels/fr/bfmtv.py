@@ -155,42 +155,42 @@ def get_video_url(plugin,
         return resolver_proxy.get_brightcove_video_json(plugin, data_account,
                                                         data_player, data_video_id,
                                                         download_mode)
-    else:
-        video_streams = json_parser['video']['medias']
-        final_video_url = ''
-        if DESIRED_QUALITY == "DIALOG":
-            all_datas_videos_quality = []
-            all_datas_videos_path = []
 
-            for datas in video_streams:
-                all_datas_videos_quality.append("Video Height : " +
-                                                str(datas['frame_height']) +
-                                                " (Encoding : " +
-                                                str(datas['encoding_rate']) + ")")
-                all_datas_videos_path.append(datas['video_url'])
+    video_streams = json_parser['video']['medias']
+    final_video_url = ''
+    if DESIRED_QUALITY == "DIALOG":
+        all_datas_videos_quality = []
+        all_datas_videos_path = []
 
-            seleted_item = xbmcgui.Dialog().select(
-                plugin.localize(30709),
-                all_datas_videos_quality)
+        for datas in video_streams:
+            all_datas_videos_quality.append("Video Height : " +
+                                            str(datas['frame_height']) +
+                                            " (Encoding : " +
+                                            str(datas['encoding_rate']) + ")")
+            all_datas_videos_path.append(datas['video_url'])
 
-            if seleted_item > -1:
-                final_video_url = all_datas_videos_path[seleted_item]
-            else:
-                return False
+        seleted_item = xbmcgui.Dialog().select(
+            plugin.localize(30709),
+            all_datas_videos_quality)
 
-        elif DESIRED_QUALITY == 'BEST':
-            # GET LAST NODE (VIDEO BEST QUALITY)
-            url_best_quality = ''
-            for datas in video_streams:
-                url_best_quality = datas['video_url']
-            final_video_url = url_best_quality
+        if seleted_item > -1:
+            final_video_url = all_datas_videos_path[seleted_item]
         else:
-            # DEFAULT VIDEO
-            final_video_url = json_parser['video']['video_url']
+            return False
 
-        if download_mode:
-            return download.download_video(final_video_url)
-        return final_video_url
+    elif DESIRED_QUALITY == 'BEST':
+        # GET LAST NODE (VIDEO BEST QUALITY)
+        url_best_quality = ''
+        for datas in video_streams:
+            url_best_quality = datas['video_url']
+        final_video_url = url_best_quality
+    else:
+        # DEFAULT VIDEO
+        final_video_url = json_parser['video']['video_url']
+
+    if download_mode:
+        return download.download_video(final_video_url)
+    return final_video_url
 
 
 @Resolver.register
@@ -207,7 +207,7 @@ def get_live_url(plugin, item_id, **kwargs):
         data_player = live_datas.get('playerid')
         return resolver_proxy.get_brightcove_video_json(plugin, data_account,
                                                         data_player, data_video_id)
-    elif item_id == 'bfmbusiness':
+    if item_id == 'bfmbusiness':
         resp = urlquick.get(URL_LIVE_BFMBUSINESS,
                             headers={'User-Agent': web_utils.get_random_ua()},
                             max_age=-1)

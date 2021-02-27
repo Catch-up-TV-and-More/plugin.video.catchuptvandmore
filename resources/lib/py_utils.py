@@ -15,8 +15,8 @@ def old_div(a, b):
     """
     if isinstance(a, numbers.Integral) and isinstance(b, numbers.Integral):
         return a // b
-    else:
-        return a / b
+
+    return a / b
 
 
 def current_timestamp():

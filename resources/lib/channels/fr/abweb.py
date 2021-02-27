@@ -108,5 +108,5 @@ def get_live_url(plugin, item_id, **kwargs):
             r'id\=\"ifr_stream\" src\=\"(.*?)\"').findall(resp4.text)[0]
         resp5 = session_requests.get(stream_datas_url)
         return re.compile(r'\"file\"\: \"(.*?)\"').findall(resp5.text)[0]
-    else:
-        return False
+
+    return False

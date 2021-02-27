@@ -274,11 +274,11 @@ def get_live_url(plugin, item_id, **kwargs):
         seleted_item = xbmcgui.Dialog().select(
             plugin.localize(30709),
             all_datas_videos_quality)
-        if seleted_item > -1:
-            return all_datas_videos_path[seleted_item]
-        else:
+        if seleted_item <= -1:
             return False
-    elif DESIRED_QUALITY == 'BEST':
+        return all_datas_videos_path[seleted_item]
+
+    if DESIRED_QUALITY == 'BEST':
         # Last video in the Best
         for k in range(0, len(lines) - 1):
             if 'RESOLUTION=' in lines[k]:
@@ -287,12 +287,13 @@ def get_live_url(plugin, item_id, **kwargs):
                 else:
                     url = root + '/' + lines[k + 1]
         return url
-    else:
-        for k in range(0, len(lines) - 1):
-            if 'RESOLUTION=' in lines[k]:
-                if 'http' in lines[k + 1]:
-                    url = lines[k + 1]
-                else:
-                    url = root + '/' + lines[k + 1]
-            break
-        return url
+
+    for k in range(0, len(lines) - 1):
+        if 'RESOLUTION=' in lines[k]:
+            if 'http' in lines[k + 1]:
+                url = lines[k + 1]
+            else:
+                url = root + '/' + lines[k + 1]
+        break
+
+    return url

@@ -165,10 +165,8 @@ def get_video_url(plugin,
     item.info.update(get_selected_item_info())
     item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property[
-        'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property[
-        'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
 
     return item
 
@@ -186,21 +184,19 @@ def get_live_url(plugin, item_id, **kwargs):
     if json_parser['delivery']['code'] > 400:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
-    else:
-        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-        if not is_helper.check_inputstream():
-            return False
 
-        item = Listitem()
-        item.path = json_parser['delivery']['url']
-        item.label = get_selected_item_label()
-        item.art.update(get_selected_item_art())
-        item.info.update(get_selected_item_info())
-        item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-        item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-        item.property[
-            'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property[
-            'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
+    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
 
-        return item
+    item = Listitem()
+    item.path = json_parser['delivery']['url']
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
+
+    return item
