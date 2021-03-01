@@ -14,7 +14,7 @@ from codequick import Listitem, Route, Resolver, Script, utils
 from kodi_six import xbmcplugin
 import urlquick
 
-from resources.lib import resolver_proxy
+from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.menu_utils import item_post_treatment
 
