@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 import json
 
 import inputstreamhelper
-from codequick import Resolver
+from codequick import Listitem, Resolver
 import urlquick
 
 from resources.lib import web_utils

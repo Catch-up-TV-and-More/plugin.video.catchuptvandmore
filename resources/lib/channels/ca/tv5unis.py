@@ -139,7 +139,8 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                 program_season_number = ''
                 if json_entry[product_ref]["seasonNumber"] is not None:
                     program_season_number = str(json_entry[product_ref]["seasonNumber"])
-                item.set_callback(list_videos,
+                item.set_callback(
+                    list_videos,
                     item_id=item_id,
                     program_slug=program_slug,
                     program_season_number=program_season_number)

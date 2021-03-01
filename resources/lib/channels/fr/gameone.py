@@ -141,7 +141,7 @@ def list_videos(plugin, item_id, season_url, **kwargs):
                     continue
 
                 for video_datas in video_props['items']:
-                    video_title = video_datas['meta']['header'][ 'title']
+                    video_title = video_datas['meta']['header']['title']
                     video_image = video_datas['media']['image']['url']
                     video_plot = video_datas['meta']['description']
                     # TODO add duration / date

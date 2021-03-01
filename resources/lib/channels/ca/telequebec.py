@@ -10,7 +10,6 @@ import time
 import urlquick
 
 from codequick import Listitem, Resolver, Route
-import urlquick
 
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment

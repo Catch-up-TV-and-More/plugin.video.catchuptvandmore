@@ -171,14 +171,12 @@ def list_programs(plugin, item_id, sub_category_title, sub_category_code_name, s
                 program_title = program_datas['title']
                 program_url = program_datas['url']
                 program_image = ''
-                if (program_datas['images']['landscape'] is not None and
-                    'resolutions' in program_datas['images']['landscape']):
-                        for image_datas in program_datas['images']['landscape']['resolutions']:
-                            program_image = image_datas['url']
-                elif (program_datas['images']['square'] is not None and
-                    'resolutions' in program_datas['images']['square']):
-                        for image_datas in program_datas['images']['square']['resolutions']:
-                            program_image = image_datas['url']
+                if (program_datas['images']['landscape'] is not None and 'resolutions' in program_datas['images']['landscape']):
+                    for image_datas in program_datas['images']['landscape']['resolutions']:
+                        program_image = image_datas['url']
+                elif (program_datas['images']['square'] is not None and 'resolutions' in program_datas['images']['square']):
+                    for image_datas in program_datas['images']['square']['resolutions']:
+                        program_image = image_datas['url']
 
                 item = Listitem()
                 item.label = program_title
