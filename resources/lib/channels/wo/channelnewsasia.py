@@ -7,7 +7,10 @@
 from __future__ import unicode_literals
 from builtins import str
 
+import json
+import re
 from codequick import Listitem, Resolver, Route
+import urlquick
 
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
