@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 from builtins import str
 
+import base64
 import json
 import re
 from codequick import Listitem, Resolver, Route
@@ -224,7 +225,7 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE_ID)
     list_stream_id = re.compile('video-asset-id="(.*?)"').findall(resp.text)
 
-    if len(list_stream_id) <=  0:
+    if len(list_stream_id) <= 0:
         return False
 
     pcode_datas = urlquick.get(URL_GET_JS_PCODE)
@@ -241,4 +242,3 @@ def get_live_url(plugin, item_id, **kwargs):
         if stream_datas["delivery_type"] == 'hls':
             stream_url_base64 = stream_datas["url"]["data"]
     return base64.standard_b64decode(stream_url_base64)
-
