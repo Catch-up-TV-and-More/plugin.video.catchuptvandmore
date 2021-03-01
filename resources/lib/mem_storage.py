@@ -81,7 +81,7 @@ class MemStorage(MutableMapping):
         full_key = '{0}__{1}'.format(self._id, key)
         raw_item = self._window.getProperty(full_key)
         if not raw_item:
-           raise KeyError(key)
+            raise KeyError(key)
         return pickle.loads(raw_item.encode('latin-1'))
 
     def __setitem__(self, key, value):

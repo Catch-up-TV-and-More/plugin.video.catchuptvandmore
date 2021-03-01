@@ -7,7 +7,7 @@
 from __future__ import unicode_literals
 import json
 
-from codequick import Listitem, Resolver, Route, Resolver
+from codequick import Listitem, Resolver, Route
 import urlquick
 
 from resources.lib.addon_utils import get_item_media_path

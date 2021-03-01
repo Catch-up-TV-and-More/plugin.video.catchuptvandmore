@@ -174,7 +174,6 @@ def select_ovpn():
     return ovpnfileslist[idx]
 
 
-
 @Script.register
 def delete_ovpn(*args, **kwargs):
     ovpnfiles = {}

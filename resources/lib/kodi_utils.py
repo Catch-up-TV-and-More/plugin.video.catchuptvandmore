@@ -33,7 +33,6 @@ def get_kodi_version():
     return int(xbmc_version.split('-')[0].split('.')[0])
 
 
-
 INPUTSTREAM_PROP = 'inputstream' if get_kodi_version() >= 19 else 'inputstreamaddon'
 
 

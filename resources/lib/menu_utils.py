@@ -24,6 +24,7 @@ MENUS_SETTINGS_FP = os.path.join(Script.get_info('profile'), "menus_settings.jso
 # Json file that keeps, for each menu of the addon,
 # what elements are hidden and the order of items in each menu
 
+
 # Utility functions to deal with user menus settings
 def get_menus_settings():
     """Get menus settings dict from json file
