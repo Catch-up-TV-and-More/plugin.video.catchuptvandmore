@@ -8,7 +8,7 @@ from kodi_six import xbmc, xbmcaddon
 
 
 def autorun_addon():
-    if xbmcaddon.Addon().getSettingBool("auto_run"):
+    if xbmcaddon.Addon().getSetting("auto_run") == "true":
         xbmc.executebuiltin('RunAddon(plugin.video.catchuptvandmore)')
     return
 
