@@ -191,7 +191,7 @@ def get_brightcove_policy_key(data_account, data_player):
     """Get policy key"""
     file_js = urlquick.get(URL_BRIGHTCOVE_POLICY_KEY %
                            (data_account, data_player))
-    return re.compile('policyKey:"(.+?)"').findall(file_js.text)[0]
+    return re.compile(r'policyKey\:\"(.*?)\"').findall(file_js.text)[0]
 
 
 def get_brightcove_video_json(plugin,
@@ -365,7 +365,7 @@ def get_francetv_live_stream(plugin, live_id):
 
     json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % (final_url), max_age=-1).text)
 
-    return json_parser2['url'] + '|user-agent=%s' % web_utils.get_random_ua()
+    return json_parser2['url'] + '|User-Agent=%s' % web_utils.get_random_ua()
 
 
 # Arte Part
