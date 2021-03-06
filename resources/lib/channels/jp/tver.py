@@ -62,8 +62,9 @@ def list_videos(plugin, item_id, category_url, **kwargs):
 
     for video_data in list_videos_datas:
         video_title = video_data.find('.//h3').text
-        video_image = re.compile(r'url\((.*?)\);').findall(
-            video_data.find(".//div[@class='picinner']").get('style'))[0]
+        video_image = ''
+        if video_data.find(".//div[@class='picinner lazyload']") is not None:
+            video_image = video_data.find(".//div[@class='picinner lazyload']").get('data-bg')
         video_plot = ''
         if video_data.find(".//p[@class='summary']") is not None:
             video_plot = video_data.find(".//p[@class='summary']").text
