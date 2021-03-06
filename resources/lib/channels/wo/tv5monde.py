@@ -177,4 +177,18 @@ def get_live_url(plugin, item_id, **kwargs):
                         max_age=-1)
     live_json = re.compile(r'data-broadcast=\'(.*?)\'').findall(resp.text)[0]
     json_parser = json.loads(live_json)
-    return json_parser["files"][0]["url"]
+    url_stream = json_parser["files"][0]["url"]
+    manifest = urlquick.get(
+        url_stream,
+        headers={'User-Agent': web_utils.get_random_ua()},
+        max_age=-1)
+    lines = manifest.text.splitlines()
+    final_url = ''
+    for k in range(0, len(lines) - 1):
+        if 'RESOLUTION=' in lines[k]:
+            final_url = lines[k + 1]
+        if 'PROGRAM-ID=' in lines[k]:
+            if '-b/' not in lines[k + 1]:
+                final_url = lines[k + 1]
+
+    return final_url
