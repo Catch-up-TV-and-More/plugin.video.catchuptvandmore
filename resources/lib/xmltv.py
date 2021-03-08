@@ -267,7 +267,7 @@ def read_programmes(fp, only_current_programmes=False):
         # than parsing the whole xmltv file with elementtree
         # (x10 faster)
         xmltv_l = []
-        with open(fp, 'r') as f:
+        with open(fp, 'r', encoding='utf-8') as f:
             take_line = True
             for line in f.readlines():
 
