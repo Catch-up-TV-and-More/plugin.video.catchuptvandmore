@@ -355,6 +355,8 @@ def get_video_url(plugin,
     js_id = re.compile(r'client\-(.*?)\.bundle\.js').findall(resp_js_id.text)[0]
     resp = urlquick.get(URL_API_KEY % js_id)
 
+    # Hack to force encoding of the response
+    resp.encoding = 'utf-8'
     api_key = re.compile(r'\"eu1.gigya.com\"\,key\:\"(.*?)\"').findall(resp.text)[0]
 
     if plugin.setting.get_string('6play.login') == '' or\
@@ -503,6 +505,9 @@ def get_live_url(plugin, item_id, **kwargs):
     js_id = re.compile(r'client\-(.*?)\.bundle\.js').findall(
         resp_js_id.text)[0]
     resp = urlquick.get(URL_API_KEY % js_id)
+
+    # Hack to force encoding of the response
+    resp.encoding = 'utf-8'
 
     api_key = re.compile(r'\"eu1.gigya.com\"\,key\:\"(.*?)\"').findall(
         resp.text)[0]

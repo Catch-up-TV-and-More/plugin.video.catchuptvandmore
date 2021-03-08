@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.33~beta04" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.33~beta05" provider-name="SylvainCecchetto,wwark">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -48,6 +48,7 @@
 [BrightCove] Possible fix for some instance of Kodi 19
 [TV5Monde - WO] Fix Live TV (hack like Arte TV)
 [Live TV] Fix TV guide on Windows
+[6Play/RTLPlay - FR/BE] Hack to force encoding of a response to fix slow behavior to play content
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
