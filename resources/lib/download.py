@@ -24,8 +24,6 @@ def download_video(video_url):
 
     #  Now that we have video URL we can try to download this one
     
-    # import web_pdb; web_pdb.set_trace()
-
     YDStreamExtractor = __import__('YDStreamExtractor')
 
     info = {'url': video_url, 'quality': get_quality_YTDL(download_mode=True)}
