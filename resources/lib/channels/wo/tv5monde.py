@@ -34,7 +34,8 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_TV5MONDE_ROOT + '/toutes-les-emissions')
+    resp = urlquick.get(URL_TV5MONDE_ROOT + '/toutes-les-emissions',
+                        headers={'User-Agent': web_utils.get_random_ua()})
     root = resp.parse()
     category_title = root.find(".//nav[@class='footer__emissions footer-content']").find(
         ".//div[@class='footer__title']").find('.//a').text.strip()
@@ -59,7 +60,8 @@ def list_programs(plugin, item_id, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(URL_TV5MONDE_ROOT)
+    resp = urlquick.get(URL_TV5MONDE_ROOT,
+                        headers={'User-Agent': web_utils.get_random_ua()})
     root = resp.parse("nav", attrs={"class": "footer__emissions footer-content"})
 
     for program_datas in root.iterfind(".//li"):
@@ -80,7 +82,8 @@ def list_programs(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, program_url, page, **kwargs):
 
-    resp = urlquick.get(program_url + '?page=%s' % page)
+    resp = urlquick.get(program_url + '?page=%s' % page,
+                        headers={'User-Agent': web_utils.get_random_ua()})
     root = resp.parse()
 
     for video_datas in root.iterfind(".//div[@class='bloc-episode-content']"):
@@ -115,7 +118,8 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
 def list_videos_category(plugin, item_id, page, **kwargs):
 
     resp = urlquick.get(URL_TV5MONDE_ROOT +
-                        '/toutes-les-videos?page=%s' % page)
+                        '/toutes-les-videos?page=%s' % page,
+                        headers={'User-Agent': web_utils.get_random_ua()})
     root = resp.parse()
 
     for video_datas in root.iterfind(".//div[@class='bloc-episode-content']"):
