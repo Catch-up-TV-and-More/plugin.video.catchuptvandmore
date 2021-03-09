@@ -122,7 +122,8 @@ def list_videos(plugin, item_id, program_url, **kwargs):
                 yield item
         else:
             list_videos_datas = root.findall(
-                ".//div[@class='season-1 views-row']") # TODO Get season number
+                ".//div[@class='season-1 views-row']")
+                # TODO Get season number
             for video_datas in list_videos_datas:
                 if video_datas.find('.//h2') is not None:
                     video_title = video_datas.find('.//h2').text
@@ -157,7 +158,8 @@ def list_videos_season(plugin, item_id, season_url, **kwargs):
     root = resp.parse()
 
     for video_datas in root.iterfind(
-            ".//div[@class='season-1 views-row']"): # TODO
+            ".//div[@class='season-1 views-row']"):
+            # TODO Season value
         if video_datas.find('.//h2') is not None:
             video_title = video_datas.find('.//h2').text
             if 'http' in video_datas.find('.//img').get('src'):
@@ -170,7 +172,6 @@ def list_videos_season(plugin, item_id, season_url, **kwargs):
             else:
                 video_url = URL_TV5MAF_ROOT + video_datas.find('.//a').get(
                     'href')
-
 
             item = Listitem()
             item.label = video_title
