@@ -71,7 +71,8 @@ def list_programs(plugin, item_id, next_url, page, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(next_url + '?page=%s' % page)
+    resp = urlquick.get(next_url + '?page=%s' % page,
+                        headers={'User-Agent': web_utils.get_random_ua()})
     root = resp.parse()
 
     for program_datas in root.iterfind(
@@ -99,7 +100,8 @@ def list_programs(plugin, item_id, next_url, page, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, next_url, page, **kwargs):
 
-    resp = urlquick.get(next_url + '?page=%s' % page)
+    resp = urlquick.get(next_url + '?page=%s' % page,
+                        headers={'User-Agent': web_utils.get_random_ua()})
     root = resp.parse()
 
     for video_datas in root.iterfind(".//div[@class='row-vignette']"):
@@ -127,7 +129,8 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
 
     resp = urlquick.get(URL_TIVI5MONDE_ROOT +
                         '/recherche?search_api_views_fulltext=%s&page=%s' %
-                        (search_query, page))
+                        (search_query, page),
+                        headers={'User-Agent': web_utils.get_random_ua()})
     root = resp.parse()
 
     at_least_one_item = False
