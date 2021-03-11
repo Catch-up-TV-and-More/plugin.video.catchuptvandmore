@@ -23,7 +23,7 @@ def download_video(video_url):
     #  print('URL Video to download ' + video_url)
 
     #  Now that we have video URL we can try to download this one
-    
+
     YDStreamExtractor = __import__('YDStreamExtractor')
 
     info = {'url': video_url, 'quality': get_quality_YTDL(download_mode=True)}
@@ -33,6 +33,6 @@ def download_video(video_url):
     if Script.setting.get_boolean('dl_item_filename'):
         filename = get_selected_item_label()
     bg = Script.setting.get_boolean('dl_background')
-    result = YDStreamExtractor.handleDownload(info, bg=bg, path=path, filename=filename)
+    YDStreamExtractor.handleDownload(info, bg=bg, path=path, filename=filename)
 
     return False
