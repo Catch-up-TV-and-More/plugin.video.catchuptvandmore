@@ -376,6 +376,9 @@ msgctxt "#30203"
 msgid "Automatically rename the video (download directory required)"
 msgstr ""
 
+msgctxt "#30204"
+msgid "Ffmpeg executable directory"
+msgstr "ספריית הפעלה של Ffmpeg"
 
 # Accounts (from 30240 to 30259)
 
