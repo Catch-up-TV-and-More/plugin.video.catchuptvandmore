@@ -1083,11 +1083,6 @@ plugin://plugin.video.catchuptvandmore/resources/lib/channels/be/vrt/get_live_ur
 #EXTINF:-1 tvg-id="C1280.api.telerama.fr" tvg-logo="resource://resource.images.catchuptvandmore/channels/be/ketnet.png" group-title="Belgium",Ketnet
 plugin://plugin.video.catchuptvandmore/resources/lib/channels/be/vrt/get_live_url/?item_id=ketnet
 
-##	NRJ Hits TV
-##	nrjhitstvbe
-#EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/be/nrjhitstvbe.png" group-title="Belgium",NRJ Hits TV
-plugin://plugin.video.catchuptvandmore/resources/lib/channels/be/nrjhitstvbe/get_live_url/?item_id=nrjhitstvbe
-
 ##	RTL Sport
 ##	rtl_sport
 #EXTINF:-1 tvg-id="" tvg-logo="resource://resource.images.catchuptvandmore/channels/be/rtlsport.png" group-title="Belgium",RTL Sport
