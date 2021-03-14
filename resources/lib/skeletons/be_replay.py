@@ -82,7 +82,7 @@ menu = {
         'order': 13
     },
     'nrjhitstvbe': {
-        'route': '/resources/lib/channels/be/nrjhitstvbe:list_videos',
+        'route': '/resources/lib/channels/be/nrjhitstvbe:list_categories',
         'label': 'NRJ Hits TV',
         'thumb': 'channels/be/nrjhitstvbe.png',
         'fanart': 'channels/be/nrjhitstvbe_fanart.jpg',
