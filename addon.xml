@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.34~beta03" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.34~beta04" provider-name="SylvainCecchetto,wwark">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -47,6 +47,7 @@
 [NRJ Hits TV - BE] Fix Catch-up TV
 [TeleQuebec - CA] Readd Catch-up TV
 [NOOVO - CA] Fix Catch-up TV
+[BFMTV - FR] Use DailyMotion to play Live TV
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
