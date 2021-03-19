@@ -67,30 +67,6 @@ jobs:
   #     - name: Run kodi-addon-checker
   #       run: kodi-addon-checker --branch krypton --allow-folder-id-mismatch .
 
-  # Update M3U files
-  update-m3u-files:
-    name: Update M3U files
-    needs: test-plugin-modules
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out plugin repository
-        uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - name: Install dependencies
-        run: pip install -r tools/generate_m3u_files_requirements.txt
-      - name: Start M3U files generator
-        run: python tools/generate_m3u_files.py
-      - name: Push changes
-        run: |
-          git config user.name 'M3U files generator'
-          git config user.email 'github@noreply.github.com'
-          git add resources/m3u
-          git commit -m "Update M3U files" || echo "No changes to commit"
-          git push
-
   # Update repository.catchuptvandmore
   update-repo:
     name: Update repository.catchuptvandmore
