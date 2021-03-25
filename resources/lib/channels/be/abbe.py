@@ -133,7 +133,6 @@ def get_live_url(plugin, item_id, **kwargs):
     headers = {
         'Accept': 'application/json, text/plain, */*',
         'Authorization': 'Bearer %s' % token,
-        'Referer': next_url,
         'User-Agent': web_utils.get_random_ua(),
         'Referer': 'https://www.bistvonline.com/live'
     }
