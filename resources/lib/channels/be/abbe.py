@@ -48,15 +48,15 @@ def get_live_url(plugin, item_id, **kwargs):
     state = 'b71f9b79703240fe967552544f5ea1b9'
     code_challenge = '89bnNcjz_0ynNMV8cjtMWPWcPIyEU1oFwQqD9YfKRkA'
     params = {
-        'client_id' : item_id,
-        'redirect_uri' : URL_AUTH_CALLBACK % item_id,
-        'response_type' : 'code',
-        'scope' : 'openid profile email',
-        'state' : state,
-        'code_challenge' : code_challenge,
-        'code_challenge_method' : 'S256',
-        'response_mode' : 'query',
-        'action' : 'undefined'
+        'client_id': item_id,
+        'redirect_uri': URL_AUTH_CALLBACK % item_id,
+        'response_type': 'code',
+        'scope': 'openid profile email',
+        'state': state,
+        'code_challenge': code_challenge,
+        'code_challenge_method': 'S256',
+        'response_mode': 'query',
+        'action': 'undefined'
     }
     paramsencoded = urlencode(params)
 
@@ -84,7 +84,7 @@ def get_live_url(plugin, item_id, **kwargs):
         'login'
     }
     paramslogin = {
-        'ReturnUrl':'/connect/authorize/callback?%s' % paramsencoded
+        'ReturnUrl': '/connect/authorize/callback?%s' % paramsencoded
     }
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -103,27 +103,27 @@ def get_live_url(plugin, item_id, **kwargs):
 
     code_verifier = '8111a6c1025249fd9c0ff43f5af8d37b8929eb1a06f342659c7e3ff6becb763bfcc752ec316f44f385523f02ef90ac77'
     paramtoken = {
-        'client_id' : item_id,
-        'code' : code_value,
-        'redirect_uri' : URL_AUTH_CALLBACK % item_id,
-        'code_verifier' : code_verifier,
-        'grant_type' : 'authorization_code'
+        'client_id': item_id,
+        'code': code_value,
+        'redirect_uri': URL_AUTH_CALLBACK % item_id,
+        'code_verifier': code_verifier,
+        'grant_type': 'authorization_code'
     }
     headers = {
-        'Accept' : '*/*',
-        'Accept-Encoding' : 'gzip, deflate, br',
-        'Accept-Language' : 'en-US,en;q=0.9',
-        'Connection' : 'keep-alive',
-        'Content-Length' : '296',
-        'Content-Type' : 'application/x-www-form-urlencoded',
-        'Host' : 'app.auth.digital.abweb.com',
-        'Origin' : 'https://www.bistvonline.com',
-        'Referer' : 'https://www.bistvonline.com/',
-        'sec-ch-ua' : '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
-        'sec-ch-ua-mobile' : '?0',
-        'Sec-Fetch-Dest' : 'empty',
-        'Sec-Fetch-Mode' : 'cors',
-        'Sec-Fetch-Site' : 'cross-site',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Connection': 'keep-alive',
+        'Content-Length': '296',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Host': 'app.auth.digital.abweb.com',
+        'Origin': 'https://www.bistvonline.com',
+        'Referer': 'https://www.bistvonline.com/',
+        'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
+        'sec-ch-ua-mobile': '?0',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'cross-site',
         'User-Agent': web_utils.get_random_ua()
     }
     resp3 = session_requests.post(URL_CONNECT_TOKEN, headers=headers, data=paramtoken)
@@ -131,11 +131,11 @@ def get_live_url(plugin, item_id, **kwargs):
     token = json_parser3['id_token']
 
     headers = {
-        'Accept' : 'application/json, text/plain, */*',
-        'Authorization' : 'Bearer %s' % token,
-        'Referer' : next_url,
-        'User-Agent' : web_utils.get_random_ua(),
-        'Referer' : 'https://www.bistvonline.com/live'
+        'Accept': 'application/json, text/plain, */*',
+        'Authorization': 'Bearer %s' % token,
+        'Referer': next_url,
+        'User-Agent': web_utils.get_random_ua(),
+        'Referer': 'https://www.bistvonline.com/live'
     }
     resp4 = session_requests.get(URL_API % (item_id, item_id), headers=headers)
     json_parser4 = json.loads(resp4.text)
