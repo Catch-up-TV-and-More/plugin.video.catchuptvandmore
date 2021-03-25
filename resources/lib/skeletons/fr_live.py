@@ -532,7 +532,7 @@ menu = {
         'thumb': 'channels/fr/luckyjack.png',
         'fanart': 'channels/fr/luckyjack_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
-        'enabled': True,
+        'enabled': False,
         'order': 83
     },
     'mblivetv': {
