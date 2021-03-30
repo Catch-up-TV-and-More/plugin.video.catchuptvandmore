@@ -142,5 +142,12 @@ menu = {
         'thumb': 'channels/et.png',
         'enabled': True,
         'order': 17
+    },
+    'ma_live': {
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30067,
+        'thumb': 'channels/ma.png',
+        'enabled': True,
+        'order': 18
     }
 }

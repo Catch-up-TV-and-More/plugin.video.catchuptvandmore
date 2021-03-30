@@ -181,6 +181,10 @@ msgctxt "#30066"
 msgid "Ethiopia"
 msgstr "Ethiopië"
 
+msgctxt "#30066"
+msgid "Morocco"
+msgstr "Marokko"
+
 # Channels (from 30080 to 30129)
 msgctxt "#30080"
 msgid "French channels"
@@ -249,6 +253,10 @@ msgstr "Sloveense kanalen"
 msgctxt "#30096"
 msgid "Ethiopian channels"
 msgstr "Ethiopische kanalen"
+
+msgctxt "#30096"
+msgid "Moroccan channels"
+msgstr "Marokkaans kanalen"
 
 # Websites (from 30130 to 30149)
 # Quality and content (from 30150 to 30199)
