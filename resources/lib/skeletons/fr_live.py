@@ -787,7 +787,7 @@ menu = {
         'enabled': True,
         'order': 121
     },
-    'equidia': {
+    'equidia-live2': {
         'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
         'label': 'Equidia',
         'thumb': 'channels/fr/equidia.png',
