@@ -18,7 +18,7 @@ STREAM_INFO_URL = 'https://player-api.new.livestream.com/accounts/%s/events/%s/s
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-	resp = urlquick.get(URL_LIVES)
+    resp = urlquick.get(URL_LIVES)
 	accout_id = re.compile(r'\<iframe.*accounts\/(.*)\/events').findall(resp.text)[0]
 	event_id = re.compile(r'\<iframe.*events\/(.*)\/player').findall(resp.text)[0]
 	resp2 = urlquick.get(STREAM_INFO_URL % (accout_id, event_id))

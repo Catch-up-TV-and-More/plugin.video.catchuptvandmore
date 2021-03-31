@@ -9,10 +9,9 @@ import re
 import urlquick
 
 from codequick import Resolver
-from kodi_six import xbmcgui
-
 
 URL_LIVES = 'http://www.m24tv.ma/'
+
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
