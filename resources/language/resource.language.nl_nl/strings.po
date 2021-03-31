@@ -181,7 +181,7 @@ msgctxt "#30066"
 msgid "Ethiopia"
 msgstr "Ethiopië"
 
-msgctxt "#30066"
+msgctxt "#30067"
 msgid "Morocco"
 msgstr "Marokko"
 
