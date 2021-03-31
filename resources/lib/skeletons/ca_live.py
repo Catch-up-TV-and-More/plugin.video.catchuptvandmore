@@ -90,7 +90,7 @@ menu = {
         'label': 'LCN',
         'thumb': 'channels/ca/lcn.png',
         'fanart': 'channels/ca/lcn_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 12
     },
     'yoopa': {

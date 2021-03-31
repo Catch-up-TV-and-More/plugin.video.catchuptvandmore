@@ -6,18 +6,18 @@
 
 from __future__ import unicode_literals
 import re
-import urlquick
 import json
+import urlquick
 
 from codequick import Resolver
-from kodi_six import xbmcgui
-
 
 URL_LIVES = 'https://www.telemaroc.tv/liveTV'
 STREAM_INFO_URL = 'https://player-api.new.livestream.com/accounts/%s/events/%s/stream_info'
 
+
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+
 	resp = urlquick.get(URL_LIVES)
 	accout_id = re.compile(r'\<iframe.*accounts\/(.*)\/events').findall(resp.text)[0]
 	event_id = re.compile(r'\<iframe.*events\/(.*)\/player').findall(resp.text)[0]
