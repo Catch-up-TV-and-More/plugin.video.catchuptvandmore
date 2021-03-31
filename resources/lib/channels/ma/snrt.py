@@ -9,11 +9,9 @@ import re
 import urlquick
 
 from codequick import Resolver
-from kodi_six import xbmcgui
-from resources.lib import web_utils
-
 
 URL_LIVES = 'http://libs.easybroadcast.io/snrt/%s/EB%s_ads.js'
+
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
