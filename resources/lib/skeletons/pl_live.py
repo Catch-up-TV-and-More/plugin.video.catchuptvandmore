@@ -24,11 +24,11 @@ menu = {
         'channels/pl/tvp3.png',
         'fanart':
         'channels/pl/tvp3_fanart.jpg',
-        'available_languages': [
-            "Białystok", "Bydgoszcz", "Gdańsk", "Gorzów Wielkopolski",
-            "Katowice", "Kielce", "Kraków", "Lublin", "Łódź", "Olsztyn",
-            "Opole", "Poznań", "Rzeszów", "Szczecin", "Warszawa", "Wrocław"
-        ],
+        'available_languages': {
+            "Białystok": {}, "Bydgoszcz": {}, "Gdańsk": {}, "Gorzów Wielkopolski": {},
+            "Katowice": {}, "Kielce": {}, "Kraków": {}, "Lublin": {}, "Łódź": {}, "Olsztyn": {},
+            "Opole": {}, "Poznań": {}, "Rzeszów": {}, "Szczecin": {}, "Warszawa": {}, "Wrocław": {}
+        },
         'enabled': True,
         'order': 2
     },

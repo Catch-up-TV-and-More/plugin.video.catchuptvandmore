@@ -38,11 +38,11 @@ menu = {
         'label': 'ICI Télé',
         'thumb': 'channels/ca/icitele.png',
         'fanart': 'channels/ca/icitele_fanart.jpg',
-        'available_languages': [
-            'Vancouver', 'Regina', 'Toronto', 'Edmonton', 'Rimouski',
-            'Québec', 'Winnipeg', 'Moncton', 'Ottawa',
-            'Montréal'
-        ],
+        'available_languages': {
+            'Vancouver': {}, 'Regina': {}, 'Toronto': {}, 'Edmonton': {}, 'Rimouski': {},
+            'Québec': {}, 'Winnipeg': {}, 'Moncton': {}, 'Ottawa': {},
+            'Montréal': {}
+        },
         'enabled': True,
         'order': 6
     },
@@ -75,12 +75,12 @@ menu = {
         'label': 'CBC',
         'thumb': 'channels/ca/cbc.png',
         'fanart': 'channels/ca/cbc_fanart.jpg',
-        'available_languages': [
-            'Ottawa', 'Montreal', 'Charlottetown', 'Fredericton',
-            'Halifax', 'Windsor', 'Yellowknife', 'Winnipeg',
-            'Regina', 'Calgary', 'Edmonton', 'Vancouver',
-            'Toronto', 'St. John\'s'
-        ],
+        'available_languages': {
+            'Ottawa': {}, 'Montreal': {}, 'Charlottetown': {}, 'Fredericton': {},
+            'Halifax': {}, 'Windsor': {}, 'Yellowknife': {}, 'Winnipeg': {},
+            'Regina': {}, 'Calgary': {}, 'Edmonton': {}, 'Vancouver': {},
+            'Toronto': {}, 'St. John\'s': {}
+        },
         'enabled': True,
         'order': 11
     },

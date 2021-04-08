@@ -268,11 +268,11 @@ menu = {
         'channels/fr/la1ere_fanart.jpg',
         'm3u_group':
         'Région',
-        'available_languages': [
-            "Guadeloupe", "Guyane", "Martinique", "Mayotte",
-            "Nouvelle Calédonie", "Polynésie", "Réunion",
-            "St-Pierre et Miquelon", "Wallis et Futuna"
-        ],
+        'available_languages': {
+            "Guadeloupe": {}, "Guyane": {}, "Martinique": {}, "Mayotte": {},
+            "Nouvelle Calédonie": {}, "Polynésie": {}, "Réunion": {},
+            "St-Pierre et Miquelon": {}, "Wallis et Futuna": {}
+        },
         'enabled': True,
         'order': 23
     },
@@ -350,15 +350,15 @@ menu = {
         'channels/fr/france3regions_fanart.jpg',
         'm3u_group':
         'Région',
-        'available_languages': [
-            'Alpes', 'Alsace', 'Aquitaine', 'Auvergne', 'Bourgogne',
-            'Bretagne', 'Centre-Val de Loire', 'Chapagne-Ardenne', 'Corse',
-            "Côte d'Azur", 'Franche-Comté', 'Languedoc-Roussillon',
-            'Limousin', 'Lorraine', 'Midi-Pyrénées', 'Nord-Pas-de-Calais',
-            'Basse-Normandie', 'Haute-Normandie', 'Paris Île-de-France',
-            'Pays de la Loire', 'Picardie', 'Poitou-Charentes',
-            'Provence-Alpes', 'Rhône-Alpes', 'Nouvelle-Aquitaine'
-        ],
+        'available_languages': {
+            'Alpes': {}, 'Alsace': {}, 'Aquitaine': {}, 'Auvergne': {}, 'Bourgogne': {},
+            'Bretagne': {}, 'Centre-Val de Loire': {}, 'Chapagne-Ardenne': {}, 'Corse': {},
+            "Côte d'Azur": {}, 'Franche-Comté': {}, 'Languedoc-Roussillon': {},
+            'Limousin': {}, 'Lorraine': {}, 'Midi-Pyrénées': {}, 'Nord-Pas-de-Calais': {},
+            'Basse-Normandie': {}, 'Haute-Normandie': {}, 'Paris Île-de-France': {},
+            'Pays de la Loire': {}, 'Picardie': {}, 'Poitou-Charentes': {},
+            'Provence-Alpes': {}, 'Rhône-Alpes': {}, 'Nouvelle-Aquitaine': {}
+        },
         'enabled': True,
         'order': 40
     },

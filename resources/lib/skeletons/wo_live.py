@@ -24,10 +24,10 @@ menu = {
         'channels/wo/euronews.png',
         'fanart':
         'channels/wo/euronews_fanart.jpg',
-        'available_languages': [
-            'FR', 'EN', 'AR', 'DE', 'IT', 'ES', 'PT', 'RU', 'TR', 'FA', 'GR',
-            'HU'
-        ],
+        'available_languages': {
+            'FR': {}, 'EN': {}, 'AR': {}, 'DE': {}, 'IT': {}, 'ES': {}, 'PT': {}, 'RU': {}, 'TR': {}, 'FA': {}, 'GR': {},
+            'HU': {}
+        },
         'enabled': True,
         'order': 2
     },
@@ -36,15 +36,14 @@ menu = {
         'label': 'Arte',
         'thumb': 'channels/wo/arte.png',
         'fanart': 'channels/wo/arte_fanart.jpg',
-        'available_languages': ['FR', 'DE'],
-        'xmltv_ids': {
-            'FR': 'C111.api.telerama.fr'
-        },
-        'm3u_groups': {
-            'FR': 'France TNT'
-        },
-        'm3u_orders': {
-            'FR': 7
+        'available_languages': {
+            'FR': {
+                'xmltv_country': 'fr_live',
+                'xmltv_id': 'C111.api.telerama.fr',
+                'm3u_group': 'France TNT',
+                'm3u_order': 7
+            },
+            'DE': {}
         },
         'enabled': True,
         'order': 3
@@ -54,7 +53,7 @@ menu = {
         'label': 'France 24',
         'thumb': 'channels/wo/france24.png',
         'fanart': 'channels/wo/france24_fanart.jpg',
-        'available_languages': ['FR', 'EN', 'AR', 'ES'],
+        'available_languages': {'FR': {}, 'EN': {}, 'AR': {}, 'ES': {}},
         'enabled': True,
         'order': 4
     },
@@ -63,7 +62,7 @@ menu = {
         'label': 'NHK World',
         'thumb': 'channels/wo/nhkworld.png',
         'fanart': 'channels/wo/nhkworld_fanart.jpg',
-        'available_languages': ['Outside Japan', 'In Japan'],
+        'available_languages': {'Outside Japan': {}, 'In Japan': {}},
         'enabled': True,
         'order': 5
     },
@@ -104,7 +103,7 @@ menu = {
         'label': 'DW',
         'thumb': 'channels/wo/dw.png',
         'fanart': 'channels/wo/dw_fanart.jpg',
-        'available_languages': ['EN', 'AR', 'ES', 'DE'],
+        'available_languages': {'EN': {}, 'AR': {}, 'ES': {}, 'DE': {}},
         'enabled': True,
         'order': 12
     },
@@ -113,7 +112,7 @@ menu = {
         'label': 'QVC',
         'thumb': 'channels/wo/qvc.png',
         'fanart': 'channels/wo/qvc_fanart.jpg',
-        'available_languages': ['JP', 'DE', 'IT', 'UK', 'US'],
+        'available_languages': {'JP': {}, 'DE': {}, 'IT': {}, 'UK': {}, 'US': {}},
         'enabled': True,
         'order': 15
     },
@@ -130,7 +129,7 @@ menu = {
         'label': 'CGTN',
         'thumb': 'channels/wo/cgtn.png',
         'fanart': 'channels/wo/cgtn_fanart.jpg',
-        'available_languages': ['FR', 'EN', 'AR', 'ES', 'RU'],
+        'available_languages': {'FR': {}, 'EN': {}, 'AR': {}, 'ES': {}, 'RU': {}},
         'enabled': True,
         'order': 17
     },
@@ -179,7 +178,7 @@ menu = {
         'label': 'RT',
         'thumb': 'channels/wo/rt.png',
         'fanart': 'channels/wo/rt_fanart.jpg',
-        'available_languages': ['FR', 'EN', 'AR', 'ES'],
+        'available_languages': {'FR': {}, 'EN': {}, 'AR': {}, 'ES': {}},
         'enabled': True,
         'order': 24
     },

@@ -9,7 +9,7 @@ from builtins import str
 import importlib
 import sys
 
-from codequick import Route, Resolver, Listitem, Script
+from codequick import Route, Resolver, Listitem, Script, utils
 import urlquick
 from kodi_six import xbmc, xbmcgui, xbmcplugin
 
@@ -79,9 +79,15 @@ def generic_menu(plugin, item_id=None, **kwargs):
                 item.art["fanart"] = get_item_media_path(
                     item_infos['fanart'])
 
-            # Set item additional params
-            if 'xmltv_id' in item_infos:
-                item.params['xmltv_id'] = item_infos['xmltv_id']
+            # If it's a live channel we retrieve TV guide info
+            if 'available_languages' in item_infos:
+                if isinstance(item_infos['available_languages'], dict):
+                    lang = utils.ensure_unicode(Script.setting[item_id + '.language'])
+                    lang_infos = item_infos['available_languages'][lang]
+                    item.params['xmltv_id'] = lang_infos.get('xmltv_id')
+                    item.params['xmltv_country'] = lang_infos.get('xmltv_country')
+            else:
+                item.params['xmltv_id'] = item_infos.get('xmltv_id')
 
             item.params['item_id'] = item_id
 
@@ -125,14 +131,16 @@ def tv_guide_menu(plugin, item_id, **kwargs):
 
     # Get tv_guide of this country
     xmltv = importlib.import_module('resources.lib.xmltv')
-    tv_guide = xmltv.grab_current_programmes(live_country_id)
+    tv_guides = {}
 
     # Treat this menu as a generic menu and add, if any, tv guide information
     for item in generic_menu(plugin, live_country_id):
-
+        xmltv_country = item.params.get('xmltv_country', live_country_id)
+        if xmltv_country not in tv_guides:
+            tv_guides[xmltv_country] = xmltv.grab_current_programmes(xmltv_country)
         # If we have program information from the grabber
-        if 'xmltv_id' in item.params and item.params['xmltv_id'] in tv_guide:
-            guide_infos = tv_guide[item.params['xmltv_id']]
+        if 'xmltv_id' in item.params and item.params['xmltv_id'] in tv_guides[xmltv_country]:
+            guide_infos = tv_guides[xmltv_country][item.params['xmltv_id']]
 
             # Title
             if 'title' in guide_infos:

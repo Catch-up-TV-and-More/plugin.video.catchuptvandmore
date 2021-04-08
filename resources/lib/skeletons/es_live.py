@@ -78,7 +78,7 @@ menu = {
         'label': 'Realmadrid TV',
         'thumb': 'channels/es/realmadridtv.png',
         'fanart': 'channels/es/realmadridtv_fanart.jpg',
-        'available_languages': ['EN', 'ES'],
+        'available_languages': {'EN': {}, 'ES': {}},
         'enabled': True,
         'order': 8
     },
