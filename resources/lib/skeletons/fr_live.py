@@ -5,7 +5,6 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-from codequick import Script, utils
 
 # The following dictionaries describe
 # the addon's tree architecture.
@@ -262,7 +261,7 @@ menu = {
     },
     'la_1ere': {
         'resolver': '/resources/lib/channels/fr/la_1ere:get_live_url',
-        'label': 'La 1ère (' + utils.ensure_unicode(Script.setting['la_1ere.language']) + ')',
+        'label': 'La 1ère',
         'thumb':
         'channels/fr/la1ere.png',
         'fanart':
@@ -344,7 +343,7 @@ menu = {
     },
     'france3regions': {
         'resolver': '/resources/lib/channels/fr/france3regions:get_live_url',
-        'label': 'France 3 Régions (' + utils.ensure_unicode(Script.setting['france3regions.language']) + ')',
+        'label': 'France 3 Régions',
         'thumb':
         'channels/fr/france3regions.png',
         'fanart':

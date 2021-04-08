@@ -36,7 +36,7 @@ menu = {
         'label': 'Arte',
         'thumb': 'channels/wo/arte.png',
         'fanart': 'channels/wo/arte_fanart.jpg',
-        'available_languages': ['FR', 'DE', 'EN', 'ES', 'PL', 'IT'],
+        'available_languages': ['FR', 'DE'],
         'xmltv_ids': {
             'FR': 'C111.api.telerama.fr'
         },
