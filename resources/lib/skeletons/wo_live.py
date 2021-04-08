@@ -5,7 +5,6 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-from codequick import Script, utils
 
 # The following dictionaries describe
 # the addon's tree architecture.
@@ -20,7 +19,7 @@ root = 'live_tv'
 menu = {
     'euronews': {
         'resolver': '/resources/lib/channels/wo/euronews:get_live_url',
-        'label': 'Euronews (' + utils.ensure_unicode(Script.setting['euronews.language']) + ')',
+        'label': 'Euronews',
         'thumb':
         'channels/wo/euronews.png',
         'fanart':
@@ -34,10 +33,10 @@ menu = {
     },
     'arte': {
         'resolver': '/resources/lib/channels/wo/arte:get_live_url',
-        'label': 'Arte (' + utils.ensure_unicode(Script.setting['arte.language']) + ')',
+        'label': 'Arte',
         'thumb': 'channels/wo/arte.png',
         'fanart': 'channels/wo/arte_fanart.jpg',
-        'available_languages': ['FR', 'DE'],
+        'available_languages': ['FR', 'DE', 'EN', 'ES', 'PL', 'IT'],
         'xmltv_ids': {
             'FR': 'C111.api.telerama.fr'
         },
@@ -52,7 +51,7 @@ menu = {
     },
     'france24': {
         'resolver': '/resources/lib/channels/wo/france24:get_live_url',
-        'label': 'France 24 (' + utils.ensure_unicode(Script.setting['france24.language']) + ')',
+        'label': 'France 24',
         'thumb': 'channels/wo/france24.png',
         'fanart': 'channels/wo/france24_fanart.jpg',
         'available_languages': ['FR', 'EN', 'AR', 'ES'],
@@ -61,7 +60,7 @@ menu = {
     },
     'nhkworld': {
         'resolver': '/resources/lib/channels/wo/nhkworld:get_live_url',
-        'label': 'NHK World (' + utils.ensure_unicode(Script.setting['nhkworld.language']) + ')',
+        'label': 'NHK World',
         'thumb': 'channels/wo/nhkworld.png',
         'fanart': 'channels/wo/nhkworld_fanart.jpg',
         'available_languages': ['Outside Japan', 'In Japan'],
@@ -102,7 +101,7 @@ menu = {
     },
     'dw': {
         'resolver': '/resources/lib/channels/wo/dw:get_live_url',
-        'label': 'DW (' + utils.ensure_unicode(Script.setting['dw.language']) + ')',
+        'label': 'DW',
         'thumb': 'channels/wo/dw.png',
         'fanart': 'channels/wo/dw_fanart.jpg',
         'available_languages': ['EN', 'AR', 'ES', 'DE'],
@@ -111,7 +110,7 @@ menu = {
     },
     'qvc': {
         'resolver': '/resources/lib/channels/wo/qvc:get_live_url',
-        'label': 'QVC (' + utils.ensure_unicode(Script.setting['qvc.language']) + ')',
+        'label': 'QVC',
         'thumb': 'channels/wo/qvc.png',
         'fanart': 'channels/wo/qvc_fanart.jpg',
         'available_languages': ['JP', 'DE', 'IT', 'UK', 'US'],
@@ -128,7 +127,7 @@ menu = {
     },
     'cgtn': {
         'resolver': '/resources/lib/channels/wo/cgtn:get_live_url',
-        'label': 'CGTN (' + utils.ensure_unicode(Script.setting['cgtn.language']) + ')',
+        'label': 'CGTN',
         'thumb': 'channels/wo/cgtn.png',
         'fanart': 'channels/wo/cgtn_fanart.jpg',
         'available_languages': ['FR', 'EN', 'AR', 'ES', 'RU'],
@@ -177,7 +176,7 @@ menu = {
     },
     'rt': {
         'resolver': '/resources/lib/channels/wo/rt:get_live_url',
-        'label': 'RT (' + utils.ensure_unicode(Script.setting['rt.language']) + ')',
+        'label': 'RT',
         'thumb': 'channels/wo/rt.png',
         'fanart': 'channels/wo/rt_fanart.jpg',
         'available_languages': ['FR', 'EN', 'AR', 'ES'],
