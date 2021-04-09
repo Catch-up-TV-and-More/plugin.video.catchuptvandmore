@@ -786,7 +786,7 @@ menu = {
         'enabled': True,
         'order': 121
     },
-    'equidia': {
+    'equidia-live2': {
         'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
         'label': 'Equidia',
         'thumb': 'channels/fr/equidia.png',
@@ -811,5 +811,104 @@ menu = {
         'fanart': 'channels/fr/culturebox_fanart.jpg',
         'enabled': True,
         'order': 124
+    },
+    'equidia-racingtrot': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing Trot',
+        'thumb': 'channels/fr/equidiaracingtrot.png',
+        'fanart': 'channels/fr/equidiaracingtrot_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 125
+    },
+    'equidia-racingmag': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing Mag',
+        'thumb': 'channels/fr/equidiaracingmag.png',
+        'fanart': 'channels/fr/equidiaracingmag_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 126
+    },
+    'equidia-racinggalop': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing Galop',
+        'thumb': 'channels/fr/equidiaracinggalop.png',
+        'fanart': 'channels/fr/equidiaracinggalop_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 127
+    },
+    'equidia-racing1': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing 1',
+        'thumb': 'channels/fr/equidiar1.png',
+        'fanart': 'channels/fr/equidiar1_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 128
+    },
+    'equidia-racing2': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing 2',
+        'thumb': 'channels/fr/equidiar2.png',
+        'fanart': 'channels/fr/equidiar2_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 129
+    },
+    'equidia-racing3': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing 3',
+        'thumb': 'channels/fr/equidiar3.png',
+        'fanart': 'channels/fr/equidiar3_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 130
+    },
+    'equidia-racing4': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing 4',
+        'thumb': 'channels/fr/equidiar4.png',
+        'fanart': 'channels/fr/eequidiar4_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 131
+    },
+    'equidia-racing5': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing 5',
+        'thumb': 'channels/fr/equidiar5.png',
+        'fanart': 'channels/fr/equidiar5_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 132
+    },
+    'equidia-racing6': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing 6',
+        'thumb': 'channels/fr/equidiar6.png',
+        'fanart': 'channels/fr/equidiar6_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 133
+    },
+    'equidia-racing7': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing 7',
+        'thumb': 'channels/fr/equidiar7.png',
+        'fanart': 'channels/fr/equidiar7_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 134
+    },
+    'equidia-racing8': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing 8',
+        'thumb': 'channels/fr/equidiar8.png',
+        'fanart': 'channels/fr/equidiar8_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 135
     }
 }
