@@ -874,6 +874,7 @@ menu = {
         'label': 'Equidia',
         'thumb': 'channels/fr/equidia.png',
         'fanart': 'channels/fr/equidia_fanart.jpg',
+        'xmltv_id': 'C64.api.telerama.fr',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
         'order': 122

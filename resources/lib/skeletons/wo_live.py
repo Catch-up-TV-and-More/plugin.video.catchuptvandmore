@@ -28,7 +28,14 @@ menu = {
             'FR': {
                 'xmltv_id': 'C140.api.telerama.fr'
             },
-            'EN': {}, 'AR': {}, 'DE': {}, 'IT': {}, 'ES': {},
+            'EN': {
+                'xmltv_id': '140.tvguide.co.uk'
+            },
+            'AR': {}, 'DE': {},
+            'IT': {
+                'xmltv_id': 'euronews.rai.it'
+            },
+            'ES': {},
             'PT': {}, 'RU': {}, 'TR': {}, 'FA': {}, 'GR': {},
             'HU': {}
         },
@@ -60,7 +67,10 @@ menu = {
             'FR': {
                 'xmltv_id': 'C529.api.telerama.fr'
             },
-            'EN': {}, 'AR': {}, 'ES': {}
+            'EN': {
+                'xmltv_id': '1183.tvguide.co.uk'
+            },
+            'AR': {}, 'ES': {}
         },
         'enabled': True,
         'order': 4
@@ -111,7 +121,10 @@ menu = {
         'label': 'DW',
         'thumb': 'channels/wo/dw.png',
         'fanart': 'channels/wo/dw_fanart.jpg',
-        'available_languages': {'EN': {}, 'AR': {}, 'ES': {}, 'DE': {}},
+        'available_languages': {
+            'EN': {'xmltv_id': 'C61.api.telerama.fr'},
+            'AR': {}, 'ES': {}, 'DE': {}
+        },
         'enabled': True,
         'order': 12
     },
@@ -187,7 +200,13 @@ menu = {
         'label': 'RT',
         'thumb': 'channels/wo/rt.png',
         'fanart': 'channels/wo/rt_fanart.jpg',
-        'available_languages': {'FR': {}, 'EN': {}, 'AR': {}, 'ES': {}},
+        'available_languages': {
+            'FR': {},
+            'EN': {
+                'xmltv_id': '853.tvguide.co.uk'
+            },
+            'AR': {}, 'ES': {}
+        },
         'enabled': True,
         'order': 24
     },
