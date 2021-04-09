@@ -173,10 +173,10 @@ def get_video_course_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(
-            URL_MOBILE_API % item_id,
-            headers={"User-Agent": "Equidia/6036 CFNetwork/1220.1 Darwin/20.3.0",
-            "Referer": "https://fr.equidia.app/"}, max_age=-1)
+    resp = urlquick.get(URL_MOBILE_API % item_id,
+                        headers={"User-Agent": "Equidia/6036 CFNetwork/1220.1 Darwin/20.3.0",
+                        "Referer": "https://fr.equidia.app/"},
+                        max_age=-1)
     json_parser2 = json.loads(resp.text)
     if "primary" in json_parser2:
         return json_parser2["primary"]
