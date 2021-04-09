@@ -44,7 +44,8 @@ menu = {
         'order': 3
     },
     'wo_live': {
-        'route': '/resources/lib/main:generic_menu',
+        'route': '/resources/lib/main:tv_guide_menu'
+        if TV_GUIDE else '/resources/lib/main:generic_menu',
         'label': 30053,
         'thumb': 'channels/wo.png',
         'enabled': True,

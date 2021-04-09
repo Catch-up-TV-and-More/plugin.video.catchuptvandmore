@@ -9,11 +9,9 @@ import re
 import urlquick
 
 from codequick import Resolver
-from kodi_six import xbmcgui
-from resources.lib import web_utils
-
 
 URL_LIVES = 'http://libs.easybroadcast.io/snrt/%s/EB%s_ads.js'
+
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
@@ -25,5 +23,5 @@ def get_live_url(plugin, item_id, **kwargs):
     else:
         first_id = item_id
 
-    resp = urlquick.get(URL_LIVES % (first_id,item_id))
+    resp = urlquick.get(URL_LIVES % (first_id, item_id))
     return re.compile(r'autolaunch\:\!0\,autoplay\:\!0\,src\:\"(.*)\"\,playerID').findall(resp.text)[0]
