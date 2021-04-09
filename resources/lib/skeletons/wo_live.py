@@ -25,7 +25,11 @@ menu = {
         'fanart':
         'channels/wo/euronews_fanart.jpg',
         'available_languages': {
-            'FR': {}, 'EN': {}, 'AR': {}, 'DE': {}, 'IT': {}, 'ES': {}, 'PT': {}, 'RU': {}, 'TR': {}, 'FA': {}, 'GR': {},
+            'FR': {
+                'xmltv_id': 'C140.api.telerama.fr'
+            },
+            'EN': {}, 'AR': {}, 'DE': {}, 'IT': {}, 'ES': {},
+            'PT': {}, 'RU': {}, 'TR': {}, 'FA': {}, 'GR': {},
             'HU': {}
         },
         'enabled': True,
@@ -38,7 +42,6 @@ menu = {
         'fanart': 'channels/wo/arte_fanart.jpg',
         'available_languages': {
             'FR': {
-                'xmltv_country': 'fr_live',
                 'xmltv_id': 'C111.api.telerama.fr',
                 'm3u_group': 'France TNT',
                 'm3u_order': 7
@@ -53,7 +56,12 @@ menu = {
         'label': 'France 24',
         'thumb': 'channels/wo/france24.png',
         'fanart': 'channels/wo/france24_fanart.jpg',
-        'available_languages': {'FR': {}, 'EN': {}, 'AR': {}, 'ES': {}},
+        'available_languages': {
+            'FR': {
+                'xmltv_id': 'C529.api.telerama.fr'
+            },
+            'EN': {}, 'AR': {}, 'ES': {}
+        },
         'enabled': True,
         'order': 4
     },
@@ -154,6 +162,7 @@ menu = {
         'label': 'TV5Monde France Belgique Suisse',
         'thumb': 'channels/wo/tv5mondefbs.png',
         'fanart': 'channels/wo/tv5mondefbs_fanart.jpg',
+        'xmltv_id': 'C205.api.telerama.fr',
         'enabled': True,
         'order': 21
     },

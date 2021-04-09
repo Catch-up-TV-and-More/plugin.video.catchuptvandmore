@@ -227,11 +227,6 @@ class IPTVManager:
                 if not tv_integration_settings['enabled_channels'].get(country_id, {}).get(channel_key, {}).get('enabled', False):
                     continue
 
-                # If it's a multilangual channel we need to take the correct xmltv country.
-                # Fallback to country_id if xmltv_country key is not found
-                if lang:
-                    country_id = channel_infos['available_languages'][lang].get('xmltv_country', country_id)
-
                 # Check if we have programmes for this country
                 if country_id in country_tv_guides:
                     continue
