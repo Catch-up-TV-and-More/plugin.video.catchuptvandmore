@@ -38,6 +38,7 @@ URL_AUTH_CALLBACK = URL_ROOT + '/auth-callback'
 
 URL_API = 'https://subscription.digital.api.abweb.com/api/subscription/has-live-rights/%s/%s'
 
+
 def genparams(item_id):
     state = ''.join(random.choice('0123456789abcdef') for n in range(32))
     while True:
@@ -101,10 +102,10 @@ def get_live_url(plugin, item_id, **kwargs):
         'Content-Type': 'application/x-www-form-urlencoded'
     }
     resp2 = session_urlquick.post(URL_ACCOUNT_LOGIN,
-                                params=paramslogin,
-                                data=payload,
-                                headers=headers,
-                                verify=False)
+                                  params=paramslogin,
+                                  data=payload,
+                                  headers=headers,
+                                  verify=False)
     next_url = resp2.history[1].headers['location']
     code_value = re.compile(r'code\=(.*?)\&').findall(next_url)[0]
     code_verifier = json_parser['code_verifier']
