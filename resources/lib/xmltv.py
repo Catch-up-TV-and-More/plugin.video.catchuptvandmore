@@ -442,6 +442,11 @@ xmltv_infos = {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}.xml',
             'keyword': 'tv_guide_be_'
         },
+    'ch_live':
+        {
+            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_ch_{}.xml',
+            'keyword': 'tv_guide_ch_'
+        },
     'uk_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_uk_{}.xml',

@@ -38,27 +38,33 @@ URL_AUTH_CALLBACK = URL_ROOT + '/auth-callback'
 
 URL_API = 'https://subscription.digital.api.abweb.com/api/subscription/has-live-rights/%s/%s'
 
+
 def genparams(item_id):
     state = ''.join(random.choice('0123456789abcdef') for n in range(32))
     while True:
         code_verifier = ''.join(random.choice('0123456789abcdef') for n in range(96)).encode('utf-8')
         hashed = sha256(code_verifier).hexdigest()
         code_challenge = codec_encode(codec_decode(hashed, 'hex'), 'base64').decode("utf-8").strip().replace('=', '')
-        #make sure that the hashed string doesn't contain + / =
+        # make sure that the hashed string doesn't contain + / =
         if not any(c in '+/=' for c in code_challenge):
-            result = json.dumps({'code_verifier': code_verifier.decode("utf-8"),
-                    "params":{
+            result = json.dumps(
+                {
+                    'code_verifier': code_verifier.decode("utf-8"),
+                    "params": {
                         'client_id': item_id,
                         'redirect_uri': URL_AUTH_CALLBACK % item_id,
                         'response_type': 'code',
                         'scope': 'openid profile email',
                         'state': state,
                         'code_challenge': code_challenge,
-                        'code_challenge_method' : 'S256',
+                        'code_challenge_method': 'S256',
                         'response_mode': 'query',
-                        'action' : 'undefined'
-                    }})
+                        'action': 'undefined'
+                    }
+                }
+            )
             return result
+
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
@@ -73,7 +79,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     # Get Token
     # KO - resp = session_urlquick.get(URL_COMPTE_LOGIN)
-    resp = session_urlquick.get(URL_CONNECT_AUTHORIZE, params=params)
+    resp = session_urlquick.get(URL_CONNECT_AUTHORIZE, params=params, max_age=-1)
     value_token = re.compile(
         r'__RequestVerificationToken\" type\=\"hidden\" value\=\"(.*?)\"').findall(resp.text)[0]
     if plugin.setting.get_string('abweb.login') == '' or \
@@ -101,10 +107,10 @@ def get_live_url(plugin, item_id, **kwargs):
         'Content-Type': 'application/x-www-form-urlencoded'
     }
     resp2 = session_urlquick.post(URL_ACCOUNT_LOGIN,
-                                params=paramslogin,
-                                data=payload,
-                                headers=headers,
-                                verify=False)
+                                  params=paramslogin,
+                                  data=payload,
+                                  headers=headers,
+                                  verify=False)
     next_url = resp2.history[1].headers['location']
     code_value = re.compile(r'code\=(.*?)\&').findall(next_url)[0]
     code_verifier = json_parser['code_verifier']
@@ -118,10 +124,10 @@ def get_live_url(plugin, item_id, **kwargs):
     }
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Referer': URL_ROOT%item_id,
+        'Referer': URL_ROOT % item_id,
         'User-Agent': web_utils.get_random_ua()
     }
-    resp3 = session_urlquick.post(URL_CONNECT_TOKEN, headers=headers, data=paramtoken)
+    resp3 = session_urlquick.post(URL_CONNECT_TOKEN, headers=headers, data=paramtoken, max_age=-1)
     json_parser3 = json.loads(resp3.text)
     token = json_parser3['id_token']
 
@@ -131,6 +137,6 @@ def get_live_url(plugin, item_id, **kwargs):
         'User-Agent': web_utils.get_random_ua(),
         'Referer': URL_AUTH_CALLBACK % item_id
     }
-    resp4 = session_urlquick.get(URL_API % (item_id, item_id), headers=headers)
+    resp4 = session_urlquick.get(URL_API % (item_id, item_id), headers=headers, max_age=-1)
     json_parser4 = json.loads(resp4.text)
     return json_parser4['hlsUrl']

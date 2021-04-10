@@ -29,7 +29,8 @@ menu = {
         'order': 1
     },
     'ch_live': {
-        'route': '/resources/lib/main:generic_menu',
+        'route': '/resources/lib/main:tv_guide_menu'
+        if TV_GUIDE else '/resources/lib/main:generic_menu',
         'label': 30051,
         'thumb': 'channels/ch.png',
         'enabled': True,
