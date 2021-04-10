@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.34~beta10" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.34~beta11" provider-name="SylvainCecchetto,wwark">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -56,6 +56,7 @@
 [RobTV - BE] Add Catch-up TV (thanks michaelarnauts)
 [Live TV] Add full support for multilingual channels (IPTV Manager + TV guide)
 [Equidia - FR] Add more Lives (thanks chamchenko)
+[TVA - CA] Fix Catch-UP TV
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
