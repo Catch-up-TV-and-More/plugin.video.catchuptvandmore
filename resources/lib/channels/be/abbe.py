@@ -7,7 +7,11 @@
 from __future__ import unicode_literals
 import re
 import json
-import requests
+import random
+import urlquick
+from hashlib import sha256
+from codecs import encode as codec_encode
+from codecs import decode as codec_decode
 
 from codequick import Resolver
 from kodi_six import xbmcgui
@@ -34,6 +38,27 @@ URL_AUTH_CALLBACK = URL_ROOT + '/auth-callback'
 
 URL_API = 'https://subscription.digital.api.abweb.com/api/subscription/has-live-rights/%s/%s'
 
+def genparams(item_id):
+    state = ''.join(random.choice('0123456789abcdef') for n in range(32))
+    while True:
+        code_verifier = ''.join(random.choice('0123456789abcdef') for n in range(96)).encode('utf-8')
+        hashed = sha256(code_verifier).hexdigest()
+        code_challenge = codec_encode(codec_decode(hashed, 'hex'), 'base64').decode("utf-8").strip().replace('=', '')
+        #make sure that the hashed string doesn't contain + / =
+        if not any(c in '+/=' for c in code_challenge):
+            result = json.dumps({'code_verifier': code_verifier.decode("utf-8"),
+                    "params":{
+                        'client_id': item_id,
+                        'redirect_uri': URL_AUTH_CALLBACK % item_id,
+                        'response_type': 'code',
+                        'scope': 'openid profile email',
+                        'state': state,
+                        'code_challenge': code_challenge,
+                        'code_challenge_method' : 'S256',
+                        'response_mode': 'query',
+                        'action' : 'undefined'
+                    }})
+            return result
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
@@ -41,28 +66,14 @@ def get_live_url(plugin, item_id, **kwargs):
     # Using script (https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/issues/484)
 
     # Create session
-    # KO - session_urlquick = urlquick.Session()
-    session_requests = requests.session()
-
-    # TODO find those values
-    state = 'b71f9b79703240fe967552544f5ea1b9'
-    code_challenge = '89bnNcjz_0ynNMV8cjtMWPWcPIyEU1oFwQqD9YfKRkA'
-    params = {
-        'client_id': item_id,
-        'redirect_uri': URL_AUTH_CALLBACK % item_id,
-        'response_type': 'code',
-        'scope': 'openid profile email',
-        'state': state,
-        'code_challenge': code_challenge,
-        'code_challenge_method': 'S256',
-        'response_mode': 'query',
-        'action': 'undefined'
-    }
+    session_urlquick = urlquick.Session()
+    json_parser = json.loads(genparams(item_id))
+    params = json_parser['params']
     paramsencoded = urlencode(params)
 
     # Get Token
     # KO - resp = session_urlquick.get(URL_COMPTE_LOGIN)
-    resp = session_requests.get(URL_CONNECT_AUTHORIZE, params=params)
+    resp = session_urlquick.get(URL_CONNECT_AUTHORIZE, params=params)
     value_token = re.compile(
         r'__RequestVerificationToken\" type\=\"hidden\" value\=\"(.*?)\"').findall(resp.text)[0]
     if plugin.setting.get_string('abweb.login') == '' or \
@@ -89,19 +100,15 @@ def get_live_url(plugin, item_id, **kwargs):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
-    post_url = URL_ACCOUNT_LOGIN + '?%s' % urlencode(paramslogin)
-    # LOGIN
-    # KO - resp2 = session_urlquick.post(
-    #     URL_COMPTE_LOGIN, data=payload,
-    #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
-    resp2 = session_requests.post(post_url,
-                                  data=payload,
-                                  headers=headers,
-                                  verify=False)
+    resp2 = session_urlquick.post(URL_ACCOUNT_LOGIN,
+                                params=paramslogin,
+                                data=payload,
+                                headers=headers,
+                                verify=False)
     next_url = resp2.history[1].headers['location']
     code_value = re.compile(r'code\=(.*?)\&').findall(next_url)[0]
+    code_verifier = json_parser['code_verifier']
 
-    code_verifier = '8111a6c1025249fd9c0ff43f5af8d37b8929eb1a06f342659c7e3ff6becb763bfcc752ec316f44f385523f02ef90ac77'
     paramtoken = {
         'client_id': item_id,
         'code': code_value,
@@ -110,23 +117,11 @@ def get_live_url(plugin, item_id, **kwargs):
         'grant_type': 'authorization_code'
     }
     headers = {
-        'Accept': '*/*',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Connection': 'keep-alive',
-        'Content-Length': '296',
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Host': 'app.auth.digital.abweb.com',
-        'Origin': 'https://www.bistvonline.com',
-        'Referer': 'https://www.bistvonline.com/',
-        'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
-        'sec-ch-ua-mobile': '?0',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'cross-site',
+        'Referer': URL_ROOT%item_id,
         'User-Agent': web_utils.get_random_ua()
     }
-    resp3 = session_requests.post(URL_CONNECT_TOKEN, headers=headers, data=paramtoken)
+    resp3 = session_urlquick.post(URL_CONNECT_TOKEN, headers=headers, data=paramtoken)
     json_parser3 = json.loads(resp3.text)
     token = json_parser3['id_token']
 
@@ -134,8 +129,8 @@ def get_live_url(plugin, item_id, **kwargs):
         'Accept': 'application/json, text/plain, */*',
         'Authorization': 'Bearer %s' % token,
         'User-Agent': web_utils.get_random_ua(),
-        'Referer': 'https://www.bistvonline.com/live'
+        'Referer': URL_AUTH_CALLBACK % item_id
     }
-    resp4 = session_requests.get(URL_API % (item_id, item_id), headers=headers)
+    resp4 = session_urlquick.get(URL_API % (item_id, item_id), headers=headers)
     json_parser4 = json.loads(resp4.text)
     return json_parser4['hlsUrl']
