@@ -45,21 +45,22 @@ def genparams(item_id):
         code_verifier = ''.join(random.choice('0123456789abcdef') for n in range(96)).encode('utf-8')
         hashed = sha256(code_verifier).hexdigest()
         code_challenge = codec_encode(codec_decode(hashed, 'hex'), 'base64').decode("utf-8").strip().replace('=', '')
-        #make sure that the hashed string doesn't contain + / =
+        # make sure that the hashed string doesn't contain + / =
         if not any(c in '+/=' for c in code_challenge):
             result = json.dumps({'code_verifier': code_verifier.decode("utf-8"),
-                    "params":{
+                    "params": {
                         'client_id': item_id,
                         'redirect_uri': URL_AUTH_CALLBACK % item_id,
                         'response_type': 'code',
                         'scope': 'openid profile email',
                         'state': state,
                         'code_challenge': code_challenge,
-                        'code_challenge_method' : 'S256',
+                        'code_challenge_method': 'S256',
                         'response_mode': 'query',
-                        'action' : 'undefined'
+                        'action': 'undefined'
                     }})
             return result
+
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
@@ -119,7 +120,7 @@ def get_live_url(plugin, item_id, **kwargs):
     }
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Referer': URL_ROOT%item_id,
+        'Referer': URL_ROOT % item_id,
         'User-Agent': web_utils.get_random_ua()
     }
     resp3 = session_urlquick.post(URL_CONNECT_TOKEN, headers=headers, data=paramtoken)
