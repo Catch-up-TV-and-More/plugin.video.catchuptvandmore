@@ -47,7 +47,9 @@ def genparams(item_id):
         code_challenge = codec_encode(codec_decode(hashed, 'hex'), 'base64').decode("utf-8").strip().replace('=', '')
         # make sure that the hashed string doesn't contain + / =
         if not any(c in '+/=' for c in code_challenge):
-            result = json.dumps({'code_verifier': code_verifier.decode("utf-8"),
+            result = json.dumps(
+                {
+                    'code_verifier': code_verifier.decode("utf-8"),
                     "params": {
                         'client_id': item_id,
                         'redirect_uri': URL_AUTH_CALLBACK % item_id,
@@ -58,7 +60,9 @@ def genparams(item_id):
                         'code_challenge_method': 'S256',
                         'response_mode': 'query',
                         'action': 'undefined'
-                    }})
+                    }
+                }
+            )
             return result
 
 
@@ -75,7 +79,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     # Get Token
     # KO - resp = session_urlquick.get(URL_COMPTE_LOGIN)
-    resp = session_urlquick.get(URL_CONNECT_AUTHORIZE, params=params)
+    resp = session_urlquick.get(URL_CONNECT_AUTHORIZE, params=params, max_age=-1)
     value_token = re.compile(
         r'__RequestVerificationToken\" type\=\"hidden\" value\=\"(.*?)\"').findall(resp.text)[0]
     if plugin.setting.get_string('abweb.login') == '' or \
@@ -123,7 +127,7 @@ def get_live_url(plugin, item_id, **kwargs):
         'Referer': URL_ROOT % item_id,
         'User-Agent': web_utils.get_random_ua()
     }
-    resp3 = session_urlquick.post(URL_CONNECT_TOKEN, headers=headers, data=paramtoken)
+    resp3 = session_urlquick.post(URL_CONNECT_TOKEN, headers=headers, data=paramtoken, max_age=-1)
     json_parser3 = json.loads(resp3.text)
     token = json_parser3['id_token']
 
@@ -133,6 +137,6 @@ def get_live_url(plugin, item_id, **kwargs):
         'User-Agent': web_utils.get_random_ua(),
         'Referer': URL_AUTH_CALLBACK % item_id
     }
-    resp4 = session_urlquick.get(URL_API % (item_id, item_id), headers=headers)
+    resp4 = session_urlquick.get(URL_API % (item_id, item_id), headers=headers, max_age=-1)
     json_parser4 = json.loads(resp4.text)
     return json_parser4['hlsUrl']
