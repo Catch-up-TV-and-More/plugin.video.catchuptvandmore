@@ -267,15 +267,14 @@ def read_programmes(fp, only_current_programmes=False):
         # than parsing the whole xmltv file with elementtree
         # (x10 faster)
         xmltv_l = []
-        with open(fp, 'r', encoding='utf-8') as f:
+        with open(fp, 'rb') as f:
             take_line = True
-            for line in f.readlines():
-
+            for line in f:
                 # Match the beginning of a program
-                if '<programme ' in line:
-                    start = int(re.search(r'start="(.*?)"', line).group(1))  # UTC start time
+                if b'<programme ' in line:
+                    start = int(re.search(b'start="(.*?)"', line).group(1))  # UTC start time
                     try:
-                        stop = int(re.search(r'stop="(.*?)"', line).group(1))  # UTC stop time
+                        stop = int(re.search(b'stop="(.*?)"', line).group(1))  # UTC stop time
                     except Exception:
                         stop = 50000000000000
                     if current_utc_time >= start and current_utc_time <= stop:
@@ -289,12 +288,12 @@ def read_programmes(fp, only_current_programmes=False):
                     xmltv_l.append(line)
 
                 # Match the end of a program
-                if '</programme>' in line:
+                if b'</programme>' in line:
                     take_line = True
 
         # Parse the reduced xmltv string with elementtree
         # and convert each programme to a dict
-        tree = ET.fromstring('\n'.join(xmltv_l))
+        tree = ET.fromstring(b''.join(xmltv_l))
     else:
         tree = ET.parse(fp)
     programmes = []
