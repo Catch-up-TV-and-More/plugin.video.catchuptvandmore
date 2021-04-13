@@ -14,7 +14,7 @@ try:
 except ImportError:
     from urllib import urlencode
 
-from codequick import Script
+from codequick import Script, utils
 from kodi_six import xbmcgui
 
 from resources.lib.addon_utils import get_item_label, get_item_media_path
@@ -200,7 +200,13 @@ class IPTVManager:
                 else:
                     json_stream['id'] = channel_infos.get('xmltv_id', '')
                     json_stream['preset'] = channel_infos.get('m3u_order')
-                json_stream['stream'] = PLUGIN_KODI_PATH + resolver + '/?' + urlencode(params)
+
+                # It seems that in Python 2 urlencode doesn't deal well with unicode data
+                # (see https://stackoverflow.com/a/3121311)
+                for k, v in params.items():
+                    params[k] = utils.ensure_native_str(v)
+
+                json_stream['stream'] = utils.ensure_native_str(PLUGIN_KODI_PATH + resolver + '/?') + urlencode(params)
                 json_stream['logo'] = get_item_media_path(channel_infos['thumb'])
 
                 channels_list.append(json_stream)
