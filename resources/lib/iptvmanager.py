@@ -21,8 +21,6 @@ try:
 except ImportError:
     from urllib import urlencode
 
-
-
 PLUGIN_KODI_PATH = "plugin://plugin.video.catchuptvandmore"
 
 # Json file that keeps user settings concerning Kodi Live TV integration made by IPTV Manager
@@ -257,6 +255,8 @@ class IPTVManager:
         for country_id, programmes in country_tv_guides.items():
             for p in programmes:
                 if p.get('channel') not in xmltv_ids_to_keep:
+                    continue
+                if not p.get('stop'):
                     continue
                 epg = dict(
                     start=p.get('start'),
