@@ -333,6 +333,7 @@ def get_francetv_video_stream(plugin,
             resp3 = urlquick.get(json_parser2['url'], headers=headers, max_age=-1, allow_redirects=False)
             location_url = resp3.headers['location']
             item.path = location_url
+            item.property['inputstream.adaptive.stream_headers'] = 'User-Agent=%s' % web_utils.get_random_ua()
             if download_mode:
                 return download.download_video(item.path)
         return item
