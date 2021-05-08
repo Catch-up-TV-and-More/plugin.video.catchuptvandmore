@@ -34,6 +34,7 @@ from kodi_six import xbmcvfs
 
 from codequick import Script
 import urlquick
+from resources.lib.py_utils import compute_md5
 
 # python-xmltv package (https://pypi.org/project/python-xmltv/)
 
@@ -434,31 +435,37 @@ xmltv_infos = {
     'fr_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_{}.xml',
+            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_{}_md5.txt',
             'keyword': 'tv_guide_fr_'
         },
     'be_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}.xml',
+            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}_md5.txt',
             'keyword': 'tv_guide_be_'
         },
     'ch_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_ch_{}.xml',
+            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_ch_{}_md5.txt',
             'keyword': 'tv_guide_ch_'
         },
     'uk_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_uk_{}.xml',
+            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_uk_{}_md5.txt',
             'keyword': 'tv_guide_uk_'
         },
     'it_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_it_{}.xml',
+            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_it_{}_md5.txt',
             'keyword': 'tv_guide_it_'
         },
     'wo_live':
         {
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_wo_{}.xml',
+            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_wo_{}_md5.txt',
             'keyword': 'tv_guide_wo_'
         }
 }
@@ -476,6 +483,21 @@ def get_xmltv_url(country_id, day_delta=0):
     xmltv_date = datetime.date.today() + datetime.timedelta(days=day_delta)
     xmltv_date_s = xmltv_date.strftime('%Y%m%d')
     return xmltv_infos[country_id]['url'].format(xmltv_date_s)
+
+
+def get_remote_xmltv_md5(country_id, day_delta=0):
+    """Get MD5 of the remote xmltv file
+
+    Args:
+        country_id (str)
+        day_delta (int): 0: Today, 1: Tomorrow,...
+    Returns:
+        str: xmltv MD5 value
+    """
+    xmltv_date = datetime.date.today() + datetime.timedelta(days=day_delta)
+    xmltv_date_s = xmltv_date.strftime('%Y%m%d')
+    url = xmltv_infos[country_id]['md5_url'].format(xmltv_date_s)
+    return urlquick.get(url, max_age=120).text
 
 
 def download_xmltv_file(country_id, day_delta=0):
@@ -512,9 +534,22 @@ def download_xmltv_file(country_id, day_delta=0):
             pass
 
     # Check if we need to download a fresh xmltv file
+    need_to_downlod_xmltv_file = False
     if not xbmcvfs.exists(xmltv_fp):
         Script.log("xmltv file of {} for today does not exist, let's download it".format(country_id))
-        r = urlquick.get(xmltv_url)
+        need_to_downlod_xmltv_file = True
+    else:
+        # Check if we have the last version of the file
+        current_file_md5 = compute_md5(xmltv_fp)
+        remote_file_md5 = get_remote_xmltv_md5(country_id, day_delta=day_delta)
+        print(current_file_md5)
+        print(remote_file_md5)
+        if current_file_md5 != remote_file_md5:
+            Script.log("A new version of xmltv file of {} for today exists, let's download it".format(country_id))
+            need_to_downlod_xmltv_file = True
+
+    if need_to_downlod_xmltv_file:
+        r = urlquick.get(xmltv_url, max_age=-1)
         with open(xmltv_fp, 'wb') as f:
             f.write(r.content)
     return xmltv_fp
