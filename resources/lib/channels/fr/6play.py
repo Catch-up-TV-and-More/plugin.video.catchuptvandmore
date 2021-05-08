@@ -438,8 +438,10 @@ def get_video_url(plugin,
                                         headers={'User-Agent': web_utils.get_random_ua()},
                                         allow_redirects=False
                                     )
-            playback_url = dummy_req.headers['location']
-            item.path = playback_url
+            if 'location' in dummy_req.headers:
+                item.path = dummy_req.headers['location']
+            else:
+                asset['full_physical_path']
             if 'http' in subtitle_url:
                 item.subtitles.append(subtitle_url)
             item.label = get_selected_item_label()
