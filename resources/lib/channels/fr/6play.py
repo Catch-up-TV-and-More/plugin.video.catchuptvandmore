@@ -433,11 +433,9 @@ def get_video_url(plugin,
     for asset in video_assets:
         if 'usp_dashcenc_h264' in asset["type"]:
             item = Listitem()
-            dummy_req = urlquick.get(
-                                        asset['full_physical_path'],
-                                        headers={'User-Agent': web_utils.get_random_ua()},
-                                        allow_redirects=False
-                                    )
+            dummy_req = urlquick.get(asset['full_physical_path'],
+                                     headers={'User-Agent': web_utils.get_random_ua()},
+                                     allow_redirects=False)
             if 'location' in dummy_req.headers:
                 item.path = dummy_req.headers['location']
             else:

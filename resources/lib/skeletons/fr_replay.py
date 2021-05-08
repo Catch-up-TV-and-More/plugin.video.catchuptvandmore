@@ -363,7 +363,7 @@ menu = {
         'order': 89
     },
     'paramountchannel_fr': {
-        'route': '/resources/lib/channels/fr/paramountchannel_fr:list_categories',
+        'route': '/resources/lib/channels/fr/paramountchannel_fr:list_programs',
         'label': 'Paramount Channel (FR)',
         'thumb': 'channels/fr/paramountchannel_fr.png',
         'fanart': 'channels/fr/paramountchannel_fr_fanart.jpg',
