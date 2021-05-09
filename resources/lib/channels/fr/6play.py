@@ -439,7 +439,7 @@ def get_video_url(plugin,
             if 'location' in dummy_req.headers:
                 item.path = dummy_req.headers['location']
             else:
-                item.path =  asset['full_physical_path']
+                item.path = asset['full_physical_path']
             if 'http' in subtitle_url:
                 item.subtitles.append(subtitle_url)
             item.label = get_selected_item_label()
