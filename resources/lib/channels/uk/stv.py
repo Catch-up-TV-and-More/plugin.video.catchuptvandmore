@@ -10,7 +10,8 @@ import json
 import re
 
 import urlquick
-from codequick import Listitem, Resolver, Route
+from codequick import Listitem, Resolver, Route, Script
+from kodi_six import xbmcplugin
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
 
@@ -33,10 +34,24 @@ URL_BRIGHTCOVE_DATAS = "https://player.stv.tv/player-web/players/vod/bundle.js"
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
     """List categroies from https://player.stv.tv/categories/."""
-    # TODO: Add most popular and recently added
     resp = urlquick.get(URL_CATEGORIES_JSON)
     json_parser = json.loads(resp.text)
 
+    # Most popular category
+    item = Listitem()
+    item.label = Script.localize(30727)
+    item.set_callback(list_videos, item_id=item_id, order_by="-views")
+    item_post_treatment(item)
+    yield item
+
+    # Recently added category
+    item = Listitem()
+    item.label = Script.localize(30728)
+    item.set_callback(list_videos, item_id=item_id, order_by="-availability.from")
+    item_post_treatment(item)
+    yield item
+
+    # Other categories
     for category_datas in json_parser["results"]:
         item = Listitem()
         item.label = category_datas["name"]
@@ -77,9 +92,13 @@ def list_programs(plugin, item_id, category_guid, **kwargs):
 
 
 @Route.register
-def list_videos(plugin, item_id, program_guid, **kwargs):
-
-    payload = {"programme_guid": program_guid, "limit": "300"}
+def list_videos(plugin, item_id, program_guid=None, order_by=None, **kwargs):
+    plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
+    payload = {"limit": "300"}
+    if program_guid:
+        payload["programme_guid"] = program_guid
+    if order_by:
+        payload["orderBy"] = order_by
     resp = urlquick.get(URL_VIDEOS_JSON, params=payload)
     json_parser = json.loads(resp.text)
 
