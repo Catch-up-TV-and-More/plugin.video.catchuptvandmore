@@ -115,6 +115,11 @@ def list_videos(plugin, item_id, program_guid=None, order_by=None, **kwargs):
             video_duration = 60 * int(video_duration_datas[0])
         video_id = video_datas["video"]["id"]
 
+        try:
+            subtitle = video_datas["_subtitles"]["webvtt"]
+        except Exception:
+            subtitle = None
+
         item = Listitem()
         item.label = video_title
         item.art["thumb"] = item.art["landscape"] = video_image
@@ -126,16 +131,14 @@ def list_videos(plugin, item_id, program_guid=None, order_by=None, **kwargs):
             item.info.date(date_value, "%Y-%m-%d")
 
         item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_id=video_id,
+            get_video_url, item_id=item_id, video_id=video_id, subtitle=subtitle
         )
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
+def get_video_url(plugin, item_id, video_id, subtitle, download_mode=False, **kwargs):
 
     resp = urlquick.get(URL_BRIGHTCOVE_DATAS)
 
@@ -143,9 +146,13 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
     data_player = re.compile(r"PLAYER_ID\:\"(.*?)\"").findall(resp.text)[1]
     data_video_id = video_id
 
-    return resolver_proxy.get_brightcove_video_json(
+    item = Listitem()
+    item.path = resolver_proxy.get_brightcove_video_json(
         plugin, data_account, data_player, data_video_id, download_mode
     )
+    if subtitle:
+        item.subtitles.append(subtitle)
+    return item
 
 
 @Resolver.register
