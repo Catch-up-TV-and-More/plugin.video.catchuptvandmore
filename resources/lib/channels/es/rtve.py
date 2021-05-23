@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 # Copyright: (c) 2016-2020, Team Catch-up TV & More
 # GNU General Public License v2.0+ (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 
@@ -16,7 +16,7 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://www.rtve.es'
 
-URL_LIVE_STREAM = 'https://rtvelivestream-lvlt.rtve.es/%s_dvr.m3u8'
+URL_LIVE_STREAM = 'https://rtvelivestream.akamaized.net/%s_main_dvr.m3u8'
 # Live Id
 
 URL_CATEGORIES = URL_ROOT + '/alacarta/categorieslist.shtml?ctx=tve'
