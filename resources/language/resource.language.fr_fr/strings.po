@@ -143,7 +143,7 @@ msgstr "Canada"
 
 msgctxt "#30057"
 msgid "United States of America"
-msgstr "Etat Unis d'Amérique"
+msgstr "États-Unis d'Amérique"
 
 msgctxt "#30058"
 msgid "Poland"
