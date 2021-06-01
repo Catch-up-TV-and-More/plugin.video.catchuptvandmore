@@ -117,7 +117,9 @@ def list_lives(plugin, item_id, **kwargs):
             live_title = live_datas["title"]
             live_image = ''
             if 'images' in live_datas:
-                live_image = live_datas["images"][0]["urls"]['w:300']
+                for image_group in live_datas['images']:
+                    if image_group['type'] == 'vignette_16x9':
+                        live_image = image_group['urls']['w:400']
             id_diffusion = live_datas["si_id"]
             try:
                 live_date_plot = time.strftime(
