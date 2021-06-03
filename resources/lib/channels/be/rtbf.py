@@ -645,6 +645,8 @@ def list_lives(plugin, item_id, **kwargs):
                 if 'url_hls' in live_datas["url_streaming"]:
                     live_url = live_datas["url_streaming"]["url_hls"]
                     if "_drm.m3u8" in live_url:
+                        live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
+                    if "/.m3u8?" in live_url:
                         if "laune" in live_url:
                             live_url = URL_LIVE_LAUNE
                         elif "ladeux" in live_url:
