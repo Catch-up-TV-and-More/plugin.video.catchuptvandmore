@@ -73,7 +73,9 @@ URL_JSON_LIVE_CHANNEL = 'http://www.rtbf.be/api/partner/generic/live/' \
 URL_LICENCE_KEY = 'https://wv-keyos.licensekeyserver.com/|%s|R{SSM}|'
 
 URL_TOKEN = 'https://www.rtbf.be/api/partner/generic/drm/encauthxml?%s=%s&partner_key=%s'
-
+URL_LIVE_LAUNE = 'https://rtbf-live.fl.freecaster.net/live/rtbf/geo/drm/laune_aes.m3u8'
+URL_LIVE_LADEUX = 'https://rtbf-live.fl.freecaster.net/live/rtbf/geo/drm/ladeux_aes.m3u8'
+URL_LIVE_LATROIS = 'https://rtbf-live.fl.freecaster.net/live/rtbf/geo/drm/latrois_aes.m3u8'
 
 URL_ROOT_LIVE = 'https://www.rtbf.be/auvio/direct#/'
 
@@ -643,7 +645,14 @@ def list_lives(plugin, item_id, **kwargs):
                 if 'url_hls' in live_datas["url_streaming"]:
                     live_url = live_datas["url_streaming"]["url_hls"]
                     if "_drm.m3u8" in live_url:
-                        live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
+                        if "laune" in live_url:
+                            live_url = URL_LIVE_LAUNE
+                        elif "ladeux" in live_url:
+                            live_url = URL_LIVE_LADEUX
+                        elif "ladeux" in live_url:
+                            live_url = URL_LIVE_LATROIS
+                        else:
+                            live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
                     live_id = live_datas["id"]
                     is_drm = False
                 elif 'url_dash' in live_datas["url_streaming"]:
