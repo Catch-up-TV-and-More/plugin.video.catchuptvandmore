@@ -595,13 +595,14 @@ def set_live_url(plugin, item_id, **kwargs):
     if "url_streaming" in json_parser:
         is_drm = json_parser["drm"]
         if is_drm:
-            if 'url_hls' in json_parser["url_streaming"]:
-                live_url = json_parser["url_streaming"]["url_hls"]
-                if "_drm.m3u8" in live_url:
-                    live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
-                live_id = json_parser["id"]
-                is_drm = False
-            elif 'url_dash' in json_parser["url_streaming"]:
+            #if 'url_hls' in json_parser["url_streaming"]:
+            #    live_url = json_parser["url_streaming"]["url_hls"]
+            #    if "_drm.m3u8" in live_url:
+            #        live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
+            #    live_id = json_parser["id"]
+            #    is_drm = False
+            #elif 'url_dash' in json_parser["url_streaming"]:
+            if 'url_dash' in json_parser["url_streaming"]:
                 live_url = json_parser["url_streaming"]["url_dash"]
                 live_id = json_parser["id"]
             else:
