@@ -602,9 +602,9 @@ def set_live_url(plugin, item_id, **kwargs):
                 if "/.m3u8?" in live_url:
                     if "laune" in live_url:
                         live_url = URL_LIVE_LAUNE
-                    elif "ladeux" in live_url:
+                    elif "tipik" in live_url:
                         live_url = URL_LIVE_LADEUX
-                    elif "ladeux" in live_url:
+                    elif "latrois" in live_url:
                         live_url = URL_LIVE_LATROIS
                     else:
                         live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
@@ -658,9 +658,9 @@ def list_lives(plugin, item_id, **kwargs):
                     if "/.m3u8?" in live_url:
                         if "laune" in live_url:
                             live_url = URL_LIVE_LAUNE
-                        elif "ladeux" in live_url:
+                        elif "tipik" in live_url:
                             live_url = URL_LIVE_LADEUX
-                        elif "ladeux" in live_url:
+                        elif "latrois" in live_url:
                             live_url = URL_LIVE_LATROIS
                         else:
                             live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
