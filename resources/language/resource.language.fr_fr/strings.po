@@ -771,6 +771,10 @@ msgctxt "#30728"
 msgid "Recently added"
 msgstr "Ajouté récemment"
 
+msgctxt "#30729"
+msgid "Emissions"
+msgstr "Émissions"
+
 # Favourites (from 30800 to 30859)
 msgctxt "#30800"
 msgid "Add to add-on favourites"
