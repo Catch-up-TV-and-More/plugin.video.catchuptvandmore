@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.36~beta07" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.36~beta08" provider-name="SylvainCecchetto,wwark">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -54,6 +54,7 @@
 [NL - OB] added omroep brabant live (#534) (thanks @Bas)
 [CA - IciTele] Add more Lives TV (#528) (thanks @Sphinxroot)
 [BE - RTLPlay] Add more Catch-Up TV (#528) (thanks @darodi)
+[FR - MyTFI] Fix missing next page button (#535)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
