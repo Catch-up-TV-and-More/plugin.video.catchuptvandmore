@@ -11,6 +11,7 @@ from codequick import Resolver
 
 URL_CHANNELS = 'https://feed.entertainment.tv.theplatform.eu/f/PR1GhC/mediaset-prod-all-stations'
 
+
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_CHANNELS)
