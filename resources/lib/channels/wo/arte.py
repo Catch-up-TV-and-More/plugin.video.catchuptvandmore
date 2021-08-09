@@ -5,15 +5,14 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
+
 import json
 import re
 
-from codequick import Listitem, Resolver, Route, Script
 import urlquick
-
+from codequick import Listitem, Resolver, Route, Script
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
-
 
 # TO DO
 #   Most recent
@@ -587,8 +586,11 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', DESIRED_LANGUAGE)
 
-    resp = urlquick.get(URL_TOKEN)
-    token = re.compile(r'token\"\:\"(.*?)\"').findall(resp.text)[0]
+    try:
+        resp = urlquick.get(URL_TOKEN)
+        token = re.compile(r'token\"\:\"(.*?)\"').findall(resp.text)[0]
+    except Exception:
+        token = 'MzYyZDYyYmM1Y2Q3ZWRlZWFjMmIyZjZjNTRiMGY4MzY4NzBhOWQ5YjE4MGQ1NGFiODJmOTFlZDQwN2FkOTZjMQ'
 
     headers = {
         'Authorization': 'Bearer %s' % token
