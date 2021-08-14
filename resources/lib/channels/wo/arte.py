@@ -51,6 +51,15 @@ CORRECT_MONTH = {
 }
 
 
+def extract_json_from_html(url):
+    resp = urlquick.get(url)
+    json_value = re.compile(r'application/json">(.*?)\}<').findall(resp.text)[0]
+    # print('json_value : ' + repr(json_value))
+    # with open('/tmp/{}.json'.format(url.replace('/', '')), "w") as f:
+    #     f.write(json_value + '}')
+    return json.loads(json_value + '}')
+
+
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
     """
@@ -60,22 +69,56 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_ROOT % DESIRED_LANGUAGE.lower())
-    json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
-    # print 'json_value : ' + repr(json_value)
-    json_parser = json.loads(json_value + '}')
+    url = URL_ROOT % DESIRED_LANGUAGE.lower()
+    return list_zone(plugin, item_id, url)
 
-    for category_datas in json_parser['categories']:
-        category_title = category_datas['label']
-        category_url = category_datas['url']
+
+@Route.register
+def list_zone(plugin, item_id, url):
+    json_parser = extract_json_from_html(url)
+    zones = json_parser['props']['pageProps']['initialPage']['zones']
+    for zone in zones:
+        category_title = zone['title']
+        id_ = zone['id']
 
         item = Listitem()
         item.label = category_title
-        item.set_callback(list_sub_categories,
+        item.set_callback(list_data,
                           item_id=item_id,
-                          category_url=category_url)
+                          url=url,
+                          id_=id_)
         item_post_treatment(item)
         yield item
+
+
+@Route.register
+def list_data(plugin, item_id, url, id_):
+    json_parser = extract_json_from_html(url)
+    zones = json_parser['props']['pageProps']['initialPage']['zones']
+    for zone in zones:
+        if id_ == zone['id']:
+            for data in zone['data']:
+                title = data['title']
+                if 'subtitle' in data and data['subtitle']:
+                    title += ' - ' + data['subtitle']
+                url = data['url']
+                print(data['type'])
+
+                item = Listitem()
+                item.label = title
+                if data['kind']['code'] == 'SHOW':
+                    item.set_callback(get_video_url, item_id=item_id, video_id=data['programId'])
+                    item_post_treatment(
+                        item,
+                        is_playable=True,
+                        is_downloadable=True)
+                else:
+
+                    item.set_callback(list_zone,
+                                      item_id=item_id,
+                                      url=url)
+                    item_post_treatment(item)
+                yield item
 
 
 @Route.register
@@ -85,12 +128,10 @@ def list_sub_categories(plugin, item_id, category_url, **kwargs):
     - Les feux de l'amour
     - ...
     """
-
-    resp = urlquick.get(category_url)
-    json_value = re.compile(r'_INITIAL_STATE__ \= (.*?)\}\;').findall(resp.text)[0]
-    json_parser = json.loads(json_value + '}')
-
+    json_parser = extract_json_from_html(category_url)
+    # zones = json_parser['props']['pageProps']['initialPage']['zones']
     value_code = json_parser['pages']['currentCode']
+
     for sub_category_datas in json_parser['pages']['list'][value_code]['zones']:
         if 'subcategory' in sub_category_datas['code']['name']:
             sub_category_title = sub_category_datas['title']

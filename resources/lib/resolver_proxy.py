@@ -5,22 +5,24 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
+
 import json
 import re
+
+import inputstreamhelper
+import urlquick
+from codequick import Listitem, Script
+from kodi_six import xbmcgui
+from resources.lib import download, web_utils
+from resources.lib.addon_utils import get_quality_YTDL
+from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
+                                      get_selected_item_info,
+                                      get_selected_item_label)
+
 try:
     from urllib.parse import quote_plus
 except ImportError:
     from urllib import quote_plus
-
-import inputstreamhelper
-from codequick import Script, Listitem
-from kodi_six import xbmcgui
-import urlquick
-
-from resources.lib import download, web_utils
-from resources.lib.addon_utils import get_quality_YTDL
-from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
-
 
 # TO DO
 # Quality VIMEO
@@ -72,7 +74,7 @@ URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json
 
 URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
 
-URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
+URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
 # desired_language, videoid
 
 
@@ -381,35 +383,36 @@ def get_arte_video_stream(plugin,
                           video_id,
                           download_mode=False):
 
-    resp = urlquick.get(URL_REPLAY_ARTE % (desired_language, video_id))
+    token = 'MzYyZDYyYmM1Y2Q3ZWRlZWFjMmIyZjZjNTRiMGY4MzY4NzBhOWQ5YjE4MGQ1NGFiODJmOTFlZDQwN2FkOTZjMQ'
+    headers = {
+        'Authorization': 'Bearer %s' % token
+    }
+    resp = urlquick.get(URL_REPLAY_ARTE % (desired_language, video_id), headers=headers)
     json_parser = json.loads(resp.text)
 
+    all_streams_label = []
+    all_streams_url = []
+
+    for stream in json_parser['data']['attributes']['streams']:
+        try:
+            all_streams_label.append(stream['versions'][0]['label'])
+        except Exception:
+            all_streams_label.append('Stream ' + str(len(all_streams_label)))
+        all_streams_url.append(stream['url'])
+
     url_selected = ''
-    stream_datas = json_parser['videoJsonPlayer']['VSR']
 
-    if DESIRED_QUALITY == "DIALOG":
-        all_datas_videos_quality = []
-        all_datas_videos_path = []
-
-        for video in stream_datas:
-            if not video.find("HLS"):
-                datas = json_parser['videoJsonPlayer']['VSR'][video]
-                all_datas_videos_quality.append(datas['mediaType'] + " (" +
-                                                datas['versionLibelle'] + ")")
-                all_datas_videos_path.append(datas['url'])
+    if len(all_streams_url) == 1:
+        url_selected = all_streams_url[0]
+    else:
 
         seleted_item = xbmcgui.Dialog().select(
             plugin.localize(30709),
-            all_datas_videos_quality)
+            all_streams_label)
         if seleted_item > -1:
-            url_selected = all_datas_videos_path[seleted_item]
+            url_selected = all_streams_url[seleted_item]
         else:
             return False
-
-    elif DESIRED_QUALITY == "BEST":
-        url_selected = stream_datas['HTTPS_SQ_1']['url']
-    else:
-        url_selected = stream_datas['HTTPS_HQ_1']['url']
 
     if download_mode:
         return download.download_video(url_selected)
