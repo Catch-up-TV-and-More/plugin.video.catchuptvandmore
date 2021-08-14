@@ -387,25 +387,23 @@ def get_arte_video_stream(plugin,
     headers = {
         'Authorization': 'Bearer %s' % token
     }
-    resp = urlquick.get(URL_REPLAY_ARTE % (desired_language, video_id), headers=headers)
-    json_parser = json.loads(resp.text)
+    url = URL_REPLAY_ARTE % (desired_language, video_id)
+    j = urlquick.get(url, headers=headers).json()
 
     all_streams_label = []
     all_streams_url = []
 
-    for stream in json_parser['data']['attributes']['streams']:
+    for stream in j['data']['attributes']['streams']:
         try:
             all_streams_label.append(stream['versions'][0]['label'])
         except Exception:
             all_streams_label.append('Stream ' + str(len(all_streams_label)))
         all_streams_url.append(stream['url'])
-
     url_selected = ''
 
     if len(all_streams_url) == 1:
         url_selected = all_streams_url[0]
     else:
-
         seleted_item = xbmcgui.Dialog().select(
             plugin.localize(30709),
             all_streams_label)

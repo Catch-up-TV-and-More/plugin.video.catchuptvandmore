@@ -52,11 +52,8 @@ CORRECT_MONTH = {
 
 
 def extract_json_from_html(url):
-    resp = urlquick.get(url)
-    json_value = re.compile(r'application/json">(.*?)\}<').findall(resp.text)[0]
-    # print('json_value : ' + repr(json_value))
-    # with open('/tmp/{}.json'.format(url.replace('/', '')), "w") as f:
-    #     f.write(json_value + '}')
+    html = urlquick.get(url).text
+    json_value = re.compile(r'application/json">(.*?)\}<').findall(html)[0]
     return json.loads(json_value + '}')
 
 
@@ -75,30 +72,32 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_zone(plugin, item_id, url):
-    json_parser = extract_json_from_html(url)
-    zones = json_parser['props']['pageProps']['initialPage']['zones']
+    j = extract_json_from_html(url)
+    zones = j['props']['pageProps']['initialPage']['zones']
     for zone in zones:
+        # Avoid empty folders
         if not zone['data']:
             continue
-        category_title = zone['title']
-        zone_id = zone['id']
+        # Avoid infinite loop
+        if len(zone['data']) == 1 and zone['data'][0]['url'] == url:
+            continue
 
         item = Listitem()
-        item.label = category_title
+        item.label = zone['title']
         item.info['plot'] = zone['description']
 
         item.set_callback(list_data,
                           item_id=item_id,
                           url=url,
-                          zone_id=zone_id)
+                          zone_id=zone['id'])
         item_post_treatment(item)
         yield item
 
 
 @Route.register
 def list_data(plugin, item_id, url, zone_id):
-    json_parser = extract_json_from_html(url)
-    zones = json_parser['props']['pageProps']['initialPage']['zones']
+    j = extract_json_from_html(url)
+    zones = j['props']['pageProps']['initialPage']['zones']
     for zone in zones:
         if zone_id == zone['id']:
             data = zone['data']
@@ -107,24 +106,32 @@ def list_data(plugin, item_id, url, zone_id):
         title = data['title']
         if 'subtitle' in data and data['subtitle']:
             title += ' - ' + data['subtitle']
-        url = data['url']
 
         item = Listitem()
         item.label = title
-
         item.info['plot'] = data.get('shortDescription', None)
 
-        try:
-            item.art['thumb'] = data['images']['square']['resolutions'][-1]['url']
-        except Exception:
+        images = data['images']
+        thumb = None
+        fanart = None
+        if 'square' in images:
             try:
-                item.art['thumb'] = data['images']['portrait']['resolutions'][-1]['url']
+                thumb = data['images']['square']['resolutions'][-1]['url']
+            except Exception:
+                pass
+        if 'portrait' in images and thumb is None:
+            try:
+                thumb = data['images']['portrait']['resolutions'][-1]['url']
             except Exception:
                 pass
         try:
-            item.art['fanart'] = data['images']['landscape']['resolutions'][-1]['url']
+            fanart = data['images']['landscape']['resolutions'][-1]['url']
         except Exception:
             pass
+        if fanart:
+            item.art['fanart'] = item.art['thumb'] = fanart
+        if thumb:
+            item.art['thumb'] = thumb
 
         item.info['duration'] = data.get('duration', None)
 
@@ -139,15 +146,12 @@ def list_data(plugin, item_id, url, zone_id):
                 item,
                 is_playable=True,
                 is_downloadable=True)
-        elif data['kind']['code'].lower() in ['tv_series', 'external', 'topic', 'magazine']:
-
+        else:
+            # Assume it's a folder
             item.set_callback(list_zone,
                               item_id=item_id,
-                              url=url)
+                              url=data['url'])
             item_post_treatment(item)
-        else:
-            print(data['kind']['code'])
-            data['kind']['code']
         yield item
 
 
