@@ -13,6 +13,7 @@ import inputstreamhelper
 import urlquick
 from codequick import Listitem, Script
 from kodi_six import xbmcgui
+from random import randint
 from resources.lib import download, web_utils
 from resources.lib.addon_utils import get_quality_YTDL
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
@@ -21,8 +22,10 @@ from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
 
 try:
     from urllib.parse import quote_plus
+    from urllib.parse import urlencode
 except ImportError:
     from urllib import quote_plus
+    from urllib import urlencode
 
 # TO DO
 # Quality VIMEO
@@ -328,14 +331,16 @@ def get_francetv_video_stream(plugin,
             item.property['inputstream.adaptive.license_key'] = license_key
         else:
             headers = {
-                'User-Agent':
-                web_utils.get_random_ua()
+                'User-Agent': web_utils.get_random_ua(),
+                # 2.0.0.0 -> 2.16.0.255 are french IP addresses, see https://lite.ip2location.com/france-ip-address-ranges
+                'X-Forwarded-For': '2.' + str(randint(0, 15)) + '.' + str(randint(0, 255)) + '.' + str(randint(0, 255)),
             }
+            stream_headers = urlencode(headers)
             json_parser2 = json.loads(urlquick.get(url_selected, headers=headers, max_age=-1).text)
             resp3 = urlquick.get(json_parser2['url'], headers=headers, max_age=-1, allow_redirects=False)
             location_url = resp3.headers['location']
             item.path = location_url
-            item.property['inputstream.adaptive.stream_headers'] = 'User-Agent=%s' % web_utils.get_random_ua()
+            item.property['inputstream.adaptive.stream_headers'] = stream_headers
             if download_mode:
                 return download.download_video(item.path)
         return item
