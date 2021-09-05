@@ -303,7 +303,7 @@ def get_francetv_video_stream(plugin,
         final_video_url = json_parser2['url']
         if download_mode:
             return download.download_video(final_video_url)
-        return final_video_url
+        return final_video_url + '|X-Forwarded-For=' + '2.' + str(randint(0, 15)) + '.' + str(randint(0, 255)) + '.' + str(randint(0, 255)) + '&User-Agent=' + web_utils.get_random_ua()
 
     if 'dash' in all_video_datas[0][0]:
 
