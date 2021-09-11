@@ -676,14 +676,14 @@ def get_live_url(plugin, item_id, **kwargs):
 
     # To uncomment if issue
     url_stream = json_parser["data"]["attributes"]["streams"][0]["url"]
-    manifest = urlquick.get(
-        url_stream,
-        headers={'User-Agent': web_utils.get_random_ua()},
-        max_age=-1)
-    lines = manifest.text.splitlines()
-    final_url = ''
-    for k in range(0, len(lines) - 1):
-        if 'RESOLUTION=' in lines[k]:
-            final_url = lines[k + 1]
+    # manifest = urlquick.get(
+    #     url_stream,
+    #     headers={'User-Agent': web_utils.get_random_ua()},
+    #     max_age=-1)
+    # lines = manifest.text.splitlines()
+    # final_url = ''
+    # for k in range(0, len(lines) - 1):
+    #     if 'RESOLUTION=' in lines[k]:
+    #         final_url = lines[k + 1]
 
-    return final_url
+    return url_stream
