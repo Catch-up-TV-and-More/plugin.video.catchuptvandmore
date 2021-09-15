@@ -66,11 +66,7 @@ URL_MTVNSERVICES_STREAM_ACCOUNT_EP = 'https://media-utils.mtvnservices.com/servi
                                      '&accountOverride=%s&ep=%s'
 # videoURI, accountOverride, ep
 
-URL_FRANCETV_LIVE_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s&player_version=5.52.0&'\
-                                 '&device_type=desktop&browser=chrome'
-# VideoId
-
-URL_FRANCETV_CATCHUP_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s?country_code=%s&device_type=desktop&browser=chrome'
+URL_FRANCETV_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s?country_code=%s&device_type=desktop&browser=chrome'
 # VideoId
 
 URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json&url=%s'
@@ -280,7 +276,7 @@ def get_francetv_video_stream(plugin,
     geoip_value = web_utils.geoip()
     if not geoip_value:
         geoip_value = 'FR'
-    resp = urlquick.get(URL_FRANCETV_CATCHUP_PROGRAM_INFO % (id_diffusion, geoip_value),
+    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % (id_diffusion, geoip_value),
                         max_age=-1)
     json_parser = resp.json()
 
@@ -357,7 +353,7 @@ def get_francetv_live_stream(plugin, live_id):
 
     # Move Live TV on the new API
     json_parser_liveId = json.loads(
-        urlquick.get(URL_FRANCETV_LIVE_PROGRAM_INFO % live_id + "?country_code="+geoip_value,
+        urlquick.get(URL_FRANCETV_PROGRAM_INFO % (live_id, geoip_value),
                      max_age=-1).text)['video']
 
     try:
