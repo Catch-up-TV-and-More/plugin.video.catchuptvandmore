@@ -94,59 +94,75 @@ def menu(plugin, path, **kwargs):
         print("RESP", resp)
 
     for elt in resp[key]:
-        # Find key 1
-        if "more" in elt:
-            key1 = "more"
-        elif "action" in elt:
-            key1 = "action"
-        else:
-            print("ELT1", elt)
-            key1 = None
+        types = elt.get('contentType',"")
+        if types:
+            #Some links allow you to launch the content directly.
+            #Exemple "Haro sur les eoliennes"
+            if types == "Movie" or types == "Episode":
+                _id = elt["action"]["actionIds"]["contentId"]
+                target_path = "web/v2/content/%s/options" % _id
+                callback = (video, target_path, elt["title"])
 
-        if key1 and not elt.get('contentType',"").lower() == "movie":
-            if not elt[key1]["actionIds"]:
-                continue
-
-            # Find key 2
-            if "menuId" in elt[key1]["actionIds"]:
-                key2 = "menuId"
-                subpath = "menu"
-            elif "spotId" in elt[key1]["actionIds"]:
-                key2 = "spotId"
-                subpath = "spot"
-            elif "contentId" in elt[key1]["actionIds"]:
-                key2 = "contentId"
-                subpath = "content"
-            elif "tileId" in elt[key1]["actionIds"]:
-                key2 = "tileId"
-                subpath = "tile"
             else:
-                print("ELT2", elt[key1]["actionIds"], elt)
-                continue
+                target_path = "web/v1/content/%s/episodes" % (
+                    elt["action"]["actionIds"]["contentId"]
+                )
 
-            # Find path suffix
-            if elt[key1]["actionType"] == "displayStructure":
-                suffix = "structure"
-            elif elt[key1]["actionType"] == "displayBRContent":
-                suffix = "content"
-            elif elt[key1]["actionType"] == "displayFip":
-                suffix = "episodes"
-            else:
-                print("ELT3", elt[key1]["actionType"], elt)
-                continue
-
-            target_path = "web/v1/%s/%s/%s" % (
-                subpath,
-                elt[key1]["actionIds"][key2],
-                suffix,
-            )
-
-            callback = (menu, target_path)
+                callback = (menu, target_path)
         else:
-            _id = elt["id"]
-            target_path = "web/v2/content/%s/options" % _id
-            callback = (video, target_path, elt["title"])
-            # ?app=bfmrmc&device=browser&isProductSeasonWithEpisodes=false&universe=provider
+            # Find key 1
+            if "more" in elt:
+                key1 = "more"
+            elif "action" in elt:
+                key1 = "action"
+            else:
+                print("ELT1", elt)
+                key1 = None
+
+            if key1:
+                if not elt[key1]["actionIds"]:
+                    continue
+
+                # Find key 2
+                if "menuId" in elt[key1]["actionIds"]:
+                    key2 = "menuId"
+                    subpath = "menu"
+                elif "spotId" in elt[key1]["actionIds"]:
+                    key2 = "spotId"
+                    subpath = "spot"
+                elif "contentId" in elt[key1]["actionIds"]:
+                    key2 = "contentId"
+                    subpath = "content"
+                elif "tileId" in elt[key1]["actionIds"]:
+                    key2 = "tileId"
+                    subpath = "tile"
+                else:
+                    print("ELT2", elt[key1]["actionIds"], elt)
+                    continue
+
+                # Find path suffix
+                if elt[key1]["actionType"] == "displayStructure":
+                    suffix = "structure"
+                elif elt[key1]["actionType"] == "displayBRContent":
+                    suffix = "content"
+                elif elt[key1]["actionType"] == "displayFip":
+                    suffix = "episodes"
+                else:
+                    print("ELT3", elt[key1]["actionType"], elt)
+                    continue
+
+                target_path = "web/v1/%s/%s/%s" % (
+                    subpath,
+                    elt[key1]["actionIds"][key2],
+                    suffix,
+                )
+
+                callback = (menu, target_path)
+
+            else:
+                _id = elt["id"]
+                target_path = "web/v2/content/%s/options" % _id
+                callback = (video, target_path, elt["title"])
 
         item = Listitem()
         item.label = elt["title"]
