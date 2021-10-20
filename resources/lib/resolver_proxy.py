@@ -66,10 +66,7 @@ URL_MTVNSERVICES_STREAM_ACCOUNT_EP = 'https://media-utils.mtvnservices.com/servi
                                      '&accountOverride=%s&ep=%s'
 # videoURI, accountOverride, ep
 
-URL_FRANCETV_LIVE_PROGRAM_INFO = 'https://sivideo.webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/?idDiffusion=%s'
-# VideoId
-
-URL_FRANCETV_CATCHUP_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s?country_code=%s&device_type=desktop&browser=chrome'
+URL_FRANCETV_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s?country_code=%s&device_type=desktop&browser=chrome'
 # VideoId
 
 URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json&url=%s'
@@ -279,7 +276,7 @@ def get_francetv_video_stream(plugin,
     geoip_value = web_utils.geoip()
     if not geoip_value:
         geoip_value = 'FR'
-    resp = urlquick.get(URL_FRANCETV_CATCHUP_PROGRAM_INFO % (id_diffusion, geoip_value),
+    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % (id_diffusion, geoip_value),
                         max_age=-1)
     json_parser = resp.json()
 
@@ -350,35 +347,21 @@ def get_francetv_video_stream(plugin,
 
 
 def get_francetv_live_stream(plugin, live_id):
-
-    # Move Live TV on the new API
-    json_parser_liveId = json.loads(
-        urlquick.get(URL_FRANCETV_LIVE_PROGRAM_INFO % live_id,
-                     max_age=-1).text)
-
-    final_url = ''
     geoip_value = web_utils.geoip()
     if not geoip_value:
         geoip_value = 'FR'
-    for video in json_parser_liveId['videos']:
-        if 'format' not in video:
-            continue
 
-        if 'hls_v' not in video['format'] and video['format'] != 'hls':
-            continue
+    # Move Live TV on the new API
+    json_parser_liveId = json.loads(
+        urlquick.get(URL_FRANCETV_PROGRAM_INFO % (live_id, geoip_value),
+                     max_age=-1).text)['video']
 
-        if video['geoblocage'] is not None:
-            for value_geoblocage in video['geoblocage']:
-                if geoip_value == value_geoblocage:
-                    final_url = video['url']
-        else:
-            final_url = video['url']
-
-    if final_url == '':
+    try:
+        final_url = json_parser_liveId['url']
+    except:
         return None
 
     json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % (final_url), max_age=-1).text)
-
     return json_parser2['url'] + '|User-Agent=%s' % web_utils.get_random_ua()
 
 
