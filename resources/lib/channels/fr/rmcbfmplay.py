@@ -6,8 +6,6 @@
 
 from __future__ import unicode_literals
 
-import json
-import re
 from builtins import str
 
 import inputstreamhelper
@@ -22,11 +20,6 @@ from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
                                       get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
 
-API_GAIA_ROOT = "https://ws-gaia.tv.sfr.net/gaia-core/rest/api/"
-API_CDN_ROOT = "https://ws-cdn.tv.sfr.net/gaia-core/rest/api/"
-USER_AGENT = "BFMRMC - 1.0.1 - iPhone9,3 - mobile - iOS 14.2"
-
-
 def get_token():
     url = "https://sso-client.sfr.fr/cas/services/rest/3.0/createToken.json"
     params = {"duration": 86400}
@@ -36,15 +29,14 @@ def get_token():
     }
     resp = urlquick.get(url, params=params, headers=headers).json()
     token = resp["createToken"]["token"]
-    print("TOKEN: " + token)
     return token
 
 
 def get_account_id(token):
-    url = "https://ws-heimdall.tv.sfr.net/heimdall-core/public/api/v2/userProfiles"
+    url = "https://ws-backendtv.rmcbfmplay.com/heimdall-core/public/api/v2/userProfiles"
     params = {
         "app": "bfmrmc",
-        "device": "ios",
+        "device": "browser",
         "noTracking": "true",
         "token": token,
         "tokenType": "casToken",
@@ -52,30 +44,41 @@ def get_account_id(token):
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json()
     account_id = resp["nexttvId"]
-    print("ACCOUNTID: " + account_id)
     return account_id
 
+API_BACKEND = "https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/"
+API_CDN_ROOT = "https://ws-cdn.tv.sfr.net/gaia-core/rest/api/"
+
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0"
+
+token = get_token()
+account_id = get_account_id(token)
 
 @Route.register
 def rmcbfmplay_root(plugin, **kwargs):
     """Root menu of the app."""
-    url = API_GAIA_ROOT + "bfmrmc/mobile/v1/explorer/structure"
-    params = {"app": "bfmrmc", "device": "ios"}
+    url = API_BACKEND + "web/v1/menu/RefMenuItem::rmcgo_home/structure"
+    params = {"app":"bfmrmc","device":"browser","profileId":account_id,"accountTypes":"NEXTTV","operators":"NEXTTV","noTracking":"false"}
     headers = {"User-Agent": USER_AGENT}
-    resp = urlquick.get(url, params=params, headers=headers).json()
+    resp = urlquick.get(url, params=params, headers=headers).json() 
     for spot in resp["spots"]:
         item = Listitem()
         item.label = spot["title"]
-        item.set_callback(menu, "mobile/v2/spot/%s/content" % spot["id"])
+        item.set_callback(menu, "web/v1/spot/%s/content" % spot["id"])
         item_post_treatment(item)
         yield item
 
-
 @Route.register
 def menu(plugin, path, **kwargs):
-    """Menu of the app with v2 API."""
-    url = API_GAIA_ROOT + path
-    params = {"app": "bfmrmc", "device": "ios", "page": 0, "size": 30}
+    """Menu of the app with v1 API."""
+
+    if "/spot/" in path or "/tile/" in path:
+        url = API_BACKEND + path
+        params = {"app":"bfmrmc","device":"browser","token":token,"page":"0","size":"30","profileId":account_id,"accountTypes":"NEXTTV","operators":"NEXTTV","noTracking":"false"}
+    else:
+        url = API_CDN_ROOT + path
+        params = {"universe":"PROVIDER","accountTypes":"NEXTTV","operators":"NEXTTV","noTracking":"false"}   
+
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json()
 
@@ -85,60 +88,81 @@ def menu(plugin, path, **kwargs):
         key = "spots"
     elif "content" in resp:
         key = "content"
+    elif "tiles" in resp:
+        key = "tiles"
     else:
         print("RESP", resp)
 
     for elt in resp[key]:
+        types = elt.get('contentType',"")
+        if types:
+            #Some links allow you to launch the content directly.
+            #Exemple "Haro sur les eoliennes"
+            if types == "Movie" or types == "Episode":
+                _id = elt["action"]["actionIds"]["contentId"]
+                target_path = "web/v2/content/%s/options" % _id
+                callback = (video, target_path, elt["title"])
 
-        # Find key 1
-        if "more" in elt:
-            key1 = "more"
-        elif "action" in elt:
-            key1 = "action"
-        else:
-            print("ELT1", elt)
-            key1 = None
-
-        if key1:
-            if not elt[key1]["actionIds"]:
-                continue
-
-            # Find key 2
-            if "menuId" in elt[key1]["actionIds"]:
-                key2 = "menuId"
-                subpath = "menu"
-            elif "spotId" in elt[key1]["actionIds"]:
-                key2 = "spotId"
-                subpath = "spot"
-            elif "contentId" in elt[key1]["actionIds"]:
-                key2 = "contentId"
-                subpath = "content"
             else:
-                print("ELT2", elt[key1]["actionIds"], elt)
-                continue
+                target_path = "web/v1/content/%s/episodes" % (
+                    elt["action"]["actionIds"]["contentId"]
+                )
 
-            # Find path suffix
-            if elt[key1]["actionType"] == "displayStructure":
-                suffix = "structure"
-            elif elt[key1]["actionType"] == "displayContent":
-                suffix = "more"
-            elif elt[key1]["actionType"] == "displayFip":
-                suffix = "episodes"
-            else:
-                print("ELT3", elt[key1]["actionType"], elt)
-                continue
-
-            target_path = "mobile/v2/%s/%s/%s" % (
-                subpath,
-                elt[key1]["actionIds"][key2],
-                suffix,
-            )
-            callback = (menu, target_path)
+                callback = (menu, target_path)
         else:
-            _id = elt["id"]
-            target_path = "mobile/v3/content/%s/options" % _id
-            callback = (video, target_path)
-            # ?app=bfmrmc&device=ios&isProductSeasonWithEpisodes=false&universe=provider
+            # Find key 1
+            if "more" in elt:
+                key1 = "more"
+            elif "action" in elt:
+                key1 = "action"
+            else:
+                print("ELT1", elt)
+                key1 = None
+
+            if key1:
+                if not elt[key1]["actionIds"]:
+                    continue
+
+                # Find key 2
+                if "menuId" in elt[key1]["actionIds"]:
+                    key2 = "menuId"
+                    subpath = "menu"
+                elif "spotId" in elt[key1]["actionIds"]:
+                    key2 = "spotId"
+                    subpath = "spot"
+                elif "contentId" in elt[key1]["actionIds"]:
+                    key2 = "contentId"
+                    subpath = "content"
+                elif "tileId" in elt[key1]["actionIds"]:
+                    key2 = "tileId"
+                    subpath = "tile"
+                else:
+                    print("ELT2", elt[key1]["actionIds"], elt)
+                    continue
+
+                # Find path suffix
+                if elt[key1]["actionType"] == "displayStructure":
+                    suffix = "structure"
+                elif elt[key1]["actionType"] == "displayBRContent":
+                    suffix = "content"
+                elif elt[key1]["actionType"] == "displayFip":
+                    suffix = "episodes"
+                else:
+                    print("ELT3", elt[key1]["actionType"], elt)
+                    continue
+
+                target_path = "web/v1/%s/%s/%s" % (
+                    subpath,
+                    elt[key1]["actionIds"][key2],
+                    suffix,
+                )
+
+                callback = (menu, target_path)
+
+            else:
+                _id = elt["id"]
+                target_path = "web/v2/content/%s/options" % _id
+                callback = (video, target_path, elt["title"])
 
         item = Listitem()
         item.label = elt["title"]
@@ -147,59 +171,56 @@ def menu(plugin, path, **kwargs):
         # TODO: castings, etc
 
         item.art["thumb"] = ""
-        try:
-            for image in elt["images"]:
-                if image["format"] == "1/1" and not item.art["thumb"]:
-                    item.art["thumb"] = image["url"]
-                elif image["format"] == "2/3":
-                    item.art["thumb"] = image["url"]
-                elif image["format"] == "16/9":
-                    item.art["fanart"] = image["url"]
-        except Exception:
-            pass
+        for image in elt["images"]:
+            if image["format"] == "1/1" and not item.art["thumb"]:
+                item.art["thumb"] = image["url"]
+            elif image["format"] == "2/3":
+                item.art["thumb"] = image["url"]
+            elif image["format"] == "16/9":
+                item.art["fanart"] = image["url"]
         item.set_callback(*callback)
         item_post_treatment(item)
         yield item
 
 
 @Resolver.register
-def video(plugin, path, **kwargs):
-    """Menu of the app with v2 API."""
+def video(plugin, path, title, **kwargs):
+    """Menu of the app with v1 API."""
 
-    # https://ws-cdn.tv.sfr.net/gaia-core/rest/api/mobile/v2/content/Product::NEUF_BFMTV_BFM0300012711/detail?app=bfmrmc&device=ios&page=0&size=30
-    # https://ws-cdn.tv.sfr.net/gaia-core/rest/api/mobile/v2/content/Product::NEUF_BFMTV_BFM0300012711/detail?app=bfmrmc&device=ios&isProductSeasonWithEpisodes=false&universe=provider
-    # https://ws-gaia.tv.sfr.net/gaia-core/rest/api/mobile/v3/content/Product::NEUF_BFMTV_BFM0300012711/options?app=bfmrmc&device=ios&noTracking=true&token=PIEOVEsvhCYGqC7df4/pvt7TiglWvZqtpW9qdSlvqAyH6bOcdj0JNJmqylF5fws2X29FA1r7isvuWGGhuXpxzGPax1g53%2BuHcPYjHs1z8hkweHk1x2USpCdykMd1wOp%2B5w74DI0c1vl50fZqpCRnR4ppMCbFYhEpThQaLPRvJHgXh7EnJ3IJeJULerWHA%2BjGc&tokenType=casToken&universe=provider
+    # https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/Product::NEUF_BFMTV_BFM0300012711/detail?app=bfmrmc&device=browser&page=0&size=30
+    # https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/Product::NEUF_BFMTV_BFM0300012711/detail?app=bfmrmc&device=browser&isProductSeasonWithEpisodes=false&universe=provider
+    # https://ws-gaia.tv.sfr.net/gaia-core/rest/api/web/v2/content/Product::NEUF_BFMTV_BFM0300012711/options?app=bfmrmc&device=browser&noTracking=true&token=PIEOVEsvhCYGqC7df4/pvt7TiglWvZqtpW9qdSlvqAyH6bOcdj0JNJmqylF5fws2X29FA1r7isvuWGGhuXpxzGPax1g53%2BuHcPYjHs1z8hkweHk1x2USpCdykMd1wOp%2B5w74DI0c1vl50fZqpCRnR4ppMCbFYhEpThQaLPRvJHgXh7EnJ3IJeJULerWHA%2BjGc&tokenType=casToken&universe=provider
     url = API_CDN_ROOT + path
     params = {
         "app": "bfmrmc",
-        "device": "ios",
-        "tokenType": "casToken",
+        "device": "browser",
+        "token": token,
         "universe": "provider",
-        "token": get_token(),
+        "accountTypes":"NEXTTV",
+        "operators":"NEXTTV",
+        "noTracking":"false"
     }
 
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json()
-    print("RESP_VIDEO", resp)
+
     for stream in resp[0]["offers"][0]["streams"]:
         if stream["drm"] == "WIDEVINE":
-            print("COUCOU")
             item = Listitem()
+            item.label = title
             item.path = stream["url"]
             item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
             item.property["inputstream.adaptive.manifest_type"] = "mpd"
             item.property["inputstream.adaptive.license_type"] = "com.widevine.alpha"
-            token = get_token()
-            account_id = get_account_id(token)
-            customdata = "sec-fetch-site=cross-site&sec-fetch-mode=cors&sec-fetch-dest=empty&user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36&description=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36&deviceId=byPassARTHIUS&deviceName=Chrome-91.0.4472.114---&deviceType=PC&osName=Mac OS&osVersion=10.15.7&persistent=false&resolution=2048x1280&tokenType=castoken&tokenSSO={}&entitlementId=3606640421&type=LIVEOTT&accountId={}".format(
-                token, account_id
+            customdata = "description={}&deviceId=byPassARTHIUS&deviceName=Firefox-92.0--&deviceType=PC&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken&tokenSSO={}&entitlementId=3674803340&type=LIVEOTT&accountId={}".format(
+                USER_AGENT, token, account_id
             )
             import urllib.parse
 
             customdata = urllib.parse.quote(customdata)
             item.property["inputstream.adaptive.license_key"] = (
-                "https://ws-backendtv.sfr.fr/asgard-drm-widevine/public/licence|user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36&customdata="
-                + customdata
+                "https://ws-backendtv.sfr.fr/asgard-drm-widevine/public/licence|User-Agent=" + USER_AGENT + "&customdata="
+                + customdata + "&Origin=https://www.rmcbfmplay.com&Content-Type="
                 + "|R{SSM}|"
             )
             return item
