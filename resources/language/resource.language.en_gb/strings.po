@@ -560,6 +560,10 @@ msgstr ""
 msgctxt "#30361"
 msgid "Connect/Disconnect VPN"
 msgstr ""
+
+msgctxt "#30362"
+msgid "An error has occurred while trying to disconnect OpenVPN"
+msgstr ""
 # delete_for_submission_end
 
 
@@ -815,6 +819,7 @@ msgstr ""
 msgctxt "#30729"
 msgid "Emissions"
 msgstr ""
+
 
 # Favourites (from 30800 to 30859)
 

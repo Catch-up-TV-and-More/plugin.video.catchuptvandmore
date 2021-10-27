@@ -5,96 +5,71 @@
 
 # This file is part of Catch-up TV & More
 
-from builtins import str
 import os
+from builtins import str
 
 from codequick import Script, storage
 from kodi_six import xbmc, xbmcgui
-
 from resources.lib import openvpn as vpnlib
 
-ip = "127.0.0.1"
-port = 1337
+IP = "127.0.0.1"
+PORT = 1337
+
+VPN_DISCONNECTED = 0
+VPN_CONNECTED = 1
 
 
 def disconnect_openvpn():
-    with storage.PersistentDict('vpn') as db:
-        Script.log('OpenVPN: Disconnecting OpenVPN')
-        try:
-            db['status'] = "disconnecting"
-            response = vpnlib.is_running(ip, port)
-            if response[0]:
-                vpnlib.disconnect(ip, port)
-                if response[1] is not None:
-                    Script.notify(
-                        'OpenVPN',
-                        Script.localize(30355))
-            db['status'] = "disconnected"
-            Script.log('OpenVPN: Disconnect OpenVPN successful')
-        except vpnlib.OpenVPNError as exception:
-            xbmcgui.Dialog().ok(
-                'OpenVPN',
-                Script.localize(30358))
-            Script.log('OpenVPN: OpenVPN error: ' + str(exception))
-            db['status'] = "failed"
-        db.flush()
+    Script.log('OpenVPN: Disconnecting OpenVPN')
+    try:
+        vpnlib.disconnect(IP, PORT)
+        Script.log('OpenVPN: Disconnect OpenVPN successful')
+        Script.notify(
+            "OpenVPN",
+            Script.localize(30355),
+            display_time=3000)
+    except Exception as e:
+        xbmcgui.Dialog().ok(
+            'OpenVPN',
+            Script.localize(30362))
+        Script.log('OpenVPN: OpenVPN error: ' + str(e))
 
 
-def connect_openvpn(config, restart=False, sudopassword=None):
-    with storage.PersistentDict('vpn') as db:
-        Script.log('OpenVPN: Connecting OpenVPN configuration: [%s]' % config)
+def connect_openvpn(config, sudopassword=None):
+    Script.log('OpenVPN: Connecting OpenVPN configuration: [%s]' % config)
 
-        if Script.setting.get_boolean('vpn.sudo') and \
-                Script.setting.get_boolean('vpn.sudopsw') and sudopassword is None:
+    if Script.setting.get_boolean('vpn.sudo') and \
+            Script.setting.get_boolean('vpn.sudopsw') and sudopassword is None:
 
-            keyboard = xbmc.Keyboard(default='',
-                                     heading=Script.localize(30353),
-                                     hidden=True)
-            keyboard.doModal()
-            if keyboard.isConfirmed():
-                sudopassword = keyboard.getText()
+        keyboard = xbmc.Keyboard()
+        keyboard.setHeading(Script.localize(30353))
+        keyboard.setHiddenInput(True)
+        keyboard.doModal()
+        if keyboard.isConfirmed():
+            sudopassword = keyboard.getText()
+        else:
+            return
 
-        openvpn = vpnlib.OpenVPN(
-            Script.setting.get_string('vpn.openvpnfilepath'),
-            config,
-            ip=ip,
-            port=port,
-            args=Script.setting.get_string('vpn.args'),
-            sudo=Script.setting.get_boolean('vpn.sudo'),
-            sudopwd=sudopassword,
-            debug=True)
+    openvpn = vpnlib.OpenVPN(
+        Script.setting.get_string('vpn.openvpnfilepath'),
+        config,
+        ip=IP,
+        port=PORT,
+        args=Script.setting.get_string('vpn.args'),
+        sudo=Script.setting.get_boolean('vpn.sudo'),
+        sudopwd=sudopassword)
 
-        try:
-            if restart:
-                openvpn.disconnect()
-                db['status'] = "disconnected"
-            openvpn.connect()
-            Script.notify(
-                "OpenVPN",
-                Script.localize(30354),
-                display_time=3000)
-
-            db['status'] = "connected"
-        except vpnlib.OpenVPNError as exception:
-            if exception.errno == 1:
-                db['status'] = "connected"
-
-                if xbmcgui.Dialog().yesno(
-                        'OpenVPN',
-                        Script.localize(30356),
-                        Script.localize(30357)):
-
-                    Script.log('OpenVPN: User has decided to restart OpenVPN')
-                    connect_openvpn(config, True, sudopassword)
-                else:
-                    Script.log(
-                        'OpenVPN: User has decided not to restart OpenVPN')
-            else:
-                xbmcgui.Dialog().ok(
-                    'OpenVPN',
-                    Script.localize(30358))
-                db['status'] = "failed"
-        db.flush()
+    try:
+        openvpn.connect()
+        Script.notify(
+            "OpenVPN",
+            Script.localize(30354),
+            display_time=3000)
+    except Exception as e:
+        xbmcgui.Dialog().ok(
+            'OpenVPN',
+            Script.localize(30358))
+        Script.log('OpenVPN: OpenVPN error: ' + str(e))
 
 
 @Script.register
@@ -151,13 +126,6 @@ def select_ovpn():
     if len(ovpnfiles) == 0:
         return None
 
-    response = vpnlib.is_running(ip, port)
-    Script.log('OpenVPN: Response from is_running: [%s] [%s] [%s]' %
-               (response[0], response[1], response[2]))
-    if response[0]:
-        # Le VPN est connecté
-        disconnect_openvpn()
-
     configs = []
     ovpnfileslist = []
     for name, configfilepath in list(ovpnfiles.items()):
@@ -187,14 +155,6 @@ def delete_ovpn(*args, **kwargs):
     if len(ovpnfiles) == 0:
         return None
 
-    response = vpnlib.is_running(ip, port)
-    Script.log('OpenVPN: Response from is_running: [%s] [%s] [%s]' %
-               (response[0], response[1], response[2]))
-    if response[0]:
-        # Le VPN est connecté
-        Script.log('OpenVPN: VPN still connected, we disconnect it')
-        disconnect_openvpn()
-
     configs = []
     ovpnfileslist = []
     for name, configfilepath in list(ovpnfiles.items()):
@@ -220,26 +180,21 @@ def delete_ovpn(*args, **kwargs):
 
 @Script.register
 def vpn_item_callback(plugin):
-    with storage.PersistentDict('vpn') as db:
-        if 'status' not in db:
-            db['status'] = "disconnected"
+    if vpnlib.is_running(IP, PORT):
+        disconnect_openvpn()
+    else:
+        ovpn = select_ovpn()
+        if ovpn is None:
+            import_ovpn()
 
-        elif db['status'] != "connected":
-            ovpn = select_ovpn()
-            if ovpn is None:
-                import_ovpn()
+        # Case when the user cancel the import dialog
+        if ovpn is None:
+            return False
 
-            # Case when the user cancel the import dialog
-            if ovpn is None:
-                return False
+        if len(ovpn) > 0:
+            connect_openvpn(ovpn)
 
-            if len(ovpn) > 0:
-                connect_openvpn(ovpn)
-
-        elif db['status'] == "connected":
-            disconnect_openvpn()
-        db.flush()
-        xbmc.executebuiltin('Container.Refresh()')
+    xbmc.executebuiltin('Container.Refresh()')
 
 
 def add_vpn_context(item):
