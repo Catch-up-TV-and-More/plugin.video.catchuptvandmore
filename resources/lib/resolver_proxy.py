@@ -74,7 +74,7 @@ URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json
 
 URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
 
-URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
+URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 # desired_language, videoid
 
 
@@ -371,30 +371,25 @@ def get_arte_video_stream(plugin,
                           video_id,
                           download_mode=False):
 
-    token = 'MzYyZDYyYmM1Y2Q3ZWRlZWFjMmIyZjZjNTRiMGY4MzY4NzBhOWQ5YjE4MGQ1NGFiODJmOTFlZDQwN2FkOTZjMQ'
-    headers = {
-        'Authorization': 'Bearer %s' % token
-    }
     url = URL_REPLAY_ARTE % (desired_language, video_id)
-    j = urlquick.get(url, headers=headers).json()
+    j = urlquick.get(url).json()
+    stream_datas = j['videoJsonPlayer']['VSR']
 
     all_streams_label = []
     all_streams_url = []
+    for stream in sorted(stream_datas.keys()):
+        if stream_datas[stream]['quality'] == 'XQ':
+            try:
+                all_streams_label.append(stream_datas[stream]['versionLibelle'])
+            except Exception:
+                all_streams_label.append('Stream ' + str(len(all_streams_label)))
+            all_streams_url.append(stream_datas[stream]['url'])
 
-    for stream in j['data']['attributes']['streams']:
-        try:
-            all_streams_label.append(stream['versions'][0]['label'])
-        except Exception:
-            all_streams_label.append('Stream ' + str(len(all_streams_label)))
-        all_streams_url.append(stream['url'])
     url_selected = ''
-
     if len(all_streams_url) == 1:
         url_selected = all_streams_url[0]
     else:
-        seleted_item = xbmcgui.Dialog().select(
-            plugin.localize(30709),
-            all_streams_label)
+        seleted_item = xbmcgui.Dialog().select(plugin.localize(30709), all_streams_label)
         if seleted_item > -1:
             url_selected = all_streams_url[seleted_item]
         else:
