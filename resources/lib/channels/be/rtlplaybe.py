@@ -118,7 +118,7 @@ def rtlplay_root(plugin, **kwargs):
         yield item
 
     item = Listitem()
-    item.label = 'All programs'
+    item.label = plugin.localize(30717)
     item.art["thumb"] = get_item_media_path('channels/be/rtlplay.png')
     item.art["fanart"] = get_item_media_path('channels/be/rtlplay_fanart.jpg')
     item.set_callback(list_all_programs, 'rtl_play')
@@ -134,7 +134,7 @@ def list_all_programs(plugin, item_id, **kwargs):
 
     for letter in letters:
         item = Listitem()
-        item.label = 'All programs : ' + letter
+        item.label = plugin.localize(30717) + ' : ' + letter
         item.art["thumb"] = get_item_media_path('channels/be/rtlplay.png')
         item.art["fanart"] = get_item_media_path('channels/be/rtlplay_fanart.jpg')
         item.set_callback(list_all_programs_by_letter, item_id, letter)
