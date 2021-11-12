@@ -73,27 +73,74 @@ def list_programs(plugin, item_id, letter_title, **kwargs):
             item = Listitem()
             item.label = program_title
             item.art['thumb'] = item.art['landscape'] = program_image
-            item.set_callback(list_videos,
+            item.set_callback(list_dispatcher,
                               item_id=item_id,
-                              program_url=program_url)
+                              program_url=program_url,
+                              program_image=program_image)
             item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url, **kwargs):
+def list_dispatcher(plugin, item_id, program_url, program_image, **kwargs):
 
     resp = urlquick.get(program_url)
     json_parser = json.loads(resp.text)
 
-    # Get Program Name and Program Plot
     program_name = json_parser["name"]
     program_plot = json_parser["program_info"]["description"]
 
-    has_contents = False
+    blocks = json_parser["blocks"]
+    if len(blocks) > 1:
+        for item in list_blocks(plugin, item_id, program_name, program_plot, program_image, blocks):
+            yield item
+    elif len(blocks[0]["sets"]) > 1:
+        for item in list_sets(plugin, item_id, program_name, program_plot, program_image, blocks[0]["sets"]):
+            yield item
+    else:
+        for item in list_videos(plugin, item_id, program_name, blocks[0]["sets"][0]):
+            yield item
 
+
+@Route.register
+def list_blocks(plugin, item_id, program_name, program_plot, program_image, blocks, **kwargs):
+
+    for block in blocks:
+        item = Listitem()
+        item.label = block["name"]
+        item.art['thumb'] = item.art['landscape'] = program_image
+        item.info['plot'] = program_plot
+        item.set_callback(list_sets,
+                          item_id=item_id,
+                          program_name=program_name,
+                          program_plot=program_plot,
+                          program_image=program_image,
+                          sets=block["sets"])
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register
+def list_sets(plugin, item_id, program_name, program_plot, program_image, sets, **kwargs):
+    for video_set in sets:
+        item = Listitem()
+        item.label = video_set["name"]
+        item.art['thumb'] = item.art['landscape'] = program_image
+        item.info['plot'] = program_plot
+        item.set_callback(list_videos,
+                          item_id=item_id,
+                          program_name=program_name,
+                          video_set=video_set)
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register
+def list_videos(plugin, item_id, program_name, video_set, **kwargs):
+
+    has_contents = False
     try:
-        url_videos = URL_ROOT + json_parser["blocks"][0]["sets"][0]["path_id"]
+        url_videos = URL_ROOT + video_set["path_id"]
         has_contents = True
     except Exception:
         pass
@@ -121,7 +168,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
             item.label = video_title
             item.art['thumb'] = item.art['landscape'] = video_image
             item.info['duration'] = video_duration
-            item.info['plot'] = program_plot
+            item.info['plot'] = video_datas.get("description", program_name)
             item.params['title'] = video_title
 
             # subtitles
