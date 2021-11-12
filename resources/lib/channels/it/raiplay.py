@@ -26,7 +26,94 @@ URL_LIVE = URL_ROOT + '/dirette/%s'
 
 URL_REPLAYS = URL_ROOT + '/dl/RaiTV/RaiPlayMobile/Prod/Config/programmiAZ-elenco.json'
 
+URL_HOMEPAGE = URL_ROOT + '/index.json'
 
+
+## ROOT_______________
+@Route.register
+def list_root(plugin, item_id, **kwargs):
+    """
+    Build inital menu.
+    """
+    item = Listitem()
+    item.label = "A-Z"
+    item.set_callback(list_letters,
+                      item_id=item_id)
+    item_post_treatment(item)
+    yield item
+
+    item = Listitem()
+    item.label = "Home Page"
+    item.set_callback(list_homepage,
+                      item_id=item_id)
+    item_post_treatment(item)
+    yield item
+
+    # item = Listitem()
+    # item.label = "Cerca"
+    # item.set_callback(show_search,
+    #                   item_id=item_id)
+    # item_post_treatment(item)
+    # yield item
+
+
+## HOMEPAGE_______________
+@Route.register
+def list_homepage(plugin, item_id, **kwargs):
+    """
+    Build homepage categories
+    """
+    resp = urlquick.get(URL_HOMEPAGE)
+    json_parser = json.loads(resp.text)
+
+    for category in json_parser["contents"]:
+        category_title = category["name"]
+        try:
+            category_contents = category["contents"]
+        except KeyError:
+            continue
+
+        item = Listitem()
+        item.label = category_title
+        item.set_callback(list_hp_programs,
+                          item_id=item_id,
+                          category_contents=category_contents)
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register
+def list_hp_programs(plugin, item_id, category_contents, **kwargs):
+    """
+    Build programs listing
+    - Imma Tataranni
+    - ...
+    """
+
+    for program_datas in category_contents:
+        if "path_id" in program_datas:
+            program_title = program_datas["name"]
+            program_image = ''
+            if "images" in program_datas:
+                if 'landscape' in program_datas["images"]:
+                    program_image = URL_ROOT + program_datas["images"][
+                        "landscape"].replace('/resizegd/[RESOLUTION]', '')
+            program_url = URL_ROOT + program_datas["path_id"]
+            # replace trailing '/?json' by '.json'
+            program_url = '.'.join(program_url.rsplit('/?', 1))
+
+            item = Listitem()
+            item.label = program_title
+            item.art['thumb'] = item.art['landscape'] = program_image
+            item.set_callback(list_dispatcher,
+                              item_id=item_id,
+                              program_url=program_url,
+                              program_image=program_image)
+            item_post_treatment(item)
+            yield item
+
+
+## A-Z_______________
 @Route.register
 def list_letters(plugin, item_id, **kwargs):
     """
@@ -41,7 +128,7 @@ def list_letters(plugin, item_id, **kwargs):
     for letter_title in sorted(json_parser.keys()):
         item = Listitem()
         item.label = letter_title
-        item.set_callback(list_programs,
+        item.set_callback(list_AZ_programs,
                           item_id=item_id,
                           letter_title=letter_title)
         item_post_treatment(item)
@@ -49,7 +136,7 @@ def list_letters(plugin, item_id, **kwargs):
 
 
 @Route.register
-def list_programs(plugin, item_id, letter_title, **kwargs):
+def list_AZ_programs(plugin, item_id, letter_title, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
@@ -81,6 +168,7 @@ def list_programs(plugin, item_id, letter_title, **kwargs):
             yield item
 
 
+## COMMON_______________
 @Route.register
 def list_dispatcher(plugin, item_id, program_url, program_image, **kwargs):
 
@@ -122,17 +210,21 @@ def list_blocks(plugin, item_id, program_name, program_plot, program_image, bloc
 
 @Route.register
 def list_sets(plugin, item_id, program_name, program_plot, program_image, sets, **kwargs):
-    for video_set in sets:
-        item = Listitem()
-        item.label = video_set["name"]
-        item.art['thumb'] = item.art['landscape'] = program_image
-        item.info['plot'] = program_plot
-        item.set_callback(list_videos,
-                          item_id=item_id,
-                          program_name=program_name,
-                          video_set=video_set)
-        item_post_treatment(item)
-        yield item
+    if len(sets) > 1:
+        for video_set in sets:
+            item = Listitem()
+            item.label = video_set["name"]
+            item.art['thumb'] = item.art['landscape'] = program_image
+            item.info['plot'] = program_plot
+            item.set_callback(list_videos,
+                              item_id=item_id,
+                              program_name=program_name,
+                              video_set=video_set)
+            item_post_treatment(item)
+            yield item
+    else:
+        for item in list_videos(plugin, item_id, program_name, sets[0]):
+            yield item
 
 
 @Route.register
