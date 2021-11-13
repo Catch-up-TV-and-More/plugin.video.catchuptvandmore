@@ -35,6 +35,8 @@ def list_root(plugin, item_id, **kwargs):
     """
     Build inital menu.
     """
+
+    # all videos 
     item = Listitem()
     item.label = "A-Z"
     item.set_callback(list_letters,
@@ -42,6 +44,7 @@ def list_root(plugin, item_id, **kwargs):
     item_post_treatment(item)
     yield item
 
+    # home page categories
     item = Listitem()
     item.label = "Home Page"
     item.set_callback(list_homepage,
@@ -49,12 +52,41 @@ def list_root(plugin, item_id, **kwargs):
     item_post_treatment(item)
     yield item
 
-    # item = Listitem()
-    # item.label = "Cerca"
-    # item.set_callback(show_search,
-    #                   item_id=item_id)
-    # item_post_treatment(item)
-    # yield item
+    # Search feature
+    item = Listitem.search(search)
+    item_post_treatment(item)
+    yield item
+
+
+## SEARCH_______________
+@Route.register
+def search(plugin, search_query, **kwargs):
+    resp = urlquick.get(URL_REPLAYS)
+    json_parser = json.loads(resp.text)
+
+    for letter_group in json_parser.values():
+        for program_datas in letter_group:
+            if search_query.lower() in program_datas["name"].lower():
+                if "PathID" in program_datas:
+                    program_title = program_datas["name"]
+                    program_image = ''
+                    if "images" in program_datas:
+                        if 'landscape' in program_datas["images"]:
+                            program_image = URL_ROOT + program_datas["images"][
+                                "landscape"].replace('/resizegd/[RESOLUTION]', '')
+                    program_url = program_datas["PathID"]
+                    # replace trailing '/?json' by '.json'
+                    program_url = '.'.join(program_url.rsplit('/?', 1))
+
+                    item = Listitem()
+                    item.label = program_title
+                    item.art['thumb'] = item.art['landscape'] = program_image
+                    item.set_callback(list_dispatcher,
+                                      item_id=None,
+                                      program_url=program_url,
+                                      program_image=program_image)
+                    item_post_treatment(item)
+                    yield item
 
 
 ## HOMEPAGE_______________
