@@ -29,14 +29,14 @@ URL_REPLAYS = URL_ROOT + '/dl/RaiTV/RaiPlayMobile/Prod/Config/programmiAZ-elenco
 URL_HOMEPAGE = URL_ROOT + '/index.json'
 
 
-## ROOT_______________
+# ROOT_______________
 @Route.register
 def list_root(plugin, item_id, **kwargs):
     """
     Build inital menu.
     """
 
-    # all videos 
+    # all videos
     item = Listitem()
     item.label = "A-Z"
     item.set_callback(list_letters,
@@ -58,7 +58,7 @@ def list_root(plugin, item_id, **kwargs):
     yield item
 
 
-## SEARCH_______________
+# SEARCH_______________
 @Route.register
 def search(plugin, search_query, **kwargs):
     resp = urlquick.get(URL_REPLAYS)
@@ -89,7 +89,7 @@ def search(plugin, search_query, **kwargs):
                     yield item
 
 
-## HOMEPAGE_______________
+# HOMEPAGE_______________
 @Route.register
 def list_homepage(plugin, item_id, **kwargs):
     """
@@ -121,7 +121,6 @@ def list_hp_programs(plugin, item_id, category_contents, **kwargs):
     - Imma Tataranni
     - ...
     """
-
     for program_datas in category_contents:
         if "path_id" in program_datas:
             program_title = program_datas["name"]
@@ -145,7 +144,7 @@ def list_hp_programs(plugin, item_id, category_contents, **kwargs):
             yield item
 
 
-## A-Z_______________
+# A-Z_______________
 @Route.register
 def list_letters(plugin, item_id, **kwargs):
     """
@@ -200,10 +199,9 @@ def list_AZ_programs(plugin, item_id, letter_title, **kwargs):
             yield item
 
 
-## COMMON_______________
+# COMMON_______________
 @Route.register
 def list_dispatcher(plugin, item_id, program_url, program_image, **kwargs):
-
     resp = urlquick.get(program_url)
     json_parser = json.loads(resp.text)
 
@@ -224,7 +222,6 @@ def list_dispatcher(plugin, item_id, program_url, program_image, **kwargs):
 
 @Route.register
 def list_blocks(plugin, item_id, program_name, program_plot, program_image, blocks, **kwargs):
-
     for block in blocks:
         item = Listitem()
         item.label = block["name"]
@@ -261,7 +258,6 @@ def list_sets(plugin, item_id, program_name, program_plot, program_image, sets, 
 
 @Route.register
 def list_videos(plugin, item_id, program_name, video_set, **kwargs):
-
     has_contents = False
     try:
         url_videos = URL_ROOT + video_set["path_id"]
@@ -314,12 +310,7 @@ def list_videos(plugin, item_id, program_name, video_set, **kwargs):
 
 
 @Resolver.register
-def get_video_url(plugin,
-                  item_id,
-                  video_url,
-                  download_mode=False,
-                  **kwargs):
-
+def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
     if download_mode:
         return download.download_video(video_url)
 
@@ -333,7 +324,6 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     resp = urlquick.get(URL_LIVE % item_id, max_age=-1)
     return re.compile(r'\"content_url\"\:\"(.*?)\"').findall(
         resp.text)[0]
