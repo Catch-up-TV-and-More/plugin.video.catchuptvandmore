@@ -45,6 +45,7 @@
 [Version 0.2.37]
 [FR - Cnews] Fi live and replay (#568)
 [CH - SSR] Fix error on SSR channels replay (#574) Thanks @jmzambon for #587
+[FR - SSR] Fix Alsace 20 and LaChaineNormande (DRM) (#584) Thanks @jmzambon for #585
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
