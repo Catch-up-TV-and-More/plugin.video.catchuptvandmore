@@ -49,7 +49,8 @@
 [FR - MyTF1] Fix categories (#562) Thanks @aaitmouloud for #563
 [BE - RTLPlay] Add 'All programs'. Thanks @darodi for #582
 [IT - raiplay] Enhanced. Thanks @jmzambon for #583
-[FFF] Fix error when no image (#586)
+[Website - FFF] Fix error when no image (#586)
+[FR - CNEWS] Try hardcoded live id in case of error (#580)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
