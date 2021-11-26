@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta02" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta03" provider-name="SylvainCecchetto,wwark">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -46,6 +46,9 @@
 [FR - Cnews] Fi live and replay (#568)
 [CH - SSR] Fix error on SSR channels replay (#574) Thanks @jmzambon for #587
 [FR - SSR] Fix Alsace 20 and LaChaineNormande (DRM) (#584) Thanks @jmzambon for #585
+[FR - MyTF1] Fix categories (#562) Thanks @aaitmouloud for #563
+[BE - RTLPlay] Add 'All programs'. Thanks @darodi for #582
+[IT - raiplay] Enhanced. Thanks @jmzambon for #583
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
