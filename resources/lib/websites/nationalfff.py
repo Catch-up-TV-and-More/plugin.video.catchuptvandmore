@@ -6,9 +6,8 @@
 
 from __future__ import unicode_literals
 
-from codequick import Route, Resolver, Listitem
 import urlquick
-
+from codequick import Listitem, Resolver, Route
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
 
@@ -39,7 +38,10 @@ def list_videos(plugin, item_id, page, **kwargs):
     for video_datas in root.iterfind(".//a"):
         if video_datas.get('href') is not None:
             video_title = video_datas.find('.//h3').text
-            video_image = video_datas.find('.//img').get('src')
+            try:
+                video_image = video_datas.find('.//img').get('src')
+            except Exception:
+                video_image = None
             video_url = URL_ROOT + video_datas.get('href')
 
             item = Listitem()
