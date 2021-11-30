@@ -28,45 +28,41 @@ from resources.lib.menu_utils import item_post_treatment
 # Url to get channel's categories
 # e.g. Info, Divertissement, Séries, ...
 # We get an id by category
-URL_ROOT = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
-           'm6group_androidmob/services/%s/folders?limit=999&offset=0'
+URL_ROOT = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
+           'chromecast/services/%s/folders?limit=999&offset=0'
 
-
-# URL_ALL_PROGRAMS_WEB = 'http://pc.middleware.6play.fr/6play/v2/platforms/' \
-#                        'm6group_web/services/rtlbe_rtl_play/programs?limit=100&offset=0&csa=6&firstLetter=a&with=rights'
-URL_ALL_PROGRAMS = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
-                   'm6group_androidmob/services/rtlbe_rtl_play/programs' \
+URL_ALL_PROGRAMS = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
+                   'chromecast/services/rtlbe_rtl_play/programs' \
                    '?limit=999&offset=0&csa=6&firstLetter=%s&with=rights'
-
-
+               
 # Url to get catgory's programs
 # e.g. Le meilleur patissier, La france à un incroyable talent, ...
 # We get an id by program
-URL_CATEGORY = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
-               'm6group_androidmob/services/rtlbe_rtl_play/folders/%s/programs' \
+URL_CATEGORY = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
+               'chromecast/services/rtlbe_rtl_play/folders/%s/programs' \
                '?limit=999&offset=0&csa=6&with=parentcontext'
 
 # Url to get program's subfolders
 # e.g. Saison 5, Les meilleurs moments, les recettes pas à pas, ...
 # We get an id by subfolder
-URL_SUBCATEGORY = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
-                  'm6group_androidmob/services/rtlbe_rtl_play/programs/%s' \
+URL_SUBCATEGORY = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
+                  'chromecast/services/rtlbe_rtl_play/programs/%s' \
                   '?with=links,subcats,rights'
 
 # Url to get shows list
 # e.g. Episode 1, Episode 2, ...
-URL_VIDEOS = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
-             'm6group_androidmob/services/rtlbe_rtl_play/programs/%s/videos?' \
+URL_VIDEOS = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
+             'chromecast/services/rtlbe_rtl_play/programs/%s/videos?' \
              'csa=6&with=clips,freemiumpacks&type=vi,vc,playlist&limit=999'\
              '&offset=0&subcat=%s&sort=subcat'
 
-URL_VIDEOS2 = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
-              'm6group_androidmob/services/rtlbe_rtl_play/programs/%s/videos?' \
+URL_VIDEOS2 = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
+              'chromecast/services/rtlbe_rtl_play/programs/%s/videos?' \
               'csa=6&with=clips,freemiumpacks&type=vi&limit=999&offset=0'
 
 
-URL_JSON_VIDEO = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
-                 'm6group_androidmob/services/rtlbe_rtl_play/videos/%s'\
+URL_JSON_VIDEO = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
+                 'chromecast/services/rtlbe_rtl_play/videos/%s'\
                  '?csa=6&with=clips,freemiumpacks'
 
 URL_IMG = 'https://images.6play.fr/v1/images/%s/raw'
@@ -81,13 +77,13 @@ URL_GET_JS_ID_API_KEY = 'https://www.rtlplay.be/connexion'
 URL_API_KEY = 'https://www.rtlplay.be/client-%s.bundle.js'
 # Id
 
-URL_TOKEN_DRM = 'https://6play-users.6play.fr/v2/platforms/m6group_androidmob/services/rtlbe_rtl_play/users/%s/videos/%s/upfront-token'
+URL_TOKEN_DRM = 'https://6play-users.6play.fr/v2/platforms/chromecast/services/rtlbe_rtl_play/users/%s/videos/%s/upfront-token'
 
 # URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&Origin=https://www.6play.fr&Referer=%s&x-dt-auth-token=%s|R{SSM}|JBlicense'
 URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&x-dt-auth-token=%s&x-customer-name=rtlbe|R{SSM}|JBlicense'
 # Referer, Token
 
-URL_LIVE_JSON = 'https://android.middleware.6play.fr/6play/v2/platforms/m6group_androidmob/services/rtlbe_rtl_play/live?channel=%s&with=service_display_images,nextdiffusion,extra_data'
+URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chromecast/services/rtlbe_rtl_play/live?channel=%s&with=service_display_images,nextdiffusion,extra_data'
 # Chaine
 
 DESIRED_QUALITY = Script.setting['quality']
@@ -118,7 +114,7 @@ def rtlplay_root(plugin, **kwargs):
         yield item
 
     item = Listitem()
-    item.label = plugin.localize(30717)
+    item.label = 'All programs'
     item.art["thumb"] = get_item_media_path('channels/be/rtlplay.png')
     item.art["fanart"] = get_item_media_path('channels/be/rtlplay_fanart.jpg')
     item.set_callback(list_all_programs, 'rtl_play')
@@ -134,7 +130,7 @@ def list_all_programs(plugin, item_id, **kwargs):
 
     for letter in letters:
         item = Listitem()
-        item.label = plugin.localize(30717) + ' : ' + letter
+        item.label = 'All programs : ' + letter
         item.art["thumb"] = get_item_media_path('channels/be/rtlplay.png')
         item.art["fanart"] = get_item_media_path('channels/be/rtlplay_fanart.jpg')
         item.set_callback(list_all_programs_by_letter, item_id, letter)
@@ -176,7 +172,6 @@ def list_all_programs_by_letter(plugin, item_id, letter, **kwargs):
                           program_id=program_id)
         item_post_treatment(item)
         yield item
-
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
@@ -511,7 +506,13 @@ def get_video_url(plugin,
     for asset in video_assets:
         if 'usp_dashcenc_h264' in asset["type"]:
             item = Listitem()
-            item.path = asset['full_physical_path']
+            dummy_req = urlquick.get(asset['full_physical_path'],
+                                     headers={'User-Agent': web_utils.get_random_ua()},
+                                     allow_redirects=False)
+            if 'location' in dummy_req.headers:
+                item.path = dummy_req.headers['location']
+            else:
+                item.path = asset['full_physical_path']
             if 'http' in subtitle_url:
                 item.subtitles.append(subtitle_url)
             item.label = get_selected_item_label()
