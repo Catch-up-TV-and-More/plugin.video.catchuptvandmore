@@ -28,25 +28,25 @@ from resources.lib.menu_utils import item_post_treatment
 # Url to get channel's categories
 # e.g. Info, Divertissement, Séries, ...
 # We get an id by category
-URL_ROOT = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
-           'chromecast/services/%s/folders?limit=999&offset=0'
+URL_ROOT = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
+           'm6group_androidmob/services/%s/folders?limit=999&offset=0'
 
-URL_ALL_PROGRAMS = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
-                   'chromecast/services/rtlbe_rtl_play/programs' \
+URL_ALL_PROGRAMS = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
+                   'm6group_androidmob/services/rtlbe_rtl_play/programs' \
                    '?limit=999&offset=0&csa=6&firstLetter=%s&with=rights'
                
 # Url to get catgory's programs
 # e.g. Le meilleur patissier, La france à un incroyable talent, ...
 # We get an id by program
-URL_CATEGORY = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
-               'chromecast/services/rtlbe_rtl_play/folders/%s/programs' \
+URL_CATEGORY = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
+               'm6group_androidmob/services/rtlbe_rtl_play/folders/%s/programs' \
                '?limit=999&offset=0&csa=6&with=parentcontext'
 
 # Url to get program's subfolders
 # e.g. Saison 5, Les meilleurs moments, les recettes pas à pas, ...
 # We get an id by subfolder
-URL_SUBCATEGORY = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
-                  'chromecast/services/rtlbe_rtl_play/programs/%s' \
+URL_SUBCATEGORY = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
+                  'm6group_androidmob/services/rtlbe_rtl_play/programs/%s' \
                   '?with=links,subcats,rights'
 
 # Url to get shows list
@@ -113,65 +113,6 @@ def rtlplay_root(plugin, **kwargs):
         item_post_treatment(item)
         yield item
 
-    item = Listitem()
-    item.label = 'All programs'
-    item.art["thumb"] = get_item_media_path('channels/be/rtlplay.png')
-    item.art["fanart"] = get_item_media_path('channels/be/rtlplay_fanart.jpg')
-    item.set_callback(list_all_programs, 'rtl_play')
-    item_post_treatment(item)
-    yield item
-
-
-@Route.register
-def list_all_programs(plugin, item_id, **kwargs):
-
-    letters = ['@', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-               'u', 'v', 'w', 'y', 'z']
-
-    for letter in letters:
-        item = Listitem()
-        item.label = 'All programs : ' + letter
-        item.art["thumb"] = get_item_media_path('channels/be/rtlplay.png')
-        item.art["fanart"] = get_item_media_path('channels/be/rtlplay_fanart.jpg')
-        item.set_callback(list_all_programs_by_letter, item_id, letter)
-        item_post_treatment(item)
-        yield item
-
-
-@Route.register
-def list_all_programs_by_letter(plugin, item_id, letter, **kwargs):
-
-    resp = urlquick.get(URL_ALL_PROGRAMS % letter,
-                        headers={
-                            'User-Agent': web_utils.get_random_ua(),
-                            'x-customer-name': 'rtlbe'})
-    json_parser = json.loads(resp.text)
-
-    for array in json_parser:
-        item = Listitem()
-        program_title = array['title']
-        program_id = str(array['id'])
-        program_desc = array['description']
-        program_imgs = array['images']
-        program_img = ''
-        program_fanart = ''
-        for img in program_imgs:
-            if img['role'] == 'vignette':
-                external_key = img['external_key']
-                program_img = URL_IMG % (external_key)
-            elif img['role'] == 'carousel':
-                external_key = img['external_key']
-                program_fanart = URL_IMG % (external_key)
-
-        item.label = program_title
-        item.art['thumb'] = item.art['landscape'] = program_img
-        item.art['fanart'] = program_fanart
-        item.info['plot'] = program_desc
-        item.set_callback(list_program_categories,
-                          item_id=item_id,
-                          program_id=program_id)
-        item_post_treatment(item)
-        yield item
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
@@ -506,6 +447,7 @@ def get_video_url(plugin,
     for asset in video_assets:
         if 'usp_dashcenc_h264' in asset["type"]:
             item = Listitem()
+            #GM Check if rtl_play is needed
             dummy_req = urlquick.get(asset['full_physical_path'],
                                      headers={'User-Agent': web_utils.get_random_ua()},
                                      allow_redirects=False)
