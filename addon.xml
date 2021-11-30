@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.36~beta04" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta04" provider-name="SylvainCecchetto,wwark">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -42,11 +42,15 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.36]
-[6Play - FR] Fix Catchup TV
-[STV - UK] Fix missing content (#512)
-[STV - UK] Add subtitle (#513)
-[Website - NFB] Fix videos (#498)
+[Version 0.2.37]
+[FR - Cnews] Fi live and replay (#568)
+[CH - SSR] Fix error on SSR channels replay (#574) Thanks @jmzambon for #587
+[FR - SSR] Fix Alsace 20 and LaChaineNormande (DRM) (#584) Thanks @jmzambon for #585
+[FR - MyTF1] Fix categories (#562) Thanks @aaitmouloud for #563
+[BE - RTLPlay] Add 'All programs'. Thanks @darodi for #582
+[IT - raiplay] Enhanced. Thanks @jmzambon for #583
+[Website - FFF] Fix error when no image (#586)
+[FR - CNEWS] Try hardcoded live id in case of error (#580)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
