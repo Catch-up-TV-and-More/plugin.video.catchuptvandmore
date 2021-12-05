@@ -24,10 +24,6 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://uktvplay.uktv.co.uk'
 
-URL_BRIGHTCOVE_DATAS = 'https://s3-eu-west-1.amazonaws.com/uktv-static/fgprod/play/%s.js'
-# JS_id
-# https://s3-eu-west-1.amazonaws.com/uktv-static/prod/play/35639012dd82fd7809e9.js
-
 URL_BRIGHTCOVE_POLICY_KEY = 'https://players.brightcove.net/%s/%s_default/index.min.js'
 # AccountId, PlayerId
 
@@ -256,7 +252,7 @@ def get_video_url(plugin, item_id, data_video_id, **kwargs):
     data_player = data_account_player.group(2)
 
     # Method to get JSON from 'edge.api.brightcove.com'
-    resp3 = session_requests.get(
+    resp2 = session_requests.get(
         URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
         headers={
             'User-Agent':
@@ -266,7 +262,7 @@ def get_video_url(plugin, item_id, data_video_id, **kwargs):
             (get_brightcove_policy_key(data_account, data_player))
         })
 
-    json_parser = json.loads(resp3.text)
+    json_parser = json.loads(resp2.text)
 
     video_url = ''
     licence_key = ''
