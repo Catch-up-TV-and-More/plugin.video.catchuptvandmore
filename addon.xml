@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta07" provider-name="SylvainCecchetto,wwark">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta08" provider-name="SylvainCecchetto,wwark">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -54,6 +54,7 @@
 [BE - RTBF] Fix RTBF sometimes down (#526) Thanks @Gaet81 for #536
 [BE - RTLPlay] Fix replay (#576) Thanks @Gaet81 for #589
 [Live TV] Temp fix of tzlocal error (#592)
+[Website - FFF] Fix video playback error (#586)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

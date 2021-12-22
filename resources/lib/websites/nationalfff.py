@@ -42,7 +42,9 @@ def list_videos(plugin, item_id, page, **kwargs):
                 video_image = video_datas.find('.//img').get('src')
             except Exception:
                 video_image = None
-            video_url = URL_ROOT + video_datas.get('href')
+            video_url = video_datas.get('href')
+            if URL_ROOT not in video_url:
+                video_url = URL_ROOT + video_url
 
             item = Listitem()
             item.label = video_title
@@ -73,7 +75,7 @@ def get_video_url(plugin,
                         headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
     root = resp.parse()
-    video_datas = root.find(".//video[@class='player-fff vjs-fluid video-js margin_b16 resp_iframe']")
+    video_datas = root.find(".//video")
 
     data_account = video_datas.get('data-account')
     data_video_id = video_datas.get('data-video-id')
