@@ -11,7 +11,7 @@ try:
     import pickle as pickle
 except ImportError:
     import pickle
-from collections import MutableMapping
+from collections.abc import MutableMapping
 from six import string_types
 from kodi_six import xbmcgui
 
