@@ -6,18 +6,21 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-from builtins import str
+
 import json
 import re
+from builtins import str
 
 import inputstreamhelper
+import urlquick
 from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
-import urlquick
-
 from resources.lib import download, web_utils
 from resources.lib.addon_utils import get_item_media_path
-from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
+from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
+                                      get_selected_item_art,
+                                      get_selected_item_info,
+                                      get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
 
 # TO DO
@@ -34,7 +37,7 @@ URL_ROOT = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
 URL_ALL_PROGRAMS = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
                    'm6group_androidmob/services/rtlbe_rtl_play/programs' \
                    '?limit=999&offset=0&csa=6&firstLetter=%s&with=rights'
-               
+
 # Url to get catgory's programs
 # e.g. Le meilleur patissier, La france à un incroyable talent, ...
 # We get an id by program
@@ -447,7 +450,7 @@ def get_video_url(plugin,
     for asset in video_assets:
         if 'usp_dashcenc_h264' in asset["type"]:
             item = Listitem()
-            #GM Check if rtl_play is needed
+            # GM Check if rtl_play is needed
             dummy_req = urlquick.get(asset['full_physical_path'],
                                      headers={'User-Agent': web_utils.get_random_ua()},
                                      allow_redirects=False)
