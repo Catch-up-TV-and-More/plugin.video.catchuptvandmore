@@ -116,6 +116,65 @@ def rtlplay_root(plugin, **kwargs):
         item_post_treatment(item)
         yield item
 
+    # all programs
+    item = Listitem()
+    item.label = plugin.localize(30717)
+    item.art["thumb"] = get_item_media_path('channels/be/rtlplay.png')
+    item.art["fanart"] = get_item_media_path('channels/be/rtlplay_fanart.jpg')
+    item.set_callback(list_all_programs, 'rtl_play')
+    item_post_treatment(item)
+    yield item
+
+
+@Route.register
+def list_all_programs(plugin, item_id, **kwargs):
+    letters = ['@', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+               'u', 'v', 'w', 'y', 'z']
+
+    for letter in letters:
+        item = Listitem()
+        item.label = plugin.localize(30717) + ' : ' + letter
+        item.art["thumb"] = get_item_media_path('channels/be/rtlplay.png')
+        item.art["fanart"] = get_item_media_path('channels/be/rtlplay_fanart.jpg')
+        item.set_callback(list_all_programs_by_letter, item_id, letter)
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register
+def list_all_programs_by_letter(plugin, item_id, letter, **kwargs):
+    resp = urlquick.get(URL_ALL_PROGRAMS % letter,
+                        headers={
+                            'User-Agent': web_utils.get_random_ua(),
+                            'x-customer-name': 'rtlbe'})
+    json_parser = json.loads(resp.text)
+
+    for array in json_parser:
+        item = Listitem()
+        program_title = array['title']
+        program_id = str(array['id'])
+        program_desc = array['description']
+        program_imgs = array['images']
+        program_img = ''
+        program_fanart = ''
+        for img in program_imgs:
+            if img['role'] == 'vignette':
+                external_key = img['external_key']
+                program_img = URL_IMG % (external_key)
+            elif img['role'] == 'carousel':
+                external_key = img['external_key']
+                program_fanart = URL_IMG % (external_key)
+
+        item.label = program_title
+        item.art['thumb'] = item.art['landscape'] = program_img
+        item.art['fanart'] = program_fanart
+        item.info['plot'] = program_desc
+        item.set_callback(list_program_categories,
+                          item_id=item_id,
+                          program_id=program_id)
+        item_post_treatment(item)
+        yield item
+
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
