@@ -64,6 +64,9 @@ URL_VIDEOS2 = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
               'chromecast/services/rtlbe_rtl_play/programs/%s/videos?' \
               'csa=6&with=clips,freemiumpacks&type=vi&limit=999&offset=0'
 
+URL_SEARCH = 'https://nhacvivxxk-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(' \
+             '4.10.5)%3B%20Browser'
+
 URL_JSON_VIDEO = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
                  'chromecast/services/rtlbe_rtl_play/videos/%s'\
                  '?csa=6&with=clips,freemiumpacks'
@@ -123,6 +126,119 @@ def rtlplay_root(plugin, **kwargs):
     item.set_callback(list_all_programs, 'rtl_play')
     item_post_treatment(item)
     yield item
+
+    item = Listitem.search(list_videos_search, item_id='rtl_play', page='0')
+    item.label = plugin.localize(30715)
+    item_post_treatment(item)
+    yield item
+
+
+@Route.register
+def list_videos_search(plugin, search_query, item_id, page, **kwargs):
+
+    if search_query is None or len(search_query) == 0:
+        return False
+
+    json_body_template = """ 
+    {
+        "requests": [
+            {
+              "indexName": "rtlmutu_prod_bedrock_layout_items_v1_rtlbe_main",
+              "query": "search_term",
+              "params": "hitsPerPage=50&facetFilters=%5B%22metadata.item_type%3Afunctionality%22%5D"
+            },
+            {
+              "indexName": "rtlmutu_prod_bedrock_layout_items_v1_rtlbe_main",
+              "query": "search_term",
+              "params": "hitsPerPage=50&facetFilters=%5B%22metadata.item_type%3Aplaylist%22%5D"
+            },
+            {
+              "indexName": "rtlmutu_prod_bedrock_layout_items_v1_rtlbe_main",
+              "query": "search_term",
+              "params": "hitsPerPage=50&facetFilters=%5B%22metadata.item_type%3Aprogram%22%5D"
+            },
+            {
+              "indexName": "rtlmutu_prod_bedrock_layout_items_v1_rtlbe_main",
+              "query": "search_term",
+              "params": "hitsPerPage=50&facetFilters=%5B%22metadata.item_type%3Avc%22%5D"
+            },
+            {
+              "indexName": "rtlmutu_prod_bedrock_layout_items_v1_rtlbe_main",
+              "query": "search_term",
+              "params": "hitsPerPage=50&facetFilters=%5B%22metadata.item_type%3Avi%22%5D"
+            }
+          ]
+    }
+
+    """
+
+    json_body = json.loads(json_body_template)
+    for request in json_body['requests']:
+        request['query'] = search_query
+
+    headers = {
+        'User-Agent': web_utils.get_random_ua(),
+        'Accept': '*/*',
+        'Accept-Language': 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'x-algolia-api-key': '5fce02cb376fb2cda773be8a8404598a',
+        'x-algolia-application-id': 'NHACVIVXXK',
+        'Origin': 'https://www.rtlplay.be',
+        'DNT': '1',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'cross-site',
+        'Referer': 'https://www.rtlplay.be/',
+        'Connection': 'keep-alive'
+    }
+
+    resp = urlquick.post(URL_SEARCH, None, json_body, headers=headers)
+    json_parser = resp.json()
+
+    for result in json_parser["results"]:
+        if result["nbHits"] > 0:
+            for hit in result["hits"]:
+                search_title = hit["item"]["itemContent"]["title"]
+                search_id = hit["item"]["itemContent"]["action"]["target"]["value_layout"]["id"]
+                search_type = hit["item"]["itemContent"]["action"]["target"]["value_layout"]["type"]
+                # search_image = result["data"]["images"]["illustration"]["16x9"]["1248x702"]
+                if search_type == "program":
+                    item = Listitem()
+                    item.label = search_title
+                    # item.art['thumb'] = item.art['landscape'] = search_image
+                    item.set_callback(list_program_categories,
+                                      item_id=item_id,
+                                      program_id=search_id)
+                    item_post_treatment(item)
+                    yield item
+                else:
+
+                    is_downloadable = False
+                    if get_kodi_version() < 18:
+                        is_downloadable = True
+
+                    if search_type != 'playlist':
+                        item = Listitem()
+                        item.label = search_title
+                        # populate_item(item, video['clips'][0])
+                        item.set_callback(get_video_url,
+                                          item_id=item_id,
+                                          video_id=search_id)
+                    # TODO playlist
+                    # else:
+                    #     item = Listitem()
+                    #     item.label = search_title
+                    #     # populate_item(item, video)
+                    #     item.set_callback(get_playlist_urls,
+                    #                       item_id=item_id,
+                    #                       video_id=search_id,
+                    #                       url=url)
+
+                        item_post_treatment(item,
+                                            is_playable=True,
+                                            is_downloadable=is_downloadable)
+                        yield item
 
 
 @Route.register
