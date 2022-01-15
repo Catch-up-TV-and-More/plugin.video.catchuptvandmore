@@ -5,6 +5,7 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
+
 from builtins import str
 import re
 
@@ -61,9 +62,10 @@ def list_programs(plugin, item_id, **kwargs):
     for program_datas in root.iterfind(".//div[@class='col-sm-4']"):
 
         program_title = program_datas.find('.//h3').text
-        program_image = URL_ROOT + '/' + program_datas.find('.//img').get(
-            'src')
-        program_url = URL_ROOT + '/' + program_datas.find(".//a").get("href")
+        program_image = program_datas.find('.//img').get('src')
+        program_image = append_schema(program_image)
+        program_url = program_datas.find(".//a").get("href")
+        program_url = append_schema(program_url)
 
         item = Listitem()
         item.label = program_title
@@ -76,6 +78,12 @@ def list_programs(plugin, item_id, **kwargs):
         yield item
 
 
+def append_schema(url):
+    if not url.startswith("http://") and not url.startswith("https://"):
+        url = URL_ROOT + ("" if url.startswith("/") else "/") + url
+    return url
+
+
 @Route.register
 def list_videos(plugin, item_id, next_url, page, **kwargs):
 
@@ -85,7 +93,9 @@ def list_videos(plugin, item_id, next_url, page, **kwargs):
     for video_datas in root.iterfind(".//div[@class='col-sm-4']"):
         video_title = video_datas.find('.//h3').text
         video_image = video_datas.find('.//img').get('src')
+        video_image = append_schema(video_image)
         video_url = video_datas.find('.//a').get('href')
+        video_url = append_schema(video_url)
 
         item = Listitem()
         item.label = video_title
@@ -110,12 +120,25 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
-    list_streams_datas = re.compile(r'source src="(.*?)"').findall(resp.text)
+
+    javascript_player_urls = re.compile(r'src="(https://rtc\.fcst\.tv/player/embed/.*?)"').findall(resp.text)
     stream_url = ''
-    for stream_datas in list_streams_datas:
-        if 'm3u8' in stream_datas or \
-                'mp4' in stream_datas:
-            stream_url = stream_datas
+    for player_url in javascript_player_urls:
+        javascript_resp = urlquick.get(player_url, max_age=-1)
+        # \"https:\\\/\\\/rtc-vod.freecaster.com\\\/vod\\\/rtc\\\/jkmYRKZBKq-720p.mp4\"
+        stream_data_array = re.compile(r'(https?:[/\\]+rtc-vod\.freecaster\.com.*?/([^/]*?)\.mp4)').findall(javascript_resp.text)
+        for stream_data in stream_data_array:
+            stream_url = stream_data[0].replace("\\","")
+
+    # list_streams_datas = re.compile(r'source src="(.*?)"').findall(resp.text)
+    # stream_url = ''
+    # for stream_datas in list_streams_datas:
+    #     if 'm3u8' in stream_datas or \
+    #             'mp4' in stream_datas:
+    #         stream_url = stream_datas
+
+    if stream_url == '':
+        return False
 
     if download_mode:
         return download.download_video(stream_url)
