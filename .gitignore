@@ -31,6 +31,10 @@ Temporary Items
 # VSCode
 /.vscode
 
+# pycharm
+/.idea
+/venv
+
 # Sublime Text
 *.sublime-workspace
 *.sublime-project
