@@ -6,15 +6,13 @@
 
 from __future__ import unicode_literals
 
-from builtins import str
 import re
+from builtins import str
 
-from codequick import Listitem, Resolver, Route
 import urlquick
-
+from codequick import Listitem, Resolver, Route
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
-
 
 # TO DO
 # ....
@@ -128,7 +126,7 @@ def get_video_url(plugin,
         # \"https:\\\/\\\/rtc-vod.freecaster.com\\\/vod\\\/rtc\\\/jkmYRKZBKq-720p.mp4\"
         stream_data_array = re.compile(r'(https?:[/\\]+rtc-vod\.freecaster\.com.*?/([^/]*?)\.mp4)').findall(javascript_resp.text)
         for stream_data in stream_data_array:
-            stream_url = stream_data[0].replace("\\","")
+            stream_url = stream_data[0].replace("\\", "")
 
     # list_streams_datas = re.compile(r'source src="(.*?)"').findall(resp.text)
     # stream_url = ''
