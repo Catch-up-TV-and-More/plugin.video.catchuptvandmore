@@ -5,15 +5,14 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
+
 import json
 import re
 
-from codequick import Listitem, Resolver, Route, Script
 import urlquick
-
+from codequick import Listitem, Resolver, Route, Script
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
-
 
 # TO DO
 # Add replay
@@ -21,7 +20,7 @@ from resources.lib.menu_utils import item_post_treatment
 URL_ROOT = 'https://www.raiplay.it'
 
 # Live
-URL_LIVE = URL_ROOT + '/dirette/%s'
+URL_LIVE = URL_ROOT + '/dirette/%s.json'
 # Channel
 
 URL_REPLAYS = URL_ROOT + '/dl/RaiTV/RaiPlayMobile/Prod/Config/programmiAZ-elenco.json'
@@ -324,6 +323,5 @@ def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE % item_id, max_age=-1)
-    return re.compile(r'\"content_url\"\:\"(.*?)\"').findall(
-        resp.text)[0]
+    resp = urlquick.get(URL_LIVE % item_id, max_age=-1).json()
+    return resp['video']['content_url']
