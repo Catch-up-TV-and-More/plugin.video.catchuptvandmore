@@ -8,15 +8,20 @@ from __future__ import unicode_literals
 import json
 import re
 import requests
+import time
+import random
+import math
+import inputstreamhelper
+import urlquick
+
 try:  # Python 3
     from urllib.parse import urlencode
 except ImportError:  # Python 2
     from urllib import urlencode
 
-import inputstreamhelper
+
 from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
-import urlquick
 
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
@@ -40,8 +45,6 @@ URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken
 URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
-
-URL_DEVICE_ID = 'https://pass.canal-plus.com/service/HelloJSON.php'
 
 # TODO
 URL_LICENCE_DRM = '[license-server url]|[Header]|[Post-Data]|[Response]'
@@ -173,7 +176,7 @@ def list_contents(plugin, item_id, key_value, **kwargs):
 def list_programs(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     if 'strates' in json_parser:
 
@@ -301,7 +304,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 def list_sub_programs(plugin, item_id, next_url, strate_title, **kwargs):
 
     resp = urlquick.get(next_url)
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     if 'strates' in json_parser:
 
@@ -336,7 +339,7 @@ def list_sub_programs(plugin, item_id, next_url, strate_title, **kwargs):
 def list_videos(plugin, item_id, next_url, **kwargs):
 
     resp = urlquick.get(next_url)
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     program_title = json_parser['currentPage']['displayName']
 
@@ -389,13 +392,17 @@ def get_video_url(plugin,
             return False
 
         # Get DeviceId (not a good device ID => TODO find the good one to fix to get licence key)
-        header_device_id = {
-            'referer':
-            'https://secure-player.canal-plus.com/one/prod/v2/',
-        }
-        resp_device_id = urlquick.get(URL_DEVICE_ID, headers=header_device_id, max_age=-1)
-        device_id_first = re.compile(
-            r'deviceId\"\:\"(.*?)\"').findall(resp_device_id.text)[0]
+        ##############################################################################
+        # Code by mtr81 : https://github.com/xbmc/inputstream.adaptive/issues/812
+        def rnd():
+            return str(hex(math.floor((1+random.random())*9007199254740991)))[4:]
+        ts= int(1000*time.time())
+
+        deviceKeyId = str(ts)+'-'+rnd()
+        device_id_first = deviceKeyId + ':0:' + str(ts+2000)+'-'+rnd()
+        sessionId = str(ts+3000)+'-'+rnd()
+        ##############################################################################
+
 
         # Get Portail Id
         session_requests = requests.session()
@@ -406,15 +413,21 @@ def get_video_url(plugin,
         portail_id = json_app_config_parser["api"]["pass"][
             "portailIdEncrypted"]
 
+        headers = {"User-Agent": web_utils.get_random_ua(),
+            "Origin": "https://www.canalplus.com",
+            "Referer": "https://www.canalplus.com/",}
+
         # Get PassToken
         payload = {
             'deviceId': device_id_first,
             'vect': 'INTERNET',
-            'media': 'PC',
-            'portailId': portail_id
+            'media': 'web',
+            'portailId': portail_id,
+            'sessionId': sessionId
         }
-        resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload)
-        json_token_parser = json.loads(resp_token_mycanal.text)
+
+        resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload, headers=headers)
+        json_token_parser = resp_token_mycanal.json()
         pass_token = json_token_parser["response"]["passToken"]
         device_id = json_token_parser["response"]["userData"]["deviceId"].split(':')[0]
 
@@ -440,7 +453,7 @@ def get_video_url(plugin,
             web_utils.get_random_ua()
         }
         value_datas_json = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers)
-        value_datas_jsonparser = json.loads(value_datas_json.text)
+        value_datas_jsonparser = value_datas_json.json()
 
         comMode_value = ''
         contentId_value = ''
@@ -528,12 +541,11 @@ def get_video_url(plugin,
         }
         resp_stream_datas = session_requests.put(
             URL_STREAM_DATAS, data=payload, headers=headers)
-        jsonparser_stream_datas = json.loads(resp_stream_datas.text)
+        jsonparser_stream_datas = resp_stream_datas.json()
 
         resp_real_stream_datas = session_requests.get(
             jsonparser_stream_datas['@medias'], headers=headers)
-        jsonparser_real_stream_datas = json.loads(
-            resp_real_stream_datas.text)
+        jsonparser_real_stream_datas = resp_real_stream_datas.json()
 
         subtitle_url = ''
         item = Listitem()
@@ -591,7 +603,7 @@ def get_video_url(plugin,
         return item
 
     resp = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     return json_parser["detail"]["informations"]["playsets"]["available"][0]["videoURL"]
 
