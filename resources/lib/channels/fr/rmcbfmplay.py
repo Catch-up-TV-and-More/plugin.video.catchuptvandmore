@@ -10,6 +10,7 @@ import base64
 import inputstreamhelper
 import urlquick
 import re
+import json
 
 from builtins import str
 from codequick import Listitem, Resolver, Route, Script
@@ -217,29 +218,52 @@ def podscast(plugin, path, **kwargs):
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(path, headers=headers).text
 
-    data = re.compile('margin-top">.+?<a href="(.+?)".+?name">(.+?)<.+?description">(.+?)<', re.DOTALL|re.MULTILINE).findall(resp)
+    if "bfmtv.com" in path:
+        data = re.compile('margin-top">.+?<a href="(.+?)".+?name">(.+?)<.+?description">(.+?)<', re.DOTALL|re.MULTILINE).findall(resp)
 
-    for d in data:
-        item = Listitem()
-        item.path = d[0]
-        item.label = d[1]
-        item.info["plot"] = d[2]
+        for d in data:
+            item = Listitem()
+            item.path = d[0]
+            item.label = d[1]
+            item.info["plot"] = d[2]
+            item.art.update(get_selected_item_art())    
 
-        callback = (playpodcast, item.path, item.label)
-        item.set_callback(*callback)
-        item_post_treatment(item)
-        yield item
+            callback = (playpodcast, item.path, item.label)
+            item.set_callback(*callback)
+            item_post_treatment(item)
+            yield item
+
+    elif "deezer.com" in path:
+        data = re.compile('window.__DZR_APP_STATE__ =(.+?)</script', re.DOTALL|re.MULTILINE).search(resp).group(1)
+        data = json.loads(data)
+
+        for d in data["EPISODES"]["data"]:
+            item = Listitem()
+            item.path = d["EPISODE_DIRECT_STREAM_URL"]
+            item.label = d["EPISODE_TITLE"]
+            item.info["plot"] = d["EPISODE_DESCRIPTION"]
+            item.art.update(get_selected_item_art())
+
+            callback = (playpodcast, item.path, item.label)
+            item.set_callback(*callback)
+            item_post_treatment(item)
+            yield item
+
 
 @Resolver.register
 def playpodcast(plugin, path, title, **kwargs):
-    headers = {"User-Agent": USER_AGENT}
-    resp = urlquick.get(path, headers=headers)
-    if "bfmtv.com" in path:
-        data = resp.parse()
+    item = Listitem()
+    item.label = title
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
 
-        item = Listitem()
-        item.label = get_selected_item_label()
-        item.art.update(get_selected_item_art())
-        item.info.update(get_selected_item_info())
-        item.path = data.find(".//div[@class='audio-player']").get('data-media-url')
-        return item
+    if ".mp3" in path:
+        item.path = path + "|User-Agent=" + USER_AGENT + "&Referer=https://www.deezer.com/"
+    else:
+        headers = {"User-Agent": USER_AGENT}
+        resp = urlquick.get(path, headers=headers)
+        data = resp.parse()
+        
+        if "bfmtv.com" in path:
+            item.path = data.find(".//div[@class='audio-player']").get('data-media-url')
+    return item
