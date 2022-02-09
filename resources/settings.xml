@@ -75,7 +75,7 @@
             <setting label="30086" type="lsep" subsetting="true" visible="eq(1,true)"/>
             <!--<setting label="" type="bool" id="pl" default="true" visible="false"/>-->
 
-                <setting label="30164" type="labelenum" id="icitele.language" values="Vancouver|Regina|Toronto|Edmonton|Rimouski|Québec|Winnipeg|Moncton|Ottawa|Montréal" default="Montréal"/>
+                <setting label="30164" type="labelenum" id="icitele.language" values="Vancouver|Regina|Toronto|Edmonton|Rimouski|Québec|Winnipeg|Moncton|Ottawa|Sherbrooke|Trois-Rivières|Montréal" default="Montréal"/>
                 <setting label="30170" type="labelenum" id="cbc.language" values="Ottawa|Montreal|Charlottetown|Fredericton|Halifax|Windsor|Yellowknife|Winnipeg|Regina|Calgary|Edmonton|Vancouver|Toronto|St. John\'s" default="Ottawa"/>
 
     </category>
@@ -112,6 +112,9 @@
             <setting label="30248" type="text" id="abweb.login" default=""/>
             <setting label="30249" type="text" id="abweb.password" option="hidden" default=""/>
 
+            <setting label="30252" type="text" id="rmcbfmplay.login" default=""/>
+            <setting label="30253" type="text" id="rmcbfmplay.password" option="hidden" default=""/>
+
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
@@ -126,7 +129,6 @@
 
             <setting label="30250" type="text" id="uktvplay.login" default=""/>
             <setting label="30251" type="text" id="uktvplay.password" option="hidden" default=""/>
-
     </category>
     <!-- Accounts -->
 
