@@ -48,17 +48,11 @@ URL_LIVE_BFMBUSINESS = 'http://bfmbusiness.bfmtv.com/mediaplayer/live-video/'
 
 DESIRED_QUALITY = Script.setting['quality']
 
-# Dailymotion Id get from these pages below
-# - https://www.dailymotion.com/BFMTV
-LIVE_DAILYMOTION_ID = {
-    'bfmtv': 'xgz4t1'
-}
-
 
 def get_token(item_id):
     """Get session token"""
     resp = urlquick.get(URL_TOKEN % item_id)
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
     return json_parser['session']['token']
 
 
@@ -66,7 +60,7 @@ def get_token(item_id):
 def list_programs(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_REPLAY % (item_id, get_token(item_id)))
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
     json_parser = json_parser['page']['contents'][0]
     json_parser = json_parser['elements'][0]['items']
 
@@ -91,7 +85,7 @@ def list_videos(plugin, item_id, program_category, page, **kwargs):
 
     resp = urlquick.get(URL_SHOW %
                         (item_id, get_token(item_id), program_category, page))
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     for video_datas in json_parser['videos']:
         video_id = video_datas['video']
@@ -144,7 +138,7 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(URL_VIDEO % (item_id, get_token(item_id), video_id))
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     if item_id == 'bfmtv' or item_id == 'bfmbusiness':
         stream_infos_url = json_parser['video']['long_url']
@@ -203,16 +197,17 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
 
     if item_id == 'bfmtv':
-        return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION_ID[item_id], False)
-
-    if item_id == 'bfmbusiness':
+        resp = urlquick.get(URL_LIVE_BFMTV,
+                    headers={'User-Agent': web_utils.get_random_ua()},
+                    max_age=-1)
+    elif item_id == 'bfmbusiness':
         resp = urlquick.get(URL_LIVE_BFMBUSINESS,
                             headers={'User-Agent': web_utils.get_random_ua()},
                             max_age=-1)
-        root = resp.parse()
-        live_datas = root.find(".//div[@class='video_block']")
-        data_account = live_datas.get('accountid')
-        data_video_id = live_datas.get('videoid')
-        data_player = live_datas.get('playerid')
-        return resolver_proxy.get_brightcove_video_json(plugin, data_account,
-                                                        data_player, data_video_id)
+    root = resp.parse()
+    live_datas = root.find(".//div[@class='video_block']")
+    data_account = live_datas.get('accountid')
+    data_video_id = live_datas.get('videoid')
+    data_player = live_datas.get('playerid')
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
+                                                    data_player, data_video_id)
