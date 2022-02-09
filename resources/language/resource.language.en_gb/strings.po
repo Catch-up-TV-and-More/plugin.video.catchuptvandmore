@@ -429,6 +429,13 @@ msgctxt "#30251"
 msgid "UKTVPlay Password"
 msgstr ""
 
+msgctxt "#30252"
+msgid "RMCBFM Play Login"
+msgstr ""
+
+msgctxt "#30253"
+msgid "RMCBFM Play Password"
+msgstr ""
 
 # TV integration (from 30270 to 30289)
 
@@ -559,6 +566,10 @@ msgstr ""
 
 msgctxt "#30361"
 msgid "Connect/Disconnect VPN"
+msgstr ""
+
+msgctxt "#30362"
+msgid "An error has occurred while trying to disconnect OpenVPN"
 msgstr ""
 # delete_for_submission_end
 
@@ -815,6 +826,7 @@ msgstr ""
 msgctxt "#30729"
 msgid "Emissions"
 msgstr ""
+
 
 # Favourites (from 30800 to 30859)
 
