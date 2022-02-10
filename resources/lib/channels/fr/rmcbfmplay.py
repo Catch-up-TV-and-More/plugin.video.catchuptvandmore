@@ -39,6 +39,7 @@ def get_token():
 
 def get_account_id(token):
     url = "https://ws-backendtv.rmcbfmplay.com/heimdall-core/public/api/v2/userProfiles"
+
     params = {
         "app": "bfmrmc",
         "device": "browser",
@@ -46,6 +47,7 @@ def get_account_id(token):
         "token": token,
         "tokenType": "casToken",
     }
+
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json()
     account_id = resp["nexttvId"]
@@ -175,22 +177,35 @@ def video(plugin, path, title, **kwargs):
     # https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/Product::NEUF_BFMTV_BFM0300012711/detail?app=bfmrmc&device=browser&page=0&size=30
     # https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/Product::NEUF_BFMTV_BFM0300012711/detail?app=bfmrmc&device=browser&isProductSeasonWithEpisodes=false&universe=provider
     # https://ws-gaia.tv.sfr.net/gaia-core/rest/api/web/v2/content/Product::NEUF_BFMTV_BFM0300012711/options?app=bfmrmc&device=browser&noTracking=true&token=PIEOVEsvhCYGqC7df4/pvt7TiglWvZqtpW9qdSlvqAyH6bOcdj0JNJmqylF5fws2X29FA1r7isvuWGGhuXpxzGPax1g53%2BuHcPYjHs1z8hkweHk1x2USpCdykMd1wOp%2B5w74DI0c1vl50fZqpCRnR4ppMCbFYhEpThQaLPRvJHgXh7EnJ3IJeJULerWHA%2BjGc&tokenType=casToken&universe=provider
+    headers = {"User-Agent": USER_AGENT,
+        'Content-type':'application/json', 
+        'Accept':'application/json, text/plain, */*'}  
+
     url = API_CDN_ROOT + path
+
     params = {
         "app": "bfmrmc",
         "device": "browser",
         "token": token,
         "universe": "provider",
-        "accountTypes":"NEXTTV",
-        "operators":"NEXTTV",
-        "noTracking":"false"
     }
 
-    headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json()
+
+    del params["universe"]
 
     for stream in resp[0]["offers"][0]["streams"]:
         if stream["drm"] == "WIDEVINE":
+            data = {
+                "app": "bfmrmc",
+                "device": "browser",
+                "macAddress": "PC",
+                "offerId": resp[0]["offers"][0]["offerId"],
+                "token": token
+            }
+
+            entitlementId = urlquick.post("https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/web/v1/replay/play", params=params, json=data, headers=headers).json()["entitlementId"]
+
             item = Listitem()
             item.label = get_selected_item_label()
             item.art.update(get_selected_item_art())
@@ -199,12 +214,11 @@ def video(plugin, path, title, **kwargs):
             item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
             item.property["inputstream.adaptive.manifest_type"] = "mpd"
             item.property["inputstream.adaptive.license_type"] = "com.widevine.alpha"
-            customdata = "description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken&tokenSSO={}&entitlementId=3769416154&type=LIVEOTT&accountId={}".format(
-                USER_AGENT, token, account_id
+            customdata = "description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken&tokenSSO={}&entitlementId={}&type=LIVEOTT&accountId={}".format(
+                USER_AGENT, token, entitlementId, account_id
             )
 
             import urllib.parse
-
             customdata = urllib.parse.quote(customdata)
             item.property["inputstream.adaptive.license_key"] = (
                 "https://ws-backendtv.rmcbfmplay.com/asgard-drm-widevine/public/licence|User-Agent=" + USER_AGENT + "&customdata="
