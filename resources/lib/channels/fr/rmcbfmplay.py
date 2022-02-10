@@ -76,9 +76,6 @@ def rmcbfmplay_root(plugin, path="", **kwargs):
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json() 
     for spot in resp["spots"]:
-        #Regionnal channel work differently.
-        if spot['title'] == "BFM Paris":
-            break
         item = Listitem()
         item.label = spot["title"]
         item.set_callback(menu, "web/v1/spot/%s/content" % spot["id"])
@@ -142,6 +139,10 @@ def menu(plugin, path, **kwargs):
 
                 key2 = elt[key1]["actionIds"]
                 if "channelId" in key2:
+                    xbmc.log(str(elt),level=xbmc.LOGINFO)
+                    #Regionnal channel work differently.
+                    if elt['title'] == "BFM Paris":
+                        break
                     #"Chaine" menu
                     callback = (rmcbfmplay_root, elt["title"])
                 elif "url" in key2:
