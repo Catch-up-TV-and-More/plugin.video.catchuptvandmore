@@ -15,6 +15,7 @@ import inputstreamhelper
 import urlquick
 from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
+
 from resources.lib import download, web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
@@ -63,7 +64,6 @@ URL_VIDEOS2 = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
               'chromecast/services/rtlbe_rtl_play/programs/%s/videos?' \
               'csa=6&with=clips,freemiumpacks&type=vi&limit=999&offset=0'
 
-
 URL_JSON_VIDEO = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
                  'chromecast/services/rtlbe_rtl_play/videos/%s'\
                  '?csa=6&with=clips,freemiumpacks'
@@ -94,7 +94,6 @@ DESIRED_QUALITY = Script.setting['quality']
 
 @Route.register
 def rtlplay_root(plugin, **kwargs):
-
     # (item_id, label, thumb, fanart)
     channels = [
         ('rtl_tvi', 'RTL TVI', 'rtltvi.png', 'rtltvi_fanart.jpg'),
@@ -147,33 +146,24 @@ def list_all_programs_by_letter(plugin, item_id, letter, **kwargs):
                         headers={
                             'User-Agent': web_utils.get_random_ua(),
                             'x-customer-name': 'rtlbe'})
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
+    at_least_one_item = False
     for array in json_parser:
+        at_least_one_item = True
         item = Listitem()
-        program_title = array['title']
         program_id = str(array['id'])
-        program_desc = array['description']
-        program_imgs = array['images']
-        program_img = ''
-        program_fanart = ''
-        for img in program_imgs:
-            if img['role'] == 'vignette':
-                external_key = img['external_key']
-                program_img = URL_IMG % (external_key)
-            elif img['role'] == 'carousel':
-                external_key = img['external_key']
-                program_fanart = URL_IMG % (external_key)
-
-        item.label = program_title
-        item.art['thumb'] = item.art['landscape'] = program_img
-        item.art['fanart'] = program_fanart
-        item.info['plot'] = program_desc
+        item.label = array['title']
+        populate_item(item, array)
         item.set_callback(list_program_categories,
                           item_id=item_id,
                           program_id=program_id)
         item_post_treatment(item)
         yield item
+
+    if not at_least_one_item:
+        plugin.notify(plugin.localize(30718), '')
+        yield False
 
 
 @Route.register
@@ -189,7 +179,7 @@ def list_categories(plugin, item_id, **kwargs):
                         headers={
                             'User-Agent': web_utils.get_random_ua(),
                             'x-customer-name': 'rtlbe'})
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     for array in json_parser:
         category_id = str(array['id'])
@@ -216,28 +206,13 @@ def list_programs(plugin, item_id, category_id, **kwargs):
                             'User-Agent': web_utils.get_random_ua(),
                             'x-customer-name': 'rtlbe'
                         })
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     for array in json_parser:
         item = Listitem()
-        program_title = array['title']
         program_id = str(array['id'])
-        program_desc = array['description']
-        program_imgs = array['images']
-        program_img = ''
-        program_fanart = ''
-        for img in program_imgs:
-            if img['role'] == 'vignette':
-                external_key = img['external_key']
-                program_img = URL_IMG % (external_key)
-            elif img['role'] == 'carousel':
-                external_key = img['external_key']
-                program_fanart = URL_IMG % (external_key)
-
-        item.label = program_title
-        item.art['thumb'] = item.art['landscape'] = program_img
-        item.art['fanart'] = program_fanart
-        item.info['plot'] = program_desc
+        item.label = array['title']
+        populate_item(item, array)
         item.set_callback(list_program_categories,
                           item_id=item_id,
                           program_id=program_id)
@@ -259,7 +234,7 @@ def list_program_categories(plugin, item_id, program_id, **kwargs):
                             'User-Agent': web_utils.get_random_ua(),
                             'x-customer-name': 'rtlbe'
                         })
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
     for sub_category in json_parser['program_subcats']:
         item = Listitem()
@@ -280,13 +255,36 @@ def list_program_categories(plugin, item_id, program_id, **kwargs):
                       item_id=item_id,
                       program_id=program_id,
                       sub_category_id=None)
+    item_post_treatment(item)
     yield item
+
+
+def populate_item(item, clip_dict):
+    duration = clip_dict.get('duration', None)
+    if duration is not None:
+        item.info['duration'] = duration
+    item.info['plot'] = clip_dict.get('description', None)
+
+    try:
+        aired = clip_dict['product']['last_diffusion']
+        aired = aired
+        aired = aired[:10]
+        item.info.date(aired, '%Y-%m-%d')
+    except Exception:
+        pass
+
+    program_imgs = clip_dict['images']
+    for img in program_imgs:
+        if img['role'] == 'vignette' or img['role'] == 'carousel':
+            external_key = img['external_key']
+            program_img = URL_IMG % external_key
+            item.art['thumb'] = item.art['landscape'] = program_img
+            item.art['fanart'] = program_img
+            break
 
 
 @Route.register
 def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
-
-    url = ''
     if sub_category_id is None:
         url = URL_VIDEOS2 % program_id
     else:
@@ -296,62 +294,35 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
                             'User-Agent': web_utils.get_random_ua(),
                             'x-customer-name': 'rtlbe'
                         })
-    json_parser = json.loads(resp.text)
+    json_parser = resp.json()
 
-    # TO DO Playlist More one 'clips'
+    if not json_parser:
+        plugin.notify(plugin.localize(30718), '')
+        yield False
+
     at_least_one_item = False
     for video in json_parser:
         video_id = str(video['id'])
 
-        title = video['title']
-        duration = video['clips'][0]['duration']
-        description = ''
-        if 'description' in video:
-            description = video['description']
-        try:
-            aired = video['clips'][0]['product']['last_diffusion']
-            aired = aired
-            aired = aired[:10]
-            # year = aired[:4]
-            # date : string (%d.%m.%Y / 01.01.2009)
-            # aired : string (2008-12-07)
-            # day = aired.split('-')[2]
-            # mounth = aired.split('-')[1]
-            # year = aired.split('-')[0]
-            # date = '.'.join((day, mounth, year))
-
-        except Exception:
-            aired = ''
-            # year = ''
-            # date = ''
-        img = ''
-
-        program_imgs = video['clips'][0]['images']
-        program_img = ''
-        for img in program_imgs:
-            if img['role'] == 'vignette':
-                external_key = img['external_key']
-                program_img = URL_IMG % (external_key)
-
         item = Listitem()
         at_least_one_item = True
-        item.label = title
-        item.info['plot'] = description
-        item.info['duration'] = duration
-        item.art['thumb'] = item.art['landscape'] = program_img
-        item.art['fanart'] = program_img
-        try:
-            item.info.date(aired, '%Y-%m-%d')
-        except Exception:
-            pass
+        item.label = video['title']
 
         is_downloadable = False
         if get_kodi_version() < 18:
             is_downloadable = True
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_id=video_id)
+        if 'type' in video and video['type'] == 'playlist':
+            populate_item(item, video)
+            item.set_callback(get_playlist_urls,
+                              item_id=item_id,
+                              video_id=video_id,
+                              url=url)
+        else:
+            populate_item(item, video['clips'][0])
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_id=video_id)
         item_post_treatment(item,
                             is_playable=True,
                             is_downloadable=is_downloadable)
@@ -379,67 +350,15 @@ def get_video_url(plugin,
         json_parser = json.loads(video_json.text)
 
         video_assets = json_parser['clips'][0]['assets']
-        if video_assets is None:
-            plugin.notify('ERROR', plugin.localize(30721))
+
+        final_video_url = get_final_video_url(plugin, video_assets)
+        if final_video_url is None:
             return False
-
-        final_video_url = ''
-        all_datas_videos_quality = []
-        all_datas_videos_path = []
-        for asset in video_assets:
-            if 'http_h264' in asset["type"]:
-                all_datas_videos_quality.append(asset["video_quality"])
-                all_datas_videos_path.append(asset['full_physical_path'])
-            elif 'h264' in asset["type"]:
-                manifest = urlquick.get(
-                    asset['full_physical_path'],
-                    headers={'User-Agent': web_utils.get_random_ua()},
-                    max_age=-1)
-                if 'drm' not in manifest.text:
-                    all_datas_videos_quality.append(asset["video_quality"])
-                    all_datas_videos_path.append(asset['full_physical_path'])
-
-        if len(all_datas_videos_quality) == 0:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
-            return False
-
-        if len(all_datas_videos_quality) == 1:
-            final_video_url = all_datas_videos_path[0]
-        else:
-            if DESIRED_QUALITY == "DIALOG":
-                seleted_item = xbmcgui.Dialog().select(
-                    plugin.localize(30709),
-                    all_datas_videos_quality)
-                if seleted_item == -1:
-                    return False
-                final_video_url = all_datas_videos_path[seleted_item]
-            elif DESIRED_QUALITY == "BEST":
-                url_best = ''
-                i = 0
-                for data_video in all_datas_videos_quality:
-                    if 'lq' not in data_video:
-                        url_best = all_datas_videos_path[i]
-                    i = i + 1
-                final_video_url = url_best
-            else:
-                final_video_url = all_datas_videos_path[0]
 
         if download_mode:
             return download.download_video(final_video_url)
+
         return final_video_url
-
-    video_json = urlquick.get(URL_JSON_VIDEO % video_id,
-                              headers={
-                                  'User-Agent': web_utils.get_random_ua(),
-                                  'x-customer-name': 'rtlbe'
-                              },
-                              max_age=-1)
-    json_parser = json.loads(video_json.text)
-
-    video_assets = json_parser['clips'][0]['assets']
-    if video_assets is None:
-        plugin.notify('ERROR', plugin.localize(30721))
-        return None
 
     resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY)
     js_id = re.compile(r'client\-(.*?)\.bundle\.js').findall(resp_js_id.text)[0]
@@ -453,8 +372,7 @@ def get_video_url(plugin,
             plugin.setting.get_string('rtlplaybe.password') == '':
         xbmcgui.Dialog().ok(
             'Info',
-            plugin.localize(30604) %
-            ('RTLPlay (BE)', 'https://www.rtlplay.be'))
+            plugin.localize(30604) % ('RTLPlay (BE)', 'https://www.rtlplay.be'))
         return False
 
     # Build PAYLOAD
@@ -476,8 +394,7 @@ def get_video_url(plugin,
 
     if "UID" not in json_parser:
         plugin.notify('ERROR', 'RTLPlay (BE) : ' + plugin.localize(30711))
-        return None
-
+        return False
     account_id = json_parser["UID"]
     account_timestamp = json_parser["signatureTimestamp"]
     account_signature = json_parser["UIDSignature"]
@@ -494,11 +411,27 @@ def get_video_url(plugin,
         'User-Agent': web_utils.get_random_ua(),
         'x-customer-name': 'rtlbe'
     }
+
     token_json = urlquick.get(URL_TOKEN_DRM % (account_id, video_id),
                               headers=payload_headers,
                               max_age=-1)
+
     token_jsonparser = json.loads(token_json.text)
     token = token_jsonparser["token"]
+
+    video_json = urlquick.get(URL_JSON_VIDEO % video_id,
+                              headers={
+                                  'User-Agent': web_utils.get_random_ua(),
+                                  'x-customer-name': 'rtlbe'
+                              },
+                              max_age=-1)
+    json_parser = json.loads(video_json.text)
+
+    video_assets = json_parser['clips'][0]['assets']
+
+    if video_assets is None:
+        plugin.notify('ERROR', plugin.localize(30721))
+        return False
 
     subtitle_url = ''
     if plugin.setting.get_boolean('active_subtitle'):
@@ -509,7 +442,6 @@ def get_video_url(plugin,
     for asset in video_assets:
         if 'usp_dashcenc_h264' in asset["type"]:
             item = Listitem()
-            # GM Check if rtl_play is needed
             dummy_req = urlquick.get(asset['full_physical_path'],
                                      headers={'User-Agent': web_utils.get_random_ua()},
                                      allow_redirects=False)
@@ -541,6 +473,91 @@ def get_video_url(plugin,
     return False
 
 
+def get_final_video_url(plugin, video_assets, asset_type=None):
+    if video_assets is None:
+        plugin.notify('ERROR', plugin.localize(30721))
+        return None
+
+    all_datas_videos_quality = []
+    all_datas_videos_path = []
+    for asset in video_assets:
+        if asset_type is None:
+            if 'http_h264' in asset["type"]:
+                all_datas_videos_quality.append(asset["video_quality"])
+                all_datas_videos_path.append(asset['full_physical_path'])
+            elif 'h264' in asset["type"]:
+                manifest = urlquick.get(
+                    asset['full_physical_path'],
+                    headers={'User-Agent': web_utils.get_random_ua()},
+                    max_age=-1)
+                if 'drm' not in manifest.text:
+                    all_datas_videos_quality.append(asset["video_quality"])
+                    all_datas_videos_path.append(asset['full_physical_path'])
+        elif asset_type in asset["type"]:
+            all_datas_videos_quality.append(asset["video_quality"])
+            all_datas_videos_path.append(asset['full_physical_path'])
+
+    if len(all_datas_videos_quality) == 0:
+        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+        return None
+
+    final_video_url = all_datas_videos_path[0]
+
+    if DESIRED_QUALITY == "DIALOG":
+        seleted_item = xbmcgui.Dialog().select(
+            plugin.localize(30709),
+            all_datas_videos_quality)
+        if seleted_item == -1:
+            return None
+        final_video_url = all_datas_videos_path[seleted_item]
+
+    elif DESIRED_QUALITY == "BEST":
+        url_best = ''
+        i = 0
+        for data_video in all_datas_videos_quality:
+            if 'lq' not in data_video:
+                url_best = all_datas_videos_path[i]
+            i = i + 1
+        final_video_url = url_best
+
+    return final_video_url
+
+
+@Resolver.register
+def get_playlist_urls(plugin,
+                      item_id,
+                      video_id,
+                      url,
+                      **kwargs):
+    resp = urlquick.get(url)
+    json_parser = resp.json()
+
+    for video in json_parser:
+        current_video_id = str(video['id'])
+
+        if current_video_id != video_id:
+            continue
+
+        playlist_videos = []
+
+        for clip in video['clips']:
+            clip_id = str(clip['video_id'])
+
+            item = Listitem()
+            item.label = clip['title']
+
+            populate_item(item, clip)
+
+            video = get_video_url(
+                plugin,
+                item_id=item_id,
+                video_id=clip_id)
+
+            playlist_videos.append(video)
+
+        return playlist_videos
+
+
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
@@ -555,16 +572,14 @@ def get_live_url(plugin, item_id, **kwargs):
 
     # Hack to force encoding of the response
     resp.encoding = 'utf-8'
-    api_key = re.compile(
-        r'login.rtl.be\"\,key\:\"(.*?)\"').findall(
-            resp.text)[0]
+    api_key = re.compile(r'login.rtl.be\"\,key\:\"(.*?)\"').findall(
+        resp.text)[0]
 
     if plugin.setting.get_string('rtlplaybe.login') == '' or\
             plugin.setting.get_string('rtlplaybe.password') == '':
         xbmcgui.Dialog().ok(
-            'Info',
-            plugin.localize(30604) %
-            ('RTLPlay (BE)', 'https://www.rtlplay.be'))
+            plugin.localize(30600),
+            plugin.localize(30604) % ('RTLPlay (BE)', 'https://www.rtlplay.be'))
         return False
 
     # Build PAYLOAD
@@ -576,12 +591,12 @@ def get_live_url(plugin, item_id, **kwargs):
         "callback": "gigya.callback"
     }
     # LOGIN
-    resp2 = urlquick.post(URL_COMPTE_LOGIN,
-                          data=payload,
-                          headers={
-                              'User-Agent': web_utils.get_random_ua(),
-                              'referer': 'https://www.rtlplay.be/connexion'
-                          })
+    resp2 = urlquick.post(
+        URL_COMPTE_LOGIN,
+        data=payload,
+        headers={
+            'User-Agent': web_utils.get_random_ua(),
+            'referer': 'https://www.rtlplay.be/connexion'})
     json_parser = json.loads(
         resp2.text.replace('gigya.callback(', '').replace(');', ''))
 
@@ -605,24 +620,24 @@ def get_live_url(plugin, item_id, **kwargs):
         'x-customer-name': 'rtlbe'
     }
     channel = 'rtlbe_' + item_id
-    token_json = urlquick.get(URL_TOKEN_DRM % (account_id, 'dashcenc_%s' %
-                                               (channel)),
-                              headers=payload_headers,
-                              max_age=-1)
+    token_json = urlquick.get(
+        URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % channel),
+        headers=payload_headers,
+        max_age=-1)
     token_jsonparser = json.loads(token_json.text)
     token = token_jsonparser["token"]
 
-    video_json = urlquick.get(URL_LIVE_JSON % (channel),
-                              headers={
-                                  'User-Agent': web_utils.get_random_ua(),
-                                  'x-customer-name': 'rtlbe'},
-                              max_age=-1)
+    video_json = urlquick.get(
+        URL_LIVE_JSON % channel,
+        headers={'User-Agent': web_utils.get_random_ua(),
+                 'x-customer-name': 'rtlbe'},
+        max_age=-1)
     json_parser = json.loads(video_json.text)
     if not json_parser[channel]:
         plugin.notify('ERROR', plugin.localize(30712))
         return False
 
-    video_assets = json_parser[channel][0]['live']['assets'][::-1]
+    video_assets = json_parser[channel][0]['live']['assets']
 
     if not video_assets:
         plugin.notify('INFO', plugin.localize(30716))
@@ -634,10 +649,14 @@ def get_live_url(plugin, item_id, **kwargs):
             if 'subtitle_vtt' in asset["type"]:
                 subtitle_url = asset['full_physical_path']
 
+    final_video_url = get_final_video_url(plugin, video_assets, 'delta_dashcenc_h264')
+    if final_video_url is None:
+        return False
+
     for asset in video_assets:
         if 'delta_dashcenc_h264' in asset["type"]:
             item = Listitem()
-            item.path = asset['full_physical_path']
+            item.path = final_video_url
             if 'http' in subtitle_url:
                 item.subtitles.append(subtitle_url)
             item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
