@@ -92,8 +92,6 @@ URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content
 URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chromecast/services/rtlbe_rtl_play/live?channel=%s&with=service_display_images,nextdiffusion,extra_data'
 # Chaine
 
-DESIRED_QUALITY = Script.setting['quality']
-
 
 @Route.register
 def rtlplay_root(plugin, **kwargs):
@@ -619,15 +617,16 @@ def get_final_video_url(plugin, video_assets, asset_type=None):
 
     final_video_url = all_datas_videos_path[0]
 
-    if DESIRED_QUALITY == "DIALOG":
-        seleted_item = xbmcgui.Dialog().select(
+    desired_quality = Script.setting.get_string('quality')
+    if desired_quality == "DIALOG":
+        selected_item = xbmcgui.Dialog().select(
             plugin.localize(30709),
             all_datas_videos_quality)
-        if seleted_item == -1:
+        if selected_item == -1:
             return None
-        final_video_url = all_datas_videos_path[seleted_item]
+        final_video_url = all_datas_videos_path[selected_item]
 
-    elif DESIRED_QUALITY == "BEST":
+    elif desired_quality == "BEST":
         url_best = ''
         i = 0
         for data_video in all_datas_videos_quality:
