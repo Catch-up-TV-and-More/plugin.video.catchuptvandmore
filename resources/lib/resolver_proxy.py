@@ -330,7 +330,7 @@ def get_francetv_video_stream(plugin,
             headers = {
                 'User-Agent': web_utils.get_random_ua(),
                 # 2.0.0.0 -> 2.16.0.255 are french IP addresses, see https://lite.ip2location.com/france-ip-address-ranges
-                'X-Forwarded-For': '2.' + str(randint(0, 15)) + '.' + str(randint(0, 255)) + '.' + str(randint(0, 255)),
+                # 'X-Forwarded-For': '2.' + str(randint(0, 15)) + '.' + str(randint(0, 255)) + '.' + str(randint(0, 255)),
             }
             stream_headers = urlencode(headers)
             json_parser2 = json.loads(urlquick.get(url_selected, headers=headers, max_age=-1).text)
