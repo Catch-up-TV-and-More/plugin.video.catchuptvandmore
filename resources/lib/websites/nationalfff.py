@@ -13,7 +13,8 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://ffftv.fff.fr'
 
-URL_REPLAY = URL_ROOT + '/playback/loadmore/national/%s'
+URL_REPLAY = URL_ROOT + '/playback/loadmore/'
+categories = ['arkema', 'cdf', 'direct', 'espoirs', 'euro', 'feminine', 'feminines', 'france', 'futsal', 'gambardella', 'national']
 
 # TODO Add Live
 
@@ -21,18 +22,19 @@ URL_REPLAY = URL_ROOT + '/playback/loadmore/national/%s'
 @Route.register
 def website_root(plugin, item_id, **kwargs):
     """Add modes in the listing"""
-    item = Listitem()
-    item.label = plugin.localize(30701)
-    item.set_callback(list_videos, item_id=item_id, page='0')
-    item_post_treatment(item)
-    yield item
+    for categorie in categories:
+        item = Listitem()
+        item.label = categorie
+        item.set_callback(list_videos, item_id=item_id, page='0', categorie=categorie)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, page, **kwargs):
+def list_videos(plugin, item_id, page, categorie, **kwargs):
     """Build videos listing"""
 
-    resp = urlquick.get(URL_REPLAY % page)
+    resp = urlquick.get(URL_REPLAY + categorie + '/' + page)
     root = resp.parse()
 
     for video_datas in root.iterfind(".//a"):
@@ -60,7 +62,7 @@ def list_videos(plugin, item_id, page, **kwargs):
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
-    yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1))
+    yield Listitem.next_page(item_id=item_id, page=str(int(page) + 1), categorie=categorie)
 
 
 @Resolver.register
