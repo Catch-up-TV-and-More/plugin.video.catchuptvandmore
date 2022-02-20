@@ -42,7 +42,7 @@ menu = {
         'order': 3
     },
     'cx': {
-        'route': '/resources/lib/channels/jp/tbsnews:list_categories',
+        'route': '/resources/lib/channels/jp/tver:list_categories',
         'label': 'Fuji TV フジテレビ',
         'thumb': 'channels/jp/cx.png',
         'fanart': 'channels/jp/cx_fanart.jpg',
