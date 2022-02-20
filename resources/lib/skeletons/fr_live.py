@@ -833,6 +833,15 @@ menu = {
         'enabled': True,
         'order': 115
     },
+    'albitv': {
+        'resolver': '/resources/lib/channels/fr/albitv:get_live_url',
+        'label': 'Albi TV',
+        'thumb': 'channels/fr/albitv.png',
+        'fanart': 'channels/fr/albitv_fanart.jpg',
+        'm3u_group': 'Région',
+        'enabled': True,
+        'order': 116
+    },
     'franceinter': {
         'resolver': '/resources/lib/channels/fr/franceinter:get_live_url',
         'label': 'France Inter',
@@ -840,7 +849,7 @@ menu = {
         'fanart': 'channels/fr/franceinter_fanart.jpg',
         'm3u_group': 'Radio',
         'enabled': True,
-        'order': 116
+        'order': 117
     },
     'rtl': {
         'resolver': '/resources/lib/channels/fr/rtl:get_live_url',

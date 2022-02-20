@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta14" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta15" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -59,6 +59,7 @@
 [FR - france.tv] Fix replay (#616, thanks @Arias800)
 [JP - FujiTV] Add the replay for FujiTV (#615)
 [Website - FFF] Add more replays (#614)
+[FR - AlbiTV] Add live for AlbiTV (#620)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
