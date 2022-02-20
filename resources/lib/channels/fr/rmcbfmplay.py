@@ -39,7 +39,6 @@ def get_token():
 
 def get_account_id(token):
     url = "https://ws-backendtv.rmcbfmplay.com/heimdall-core/public/api/v2/userProfiles"
-
     params = {
         "app": "bfmrmc",
         "device": "browser",
@@ -47,7 +46,6 @@ def get_account_id(token):
         "token": token,
         "tokenType": "casToken",
     }
-
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json()
     account_id = resp["nexttvId"]
@@ -116,7 +114,6 @@ def menu(plugin, path, **kwargs):
                 _id = elt["action"]["actionIds"]["contentId"]
                 target_path = "web/v2/content/%s/options" % _id
                 callback = (video, target_path, elt["title"])
-
             else:
                 target_path = "web/v1/content/%s/episodes" % (
                     elt["action"]["actionIds"]["contentId"]
@@ -136,7 +133,6 @@ def menu(plugin, path, **kwargs):
             if key1:
                 if not elt[key1]["actionIds"]:
                     continue
-
                 key2 = elt[key1]["actionIds"]
                 if "channelId" in key2:
                     xbmc.log(str(elt),level=xbmc.LOGINFO)
@@ -164,8 +160,7 @@ def menu(plugin, path, **kwargs):
                         suffix,
                     )
 
-                    callback = (menu, target_path)               
-
+                    callback = (menu, target_path)
             else:
                 _id = elt["id"]
                 target_path = "web/v2/content/%s/options" % _id
@@ -220,7 +215,7 @@ def video(plugin, path, title, **kwargs):
                 "offerId": resp[0]["offers"][0]["offerId"],
                 "token": token
             }
-
+            #Needed ID for the customdata.
             entitlementId = urlquick.post("https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/web/v1/replay/play", params=params, json=data, headers=headers).json()["entitlementId"]
 
             item = Listitem()
@@ -251,7 +246,6 @@ def podscast(plugin, path, **kwargs):
 
     if "bfmtv.com" in path:
         data = re.compile('margin-top">.+?<a href="(.+?)".+?name">(.+?)<.+?description">(.+?)<', re.DOTALL|re.MULTILINE).findall(resp)
-
         for d in data:
             item = Listitem()
             item.path = d[0]
@@ -263,11 +257,9 @@ def podscast(plugin, path, **kwargs):
             item.set_callback(*callback)
             item_post_treatment(item)
             yield item
-
     elif "deezer.com" in path:
         data = re.compile('window.__DZR_APP_STATE__ =(.+?)</script', re.DOTALL|re.MULTILINE).search(resp).group(1)
         data = json.loads(data)
-
         for d in data["EPISODES"]["data"]:
             item = Listitem()
             item.path = d["EPISODE_DIRECT_STREAM_URL"]
@@ -295,7 +287,6 @@ def playpodcast(plugin, path, title, **kwargs):
         headers = {"User-Agent": USER_AGENT}
         resp = urlquick.get(path, headers=headers)
         data = resp.parse()
-        
         if "bfmtv.com" in path:
             item.path = data.find(".//div[@class='audio-player']").get('data-media-url')
     return item
