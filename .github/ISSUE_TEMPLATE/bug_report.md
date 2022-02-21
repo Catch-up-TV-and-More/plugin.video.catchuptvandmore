@@ -20,7 +20,7 @@ Steps to reproduce the behaviour:
 ### Expected behaviour
 A clear and concise description of what you expected to happen:
 
-### Actual behavior
+### Actual behaviour
 Tell us what happens instead:
 
 ### Screenshots
