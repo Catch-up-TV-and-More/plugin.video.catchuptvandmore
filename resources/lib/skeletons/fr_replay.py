@@ -439,4 +439,12 @@ menu = {
         "enabled": True,
         "order": 123,
     },
+    "rmcbfmplay": {
+        "route": "/resources/lib/channels/fr/rmcbfmplay:rmcbfmplay_root",
+        "label": "RMC BFM Play",
+        "thumb": "channels/fr/rmcbfmplay.png",
+        "fanart": "channels/fr/rmcbfmplay_fanart.jpg",
+        "enabled": True,
+        "order": 124,
+    },
 }
