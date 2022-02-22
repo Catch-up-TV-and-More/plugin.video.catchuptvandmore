@@ -112,6 +112,9 @@
             <setting label="30248" type="text" id="abweb.login" default=""/>
             <setting label="30249" type="text" id="abweb.password" option="hidden" default=""/>
 
+            <setting label="30252" type="text" id="rmcbfmplay.login" default=""/>
+            <setting label="30253" type="text" id="rmcbfmplay.password" option="hidden" default=""/>
+
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
