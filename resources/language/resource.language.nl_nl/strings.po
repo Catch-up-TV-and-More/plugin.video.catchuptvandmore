@@ -429,6 +429,13 @@ msgctxt "#30251"
 msgid "UKTVPlay Password"
 msgstr "UKTVPlay wachtwoord"
 
+msgctxt "#30252"
+msgid "RMCBFM Play Login"
+msgstr ""
+
+msgctxt "#30253"
+msgid "RMCBFM Play Password"
+msgstr ""
 
 # TV integration (from 30270 to 30289)
 
