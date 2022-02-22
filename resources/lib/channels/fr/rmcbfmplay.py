@@ -59,9 +59,17 @@ token = get_token()
 account_id = get_account_id(token)
 
 @Route.register
-def rmcbfmplay_root(plugin, **kwargs):
+def rmcbfmplay_root(plugin, path="", **kwargs):
     """Root menu of the app."""
-    url = API_BACKEND + "web/v1/menu/RefMenuItem::rmcgo_home/structure"
+    if path:
+        #For the "Chaines" menu.
+        #01TV doesn't need lower.
+        if " " in path:
+            path = path.lower()
+        url = API_BACKEND +  "web/v1/menu/RefMenuItem::rmcgo_home_" + path.replace(' ','') + "/structure"
+    else:
+        url = API_BACKEND + "web/v1/menu/RefMenuItem::rmcgo_home/structure"
+
     params = {"app":"bfmrmc","device":"browser","profileId":account_id,"accountTypes":"NEXTTV","operators":"NEXTTV","noTracking":"false"}
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json() 
@@ -106,7 +114,6 @@ def menu(plugin, path, **kwargs):
                 _id = elt["action"]["actionIds"]["contentId"]
                 target_path = "web/v2/content/%s/options" % _id
                 callback = (video, target_path, elt["title"])
-
             else:
                 target_path = "web/v1/content/%s/episodes" % (
                     elt["action"]["actionIds"]["contentId"]
@@ -126,13 +133,26 @@ def menu(plugin, path, **kwargs):
             if key1:
                 if not elt[key1]["actionIds"]:
                     continue
-
                 key2 = elt[key1]["actionIds"]
-                if type(key2) is not dict:
-                    subpath = key2[:-2]
+                if "channelId" in key2:
+                    xbmc.log(str(elt),level=xbmc.LOGINFO)
+                    #Regionnal channel work differently.
+                    if elt['title'] == "BFM Paris":
+                        break
+                    #"Chaine" menu
+                    callback = (rmcbfmplay_root, elt["title"])
+                elif "url" in key2:
+                    #For the podcast menu.
+                    callback = (podscast, key2["url"]) 
+                else:
+                    if "tileId" in key2:
+                        key2 = "tileId"
+                        suffix = "content"
+                    else:
+                        # Find path suffix
+                        suffix = elt[key1]["actionType"]
 
-                    # Find path suffix
-                    suffix = elt[key1]["actionType"]
+                    subpath = key2[:-2]
 
                     target_path = "web/v1/%s/%s/%s" % (
                         subpath,
@@ -141,9 +161,6 @@ def menu(plugin, path, **kwargs):
                     )
 
                     callback = (menu, target_path)
-                else:
-                    callback = (podscast, key2["url"])                    
-
             else:
                 _id = elt["id"]
                 target_path = "web/v2/content/%s/options" % _id
@@ -171,26 +188,36 @@ def menu(plugin, path, **kwargs):
 @Resolver.register
 def video(plugin, path, title, **kwargs):
     """Menu of the app with v1 API."""
+    headers = {"User-Agent": USER_AGENT,
+        'Content-type':'application/json', 
+        'Accept':'application/json, text/plain, */*'}  
 
-    # https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/Product::NEUF_BFMTV_BFM0300012711/detail?app=bfmrmc&device=browser&page=0&size=30
-    # https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/Product::NEUF_BFMTV_BFM0300012711/detail?app=bfmrmc&device=browser&isProductSeasonWithEpisodes=false&universe=provider
-    # https://ws-gaia.tv.sfr.net/gaia-core/rest/api/web/v2/content/Product::NEUF_BFMTV_BFM0300012711/options?app=bfmrmc&device=browser&noTracking=true&token=PIEOVEsvhCYGqC7df4/pvt7TiglWvZqtpW9qdSlvqAyH6bOcdj0JNJmqylF5fws2X29FA1r7isvuWGGhuXpxzGPax1g53%2BuHcPYjHs1z8hkweHk1x2USpCdykMd1wOp%2B5w74DI0c1vl50fZqpCRnR4ppMCbFYhEpThQaLPRvJHgXh7EnJ3IJeJULerWHA%2BjGc&tokenType=casToken&universe=provider
     url = API_CDN_ROOT + path
+
     params = {
         "app": "bfmrmc",
         "device": "browser",
         "token": token,
         "universe": "provider",
-        "accountTypes":"NEXTTV",
-        "operators":"NEXTTV",
-        "noTracking":"false"
     }
 
-    headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json()
+
+    #For reuse params dict.
+    del params["universe"]
 
     for stream in resp[0]["offers"][0]["streams"]:
         if stream["drm"] == "WIDEVINE":
+            data = {
+                "app": "bfmrmc",
+                "device": "browser",
+                "macAddress": "PC",
+                "offerId": resp[0]["offers"][0]["offerId"],
+                "token": token
+            }
+            #Needed ID for the customdata.
+            entitlementId = urlquick.post("https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/web/v1/replay/play", params=params, json=data, headers=headers).json()["entitlementId"]
+
             item = Listitem()
             item.label = get_selected_item_label()
             item.art.update(get_selected_item_art())
@@ -199,12 +226,11 @@ def video(plugin, path, title, **kwargs):
             item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
             item.property["inputstream.adaptive.manifest_type"] = "mpd"
             item.property["inputstream.adaptive.license_type"] = "com.widevine.alpha"
-            customdata = "description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken&tokenSSO={}&entitlementId=3769416154&type=LIVEOTT&accountId={}".format(
-                USER_AGENT, token, account_id
+            customdata = "description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken&tokenSSO={}&entitlementId={}&type=LIVEOTT&accountId={}".format(
+                USER_AGENT, token, entitlementId, account_id
             )
 
             import urllib.parse
-
             customdata = urllib.parse.quote(customdata)
             item.property["inputstream.adaptive.license_key"] = (
                 "https://ws-backendtv.rmcbfmplay.com/asgard-drm-widevine/public/licence|User-Agent=" + USER_AGENT + "&customdata="
@@ -220,7 +246,6 @@ def podscast(plugin, path, **kwargs):
 
     if "bfmtv.com" in path:
         data = re.compile('margin-top">.+?<a href="(.+?)".+?name">(.+?)<.+?description">(.+?)<', re.DOTALL|re.MULTILINE).findall(resp)
-
         for d in data:
             item = Listitem()
             item.path = d[0]
@@ -232,11 +257,9 @@ def podscast(plugin, path, **kwargs):
             item.set_callback(*callback)
             item_post_treatment(item)
             yield item
-
     elif "deezer.com" in path:
         data = re.compile('window.__DZR_APP_STATE__ =(.+?)</script', re.DOTALL|re.MULTILINE).search(resp).group(1)
         data = json.loads(data)
-
         for d in data["EPISODES"]["data"]:
             item = Listitem()
             item.path = d["EPISODE_DIRECT_STREAM_URL"]
@@ -257,13 +280,13 @@ def playpodcast(plugin, path, title, **kwargs):
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
 
+    #Deezer send directly the final url.
     if ".mp3" in path:
         item.path = path + "|User-Agent=" + USER_AGENT + "&Referer=https://www.deezer.com/"
     else:
         headers = {"User-Agent": USER_AGENT}
         resp = urlquick.get(path, headers=headers)
         data = resp.parse()
-        
         if "bfmtv.com" in path:
             item.path = data.find(".//div[@class='audio-player']").get('data-media-url')
     return item
