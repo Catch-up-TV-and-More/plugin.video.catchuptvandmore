@@ -5,13 +5,16 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-
-from builtins import str
-
+import xbmcaddon
+import base64
 import inputstreamhelper
 import urlquick
+import re
+
+from builtins import str
 from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
+
 from resources.lib import download, web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
@@ -20,17 +23,18 @@ from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
                                       get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
 
+@Route.register
 def get_token():
-    url = "https://sso-client.sfr.fr/cas/services/rest/3.0/createToken.json"
+    autorization = xbmcaddon.Addon("plugin.video.catchuptvandmore").getSetting('rmcbfmplay.login') + ":" + xbmcaddon.Addon("plugin.video.catchuptvandmore").getSetting('rmcbfmplay.password')
+    url = "https://sso-client.sfr.fr/cas/services/rest/3.2/createToken.json"
     params = {"duration": 86400}
     headers = {
-        "secret": "Basic Y2VjY2hldHRvLnN5bHZhaW5AbWUuY29tOmlQaG9uZTRpUGhvbmU0",
-        "Authorization": "Basic Uk1DQkZNUGxheUlPU3YxOnNhdHRvdWYyMDIx",
+        "secret": "Basic Uk1DQkZNUGxheUFuZHJvaWR2MTptb2ViaXVzMTk3MA==",
+        "Authorization": "Basic " + base64.b64encode(autorization.encode("utf-8")).decode("utf-8"),
     }
     resp = urlquick.get(url, params=params, headers=headers).json()
     token = resp["createToken"]["token"]
     return token
-
 
 def get_account_id(token):
     url = "https://ws-backendtv.rmcbfmplay.com/heimdall-core/public/api/v2/userProfiles"
@@ -49,8 +53,7 @@ def get_account_id(token):
 API_BACKEND = "https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/"
 API_CDN_ROOT = "https://ws-cdn.tv.sfr.net/gaia-core/rest/api/"
 
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0"
-
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0"
 token = get_token()
 account_id = get_account_id(token)
 
@@ -123,41 +126,22 @@ def menu(plugin, path, **kwargs):
                 if not elt[key1]["actionIds"]:
                     continue
 
-                # Find key 2
-                if "menuId" in elt[key1]["actionIds"]:
-                    key2 = "menuId"
-                    subpath = "menu"
-                elif "spotId" in elt[key1]["actionIds"]:
-                    key2 = "spotId"
-                    subpath = "spot"
-                elif "contentId" in elt[key1]["actionIds"]:
-                    key2 = "contentId"
-                    subpath = "content"
-                elif "tileId" in elt[key1]["actionIds"]:
-                    key2 = "tileId"
-                    subpath = "tile"
+                key2 = elt[key1]["actionIds"]
+                if type(key2) is not dict:
+                    subpath = key2[:-2]
+
+                    # Find path suffix
+                    suffix = elt[key1]["actionType"]
+
+                    target_path = "web/v1/%s/%s/%s" % (
+                        subpath,
+                        elt[key1]["actionIds"][key2],
+                        suffix,
+                    )
+
+                    callback = (menu, target_path)
                 else:
-                    print("ELT2", elt[key1]["actionIds"], elt)
-                    continue
-
-                # Find path suffix
-                if elt[key1]["actionType"] == "displayStructure":
-                    suffix = "structure"
-                elif elt[key1]["actionType"] == "displayBRContent":
-                    suffix = "content"
-                elif elt[key1]["actionType"] == "displayFip":
-                    suffix = "episodes"
-                else:
-                    print("ELT3", elt[key1]["actionType"], elt)
-                    continue
-
-                target_path = "web/v1/%s/%s/%s" % (
-                    subpath,
-                    elt[key1]["actionIds"][key2],
-                    suffix,
-                )
-
-                callback = (menu, target_path)
+                    callback = (podscast, key2["url"])                    
 
             else:
                 _id = elt["id"]
@@ -207,20 +191,55 @@ def video(plugin, path, title, **kwargs):
     for stream in resp[0]["offers"][0]["streams"]:
         if stream["drm"] == "WIDEVINE":
             item = Listitem()
-            item.label = title
+            item.label = get_selected_item_label()
+            item.art.update(get_selected_item_art())
+            item.info.update(get_selected_item_info())
             item.path = stream["url"]
             item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
             item.property["inputstream.adaptive.manifest_type"] = "mpd"
             item.property["inputstream.adaptive.license_type"] = "com.widevine.alpha"
-            customdata = "description={}&deviceId=byPassARTHIUS&deviceName=Firefox-92.0--&deviceType=PC&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken&tokenSSO={}&entitlementId=3674803340&type=LIVEOTT&accountId={}".format(
+            customdata = "description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken&tokenSSO={}&entitlementId=3769416154&type=LIVEOTT&accountId={}".format(
                 USER_AGENT, token, account_id
             )
+
             import urllib.parse
 
             customdata = urllib.parse.quote(customdata)
             item.property["inputstream.adaptive.license_key"] = (
-                "https://ws-backendtv.sfr.fr/asgard-drm-widevine/public/licence|User-Agent=" + USER_AGENT + "&customdata="
+                "https://ws-backendtv.rmcbfmplay.com/asgard-drm-widevine/public/licence|User-Agent=" + USER_AGENT + "&customdata="
                 + customdata + "&Origin=https://www.rmcbfmplay.com&Content-Type="
                 + "|R{SSM}|"
             )
             return item
+
+@Route.register
+def podscast(plugin, path, **kwargs):
+    headers = {"User-Agent": USER_AGENT}
+    resp = urlquick.get(path, headers=headers).text
+
+    data = re.compile('margin-top">.+?<a href="(.+?)".+?name">(.+?)<.+?description">(.+?)<', re.DOTALL|re.MULTILINE).findall(resp)
+
+    for d in data:
+        item = Listitem()
+        item.path = d[0]
+        item.label = d[1]
+        item.info["plot"] = d[2]
+
+        callback = (playpodcast, item.path, item.label)
+        item.set_callback(*callback)
+        item_post_treatment(item)
+        yield item
+
+@Resolver.register
+def playpodcast(plugin, path, title, **kwargs):
+    headers = {"User-Agent": USER_AGENT}
+    resp = urlquick.get(path, headers=headers)
+    if "bfmtv.com" in path:
+        data = resp.parse()
+
+        item = Listitem()
+        item.label = get_selected_item_label()
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
+        item.path = data.find(".//div[@class='audio-player']").get('data-media-url')
+        return item
