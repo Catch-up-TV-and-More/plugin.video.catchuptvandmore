@@ -65,6 +65,8 @@
 [BE - RTLPlay] [FR - M6] choose live quality (#627) Thanks @darodi
 [FR - M6] add all programs section (#627) Thanks @darodi
 [BE - RTLPlay] add search (#627) Thanks @darodi
+[FR - Replay] Beginning of a new API for the replay of the RMC channels
+[FR - Replay] Complete the API for RMC channels replay: now working !! (#626) Thanks @Arias800
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
