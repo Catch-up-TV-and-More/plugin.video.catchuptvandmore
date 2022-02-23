@@ -6,6 +6,8 @@
 
 from __future__ import unicode_literals
 
+import xbmc
+import tempfile
 import json
 import re
 
@@ -656,7 +658,6 @@ def get_video_url(plugin,
                                                 video_id,
                                                 download_mode)
 
-
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', DESIRED_LANGUAGE)
@@ -672,18 +673,18 @@ def get_live_url(plugin, item_id, **kwargs):
     }
     resp2 = urlquick.get(URL_LIVE_ARTE % final_language.lower(), headers=headers)
     json_parser = json.loads(resp2.text)
-    # return json_parser["data"]["attributes"]["streams"][0]["url"]
-
-    # To uncomment if issue
     url_stream = json_parser["data"]["attributes"]["streams"][0]["url"]
-    # manifest = urlquick.get(
-    #     url_stream,
-    #     headers={'User-Agent': web_utils.get_random_ua()},
-    #     max_age=-1)
-    # lines = manifest.text.splitlines()
-    # final_url = ''
-    # for k in range(0, len(lines) - 1):
-    #     if 'RESOLUTION=' in lines[k]:
-    #         final_url = lines[k + 1]
 
-    return url_stream
+    manifest = urlquick.get(url_stream, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
+    lines = manifest.text.splitlines()
+    file_m3u8 = tempfile.NamedTemporaryFile("w+", dir=xbmc.translatePath('special://home/temp/archive_cache'),
+        suffix='.m3u8', delete=False)
+
+    for k in range(len(lines)):
+        if (k<3):
+            file_m3u8.write(lines[k]+'\n')
+        if (lines[k].find("-b") != -1):
+            file_m3u8.write(lines[k-1]+'\n')
+            file_m3u8.write(lines[k]+'\n')
+
+    return file_m3u8.name

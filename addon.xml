@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta16" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta17" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -67,6 +67,7 @@
 [BE - RTLPlay] add search (#627) Thanks @darodi
 [FR - Replay] Beginning of a new API for the replay of the RMC channels
 [FR - Replay] Complete the API for RMC channels replay: now working !! (#626) Thanks @Arias800
+[FR - Live ARTE] Workaround a FFMPEG bug (#619)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
