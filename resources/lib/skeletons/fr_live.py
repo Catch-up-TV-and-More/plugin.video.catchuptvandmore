@@ -149,8 +149,8 @@ menu = {
         'enabled': True,
         'order': 12
     },
-    'bfmtv': {
-        'resolver': '/resources/lib/channels/fr/bfmtv:get_live_url',
+    'BFM TV': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'BFM TV',
         'thumb': 'channels/fr/bfmtv.png',
         'fanart': 'channels/fr/bfmtv_fanart.jpg',
@@ -237,8 +237,8 @@ menu = {
         'enabled': True,
         'order': 20
     },
-    'rmcstory': {
-        'resolver': '/resources/lib/channels/fr/rmc:get_live_url',
+    'RMC STORY': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'RMC Story',
         'thumb': 'channels/fr/rmcstory.png',
         'fanart': 'channels/fr/rmcstory_fanart.jpg',
@@ -305,8 +305,8 @@ menu = {
         'enabled': True,
         'order': 24
     },
-    'bfmbusiness': {
-        'resolver': '/resources/lib/channels/fr/bfmtv:get_live_url',
+    'BFM Business': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'BFM Business',
         'thumb': 'channels/fr/bfmbusiness.png',
         'fanart': 'channels/fr/bfmbusiness_fanart.jpg',
@@ -337,8 +337,8 @@ menu = {
         'enabled': True,
         'order': 31
     },
-    'rmcdecouverte': {
-        'resolver': '/resources/lib/channels/fr/rmc:get_live_url',
+    'RMC Découverte': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'RMC Découverte',
         'thumb': 'channels/fr/rmcdecouverte.png',
         'fanart': 'channels/fr/rmcdecouverte_fanart.jpg',
@@ -462,8 +462,8 @@ menu = {
         'enabled': True,
         'order': 55
     },
-    'bfmparis': {
-        'resolver': '/resources/lib/channels/fr/bfmregion:get_live_url',
+    'BFM Paris': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'BFM Paris',
         'thumb': 'channels/fr/bfmparis.png',
         'fanart': 'channels/fr/bfmparis_fanart.jpg',
@@ -680,8 +680,8 @@ menu = {
         'enabled': True,
         'order': 97
     },
-    'bfmlille': {
-        'resolver': '/resources/lib/channels/fr/bfmregion:get_live_url',
+    'BFM Grand Lille': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'BFM Lille',
         'thumb': 'channels/fr/bfmlille.png',
         'fanart': 'channels/fr/bfmlille_fanart.jpg',
@@ -689,8 +689,8 @@ menu = {
         'enabled': True,
         'order': 98
     },
-    'bfmgrandlittoral': {
-        'resolver': '/resources/lib/channels/fr/bfmregion:get_live_url',
+    'BFM Grand Littoral': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'BFM Littoral',
         'thumb': 'channels/fr/bfmgrandlittoral.png',
         'fanart': 'channels/fr/bfmgrandlittoral_fanart.jpg',
@@ -752,8 +752,8 @@ menu = {
         'enabled': True,
         'order': 106
     },
-    'bfmlyon': {
-        'resolver': '/resources/lib/channels/fr/bfmregion:get_live_url',
+    'BFM Lyon': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'BFM Lyon',
         'thumb': 'channels/fr/bfmlyon.png',
         'fanart': 'channels/fr/bfmlyon_fanart.jpg',
@@ -869,8 +869,8 @@ menu = {
         'enabled': True,
         'order': 120
     },
-    '01net': {
-        'resolver': '/resources/lib/channels/fr/01net:get_live_url',
+    '01TV': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': '01Net TV',
         'thumb': 'channels/fr/01net.png',
         'fanart': 'channels/fr/01net_fanart.jpg',
