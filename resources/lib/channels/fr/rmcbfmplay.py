@@ -136,7 +136,6 @@ def menu(plugin, path, **kwargs):
                     continue
                 key2 = elt[key1]["actionIds"]
                 if "channelId" in key2:
-                    xbmc.log(str(elt),level=xbmc.LOGINFO)
                     #Regionnal channel work differently.
                     if elt['title'] == "BFM Paris":
                         break
