@@ -11,6 +11,7 @@ import inputstreamhelper
 import urlquick
 import re
 import json
+import urllib.parse
 
 from builtins import str
 from codequick import Listitem, Resolver, Route, Script
@@ -230,7 +231,6 @@ def video(plugin, path, title, **kwargs):
                 USER_AGENT, token, entitlementId, account_id
             )
 
-            import urllib.parse
             customdata = urllib.parse.quote(customdata)
             item.property["inputstream.adaptive.license_key"] = (
                 "https://ws-backendtv.rmcbfmplay.com/asgard-drm-widevine/public/licence|User-Agent=" + USER_AGENT + "&customdata="
@@ -290,3 +290,48 @@ def playpodcast(plugin, path, title, **kwargs):
         if "bfmtv.com" in path:
             item.path = data.find(".//div[@class='audio-player']").get('data-media-url')
     return item
+
+@Resolver.register
+def get_live_url(plugin, item_id, **kwargs):
+    headers = {"User-Agent": USER_AGENT,
+        'Content-type':'application/json', 
+        'Accept':'application/json, text/plain, */*'}  
+
+    url = "https://ws-backendtv.rmcbfmplay.com/sekai-service-plan/public/v2/service-list"
+
+    params = {
+        "app": "bfmrmc",
+        "device": "browser",
+        "token": token,
+    }
+    
+    resp = urlquick.get(url, params=params, headers=headers).json()
+
+    for data in resp:
+        if data["name"] == item_id:
+            item = Listitem()
+            item.label = get_selected_item_label()
+            item.art.update(get_selected_item_art())
+            item.info.update(get_selected_item_info())
+
+            for stream in data["streams"]:
+                if stream["drm"] == "WIDEVINE":
+
+                    #Workaround for IA bug : https://github.com/xbmc/inputstream.adaptive/issues/804
+                    response = urlquick.get(stream["url"])
+                    item.path = re.search('<Location>([^<]+)</Location>',response.text).group(1).replace(';','&')
+
+                    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
+                    item.property["inputstream.adaptive.manifest_type"] = "mpd"
+                    item.property["inputstream.adaptive.license_type"] = "com.widevine.alpha"
+                    customdata = "description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken&tokenSSO={}&type=LIVEOTT&accountId={}".format(
+                        USER_AGENT, token, "undefined"
+                    )
+
+                    customdata = urllib.parse.quote(customdata)
+                    item.property["inputstream.adaptive.license_key"] = (
+                        "https://ws-backendtv.rmcbfmplay.com/asgard-drm-widevine/public/licence|User-Agent=" + USER_AGENT + "&customdata="
+                        + customdata + "&Origin=https://www.rmcbfmplay.com&Content-Type="
+                        + "|R{SSM}|"
+                    )
+                    return item
