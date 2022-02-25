@@ -6,14 +6,16 @@
 
 from __future__ import unicode_literals
 
-import xbmc
-import tempfile
 import json
 import re
 
+import inputstreamhelper
 import urlquick
 from codequick import Listitem, Resolver, Route, Script
 from resources.lib import resolver_proxy, web_utils
+from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
+                                      get_selected_item_info,
+                                      get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
 
 # TO DO
@@ -673,18 +675,14 @@ def get_live_url(plugin, item_id, **kwargs):
     }
     resp2 = urlquick.get(URL_LIVE_ARTE % final_language.lower(), headers=headers)
     json_parser = json.loads(resp2.text)
-    url_stream = json_parser["data"]["attributes"]["streams"][0]["url"]
 
-    manifest = urlquick.get(url_stream, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
-    lines = manifest.text.splitlines()
-    file_m3u8 = tempfile.NamedTemporaryFile("w+", dir=xbmc.translatePath('special://home/temp/archive_cache'),
-        suffix='.m3u8', delete=False)
+    is_helper = inputstreamhelper.Helper("hls")
+    if not is_helper.check_inputstream():
+        return False
 
-    for k in range(len(lines)):
-        if (k<3):
-            file_m3u8.write(lines[k]+'\n')
-        if (lines[k].find("-b") != -1):
-            file_m3u8.write(lines[k-1]+'\n')
-            file_m3u8.write(lines[k]+'\n')
+    item = Listitem()
+    item.path = json_parser["data"]["attributes"]["streams"][0]["url"]
+    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
+    item.property["inputstream.adaptive.manifest_type"] = "hls"
 
-    return file_m3u8.name
+    return item
