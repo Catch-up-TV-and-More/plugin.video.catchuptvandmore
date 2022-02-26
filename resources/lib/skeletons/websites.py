@@ -145,9 +145,9 @@ menu = {
         'enabled': True,
         'order': 16
     },
-    'nationalfff': {
+    'fff': {
         'route': '/resources/lib/websites/nationalfff:website_root',
-        'label': 'National FFF',
+        'label': 'FFF',
         'thumb': 'websites/nationalfff.png',
         'fanart': 'websites/nationalfff_fanart.jpg',
         'enabled': True,
