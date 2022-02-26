@@ -193,6 +193,10 @@ msgctxt "#30067"
 msgid "Morocco"
 msgstr "Marokko"
 
+msgctxt "#30068"
+msgid "Singapore"
+msgstr "Singapore"
+
 
 # Channels (from 30080 to 30129)
 
