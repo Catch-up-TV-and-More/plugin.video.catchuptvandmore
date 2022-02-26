@@ -163,4 +163,7 @@ def get_live_url(plugin, item_id, **kwargs):
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % (
         json_parser4["smToken"], URL_ROOT % item_id, URL_ROOT % item_id)
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
     return item
