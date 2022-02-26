@@ -498,6 +498,15 @@ menu = {
         'enabled': True,
         'order': 65
     },
+    'tntv': {
+        'resolver': '/resources/lib/channels/fr/tntv:get_live_url',
+        'label': 'Tahiti Nui Télévision',
+        'thumb': 'channels/fr/tntv.png',
+        'fanart': 'channels/fr/tntv_fanart.jpg',
+        'm3u_group': 'Région',
+        'enabled': True,
+        'order': 66
+    },
     'viaoccitanie': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
         'label': 'viàOccitanie',
@@ -505,7 +514,7 @@ menu = {
         'fanart': 'channels/fr/viaoccitanie_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 66
+        'order': 67
     },
     'ouatchtv': {
         'resolver': '/resources/lib/channels/fr/ouatchtv:get_live_url',
@@ -514,7 +523,7 @@ menu = {
         'fanart': 'channels/fr/ouatchtv_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
         'enabled': False,
-        'order': 67
+        'order': 68
     },
     'canal10': {
         'resolver': '/resources/lib/channels/fr/canal10:get_live_url',
@@ -523,7 +532,7 @@ menu = {
         'fanart': 'channels/fr/canal10_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': False,
-        'order': 68
+        'order': 69
     },
     'rtl2': {
         'resolver': '/resources/lib/channels/fr/6play:get_live_url',
@@ -532,7 +541,7 @@ menu = {
         'fanart': 'channels/fr/rtl2_fanart.jpg',
         'm3u_group': 'Radio',
         'enabled': True,
-        'order': 69
+        'order': 70
     },
     'viaatv': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
