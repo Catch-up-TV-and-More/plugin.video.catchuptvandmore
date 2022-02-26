@@ -123,19 +123,19 @@ msgstr ""
 
 msgctxt "#30050"
 msgid "France"
-msgstr ""
+msgstr "צָרְפַת"
 
 msgctxt "#30051"
 msgid "Switzerland"
-msgstr ""
+msgstr "שְׁוֵיצָרִי"
 
 msgctxt "#30052"
 msgid "United Kingdom"
-msgstr ""
+msgstr "בְּרִיטַנִיָה"
 
 msgctxt "#30053"
 msgid "International"
-msgstr ""
+msgstr "בינלאומי"
 
 msgctxt "#30054"
 msgid "Belgium"
@@ -147,51 +147,51 @@ msgstr ""
 
 msgctxt "#30056"
 msgid "Canada"
-msgstr ""
+msgstr "קנדה"
 
 msgctxt "#30057"
 msgid "United States of America"
-msgstr ""
+msgstr "ארצות הברית"
 
 msgctxt "#30058"
 msgid "Poland"
-msgstr ""
+msgstr "פּוֹלִין"
 
 msgctxt "#30059"
 msgid "Spain"
-msgstr ""
+msgstr "סְפָרַד"
 
 msgctxt "#30060"
 msgid "Tunisia"
-msgstr ""
+msgstr "תוניסיה"
 
 msgctxt "#30061"
 msgid "Italia"
-msgstr ""
+msgstr "אִיטַלִיָה"
 
 msgctxt "#30062"
 msgid "Netherlands"
-msgstr ""
+msgstr "הולנד"
 
 msgctxt "#30063"
 msgid "China"
-msgstr ""
+msgstr "חרסינה"
 
 msgctxt "#30064"
 msgid "Cameroon"
-msgstr ""
+msgstr "קמרון"
 
 msgctxt "#30065"
 msgid "Slovenia"
-msgstr ""
+msgstr "סלובניה"
 
 msgctxt "#30066"
 msgid "Ethiopia"
-msgstr ""
+msgstr "סלובניה"
 
 msgctxt "#30067"
 msgid "Morocco"
-msgstr ""
+msgstr "מָרוֹקוֹ"
 
 msgctxt "#30068"
 msgid "Singapore"
