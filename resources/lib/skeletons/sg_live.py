@@ -23,6 +23,6 @@ menu = {
         'thumb': 'channels/sg/cna.png',
         'fanart': 'channels/sg/cna_fanart.jpg',
         'enabled': True,
-        'order': 3
+        'order': 1
     },
 }
