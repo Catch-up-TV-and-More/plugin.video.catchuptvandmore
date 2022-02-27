@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta41" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta42" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -94,6 +94,7 @@
 [PROJECT] Fix linting to be compliant with Flake8 (PR #646 #647 #649 #650 #651 #652 #652 #653 #654 #655) Thanks @Piotr Pawlicki
 [PL - TVP] Add stream for TVP Wilno (#PR  656) Thanks @Piotr Pawlicki
 [FR - RMCBFMREPLAY] Fix a syntax error Thanks @Piotr Pawlicki
+[FR - RMCBMFPLAY]: correct linting on rmcbfmplay.py (PR #648) Thanks @Piotr Pawlicki
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

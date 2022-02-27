@@ -25,15 +25,23 @@ from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
                                       get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
 
+
 @Route.register
 def get_token():
     addon = xbmcaddon.Addon("plugin.video.catchuptvandmore")
-    if addon.getSetting('rmcbfmplay.login') == '' or addon.getSetting('rmcbfmplay.password') == '':
-        xbmcgui.Dialog().ok(addon.getLocalizedString(30600),addon.getLocalizedString(30604) %
-            ('RMCBFMPlay', 'https://www.rmcbfmplay.com'))
+    if (
+            addon.getSetting('rmcbfmplay.login') == ''
+            or addon.getSetting('rmcbfmplay.password') == ''
+    ):
+        xbmcgui.Dialog().ok(addon.getLocalizedString(30600), addon.getLocalizedString(30604) %
+                            ('RMCBFMPlay', 'https://www.rmcbfmplay.com'))
         return False
 
-    autorization = addon.getSetting('rmcbfmplay.login') + ":" + addon.getSetting('rmcbfmplay.password')
+    autorization = (
+        addon.getSetting('rmcbfmplay.login')
+        + ":"
+        + addon.getSetting('rmcbfmplay.password')
+    )
     url = "https://sso-client.sfr.fr/cas/services/rest/3.2/createToken.json"
     params = {"duration": 86400}
     headers = {
@@ -44,6 +52,7 @@ def get_token():
     resp = urlquick.get(url, params=params, headers=headers).json()
     token = resp["createToken"]["token"]
     return token
+
 
 def get_account_id(token):
     url = "https://ws-backendtv.rmcbfmplay.com/heimdall-core/public/api/v2/userProfiles"
@@ -59,6 +68,7 @@ def get_account_id(token):
     account_id = resp["nexttvId"]
     return account_id
 
+
 API_BACKEND = "https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/"
 API_CDN_ROOT = "https://ws-cdn.tv.sfr.net/gaia-core/rest/api/"
 
@@ -66,21 +76,29 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 
 token = get_token()
 account_id = get_account_id(token)
 
+
 @Route.register
 def rmcbfmplay_root(plugin, path="", **kwargs):
     """Root menu of the app."""
     if path:
-        #For the "Chaines" menu.
-        #01TV doesn't need lower.
+        # For the "Chaines" menu.
+        # 01TV doesn't need lower.
         if " " in path:
             path = path.lower()
-        url = API_BACKEND +  "web/v1/menu/RefMenuItem::rmcgo_home_" + path.replace(' ','') + "/structure"
+        url = API_BACKEND + "web/v1/menu/RefMenuItem::rmcgo_home_" + path.replace(' ', '') + "/structure"
     else:
         url = API_BACKEND + "web/v1/menu/RefMenuItem::rmcgo_home/structure"
 
-    params = {"app":"bfmrmc","device":"browser","profileId":account_id,"accountTypes":"NEXTTV","operators":"NEXTTV","noTracking":"false"}
+    params = {
+        "app": "bfmrmc",
+        "device": "browser",
+        "profileId": account_id,
+        "accountTypes": "NEXTTV",
+        "operators": "NEXTTV",
+        "noTracking": "false"
+    }
     headers = {"User-Agent": USER_AGENT}
-    resp = urlquick.get(url, params=params, headers=headers).json() 
+    resp = urlquick.get(url, params=params, headers=headers).json()
     for spot in resp["spots"]:
         item = Listitem()
         item.label = spot["title"]
@@ -88,16 +106,32 @@ def rmcbfmplay_root(plugin, path="", **kwargs):
         item_post_treatment(item)
         yield item
 
+
 @Route.register
 def menu(plugin, path, **kwargs):
     """Menu of the app with v1 API."""
 
     if "/spot/" in path or "/tile/" in path:
         url = API_BACKEND + path
-        params = {"app":"bfmrmc","device":"browser","token":token,"page":"0","size":"30","profileId":account_id,"accountTypes":"NEXTTV","operators":"NEXTTV","noTracking":"false"}
+        params = {
+            "app": "bfmrmc",
+            "device": "browser",
+            "token": token,
+            "page": "0",
+            "size": "30",
+            "profileId": account_id,
+            "accountTypes": "NEXTTV",
+            "operators": "NEXTTV",
+            "noTracking": "false",
+        }
     else:
         url = API_CDN_ROOT + path
-        params = {"universe":"PROVIDER","accountTypes":"NEXTTV","operators":"NEXTTV","noTracking":"false"}   
+        params = {
+            "universe": "PROVIDER",
+            "accountTypes": "NEXTTV",
+            "operators": "NEXTTV",
+            "noTracking": "false"
+        }
 
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(url, params=params, headers=headers).json()
@@ -114,10 +148,10 @@ def menu(plugin, path, **kwargs):
         print("RESP", resp)
 
     for elt in resp[key]:
-        types = elt.get('contentType',"")
+        types = elt.get('contentType', "")
         if types:
-            #Some links allow you to launch the content directly.
-            #Exemple "Haro sur les eoliennes"
+            # Some links allow you to launch the content directly.
+            # Exemple "Haro sur les eoliennes"
             if types == "Movie" or types == "Episode":
                 _id = elt["action"]["actionIds"]["contentId"]
                 target_path = "web/v2/content/%s/options" % _id
@@ -143,14 +177,14 @@ def menu(plugin, path, **kwargs):
                     continue
                 key2 = elt[key1]["actionIds"]
                 if "channelId" in key2:
-                    #Regionnal channel work differently.
+                    # Regionnal channel work differently.
                     if elt['title'] == "BFM Paris":
                         break
-                    #"Chaine" menu
+                    # "Chaine" menu
                     callback = (rmcbfmplay_root, elt["title"])
                 elif "url" in key2:
-                    #For the podcast menu.
-                    callback = (podscast, key2["url"]) 
+                    # For the podcast menu.
+                    callback = (podscast, key2["url"])
                 else:
                     if "tileId" in key2:
                         key2 = "tileId"
@@ -195,9 +229,11 @@ def menu(plugin, path, **kwargs):
 @Resolver.register
 def video(plugin, path, title, **kwargs):
     """Menu of the app with v1 API."""
-    headers = {"User-Agent": USER_AGENT,
-        'Content-type':'application/json', 
-        'Accept':'application/json, text/plain, */*'}  
+    headers = {
+        'User-Agent': USER_AGENT,
+        'Content-type': 'application/json',
+        'Accept': 'application/json, text/plain, */*',
+    }
 
     url = API_CDN_ROOT + path
 
@@ -210,7 +246,7 @@ def video(plugin, path, title, **kwargs):
 
     resp = urlquick.get(url, params=params, headers=headers).json()
 
-    #For reuse params dict.
+    # For reuse params dict.
     del params["universe"]
 
     for stream in resp[0]["offers"][0]["streams"]:
@@ -220,10 +256,15 @@ def video(plugin, path, title, **kwargs):
                 "device": "browser",
                 "macAddress": "PC",
                 "offerId": resp[0]["offers"][0]["offerId"],
-                "token": token
+                "token": token,
             }
-            #Needed ID for the customdata.
-            entitlementId = urlquick.post("https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/web/v1/replay/play", params=params, json=data, headers=headers).json()["entitlementId"]
+            # Needed ID for the customdata.
+            entitlementId = urlquick.post(
+                "https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/web/v1/replay/play",
+                params=params,
+                headers=headers,
+                json=data,
+            ).json()["entitlementId"]
 
             item = Listitem()
             item.label = get_selected_item_label()
@@ -245,26 +286,27 @@ def video(plugin, path, title, **kwargs):
             )
             return item
 
+
 @Route.register
 def podscast(plugin, path, **kwargs):
     headers = {"User-Agent": USER_AGENT}
     resp = urlquick.get(path, headers=headers).text
 
     if "bfmtv.com" in path:
-        data = re.compile('margin-top">.+?<a href="(.+?)".+?name">(.+?)<.+?description">(.+?)<', re.DOTALL|re.MULTILINE).findall(resp)
+        data = re.compile('margin-top">.+?<a href="(.+?)".+?name">(.+?)<.+?description">(.+?)<', re.DOTALL | re.MULTILINE).findall(resp)
         for d in data:
             item = Listitem()
             item.path = d[0]
             item.label = d[1]
             item.info["plot"] = d[2]
-            item.art.update(get_selected_item_art())    
+            item.art.update(get_selected_item_art())
 
             callback = (playpodcast, item.path, item.label)
             item.set_callback(*callback)
             item_post_treatment(item)
             yield item
     elif "deezer.com" in path:
-        data = re.compile('window.__DZR_APP_STATE__ =(.+?)</script', re.DOTALL|re.MULTILINE).search(resp).group(1)
+        data = re.compile('window.__DZR_APP_STATE__ =(.+?)</script', re.DOTALL | re.MULTILINE).search(resp).group(1)
         data = json.loads(data)
         for d in data["EPISODES"]["data"]:
             item = Listitem()
@@ -286,7 +328,7 @@ def playpodcast(plugin, path, title, **kwargs):
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
 
-    #Deezer send directly the final url.
+    # Deezer send directly the final url.
     if ".mp3" in path:
         item.path = path + "|User-Agent=" + USER_AGENT + "&Referer=https://www.deezer.com/"
     else:
@@ -297,11 +339,14 @@ def playpodcast(plugin, path, title, **kwargs):
             item.path = data.find(".//div[@class='audio-player']").get('data-media-url')
     return item
 
+
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    headers = {"User-Agent": USER_AGENT,
-        'Content-type':'application/json', 
-        'Accept':'application/json, text/plain, */*'}  
+    headers = {
+        'User-Agent': USER_AGENT,
+        'Content-type': 'application/json',
+        'Accept': 'application/json, text/plain, */*',
+    }
 
     url = "https://ws-backendtv.rmcbfmplay.com/sekai-service-plan/public/v2/service-list"
 
@@ -310,7 +355,7 @@ def get_live_url(plugin, item_id, **kwargs):
         "device": "browser",
         "token": token,
     }
-    
+
     resp = urlquick.get(url, params=params, headers=headers).json()
 
     for data in resp:
@@ -323,9 +368,9 @@ def get_live_url(plugin, item_id, **kwargs):
             for stream in data["streams"]:
                 if stream["drm"] == "WIDEVINE":
 
-                    #Workaround for IA bug : https://github.com/xbmc/inputstream.adaptive/issues/804
+                    # Workaround for IA bug : https://github.com/xbmc/inputstream.adaptive/issues/804
                     response = urlquick.get(stream["url"])
-                    item.path = re.search('<Location>([^<]+)</Location>',response.text).group(1).replace(';','&')
+                    item.path = re.search('<Location>([^<]+)</Location>', response.text).group(1).replace(';', '&')
 
                     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
                     item.property["inputstream.adaptive.manifest_type"] = "mpd"
