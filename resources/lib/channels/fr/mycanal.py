@@ -49,8 +49,17 @@ URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
 # TODO
 URL_LICENCE_DRM = '[license-server url]|[Header]|[Post-Data]|[Response]'
 # com.widevine.alpha
-# license_key must be a string template with 4 | separated fields: [license-server url]|[Header]|[Post-Data]|[Response] in which [license-server url] allows B{SSM} placeholder and [Post-Data] allows [b/B/R]{SSM} and [b/B/R]{SID} placeholders to transport the widevine challenge and if required the DRM SessionId in base64NonURLencoded, Base64URLencoded or Raw format.
-# [Response] can be a.) empty or R to specify that the response payload of the license request is binary format, b.) B if the response payload is base64 encoded or c.) J[licensetoken] if the license key data is located in a JSON struct returned in the response payload.
+# license_key must be a string template with 4 | separated fields:
+# [license-server url]|[Header]|[Post-Data]|[Response] in which:
+# * [license-server url] allows B{SSM} placeholder
+# * [Post-Data] allows [b/B/R]{SSM}
+# * [b/B/R]{SID} placeholders to transport the widevine challenge
+#   and if required the DRM SessionId in base64NonURLencoded, Base64URLencoded or Raw format.
+# * [Response] can be:
+#   a.) empty or R to specify that the response payload of the license request is binary format
+#   b.) B if the response payload is base64 encoded
+#   or c.) J[licensetoken] if the license key data is located in a JSON struct returned in the response payload.
+#
 # inputstream.adaptive searches for the key [licensetoken] and handles the value as base64 encoded data.
 
 # Dailymotion Id get from these pages below
@@ -395,14 +404,13 @@ def get_video_url(plugin,
         ##############################################################################
         # Code by mtr81 : https://github.com/xbmc/inputstream.adaptive/issues/812
         def rnd():
-            return str(hex(math.floor((1+random.random())*9007199254740991)))[4:]
-        ts= int(1000*time.time())
+            return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
+        ts = int(1000 * time.time())
 
-        deviceKeyId = str(ts)+'-'+rnd()
-        device_id_first = deviceKeyId + ':0:' + str(ts+2000)+'-'+rnd()
-        sessionId = str(ts+3000)+'-'+rnd()
+        deviceKeyId = str(ts) + '-' + rnd()
+        device_id_first = deviceKeyId + ':0:' + str(ts + 2000) + '-' + rnd()
+        sessionId = str(ts + 3000) + '-' + rnd()
         ##############################################################################
-
 
         # Get Portail Id
         session_requests = requests.session()
@@ -410,12 +418,13 @@ def get_video_url(plugin,
         json_app_config = re.compile('window.app_config=(.*?)};').findall(
             resp_app_config.text)[0]
         json_app_config_parser = json.loads(json_app_config + ('}'))
-        portail_id = json_app_config_parser["api"]["pass"][
-            "portailIdEncrypted"]
+        portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
 
-        headers = {"User-Agent": web_utils.get_random_ua(),
-            "Origin": "https://www.canalplus.com",
-            "Referer": "https://www.canalplus.com/",}
+        headers = {
+            'User-Agent': web_utils.get_random_ua(),
+            'Origin': 'https://www.canalplus.com',
+            'Referer': 'https://www.canalplus.com/',
+        }
 
         # Get PassToken
         payload = {
@@ -423,7 +432,7 @@ def get_video_url(plugin,
             'vect': 'INTERNET',
             'media': 'web',
             'portailId': portail_id,
-            'sessionId': sessionId
+            'sessionId': sessionId,
         }
 
         resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload, headers=headers)
@@ -433,24 +442,15 @@ def get_video_url(plugin,
 
         video_id = next_url.split('/')[-1].split('.json')[0]
         headers = {
-            'Accept':
-            'application/json, text/plain, */*',
-            'Authorization':
-            'PASS Token="%s"' % pass_token,
-            'Content-Type':
-            'application/json; charset=UTF-8',
-            'XX-DEVICE':
-            'pc %s' % device_id,
-            'XX-DOMAIN':
-            'cpfra',
-            'XX-OPERATOR':
-            'pc',
-            'XX-Profile-Id':
-            '0',
-            'XX-SERVICE':
-            'mycanal',
-            'User-Agent':
-            web_utils.get_random_ua()
+            'Accept': 'application/json, text/plain, */*',
+            'Authorization': 'PASS Token="%s"' % pass_token,
+            'Content-Type': 'application/json; charset=UTF-8',
+            'XX-DEVICE': 'pc %s' % device_id,
+            'XX-DOMAIN': 'cpfra',
+            'XX-OPERATOR': 'pc',
+            'XX-Profile-Id': '0',
+            'XX-SERVICE': 'mycanal',
+            'User-Agent': web_utils.get_random_ua(),
         }
         value_datas_json = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers)
         value_datas_jsonparser = value_datas_json.json()
@@ -516,28 +516,19 @@ def get_video_url(plugin,
             'functionalType': functionalType_value,
             'hash': hash_value,
             'idKey': idKey_value,
-            'quality': quality_value
+            'quality': quality_value,
         }
         payload = json.dumps(payload)
         headers = {
-            'Accept':
-            'application/json, text/plain, */*',
-            'Authorization':
-            'PASS Token="%s"' % pass_token,
-            'Content-Type':
-            'application/json; charset=UTF-8',
-            'XX-DEVICE':
-            'pc %s' % device_id,
-            'XX-DOMAIN':
-            'cpfra',
-            'XX-OPERATOR':
-            'pc',
-            'XX-Profile-Id':
-            '0',
-            'XX-SERVICE':
-            'mycanal',
-            'User-Agent':
-            web_utils.get_random_ua()
+            'Accept': 'application/json, text/plain, */*',
+            'Authorization': 'PASS Token="%s"' % pass_token,
+            'Content-Type': 'application/json; charset=UTF-8',
+            'XX-DEVICE': 'pc %s' % device_id,
+            'XX-DOMAIN': 'cpfra',
+            'XX-OPERATOR': 'pc',
+            'XX-Profile-Id': '0',
+            'XX-SERVICE': 'mycanal',
+            'User-Agent': web_utils.get_random_ua(),
         }
         resp_stream_datas = session_requests.put(
             URL_STREAM_DATAS, data=payload, headers=headers)
@@ -575,28 +566,17 @@ def get_video_url(plugin,
             item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
             item.property[
                 'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            value_pass_token = 'PASS Token="%s"' % pass_token
             headers2 = {
-                'Accept':
-                'application/json, text/plain, */*',
-                'Authorization':
-                value_pass_token,
-                'Content-Type':
-                'text/plain',
-                'User-Agent':
-                web_utils.get_random_ua(),
-                'Origin':
-                'https://www.mycanal.fr',
-                'XX-DEVICE':
-                'pc %s' % device_id,
-                'XX-DOMAIN':
-                'cpfra',
-                'XX-OPERATOR':
-                'pc',
-                'XX-Profile-Id':
-                '0',
-                'XX-SERVICE':
-                'mycanal',
+                'Accept': 'application/json, text/plain, */*',
+                'Authorization': 'PASS Token="%s"' % pass_token,
+                'Content-Type': 'text/plain',
+                'User-Agent': web_utils.get_random_ua(),
+                'Origin': 'https://www.mycanal.fr',
+                'XX-DEVICE': 'pc %s' % device_id,
+                'XX-DOMAIN': 'cpfra',
+                'XX-OPERATOR': 'pc',
+                'XX-Profile-Id': '0',
+                'XX-SERVICE': 'mycanal',
             }
             # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
             item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmConfig=mkpl::false' + '|%s|R{SSM}|' % urlencode(headers2)

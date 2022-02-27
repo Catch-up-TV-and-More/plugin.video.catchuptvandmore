@@ -171,6 +171,7 @@ def get_video_url(plugin,
                                                 video_id,
                                                 download_mode)
 
+
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', DESIRED_LANGUAGE)

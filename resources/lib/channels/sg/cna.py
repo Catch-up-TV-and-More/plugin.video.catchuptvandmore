@@ -17,6 +17,7 @@ URL_ROOT = "https://www.channelnewsasia.com"
 
 URL_LIVE = URL_ROOT + "/watch"
 
+
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
