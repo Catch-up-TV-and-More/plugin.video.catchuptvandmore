@@ -75,6 +75,10 @@ def get_live_url(plugin, item_id, **kwargs):
                             'alt'):
                     live_id = live_datas.get('data-video-id')
                     break
+            elif item_id == 'tvpwilno':
+                if 'wilno' in live_datas.find('.//img').get('alt'):
+                    live_id = live_datas.get('data-video-id')
+                    break
 
     if live_id is None:
         # Stream is not available - channel not found on scrapped page

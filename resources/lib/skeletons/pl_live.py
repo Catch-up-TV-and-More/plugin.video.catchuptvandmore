@@ -55,5 +55,13 @@ menu = {
         'fanart': 'channels/pl/tvpworld_fanart.jpg',
         'enabled': True,
         'order': 5
-    }
+    },
+    'tvpwilno': {
+        'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
+        'label': 'TVP Wilno',
+        'thumb': 'channels/pl/tvpwilno.png',
+        'fanart': 'channels/pl/tvpwilno_fanart.jpg',
+        'enabled': True,
+        'order': 6
+    },
 }
