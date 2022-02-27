@@ -91,11 +91,11 @@
 [PL - TVP] Use data-channel-id for Polonia (PR #639) Thanks @Piotr Pawlicki
 [FR - RMCBFMREPLAY] Add a dialog box to advertise that credentials are not set (PR #644) Thanks Arias800
 [WO- TV5MONDE] Fix TV5Monde live (PR #643) Thanks Arias800
-[PROJECT] Fix linting to be compliant with Flake8 (PR #646 #647 #649 #650 #651 #652 #652 #653 #654 #655) Thanks @Piotr Pawlicki
+[Project] Fix linting to be compliant with Flake8 (PR #646 #647 #649 #650 #651 #652 #652 #653 #654 #655) Thanks @Piotr Pawlicki
 [PL - TVP] Add stream for TVP Wilno (#PR  656) Thanks @Piotr Pawlicki
 [FR - RMCBFMREPLAY] Fix a syntax error Thanks @Piotr Pawlicki
-[FR - RMCBMFPLAY]: correct linting on rmcbfmplay.py (PR #648) Thanks @Piotr Pawlicki
-[WO - TV5MONDE]: Correct linting on tv5monde.py (PR #657) Thanks @Piotr Pawlicki
+[FR - RMCBMFPLAY] Correct linting on rmcbfmplay.py (PR #648) Thanks @Piotr Pawlicki
+[WO - TV5MONDE] Correct linting on tv5monde.py (PR #657) Thanks @Piotr Pawlicki
 [Website] Disable lesargonautes (PR #641) Thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
