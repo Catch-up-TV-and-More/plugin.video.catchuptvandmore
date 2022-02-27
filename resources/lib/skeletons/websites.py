@@ -142,7 +142,7 @@ menu = {
         'label': 'Les Argonautes',
         'thumb': 'websites/lesargonautes.png',
         'fanart': 'websites/lesargonautes_fanart.jpg',
-        'enabled': True,
+        'enabled': False,  # broken, disabled
         'order': 16
     },
     'fff': {
