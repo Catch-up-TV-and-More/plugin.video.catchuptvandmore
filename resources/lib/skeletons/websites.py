@@ -146,7 +146,7 @@ menu = {
         'order': 16
     },
     'fff': {
-        'route': '/resources/lib/websites/nationalfff:website_root',
+        'route': '/resources/lib/websites/fff:website_root',
         'label': 'FFF',
         'thumb': 'websites/nationalfff.png',
         'fanart': 'websites/nationalfff_fanart.jpg',
