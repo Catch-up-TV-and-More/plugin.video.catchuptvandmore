@@ -66,7 +66,7 @@ def list_contents(plugin, item_id, category_url, page, **kwargs):
     root = resp.parse()
 
     for program_datas in root.iterfind(".//div[@class='card card--media   ']"):
-        
+
         program_title = program_datas.find(".//p").text.strip()
         program_image = program_datas.findall(".//img")[1].get('data-src')
         program_url = URL_ROOT_EDUCATION + program_datas.find(".//a").get('href')
