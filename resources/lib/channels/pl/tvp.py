@@ -62,7 +62,7 @@ def get_live_url(plugin, item_id, **kwargs):
                 if 'Polonia' in live_datas.get('data-title'):
                     live_id = live_datas.get('data-video-id')
                     break
-            elif item_id == 'tvppolandin':
+            elif item_id == 'tvpworld':
                 if 'News and entertainment' in live_datas.get('data-title'):
                     live_id = live_datas.get('data-video-id')
                     break
