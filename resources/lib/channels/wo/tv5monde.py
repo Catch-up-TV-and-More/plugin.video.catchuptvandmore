@@ -15,7 +15,7 @@ from codequick import Listitem, Resolver, Route
 from resources.lib import download, web_utils
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
-    get_selected_item_info, get_selected_item_label)
+                                      get_selected_item_info, get_selected_item_label)
 
 # TODO Rework filter for all videos
 
