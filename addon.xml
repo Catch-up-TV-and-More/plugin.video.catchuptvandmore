@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta31" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta32" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -84,6 +84,7 @@
 [FR] Add Tahiti Nui Télévision (TNTV) live (issue #452)
 [ES live RealMadridTV] Fix broken url parsing (PR ##637) Thanks @Adrien Aubry
 [Website] Fix the route for the FFF website (PR #640) thanks @darodi
+[BE-RTC] fix live (PR #642) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
