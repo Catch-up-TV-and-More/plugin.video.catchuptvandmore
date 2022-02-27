@@ -74,4 +74,4 @@ def get_live_url(plugin, item_id, **kwargs):
     lives_html = urlquick.get(URL_STREAM % live_id,
                               headers={'User-Agent': web_utils.get_random_ua()},
                               max_age=-1)
-    return re.compile(r'src:\'(.*?)\'').findall(lives_html.text)[0]
+    return re.compile(r'src:\'(.+\.m3u8)\'').findall(lives_html.text)[0]
