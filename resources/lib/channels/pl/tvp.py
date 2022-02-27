@@ -59,8 +59,10 @@ def get_live_url(plugin, item_id, **kwargs):
                     live_id = live_datas.get('data-video-id')
                     break
             elif item_id == 'tvppolonia':
-                if ('Polonia' in live_datas.get('data-title')) or
-                   ('1773' in live_datas.get('data-channel-id')):
+                if (
+                    'Polonia' in live_datas.get('data-title')
+                    or '1773' in live_datas.get('data-channel-id')
+                ):
                     live_id = live_datas.get('data-video-id')
                     break
             elif item_id == 'tvpworld':
