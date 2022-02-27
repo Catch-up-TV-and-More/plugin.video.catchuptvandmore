@@ -27,13 +27,20 @@ from resources.lib.menu_utils import item_post_treatment
 
 @Route.register
 def get_token():
-    autorization = xbmcaddon.Addon("plugin.video.catchuptvandmore").getSetting('rmcbfmplay.login') + ":" + xbmcaddon.Addon("plugin.video.catchuptvandmore").getSetting('rmcbfmplay.password')
+    addon = xbmcaddon.Addon("plugin.video.catchuptvandmore")
+    if addon.getSetting('rmcbfmplay.login') == '' or \addon.getSetting('rmcbfmplay.password') == '':
+        xbmcgui.Dialog().ok(addon.getLocalizedString(30600),addon.getLocalizedString(30604) %
+            ('RMCBFMPlay', 'https://www.rmcbfmplay.com'))
+        return False
+
+    autorization = addon.getSetting('rmcbfmplay.login') + ":" + addon.getSetting('rmcbfmplay.password')
     url = "https://sso-client.sfr.fr/cas/services/rest/3.2/createToken.json"
     params = {"duration": 86400}
     headers = {
         "secret": "Basic Uk1DQkZNUGxheUFuZHJvaWR2MTptb2ViaXVzMTk3MA==",
         "Authorization": "Basic " + base64.b64encode(autorization.encode("utf-8")).decode("utf-8"),
     }
+
     resp = urlquick.get(url, params=params, headers=headers).json()
     token = resp["createToken"]["token"]
     return token
