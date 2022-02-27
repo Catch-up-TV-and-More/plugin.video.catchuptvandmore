@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta37" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta38" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -90,6 +90,7 @@
 [PL - TVP] Rename 'TVP Poland In' to 'TVP World' (PR #639) Thanks @Piotr Pawlicki
 [PL - TVP] Use data-channel-id for Polonia (PR #639) Thanks @Piotr Pawlicki
 [FR - RMCBFMREPLAY] Add a dialog box to advertise that credentials are not set (PR #644) Thanks Arias800
+[WO- TV5MONDE] Fix TV5Monde live (PR #643) Thanks Arias800
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
