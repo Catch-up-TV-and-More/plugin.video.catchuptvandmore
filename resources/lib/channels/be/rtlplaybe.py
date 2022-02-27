@@ -137,7 +137,7 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
     if search_query is None or len(search_query) == 0:
         return False
 
-    json_body_template = """ 
+    json_body_template = """
     {
         "requests": [
             {
