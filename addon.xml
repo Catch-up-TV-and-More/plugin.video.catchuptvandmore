@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta43" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta44" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -96,6 +96,7 @@
 [FR - RMCBFMREPLAY] Fix a syntax error Thanks @Piotr Pawlicki
 [FR - RMCBMFPLAY]: correct linting on rmcbfmplay.py (PR #648) Thanks @Piotr Pawlicki
 [WO - TV5MONDE]: Correct linting on tv5monde.py (PR #657) Thanks @Piotr Pawlicki
+[Website] Disable lesargonautes (PR #641) Thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
