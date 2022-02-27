@@ -28,7 +28,7 @@ from resources.lib.menu_utils import item_post_treatment
 @Route.register
 def get_token():
     addon = xbmcaddon.Addon("plugin.video.catchuptvandmore")
-    if addon.getSetting('rmcbfmplay.login') == '' or \addon.getSetting('rmcbfmplay.password') == '':
+    if addon.getSetting('rmcbfmplay.login') == '' or addon.getSetting('rmcbfmplay.password') == '':
         xbmcgui.Dialog().ok(addon.getLocalizedString(30600),addon.getLocalizedString(30604) %
             ('RMCBFMPlay', 'https://www.rmcbfmplay.com'))
         return False
