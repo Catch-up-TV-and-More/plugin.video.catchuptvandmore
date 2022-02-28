@@ -351,6 +351,14 @@ menu = {
         "enabled": True,
         "order": 105,
     },
+    'albitv': {
+        'route"': '/resources/lib/channels/fr/albitv:list_videos_emissions',
+        'label': 'Albi TV',
+        'thumb': 'channels/fr/albitv.png',
+        'fanart': 'channels/fr/albitv_fanart.jpg',
+        'enabled': True,
+        'order': 106
+    },
     "equidia": {
         "route": "/resources/lib/channels/fr/equidia:list_categories",
         "label": "Equidia",
