@@ -846,8 +846,8 @@ menu = {
         'enabled': True,
         'order': 124
     },
-    'fun_radio': {
-        'resolver': '/resources/lib/channels/fr/6play:get_live_url',
+    'funradio': {
+        'resolver': '/resources/lib/channels/fr/rtl:get_live_url',
         'label': 'Fun Radio',
         'thumb': 'channels/fr/funradio.png',
         'fanart': 'channels/fr/funradio_fanart.jpg',
@@ -865,7 +865,7 @@ menu = {
         'order': 126
     },
     'rtl2': {
-        'resolver': '/resources/lib/channels/fr/6play:get_live_url',
+        'resolver': '/resources/lib/channels/fr/rtl:get_live_url',
         'label': 'RTL 2',
         'thumb': 'channels/fr/rtl2.png',
         'fanart': 'channels/fr/rtl2_fanart.jpg',
