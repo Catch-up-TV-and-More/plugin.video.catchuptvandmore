@@ -352,7 +352,7 @@ menu = {
         "order": 105,
     },
     'albitv': {
-        'route"': '/resources/lib/channels/fr/albitv:list_videos_emissions',
+        'route': '/resources/lib/channels/fr/albitv:list_videos_emissions',
         'label': 'Albi TV',
         'thumb': 'channels/fr/albitv.png',
         'fanart': 'channels/fr/albitv_fanart.jpg',
