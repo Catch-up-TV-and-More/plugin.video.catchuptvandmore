@@ -359,6 +359,14 @@ menu = {
         'enabled': True,
         'order': 106
     },
+    'dicitv': {
+        'route': '/resources/lib/channels/fr/dicitv:list_videos',
+        'label': 'DiCi TV',
+        'thumb': 'channels/fr/dicitv.png',
+        'fanart': 'channels/fr/dicitv_fanart.jpg',
+        'enabled': True,
+        'order': 107
+    },
     "equidia": {
         "route": "/resources/lib/channels/fr/equidia:list_categories",
         "label": "Equidia",
