@@ -16,10 +16,11 @@ URL_ROOT = "https://www.albi-tv.fr"
 URL_CATCHUP = URL_ROOT + "/replay"
 URL_LIVE = "https://www.creacast.com/play.php?su=albi-tv-ch1"
 
+
 @Route.register
 def list_videos_emissions(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_CATCHUP, headers={"User-Agent": web_utils.get_random_ua()})
-    data = re.compile(r'direction-container.+?name":"([^"]+)".+?:"([^"]+)".+?:"([^"]+)"', re.DOTALL|re.MULTILINE).findall(resp.text)
+    data = re.compile(r'direction-container.+?name":"([^"]+)".+?:"([^"]+)".+?:"([^"]+)"', re.DOTALL | re.MULTILINE).findall(resp.text)
 
     for content in data:
         item = Listitem()
@@ -34,11 +35,12 @@ def list_videos_emissions(plugin, item_id, **kwargs):
         item_post_treatment(item)
         yield item
 
+
 @Route.register
 def list_videos(plugin, item_id, **kwargs):
     headers = {"User-Agent": web_utils.get_random_ua()}
 
-    #Yes, it's ugly but need by the website...
+    # Yes, it's ugly but need by the website...
     params = {
         "appDefinitionIdToSiteRevision": '{"13d21c63-b5ec-5912-8397-c3a5ddb27a97":"440","14bcded7-0066-7c35-14d7-466cb3f09103":"222"}',
         "beckyExperiments": "specs.thunderbolt.responsiveAbsoluteChildrenPosition:true,specs.thunderbolt.byRefV2:true,specs.thunderbolt.DatePickerPortal:true,specs.thunderbolt.LinkBarPlaceholderImages:true,specs.thunderbolt.carmi_simple_mode:true,specs.thunderbolt.final_image_auto_encode:true,specs.thunderbolt.premiumDocumentLink:true,specs.thunderbolt.prefetchComponentsShapesInBecky:true,specs.thunderbolt.inflatePresetsWithNoDefaultItems:true,specs.thunderbolt.maskImageCSS:true,specs.thunderbolt.SearchBoxModalSuggestions:true",
@@ -70,7 +72,7 @@ def list_videos(plugin, item_id, **kwargs):
     resp = urlquick.get("https://siteassets.parastorage.com/pages/pages/thunderbolt", params=params, headers=headers).text
     appID = re.search(r'applications":\{"(.+?)"', resp).group(1)
     compID = re.findall(r'compId":"(.+?)"', resp)[int(item_id)]
-    channelId = re.findall(compID+'".+?channelId":"(.+?)"', resp)
+    channelId = re.findall(compID + '".+?channelId":"(.+?)"', resp)
 
     if len(channelId) == 1:
         channelId = channelId[0]
@@ -78,7 +80,7 @@ def list_videos(plugin, item_id, **kwargs):
         channelId = channelId[1]
 
     resp = urlquick.get(URL_ROOT + "/_api/v2/dynamicmodel", headers=headers)
-    instance = re.search(appID+'".+?instance":"(.+?)"', resp.text).group(1)
+    instance = re.search(appID + '".+?instance":"(.+?)"', resp.text).group(1)
 
     params = {
         "siteUrl": URL_ROOT,

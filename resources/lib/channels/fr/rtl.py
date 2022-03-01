@@ -30,7 +30,7 @@ def get_live_url(plugin, item_id, **kwargs):
         json_parser = json.loads(resp.text)
         live_id = json_parser['video']['dailymotionId']
     except Exception:
-    # Links seem to be stable
+        # Links seem to be stable
         if item_id == 'funradio':
             live_id = 'xxtuy6'
         elif item_id == 'rtl':
