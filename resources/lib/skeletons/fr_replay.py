@@ -109,14 +109,6 @@ menu = {
         "enabled": True,
         "order": 24,
     },
-    "rmc": {
-        "route": "/resources/lib/channels/fr/bfmtv:list_programs",
-        "label": "RMC",
-        "thumb": "channels/fr/rmc.png",
-        "fanart": "channels/fr/rmc_fanart.jpg",
-        "enabled": True,
-        "order": 26,
-    },
     "lcp": {
         "route": "/resources/lib/channels/fr/lcp:list_categories",
         "label": "LCP Assemblée Nationale",
