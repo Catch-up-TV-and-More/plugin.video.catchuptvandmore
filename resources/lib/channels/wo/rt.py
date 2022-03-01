@@ -344,12 +344,14 @@ def get_live_url(plugin, item_id, **kwargs):
     #       html gives DDoS protection by DDoS-GUARD and can't be parsed for video url
 
     if final_language == 'FR':
-        # url_live = URL_LIVE_FR
-        # resp = urlquick.get(url_live, max_age=-1)
-        # return re.compile(r'file\: \"(.*?)\"').findall(resp.text)[0]
-
-        # temp fix, using the direct url instead of url parsing
-        return 'https://rt-fra.rttv.com/live/rtfrance/playlist.m3u8'
+        url_live = URL_LIVE_FR
+        resp = urlquick.get(url_live, max_age=-1)
+        found_urls = re.compile(r'file: \"(.*?)\"').findall(resp.text)
+        if len(found_urls) > 0:
+            return found_urls[0]
+        else:
+            # temp fix, using the direct url instead of url parsing if html gives DDoS protection
+            return 'https://rt-fra.rttv.com/live/rtfrance/playlist.m3u8'
 
     elif final_language == 'AR':
         url_live = URL_LIVE_AR
