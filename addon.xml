@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta46" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta47" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -99,6 +99,7 @@
 [Website] Disable lesargonautes (PR #641) Thanks @darodi
 [BE - RTBFAuvio] Add TipikVision live (PR #661) Thanks @darodi
 [FR - AlbiTV] Add replay for AlbiTV (PR #662) Thanks Arias800
+[FR - Live] Remove a useless item in fr_live skeleton.
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

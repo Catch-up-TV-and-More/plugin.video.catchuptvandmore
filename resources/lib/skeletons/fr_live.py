@@ -193,17 +193,6 @@ menu = {
         'enabled': True,
         'order': 16
     },
-    'france-o': {
-        'resolver': '/resources/lib/channels/fr/francetv:get_live_url',
-        'label': 'France Ô',
-        'thumb': 'channels/fr/franceo.png',
-        'fanart': 'channels/fr/franceo_fanart.jpg',
-        'xmltv_id': 'C160.api.telerama.fr',
-        'm3u_group': 'TNT',
-        'm3u_order': 19,
-        'enabled': False,
-        'order': 17
-    },
     'tf1-series-films': {
         'resolver': '/resources/lib/channels/fr/mytf1:get_live_url',
         'label': 'TF1 Séries Films',
