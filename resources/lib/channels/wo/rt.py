@@ -129,7 +129,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 def list_videos_programs(plugin, item_id, next_url, page, **kwargs):
 
     resp = urlquick.get(next_url)
-    program_id_values = re.compile(r'\/program\.(.*?)\/prepare').findall(
+    program_id_values = re.compile(r'/program\.(.*?)/prepare').findall(
         resp.text)
 
     if len(program_id_values) > 0:
@@ -244,7 +244,7 @@ def list_videos_programs(plugin, item_id, next_url, page, **kwargs):
 def list_videos_documentaries(plugin, item_id, next_url, page, **kwargs):
 
     resp = urlquick.get(next_url)
-    program_id = re.compile(r'\/program\.(.*?)\/prepare').findall(resp.text)[0]
+    program_id = re.compile(r'/program\.(.*?)/prepare').findall(resp.text)[0]
 
     resp2 = urlquick.get(
         eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/program.%s/prepare/telecasts/10/%s' % (program_id, page))
@@ -282,7 +282,7 @@ def list_videos(plugin, item_id, page, **kwargs):
 
     resp = urlquick.get(
         eval('URL_ROOT_%s' % DESIRED_LANGUAGE) + '/listing/type.Videoclub.category.videos/noprepare/video-rows/10/%s' %
-        (page))
+        page)
 
     root = resp.parse("ul", attrs={"class": "media-rows js-listing__list"})
 
@@ -314,42 +314,51 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(video_url, max_age=-1)
+
+    # TODO
+    #       sometimes, doesn't work.
+    #       html gives DDoS protection by DDoS-GUARD and can't be parsed for video url
+
     if 'youtube.com/embed' in resp.text:
-        video_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(
+        video_id = re.compile(r'youtube\.com/embed/(.*?)[?\"]').findall(
             resp.text)[0]
         return resolver_proxy.get_stream_youtube(plugin, video_id,
                                                  download_mode)
 
-    final_url = re.compile(r'file\: \"(.*?)\"').findall(resp.text)
-    if download_mode:
-        return download.download_video(final_url)
+    final_url_list = re.compile(r'file: \"(.*?)\"').findall(resp.text)
+    if len(final_url_list) == 0:
+        return False
 
-    return final_url
+    if download_mode:
+        return download.download_video(final_url_list[0])
+
+    return final_url_list[0]
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', DESIRED_LANGUAGE)
 
-    if final_language == 'AR':
-        url_live = URL_LIVE_AR
-        resp = urlquick.get(url_live, max_age=-1)
-        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(resp.text)[0]
-        return resolver_proxy.get_stream_youtube(plugin, live_id, False)
+    # TODO
+    #       sometimes, live doesn't work.
+    #       html gives DDoS protection by DDoS-GUARD and can't be parsed for video url
 
     if final_language == 'FR':
-        url_live = URL_LIVE_FR
-        resp = urlquick.get(url_live, max_age=-1)
-        return re.compile(r'file\: \"(.*?)\"').findall(resp.text)[0]
+        # url_live = URL_LIVE_FR
+        # resp = urlquick.get(url_live, max_age=-1)
+        # return re.compile(r'file\: \"(.*?)\"').findall(resp.text)[0]
 
-    if final_language == 'ES':
+        # temp fix, using the direct url instead of url parsing
+        return 'https://rt-fra.rttv.com/live/rtfrance/playlist.m3u8'
+
+    elif final_language == 'AR':
+        url_live = URL_LIVE_AR
+    elif final_language == 'ES':
         url_live = URL_LIVE_ES
-        resp = urlquick.get(url_live, max_age=-1)
-        live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(resp.text)[0]
-        return resolver_proxy.get_stream_youtube(plugin, live_id, False)
+    else:
+        # Use EN by default
+        url_live = URL_LIVE_EN
 
-    # Use EN by default
-    url_live = URL_LIVE_EN
     resp = urlquick.get(url_live, max_age=-1)
-    live_id = re.compile(r'youtube\.com\/embed\/(.*?)[\?\"]').findall(resp.text)[0]
+    live_id = re.compile(r'youtube\.com/embed/(.*?)[?\"]').findall(resp.text)[0]
     return resolver_proxy.get_stream_youtube(plugin, live_id, False)
