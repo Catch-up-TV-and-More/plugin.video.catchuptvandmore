@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta48" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta49" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -101,6 +101,7 @@
 [FR - AlbiTV] Add replay for AlbiTV (PR #662) Thanks Arias800
 [FR - Live] Remove a useless item in fr_live skeleton
 [FR - Live] Rearrange the items in fr_live skeleton
+[FR - Live] Replace the locals of BFM by the more generic BFM Régions
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

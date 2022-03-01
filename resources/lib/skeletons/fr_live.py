@@ -532,41 +532,20 @@ menu = {
         'enabled': True,
         'order': 54
     },
-    'BFM Grand Lille': {
+   'BFM_régions': {
         'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
-        'label': 'BFM Lille',
-        'thumb': 'channels/fr/bfmlille.png',
-        'fanart': 'channels/fr/bfmlille_fanart.jpg',
+        'label': 'BFM Régions',
+        'thumb': 'channels/fr/bfmregions.png',
+        'fanart': 'channels/fr/bfmregions_fanart.jpeg',
         'm3u_group': 'Région',
+        'available_languages': {
+            "BFM Grand Lille": {},
+            "BFM Grand Littoral": {},
+            "BFM Lyon": {},
+            "BFM Paris": {}
+        },
         'enabled': True,
         'order': 55
-    },
-    'BFM Grand Littoral': {
-        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
-        'label': 'BFM Littoral',
-        'thumb': 'channels/fr/bfmgrandlittoral.png',
-        'fanart': 'channels/fr/bfmgrandlittoral_fanart.jpg',
-        'm3u_group': 'Région',
-        'enabled': True,
-        'order': 56
-    },
-    'BFM Lyon': {
-        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
-        'label': 'BFM Lyon',
-        'thumb': 'channels/fr/bfmlyon.png',
-        'fanart': 'channels/fr/bfmlyon_fanart.jpg',
-        'm3u_group': 'Région',
-        'enabled': True,
-        'order': 57
-    },
-    'BFM Paris': {
-        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
-        'label': 'BFM Paris',
-        'thumb': 'channels/fr/bfmparis.png',
-        'fanart': 'channels/fr/bfmparis_fanart.jpg',
-        'm3u_group': 'Région',
-        'enabled': True,
-        'order': 59
     },
     'albitv': {
         'resolver': '/resources/lib/channels/fr/albitv:get_live_url',

@@ -342,6 +342,8 @@ def playpodcast(plugin, path, title, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+    if item_id == 'BFM_régions' :
+        item_id = kwargs.get('language', Script.setting['BFM_Régions.language'])
     headers = {
         'User-Agent': USER_AGENT,
         'Content-type': 'application/json',

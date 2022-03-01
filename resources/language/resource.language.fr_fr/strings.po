@@ -362,6 +362,10 @@ msgctxt "#30170"
 msgid "CBC: Choose region"
 msgstr "CBC : Choix de la région"
 
+msgctxt "#30171"
+msgid "BFM Régions: Choix de la région"
+msgstr ""
+
 
 # Download (from 30200 to 30239)
 
