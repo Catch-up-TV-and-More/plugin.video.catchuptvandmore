@@ -368,8 +368,8 @@ msgid "CBC: Choose region"
 msgstr "CBC : Choix de la région"
 
 msgctxt "#30171"
-msgid "BFM Régions: Choix de la région"
-msgstr ""
+msgid "BFM Régions: Choose region"
+msgstr "BFM Régions: Choix de la région"
 
 msgctxt "#30172"
 msgid "TV5 monde plus: Choose country"
