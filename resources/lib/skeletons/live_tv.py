@@ -160,10 +160,10 @@ menu = {
         'order': 19
     },
     'lt_live': {
-    'route': '/resources/lib/main:generic_menu',
-    'label': 30069,
-    'thumb': 'channels/lt.png',
-    'enabled': True,
-    'order': 20
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30069,
+        'thumb': 'channels/lt.png',
+        'enabled': True,
+        'order': 20
     }
 }
