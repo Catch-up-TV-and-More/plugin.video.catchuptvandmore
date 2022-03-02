@@ -26,22 +26,18 @@ FAKE_DEVICE_ID = "69702f98-260a-ff2d-375c-ffffbf16f78c"
 
 URL_TV5MONDEPLUS_ROOT = 'https://api.tv5mondeplus.com'
 
-URL_TV5MONDEPLUS_ROOT_API = URL_TV5MONDEPLUS_ROOT \
-                            + '/v2/whitelabel/customer/TV5MONDE/businessunit/TV5MONDEplus/config/sandwich' \
-                              '?onlyPublished=true&allowedCountry=%s'
+API = URL_TV5MONDEPLUS_ROOT + '/v2/whitelabel/customer/TV5MONDE/businessunit/TV5MONDEplus/config/sandwich'
 
-URL_TV5MONDEPLUS_COMPONENT_API = URL_TV5MONDEPLUS_ROOT \
-                                 + '/v2/whitelabel/customer/TV5MONDE/businessunit/TV5MONDEplus/config/sandwich' \
-                                   '/component/%s?client=json&onlyPublished=true&allowedCountry=%s'
+URL_TV5MONDEPLUS_ROOT_API = API + '?onlyPublished=true&allowedCountry=%s'
+
+URL_TV5MONDEPLUS_COMPONENT_API = API + '/component/%s?client=json&onlyPublished=true&allowedCountry=%s'
 
 URL_VIDEOS_DATA = 'https://www.tv5mondeplus.com/api/graphql/v1/'
 
-URL_STREAM_DATA = URL_TV5MONDEPLUS_ROOT \
-                  + '/v2/customer/TV5MONDE/businessunit/TV5MONDEplus/entitlement/%s/play'
+URL_STREAM_DATA = URL_TV5MONDEPLUS_ROOT + '/v2/customer/TV5MONDE/businessunit/TV5MONDEplus/entitlement/%s/play'
 # Video_Id
 
-URL_TV5MONDEPLUS_AUTH_ANONYMOUS_API = URL_TV5MONDEPLUS_ROOT \
-                                      + '/v1/customer/TV5MONDE/businessunit/TV5MONDEplus/auth/anonymous'
+URL_TV5MONDEPLUS_AUTH_ANONYMOUS_API = URL_TV5MONDEPLUS_ROOT + '/v1/customer/TV5MONDE/businessunit/TV5MONDEplus/auth/anonymous'
 
 # TODO compute hashes instead?
 OPERATION_HASHES_WEB = {
