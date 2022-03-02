@@ -20,13 +20,13 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = "https://www.lrt.lt"
 
-URL_API = URL_ROOT + "/servisai/stream_url/live/get_live_url.php?channel=LTV1"
+URL_API = URL_ROOT + "/servisai/stream_url/live/get_live_url.php?channel=%s"
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(URL_API, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1).json()
+    resp = urlquick.get(URL_API % item_id, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1).json()
 
     is_helper = inputstreamhelper.Helper("hls")
     if not is_helper.check_inputstream():

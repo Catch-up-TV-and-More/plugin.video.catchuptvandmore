@@ -17,12 +17,20 @@ from __future__ import unicode_literals
 root = 'live_tv'
 
 menu = {
-    'lrt': {
+    'LTV1': {
         'resolver': '/resources/lib/channels/lt/lrt:get_live_url',
         'label': 'LRT Televizija',
         'thumb': 'channels/sg/lrt.png',
         'fanart': 'channels/sg/lrt_fanart.jpg',
         'enabled': True,
         'order': 1
+    },
+    'LTV2': {
+    'resolver': '/resources/lib/channels/lt/lrt:get_live_url',
+    'label': 'LRT PLIUS',
+    'thumb': 'channels/sg/lrtplius.png',
+    'fanart': 'channels/sg/lrtplius_fanart.jpg',
+    'enabled': True,
+    'order': 1
     },
 }
