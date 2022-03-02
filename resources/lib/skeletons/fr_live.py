@@ -539,10 +539,14 @@ menu = {
         'fanart': 'channels/fr/bfmregions_fanart.jpeg',
         'm3u_group': 'Région',
         'available_languages': {
+            "BFM DICI HAUTE-PROVENCE": {},
             "BFM Grand Lille": {},
             "BFM Grand Littoral": {},
             "BFM Lyon": {},
-            "BFM Paris": {}
+            "BFM MARSEILLE PROVENCE": {},
+            "BFM NICE COTE D'AZUR": {},
+            "BFM Paris": {},
+            "BFM TOULON VAR": {},
         },
         'enabled': True,
         'order': 55
