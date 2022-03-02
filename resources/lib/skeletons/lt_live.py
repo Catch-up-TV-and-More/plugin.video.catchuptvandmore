@@ -20,17 +20,25 @@ menu = {
     'LTV1': {
         'resolver': '/resources/lib/channels/lt/lrt:get_live_url',
         'label': 'LRT Televizija',
-        'thumb': 'channels/sg/lrt.png',
-        'fanart': 'channels/sg/lrt_fanart.jpg',
+        'thumb': 'channels/lt/lrt.png',
+        'fanart': 'channels/lt/lrt_fanart.jpg',
         'enabled': True,
         'order': 1
     },
     'LTV2': {
-    'resolver': '/resources/lib/channels/lt/lrt:get_live_url',
-    'label': 'LRT PLIUS',
-    'thumb': 'channels/sg/lrtplius.png',
-    'fanart': 'channels/sg/lrtplius_fanart.jpg',
-    'enabled': True,
-    'order': 1
+        'resolver': '/resources/lib/channels/lt/lrt:get_live_url',
+        'label': 'LRT PLIUS',
+        'thumb': 'channels/lt/lrtplius.png',
+        'fanart': 'channels/lt/lrtplius_fanart.jpg',
+        'enabled': True,
+        'order': 2
+    },
+    'WORLD': {
+        'resolver': '/resources/lib/channels/lt/lrt:get_live_url',
+        'label': 'LRT LITUANICA',
+        'thumb': 'channels/lt/lrtlituanica.png',
+        'fanart': 'channels/lt/lrtlituanica_fanart.jpg',
+        'enabled': True,
+        'order': 3
     },
 }
