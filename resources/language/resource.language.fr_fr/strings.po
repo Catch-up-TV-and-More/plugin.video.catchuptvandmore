@@ -197,6 +197,11 @@ msgctxt "#30068"
 msgid "Singapore"
 msgstr "Singapour"
 
+msgctxt "#30069"
+msgid "Lituania"
+msgstr "Lituanie"
+
+
 # Channels (from 30080 to 30129)
 
 msgctxt "#30080"
