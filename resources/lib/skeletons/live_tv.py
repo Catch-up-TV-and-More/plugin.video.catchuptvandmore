@@ -157,7 +157,7 @@ menu = {
         'label': 30068,
         'thumb': 'channels/sg.png',
         'enabled': True,
-        'order': 18
+        'order': 19
     },
     'lt_live': {
     'route': '/resources/lib/main:generic_menu',
