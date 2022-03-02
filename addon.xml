@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta62" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.37~beta63" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -116,6 +116,7 @@ addon.xml Change RMCBFMREPLAY into RMCBMFPLAY
 [LT - LIVE] Fix the path for LRT Televizija pictures
 [SG] Fix live skeleton
 [LT] Make Flake8 happy
+[WO - TV5mondeplus] enable TV5mondeplus (PR #673) Thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
