@@ -20,8 +20,8 @@ menu = {
     'LTV1': {
         'resolver': '/resources/lib/channels/lt/lrt:get_live_url',
         'label': 'LRT Televizija',
-        'thumb': 'channels/lt/lrt.png',
-        'fanart': 'channels/lt/lrt_fanart.jpg',
+        'thumb': 'channels/lt/lrttelevizija.png',
+        'fanart': 'channels/lt/lrttelevizija_fanart.jpg',
         'enabled': True,
         'order': 1
     },
