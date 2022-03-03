@@ -19,7 +19,7 @@ root = 'live_tv'
 menu = {
     'LTV1': {
         'resolver': '/resources/lib/channels/lt/lrt:get_live_url',
-        'label': 'LRT Televizija',
+        'label': 'LRT TELEVIZIJA',
         'thumb': 'channels/lt/lrttelevizija.png',
         'fanart': 'channels/lt/lrttelevizija_fanart.jpg',
         'enabled': True,
