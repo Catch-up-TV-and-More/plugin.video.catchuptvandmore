@@ -120,6 +120,7 @@ addon.xml Change RMCBFMREPLAY into RMCBMFPLAY
 [FR - BFM REGIONS] Fix a translation Thanks @darodi
 [WO - TV5MONDEPLUS] Fix Flake8 errors
 [LT] Capitalize LRT TELEVIZIJA in skeleton
+[Project] Add joaopa00 as releaser
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

@@ -9,7 +9,7 @@ jobs:
   release:
     name: Trigger release
     runs-on: ubuntu-latest
-    if: github.event.comment.body == 'Trigger release' && (github.actor == 'sy6sy2' || github.actor == 'wwark')
+    if: github.event.comment.body == 'Trigger release' && (github.actor == 'sy6sy2' || github.actor == 'wwark' || github.actor == 'joaopa00')
     env: 
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
