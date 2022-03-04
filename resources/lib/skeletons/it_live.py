@@ -261,5 +261,13 @@ menu = {
         'fanart': 'channels/it/tgcom_fanart.jpg',
         'enabled': True,
         'order': 31
+    },
+    'radiofreccia': {
+        'resolver': '/resources/lib/channels/it/radiofreccia:get_live_url',
+        'label': 'Radiofreccia',
+        'thumb': 'channels/it/radiofreccia.png',
+        'fanart': 'channels/it/radiofreccia_fanart.png',
+        'enabled': True,
+        'order': 32
     }
 }
