@@ -985,5 +985,28 @@ menu = {
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
         'order': 139
-    }
+    },
+    'lequipesup': {
+        'resolver': '/resources/lib/channels/fr/lequipe:get_live_url',
+        'label': 'L\'Equipe',
+        'thumb': 'channels/fr/lequipe.png',
+        'fanart': 'channels/fr/lequipe_fanart.png',
+        'm3u_group': 'Région',
+        'available_languages': {
+            "Direct 4": {},
+            "Direct 5": {},
+            "Direct 6": {},
+            "Direct 7": {},
+            "Direct 8": {},
+            "Direct 9": {},
+            "Direct 10": {},
+            "Direct 11": {},
+            "Direct 12": {},
+            "Direct 13": {},
+            "Direct 14": {},
+            "Direct 15": {},
+        },
+        'enabled': True,
+        'order': 140
+    },
 }
