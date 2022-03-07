@@ -749,15 +749,6 @@ menu = {
         'enabled': True,
         'order': 92
     },
-    'sportenfrance': {
-        'resolver': '/resources/lib/channels/fr/sportenfrance:get_live_url',
-        'label': 'Sport en France',
-        'thumb': 'channels/fr/sportenfrance.png',
-        'fanart': 'channels/fr/sportenfrance_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 100
-    },
     'luckyjack': {
         'resolver': '/resources/lib/channels/fr/abweb:get_live_url',
         'label': 'Lucky Jack',
@@ -877,61 +868,14 @@ menu = {
         'enabled': True,
         'order': 127
     },
-    'equidia-live2': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia',
-        'thumb': 'channels/fr/equidia.png',
-        'fanart': 'channels/fr/equidia_fanart.jpg',
-        'xmltv_id': 'C64.api.telerama.fr',
+    'sportenfrance': {
+        'resolver': '/resources/lib/channels/fr/sportenfrance:get_live_url',
+        'label': 'Sport en France',
+        'thumb': 'channels/fr/sportenfrance.png',
+        'fanart': 'channels/fr/sportenfrance_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
         'order': 128
-    },
-    'equidia-racingtrot': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing Trot',
-        'thumb': 'channels/fr/equidiaracingtrot.png',
-        'fanart': 'channels/fr/equidiaracingtrot_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 129
-    },
-    'equidia-racingmag': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing Mag',
-        'thumb': 'channels/fr/equidiaracingmag.png',
-        'fanart': 'channels/fr/equidiaracingmag_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 130
-    },
-    'equidia-racinggalop': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing Galop',
-        'thumb': 'channels/fr/equidiaracinggalop.png',
-        'fanart': 'channels/fr/equidiaracinggalop_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 131
-    },
-    'equidia-racing': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing',
-        'thumb': 'channels/fr/equidiar.png',
-        'fanart': 'channels/fr/equidiar_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'available_languages': {
-            "1": {},
-            "2": {},
-            "3": {},
-            "4": {},
-            "5": {},
-            "6": {},
-            "7": {},
-            "8": {},
-        },
-        'enabled': True,
-        'order': 132
     },
     'lequipesup': {
         'resolver': '/resources/lib/channels/fr/lequipe:get_live_url',
@@ -954,6 +898,62 @@ menu = {
             "Direct 15": {},
         },
         'enabled': True,
-        'order': 140
+        'order': 129
+    },
+    'equidia-live2': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia',
+        'thumb': 'channels/fr/equidia.png',
+        'fanart': 'channels/fr/equidia_fanart.jpg',
+        'xmltv_id': 'C64.api.telerama.fr',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 130
+    },
+    'equidia-racingtrot': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing Trot',
+        'thumb': 'channels/fr/equidiaracingtrot.png',
+        'fanart': 'channels/fr/equidiaracingtrot_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 131
+    },
+    'equidia-racingmag': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing Mag',
+        'thumb': 'channels/fr/equidiaracingmag.png',
+        'fanart': 'channels/fr/equidiaracingmag_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 132
+    },
+    'equidia-racinggalop': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing Galop',
+        'thumb': 'channels/fr/equidiaracinggalop.png',
+        'fanart': 'channels/fr/equidiaracinggalop_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 133
+    },
+    'equidia-racing': {
+        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
+        'label': 'Equidia Racing',
+        'thumb': 'channels/fr/equidiar.png',
+        'fanart': 'channels/fr/equidiar_fanart.jpg',
+        'm3u_group': 'Satellite/FAI',
+        'available_languages': {
+            "1": {},
+            "2": {},
+            "3": {},
+            "4": {},
+            "5": {},
+            "6": {},
+            "7": {},
+            "8": {},
+        },
+        'enabled': True,
+        'order': 134
     },
 }
