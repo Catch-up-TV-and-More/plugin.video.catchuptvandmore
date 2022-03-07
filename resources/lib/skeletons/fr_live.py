@@ -914,77 +914,24 @@ menu = {
         'enabled': True,
         'order': 131
     },
-    'equidia-racing1': {
+    'equidia-racing': {
         'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing 1',
-        'thumb': 'channels/fr/equidiar1.png',
-        'fanart': 'channels/fr/equidiar1_fanart.jpg',
+        'label': 'Equidia Racing',
+        'thumb': 'channels/fr/equidiar.png',
+        'fanart': 'channels/fr/equidiar_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
+        'available_languages': {
+            "1": {},
+            "2": {},
+            "3": {},
+            "4": {},
+            "5": {},
+            "6": {},
+            "7": {},
+            "8": {},
+        },
         'enabled': True,
         'order': 132
-    },
-    'equidia-racing2': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing 2',
-        'thumb': 'channels/fr/equidiar2.png',
-        'fanart': 'channels/fr/equidiar2_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 133
-    },
-    'equidia-racing3': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing 3',
-        'thumb': 'channels/fr/equidiar3.png',
-        'fanart': 'channels/fr/equidiar3_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 134
-    },
-    'equidia-racing4': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing 4',
-        'thumb': 'channels/fr/equidiar4.png',
-        'fanart': 'channels/fr/eequidiar4_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 135
-    },
-    'equidia-racing5': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing 5',
-        'thumb': 'channels/fr/equidiar5.png',
-        'fanart': 'channels/fr/equidiar5_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 136
-    },
-    'equidia-racing6': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing 6',
-        'thumb': 'channels/fr/equidiar6.png',
-        'fanart': 'channels/fr/equidiar6_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 137
-    },
-    'equidia-racing7': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing 7',
-        'thumb': 'channels/fr/equidiar7.png',
-        'fanart': 'channels/fr/equidiar7_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 138
-    },
-    'equidia-racing8': {
-        'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
-        'label': 'Equidia Racing 8',
-        'thumb': 'channels/fr/equidiar8.png',
-        'fanart': 'channels/fr/equidiar8_fanart.jpg',
-        'm3u_group': 'Satellite/FAI',
-        'enabled': True,
-        'order': 139
     },
     'lequipesup': {
         'resolver': '/resources/lib/channels/fr/lequipe:get_live_url',

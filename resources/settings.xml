@@ -64,6 +64,7 @@
                 <setting label="30174" type="labelenum" id="lequipesup.language" values="Direct 4|Direct 5|Direct 6l|Direct 6|Direct 7|Direct 8|
                                                                                         Direct 9|Direct 10|Direct 11|Direct 12|Direct 13|Direct 14|
                                                                                         Direct 15" default="Direct 4"/>
+                <setting label="30175" type="labelenum" id="equidia-racing.language" values="1|2|3|4|5|6|7|8" default="1"/>
 
             <!-- Spain channels -->
             <setting label="30089" type="lsep" subsetting="true" visible="eq(1,true)"/>
