@@ -49,6 +49,7 @@
 [FR - RMCBFMPLAY] Make sure to not use item_id again
 [FR] Rearrange skeleton
 [IT - RADIOFRECCIA] Enable multiple resolutions
+[FR - RMCBFMPLAY] Avoid a problem of conversion UTF-8 into ASCII (issue #678)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

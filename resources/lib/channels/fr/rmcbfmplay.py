@@ -359,8 +359,8 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(url, params=params, headers=headers).json()
 
-    if item_id == 'BFM_régions':
-        temp_id = kwargs.get('language', Script.setting['BFM_Régions.language'])
+    if item_id == 'BFM_regions':
+        temp_id = kwargs.get('language', Script.setting['BFM_regions.language'])
     else:
         temp_id = item_id
 

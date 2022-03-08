@@ -532,7 +532,7 @@ menu = {
         'enabled': True,
         'order': 54
     },
-    'BFM_régions': {
+    'BFM_regions': {
         'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'BFM Régions',
         'thumb': 'channels/fr/bfmregions.png',
