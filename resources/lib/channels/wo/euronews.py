@@ -17,7 +17,7 @@ from resources.lib import web_utils
 # TODO
 # Replay add emissions
 
-URL_LIVE_API = 'http://%s.euronews.com/api/watchlive.json'
+URL_LIVE_API = 'http://%s.euronews.com/api/geoblocking_live.json'
 # Language
 
 DESIRED_LANGUAGE = Script.setting['euronews.language']
