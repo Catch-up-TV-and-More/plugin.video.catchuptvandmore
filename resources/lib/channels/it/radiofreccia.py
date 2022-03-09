@@ -44,7 +44,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     is_helper = inputstreamhelper.Helper("mpd")
     if not is_helper.check_inputstream():
-        return False
+        return json_media_object['mediaInfo']['uri']
 
     item = Listitem()
     item.path = json_media_object['mediaInfo']['descriptor'][1]["uri"]
