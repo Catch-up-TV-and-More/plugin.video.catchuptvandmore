@@ -14,7 +14,7 @@ from codequick import Listitem, Resolver
 import sys
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
                                       get_selected_item_info,
-                                      get_selected_item_label)
+                                      get_selected_item_label, get_kodi_version)
 
 
 if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
@@ -42,13 +42,20 @@ def get_live_url(plugin, item_id, **kwargs):
     media_object = html_parser.unescape(media_objects[0])
     json_media_object = json.loads(media_object)
 
+    url = json_media_object['mediaInfo']['uri']
+    if get_kodi_version() < 18:
+        return url
+
     is_helper = inputstreamhelper.Helper("mpd")
     if not is_helper.check_inputstream():
-        return json_media_object['mediaInfo']['uri']
+        return url
 
     item = Listitem()
     item.path = json_media_object['mediaInfo']['descriptor'][1]["uri"]
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
     item.property["inputstream.adaptive.manifest_type"] = "mpd"
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
 
     return item
