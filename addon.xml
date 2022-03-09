@@ -12,7 +12,7 @@
     <import addon="script.module.tzlocal" version="2.0.0"/>
     <import addon="script.module.future" version="0.17.1"/>
     <import addon="script.module.kodi-six" version="0.0.4"/>
-    <import addon="resource.images.catchuptvandmore" version="1.0.0"/>
+    <import addon="resource.images.catchuptvandmore" version="1.0.13"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -50,6 +50,7 @@
 [FR] Rearrange skeleton
 [IT - RADIOFRECCIA] Enable multiple resolutions
 [FR - RMCBFMPLAY] Avoid a problem of conversion UTF-8 into ASCII (issue #678)
+[Project] Update the requested version of resource.images.catchuptvandmore (issue #680)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
