@@ -549,8 +549,6 @@ def download_xmltv_file(country_id, day_delta=0):
         # Check if we have the last version of the file
         current_file_md5 = compute_md5(xmltv_fp)
         remote_file_md5 = get_remote_xmltv_md5(country_id, day_delta=day_delta)
-        print(current_file_md5)
-        print(remote_file_md5)
         if current_file_md5 != remote_file_md5:
             Script.log("A new version of xmltv file of {} for today exists, let's download it".format(country_id))
             need_to_downlod_xmltv_file = True

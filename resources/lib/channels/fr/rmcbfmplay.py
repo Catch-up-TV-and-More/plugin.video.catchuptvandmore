@@ -147,7 +147,8 @@ def menu(plugin, path, **kwargs):
     elif "tiles" in resp:
         key = "tiles"
     else:
-        print("RESP", resp)
+        # print("RESP", resp)
+        pass
 
     for elt in resp[key]:
         types = elt.get('contentType', "")
@@ -171,7 +172,7 @@ def menu(plugin, path, **kwargs):
             elif "action" in elt:
                 key1 = "action"
             else:
-                print("ELT1", elt)
+                # print("ELT1", elt)
                 key1 = None
 
             if key1:
