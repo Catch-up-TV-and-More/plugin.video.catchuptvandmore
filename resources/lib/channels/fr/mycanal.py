@@ -13,6 +13,8 @@ import random
 import math
 import inputstreamhelper
 import urlquick
+import base64
+import urllib3
 
 try:  # Python 3
     from urllib.parse import urlencode
@@ -28,10 +30,6 @@ from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
-
-# TODO
-# Wait Kodi 18 to use live with DRM
-
 # URL :
 URL_ROOT_SITE = 'https://www.mycanal.fr'
 # Channel
@@ -45,22 +43,6 @@ URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken
 URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
-
-# TODO
-URL_LICENCE_DRM = '[license-server url]|[Header]|[Post-Data]|[Response]'
-# com.widevine.alpha
-# license_key must be a string template with 4 | separated fields:
-# [license-server url]|[Header]|[Post-Data]|[Response] in which:
-# * [license-server url] allows B{SSM} placeholder
-# * [Post-Data] allows [b/B/R]{SSM}
-# * [b/B/R]{SID} placeholders to transport the widevine challenge
-#   and if required the DRM SessionId in base64NonURLencoded, Base64URLencoded or Raw format.
-# * [Response] can be:
-#   a.) empty or R to specify that the response payload of the license request is binary format
-#   b.) B if the response payload is base64 encoded
-#   or c.) J[licensetoken] if the license key data is located in a JSON struct returned in the response payload.
-#
-# inputstream.adaptive searches for the key [licensetoken] and handles the value as base64 encoded data.
 
 # Dailymotion Id get from these pages below
 # - http://www.dailymotion.com/cstar
@@ -184,8 +166,7 @@ def list_contents(plugin, item_id, key_value, **kwargs):
 @Route.register
 def list_programs(plugin, item_id, next_url, **kwargs):
 
-    resp = urlquick.get(next_url)
-    json_parser = resp.json()
+    json_parser = urlquick.get(next_url).json()
 
     if 'strates' in json_parser:
 
@@ -312,8 +293,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 @Route.register
 def list_sub_programs(plugin, item_id, next_url, strate_title, **kwargs):
 
-    resp = urlquick.get(next_url)
-    json_parser = resp.json()
+    json_parser = urlquick.get(next_url).json()
 
     if 'strates' in json_parser:
 
@@ -347,8 +327,7 @@ def list_sub_programs(plugin, item_id, next_url, strate_title, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, next_url, **kwargs):
 
-    resp = urlquick.get(next_url)
-    json_parser = resp.json()
+    json_parser = urlquick.get(next_url).json()
 
     program_title = json_parser['currentPage']['displayName']
 
@@ -412,6 +391,7 @@ def get_video_url(plugin,
         sessionId = str(ts + 3000) + '-' + rnd()
         ##############################################################################
 
+
         # Get Portail Id
         session_requests = requests.session()
         resp_app_config = session_requests.get(URL_REPLAY % item_id)
@@ -420,11 +400,9 @@ def get_video_url(plugin,
         json_app_config_parser = json.loads(json_app_config + ('}'))
         portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
 
-        headers = {
-            'User-Agent': web_utils.get_random_ua(),
-            'Origin': 'https://www.canalplus.com',
-            'Referer': 'https://www.canalplus.com/',
-        }
+        headers = {"User-Agent": web_utils.get_random_ua(),
+            "Origin": "https://www.canalplus.com",
+            "Referer": "https://www.canalplus.com/",}
 
         # Get PassToken
         payload = {
@@ -435,8 +413,7 @@ def get_video_url(plugin,
             'sessionId': sessionId,
         }
 
-        resp_token_mycanal = session_requests.post(URL_TOKEN, data=payload, headers=headers)
-        json_token_parser = resp_token_mycanal.json()
+        json_token_parser = session_requests.post(URL_TOKEN, data=payload, headers=headers).json()
         pass_token = json_token_parser["response"]["passToken"]
         device_id = json_token_parser["response"]["userData"]["deviceId"].split(':')[0]
 
@@ -452,77 +429,40 @@ def get_video_url(plugin,
             'XX-SERVICE': 'mycanal',
             'User-Agent': web_utils.get_random_ua(),
         }
-        value_datas_json = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers)
-        value_datas_jsonparser = value_datas_json.json()
 
-        comMode_value = ''
-        contentId_value = ''
-        distMode_value = ''
-        distTechnology_value = ''
-        drmType_value = ''
-        functionalType_value = ''
-        hash_value = ''
-        idKey_value = ''
-        quality_value = ''
+        #Fix an ssl issue on some device.
+        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+        try:
+            requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+        except AttributeError:
+            # no pyopenssl support used / needed / available
+            pass
+    
+        value_datas_jsonparser = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers).json()
 
         if 'available' not in value_datas_jsonparser:
             # Some videos required an account
             # Get error
             return False
 
-        is_video_drm = True
         for stream_datas in value_datas_jsonparser["available"]:
-            if 'stream' not in stream_datas['distTechnology']:
-                continue
+            if stream_datas['drmType'] == "DRM MKPC Widevine DASH" or stream_datas['drmType'] == "Non protégé":
+                payload = {
+                    'comMode': stream_datas['comMode'],
+                    'contentId': stream_datas['contentId'],
+                    'distMode': stream_datas['distMode'],
+                    'distTechnology': stream_datas['distTechnology'],
+                    'drmType': stream_datas['drmType'],
+                    'functionalType': stream_datas['functionalType'],
+                    'hash': stream_datas['hash'],
+                    'idKey': stream_datas['idKey'],
+                    'quality': stream_datas['quality']}
+                break
 
-            if 'DRM' in stream_datas['drmType']:
-                continue
-
-            comMode_value = stream_datas['comMode']
-            contentId_value = stream_datas['contentId']
-            distMode_value = stream_datas['distMode']
-            distTechnology_value = stream_datas['distTechnology']
-            drmType_value = stream_datas['drmType']
-            functionalType_value = stream_datas['functionalType']
-            hash_value = stream_datas['hash']
-            idKey_value = stream_datas['idKey']
-            quality_value = stream_datas['quality']
-            is_video_drm = False
-
-        if is_video_drm:
-            for stream_datas in value_datas_jsonparser["available"]:
-                if 'stream' not in stream_datas['distTechnology']:
-                    continue
-
-                if 'Widevine' not in stream_datas['drmType']:
-                    continue
-
-                comMode_value = stream_datas['comMode']
-                contentId_value = stream_datas['contentId']
-                distMode_value = stream_datas['distMode']
-                distTechnology_value = stream_datas['distTechnology']
-                drmType_value = stream_datas['drmType']
-                functionalType_value = stream_datas['functionalType']
-                hash_value = stream_datas['hash']
-                idKey_value = stream_datas['idKey']
-                quality_value = stream_datas['quality']
-
-        payload = {
-            'comMode': comMode_value,
-            'contentId': contentId_value,
-            'distMode': distMode_value,
-            'distTechnology': distTechnology_value,
-            'drmType': drmType_value,
-            'functionalType': functionalType_value,
-            'hash': hash_value,
-            'idKey': idKey_value,
-            'quality': quality_value,
-        }
         payload = json.dumps(payload)
-        headers = {
-            'Accept': 'application/json, text/plain, */*',
-            'Authorization': 'PASS Token="%s"' % pass_token,
-            'Content-Type': 'application/json; charset=UTF-8',
+        headers = {'Accept':'application/json, text/plain, */*',
+            'Authorization':'PASS Token="%s"' % pass_token,
+            'Content-Type':'application/json; charset=UTF-8',
             'XX-DEVICE': 'pc %s' % device_id,
             'XX-DOMAIN': 'cpfra',
             'XX-OPERATOR': 'pc',
@@ -530,42 +470,42 @@ def get_video_url(plugin,
             'XX-SERVICE': 'mycanal',
             'User-Agent': web_utils.get_random_ua(),
         }
-        resp_stream_datas = session_requests.put(
-            URL_STREAM_DATAS, data=payload, headers=headers)
-        jsonparser_stream_datas = resp_stream_datas.json()
 
-        resp_real_stream_datas = session_requests.get(
-            jsonparser_stream_datas['@medias'], headers=headers)
-        jsonparser_real_stream_datas = resp_real_stream_datas.json()
+        jsonparser_stream_datas = session_requests.put(
+            URL_STREAM_DATAS, data=payload, headers=headers).json()
 
+        jsonparser_real_stream_datas = session_requests.get(
+            jsonparser_stream_datas['@medias'], headers=headers).json()
+
+        certificate_data = base64.b64encode(requests.get('https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode('utf-8')
+        
         subtitle_url = ''
         item = Listitem()
-        if 'VM' in jsonparser_real_stream_datas:
-            item.path = jsonparser_real_stream_datas["VM"][0]["media"][0]["distribURL"] + '/manifest'
-            if plugin.setting.get_boolean('active_subtitle'):
-                for asset in jsonparser_real_stream_datas["VM"][0]["files"]:
-                    if 'vtt' in asset["mimeType"]:
-                        subtitle_url = asset['distribURL']
-        else:
-            item.path = jsonparser_real_stream_datas["VF"][0]["media"][0]["distribURL"] + '/manifest'
-            if plugin.setting.get_boolean('active_subtitle'):
-                for asset in jsonparser_real_stream_datas["VF"][0]["files"]:
-                    if 'vtt' in asset["mimeType"]:
-                        subtitle_url = asset['distribURL']
+        Type = "VM" if 'VM' in jsonparser_real_stream_datas else "VF"
+
+        item.path = jsonparser_real_stream_datas[Type][0]["media"][0]["distribURL"]
+        if plugin.setting.get_boolean('active_subtitle'):
+            for asset in jsonparser_real_stream_datas[Type][0]["files"]:
+                if 'vtt' in asset["mimeType"]:
+                    subtitle_url = asset['distribURL']
+
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
         item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-        item.property['inputstream.adaptive.manifest_type'] = 'ism'
+
         if 'http' in subtitle_url:
             item.subtitles.append(subtitle_url)
-        if 'Widevine' in drmType_value:
+
+        if ".ism" in item.path:
+            item.property['inputstream.adaptive.manifest_type'] = 'ism'
+            item.path = item.path + "/manifest"
+        elif ".mpd" in item.path:
             # DRM Message (TODO to find a way to get licence key)
             Script.notify("INFO", plugin.localize(30702), Script.NOTIFY_INFO)
             return False
+            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
             item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            item.property[
-                'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
             headers2 = {
                 'Accept': 'application/json, text/plain, */*',
                 'Authorization': 'PASS Token="%s"' % pass_token,
@@ -579,16 +519,14 @@ def get_video_url(plugin,
                 'XX-SERVICE': 'mycanal',
             }
             # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
-            item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmConfig=mkpl::false' + '|%s|R{SSM}|' % urlencode(headers2)
+            item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmConfig=mkpl::false' + '|%s|b{SSM}|' % urlencode(headers2)
+            item.property['inputstream.adaptive.server_certificate'] = certificate_data
         return item
 
-    resp = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
-    json_parser = resp.json()
-
+    json_parser = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1).json()
     return json_parser["detail"]["informations"]["playsets"]["available"][0]["videoURL"]
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION_ID[item_id], False)
