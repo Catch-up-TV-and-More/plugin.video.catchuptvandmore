@@ -5,18 +5,18 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-import xbmcaddon
+
 import base64
+import json
+import re
+import urllib.parse
+from builtins import str
+
 import inputstreamhelper
 import urlquick
-import re
-import json
-import urllib.parse
-
-from builtins import str
+import xbmcaddon
 from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
-
 from resources.lib import download, web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
@@ -24,6 +24,11 @@ from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
                                       get_selected_item_info,
                                       get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
+
+API_BACKEND = "https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/"
+API_CDN_ROOT = "https://ws-cdn.tv.sfr.net/gaia-core/rest/api/"
+
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0"
 
 
 @Route.register
@@ -69,14 +74,6 @@ def get_account_id(token):
     return account_id
 
 
-API_BACKEND = "https://ws-backendtv.rmcbfmplay.com/gaia-core/rest/api/"
-API_CDN_ROOT = "https://ws-cdn.tv.sfr.net/gaia-core/rest/api/"
-
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0"
-token = get_token()
-account_id = get_account_id(token)
-
-
 @Route.register
 def rmcbfmplay_root(plugin, path="", **kwargs):
     """Root menu of the app."""
@@ -88,6 +85,9 @@ def rmcbfmplay_root(plugin, path="", **kwargs):
         url = API_BACKEND + "web/v1/menu/RefMenuItem::rmcgo_home_" + path.replace(' ', '') + "/structure"
     else:
         url = API_BACKEND + "web/v1/menu/RefMenuItem::rmcgo_home/structure"
+
+    token = get_token()
+    account_id = get_account_id(token)
 
     params = {
         "app": "bfmrmc",
@@ -113,6 +113,8 @@ def menu(plugin, path, **kwargs):
 
     if "/spot/" in path or "/tile/" in path:
         url = API_BACKEND + path
+        token = get_token()
+        account_id = get_account_id(token)
         params = {
             "app": "bfmrmc",
             "device": "browser",
@@ -237,6 +239,9 @@ def video(plugin, path, title, **kwargs):
 
     url = API_CDN_ROOT + path
 
+    token = get_token()
+    account_id = get_account_id(token)
+
     params = {
         "app": "bfmrmc",
         "device": "browser",
@@ -350,6 +355,7 @@ def get_live_url(plugin, item_id, **kwargs):
     }
 
     url = "https://ws-backendtv.rmcbfmplay.com/sekai-service-plan/public/v2/service-list"
+    token = get_token()
 
     params = {
         "app": "bfmrmc",
