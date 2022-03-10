@@ -63,12 +63,10 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_programs(plugin, item_id, **kwargs):
-
     resp = urlquick.get(URL_EMISSIONS)
     root = resp.parse()
 
     for program_datas in root.iterfind(".//div[@class='col-sm-4']"):
-
         program_title = program_datas.find('.//img').get('alt')
         program_image = program_datas.find('.//img').get('src')
         program_url = URL_ROOT + '/' + program_datas.find(".//a").get("href")
@@ -86,7 +84,6 @@ def list_programs(plugin, item_id, **kwargs):
 
 @Route.register
 def list_videos(plugin, item_id, next_url, page, **kwargs):
-
     resp = urlquick.get(next_url + '?lim_un=%s' % page)
     root = resp.parse()
 
@@ -116,7 +113,6 @@ def get_video_url(plugin,
                   video_url,
                   download_mode=False,
                   **kwargs):
-
     resp = urlquick.get(video_url, max_age=-1)
     list_streams_datas = re.compile(
         r'source src=\"(.*?)\"').findall(resp.text)
@@ -161,4 +157,3 @@ def get_live_url(plugin, item_id, **kwargs):
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
     return item
-
