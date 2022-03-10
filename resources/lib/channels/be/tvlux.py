@@ -20,10 +20,10 @@ from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
 from resources.lib.menu_utils import item_post_treatment
 
 # "https://tvlux.fcst.tv/player/embed/3426115.js"
-PATTERN_PLAYER = re.compile(r'"(https://.*?/player/embed/.*?.js.*?)"')
+PATTERN_PLAYER = re.compile(r'"(https://.*?/player/embed/.*?\.js.*?)"')
 
 # \"src\":[\"https:\\\/\\\/tvlux-live.freecaster.com\\\/live\\\/tvlux\\\/tvlux.m3u8\"]
-PATTERN_M3U8 = re.compile(r'https?:[^,]*?.m3u8')
+PATTERN_M3U8 = re.compile(r'https?:[^,]*?\.m3u8')
 
 URL_ROOT = 'https://www.tvlux.be'
 
