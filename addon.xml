@@ -54,7 +54,7 @@
 [FR - RMCBFMPlay] Call get_token and get_account_id only when needed
 [Project] Remove print
 [FR - MYCANAL] Code cleanup thanks @Arias800
-
+[IT - Radiofreccia] Make it work without inputstream.adaptive
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
