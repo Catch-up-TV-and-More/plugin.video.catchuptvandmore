@@ -5,18 +5,25 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-from builtins import str
-import re
 
-from codequick import Listitem, Resolver, Route
+import re
+from builtins import str
+
+import inputstreamhelper
 import urlquick
+from codequick import Listitem, Resolver, Route
 
 from resources.lib import download
+from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
+                                      get_selected_item_info,
+                                      get_selected_item_label, get_kodi_version)
 from resources.lib.menu_utils import item_post_treatment
 
+# "https://tvlux.fcst.tv/player/embed/3426115.js"
+PATTERN_PLAYER = re.compile(r'"(https://.*?/player/embed/.*?.js.*?)"')
 
-# TO DO
-# ....
+# \"src\":[\"https:\\\/\\\/tvlux-live.freecaster.com\\\/live\\\/tvlux\\\/tvlux.m3u8\"]
+PATTERN_M3U8 = re.compile(r'https?:[^,]*?.m3u8')
 
 URL_ROOT = 'https://www.tvlux.be'
 
@@ -112,7 +119,7 @@ def get_video_url(plugin,
 
     resp = urlquick.get(video_url, max_age=-1)
     list_streams_datas = re.compile(
-        r'source src\=\"(.*?)\"').findall(resp.text)
+        r'source src=\"(.*?)\"').findall(resp.text)
     stream_url = ''
     for stream_datas in list_streams_datas:
         if 'm3u8' in stream_datas or \
@@ -126,11 +133,32 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    list_live_datas = re.compile(
-        r'player\.freecaster\.com\/embed\/(.*?)\.js').findall(resp.text)[0]
+    found_players = PATTERN_PLAYER.findall(resp.text)
+    if len(found_players) == 0:
+        plugin.notify(plugin.localize(30600), plugin.localize(30716))
+        return False
 
-    resp2 = urlquick.get(URL_LIVE_DATAS % list_live_datas, max_age=-1)
-    return re.compile(
-        r'file\"\:\"(.*?)\"').findall(resp2.text.replace('\\', ''))[1]
+    resp2 = urlquick.get(found_players[0], max_age=-1)
+    found_m3u8_objects = PATTERN_M3U8.findall(resp2.text)
+    if len(found_m3u8_objects) == 0:
+        plugin.notify(plugin.localize(30600), plugin.localize(30716))
+        return False
+    url = found_m3u8_objects[0].replace('\\', '')
+
+    if get_kodi_version() < 18:
+        return url
+
+    is_helper = inputstreamhelper.Helper("mpd")
+    if not is_helper.check_inputstream():
+        return url
+
+    item = Listitem()
+    item.path = url
+    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
+    item.property["inputstream.adaptive.manifest_type"] = "hls"
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+    return item
+
