@@ -21,13 +21,13 @@ try:  # Python 3
 except ImportError:  # Python 2
     from urllib import urlencode
 
-
 from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
 
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
-from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
+from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, \
+    get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
 # URL :
@@ -57,7 +57,6 @@ LIVE_DAILYMOTION_ID = {
 
 @Route.register
 def mycanal_root(plugin, **kwargs):
-
     # (item_id, label, thumb, fanart)
     channels = [
         ('canalplus-en-clair', 'Canal +', 'canalplus.png', 'canalplus_fanart.jpg'),
@@ -97,7 +96,7 @@ def list_categories(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_REPLAY % item_id)
     json_replay = re.compile(
-        r'window.__data\=(.*?)\; window.app_config').findall(resp.text)[0]
+        r'window.__data=(.*?); window.app_config').findall(resp.text)[0]
     json_parser = json.loads(json_replay)
 
     for category in json_parser["templates"]["landing"]["strates"]:
@@ -126,10 +125,9 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_contents(plugin, item_id, key_value, **kwargs):
-
     resp = urlquick.get(URL_REPLAY % item_id)
     json_replay = re.compile(
-        r'window.__data\=(.*?)\; window.app_config').findall(resp.text)[0]
+        r'window.__data=(.*?); window.app_config').findall(resp.text)[0]
     json_parser = json.loads(json_replay)
 
     for category in json_parser["templates"]["landing"]["strates"]:
@@ -165,7 +163,6 @@ def list_contents(plugin, item_id, key_value, **kwargs):
 
 @Route.register
 def list_programs(plugin, item_id, next_url, **kwargs):
-
     json_parser = urlquick.get(next_url).json()
 
     if 'strates' in json_parser:
@@ -222,11 +219,12 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 
         if 'seasons' in json_parser['detail']:
             for seasons_datas in json_parser['detail']['seasons']:
+                display_name = seasons_datas['onClick']['displayName']
                 if 'seasonNumber' in seasons_datas:
-                    season_title = seasons_datas['onClick']['displayName'] + \
-                        ' (Saison ' + str(seasons_datas["seasonNumber"]) + ')'
+                    season_number = str(seasons_datas["seasonNumber"])
+                    season_title = display_name + ' (Saison ' + season_number + ')'
                 else:
-                    season_title = seasons_datas['onClick']['displayName']
+                    season_title = display_name
                 season_url = seasons_datas['onClick']['URLPage']
 
                 item = Listitem()
@@ -270,11 +268,11 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 
         for content_datas in json_parser['contents']:
             if content_datas["type"] != 'article':
+                title = content_datas['title']
                 if 'subtitle' in content_datas:
-                    content_title = content_datas['title'] + \
-                        ' - ' + content_datas['subtitle']
+                    content_title = title + ' - ' + content_datas['subtitle']
                 else:
-                    content_title = content_datas['title']
+                    content_title = title
                 content_image = content_datas['URLImage']
                 content_url = content_datas['onClick']['URLPage']
 
@@ -292,7 +290,6 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 
 @Route.register
 def list_sub_programs(plugin, item_id, next_url, strate_title, **kwargs):
-
     json_parser = urlquick.get(next_url).json()
 
     if 'strates' in json_parser:
@@ -326,7 +323,6 @@ def list_sub_programs(plugin, item_id, next_url, strate_title, **kwargs):
 
 @Route.register
 def list_videos(plugin, item_id, next_url, **kwargs):
-
     json_parser = urlquick.get(next_url).json()
 
     program_title = json_parser['currentPage']['displayName']
@@ -365,7 +361,6 @@ def get_video_url(plugin,
                   next_url,
                   download_mode=False,
                   **kwargs):
-
     if 'tokenCMS' in next_url:
         if get_kodi_version() < 18:
             xbmcgui.Dialog().ok('Info', plugin.localize(30602))
@@ -384,13 +379,13 @@ def get_video_url(plugin,
         # Code by mtr81 : https://github.com/xbmc/inputstream.adaptive/issues/812
         def rnd():
             return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
+
         ts = int(1000 * time.time())
 
         deviceKeyId = str(ts) + '-' + rnd()
         device_id_first = deviceKeyId + ':0:' + str(ts + 2000) + '-' + rnd()
         sessionId = str(ts + 3000) + '-' + rnd()
         ##############################################################################
-
 
         # Get Portail Id
         session_requests = requests.session()
@@ -401,8 +396,8 @@ def get_video_url(plugin,
         portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
 
         headers = {"User-Agent": web_utils.get_random_ua(),
-            "Origin": "https://www.canalplus.com",
-            "Referer": "https://www.canalplus.com/",}
+                   "Origin": "https://www.canalplus.com",
+                   "Referer": "https://www.canalplus.com/", }
 
         # Get PassToken
         payload = {
@@ -430,14 +425,14 @@ def get_video_url(plugin,
             'User-Agent': web_utils.get_random_ua(),
         }
 
-        #Fix an ssl issue on some device.
+        # Fix an ssl issue on some device.
         requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
         try:
             requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
         except AttributeError:
             # no pyopenssl support used / needed / available
             pass
-    
+
         value_datas_jsonparser = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers).json()
 
         if 'available' not in value_datas_jsonparser:
@@ -460,16 +455,16 @@ def get_video_url(plugin,
                 break
 
         payload = json.dumps(payload)
-        headers = {'Accept':'application/json, text/plain, */*',
-            'Authorization':'PASS Token="%s"' % pass_token,
-            'Content-Type':'application/json; charset=UTF-8',
-            'XX-DEVICE': 'pc %s' % device_id,
-            'XX-DOMAIN': 'cpfra',
-            'XX-OPERATOR': 'pc',
-            'XX-Profile-Id': '0',
-            'XX-SERVICE': 'mycanal',
-            'User-Agent': web_utils.get_random_ua(),
-        }
+        headers = {'Accept': 'application/json, text/plain, */*',
+                   'Authorization': 'PASS Token="%s"' % pass_token,
+                   'Content-Type': 'application/json; charset=UTF-8',
+                   'XX-DEVICE': 'pc %s' % device_id,
+                   'XX-DOMAIN': 'cpfra',
+                   'XX-OPERATOR': 'pc',
+                   'XX-Profile-Id': '0',
+                   'XX-SERVICE': 'mycanal',
+                   'User-Agent': web_utils.get_random_ua(),
+                   }
 
         jsonparser_stream_datas = session_requests.put(
             URL_STREAM_DATAS, data=payload, headers=headers).json()
@@ -477,15 +472,17 @@ def get_video_url(plugin,
         jsonparser_real_stream_datas = session_requests.get(
             jsonparser_stream_datas['@medias'], headers=headers).json()
 
-        certificate_data = base64.b64encode(requests.get('https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode('utf-8')
-        
+        # certificate_data = base64.b64encode(requests.get(
+        #     'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode(
+        #     'utf-8')
+
         subtitle_url = ''
         item = Listitem()
-        Type = "VM" if 'VM' in jsonparser_real_stream_datas else "VF"
+        stream_data_type = "VM" if 'VM' in jsonparser_real_stream_datas else "VF"
 
-        item.path = jsonparser_real_stream_datas[Type][0]["media"][0]["distribURL"]
+        item.path = jsonparser_real_stream_datas[stream_data_type][0]["media"][0]["distribURL"]
         if plugin.setting.get_boolean('active_subtitle'):
-            for asset in jsonparser_real_stream_datas[Type][0]["files"]:
+            for asset in jsonparser_real_stream_datas[stream_data_type][0]["files"]:
                 if 'vtt' in asset["mimeType"]:
                     subtitle_url = asset['distribURL']
 
@@ -504,23 +501,26 @@ def get_video_url(plugin,
             # DRM Message (TODO to find a way to get licence key)
             Script.notify("INFO", plugin.localize(30702), Script.NOTIFY_INFO)
             return False
-            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            headers2 = {
-                'Accept': 'application/json, text/plain, */*',
-                'Authorization': 'PASS Token="%s"' % pass_token,
-                'Content-Type': 'text/plain',
-                'User-Agent': web_utils.get_random_ua(),
-                'Origin': 'https://www.mycanal.fr',
-                'XX-DEVICE': 'pc %s' % device_id,
-                'XX-DOMAIN': 'cpfra',
-                'XX-OPERATOR': 'pc',
-                'XX-Profile-Id': '0',
-                'XX-SERVICE': 'mycanal',
-            }
-            # Return HTTP 200 but the response is not correctly interpreted by inputstream (https://github.com/peak3d/inputstream.adaptive/issues/267)
-            item.property['inputstream.adaptive.license_key'] = jsonparser_stream_datas['@licence'] + '?drmConfig=mkpl::false' + '|%s|b{SSM}|' % urlencode(headers2)
-            item.property['inputstream.adaptive.server_certificate'] = certificate_data
+            # item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+            # item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            # headers2 = {
+            #     'Accept': 'application/json, text/plain, */*',
+            #     'Authorization': 'PASS Token="%s"' % pass_token,
+            #     'Content-Type': 'text/plain',
+            #     'User-Agent': web_utils.get_random_ua(),
+            #     'Origin': 'https://www.mycanal.fr',
+            #     'XX-DEVICE': 'pc %s' % device_id,
+            #     'XX-DOMAIN': 'cpfra',
+            #     'XX-OPERATOR': 'pc',
+            #     'XX-Profile-Id': '0',
+            #     'XX-SERVICE': 'mycanal',
+            # }
+            # # Return HTTP 200 but the response is not correctly interpreted by inputstream
+            # # (https://github.com/peak3d/inputstream.adaptive/issues/267)
+            # licence = jsonparser_stream_datas['@licence']
+            # licence += '?drmConfig=mkpl::false|%s|b{SSM}|' % urlencode(headers2)
+            # item.property['inputstream.adaptive.license_key'] = licence
+            # item.property['inputstream.adaptive.server_certificate'] = certificate_data
         return item
 
     json_parser = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1).json()
