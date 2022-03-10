@@ -51,6 +51,10 @@
 [IT - RADIOFRECCIA] Enable multiple resolutions
 [FR - RMCBFMPLAY] Avoid a problem of conversion UTF-8 into ASCII (issue #678)
 [Project] Update the requested version of resource.images.catchuptvandmore (issue #680)
+[FR - RMCBFMPlay] Call get_token and get_account_id only when needed
+[Project] Remove print
+[FR - MYCANAL] Code cleanup thanks @Arias800
+
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
