@@ -43,7 +43,7 @@
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
 [Version 0.2.38]
-[IT - Radiofreccia] Add Radiofreccia Web TV (PR #675) Thanks @darodi
+[IT - RADIOFRECCIA] Add Radiofreccia Web TV (PR #675) Thanks @darodi
 [FR - LEQUIPE] Add additional lives (issue #481)
 [FR - EQUIDIA] Use the more generic Equidia-racing instead of multiple channels
 [FR - RMCBFMPLAY] Make sure to not use item_id again
@@ -54,7 +54,8 @@
 [FR - RMCBFMPlay] Call get_token and get_account_id only when needed
 [Project] Remove print
 [FR - MYCANAL] Code cleanup thanks @Arias800
-[IT - Radiofreccia] Make it work without inputstream.adaptive
+[IT - RADIOFRECCIA] Make it work without inputstream.adaptive thanks @darodi
+[Project] PR workflow: flake8 with forks - fix test-plugin-modules (PR #686) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
