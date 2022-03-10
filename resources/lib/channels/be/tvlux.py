@@ -145,7 +145,7 @@ def get_live_url(plugin, item_id, **kwargs):
     if get_kodi_version() < 18:
         return url
 
-    is_helper = inputstreamhelper.Helper("mpd")
+    is_helper = inputstreamhelper.Helper("hls")
     if not is_helper.check_inputstream():
         return url
 
