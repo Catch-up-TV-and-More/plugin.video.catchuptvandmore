@@ -12,7 +12,7 @@
     <import addon="script.module.tzlocal" version="2.0.0"/>
     <import addon="script.module.future" version="0.17.1"/>
     <import addon="script.module.kodi-six" version="0.0.4"/>
-    <import addon="resource.images.catchuptvandmore" version="1.0.13"/>
+    <import addon="resource.images.catchuptvandmore" version="1.0.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -60,6 +60,7 @@
 [WO - EURONEWS] Update Euronews link (PR #679) thanks @adrien3287
 [BE - TV LUX] Small pattern fix (PR #689) thanks @darodi
 [FR - MYCANAL] Fix flake8 (PR #690) thanks @darodi
+[Project] Revert commit 27b088548a870901fd629e77c95b442549dabe03 (issue #688)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
