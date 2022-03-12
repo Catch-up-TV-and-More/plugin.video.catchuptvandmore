@@ -395,22 +395,27 @@ def programme_post_treatment_iptvmanager(programme):
     if 'episode-num' in programme:
         for episode_num, episode_format in programme['episode-num']:
             if episode_format == 'xmltv_ns':
-                splitted_episode_num = episode_num.split('.')
-                season = splitted_episode_num[0]
-                episode = splitted_episode_num[1]
-                part = splitted_episode_num[2]
+                try:
+                    splitted_episode_num = episode_num.split('.')
+                    season = splitted_episode_num[0]
+                    episode = splitted_episode_num[1]
+                    part = splitted_episode_num[2]
 
-                final_string = ''
-                if season != '':
-                    season = int(season) + 1
-                    final_string += 'S' + str(season).zfill(2)
-                if episode != '':
-                    episode = int(episode) + 1
-                    final_string += 'E' + str(episode).zfill(2)
-                if part != '':
-                    part = int(part) + 1
-                    final_string += '/' + str(part).zfill(2)
-                programme['episode'] = final_string
+                    final_string = ''
+                    if season != '':
+                        season = int(season) + 1
+                        final_string += 'S' + str(season).zfill(2)
+                    if episode != '':
+                        episode = int(episode) + 1
+                        final_string += 'E' + str(episode).zfill(2)
+                    if part != '':
+                        part = int(part) + 1
+                        final_string += '/' + str(part).zfill(2)
+                    programme['episode'] = final_string
+                except Exception:
+                    # see https://github.com/Catch-up-TV-and-More/xmltv/issues/16
+                    # TODO: handle this issue case instead of pass
+                    pass
                 break
 
     # For start and stop we use ISO-8601 format in UTC
