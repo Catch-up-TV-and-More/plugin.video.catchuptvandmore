@@ -142,6 +142,7 @@ menu = {
         'label': 'ICI RDI',
         'thumb': 'channels/wo/icirdi.png',
         'fanart': 'channels/wo/icirdi_fanart.jpg',
+        'xmltv_id': 'I60327.json.schedulesdirect.org',
         'enabled': True,
         'order': 16
     },
