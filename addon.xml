@@ -61,6 +61,7 @@
 [BE - TV LUX] Small pattern fix (PR #689) thanks @darodi
 [FR - MYCANAL] Fix flake8 (PR #690) thanks @darodi
 [Project] Revert commit 27b088548a870901fd629e77c95b442549dabe03 (issue #688)
+[XMLTV] Fix issue if 'episode-num' format is wrong in xmltv file
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
