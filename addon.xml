@@ -64,6 +64,7 @@
 [XMLTV] Fix issue if 'episode-num' format is wrong in xmltv file
 [XMLTV] Add default XMLTV id for CA channels
 [FR - LIVE] Add Sud Radio
+[Project] Make Flake8 happy
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

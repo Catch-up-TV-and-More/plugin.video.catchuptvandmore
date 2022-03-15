@@ -28,5 +28,5 @@ def get_live_url(plugin, item_id, **kwargs):
     try:
         live_id = root.find(".//div[@class='dailymotion-cpe']").get('video-id')
     except Exception:
-            live_id = 'x75yzts'
+        live_id = 'x75yzts'
     return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
