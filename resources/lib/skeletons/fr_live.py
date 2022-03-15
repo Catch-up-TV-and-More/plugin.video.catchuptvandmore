@@ -868,6 +868,15 @@ menu = {
         'enabled': True,
         'order': 127
     },
+    'sudradio': {
+        'resolver': '/resources/lib/channels/fr/sudradio:get_live_url',
+        'label': 'Sud Radio',
+        'thumb': 'channels/fr/sudradio.png',
+        'fanart': 'channels/fr/sudradio_fanart.jpg',
+        'm3u_group': 'Radio',
+        'enabled': True,
+        'order': 128
+    },
     'sportenfrance': {
         'resolver': '/resources/lib/channels/fr/sportenfrance:get_live_url',
         'label': 'Sport en France',
@@ -875,7 +884,7 @@ menu = {
         'fanart': 'channels/fr/sportenfrance_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
-        'order': 128
+        'order': 129
     },
     'lequipesup': {
         'resolver': '/resources/lib/channels/fr/lequipe:get_live_url',
@@ -898,7 +907,7 @@ menu = {
             "Direct 15": {},
         },
         'enabled': True,
-        'order': 129
+        'order': 130
     },
     'equidia-live2': {
         'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
@@ -908,7 +917,7 @@ menu = {
         'xmltv_id': 'C64.api.telerama.fr',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
-        'order': 130
+        'order': 131
     },
     'equidia-racingtrot': {
         'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
@@ -917,7 +926,7 @@ menu = {
         'fanart': 'channels/fr/equidiaracingtrot_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
-        'order': 131
+        'order': 132
     },
     'equidia-racingmag': {
         'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
@@ -926,7 +935,7 @@ menu = {
         'fanart': 'channels/fr/equidiaracingmag_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
-        'order': 132
+        'order': 133
     },
     'equidia-racinggalop': {
         'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
@@ -935,7 +944,7 @@ menu = {
         'fanart': 'channels/fr/equidiaracinggalop_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
-        'order': 133
+        'order': 134
     },
     'equidia-racing': {
         'resolver': '/resources/lib/channels/fr/equidia:get_live_url',
@@ -954,6 +963,6 @@ menu = {
             "8": {},
         },
         'enabled': True,
-        'order': 134
+        'order': 135
     },
 }
