@@ -137,6 +137,13 @@
             <setting label="30250" type="text" id="uktvplay.login" default=""/>
             <setting label="30251" type="text" id="uktvplay.password" option="hidden" default=""/>
 
+        <setting label="30254" type="lsep" subsetting="true" visible="eq(1,true)"/>
+
+            <setting label="30255" type="text" id="schedulesdirect.login" default=""/>
+            <setting label="30256" type="text" id="schedulesdirect.password" option="hidden" default=""/>
+            <setting label="30257" type="text" id="schedulesdirect.lineup" default="CAN-0005993-X"/>
+
+
     </category>
     <!-- Accounts -->
 

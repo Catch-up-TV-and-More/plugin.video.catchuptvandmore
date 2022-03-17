@@ -465,6 +465,23 @@ msgctxt "#30253"
 msgid "RMCBFM Play Password"
 msgstr "Mot de passe RMCBFM Play"
 
+msgctxt "#30254"
+msgid "TV guides"
+msgstr "Guides TV"
+
+msgctxt "#30255"
+msgid "Schedules Direct login"
+msgstr "Login Schedules Direct"
+
+msgctxt "#30256"
+msgid "Schedules Direct password"
+msgstr "Mot de passe Schedules Direct"
+
+msgctxt "#30257"
+msgid "Schedules Direct lineup"
+msgstr "Lineup Schedules Direct"
+
+
 # TV integration (from 30270 to 30289)
 
 msgctxt "#30270"

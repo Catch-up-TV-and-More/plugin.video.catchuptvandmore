@@ -18,17 +18,18 @@ with this software; if not, see <http://www.gnu.org/licenses/>.
 
 # Stolen from https://bitbucket.org/jfunk/python-xmltv/src/default/xmltv.py
 
+
 import datetime
 import os
 import re
-import time
 import xml.etree.ElementTree as ET
 
 import pytz
 import urlquick
 from codequick import Script
 from kodi_six import xbmcvfs
-from resources.lib.py_utils import compute_md5
+from resources.lib.py_utils import compute_md5, datetime_strptime
+from resources.lib.xmltv_utils.sd_json import SD_JSON
 
 try:
     # Temp fix of #592
@@ -309,15 +310,6 @@ def read_programmes(fp, only_current_programmes=False):
 
 # CUTV&M functions
 
-def datetime_strptime(s, f):
-    """Simple workaroung to fix https://forum.kodi.tv/showthread.php?tid=112916
-
-    """
-    try:
-        return datetime.datetime.strptime(s, f)
-    except TypeError:
-        return datetime.datetime(*(time.strptime(s, f)[0:6]))
-
 
 def programme_post_treatment(programme):
     """Prepare the programme to be used in the Live TV menu of CUTV&M
@@ -446,39 +438,50 @@ def programme_post_treatment_iptvmanager(programme):
 xmltv_infos = {
     'fr_live':
         {
+            'method': 'CUTV_xmltv_github',
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_{}.xml',
             'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_{}_md5.txt',
             'keyword': 'tv_guide_fr_'
         },
     'be_live':
         {
+            'method': 'CUTV_xmltv_github',
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}.xml',
             'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}_md5.txt',
             'keyword': 'tv_guide_be_'
         },
     'ch_live':
         {
+            'method': 'CUTV_xmltv_github',
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_ch_{}.xml',
             'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_ch_{}_md5.txt',
             'keyword': 'tv_guide_ch_'
         },
     'uk_live':
         {
+            'method': 'CUTV_xmltv_github',
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_uk_{}.xml',
             'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_uk_{}_md5.txt',
             'keyword': 'tv_guide_uk_'
         },
     'it_live':
         {
+            'method': 'CUTV_xmltv_github',
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_it_{}.xml',
             'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_it_{}_md5.txt',
             'keyword': 'tv_guide_it_'
         },
     'wo_live':
         {
+            'method': 'CUTV_xmltv_github',
             'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_wo_{}.xml',
             'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_wo_{}_md5.txt',
             'keyword': 'tv_guide_wo_'
+        },
+    'ca_live':
+        {
+            'method': 'sd_json',
+            'keyword': 'tv_guide_ca_'
         }
 }
 
@@ -521,48 +524,86 @@ def download_xmltv_file(country_id, day_delta=0):
     Returns:
         str: xmltv filepath.
     """
-    # Retrieve URL
-    xmltv_url = get_xmltv_url(country_id, day_delta=day_delta)
-    Script.log('xmltv url of {} country with day_delta {}: {}'.format(country_id, day_delta, xmltv_url))
+    if xmltv_infos[country_id]['method'] == 'CUTV_xmltv_github':
+        # Retrieve URL
+        xmltv_url = get_xmltv_url(country_id, day_delta=day_delta)
+        Script.log('xmltv url of {} country with day_delta {}: {}'.format(country_id, day_delta, xmltv_url))
 
-    # Compute dst filepath
-    xmltv_fn = os.path.basename(urlparse(xmltv_url).path)
-    Script.log('xmltv filename: {}'.format(xmltv_fn))
-    xmltv_fp = os.path.join(Script.get_info('profile'), xmltv_fn)
+        # Compute dst filepath
+        xmltv_fn = os.path.basename(urlparse(xmltv_url).path)
+        Script.log('xmltv filename: {}'.format(xmltv_fn))
+        xmltv_fp = os.path.join(Script.get_info('profile'), xmltv_fn)
 
-    # Remove old xmltv files of this country
-    dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
-    today = datetime.date.today()
-    for fn in files:
-        if xmltv_infos[country_id]['keyword'] not in fn:
-            continue
-        try:
-            file_date_s = fn.split(xmltv_infos[country_id]['keyword'])[1].split('.xml')[0]
-            file_date = datetime_strptime(file_date_s, '%Y%m%d').date()
-            if file_date < today:
-                Script.log('Remove old xmltv file: {}'.format(fn))
-                xbmcvfs.delete(os.path.join(Script.get_info('profile'), fn))
-        except Exception:
-            pass
+        # Remove old xmltv files of this country
+        dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
+        today = datetime.date.today()
+        for fn in files:
+            if xmltv_infos[country_id]['keyword'] not in fn:
+                continue
+            try:
+                file_date_s = fn.split(xmltv_infos[country_id]['keyword'])[1].split('.xml')[0]
+                file_date = datetime_strptime(file_date_s, '%Y%m%d').date()
+                if file_date < today:
+                    Script.log('Remove old xmltv file: {}'.format(fn))
+                    xbmcvfs.delete(os.path.join(Script.get_info('profile'), fn))
+            except Exception:
+                pass
 
-    # Check if we need to download a fresh xmltv file
-    need_to_downlod_xmltv_file = False
-    if not xbmcvfs.exists(xmltv_fp):
-        Script.log("xmltv file of {} for today does not exist, let's download it".format(country_id))
-        need_to_downlod_xmltv_file = True
-    else:
-        # Check if we have the last version of the file
-        current_file_md5 = compute_md5(xmltv_fp)
-        remote_file_md5 = get_remote_xmltv_md5(country_id, day_delta=day_delta)
-        if current_file_md5 != remote_file_md5:
-            Script.log("A new version of xmltv file of {} for today exists, let's download it".format(country_id))
+        # Check if we need to download a fresh xmltv file
+        need_to_downlod_xmltv_file = False
+        if not xbmcvfs.exists(xmltv_fp):
+            Script.log("xmltv file of {} for today does not exist, let's download it".format(country_id))
             need_to_downlod_xmltv_file = True
+        else:
+            # Check if we have the last version of the file
+            current_file_md5 = compute_md5(xmltv_fp)
+            remote_file_md5 = get_remote_xmltv_md5(country_id, day_delta=day_delta)
+            if current_file_md5 != remote_file_md5:
+                Script.log("A new version of xmltv file of {} for today exists, let's download it".format(country_id))
+                need_to_downlod_xmltv_file = True
 
-    if need_to_downlod_xmltv_file:
-        r = urlquick.get(xmltv_url, max_age=-1)
-        with open(xmltv_fp, 'wb') as f:
-            f.write(r.content)
-    return xmltv_fp
+        if need_to_downlod_xmltv_file:
+            r = urlquick.get(xmltv_url, max_age=-1)
+            with open(xmltv_fp, 'wb') as f:
+                f.write(r.content)
+        return xmltv_fp
+    elif xmltv_infos[country_id]['method'] == 'sd_json':
+        # Compute dst filepath
+        xmltv_date = datetime.date.today() + datetime.timedelta(days=day_delta)
+        xmltv_date_s = xmltv_date.strftime('%Y%m%d')
+        xmltv_fn = xmltv_infos[country_id]['keyword'] + xmltv_date_s + '.xml'
+        Script.log('xmltv filename: {}'.format(xmltv_fn))
+        xmltv_fp = os.path.join(Script.get_info('profile'), xmltv_fn)
+
+        # Remove old xmltv files of this country
+        dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
+        today = datetime.date.today()
+        for fn in files:
+            if xmltv_infos[country_id]['keyword'] not in fn:
+                continue
+            try:
+                file_date_s = fn.split(xmltv_infos[country_id]['keyword'])[1].split('.xml')[0]
+                file_date = datetime_strptime(file_date_s, '%Y%m%d').date()
+                if file_date < today:
+                    Script.log('Remove old xmltv file: {}'.format(fn))
+                    xbmcvfs.delete(os.path.join(Script.get_info('profile'), fn))
+            except Exception:
+                pass
+
+        # Check if we need to download a fresh xmltv file
+        need_to_downlod_xmltv_file = False
+        if not xbmcvfs.exists(xmltv_fp):
+            Script.log("xmltv file of {} for today does not exist, let's download it".format(country_id))
+            Script.log('GOOOOOOO')
+            sd = SD_JSON(
+                username=Script.setting.get_string('schedulesdirect.login'),
+                password=Script.setting.get_string('schedulesdirect.password'),
+                xmltv_filepath=xmltv_fp,
+                lineup=Script.setting.get_string('schedulesdirect.lineup'))
+            sd.get_xmltv()
+        return xmltv_fp
+    else:
+        raise Exception('Unknown XMLTV method')
 
 
 def grab_programmes(country_id, day_delta):
@@ -601,24 +642,24 @@ def grab_current_programmes(country_id):
     """
     if country_id not in xmltv_infos:
         return {}
-    try:
-        # Download, if needed, xmltv file of today
-        xmltv_fp = download_xmltv_file(country_id)
+    #try:
+    # Download, if needed, xmltv file of today
+    xmltv_fp = download_xmltv_file(country_id)
 
-        # Grab current programmes in xmltv file
-        programmes = read_programmes(xmltv_fp, only_current_programmes=True)
+    # Grab current programmes in xmltv file
+    programmes = read_programmes(xmltv_fp, only_current_programmes=True)
 
-        # Use the channel as key
-        tv_guide = {}
-        for programme in programmes:
-            programme = programme_post_treatment(programme)
-            tv_guide[programme['channel']] = programme
+    # Use the channel as key
+    tv_guide = {}
+    for programme in programmes:
+        programme = programme_post_treatment(programme)
+        tv_guide[programme['channel']] = programme
 
-        return tv_guide
-    except Exception as e:
-        Script.notify(
-            Script.localize(30722),
-            Script.localize(30723),
-            display_time=7000)
-        Script.log('xmltv module failed with error: {}'.format(e), lvl=Script.ERROR)
-        return {}
+    return tv_guide
+    # except Exception as e:
+    #     Script.notify(
+    #         Script.localize(30722),
+    #         Script.localize(30723),
+    #         display_time=7000)
+    #     Script.log('xmltv module failed with error: {}'.format(e), lvl=Script.ERROR)
+    #     return {}
