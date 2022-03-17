@@ -538,6 +538,10 @@ def download_xmltv_file(country_id, date: datetime.datetime, xmltv_fp: str) -> N
                 need_to_downlod_xmltv_file = True
 
         if need_to_downlod_xmltv_file:
+            Script.notify(
+                Script.localize(30722),
+                Script.localize(30730),
+                display_time=5000)
             r = urlquick.get(xmltv_url, max_age=-1)
             with open(xmltv_fp, 'wb') as f:
                 f.write(r.content)
@@ -575,10 +579,31 @@ def download_xmltv_file(country_id, date: datetime.datetime, xmltv_fp: str) -> N
             date.strftime('%Y-%m-%d'),
             xmltv_ids
         )
+        Script.notify(
+            Script.localize(30722),
+            Script.localize(30730),
+            display_time=5000)
         sd.get_xmltv()
 
     else:
         raise Exception('Unknown XMLTV method')
+
+
+def delete_xmltv_file(country_id, day_delta=0):
+    """Delete XMLTV file of dountry_id at day = today + day_delta."""
+    day_to_delete = datetime.date.today() + datetime.timedelta(days=day_delta)
+    dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
+    for fn in files:
+        if xmltv_infos[country_id]['keyword'] not in fn:
+            continue
+        try:
+            file_date_s = fn.split(xmltv_infos[country_id]['keyword'])[1].split('.xml')[0]
+            file_date = datetime_strptime(file_date_s, '%Y%m%d').date()
+            if file_date == day_to_delete:
+                Script.log('Remove xmltv file {}'.format(fn))
+                xbmcvfs.delete(os.path.join(Script.get_info('profile'), fn))
+        except Exception:
+            pass
 
 
 def get_xmltv_filepath(country_id, day_delta=0):
@@ -643,6 +668,7 @@ def grab_programmes(country_id, day_delta):
         return programmes_post_treated
     except Exception as e:
         Script.log('xmltv module failed with error: {}'.format(e), lvl=Script.ERROR)
+        delete_xmltv_file(country_id, day_delta)
         return []
 
 
@@ -676,4 +702,5 @@ def grab_current_programmes(country_id):
             Script.localize(30723),
             display_time=7000)
         Script.log('xmltv module failed with error: {}'.format(e), lvl=Script.ERROR)
+        delete_xmltv_file(country_id)
         return {}

@@ -872,6 +872,10 @@ msgctxt "#30729"
 msgid "Emissions"
 msgstr "Émissions"
 
+msgctxt "#30730"
+msgid "Downloading TV guide..."
+msgstr "Téléchargement du guide TV"
+
 
 # Favourites (from 30800 to 30859)
 
