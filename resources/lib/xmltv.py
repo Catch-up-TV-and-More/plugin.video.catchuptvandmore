@@ -642,24 +642,24 @@ def grab_current_programmes(country_id):
     """
     if country_id not in xmltv_infos:
         return {}
-    #try:
-    # Download, if needed, xmltv file of today
-    xmltv_fp = download_xmltv_file(country_id)
+    try:
+        # Download, if needed, xmltv file of today
+        xmltv_fp = download_xmltv_file(country_id)
 
-    # Grab current programmes in xmltv file
-    programmes = read_programmes(xmltv_fp, only_current_programmes=True)
+        # Grab current programmes in xmltv file
+        programmes = read_programmes(xmltv_fp, only_current_programmes=True)
 
-    # Use the channel as key
-    tv_guide = {}
-    for programme in programmes:
-        programme = programme_post_treatment(programme)
-        tv_guide[programme['channel']] = programme
+        # Use the channel as key
+        tv_guide = {}
+        for programme in programmes:
+            programme = programme_post_treatment(programme)
+            tv_guide[programme['channel']] = programme
 
-    return tv_guide
-    # except Exception as e:
-    #     Script.notify(
-    #         Script.localize(30722),
-    #         Script.localize(30723),
-    #         display_time=7000)
-    #     Script.log('xmltv module failed with error: {}'.format(e), lvl=Script.ERROR)
-    #     return {}
+        return tv_guide
+    except Exception as e:
+        Script.notify(
+            Script.localize(30722),
+            Script.localize(30723),
+            display_time=7000)
+        Script.log('xmltv module failed with error: {}'.format(e), lvl=Script.ERROR)
+        return {}

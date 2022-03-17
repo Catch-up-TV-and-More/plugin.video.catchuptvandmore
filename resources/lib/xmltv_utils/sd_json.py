@@ -231,12 +231,12 @@ class SD_JSON:
             et.SubElement(channel, "display-name").text = f'{stationID_map_dict[stn["stationID"]]["channel"]} {stn["name"]}'
             et.SubElement(channel, "display-name").text = stn["callsign"]
             et.SubElement(channel, "display-name").text = stationID_map_dict[stn["stationID"]]["channel"]
-            if "logo" in stn:
-                icon = et.SubElement(
-                    channel,
-                    "icon",
-                    attrib={"src": stn["logo"]["URL"], "width": str(stn["logo"]["width"]), "height": str(stn["logo"]["height"])}
-                )
+            # if "logo" in stn:
+            #     icon = et.SubElement(
+            #         channel,
+            #         "icon",
+            #         attrib={"src": stn["logo"]["URL"], "width": str(stn["logo"]["width"]), "height": str(stn["logo"]["height"])}
+            #     )
 
         # programs
         stationID_stn_dict = {
@@ -314,6 +314,7 @@ class SD_JSON:
                         et.SubElement(rating, "value").text = rtn["code"]
                 # credits
                 xmltv_roles = ["director", "actor", "writer", "adapter", "producer", "composer", "editor", "presenter", "commentator", "guest"]
+
                 def role_to_xml(role):
                     role_normalized = re.sub(r" ", "-", role.lower().translate(str.maketrans('', '', string.punctuation)))
                     role_xml = None
@@ -340,6 +341,7 @@ class SD_JSON:
                         role_xml = role_to_xml(crw["role"])
                         if role_xml is not None:
                             et.SubElement(credits, role_xml).text = crw["name"]
+
                 # video
                 def re_any(pattern, list_of_str, *args, **kwargs):
                     return any([bool(re.match(pattern, x, *args, **kwargs)) for x in list_of_str])
@@ -348,17 +350,17 @@ class SD_JSON:
                     et.SubElement(video, "quality").text = "HDTV"
                 # audio
                 if "audioProperties" in pgm:
-                    if re_any("mono",pgm["audioProperties"], re.IGNORECASE):
+                    if re_any("mono", pgm["audioProperties"], re.IGNORECASE):
                         audio = et.SubElement(programme, "audio")
                         et.SubElement(audio, "stereo").text = "mono"
-                    elif re_any("stereo",pgm["audioProperties"], re.IGNORECASE):
+                    elif re_any("stereo", pgm["audioProperties"], re.IGNORECASE):
                         audio = et.SubElement(programme, "audio")
                         et.SubElement(audio, "stereo").text = "stereo"
-                    elif re_any("DD",pgm["audioProperties"],re.IGNORECASE):
+                    elif re_any("DD", pgm["audioProperties"], re.IGNORECASE):
                         audio = et.SubElement(programme, "audio")
                         et.SubElement(audio, "stereo").text = "dolby digital"
                 # subtitles
-                if "audioProperties" in pgm and re_any("cc",pgm["audioProperties"], re.IGNORECASE):
+                if "audioProperties" in pgm and re_any("cc", pgm["audioProperties"], re.IGNORECASE):
                     et.SubElement(programme, "subtitles", attrib={"type": "teletext"})
                 # url
                 if "officialURL" in pgm:
@@ -445,6 +447,7 @@ class SD_JSON:
                 print(e)
                 self.return_value = 1
                 return
+
             @self.sd_api_no_token
             def sd_api_call():
                 return func(*args, **kwargs)
@@ -456,7 +459,8 @@ class SD_JSON:
     def sd_verbose_map(self, func):
         """Set the HTTP Header "verboseMap" to "true", per API documentation."""
         def call_func(*args, **kwargs):
-            if self.verboseMap: self.headers["verboseMap"] = "true"
+            if self.verboseMap:
+                self.headers["verboseMap"] = "true"
             resp_json = func(*args, **kwargs)
             self.headers.pop("verboseMap", None)  # silently delete "verboseMap"
             return resp_json
