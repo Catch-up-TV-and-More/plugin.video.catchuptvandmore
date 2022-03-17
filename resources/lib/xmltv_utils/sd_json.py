@@ -41,16 +41,8 @@ import xml.etree.ElementTree as et
 from xml.dom import minidom
 
 import requests
+from codequick import Script
 from resources.lib.py_utils import datetime_strptime
-
-
-def json_prettyprint(j, *args, **kwargs):
-    print(json.dumps(j, indent=4, sort_keys=True), *args, **kwargs)
-
-
-# cache programme's using a keyword with this hash name prefix
-sd_md5_prefix = 'sd-md5-'
-sd_md5_re = re.compile(f'^{sd_md5_prefix}')
 
 
 class SD_JSON:
@@ -61,27 +53,22 @@ class SD_JSON:
     """
 
     def __init__(self,
-                 username,
-                 password,
-                 xmltv_filepath,
-                 lineup,
-                 verboseMap=True,
-                 timedelta_days=1,
-                 parseArgs_flag=False,
-                 quiet=True,
-                 verbose=True,
-                 debug=False):
+                 username: str,
+                 password: str,
+                 xmltv_filepath: str,
+                 lineup: str,
+                 date: str,
+                 xmltv_ids,
+                 verboseMap=True):
         self.sd_url = "https://json.schedulesdirect.org/20141201"
         self.username = username
         self.password_sha1 = hl.sha1(password.encode()).hexdigest()
         self.lineup = lineup
+        self.date = date
+        self.xmltv_ids = xmltv_ids
         self.headers = {"Content-type": "application/json", "Accept": "text/plain,deflate,gzip"}
         self.verboseMap = verboseMap
-        self.timedelta_days = timedelta_days
         self.xmltv_filepath = xmltv_filepath
-        self.quiet = quiet
-        self.verbose = verbose
-        self.debug = debug
 
     # def parseArgs(self,parseArgs_flag):
     #     parser = ap.ArgumentParser()
@@ -109,7 +96,7 @@ class SD_JSON:
     #             if getattr(args, "headers") is not None: setattr(self, "headers", json.loads(getattr(args, "headers")))
     #     return args
 
-    def api_token(self):
+    def api_token(self) -> None:
         sd_token_request = {"username": self.username, "password": self.password_sha1}
         resp = requests.post(f"{self.sd_url}/token", data=json.dumps(sd_token_request))
         resp_json = None
@@ -124,44 +111,43 @@ class SD_JSON:
         self.token = resp_json['token']
         self.api_token_data = sd_token_request
         self.api_token_json = resp_json
-        return resp_json
+        return
 
-    def api_lineups(self):
-        @self.sd_api_token_required
-        def sd_api_lineups():
-            return requests.get(f'{self.sd_url}/lineups', headers=self.headers)
-        resp_json = sd_api_lineups()
-        if self.verbose:
-            json_prettyprint(resp_json)
-        self.api_lineups_json = resp_json
-        return resp_json
-
-    def api_channel_mapping(self):
+    def api_channel_mapping(self) -> None:
+        """StationID / channel mapping for a lineup."""
         @self.sd_verbose_map
         @self.sd_api_token_required
         def sd_api_channel_mapping():
             return requests.get(f'{self.sd_url}/lineups/{self.lineup}', headers=self.headers)
-        resp_json = sd_api_channel_mapping()
-        if not self.quiet or self.verbose:
-            print(f'Lineup: {self.lineup}')
-            print(f'\tchannels retrieved: {len(resp_json["map"])}', flush=True)
-        self.api_channel_mapping_json = resp_json
-        return resp_json
+        Script.log('[sd_json] Get stationID/channel mapping with lineup {}'.format(self.lineup), lvl=Script.DEBUG)
+        full_api_channel_mapping_json = sd_api_channel_mapping()
+        channels_map = []
+        for channel_map in full_api_channel_mapping_json['map']:
+            channel = f'I{channel_map["stationID"]}.json.schedulesdirect.org'
+            if channel in self.xmltv_ids:
+                channels_map.append(channel_map)
+        stations = []
+        for station in full_api_channel_mapping_json['stations']:
+            channel = f'I{station["stationID"]}.json.schedulesdirect.org'
+            if channel in self.xmltv_ids:
+                stations.append(station)
+        self.api_channel_mapping_json = {"map": channels_map, "stations": stations}
+        return
 
-    def api_schedules(self, max_stationIDs=5000):
+    def api_schedules(self, max_stationIDs=5000) -> None:
         """Schedules API takes a POST of:
             [ {"stationID": "20454", "date": [ "2015-03-13", "2015-03-17" ]}, …]
 
         The schedules for the current date to `timedelta_days` is retrieved.
+        date in %Y-%m-%d format
         """
         @self.sd_api_token_required
         def sd_api_schedules():
             return requests.post(f'{self.sd_url}/schedules', data=json.dumps(sd_schedule_query), headers=self.headers)
-        now = dt.datetime.now()
-        dates = {"date": [(now + dt.timedelta(days=k)).strftime("%Y-%m-%d") for k in range(self.timedelta_days)]}
-        resp_cm = self.api_channel_mapping()
+        dates = {"date": [self.date]}
+        self.api_channel_mapping()
         idx = 0  # block indexing through stationID's
-        sd_schedule_data = [dict(stationID=sid["stationID"], **dates) for sid in resp_cm["map"]]
+        sd_schedule_data = [dict(stationID=sid["stationID"], **dates) for sid in self.api_channel_mapping_json["map"]]
         resp_json = []
         while True:
             sd_schedule_query = sd_schedule_data[idx:idx + max_stationIDs]
@@ -169,22 +155,20 @@ class SD_JSON:
                 break  # no more stations
             resp_json += sd_api_schedules()  # API returns a list of dicts
             idx += max_stationIDs
-        if not self.quiet or self.verbose:
-            print(f'\tschedules retrieved: {len(resp_json)}', flush=True)
+        Script.log('[sd_json] Schedules retrieved: {}'.format(len(resp_json)), lvl=Script.DEBUG)
         self.api_schedules_data = sd_schedule_data
         self.api_schedules_json = resp_json
-        return resp_json
+        return
 
-    def api_programs(self, max_programIDs=500):
+    def api_programs(self, max_programIDs=500) -> None:
         """Programs API takes a POST of: ["EP000000060003", "EP000000510142"]"""
         @self.sd_api_token_required
         def sd_api_programs():
             return requests.post(f'{self.sd_url}/programs', data=json.dumps(sd_pgm_query), headers=self.headers)
-        resp_sched = self.api_schedules()
-        sd_programs_data = list(set([p["programID"] for s in resp_sched if "programs" in s for p in s["programs"] if p["md5"] not in {}]))
+        self.api_schedules()
+        sd_programs_data = list(set([p["programID"] for s in self.api_schedules_json if "programs" in s for p in s["programs"] if p["md5"] not in {}]))
 
-        if not self.quiet or self.verbose:
-            print(f'\tprograms requested: {len(sd_programs_data)}… ', end="", flush=True)
+        Script.log('[sd_json] Programs requested: {}'.format(len(sd_programs_data)), lvl=Script.DEBUG)
         idx = 0  # block indexing through programID's
         resp_json = []
         while True:
@@ -193,13 +177,10 @@ class SD_JSON:
                 break  # no more programs
             resp_json += sd_api_programs()  # API returns a list of dicts
             idx += max_programIDs
-            if not self.quiet or self.verbose:
-                print('.', end="", flush=True)
-        if not self.quiet or self.verbose:
-            print(f'\n\tprograms retrieved: {len(resp_json)}', flush=True)
+        Script.log('[sd_json] Programs retrieved: {}'.format(len(resp_json)), lvl=Script.DEBUG)
         self.api_programs_data = sd_programs_data
         self.api_programs_json = resp_json
-        return resp_json
+        return
 
     def get_xmltv(self):
         """
@@ -263,9 +244,6 @@ class SD_JSON:
                     channel=stationID_map_dict[sid["stationID"]]["id"])
                 pgm = self.api_programs_json[programID_dict[sid_pgm["programID"]]]
                 programme = et.SubElement(root, "programme", attrib=programme_attrib)
-                # Schedules Direct program md5 hash as keyword "sd-md5-<hash>"
-                if "md5" in sid_pgm:
-                    et.SubElement(programme, "keyword").text = f'{sd_md5_prefix}{sid_pgm["md5"]}'
                 # title
                 if "titles" in pgm:
                     for ttl in pgm["titles"]:
@@ -414,26 +392,10 @@ class SD_JSON:
     def sd_api_no_token(self, func):
         """API call with error handling. Note that the JSON is returned, not the response."""
         def call_func(*args, **kwargs):
-            resp = None
-            try:
-                resp = func(*args, **kwargs)
-            except Exception as e:
-                if self.debug:
-                    print(f'{func.__name__} exception:\n{e}')
-                self.return_value = 1
-                return
-            resp_json = None
-            try:
-                resp.raise_for_status()
-                # assert resp.status_code < 400, f'API response status code {resp.status_code}.'
-                resp_json = resp.json()
-            except Exception as e:
-                print(e)
-                self.return_value = 1
-                return
-            if self.debug and resp_json is not None:
-                json_prettyprint(resp_json, end='\n\n', flush=True)
-            return resp_json
+            resp = func(*args, **kwargs)
+            resp.raise_for_status()
+            # assert resp.status_code < 400, f'API response status code {resp.status_code}.'
+            return resp.json()
         return call_func
 
     def sd_api_token_required(self, func):
@@ -441,12 +403,7 @@ class SD_JSON:
         def call_func(*args, **kwargs):
             if not hasattr(self, "token"):
                 self.api_token()
-            try:
-                self.headers["token"] = self.token
-            except Exception as e:
-                print(e)
-                self.return_value = 1
-                return
+            self.headers["token"] = self.token
 
             @self.sd_api_no_token
             def sd_api_call():
