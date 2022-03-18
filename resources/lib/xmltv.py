@@ -486,7 +486,7 @@ xmltv_infos = {
 }
 
 
-def get_xmltv_url(country_id, date: datetime.datetime) -> str:
+def get_xmltv_url(country_id, date):
     """Get URL of the xmltv file
 
     Args:
@@ -498,7 +498,7 @@ def get_xmltv_url(country_id, date: datetime.datetime) -> str:
     return xmltv_infos[country_id]['url'].format(date.strftime('%Y%m%d'))
 
 
-def get_remote_xmltv_md5(country_id, date: datetime.datetime) -> str:
+def get_remote_xmltv_md5(country_id, date):
     """Get MD5 of the remote xmltv file
 
     Args:
@@ -511,7 +511,7 @@ def get_remote_xmltv_md5(country_id, date: datetime.datetime) -> str:
     return urlquick.get(url, max_age=120).text
 
 
-def download_xmltv_file(country_id, date: datetime.datetime, xmltv_fp: str) -> None:
+def download_xmltv_file(country_id, date, xmltv_fp):
     """Try to download XMLTV file of country_id for today + day_delta.
 
     Args:

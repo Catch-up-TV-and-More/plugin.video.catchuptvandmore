@@ -53,11 +53,11 @@ class SD_JSON:
     """
 
     def __init__(self,
-                 username: str,
-                 password: str,
-                 xmltv_filepath: str,
-                 lineup: str,
-                 date: str,
+                 username,
+                 password,
+                 xmltv_filepath,
+                 lineup,
+                 date,
                  xmltv_ids,
                  verboseMap=True):
         self.sd_url = "https://json.schedulesdirect.org/20141201"
@@ -96,9 +96,9 @@ class SD_JSON:
     #             if getattr(args, "headers") is not None: setattr(self, "headers", json.loads(getattr(args, "headers")))
     #     return args
 
-    def api_token(self) -> None:
+    def api_token(self):
         sd_token_request = {"username": self.username, "password": self.password_sha1}
-        resp = requests.post(f"{self.sd_url}/token", data=json.dumps(sd_token_request))
+        resp = requests.post(self.sd_url + "/token", data=json.dumps(sd_token_request))
         resp_json = None
         try:
             resp.raise_for_status()
@@ -113,28 +113,28 @@ class SD_JSON:
         self.api_token_json = resp_json
         return
 
-    def api_channel_mapping(self) -> None:
+    def api_channel_mapping(self):
         """StationID / channel mapping for a lineup."""
         @self.sd_verbose_map
         @self.sd_api_token_required
         def sd_api_channel_mapping():
-            return requests.get(f'{self.sd_url}/lineups/{self.lineup}', headers=self.headers)
+            return requests.get(self.sd_url + "/lineups/" + self.lineup, headers=self.headers)
         Script.log('[sd_json] Get stationID/channel mapping with lineup {}'.format(self.lineup), lvl=Script.DEBUG)
         full_api_channel_mapping_json = sd_api_channel_mapping()
         channels_map = []
         for channel_map in full_api_channel_mapping_json['map']:
-            channel = f'I{channel_map["stationID"]}.json.schedulesdirect.org'
+            channel = 'I' + channel_map["stationID"] + ".json.schedulesdirect.org"
             if channel in self.xmltv_ids:
                 channels_map.append(channel_map)
         stations = []
         for station in full_api_channel_mapping_json['stations']:
-            channel = f'I{station["stationID"]}.json.schedulesdirect.org'
+            channel = 'I' + station["stationID"] + ".json.schedulesdirect.org"
             if channel in self.xmltv_ids:
                 stations.append(station)
         self.api_channel_mapping_json = {"map": channels_map, "stations": stations}
         return
 
-    def api_schedules(self, max_stationIDs=5000) -> None:
+    def api_schedules(self, max_stationIDs=5000):
         """Schedules API takes a POST of:
             [ {"stationID": "20454", "date": [ "2015-03-13", "2015-03-17" ]}, …]
 
@@ -143,7 +143,7 @@ class SD_JSON:
         """
         @self.sd_api_token_required
         def sd_api_schedules():
-            return requests.post(f'{self.sd_url}/schedules', data=json.dumps(sd_schedule_query), headers=self.headers)
+            return requests.post(self.sd_url + '/schedules', data=json.dumps(sd_schedule_query), headers=self.headers)
         dates = {"date": [self.date]}
         self.api_channel_mapping()
         idx = 0  # block indexing through stationID's
@@ -160,11 +160,11 @@ class SD_JSON:
         self.api_schedules_json = resp_json
         return
 
-    def api_programs(self, max_programIDs=500) -> None:
+    def api_programs(self, max_programIDs=500):
         """Programs API takes a POST of: ["EP000000060003", "EP000000510142"]"""
         @self.sd_api_token_required
         def sd_api_programs():
-            return requests.post(f'{self.sd_url}/programs', data=json.dumps(sd_pgm_query), headers=self.headers)
+            return requests.post(self.sd_url + '/programs', data=json.dumps(sd_pgm_query), headers=self.headers)
         self.api_schedules()
         sd_programs_data = list(set([p["programID"] for s in self.api_schedules_json if "programs" in s for p in s["programs"] if p["md5"] not in {}]))
 
@@ -203,13 +203,13 @@ class SD_JSON:
 
         # channels
         stationID_map_dict = {
-            sid["stationID"]: {"id": f'I{sid["stationID"]}.json.schedulesdirect.org',
+            sid["stationID"]: {"id": 'I' + sid["stationID"] + '.json.schedulesdirect.org',
                                "channel": str(int(sid["channel"]))} for k, sid in enumerate(self.api_channel_mapping_json["map"])}
         for k, stn in enumerate(self.api_channel_mapping_json["stations"]):
             channel = et.SubElement(root, "channel", attrib={"id": stationID_map_dict[stn["stationID"]]["id"]})
             # "mythtv seems to assume that the first three display-name elements are
             # name, callsign and channel number. We follow that scheme here."
-            et.SubElement(channel, "display-name").text = f'{stationID_map_dict[stn["stationID"]]["channel"]} {stn["name"]}'
+            et.SubElement(channel, "display-name").text = stationID_map_dict[stn["stationID"]]["channel"] + " " + stn["name"]
             et.SubElement(channel, "display-name").text = stn["callsign"]
             et.SubElement(channel, "display-name").text = stationID_map_dict[stn["stationID"]]["channel"]
             # if "logo" in stn:
@@ -280,7 +280,7 @@ class SD_JSON:
                 # episode-num
                 if "metadata" in pgm and "Gracenote" in pgm["metadata"][0]:
                     et.SubElement(programme, "episode-num", attrib={"system": "xmltv_ns"}).text = self.create_episode_num(pgm["metadata"][0]["Gracenote"])
-                et.SubElement(programme, "episode-num", attrib={"system": "dd_progid"}).text = f'{pgm["programID"]}.{pgmid_counts[pgm["programID"]]:0{pgm_prec}d}'
+                et.SubElement(programme, "episode-num", attrib={"system": "dd_progid"}).text =  '{}.{}'.format(pgm["programID"], pgmid_counts[pgm["programID"]]:0 + '{}'.format(pgm_prec)d)
                 pgmid_counts[pgm["programID"]] += 1
                 # previously-shown
                 if "originalAirDate" in pgm:
@@ -353,7 +353,7 @@ class SD_JSON:
                 if "movie" in pgm and "qualityRating" in pgm["movie"]:
                     for qrt in pgm["movie"]["qualityRating"]:
                         star_rating = et.SubElement(programme, "star-rating")
-                        et.SubElement(star_rating, "value").text = f'{qrt["rating"]}/{qrt["maxRating"]}'
+                        et.SubElement(star_rating, "value").text = qrt["rating"] + '/' + qrt["maxRating"]
 
         # (re-)write the XML file
         rough_string = et.tostring(root, 'utf-8')
