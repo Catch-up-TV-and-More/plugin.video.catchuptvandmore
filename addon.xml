@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta08" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta09" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -63,9 +63,10 @@
 [Project] Revert commit 27b088548a870901fd629e77c95b442549dabe03 (issue #688)
 [XMLTV] Fix issue if 'episode-num' format is wrong in xmltv file
 [XMLTV] Add default XMLTV id for CA channels
-[FR - LIVE] Add Sud Radio
+[FR - LIVE] Add Sud Radio (issue #696)
 [Project] Make Flake8 happy
 [XMLTV] Support Schedules Direct (see addon settings) for canadian channels
+[FR - RMCBFMPLAY] Fix a compatibility issue with Leia and below (issue #678)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

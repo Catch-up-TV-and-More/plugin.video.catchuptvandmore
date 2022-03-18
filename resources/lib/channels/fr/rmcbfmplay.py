@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 import base64
 import json
 import re
-import urllib.parse
+from six.moves import urllib
 from builtins import str
 
 import inputstreamhelper
