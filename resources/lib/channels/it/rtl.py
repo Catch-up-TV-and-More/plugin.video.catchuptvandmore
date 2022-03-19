@@ -16,11 +16,11 @@ from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
 
 from resources.lib import web_utils
+from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
                                       get_selected_item_info,
                                       get_selected_item_label, get_kodi_version)
 from resources.lib.menu_utils import item_post_treatment
-from resources.lib.addon_utils import get_item_label, get_item_media_path
 
 if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
     import html as html_parser
@@ -33,9 +33,10 @@ else:
 
     html_parser = HTMLParser.HTMLParser()
 
-PATTERN = re.compile(r'data-media-object="(.*?)"')
+PATTERN_MEDIA_OBJECT = re.compile(r'data-media-object="(.*?)"')
 # EXT-X-STREAM-INF:BANDWIDTH=1888000,CODECS="avc1.4d481f,mp4a.40.2",RESOLUTION=1024x576
 PATTERN_M3U8_QUALITIES = re.compile(r'#EXT-X-STREAM-INF:.*RESOLUTION=([^\n]*)\n(.*\.m3u8)')
+PATTERN_BACKGROUND_IMAGE_URL = re.compile(r'url\((.*)\)')
 
 URL_ROOT = "https://play.rtl.it"
 
@@ -102,15 +103,15 @@ def list_lives(plugin, item_id, **kwargs):
         live_url = URL_ROOT + live_url_anchor.get('href')
 
         resp = urlquick.get(live_url)
-        media_objects = PATTERN.findall(resp.text)
+        media_objects = PATTERN_MEDIA_OBJECT.findall(resp.text)
         if len(media_objects) == 0:
-            return False
+            continue
         media_object = html_parser.unescape(media_objects[0])
         json_media_object = json.loads(media_object)
         live_plot = live_title = json_media_object['mediaInfo']['title']
 
         style = channel.find('.//img').get('style')
-        img_array = re.compile(r'url\((.*)\)').findall(style)
+        img_array = PATTERN_BACKGROUND_IMAGE_URL.findall(style)
         if len(img_array) > 0:
             live_image = img_array[0]
 
