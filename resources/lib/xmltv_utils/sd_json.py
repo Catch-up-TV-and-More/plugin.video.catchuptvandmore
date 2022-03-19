@@ -280,7 +280,12 @@ class SD_JSON:
                 # episode-num
                 if "metadata" in pgm and "Gracenote" in pgm["metadata"][0]:
                     et.SubElement(programme, "episode-num", attrib={"system": "xmltv_ns"}).text = self.create_episode_num(pgm["metadata"][0]["Gracenote"])
-                et.SubElement(programme, "episode-num", attrib={"system": "dd_progid"}).text =  '{}.{}'.format(pgm["programID"], pgmid_counts[pgm["programID"]]:0 + '{}'.format(pgm_prec)d)
+                id_cnt = pgmid_counts[pgm["programID"]]
+                # et.SubElement(programme, "episode-num", attrib={"system": "dd_progid"}).text =
+                # f'{pgm["programID"]}.{pgmid_counts[pgm["programID"]]:0{pgm_prec}d}'
+                counts_fmt = '0' + '{}'.format(pgm_prec) + 'd'
+                dd_progid_text = ('{}.{id_cnt:' + counts_fmt + '}').format(pgm["programID"], id_cnt=id_cnt)
+                et.SubElement(programme, "episode-num", attrib={"system": "dd_progid"}).text = dd_progid_text
                 pgmid_counts[pgm["programID"]] += 1
                 # previously-shown
                 if "originalAirDate" in pgm:
