@@ -70,6 +70,7 @@
 [XMLTV] Avoid Python 3 specific syntax not available in Leia and below
 [SD] Fix encoding issue on Linux computers
 [XMLTV] Fix f-strings for Python2
+[IT - Radiofreccia] Choose quality without inputstream.adaptive thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
