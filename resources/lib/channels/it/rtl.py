@@ -8,14 +8,19 @@ from __future__ import unicode_literals
 
 import json
 import re
-import urlquick
-import inputstreamhelper
-from codequick import Listitem, Resolver, Script
-from kodi_six import xbmcgui
 import sys
+
+import inputstreamhelper
+import urlquick
+from codequick import Listitem, Resolver, Route, Script
+from kodi_six import xbmcgui
+
+from resources.lib import web_utils
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
                                       get_selected_item_info,
                                       get_selected_item_label, get_kodi_version)
+from resources.lib.menu_utils import item_post_treatment
+from resources.lib.addon_utils import get_item_label, get_item_media_path
 
 if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
     import html as html_parser
@@ -31,7 +36,10 @@ else:
 PATTERN = re.compile(r'data-media-object="(.*?)"')
 # EXT-X-STREAM-INF:BANDWIDTH=1888000,CODECS="avc1.4d481f,mp4a.40.2",RESOLUTION=1024x576
 PATTERN_M3U8_QUALITIES = re.compile(r'#EXT-X-STREAM-INF:.*RESOLUTION=([^\n]*)\n(.*\.m3u8)')
-URL_LIVE = "https://play.rtl.it/live/17/radiofreccia-radiovisione/"
+
+URL_ROOT = "https://play.rtl.it"
+
+DEFAULT_IMAGE = get_item_media_path('channels/it/rtl-1025-radiovisione.png')
 
 
 def get_url_for_quality(plugin, url):
@@ -73,15 +81,57 @@ def get_url_for_quality(plugin, url):
     return final_video_url
 
 
-@Resolver.register
-def get_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE)
-    media_objects = PATTERN.findall(resp.text)
-    if len(media_objects) == 0:
-        return False
-    media_object = html_parser.unescape(media_objects[0])
-    json_media_object = json.loads(media_object)
+@Route.register
+def list_lives(plugin, item_id, **kwargs):
+    root = urlquick.get(URL_ROOT,
+                        headers={'User-Agent': web_utils.get_random_ua()},
+                        max_age=-1).parse()
+    channels = root.findall(".//div[@data-media-type='SectionItem']")
 
+    if len(channels) == 0:
+        return False
+
+    for channel in channels:
+
+        live_image = DEFAULT_IMAGE
+
+        live_url_anchor = channel.find('.//a')
+        if live_url_anchor is None:
+            continue
+
+        live_url = URL_ROOT + live_url_anchor.get('href')
+
+        resp = urlquick.get(live_url)
+        media_objects = PATTERN.findall(resp.text)
+        if len(media_objects) == 0:
+            return False
+        media_object = html_parser.unescape(media_objects[0])
+        json_media_object = json.loads(media_object)
+        live_plot = live_title = json_media_object['mediaInfo']['title']
+
+        style = channel.find('.//img').get('style')
+        img_array = re.compile(r'url\((.*)\)').findall(style)
+        if len(img_array) > 0:
+            live_image = img_array[0]
+
+        on_focus = channel.find(".//div[@class='on-focus-state-info']")
+        if on_focus is not None:
+            img = on_focus.find(".//img")
+            if img is not None:
+                live_image = img.get('src')
+            live_plot = on_focus.find(".//div[@class='info-title']").text
+
+        item = Listitem()
+        item.label = live_title
+        item.art['thumb'] = item.art['landscape'] = live_image
+        item.info['plot'] = live_plot
+        item.set_callback(get_live_url, item_id=item_id, json_media_object=json_media_object)
+        item_post_treatment(item, is_playable=True)
+        yield item
+
+
+@Resolver.register
+def get_live_url(plugin, json_media_object, **kwargs):
     url = json_media_object['mediaInfo']['uri']
     if get_kodi_version() < 18:
         return get_url_for_quality(plugin, url)

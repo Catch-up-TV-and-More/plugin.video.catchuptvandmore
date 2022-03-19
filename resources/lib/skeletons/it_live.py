@@ -262,11 +262,11 @@ menu = {
         'enabled': True,
         'order': 31
     },
-    'radiofreccia': {
-        'resolver': '/resources/lib/channels/it/radiofreccia:get_live_url',
-        'label': 'Radiofreccia',
-        'thumb': 'channels/it/radiofreccia.png',
-        'fanart': 'channels/it/radiofreccia_fanart.png',
+    'rtl': {
+        'route': '/resources/lib/channels/it/rtl:list_lives',
+        'label': 'RTL 102.5 Radiovisione',
+        'thumb': 'channels/it/rtl-1025-radiovisione.png',
+        'fanart': 'channels/it/rtl-1025-radiovisione.png',
         'enabled': True,
         'order': 32
     }
