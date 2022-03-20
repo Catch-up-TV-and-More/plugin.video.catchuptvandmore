@@ -18,7 +18,7 @@ from resources.lib import download, web_utils
 from resources.lib.addon_utils import get_quality_YTDL
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
                                       get_selected_item_info,
-                                      get_selected_item_label)
+                                      get_selected_item_label, get_kodi_version)
 
 try:
     from urllib.parse import quote_plus
@@ -76,6 +76,28 @@ URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?
 
 URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 # desired_language, videoid
+
+
+def get_live_stream(plugin,
+                    video_url,
+                    manifest_type="hls"):
+
+    if get_kodi_version() < 18:
+        return get_stream_default(plugin, video_url, False)
+
+    is_helper = inputstreamhelper.Helper(manifest_type)
+    if not is_helper.check_inputstream():
+        return get_stream_default(plugin, video_url, False)
+
+    item = Listitem()
+    item.path = video_url
+    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
+    item.property["inputstream.adaptive.manifest_type"] = manifest_type
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+
+    return item
 
 
 def get_stream_default(plugin,
