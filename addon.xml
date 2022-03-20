@@ -76,6 +76,7 @@
 [IT - RTL 102.5] Get_live_url changes (PR #706) thanks @darodi
 [BE - TELE MB] Fix live (PR #707) thanks @darodi
 [IT - RTL 102.5] Extract video URL using “YouTube.DL” without inputstream adaptative thanks @darodi
+[BE - VRT] Fix live (PR #709) Thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
