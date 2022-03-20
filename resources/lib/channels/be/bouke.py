@@ -7,8 +7,6 @@
 from __future__ import unicode_literals
 import re
 
-import inputstreamhelper
-
 try:  # Python 3
     from urllib.parse import unquote_plus
 except ImportError:  # Python 2
@@ -16,10 +14,7 @@ except ImportError:  # Python 2
 
 from codequick import Listitem, Resolver, Route
 import urlquick
-from resources.lib.addon_utils import get_item_media_path, get_quality_YTDL
-from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
-                                      get_selected_item_info,
-                                      get_selected_item_label, get_kodi_version)
+from resources.lib import resolver_proxy
 
 # TODO Add Replay
 
@@ -66,21 +61,4 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
     url = m3u8_array[0].replace("\\", "")
 
-    if get_kodi_version() < 18:
-        quality = get_quality_YTDL(download_mode=False)
-        return plugin.extract_source(url, quality)
-
-    is_helper = inputstreamhelper.Helper("hls")
-    if not is_helper.check_inputstream():
-        quality = get_quality_YTDL(download_mode=False)
-        return plugin.extract_source(url, quality)
-
-    item = Listitem()
-    item.path = url
-    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    item.property["inputstream.adaptive.manifest_type"] = "hls"
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-
-    return item
+    return resolver_proxy.get_live_stream(plugin, video_url=url, manifest_type="hls")
