@@ -77,6 +77,10 @@
 [BE - TELE MB] Fix live (PR #707) thanks @darodi
 [IT - RTL 102.5] Extract video URL using “YouTube.DL” without inputstream adaptative thanks @darodi
 [BE - VRT] Fix live (PR #709) Thanks @darodi
+[BE - Bouke] Fix live, formerly known as CanalC (PR #710) thanks @darodi
+[BE - Bouke] Refactoring in resolver_proxy.py (PR #710) thanks @darodi
+[IT - RTL102.5] Refactoring in resolver_proxy.py (PR #710) thanks @darodi
+[BE - TV Lux] Refactoring in resolver_proxy.py (PR #710) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
