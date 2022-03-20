@@ -359,7 +359,7 @@ class SD_JSON:
         # (re-)write the XML file
         rough_string = et.tostring(root, 'utf-8')
         reparsed = minidom.parseString(rough_string)
-        with open(self.xmltv_filepath, 'w') as f:
+        with open(self.xmltv_filepath, 'wb') as f:
             f.write(reparsed.toprettyxml(indent="  ").encode('utf-8'))
 
         # print(et.tostring(root, pretty_print=True, xml_declaration=True, encoding="ISO-8859-1", doctype='<!DOCTYPE tv SYSTEM "xmltv.dtd">').decode())
