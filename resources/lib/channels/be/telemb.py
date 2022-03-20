@@ -8,14 +8,17 @@ from __future__ import unicode_literals
 from builtins import str
 import re
 
+import inputstreamhelper
 from codequick import Listitem, Resolver, Route
 import urlquick
 
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
+from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
+                                      get_selected_item_info,
+                                      get_selected_item_label, get_kodi_version)
 
 # TO DO
-# Token (live) maybe more work todo
 # Fix Download Mode
 
 URL_ROOT = 'https://www.telemb.be'
@@ -23,18 +26,17 @@ URL_ROOT = 'https://www.telemb.be'
 URL_LIVE = URL_ROOT + '/direct'
 
 URL_STREAM_LIVE = 'https://telemb.fcst.tv/player/embed/%s'
-# LiveId
+
+PATTERN_M3U8 = re.compile(r'file\":\"(.*?)\"')
 
 
 @Route.register
 def list_programs(plugin, item_id, **kwargs):
-
     resp = urlquick.get(URL_ROOT)
     root = resp.parse()
     root2 = root.findall(".//li[@class='we-mega-menu-li dropdown-menu']")[3]
 
     for program_datas in root2.iterfind(".//li[@class='we-mega-menu-li']"):
-
         program_title = program_datas.find('.//a').text.strip()
         program_url = URL_ROOT + program_datas.find('.//a').get('href')
 
@@ -50,7 +52,6 @@ def list_programs(plugin, item_id, **kwargs):
 
 @Route.register
 def list_videos(plugin, item_id, program_url, page, **kwargs):
-
     resp = urlquick.get(program_url + '?page=%s' % page)
     root = resp.parse()
     root2 = root.findall(".//div[@class='view-content']")[1]
@@ -81,7 +82,6 @@ def get_video_url(plugin,
                   video_url,
                   download_mode=False,
                   **kwargs):
-
     resp = urlquick.get(video_url, max_age=-1)
     root = resp.parse()
     video_id_url = root.findall('.//iframe')[1].get('src')
@@ -96,11 +96,31 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     resp = urlquick.get(URL_LIVE, max_age=-1)
     root = resp.parse()
     live_datas = root.findall('.//iframe')[0].get('src')
 
     resp2 = urlquick.get(live_datas, max_age=-1)
-    return re.compile(
-        r'file\"\:\"(.*?)\"').findall(resp2.text)[2] + '|referer=https://telemb.fcst.tv/'
+    m3u8_files = PATTERN_M3U8.findall(resp2.text)
+    if len(m3u8_files) == 0:
+        plugin.notify(plugin.localize(30600), plugin.localize(30716))
+        return False
+
+    m3u_file = m3u8_files[0].replace("\\", "")
+
+    if get_kodi_version() < 18:
+        return m3u_file + '|referer=https://telemb.fcst.tv/'
+
+    is_helper = inputstreamhelper.Helper("hls")
+    if not is_helper.check_inputstream():
+        return m3u_file + '|referer=https://telemb.fcst.tv/'
+
+    item = Listitem()
+    item.path = m3u_file
+    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
+    item.property["inputstream.adaptive.manifest_type"] = "hls"
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+
+    return item
