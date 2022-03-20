@@ -74,6 +74,7 @@
 [XMLTV] FIx the type of the opened file thanks @JungleJim42
 [IT - RTL 102.5] Add radio lives (PR #705 issue #704) thanks @darodi
 [IT - RTL 102.5] Get_live_url changes (PR #706) thanks @darodi
+[BE - TELE MB] Fix live (PR #707) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
