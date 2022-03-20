@@ -387,6 +387,13 @@ msgctxt "#30175"
 msgid "Equidia Racing: Choose race"
 msgstr ""
 
+msgctxt "#30198"
+msgid "Use inputstream HLS?"
+msgstr ""
+
+msgctxt "#30199"
+msgid "Use ytdl for live?"
+msgstr ""
 
 # Download (from 30200 to 30239)
 

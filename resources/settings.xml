@@ -28,6 +28,8 @@
         <!-- Video quality -->
         <setting label="30150" type="lsep" />
             <setting label="30151" type="labelenum" id="quality" values="BEST|DEFAULT|DIALOG" default="BEST"/>
+            <setting label="30198" type="bool" id="use_ia_hls_live" default="true"/>
+            <setting label="30199" type="bool" id="use_ytdl_live" default="false"/>
 
 
         <!-- Content -->
