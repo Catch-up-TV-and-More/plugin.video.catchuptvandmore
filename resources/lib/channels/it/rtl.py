@@ -122,18 +122,24 @@ def list_lives(plugin, item_id, **kwargs):
                 live_image = img.get('src')
             live_plot = on_focus.find(".//div[@class='info-title']").text
 
+        url = json_media_object['mediaInfo']['uri']
+        mpd = json_media_object['mediaInfo']['descriptor'][1]["uri"]
+
         item = Listitem()
         item.label = live_title
         item.art['thumb'] = item.art['landscape'] = live_image
         item.info['plot'] = live_plot
-        item.set_callback(get_live_url, item_id=item_id, json_media_object=json_media_object)
+        item.set_callback(get_live_url, url=url, mpd=mpd)
         item_post_treatment(item, is_playable=True)
         yield item
 
 
 @Resolver.register
-def get_live_url(plugin, json_media_object, **kwargs):
-    url = json_media_object['mediaInfo']['uri']
+def get_live_url(plugin, url, mpd, **kwargs):
+
+    if mpd is None:
+        return get_url_for_quality(plugin, url)
+
     if get_kodi_version() < 18:
         return get_url_for_quality(plugin, url)
 
@@ -142,7 +148,7 @@ def get_live_url(plugin, json_media_object, **kwargs):
         return get_url_for_quality(plugin, url)
 
     item = Listitem()
-    item.path = json_media_object['mediaInfo']['descriptor'][1]["uri"]
+    item.path = mpd
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
     item.property["inputstream.adaptive.manifest_type"] = "mpd"
     item.label = get_selected_item_label()
