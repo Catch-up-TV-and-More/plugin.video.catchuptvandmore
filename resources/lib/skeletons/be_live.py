@@ -175,11 +175,11 @@ menu = {
         'enabled': True,
         'order': 19
     },
-    'canalc': {
-        'resolver': '/resources/lib/channels/be/canalc:get_live_url',
-        'label': 'Canal C',
-        'thumb': 'channels/be/canalc.png',
-        'fanart': 'channels/be/canalc_fanart.jpg',
+    'bouke': {
+        'resolver': '/resources/lib/channels/be/bouke:get_live_url',
+        'label': 'Bouké',
+        'thumb': 'channels/be/bouke.png',
+        'fanart': 'channels/be/bouke.png',
         'm3u_group': 'Belgique fr',
         'enabled': True,
         'order': 20

@@ -97,12 +97,12 @@ menu = {
         'enabled': True,
         'order': 19
     },
-    'canalc': {
-        'route': '/resources/lib/channels/be/canalc:list_programs',
-        'label': 'Canal C',
-        'thumb': 'channels/be/canalc.png',
-        'fanart': 'channels/be/canalc_fanart.jpg',
-        'enabled': True,
+    'bouke': {
+        'route': '/resources/lib/channels/be/bouke:list_programs',
+        'label': 'Bouké',
+        'thumb': 'channels/be/bouke.png',
+        'fanart': 'channels/be/bouke.png',
+        'enabled': False,
         'order': 20
     },
     'robtv': {
