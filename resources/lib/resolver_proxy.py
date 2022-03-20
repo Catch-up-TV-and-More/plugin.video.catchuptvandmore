@@ -82,12 +82,13 @@ def get_live_stream(plugin,
                     video_url,
                     manifest_type="hls"):
 
-    if get_kodi_version() < 18:
-        return get_stream_default(plugin, video_url, False)
-
-    is_helper = inputstreamhelper.Helper(manifest_type)
-    if not is_helper.check_inputstream():
-        return get_stream_default(plugin, video_url, False)
+    if ((not Script.setting.get_boolean('use_ia_hls_live') and manifest_type == "hls")
+            or (get_kodi_version() < 18)
+            or (not inputstreamhelper.Helper(manifest_type).check_inputstream())):
+        if Script.setting.get_boolean('use_ytdl_live'):
+            return get_stream_default(plugin, video_url, False)
+        else:
+            return video_url
 
     item = Listitem()
     item.path = video_url
@@ -96,7 +97,6 @@ def get_live_stream(plugin,
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
-
     return item
 
 

@@ -10,15 +10,11 @@ import json
 import re
 import sys
 
-import inputstreamhelper
 import urlquick
 from codequick import Listitem, Resolver, Route, Script
 
-from resources.lib import web_utils
-from resources.lib.addon_utils import get_item_media_path, get_quality_YTDL
-from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
-                                      get_selected_item_info,
-                                      get_selected_item_label, get_kodi_version)
+from resources.lib import web_utils, resolver_proxy
+from resources.lib.addon_utils import get_item_media_path
 from resources.lib.menu_utils import item_post_treatment
 
 if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
@@ -81,34 +77,16 @@ def list_lives(plugin, item_id, **kwargs):
             live_plot = on_focus.find(".//div[@class='info-title']").text
 
         url = json_media_object['mediaInfo']['uri']
-        mpd = json_media_object['mediaInfo']['descriptor'][1]["uri"]
 
         item = Listitem()
         item.label = live_title
         item.art['thumb'] = item.art['landscape'] = live_image
         item.info['plot'] = live_plot
-        item.set_callback(get_live_url, url=url, mpd=mpd)
+        item.set_callback(get_live_url, url=url)
         item_post_treatment(item, is_playable=True)
         yield item
 
 
 @Resolver.register
-def get_live_url(plugin, url, mpd, **kwargs):
-    if mpd is None or get_kodi_version() < 18:
-        quality = get_quality_YTDL(download_mode=False)
-        return plugin.extract_source(url, quality)
-
-    is_helper = inputstreamhelper.Helper("mpd")
-    if not is_helper.check_inputstream():
-        quality = get_quality_YTDL(download_mode=False)
-        return plugin.extract_source(url, quality)
-
-    item = Listitem()
-    item.path = mpd
-    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    item.property["inputstream.adaptive.manifest_type"] = "mpd"
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-
-    return item
+def get_live_url(plugin, url, **kwargs):
+    return resolver_proxy.get_live_stream(plugin, video_url=url, manifest_type="hls")
