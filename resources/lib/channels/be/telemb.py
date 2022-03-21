@@ -8,15 +8,11 @@ from __future__ import unicode_literals
 from builtins import str
 import re
 
-import inputstreamhelper
 from codequick import Listitem, Resolver, Route
 import urlquick
 
-from resources.lib import download
+from resources.lib import download, resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
-from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
-                                      get_selected_item_info,
-                                      get_selected_item_label, get_kodi_version)
 
 # TO DO
 # Fix Download Mode
@@ -106,21 +102,6 @@ def get_live_url(plugin, item_id, **kwargs):
         plugin.notify(plugin.localize(30600), plugin.localize(30716))
         return False
 
-    m3u_file = m3u8_files[0].replace("\\", "")
+    url = m3u8_files[0].replace("\\", "")
 
-    if get_kodi_version() < 18:
-        return m3u_file + '|referer=https://telemb.fcst.tv/'
-
-    is_helper = inputstreamhelper.Helper("hls")
-    if not is_helper.check_inputstream():
-        return m3u_file + '|referer=https://telemb.fcst.tv/'
-
-    item = Listitem()
-    item.path = m3u_file
-    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    item.property["inputstream.adaptive.manifest_type"] = "hls"
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-
-    return item
+    return resolver_proxy.get_live_stream(plugin, video_url=url, manifest_type="hls")
