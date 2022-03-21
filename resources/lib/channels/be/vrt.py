@@ -327,7 +327,7 @@ def get_live_url(plugin, item_id, **kwargs):
             if get_kodi_version() < 18:
                 continue
 
-            is_helper = inputstreamhelper.Helper("mpd")
+            is_helper = inputstreamhelper.Helper("mpd", drm='widevine')
             if not is_helper.check_inputstream():
                 continue
 
