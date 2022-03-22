@@ -102,7 +102,7 @@ menu = {
         'label': 'Bouké',
         'thumb': 'channels/be/bouke.png',
         'fanart': 'channels/be/bouke.png',
-        'enabled': False,
+        'enabled': True,
         'order': 20
     },
     'robtv': {
