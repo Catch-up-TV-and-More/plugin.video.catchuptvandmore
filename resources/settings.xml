@@ -53,7 +53,6 @@
                 <setting label="30162" type="labelenum" id="nhkworld.language" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" values="FR|EN|AR|ES|RU" default="FR"/>
                 <setting label="30166" type="labelenum" id="rt.language" values="FR|EN|AR|ES" default="FR"/>
-                <setting label="30172" type="labelenum" id="tv5mondeplus.country" values="FR|BE|DE|PT|DK|LT|HR|LV|UA|HU|MD|ME|IE|MK|EE|IL|IM|MT|IS|AL|IT|VA|AM|ES|AQ|AT|AX|AZ|JE|RO|NL|BA|NO|RS|FI|RU|BG|FO|SE|BV|SI|BY|SJ|SK|SM|GB|GE|GG|GI|GL|GR|XK|CY|CZ|PL|LI|TR" default="FR"/>
                 <setting label="30173" type="labelenum" id="tv5mondeplus.language" values="fr|en|de|es-LA" default="fr"/>
 
             <!-- French channels -->
