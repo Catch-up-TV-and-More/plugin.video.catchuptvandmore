@@ -371,10 +371,6 @@ msgctxt "#30171"
 msgid "BFM Régions: Choose region"
 msgstr "BFM Régions: Choix de la région"
 
-msgctxt "#30172"
-msgid "TV5 monde plus: Choose country"
-msgstr "TV5 monde plus: Choix du pays"
-
 msgctxt "#30173"
 msgid "TV5 monde plus: Choose language"
 msgstr "TV5 monde plus: Choix du langage"
