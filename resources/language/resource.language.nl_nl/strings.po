@@ -387,6 +387,10 @@ msgctxt "#30175"
 msgid "Equidia Racing: Choose race"
 msgstr ""
 
+msgctxt "#30197"
+msgid "Settings - InputStream adaptive"
+msgstr ""
+
 msgctxt "#30198"
 msgid "Use inputstream HLS?"
 msgstr ""
