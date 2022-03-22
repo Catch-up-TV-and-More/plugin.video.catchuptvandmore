@@ -8,7 +8,6 @@ from __future__ import unicode_literals
 
 import json
 import re
-import sys
 
 import urlquick
 # noinspection PyUnresolvedReferences
@@ -17,17 +16,7 @@ from codequick import Listitem, Resolver, Route, Script
 from resources.lib import web_utils, resolver_proxy
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.menu_utils import item_post_treatment
-
-if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
-    import html as html_parser
-elif sys.version_info.major >= 3:
-    import html.parser
-
-    html_parser = html.parser.HTMLParser()
-else:
-    import HTMLParser
-
-    html_parser = HTMLParser.HTMLParser()
+from resources.lib.web_utils import html_parser
 
 PATTERN_MEDIA_OBJECT = re.compile(r'data-media-object="(.*?)"')
 PATTERN_BACKGROUND_IMAGE_URL = re.compile(r'url\((.*)\)')

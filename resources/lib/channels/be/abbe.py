@@ -18,10 +18,7 @@ from codecs import decode as codec_decode
 from codequick import Resolver, Listitem
 from kodi_six import xbmcgui
 from resources.lib import web_utils
-try:
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib import urlencode
+from resources.lib.web_utils import urlencode
 
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
                                       get_selected_item_info,
