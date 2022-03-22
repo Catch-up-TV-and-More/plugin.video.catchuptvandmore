@@ -90,4 +90,4 @@ def list_lives(plugin, item_id, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, url, **kwargs):
-    return resolver_proxy.get_live_stream(plugin, video_url=url, manifest_type="hls")
+    return resolver_proxy.get_stream_ia_or_default(plugin, video_url=url, manifest_type="hls")

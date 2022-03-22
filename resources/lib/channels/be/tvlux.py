@@ -137,4 +137,4 @@ def get_live_url(plugin, item_id, **kwargs):
         plugin.notify(plugin.localize(30600), plugin.localize(30716))
         return False
     url = found_m3u8_objects[0].replace('\\', '')
-    return resolver_proxy.get_live_stream(plugin, video_url=url, manifest_type="hls")
+    return resolver_proxy.get_stream_ia_or_default(plugin, video_url=url, manifest_type="hls")
