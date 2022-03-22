@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta15" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta16" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -84,6 +84,13 @@
 [BE - AB] Check widevine (PR #711) thanks @darodi
 [BE - VRT] Check widevine (PR #711) thanks @darodi
 [BE - TELE MB] Refactoring in resolver_proxy.py (PR #711) thanks @darodi
+[BE - BOUKE] Add replay (PR #712) thanks @darodi
+[IT - RTL 102.5] Copyright correction (PR #713) thanks @darodi
+[Project] Refactoring in resolver_proxy.py (PR #714) thanks @darodi
+[Project] Refactoring in web_utils.py (PR #714) thanks @darodi
+[WO - TV5MONDEPLUS] Add search, use GeoIp country, random user agent, language (PR #715) thanks @darodi
+Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
+[BE - RTBFAUVIO] Allow using input stream adaptive (PR #718) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
