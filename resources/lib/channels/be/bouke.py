@@ -6,32 +6,14 @@
 
 from __future__ import unicode_literals
 import re
-import sys
-
-try:  # Python 3
-    from urllib.parse import unquote_plus
-except ImportError:  # Python 2
-    # noinspection PyUnresolvedReferences
-    from urllib import unquote_plus
 
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route
 # noinspection PyUnresolvedReferences
 from codequick.utils import urljoin_partial
 import urlquick
-from resources.lib import resolver_proxy, web_utils
-
-if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
-    import html as html_parser
-elif sys.version_info.major >= 3:
-    import html.parser
-
-    html_parser = html.parser.HTMLParser()
-else:
-    # noinspection PyUnresolvedReferences
-    import HTMLParser
-
-    html_parser = HTMLParser.HTMLParser()
+from resources.lib import resolver_proxy
+from resources.lib.web_utils import html_parser, unquote_plus, get_random_ua
 
 URL_ROOT = 'https://www.bouke.media/'
 url_constructor = urljoin_partial(URL_ROOT)
@@ -51,7 +33,7 @@ PATTERN_VIDEO_M3U8 = re.compile(r'\\\"src\\\":\[\\\"(.*?\.m3u8)\\\"')
 PATTERN_LIVE_M3U8 = re.compile(r'\"src\":\[\"(.*?\.m3u8)\"]')
 
 HEADERS = {
-    "User-Agent": web_utils.get_random_ua(),
+    "User-Agent": get_random_ua(),
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
     "Upgrade-Insecure-Requests": "1",

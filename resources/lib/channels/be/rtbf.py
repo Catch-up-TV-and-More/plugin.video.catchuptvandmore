@@ -8,11 +8,6 @@ from __future__ import unicode_literals
 import json
 import re
 
-try:  # Python 3
-    from urllib.parse import urlencode
-except ImportError:  # Python 2
-    from urllib import urlencode
-
 import inputstreamhelper
 from codequick import Route, Resolver, Listitem
 import htmlement
@@ -23,6 +18,7 @@ from resources.lib import download, resolver_proxy
 from resources.lib.kodi_utils import (get_kodi_version, get_selected_item_art, get_selected_item_label,
                                       get_selected_item_info, INPUTSTREAM_PROP)
 from resources.lib.menu_utils import item_post_treatment
+from resources.lib.web_utils import urlencode
 
 # TODO
 # Add geoblock (info in JSON)
