@@ -14,3 +14,4 @@ six
 #typing-extensions == 3.7.4.1; python_version != '2.7'
 tzlocal
 xmlschema == 1.0.18; python_version == '2.7'
+urlquick
