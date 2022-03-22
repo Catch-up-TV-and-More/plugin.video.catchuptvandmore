@@ -129,7 +129,7 @@ def play_video(plugin, url):
         return False
     video_url = m3u8_array[0].replace("\\", "")
 
-    return resolver_proxy.get_live_stream(plugin, video_url=video_url, manifest_type="hls")
+    return resolver_proxy.get_stream_ia_or_default(plugin, video_url=video_url, manifest_type="hls")
 
 
 @Resolver.register
@@ -146,4 +146,4 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
     video_url = m3u8_array[0].replace("\\", "")
 
-    return resolver_proxy.get_live_stream(plugin, video_url=video_url, manifest_type="hls")
+    return resolver_proxy.get_stream_ia_or_default(plugin, video_url=video_url, manifest_type="hls")

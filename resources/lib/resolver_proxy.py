@@ -78,9 +78,9 @@ URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 # desired_language, videoid
 
 
-def get_live_stream(plugin,
-                    video_url,
-                    manifest_type="hls"):
+def get_stream_ia_or_default(plugin,
+                             video_url,
+                             manifest_type="hls"):
 
     if ((not Script.setting.get_boolean('use_ia_hls_live') and manifest_type == "hls")
             or (get_kodi_version() < 18)
