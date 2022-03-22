@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta14" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta15" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -76,11 +76,14 @@
 [IT - RTL 102.5] Get_live_url changes (PR #706) thanks @darodi
 [BE - TELE MB] Fix live (PR #707) thanks @darodi
 [IT - RTL 102.5] Extract video URL using “YouTube.DL” without inputstream adaptative thanks @darodi
-[BE - VRT] Fix live (PR #709) Thanks @darodi
+[BE - VRT] Fix live (PR #709) thanks @darodi
 [BE - Bouke] Fix live, formerly known as CanalC (PR #710) thanks @darodi
 [BE - Bouke] Refactoring in resolver_proxy.py (PR #710) thanks @darodi
 [IT - RTL102.5] Refactoring in resolver_proxy.py (PR #710) thanks @darodi
 [BE - TV Lux] Refactoring in resolver_proxy.py (PR #710) thanks @darodi
+[BE - AB] Check widevine (PR #711) thanks @darodi
+[BE - VRT] Check widevine (PR #711) thanks @darodi
+[BE - TELE MB] Refactoring in resolver_proxy.py (PR #711) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
