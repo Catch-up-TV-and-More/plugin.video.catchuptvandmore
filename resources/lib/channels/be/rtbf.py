@@ -462,6 +462,8 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
     parser.feed(json_parser["blocks"][sub_category_data_uuid])
     root = parser.close()
 
+    item_found = False
+
     for sub_category_dl_datas in root.iterfind(".//section[@class='js-item-container']"):
         if sub_category_dl_datas.get('id') != sub_category_id:
             continue
@@ -495,7 +497,11 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
                               item_id=item_id,
                               video_id=video_id)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
+            item_found = True
             yield item
+
+    if not item_found:
+        return False
 
 
 @Resolver.register
@@ -546,6 +552,9 @@ def get_video_url(plugin,
         item.info.update(get_selected_item_info())
         return item
 
+    if video_url.endswith('m3u8'):
+        return resolver_proxy.get_stream_ia_or_default(plugin, video_url=video_url, manifest_type="hls")
+
     return video_url
 
 
@@ -573,6 +582,10 @@ def get_video_url2(plugin,
 
     if download_mode:
         return download.download_video(stream_url)
+
+    if stream_url.endswith('m3u8'):
+        return resolver_proxy.get_stream_ia_or_default(plugin, video_url=stream_url, manifest_type="hls")
+
     return stream_url
 
 
