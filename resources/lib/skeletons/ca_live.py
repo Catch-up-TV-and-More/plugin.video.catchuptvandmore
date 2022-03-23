@@ -58,10 +58,10 @@ menu = {
         'order': 6
     },
     'icirdi': {
-        'resolver': '/resources/lib/channels/wo/icirdi:get_live_url',
+        'resolver': '/resources/lib/channels/ca/icirdi:get_live_url',
         'label': 'ICI RDI',
-        'thumb': 'channels/wo/icirdi.png',
-        'fanart': 'channels/wo/icirdi_fanart.jpg',
+        'thumb': 'channels/ca/icirdi.png',
+        'fanart': 'channels/ca/icirdi_fanart.jpg',
         'xmltv_id': 'I60327.json.schedulesdirect.org',
         'enabled': True,
         'order': 16
