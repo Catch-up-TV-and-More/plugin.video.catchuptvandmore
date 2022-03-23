@@ -10,6 +10,7 @@ import json
 from codequick import Resolver
 import urlquick
 
+from resources.lib import resolver_proxy
 
 # TODO
 # Add Replay
@@ -24,4 +25,4 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
     json_parser = json.loads(resp.text)
-    return json_parser["url"]
+    return resolver_proxy.get_stream_ia_or_default(plugin, video_url=json_parser["url"], manifest_type="hls")
