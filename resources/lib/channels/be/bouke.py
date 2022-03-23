@@ -13,6 +13,7 @@ from codequick import Listitem, Resolver, Route
 from codequick.utils import urljoin_partial
 import urlquick
 from resources.lib import resolver_proxy
+from resources.lib.addon_utils import get_item_media_path
 from resources.lib.web_utils import html_parser, unquote_plus, get_random_ua
 
 URL_ROOT = 'https://www.bouke.media/'
@@ -57,6 +58,8 @@ def list_programs(plugin, item_id, **kwargs):
         url = url_tag.get("href")
         if url == '/':
             continue
+
+        item.art["thumb"] = get_item_media_path('channels/be/bouke.png')
         item.set_callback(video_list, url=url)
         yield item
 
@@ -87,7 +90,8 @@ def video_list(plugin, url):
                 item.plot = plot_container.findtext(".//div[@class='field-item']")
                 break
 
-        item.art["thumb"] = article.find(".//img").get("src")
+        image = article.find(".//img").get("src")
+        item.art["thumb"] = url_constructor(image)
         item.set_callback(play_video, url=video_url)
         yield item
 
