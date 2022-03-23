@@ -25,4 +25,4 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
     json_parser = json.loads(resp.text)
-    return resolver_proxy.get_stream_ia_or_default(plugin, video_url=json_parser["url"], manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=json_parser["url"], manifest_type="hls")

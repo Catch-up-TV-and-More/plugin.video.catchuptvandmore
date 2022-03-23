@@ -553,7 +553,7 @@ def get_video_url(plugin,
         return item
 
     if video_url.endswith('m3u8'):
-        return resolver_proxy.get_stream_ia_or_default(plugin, video_url=video_url, manifest_type="hls")
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
 
     return video_url
 
@@ -584,7 +584,7 @@ def get_video_url2(plugin,
         return download.download_video(stream_url)
 
     if stream_url.endswith('m3u8'):
-        return resolver_proxy.get_stream_ia_or_default(plugin, video_url=stream_url, manifest_type="hls")
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=stream_url, manifest_type="hls")
 
     return stream_url
 

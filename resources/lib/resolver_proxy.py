@@ -12,13 +12,16 @@ from random import randint
 
 import inputstreamhelper
 import urlquick
+# noinspection PyUnresolvedReferences
 from codequick import Listitem, Script
+# noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 from resources.lib import download, web_utils
 from resources.lib.addon_utils import get_quality_YTDL
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
                                       get_selected_item_info,
                                       get_selected_item_label, get_kodi_version)
+from resources.lib.streams.m3u8 import M3u8
 
 try:
     from urllib.parse import quote_plus
@@ -30,8 +33,6 @@ except ImportError:
 # TO DO
 # Quality VIMEO
 # Download Mode with Facebook (the video has no audio)
-
-DESIRED_QUALITY = Script.setting['quality']
 
 URL_DAILYMOTION_EMBED = 'http://www.dailymotion.com/embed/video/%s'
 # Video_id
@@ -48,7 +49,7 @@ URL_YOUTUBE = 'https://www.youtube.com/embed/%s?&autoplay=0'
 URL_BRIGHTCOVE_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.min.js'
 # AccountId, PlayerId
 
-URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/'\
+URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/' \
                             'playback/v1/accounts/%s/videos/%s'
 # AccountId, VideoId
 
@@ -66,7 +67,8 @@ URL_MTVNSERVICES_STREAM_ACCOUNT_EP = 'https://media-utils.mtvnservices.com/servi
                                      '&accountOverride=%s&ep=%s'
 # videoURI, accountOverride, ep
 
-URL_FRANCETV_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s?country_code=%s&device_type=desktop&browser=chrome'
+URL_FRANCETV_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s' \
+                            '?country_code=%s&device_type=desktop&browser=chrome'
 # VideoId
 
 URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json&url=%s'
@@ -74,26 +76,78 @@ URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json
 
 URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
 
-URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 # desired_language, videoid
+URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 
 
-def get_stream_ia_or_default(plugin,
-                             video_url,
-                             manifest_type="hls"):
+def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
+                                     append_query_string=False):
+    item = Listitem()
+    if manifest_type == 'hls':
+        stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
+        m3u8 = M3u8(url, headers=headers, map_audio=map_audio, append_query_string=append_query_string)
+        if stream_bitrate_limit > 0:
+            item.path = m3u8.get_matching_stream(stream_bitrate_limit)
+        else:
+            url_quality, bitrate = m3u8.get_url_and_bitrate_for_quality()
+            if url_quality is None and bitrate is None:
+                return False
+            item.path = url_quality
+    else:
+        # TODO other manifest types?
+        return url
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
 
-    if ((not Script.setting.get_boolean('use_ia_hls_live') and manifest_type == "hls")
+    # TODO add subtitles?
+    return item
+
+
+def get_stream_with_quality(plugin, video_url,
+                            manifest_type="hls",
+                            headers=None,
+                            map_audio=False,
+                            append_query_string=False):
+    """ Returns the stream for the bitrate or the requested quality.
+
+     Returns:
+     An item for the stream
+
+     """
+    if ((not plugin.setting.get_boolean('use_ia_hls_stream') and manifest_type == "hls")
             or (get_kodi_version() < 18)
             or (not inputstreamhelper.Helper(manifest_type).check_inputstream())):
-        if Script.setting.get_boolean('use_ytdl_live'):
+
+        if plugin.setting.get_boolean('use_ytdl_stream'):
             return get_stream_default(plugin, video_url, False)
         else:
-            return video_url
+            return __get_non_ia_stream_with_quality(plugin, video_url,
+                                                    manifest_type=manifest_type,
+                                                    headers=headers,
+                                                    map_audio=map_audio,
+                                                    append_query_string=append_query_string)
 
     item = Listitem()
     item.path = video_url
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
     item.property["inputstream.adaptive.manifest_type"] = manifest_type
+
+    # set max bandwidth
+    stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
+    if stream_bitrate_limit > 0:
+        item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
+    elif manifest_type == "hls" and 'BEST' != plugin.setting.get_string('quality'):
+        url, bitrate = M3u8(video_url).get_url_and_bitrate_for_quality()
+        if url is None and bitrate is None:
+            return False
+        if bitrate != 0:
+            item.property["inputstream.adaptive.max_bandwidth"] = str(bitrate * 1000)
+
+    if headers is not None:
+        stream_headers = urlencode(headers)
+        item.property['inputstream.adaptive.stream_headers'] = stream_headers
+
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
@@ -103,6 +157,9 @@ def get_stream_ia_or_default(plugin,
 def get_stream_default(plugin,
                        video_url,
                        download_mode=False):
+    """
+    get a stream using youtube-dl
+    """
     if download_mode:
         return download.download_video(video_url)
 
@@ -121,7 +178,6 @@ def get_stream_kaltura(plugin,
 def get_stream_dailymotion(plugin,
                            video_id,
                            download_mode=False):
-
     url_dailymotion = URL_DAILYMOTION_EMBED % video_id
     return get_stream_default(plugin, url_dailymotion, download_mode)
     # Code to reactivate when youtubedl is KO for dailymotion
@@ -168,8 +224,7 @@ def get_stream_vimeo(plugin,
                      video_id,
                      download_mode=False,
                      referer=None):
-
-    url_vimeo = URL_VIMEO_BY_ID % (video_id)
+    url_vimeo = URL_VIMEO_BY_ID % video_id
 
     if referer is not None:
         html_vimeo = urlquick.get(url_vimeo,
@@ -200,7 +255,7 @@ def get_stream_vimeo(plugin,
 def get_stream_facebook(plugin,
                         video_id,
                         download_mode=False):
-    url_facebook = URL_FACEBOOK_BY_ID % (video_id)
+    url_facebook = URL_FACEBOOK_BY_ID % video_id
     return get_stream_default(plugin, url_facebook, download_mode)
 
 
@@ -223,18 +278,14 @@ def get_brightcove_video_json(plugin,
                               data_player,
                               data_video_id,
                               download_mode=False):
-
     # Method to get JSON from 'edge.api.brightcove.com'
     resp = urlquick.get(
         URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
         headers={
-            'User-Agent':
-            web_utils.get_random_ua(),
-            'Accept':
-            'application/json;pk=%s' %
-            (get_brightcove_policy_key(data_account, data_player)),
-            'X-Forwarded-For':
-            plugin.setting.get_string('header_x-forwarded-for')
+            'User-Agent': web_utils.get_random_ua(),
+            'Accept': 'application/json;pk=%s' %
+                      (get_brightcove_policy_key(data_account, data_player)),
+            'X-Forwarded-For': plugin.setting.get_string('header_x-forwarded-for')
         })
     json_parser = json.loads(resp.text)
 
@@ -263,7 +314,6 @@ def get_mtvnservices_stream(plugin,
                             download_mode=False,
                             account_override=None,
                             ep=None):
-
     if account_override is not None and ep is not None:
         json_video_stream = urlquick.get(URL_MTVNSERVICES_STREAM_ACCOUNT_EP %
                                          (video_uri, account_override, ep),
@@ -277,8 +327,7 @@ def get_mtvnservices_stream(plugin,
                                          max_age=-1)
 
     json_video_stream_parser = json.loads(json_video_stream.text)
-    if 'rendition' not in json_video_stream_parser["package"]["video"]["item"][
-            0]:
+    if 'rendition' not in json_video_stream_parser["package"]["video"]["item"][0]:
         plugin.notify('ERROR', plugin.localize(30716))
         return False
 
@@ -294,7 +343,6 @@ def get_mtvnservices_stream(plugin,
 def get_francetv_video_stream(plugin,
                               id_diffusion,
                               download_mode=False):
-
     geoip_value = web_utils.geoip()
     if not geoip_value:
         geoip_value = 'FR'
@@ -322,7 +370,8 @@ def get_francetv_video_stream(plugin,
         final_video_url = json_parser2['url']
         if download_mode:
             return download.download_video(final_video_url)
-        return final_video_url + '|X-Forwarded-For=' + '2.' + str(randint(0, 15)) + '.' + str(randint(0, 255)) + '.' + str(randint(0, 255)) + '&User-Agent=' + web_utils.get_random_ua()
+        return final_video_url + '|X-Forwarded-For=' + '2.' + str(randint(0, 15)) + '.' + str(
+            randint(0, 255)) + '.' + str(randint(0, 255)) + '&User-Agent=' + web_utils.get_random_ua()
 
     if 'dash' in all_video_datas[0][0]:
 
@@ -342,10 +391,12 @@ def get_francetv_video_stream(plugin,
                 xbmcgui.Dialog().ok(plugin.localize(14116), plugin.localize(30603))
                 return False
             item.path = video_datas['url']
-            token_request = json.loads('{"id": "%s", "drm_type": "%s", "license_type": "%s"}' % (id_diffusion, video_datas['drm_type'], video_datas['license_type']))
+            token_request = json.loads('{"id": "%s", "drm_type": "%s", "license_type": "%s"}'
+                                       % (id_diffusion, video_datas['drm_type'], video_datas['license_type']))
             token = urlquick.post(video_datas['token'], json=token_request).json()['token']
             license_request = '{"token": "%s", "drm_info": [D{SSM}]}' % token
-            license_key = 'https://widevine-proxy.drm.technology/proxy|Content-Type=application%%2Fjson|%s|' % quote_plus(license_request)
+            license_key = 'https://widevine-proxy.drm.technology/proxy|Content-Type=application%%2Fjson|%s|' \
+                          % quote_plus(license_request)
             item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
             item.property['inputstream.adaptive.license_key'] = license_key
         else:
@@ -374,16 +425,16 @@ def get_francetv_live_stream(plugin, live_id):
         geoip_value = 'FR'
 
     # Move Live TV on the new API
-    json_parser_liveId = json.loads(
+    json_parser_live_id = json.loads(
         urlquick.get(URL_FRANCETV_PROGRAM_INFO % (live_id, geoip_value),
                      max_age=-1).text)['video']
 
     try:
-        final_url = json_parser_liveId['url']
+        final_url = json_parser_live_id['url']
     except Exception:
         return None
 
-    json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % (final_url), max_age=-1).text)
+    json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % final_url, max_age=-1).text)
     return json_parser2['url'] + '|User-Agent=%s' % web_utils.get_random_ua()
 
 
@@ -392,7 +443,6 @@ def get_arte_video_stream(plugin,
                           desired_language,
                           video_id,
                           download_mode=False):
-
     url = URL_REPLAY_ARTE % (desired_language, video_id)
     j = urlquick.get(url).json()
     stream_datas = j['videoJsonPlayer']['VSR']
@@ -407,7 +457,6 @@ def get_arte_video_stream(plugin,
                 all_streams_label.append('Stream ' + str(len(all_streams_label)))
             all_streams_url.append(stream_datas[stream]['url'])
 
-    url_selected = ''
     if len(all_streams_url) == 1:
         url_selected = all_streams_url[0]
     else:
