@@ -65,7 +65,7 @@ menu = {
         'xmltv_id': 'I60327.json.schedulesdirect.org',
         'enabled': True,
         'order': 16
-    }, 
+    },
     'ntvca': {
         'resolver': '/resources/lib/channels/ca/ntvca:get_live_url',
         'label': 'NTV',
