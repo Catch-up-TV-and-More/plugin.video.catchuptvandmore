@@ -27,10 +27,11 @@
 
         <!-- Video quality -->
         <setting label="30150" type="lsep" />
-            <setting label="30151" type="labelenum" id="quality" values="BEST|DEFAULT|DIALOG" default="BEST"/>
-            <setting label="30197" type="action" action="Addon.OpenSettings(inputstream.adaptive)" option="close" visible="System.HasAddon(inputstream.adaptive)"/>
-            <setting label="30198" type="bool" id="use_ia_hls_live" default="true"/>
-            <setting label="30199" type="bool" id="use_ytdl_live" default="false"/>
+            <setting label="30151" type="labelenum" id="quality" values="BEST|DEFAULT|DIALOG|WORST" default="BEST"/>
+            <setting id="stream_bitrate_limit" type="select" label="30196" default="0" values="0|100|250|500|750|1000|1500|2000|2500|4000|8000|20000" />
+            <setting label="30198" type="bool" id="use_ia_hls_stream" default="System.HasAddon(inputstream.adaptive)" enable="System.HasAddon(inputstream.adaptive)" />
+            <setting label="30197" type="action" subsetting="true"  action="Addon.OpenSettings(inputstream.adaptive)" option="close" enable="eq(-1,true)"/>
+            <setting label="30199" type="bool" id="use_ytdl_stream" default="false" enable="eq(-2,false)"/>
 
 
         <!-- Content -->
@@ -95,7 +96,7 @@
 
     <!-- Downloads -->
     <category label="30003">
-        <setting label="30012" type="lsep"/>
+        <setting label="30012" type="action" action="Addon.OpenSettings(script.module.youtube.dl)" option="close" enable="System.HasAddon(script.module.youtube.dl)" />
         <setting label="30200" type="folder" id="dl_folder" source="" option="writeable"/>
         <setting label="30201" type="labelenum" id="dl_quality" visible="true" values="SD|720p|1080p|Highest available" default="Highest available"/>
         <setting label="30202" type="bool" id="dl_background" default="false" visible="true"/>

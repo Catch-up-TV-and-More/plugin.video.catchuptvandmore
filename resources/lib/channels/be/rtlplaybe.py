@@ -635,6 +635,14 @@ def get_final_video_url(plugin, video_assets, asset_type=None):
             i = i + 1
         final_video_url = url_best
 
+    elif desired_quality == "WORST":
+        final_video_url = all_datas_videos_path[0]
+        i = 0
+        for data_video in all_datas_videos_quality:
+            if 'lq' in data_video:
+                final_video_url = all_datas_videos_path[i]
+                return final_video_url
+
     return final_video_url
 
 

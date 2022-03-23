@@ -64,7 +64,7 @@ msgid "Hide channels"
 msgstr ""
 
 msgctxt "#30012"
-msgid "To configure YTDL go settings of script.module.youtube.dl"
+msgid "YTDL settings"
 msgstr ""
 
 msgctxt "#30013"
@@ -288,7 +288,7 @@ msgid "Video quality"
 msgstr ""
 
 msgctxt "#30151"
-msgid "Video quality (BEST|DEFAULT|DIALOG)"
+msgid "Video quality (BEST|DEFAULT|DIALOG|WORST)"
 msgstr ""
 
 msgctxt "#30152"
@@ -383,6 +383,10 @@ msgctxt "#30175"
 msgid "Equidia Racing: Choose race"
 msgstr ""
 
+msgctxt "#30196"
+msgid "Maximum stream bitrate [COLOR=gray](0=disabled)[/COLOR]"
+msgstr ""
+
 msgctxt "#30197"
 msgid "Settings - InputStream adaptive"
 msgstr ""
@@ -392,7 +396,7 @@ msgid "Use inputstream HLS?"
 msgstr ""
 
 msgctxt "#30199"
-msgid "Use ytdl for live?"
+msgid "Use ytdl for stream?"
 msgstr ""
 
 # Download (from 30200 to 30239)

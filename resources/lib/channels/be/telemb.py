@@ -104,4 +104,4 @@ def get_live_url(plugin, item_id, **kwargs):
 
     url = m3u8_files[0].replace("\\", "")
 
-    return resolver_proxy.get_stream_ia_or_default(plugin, video_url=url, manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=url, manifest_type="hls")

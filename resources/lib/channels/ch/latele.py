@@ -42,4 +42,4 @@ def get_live_url(plugin, item_id, **kwargs):
     #     "referrer": "https://latele.ch/"
     # }
 
-    return resolver_proxy.get_stream_ia_or_default(plugin, video_url=URL_LIVE_M3U8, manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=URL_LIVE_M3U8, manifest_type="hls")
