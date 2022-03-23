@@ -20,6 +20,7 @@ from codequick.utils import urljoin_partial
 from kodi_six import xbmcgui
 
 from resources.lib import web_utils
+from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import (get_kodi_version, get_selected_item_art, get_selected_item_label,
                                       get_selected_item_info, INPUTSTREAM_PROP)
 from resources.lib.menu_utils import item_post_treatment
@@ -105,6 +106,7 @@ def list_categories(plugin, item_id, **kwargs):
 
                 item = Listitem()
                 item.label = menu_category_title
+                item.art["thumb"] = get_item_media_path('channels/wo/tv5mondeplus.png')
                 item.set_callback(list_menu_sub_categories,
                                   item_id=item_id,
                                   menu_category_reference_id=menu_category_reference_id)
@@ -163,6 +165,7 @@ def list_menu_sub_categories(plugin, item_id, menu_category_reference_id, **kwar
 
                 item = Listitem()
                 item.label = menu_sub_category_title
+                item.art["thumb"] = get_item_media_path('channels/wo/tv5mondeplus.png')
                 item.set_callback(list_programs,
                                   item_id=item_id,
                                   program_reference_id=menu_sub_category_reference_id)
@@ -195,7 +198,7 @@ def list_items(item_id, items, language):
         for localized_data in item["localized"]:
             if language in localized_data["locale"]:
                 program_title = localized_data["title"]
-                program_plot = localized_data["description"]
+                program_plot = localized_data.get("description", "")
                 for images_data in localized_data["images"]:
                     if 'poster' in images_data["type"]:
                         program_image = images_data["url"]
@@ -306,7 +309,7 @@ def list_videos_of_season(plugin, item_id, season_id, **kwargs):
     for video_data in json_parser["data"]["lookupContent"]["episodes"]["items"]:
         video_title = 'Episode %s' % str(video_data["episodeNumber"])
         video_image = video_data["artworks"][0]["source"]
-        video_plot = video_data["description"]
+        video_plot = video_data.get("description", '')
         video_id = video_data["externalIds"][0]["identifier"]
 
         item = Listitem()
@@ -354,7 +357,7 @@ def list_video_movie(plugin, item_id, program_asset_id, **kwargs):
 
     video_title = video_data["title"]
     video_image = video_data["artworks"][0]["source"]
-    video_plot = video_data["description"]
+    video_plot = video_data.get("description", '')
     video_id = video_data["externalIds"][0]["identifier"]
 
     item = Listitem()
