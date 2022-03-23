@@ -137,15 +137,6 @@ menu = {
         'enabled': True,
         'order': 15
     },
-    'icirdi': {
-        'resolver': '/resources/lib/channels/wo/icirdi:get_live_url',
-        'label': 'ICI RDI',
-        'thumb': 'channels/wo/icirdi.png',
-        'fanart': 'channels/wo/icirdi_fanart.jpg',
-        'xmltv_id': 'I60327.json.schedulesdirect.org',
-        'enabled': True,
-        'order': 16
-    },
     'cgtn': {
         'resolver': '/resources/lib/channels/wo/cgtn:get_live_url',
         'label': 'CGTN',
