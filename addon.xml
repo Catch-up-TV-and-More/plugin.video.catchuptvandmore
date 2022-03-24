@@ -99,6 +99,7 @@ Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
 [WO - TV5MONDEPLUS] Fix missing description (PR #722) thanks @darodi
 [Project] Add get_stream_with_quality function (PR #723) thanks @darodi
 [Project] Improve the french translation
+[FR - PROVENCEAZUR] Provence Azur is remplaced by BFM-Marseille and BFM Nice Côte d'Azur
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

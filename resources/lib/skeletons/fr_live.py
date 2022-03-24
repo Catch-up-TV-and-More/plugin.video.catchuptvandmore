@@ -623,15 +623,6 @@ menu = {
         'enabled': False,
         'order': 77
     },
-    'provenceazurtv': {
-        'resolver': '/resources/lib/channels/fr/azurtv:get_live_url',
-        'label': 'Provence Azur TV',
-        'thumb': 'channels/fr/provenceazurtv.png',
-        'fanart': 'channels/fr/provenceazurtv_fanart.jpg',
-        'm3u_group': 'Région',
-        'enabled': True,
-        'order': 78
-    },
     'tebeo': {
         'resolver': '/resources/lib/channels/fr/tebeo:get_live_url',
         'label': 'Tébéo',
