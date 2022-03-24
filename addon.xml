@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta18" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta19" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -93,8 +93,12 @@ Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
 [BE - RTBFAUVIO] Allow using input stream adaptive (PR #718) thanks @darodi
 [CA, WO - ICIRDI] Move Icirdi from International live into Canada live (PR #719) thanks @JungleJim42
 [CA - ICIRDI] Use get_stream_ia_or_default
-[CH - LATELE] Add live (PR #720)  thanks @darodi
+[CH - LATELE] Add live (PR #720) thanks @darodi
 [XMLTV] Remove fstrings definitively
+[BE - BOUKE] Fix images and thumbs (PR #721) thanks @darodi
+[WO - TV5MONDEPLUS] Fix missing description (PR #722) thanks @darodi
+[Project] Add get_stream_with_quality function (PR #723) thanks @darodi
+[Project] Improve the french translation
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
