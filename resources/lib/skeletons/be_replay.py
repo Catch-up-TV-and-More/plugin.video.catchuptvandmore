@@ -111,6 +111,14 @@ menu = {
         'thumb': 'channels/be/robtv.png',
         'fanart': 'channels/be/robtv_fanart.jpg',
         'enabled': True,
-        'order': 21,
+        'order': 21
     },
+    'ln24': {
+        'route': '/resources/lib/channels/be/ln24:list_programs',
+        'label': 'LN24',
+        'thumb': 'channels/be/ln24.png',
+        'fanart': 'channels/be/ln24.png',
+        'enabled': True,
+        'order': 22
+    }
 }
