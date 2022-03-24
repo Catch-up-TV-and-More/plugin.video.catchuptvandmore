@@ -117,14 +117,14 @@ def get_video_url(plugin,
             all_datas_videos_path.append(stream_url)
 
     url = ''
-    if desired_quality == Quality.DIALOG:
+    if desired_quality == Quality.DIALOG.value:
         seleted_item = xbmcgui.Dialog().select(
             plugin.localize(30709),
             all_datas_videos_quality)
         if seleted_item == -1:
             url = ''
         url = all_datas_videos_path[seleted_item]
-    elif desired_quality == Quality.BEST:
+    elif desired_quality == Quality.BEST.value:
         url_best = ''
         for data_video in all_datas_videos_path:
             url_best = data_video
