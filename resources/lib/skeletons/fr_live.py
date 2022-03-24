@@ -569,15 +569,6 @@ menu = {
         'enabled': True,
         'order': 71
     },
-    'azurtv': {
-        'resolver': '/resources/lib/channels/fr/azurtv:get_live_url',
-        'label': 'Azur TV',
-        'thumb': 'channels/fr/azurtv.png',
-        'fanart': 'channels/fr/azurtv_fanart.jpg',
-        'm3u_group': 'Région',
-        'enabled': True,
-        'order': 72
-    },
     'biptv': {
         'resolver': '/resources/lib/channels/fr/biptv:get_live_url',
         'label': 'BIP TV',
