@@ -492,7 +492,7 @@ def get_final_video_url(plugin, video_assets, asset_type=None):
     final_video_url = all_datas_videos_path[0]
 
     desired_quality = Script.setting.get_string('quality')
-    if desired_quality == Quality.DIALOG:
+    if desired_quality == Quality.DIALOG.value:
         selected_item = xbmcgui.Dialog().select(
             plugin.localize(30709),
             all_datas_videos_quality)
@@ -500,7 +500,7 @@ def get_final_video_url(plugin, video_assets, asset_type=None):
             return None
         final_video_url = all_datas_videos_path[selected_item]
 
-    elif desired_quality == Quality.BEST:
+    elif desired_quality == Quality.BEST.value:
         url_best = ''
         i = 0
         for data_video in all_datas_videos_quality:
@@ -509,7 +509,7 @@ def get_final_video_url(plugin, video_assets, asset_type=None):
             i = i + 1
         final_video_url = url_best
 
-    elif desired_quality == Quality.WORST:
+    elif desired_quality == Quality.WORST.value:
         final_video_url = all_datas_videos_path[0]
         i = 0
         for data_video in all_datas_videos_quality:

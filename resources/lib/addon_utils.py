@@ -82,20 +82,20 @@ def get_quality_YTDL(download_mode=False):
     # If not download mode get the 'quality' setting
     if not download_mode:
         quality = Script.setting.get_string('quality')
-        if quality == Quality.BEST:
+        if quality == Quality.BEST.value:
             return 3
 
-        if quality == Quality.DEFAULT:
+        if quality == Quality.DEFAULT.value:
             return 3
 
-        if quality == Quality.DIALOG:
+        if quality == Quality.DIALOG.value:
             youtube_dl_quality = ['SD', '720p', '1080p', 'Highest Available']
             selected_item = xbmcgui.Dialog().select(
                 Script.localize(30709),
                 youtube_dl_quality)
             return selected_item
 
-        if quality == Quality.WORST:
+        if quality == Quality.WORST.value:
             return 0
 
         return 3
