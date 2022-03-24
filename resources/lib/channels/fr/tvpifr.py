@@ -13,9 +13,9 @@ import urlquick
 
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
+from resources.lib import resolver_proxy, web_utils
 
-
-URL_ROOT = 'http://www.tvpi.fr'
+URL_ROOT = 'https://www.sudouest.fr/lachainetvpi/'
 
 
 @Route.register
@@ -105,5 +105,10 @@ def get_video_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(URL_ROOT)
-    return re.compile(r'file\'\: \'(.*?)\'').findall(resp.text)[0]
+    try:
+        resp = urlquick.get(URL_ROOT, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
+        live_id = re.compile(r'https://www.youtube.com/embed/(.*?)[\?\"]').findall(resp.text)[0]
+    except Exception:
+        live_id = 'iFSO8pJ_bQs'
+
+    return resolver_proxy.get_stream_youtube(plugin, live_id, download_mode=False)
