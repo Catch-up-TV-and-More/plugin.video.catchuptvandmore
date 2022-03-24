@@ -287,6 +287,10 @@ msgctxt "#30150"
 msgid "Video quality"
 msgstr "Video kwaliteit"
 
+msgctxt "#30151"
+msgid "Video quality (BEST|DEFAULT|DIALOG|WORST)"
+msgstr "Video kwaliteit (BEST|DEFAULT|DIALOG|WORST)"
+
 msgctxt "#30152"
 msgid "Contents"
 msgstr "Inhoud"
@@ -377,22 +381,6 @@ msgstr ""
 
 msgctxt "#30175"
 msgid "Equidia Racing: Choose race"
-msgstr ""
-
-msgctxt "#30192"
-msgid "BEST"
-msgstr ""
-
-msgctxt "#30193"
-msgid "DEFAULT"
-msgstr ""
-
-msgctxt "#30194"
-msgid "DIALOG"
-msgstr ""
-
-msgctxt "#30195"
-msgid "WORST"
 msgstr ""
 
 msgctxt "#30196"
