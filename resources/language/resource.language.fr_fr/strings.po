@@ -287,10 +287,6 @@ msgctxt "#30150"
 msgid "Video quality"
 msgstr "Qualité vidéo"
 
-msgctxt "#30151"
-msgid "Video quality (BEST|DEFAULT|DIALOG|WORST)"
-msgstr "Qualité vidéo (MAXIMALE|DEFAUT|DIALOGUE|MINIMALE)"
-
 msgctxt "#30152"
 msgid "Contents"
 msgstr "Contenus"
@@ -382,6 +378,22 @@ msgstr "L'Equipe: Choix du direct"
 msgctxt "#30175"
 msgid "Equidia Racing: Choose race"
 msgstr "Equidia Racing: Choix de la course"
+
+msgctxt "#30192"
+msgid "BEST"
+msgstr "MAXIMALE"
+
+msgctxt "#30193"
+msgid "DEFAULT"
+msgstr "DEFAUT"
+
+msgctxt "#30194"
+msgid "DIALOG"
+msgstr "DIALOGUE"
+
+msgctxt "#30195"
+msgid "WORST"
+msgstr "MINIMALE"
 
 msgctxt "#30196"
 msgid "Maximum stream bitrate [COLOR=gray](0=disabled)[/COLOR]"
