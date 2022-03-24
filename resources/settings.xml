@@ -27,7 +27,7 @@
 
         <!-- Video quality -->
         <setting label="30150" type="lsep" />
-            <setting label="30151" type="labelenum" id="quality" values="BEST|DEFAULT|DIALOG|WORST" default="BEST"/>
+            <setting label="30150" type="enum" id="quality" lvalues="30192|30193|30194|30195" default="0"/>
             <setting id="stream_bitrate_limit" type="select" label="30196" default="0" values="0|100|250|500|750|1000|1500|2000|2500|4000|8000|20000" />
             <setting label="30198" type="bool" id="use_ia_hls_stream" default="System.HasAddon(inputstream.adaptive)" enable="System.HasAddon(inputstream.adaptive)" />
             <setting label="30197" type="action" subsetting="true"  action="Addon.OpenSettings(inputstream.adaptive)" option="close" enable="eq(-1,true)"/>

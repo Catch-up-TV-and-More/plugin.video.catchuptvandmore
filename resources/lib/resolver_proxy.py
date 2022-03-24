@@ -17,7 +17,7 @@ from codequick import Listitem, Script
 # noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 from resources.lib import download, web_utils
-from resources.lib.addon_utils import get_quality_YTDL
+from resources.lib.addon_utils import get_quality_YTDL, Quality
 from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
                                       get_selected_item_info,
                                       get_selected_item_label, get_kodi_version)
@@ -137,7 +137,7 @@ def get_stream_with_quality(plugin, video_url,
     stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
     if stream_bitrate_limit > 0:
         item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
-    elif manifest_type == "hls" and 'BEST' != plugin.setting.get_string('quality'):
+    elif manifest_type == "hls" and Quality.BEST != plugin.setting.get_string('quality'):
         url, bitrate = M3u8(video_url).get_url_and_bitrate_for_quality()
         if url is None and bitrate is None:
             return False
