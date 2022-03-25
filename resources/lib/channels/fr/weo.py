@@ -7,15 +7,11 @@
 from __future__ import unicode_literals
 import re
 
-from codequick import Listitem, Resolver
+# noinspection PyUnresolvedReferences
+from codequick import Resolver
 import urlquick
 
-import inputstreamhelper
 from resources.lib import resolver_proxy, web_utils
-from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
-                                      get_selected_item_info,
-                                      get_selected_item_label)
-from resources.lib.menu_utils import item_post_treatment
 
 
 # TODO
@@ -38,13 +34,5 @@ def get_live_url(plugin, item_id, **kwargs):
     resp2 = urlquick.get(video_page, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
     video_url = re.compile(r'live\"\:\{\"src\"\:\"(.*?)\"').findall(resp2.text)[0].replace("\/", "/")
 
-    is_helper = inputstreamhelper.Helper("hls")
-    if not is_helper.check_inputstream():
-        return False
 
-    item = Listitem()
-    item.path = video_url
-    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    item.property["inputstream.adaptive.manifest_type"] = "hls"
-
-    return item
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
