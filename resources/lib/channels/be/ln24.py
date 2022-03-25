@@ -8,7 +8,6 @@
 from __future__ import unicode_literals
 
 import re
-from xml.etree import ElementTree
 
 import urlquick
 # noinspection PyUnresolvedReferences
@@ -64,7 +63,7 @@ def video_list(plugin, url):
     resp = urlquick.get(url)
 
     root_elem = resp.parse("div", attrs={"class": "view-content"})
-    results = root_elem.iterfind(".//article[@role='article']")
+    results = root_elem.iterfind(".//article")
 
     for article in results:
 
@@ -75,14 +74,20 @@ def video_list(plugin, url):
             trimmed_date = re.sub(r'\s', '', date)
             item.info.date(trimmed_date, "%d.%m.%y")
 
-        video_url = url_constructor(article.find(".//a").get("href"))
+        found_url = url_constructor(article.find(".//a").get("href"))
 
         label = article.findtext(".//h3//span")
+        if label is None:
+            label = article.findtext(".//h3//a")
         item.label = re.sub(r'(^\s*|\s{2})', '', label)
         image = article.find(".//img")
         if image is not None:
             item.art["thumb"] = url_constructor(image.get("src"))
-        item.set_callback(play_video, url=video_url)
+
+        if "/emission/" in found_url:
+            item.set_callback(video_list, url=found_url)
+        else:
+            item.set_callback(play_video, url=found_url)
         yield item
 
     pagination_container = resp.parse("div", attrs={"class": "region region-content"})
