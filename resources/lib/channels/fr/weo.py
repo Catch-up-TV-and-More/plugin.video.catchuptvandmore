@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 import re
 
+# noinspection PyUnresolvedReferences
 from codequick import Resolver
 import urlquick
 
@@ -33,4 +34,4 @@ def get_live_url(plugin, item_id, **kwargs):
     resp2 = urlquick.get(video_page, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
     video_url = re.compile(r'live\"\:\{\"src\"\:\"(.*?)\"').findall(resp2.text)[0].replace("\/", "/")
 
-    return resolver_proxy.__get_non_ia_stream_with_quality(plugin, video_url, manifest_type="hls")
+    return resolver_proxy.get_non_ia_stream_with_quality(plugin, video_url, manifest_type="hls")
