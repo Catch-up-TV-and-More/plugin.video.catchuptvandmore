@@ -24,9 +24,13 @@ URL_LIVE = URL_ROOT + "/direct/"
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
-    live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
-    return resolver_proxy.get_stream_dailymotion(plugin,
-                                                 live_id,
-                                                 False)
+    resp = urlquick.get(URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
+    for possibility in resp.parse().findall('.//iframe'):
+        if possibility.get('allowfullscreen'):
+            video_page = 'https:' + possibility.get('src')
+
+    # In a perfect world, digiteka extractor would not be broken in youtube-dl
+    resp2 = urlquick.get(video_page, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
+    video_url = re.compile(r'live\"\:\{\"src\"\:\"(.*?)\"').findall(resp2.text)[0].replace("\/", "/")
+
+    return resolver_proxy.__get_non_ia_stream_with_quality(plugin, video_url, manifest_type="hls")
