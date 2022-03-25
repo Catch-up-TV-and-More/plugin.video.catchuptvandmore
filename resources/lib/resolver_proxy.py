@@ -80,8 +80,8 @@ URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?
 URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 
 
-def get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
-                                   append_query_string=False):
+def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
+                                     append_query_string=False):
     item = Listitem()
     if manifest_type == 'hls':
         stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
@@ -122,11 +122,11 @@ def get_stream_with_quality(plugin, video_url,
         if plugin.setting.get_boolean('use_ytdl_stream'):
             return get_stream_default(plugin, video_url, False)
         else:
-            return get_non_ia_stream_with_quality(plugin, video_url,
-                                                  manifest_type=manifest_type,
-                                                  headers=headers,
-                                                  map_audio=map_audio,
-                                                  append_query_string=append_query_string)
+            return __get_non_ia_stream_with_quality(plugin, video_url,
+                                                    manifest_type=manifest_type,
+                                                    headers=headers,
+                                                    map_audio=map_audio,
+                                                    append_query_string=append_query_string)
 
     item = Listitem()
     item.path = video_url
