@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta19" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta20" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -100,6 +100,25 @@ Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
 [Project] Add get_stream_with_quality function (PR #723) thanks @darodi
 [Project] Improve the french translation
 [FR - PROVENCEAZUR] Provence Azur is remplaced by BFM-Marseille and BFM Nice Côte d'Azur
+[FR - LIVE] Remove a useless item
+[FR - TVVENDEE] Fix the link (issue #726)
+[Project] Improve translations (PR #725) thanks @darodi
+[Project] settings changes (PR #725) thanks @darodi
+[Project] Revert "[Project] Improve translations" (PR #727 issue #724) thanks @dardi
+[Project] Improve translations - qualities as enum (PR #727 issue #724) thanks @dardi
+[FR - TVPI] Fix live (issue #726)
+[FR - TEBEO] Fix live (issue #726)
+[Project] Qualities as enum - fix comparison (PR #729) thanks @darodi
+[ES - MITELE] Fix typos and undeclared values (PR #730) thanks @darodi
+[BE - LN24] Add replay (PR #731) thanks @darodi
+[FR - WEO] Fix live (issue #726)
+[BE - LN24] Add replay - partenaires (PR  #732) thanks @darodi
+[Project] Qualities as enum - better default qualities (PR #733) thanks @darodi
+[Project] Qualities - refactoring resolver_proxy.py (PR #733) thanks @darodi
+[BE - ACTV] Fix live (PR #734) thanks @darodi
+[BE - ATV] Live qualities (PR #735) thanks @darodi
+[FR - WEO] Fix qualities (issue #726) thanks @darodi
+[FR - WEO] Fix live (PR #736 issue #726) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
