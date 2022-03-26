@@ -305,7 +305,7 @@ def get_brightcove_video_json(plugin,
 
     if download_mode:
         return download.download_video(video_url)
-    return video_url
+    return get_stream_with_quality(plugin, video_url, manifest_type="hls")
 
 
 # MTVN Services Part

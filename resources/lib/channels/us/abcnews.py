@@ -7,11 +7,15 @@
 from __future__ import unicode_literals
 import json
 
-from codequick import Listitem, Resolver, Route
+from codequick import Listitem, Route
 import urlquick
 
 from resources.lib import download
 from resources.lib.menu_utils import item_post_treatment
+
+# noinspection PyUnresolvedReferences
+from codequick import Resolver
+from resources.lib import resolver_proxy, web_utils
 
 
 # TODO
@@ -99,23 +103,19 @@ def list_videos(plugin, item_id, program_url, **kwargs):
 
 
 @Resolver.register
-def get_video_url(plugin,
-                  item_id,
-                  video_id,
-                  download_mode=False,
-                  **kwargs):
+def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
 
     resp = urlquick.get(URL_REPLAY_STREAM % video_id)
     json_parser = json.loads(resp.text)
-    stream_url = ''
+    video_url = ''
     for stream_datas in json_parser["channel"]["item"]["media-group"][
             "media-content"]:
         if stream_datas["@attributes"]["type"] == 'application/x-mpegURL':
-            stream_url = stream_datas["@attributes"]["url"]
+            video_url = stream_datas["@attributes"]["url"]
 
     if download_mode:
-        return download.download_video(stream_url)
-    return stream_url
+        return download.download_video(url_url)
+    resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
 
 
 @Resolver.register
@@ -123,10 +123,11 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE_STREAM)
     json_parser = json.loads(resp.text)
-    stream_url = ''
+    video_url = ''
     for live_datas in json_parser["channel"]["item"]["media-group"][
             "media-content"]:
         if 'application/x-mpegURL' in live_datas["@attributes"]["type"]:
             if 'preview' not in live_datas["@attributes"]["url"]:
-                stream_url = live_datas["@attributes"]["url"]
-    return stream_url
+                video_url = live_datas["@attributes"]["url"]
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
