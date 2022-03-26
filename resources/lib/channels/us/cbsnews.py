@@ -32,5 +32,5 @@ def get_live_url(plugin, item_id, **kwargs):
 
     jsonparser = json.loads(defaultPayload_line)
 
-    video_url =  jsonparser["items"][0]["video2"]
+    video_url = jsonparser["items"][0]["video2"]
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
