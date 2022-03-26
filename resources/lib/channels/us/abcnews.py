@@ -114,7 +114,7 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
             video_url = stream_datas["@attributes"]["url"]
 
     if download_mode:
-        return download.download_video(url_url)
+        return download.download_video(video_url)
     resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
 
 
