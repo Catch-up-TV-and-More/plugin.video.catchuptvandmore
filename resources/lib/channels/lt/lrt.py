@@ -29,5 +29,3 @@ def get_live_url(plugin, item_id, **kwargs):
     video_url = resp['response']['data']['content']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
-
-
