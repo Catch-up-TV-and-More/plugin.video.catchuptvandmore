@@ -35,8 +35,9 @@ class M3u8(object):
     PATTERN_AUDIO2 = re.compile(
         r'(#\w[^:]+)[^\n]+BANDWIDTH=(\d+)\d{3}(?:[^\r\n]*AUDIO="([^"]+)")?[^\n]*\W+([^\n]+.m3u8[^\n\r]*)')
 
-    def __init__(self, url, headers=None, append_query_string=False, map_audio=False):
+    def __init__(self, url, headers=None, append_query_string=False, map_audio=False, verify=True):
 
+        self.verify = verify
         self.map_audio = map_audio
         self.append_query_string = append_query_string
         self.headers = headers
@@ -46,7 +47,7 @@ class M3u8(object):
         self.media_streams_checked = False
 
     @staticmethod
-    def get_streams(url, headers=None, append_query_string=False, map_audio=False):
+    def get_streams(url, headers=None, append_query_string=False, map_audio=False, verify=True):
         """ Parsers standard M3U8 lists and returns a list of tuples with streams and bitrates and resolutions that
         can be used by other methods.
 
@@ -54,6 +55,7 @@ class M3u8(object):
         :param str url:                     The url to download
         :param bool append_query_string:    Should the existing query string be appended?
         :param bool map_audio:              Map audio streams
+        :param bool verify:                 verify ssl
 
         :return: a list of streams with their bitrate and their resolution and optionally the audio streams.
         :rtype: list[tuple[str,str,str]|tuple[str,str,str,str]]
@@ -61,7 +63,7 @@ class M3u8(object):
         """
 
         streams = []
-        resp = urlquick.get(url, headers=headers, max_age=-1)
+        resp = urlquick.get(url, headers=headers, max_age=-1, verify=verify)
         data = resp.text
 
         qs = None
@@ -121,18 +123,19 @@ class M3u8(object):
         return streams
 
     @staticmethod
-    def get_media_streams(url, headers=None, append_query_string=False, map_audio=False):
+    def get_media_streams(url, headers=None, append_query_string=False, map_audio=False, verify=True):
         media_streams = []
         if map_audio:
             for s, b, r, a in M3u8.get_streams(url, headers=headers, append_query_string=append_query_string,
-                                               map_audio=True):
+                                               map_audio=True, verify=verify):
                 if a:
                     audio_part = a.rsplit("-", 1)[-1]
                     audio_part = "-%s" % (audio_part,)
                     s = s.replace(".m3u8", audio_part)
                 media_streams.append(MediaStream(s, b, r))
 
-        for s, b, r in M3u8.get_streams(url, headers=headers, append_query_string=append_query_string, map_audio=False):
+        for s, b, r in M3u8.get_streams(url, headers=headers, append_query_string=append_query_string, map_audio=False,
+                                        verify=verify):
             media_streams.append(MediaStream(s, b, r))
 
         return media_streams
@@ -152,7 +155,7 @@ class M3u8(object):
 
         if not self.media_streams_checked:
             self.media_streams = M3u8.get_media_streams(self.url, self.headers, self.append_query_string,
-                                                        self.map_audio)
+                                                        self.map_audio, self.verify)
             self.media_streams_checked = True
 
         # order the items by bitrate
@@ -204,7 +207,7 @@ class M3u8(object):
 
         if not self.media_streams_checked:
             self.media_streams = M3u8.get_media_streams(self.url, self.headers, self.append_query_string,
-                                                        self.map_audio)
+                                                        self.map_audio, self.verify)
             self.media_streams_checked = True
 
         if len(self.media_streams) == 0:
