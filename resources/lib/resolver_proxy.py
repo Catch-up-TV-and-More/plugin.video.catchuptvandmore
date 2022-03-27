@@ -9,11 +9,11 @@ from __future__ import unicode_literals
 import json
 import re
 from random import randint
-
+# noinspection PyUnresolvedReferences
 import inputstreamhelper
 import urlquick
 # noinspection PyUnresolvedReferences
-from codequick import Listitem, Script
+from codequick import Listitem, Route, Script
 # noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 from resources.lib import download, web_utils
@@ -81,11 +81,11 @@ URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
 
 
 def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
-                                     append_query_string=False):
+                                     append_query_string=False, verify=True):
     item = Listitem()
     if manifest_type == 'hls':
         stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
-        m3u8 = M3u8(url, headers=headers, map_audio=map_audio, append_query_string=append_query_string)
+        m3u8 = M3u8(url, headers=headers, map_audio=map_audio, append_query_string=append_query_string, verify=verify)
         if stream_bitrate_limit > 0:
             item.path = m3u8.get_matching_stream(stream_bitrate_limit)
         else:
@@ -93,9 +93,15 @@ def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=N
             if url_quality is None and bitrate is None:
                 return False
             item.path = url_quality
+        item.context.related(add_context_qualities, plugin, m3u8)
+
+    # TODO other manifest types?
     else:
-        # TODO other manifest types?
-        return url
+        if headers is not None and headers.get("referrer") is not None:
+            return url + "|referrer=" + headers.get("referrer")
+        else:
+            return url
+
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
@@ -104,17 +110,41 @@ def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=N
     return item
 
 
-def get_stream_with_quality(plugin, video_url,
+@Route.register
+def add_context_qualities(plugin, url, m3u8):
+    streams = m3u8.media_streams.sort(key=lambda s: s.bitrate)
+    for stream in streams:
+        item = Listitem()
+        item.path = stream.url
+        item.label = get_selected_item_label() + " - " + str(stream)
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
+        yield item
+
+
+def get_stream_with_quality(plugin,
+                            video_url,
                             manifest_type="hls",
                             headers=None,
                             map_audio=False,
-                            append_query_string=False):
+                            append_query_string=False,
+                            verify=True):
+
     """ Returns the stream for the bitrate or the requested quality.
 
-     Returns:
-     An item for the stream
+    :param plugin:                      plugin
+    :param str video_url:               The url to download
+    :param str manifest_type:           Manifest type
+    :param headers                      the headers
+    :param bool append_query_string:    Should the existing query string be appended?
+    :param bool map_audio:              Map audio streams
+    :param bool verify:                 verify ssl?
 
-     """
+    :return: An item for the stream
+    :rtype: Listitem
+
+    """
+
     if ((not plugin.setting.get_boolean('use_ia_hls_stream') and manifest_type == "hls")
             or (get_kodi_version() < 18)
             or (not inputstreamhelper.Helper(manifest_type).check_inputstream())):
@@ -126,7 +156,8 @@ def get_stream_with_quality(plugin, video_url,
                                                     manifest_type=manifest_type,
                                                     headers=headers,
                                                     map_audio=map_audio,
-                                                    append_query_string=append_query_string)
+                                                    append_query_string=append_query_string,
+                                                    verify=verify)
 
     item = Listitem()
     item.path = video_url

@@ -154,7 +154,7 @@ menu = {
         'thumb': 'channels/be/nrjhitstvbe.png',
         'fanart': 'channels/be/nrjhitstvbe_fanart.jpg',
         'm3u_group': 'Belgique fr',
-        'enabled': False,
+        'enabled': True,
         'order': 17
     },
     'rtl_sport': {
@@ -330,5 +330,5 @@ menu = {
         'm3u_group': 'België nl',
         'enabled': True,
         'order': 36,
-    },
+    }
 }
