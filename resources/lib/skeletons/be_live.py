@@ -323,7 +323,7 @@ menu = {
         'order': 35,
     },
     'hln_live': {
-        'resolver': '/resources/lib/channels/be/hln_live:get_live_url',
+        'resolver': '/resources/lib/channels/be/hln:get_live_url',
         'label': 'HLN Live',
         'thumb': 'channels/be/hln_live.png',
         'fanart': 'channels/be/hln_live_fanart.jpg',
