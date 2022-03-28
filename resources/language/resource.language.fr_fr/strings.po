@@ -81,7 +81,7 @@ msgstr "Masquer des pays pour la TV en direct"
 
 msgctxt "#30016"
 msgid "Hide catch-up TV countries"
-msgstr "Masquer des pays pour le replay TV"
+msgstr "Masquer des pays de la télévision de rattrapage"
 
 msgctxt "#30017"
 msgid "Default values"
@@ -97,7 +97,7 @@ msgstr "Démasquer les chaînes de la TV en direct"
 
 msgctxt "#30020"
 msgid "Unmask replay TV channels"
-msgstr "Démasquer les chaînes des replay TV"
+msgstr "Démasquer les chaînes de la télévision de rattrapage"
 
 
 # Main menu (from 30030 to 30049)
@@ -108,7 +108,7 @@ msgstr "TV en direct"
 
 msgctxt "#30031"
 msgid "Catch-up TV"
-msgstr "Replay TV"
+msgstr "Télévision de rattrapage"
 
 msgctxt "#30032"
 msgid "Websites"
