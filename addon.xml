@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta20" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta21" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -119,6 +119,14 @@ Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
 [BE - ATV] Live qualities (PR #735) thanks @darodi
 [FR - WEO] Fix qualities (issue #726) thanks @darodi
 [FR - WEO] Fix live (PR #736 issue #726) thanks @darodi
+[Project] Use get_stream_with_quality in a few more places (PR #738)
+[MA - TELEMAROC] Fix live (PR #742)
+[US - PBSKIDS] Fix live (PR #743)
+[MA - MEDI1] Fix live (PR #744)
+[BE - NRJ] Fix live, Fix replay (PR #745 issue #741) thanks @darodi
+[MA - SNRT] Fix lives (PR #746)
+[BE - HLN] Remove useless suffix in file name (PR #747)
+[FR] Fix translation (PR #749)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
