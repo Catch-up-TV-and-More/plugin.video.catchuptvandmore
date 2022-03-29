@@ -27,10 +27,10 @@ URL_INFO_STREAM_LIVE = URL_ROOT + '/js/app.%s.js'
 
 URL_API_LEQUIPE = URL_ROOT + '/equipehd/applis/filtres/videosfiltres.json'
 
-# TODO Channels 1,2 and 3 are missing
-ADDITIONAL_LIVES = ['k5TgcOKBUTM2KnqwBWC', 'kXRfcKHV9HhcZuqwBYP', 'k6oih7JyuEmhrnqwBZT', 'k3HiS3JB0BsORKqwC49', 'k6P3xLH5tTtGSgqwC4P',
-                    'k1y3Q3GC7w8flQry8S3', 'k5VKYQn5hAE4vfry927', 'k2Z9T8IhyLWvyPtITYJ', 'k53cYSxIs49Vf0wkv86', 'k7rZDp22dyZ25EwkvsF',
-                    'k6c3A07yUljlAzwkvtL']
+# TODO Channels 1 and 2 are missing
+ADDITIONAL_LIVES = ['k1kypsRZF9plQhqwBRS', 'k5TgcOKBUTM2KnqwBWC', 'kXRfcKHV9HhcZuqwBYP', 'k6oih7JyuEmhrnqwBZT', 'k3HiS3JB0BsORKqwC49',
+                    'k6P3xLH5tTtGSgqwC4P', 'k1y3Q3GC7w8flQry8S3', 'k5VKYQn5hAE4vfry927', 'k2Z9T8IhyLWvyPtITYJ', 'k53cYSxIs49Vf0wkv86',
+                    'k7rZDp22dyZ25EwkvsF', 'k6c3A07yUljlAzwkvtL']
 
 
 @Route.register
@@ -96,7 +96,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     if item_id == 'lequipesup':
         live = kwargs.get('language', Script.setting["lequipesup.language"])
-        live_id = ADDITIONAL_LIVES[int(re.findall("\d+", live)[0]) - 4]
+        live_id = ADDITIONAL_LIVES[int(re.findall("\d+", live)[0]) - 3]
     else:
         resp = urlquick.get(URL_LIVE, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
         live_id = re.compile(r'video-id\=\"(.*?)\"', re.DOTALL).findall(resp.text)[0]
