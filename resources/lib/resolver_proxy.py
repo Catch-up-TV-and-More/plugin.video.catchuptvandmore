@@ -98,8 +98,8 @@ def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=N
 
     # TODO other manifest types?
     else:
-        if headers is not None and headers.get("referrer") is not None:
-            return url + "|referrer=" + headers.get("referrer")
+        if headers is not None:
+            return url + "|" + urlencode(headers)
         else:
             return url
 
@@ -468,8 +468,11 @@ def get_francetv_live_stream(plugin, live_id):
         return None
 
     json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % final_url, max_age=-1).text)
-    video_url = json_parser2['url'] + '|User-Agent=%s' % web_utils.get_random_ua()
-    return get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    headers = {
+        "User-Agent": web_utils.get_random_ua()
+    }
+    video_url = json_parser2['url']
+    return get_stream_with_quality(plugin, video_url, manifest_type="hls", headers=headers)
 
 
 # Arte Part
