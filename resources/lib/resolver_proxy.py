@@ -93,7 +93,8 @@ def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=N
             if url_quality is None and bitrate is None:
                 return False
             item.path = url_quality
-        item.context.related(add_context_qualities, plugin, m3u8)
+        # disabled doesn't work yet
+        # item.context.related(add_context_qualities, media_streams=m3u8.media_streams)
 
     # TODO other manifest types?
     else:
@@ -111,15 +112,16 @@ def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=N
 
 
 @Route.register
-def add_context_qualities(plugin, url, m3u8):
-    streams = m3u8.media_streams.sort(key=lambda s: s.bitrate)
-    for stream in streams:
-        item = Listitem()
-        item.path = stream.url
-        item.label = get_selected_item_label() + " - " + str(stream)
-        item.art.update(get_selected_item_art())
-        item.info.update(get_selected_item_info())
-        yield item
+def add_context_qualities(plugin, media_streams):
+    if len(media_streams) > 0:
+        streams = media_streams.sort(key=lambda s: s.bitrate)
+        for stream in streams:
+            item = Listitem()
+            item.path = stream.url
+            item.label = get_selected_item_label() + " - " + str(stream)
+            item.art.update(get_selected_item_art())
+            item.info.update(get_selected_item_info())
+            yield item
 
 
 def get_stream_with_quality(plugin,
