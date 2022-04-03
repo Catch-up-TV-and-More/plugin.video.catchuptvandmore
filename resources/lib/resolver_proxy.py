@@ -468,7 +468,8 @@ def get_francetv_live_stream(plugin, live_id):
         return None
 
     json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % final_url, max_age=-1).text)
-    return json_parser2['url'] + '|User-Agent=%s' % web_utils.get_random_ua()
+    video_url = json_parser2['url'] + '|User-Agent=%s' % web_utils.get_random_ua()
+    return get_stream_with_quality(plugin, video_url, manifest_type="hls")
 
 
 # Arte Part
@@ -502,4 +503,4 @@ def get_arte_video_stream(plugin,
     if download_mode:
         return download.download_video(url_selected)
 
-    return url_selected
+    return get_stream_with_quality(plugin, url_selected, manifest_type="hls")
