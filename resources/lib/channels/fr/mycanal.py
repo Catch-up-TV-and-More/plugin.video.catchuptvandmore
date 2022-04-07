@@ -14,17 +14,17 @@ import math
 import inputstreamhelper
 import urlquick
 import base64
-import urllib3
 
-try:  # Python 3
-    from urllib.parse import urlencode
-except ImportError:  # Python 2
-    from urllib import urlencode
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
+
 
 from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
 
-from resources.lib import resolver_proxy, web_utils
+from resources.lib import web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, \
     get_selected_item_info, INPUTSTREAM_PROP
@@ -44,14 +44,10 @@ URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
 
-# Dailymotion Id get from these pages below
-# - http://www.dailymotion.com/cstar
-# - http://www.dailymotion.com/canalplus
-# - http://www.dailymotion.com/C8TV
 LIVE_DAILYMOTION_ID = {
-    'c8': 'x5gv5rr',
-    'cstar': 'x5gv5v0',
-    'canalplus': 'x5gv6be'
+    'c8': 'c8',
+    'cstar': 'cstar',
+    'canalplus': 'canalplus'
 }
 
 
@@ -529,4 +525,108 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION_ID[item_id], False)
+    def rnd():
+        return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
+    ts = int(1000 * time.time())
+
+    deviceKeyId = str(ts) + '-' + rnd()
+    deviceId = deviceKeyId + ':0:' + str(ts + 2000) + '-' + rnd()
+    sessionId = str(ts + 3000) + '-' + rnd()
+
+    resp_app_config = requests.get("https://www.canalplus.com/chaines/%s" % item_id)
+    EPGID = re.compile('expertMode.+?"epgID":(.+?),').findall(
+        resp_app_config.text)[0]
+
+    json_app_config = re.compile('window.app_config=(.*?)};').findall(
+        resp_app_config.text)[0]
+    json_app_config_parser = json.loads(json_app_config + ('}'))
+    portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
+
+    data = {
+        "deviceId": deviceId,
+        "sessionId": sessionId,
+        "vect": "INTERNET",
+        "media": "PC",
+        "portailId": portail_id,
+        "zone": "cpfra",
+        "noCache": "false",
+        "analytics": "false",
+        "trackingPub": "false",
+        "anonymousTracking": "true"
+    }
+
+    hdr = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Origin": "https://www.canalplus.com",
+        "Referer": "https://www.canalplus.com/",
+        "User-Agent": web_utils.get_random_ua()
+    }
+    
+    resp = requests.post('https://pass-api-v2.canal-plus.com/services/apipublique/createToken', data=data, headers=hdr)
+    passToken = json.loads(resp.text)['response']['passToken']
+
+    data = {
+        "ServiceRequest": {
+            "InData": {
+                "DeviceKeyId": deviceKeyId,
+                "PassData": {
+                    "Id": 0,
+                    "Token": passToken
+                },
+                "PDSData": {
+                    "GroupTypes": "1;2;4"
+                },
+                "UserKeyId": "_tl1sb683u"
+            }
+        }
+    }
+
+    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
+    try:
+        requests.packages.urllib3.contrib.pyopenssl.DEFAULT_SSL_CIPHER_LIST += 'HIGH:!DH:!aNULL'
+    except AttributeError:
+        # no pyopenssl support used / needed / available
+        pass
+    resp = requests.post('https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV', json=data, headers=hdr)
+    liveToken = json.loads(resp.text)['ServiceResponse']['OutData']['LiveToken']
+  
+    data_drm = quote('''{
+        "ServiceRequest":
+        {
+            "InData":
+            {
+                "ChallengeInfo": "b{SSM}",
+                "DeviceKeyId": "''' + deviceKeyId + '''",
+                "EpgId": ''' + EPGID + ''',
+                "LiveToken": "''' + liveToken + '''",
+                "Mode": "MKPL",
+                "UserKeyId": "_tl1sb683u"
+            }
+        }
+    }''')
+
+    if item_id == "canalplus":
+        item_id = "canalplusclair"
+        
+    resp = requests.get("https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/" + item_id + "-hd.json").json()
+    url_stream = resp["primary"]["src"]
+    
+    PROTOCOL = 'mpd'
+    DRM = 'com.widevine.alpha'
+    LICENSE_URL = 'https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
+
+    certificate_data = base64.b64encode(requests.get('https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode('utf-8')
+    
+    item = Listitem()
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+
+    item.path = url_stream
+    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
+    
+    item.property['inputstream.adaptive.manifest_type'] = PROTOCOL
+    item.property['inputstream.adaptive.license_type'] = DRM
+    item.property['inputstream.adaptive.license_key'] = LICENSE_URL + '||' + data_drm + '|JBLicenseInfo'
+    item.property['inputstream.adaptive.server_certificate'] = certificate_data
+    return item
