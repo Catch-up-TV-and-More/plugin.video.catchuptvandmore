@@ -561,7 +561,7 @@ def get_live_url(plugin, item_id, **kwargs):
         "Referer": "https://www.canalplus.com/",
         "User-Agent": web_utils.get_random_ua()
     }
-    
+
     resp = requests.post('https://pass-api-v2.canal-plus.com/services/apipublique/createToken', data=data, headers=hdr)
     passToken = json.loads(resp.text)['response']['passToken']
 
@@ -589,7 +589,7 @@ def get_live_url(plugin, item_id, **kwargs):
         pass
     resp = requests.post('https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV', json=data, headers=hdr)
     liveToken = json.loads(resp.text)['ServiceResponse']['OutData']['LiveToken']
-  
+
     data_drm = quote('''{
         "ServiceRequest":
         {
@@ -607,16 +607,16 @@ def get_live_url(plugin, item_id, **kwargs):
 
     if item_id == "canalplus":
         item_id = "canalplusclair"
-        
+
     resp = requests.get("https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/" + item_id + "-hd.json").json()
     url_stream = resp["primary"]["src"]
-    
+
     PROTOCOL = 'mpd'
     DRM = 'com.widevine.alpha'
     LICENSE_URL = 'https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
 
     certificate_data = base64.b64encode(requests.get('https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode('utf-8')
-    
+
     item = Listitem()
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
@@ -624,7 +624,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     item.path = url_stream
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    
+
     item.property['inputstream.adaptive.manifest_type'] = PROTOCOL
     item.property['inputstream.adaptive.license_type'] = DRM
     item.property['inputstream.adaptive.license_key'] = LICENSE_URL + '||' + data_drm + '|JBLicenseInfo'
