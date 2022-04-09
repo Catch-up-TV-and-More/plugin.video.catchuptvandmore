@@ -379,6 +379,18 @@ msgctxt "#30175"
 msgid "Equidia Racing: Choose race"
 msgstr ""
 
+msgctxt "#30176"
+msgid "Canal+ group channels"
+msgstr ""
+
+msgctxt "#30190"
+msgid "MyCanal links"
+msgstr ""
+
+msgctxt "#30191"
+msgid "Dailymotion links"
+msgstr ""
+
 msgctxt "#30192"
 msgid "BEST"
 msgstr ""

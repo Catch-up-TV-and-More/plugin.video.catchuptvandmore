@@ -20,11 +20,11 @@ try:
 except ImportError:
     from urllib import quote
 
-
+from enum import Enum
 from codequick import Listitem, Resolver, Route, Script
 from kodi_six import xbmcgui
 
-from resources.lib import web_utils
+from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, \
     get_selected_item_info, INPUTSTREAM_PROP
@@ -44,11 +44,21 @@ URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
 
-LIVE_DAILYMOTION_ID = {
+LIVE_MYCANAL = {
     'c8': 'c8',
     'cstar': 'cstar',
     'canalplus': 'canalplus'
 }
+
+LIVE_DAILYMOTION = {
+    'c8': 'x5gv5rr',
+    'cstar': 'x5gv5v0',
+    'canalplus': 'x5gv6be'
+}
+
+class CANALPLUS_links(Enum):
+    DAILYMOTION = "1"
+    DEFAULT = "0"
 
 
 @Route.register
@@ -527,6 +537,10 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
     def rnd():
         return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
+
+    if CANALPLUS_links.DAILYMOTION.value == plugin.setting.get_string('canalplusgroup'):
+        return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION[item_id], False)
+
     ts = int(1000 * time.time())
 
     deviceKeyId = str(ts) + '-' + rnd()
