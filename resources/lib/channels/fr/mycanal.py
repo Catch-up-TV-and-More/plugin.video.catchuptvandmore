@@ -56,6 +56,7 @@ LIVE_DAILYMOTION = {
     'canalplus': 'x5gv6be'
 }
 
+
 class CANALPLUS_links(Enum):
     DAILYMOTION = "1"
     DEFAULT = "0"
