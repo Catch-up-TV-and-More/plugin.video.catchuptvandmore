@@ -11,13 +11,13 @@ import re
 from codequick import Listitem, Resolver, Route
 import urlquick
 
-from resources.lib import download, web_utils
+from resources.lib import download, resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
 
 
 URL_ROOT = 'http://www.antennereunion.fr'
 
-URL_LIVE = URL_ROOT + '/direct'
+URL_LIVE = 'https://live-antenne-reunion.zeop.tv/live/c3eds/antreunihd/hls_fta/antreunihd.m3u8'
 
 CATEGORIES = {
     'ÉMISSIONS':
@@ -105,12 +105,4 @@ def get_video_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    live_html = urlquick.get(URL_LIVE,
-                             headers={'User-Agent': web_utils.get_random_ua()},
-                             max_age=-1)
-    list_url_stream = re.compile(r'file"\: "(.*?)"').findall(live_html.text)
-    url_live = ''
-    for url_stream_data in list_url_stream:
-        if 'm3u8' in url_stream_data:
-            url_live = url_stream_data
-    return url_live
+    return resolver_proxy.get_stream_with_quality(plugin, URL_LIVE, manifest_type="hls")
