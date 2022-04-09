@@ -180,6 +180,7 @@ def get_stream_with_quality(plugin,
     if headers is not None:
         stream_headers = urlencode(headers)
         item.property['inputstream.adaptive.stream_headers'] = stream_headers
+        item.property['inputstream.adaptive.license_key'] = '|{}'.format(stream_headers)
 
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
