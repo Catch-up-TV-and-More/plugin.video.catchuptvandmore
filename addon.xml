@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta21" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta22" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -127,6 +127,15 @@ Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
 [MA - SNRT] Fix lives (PR #746)
 [BE - HLN] Remove useless suffix in file name (PR #747)
 [FR] Fix translation (PR #749)
+[FR - LEQUIPE] Add live channel 3
+[ET] Rearrange items (PR #751)
+[Project] resolver_proxy.py disable context related (PR #755 issue 754) thanks @darodi
+[Project] Use get_stream_with_quality in more places (PR #756)
+[Project] Use get_stream_with_quality in more places (PR #757) thanks @darodi
+[FR - MYCANAL] Use other links for lives (PR #759) thanks @Arias800
+[FR - MYCANAL] Give choose for the live links (PR #760)
+[FR - MYCANAL] Make flake 8 happy
+[Project] Add headers for license_key in get_stream_with_quality
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
