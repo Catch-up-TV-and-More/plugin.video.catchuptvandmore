@@ -14,14 +14,16 @@ import math
 import inputstreamhelper
 import urlquick
 import base64
+import pickle
+import xbmcvfs
 
 try:
-    from urllib.parse import quote
+    from urllib.parse import quote, urlencode
 except ImportError:
-    from urllib import quote
+    from urllib import quote, urlencode
 
 from enum import Enum
-from codequick import Listitem, Resolver, Route, Script
+from codequick import Listitem, Resolver, Route
 from kodi_six import xbmcgui
 
 from resources.lib import resolver_proxy, web_utils
@@ -60,6 +62,17 @@ LIVE_DAILYMOTION = {
 class CANALPLUS_links(Enum):
     DAILYMOTION = "1"
     DEFAULT = "0"
+
+
+def getKeyID():
+    def rnd():
+        return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
+    ts = int(1000 * time.time())
+
+    deviceKeyId = str(ts) + '-' + rnd()
+    deviceId = deviceKeyId + ':0:' + str(ts + 2000) + '-' + rnd()
+    sessionId = str(ts + 3000) + '-' + rnd()
+    return deviceKeyId, deviceId, sessionId
 
 
 @Route.register
@@ -381,18 +394,7 @@ def get_video_url(plugin,
             xbmcgui.Dialog().ok('Info', plugin.localize(30603))
             return False
 
-        # Get DeviceId (not a good device ID => TODO find the good one to fix to get licence key)
-        ##############################################################################
-        # Code by mtr81 : https://github.com/xbmc/inputstream.adaptive/issues/812
-        def rnd():
-            return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
-
-        ts = int(1000 * time.time())
-
-        deviceKeyId = str(ts) + '-' + rnd()
-        device_id_first = deviceKeyId + ':0:' + str(ts + 2000) + '-' + rnd()
-        sessionId = str(ts + 3000) + '-' + rnd()
-        ##############################################################################
+        deviceKeyId, device_id_first, sessionId = getKeyID()
 
         # Get Portail Id
         session_requests = requests.session()
@@ -479,9 +481,9 @@ def get_video_url(plugin,
         jsonparser_real_stream_datas = session_requests.get(
             jsonparser_stream_datas['@medias'], headers=headers).json()
 
-        # certificate_data = base64.b64encode(requests.get(
-        #     'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode(
-        #     'utf-8')
+        certificate_data = base64.b64encode(requests.get(
+            'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode(
+            'utf-8')
 
         subtitle_url = ''
         item = Listitem()
@@ -501,33 +503,31 @@ def get_video_url(plugin,
         if 'http' in subtitle_url:
             item.subtitles.append(subtitle_url)
 
-        if ".ism" in item.path:
-            item.property['inputstream.adaptive.manifest_type'] = 'ism'
-            item.path = item.path + "/manifest"
-        elif ".mpd" in item.path:
-            # DRM Message (TODO to find a way to get licence key)
-            Script.notify("INFO", plugin.localize(30702), Script.NOTIFY_INFO)
-            return False
-            # item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            # item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            # headers2 = {
-            #     'Accept': 'application/json, text/plain, */*',
-            #     'Authorization': 'PASS Token="%s"' % pass_token,
-            #     'Content-Type': 'text/plain',
-            #     'User-Agent': web_utils.get_random_ua(),
-            #     'Origin': 'https://www.mycanal.fr',
-            #     'XX-DEVICE': 'pc %s' % device_id,
-            #     'XX-DOMAIN': 'cpfra',
-            #     'XX-OPERATOR': 'pc',
-            #     'XX-Profile-Id': '0',
-            #     'XX-SERVICE': 'mycanal',
-            # }
-            # # Return HTTP 200 but the response is not correctly interpreted by inputstream
-            # # (https://github.com/peak3d/inputstream.adaptive/issues/267)
-            # licence = jsonparser_stream_datas['@licence']
-            # licence += '?drmConfig=mkpl::false|%s|b{SSM}|' % urlencode(headers2)
-            # item.property['inputstream.adaptive.license_key'] = licence
-            # item.property['inputstream.adaptive.server_certificate'] = certificate_data
+        if ".mpd" in item.path:
+            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+            headers2 = {
+                'Accept': 'application/json, text/plain, */*',
+                'Authorization': 'PASS Token="%s"' % pass_token,
+                'Content-Type': 'text/plain',
+                'User-Agent': web_utils.get_random_ua(),
+                'Origin': 'https://www.mycanal.fr',
+                'XX-DEVICE': 'pc %s' % device_id,
+                'XX-DOMAIN': 'cpfra',
+                'XX-OPERATOR': 'pc',
+                'XX-Profile-Id': '0',
+                'XX-SERVICE': 'mycanal',
+            }
+
+            with xbmcvfs.File('special://userdata/addon_data/plugin.video.catchuptvandmore/headersCanal', 'wb') as f1:
+                pickle.dump(headers2, f1)
+
+            # Return HTTP 200 but the response is not correctly interpreted by inputstream
+            # (https://github.com/peak3d/inputstream.adaptive/issues/267)
+            licence = "http://127.0.0.1:5057/license=" + jsonparser_stream_datas['@licence']
+            licence += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers2)
+            item.property['inputstream.adaptive.license_key'] = licence
+            item.property['inputstream.adaptive.server_certificate'] = certificate_data
         return item
 
     json_parser = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1).json()
@@ -536,17 +536,10 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    def rnd():
-        return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
-
     if CANALPLUS_links.DAILYMOTION.value == plugin.setting.get_string('canalplusgroup'):
         return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION[item_id], False)
 
-    ts = int(1000 * time.time())
-
-    deviceKeyId = str(ts) + '-' + rnd()
-    deviceId = deviceKeyId + ':0:' + str(ts + 2000) + '-' + rnd()
-    sessionId = str(ts + 3000) + '-' + rnd()
+    deviceKeyId, deviceId, sessionId = getKeyID()
 
     resp_app_config = requests.get("https://www.canalplus.com/chaines/%s" % item_id)
     EPGID = re.compile('expertMode.+?"epgID":(.+?),').findall(
@@ -577,8 +570,8 @@ def get_live_url(plugin, item_id, **kwargs):
         "User-Agent": web_utils.get_random_ua()
     }
 
-    resp = requests.post('https://pass-api-v2.canal-plus.com/services/apipublique/createToken', data=data, headers=hdr)
-    passToken = json.loads(resp.text)['response']['passToken']
+    resp = requests.post('https://pass-api-v2.canal-plus.com/services/apipublique/createToken', data=data, headers=hdr).json()
+    passToken = resp['response']['passToken']
 
     data = {
         "ServiceRequest": {
@@ -602,8 +595,8 @@ def get_live_url(plugin, item_id, **kwargs):
     except AttributeError:
         # no pyopenssl support used / needed / available
         pass
-    resp = requests.post('https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV', json=data, headers=hdr)
-    liveToken = json.loads(resp.text)['ServiceResponse']['OutData']['LiveToken']
+    resp = requests.post('https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV', json=data, headers=hdr).json()
+    liveToken = resp['ServiceResponse']['OutData']['LiveToken']
 
     data_drm = quote('''{
         "ServiceRequest":
@@ -626,8 +619,6 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = requests.get("https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/" + item_id + "-hd.json").json()
     url_stream = resp["primary"]["src"]
 
-    PROTOCOL = 'mpd'
-    DRM = 'com.widevine.alpha'
     LICENSE_URL = 'https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
 
     certificate_data = base64.b64encode(requests.get('https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode('utf-8')
@@ -640,8 +631,8 @@ def get_live_url(plugin, item_id, **kwargs):
     item.path = url_stream
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
 
-    item.property['inputstream.adaptive.manifest_type'] = PROTOCOL
-    item.property['inputstream.adaptive.license_type'] = DRM
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     item.property['inputstream.adaptive.license_key'] = LICENSE_URL + '||' + data_drm + '|JBLicenseInfo'
     item.property['inputstream.adaptive.server_certificate'] = certificate_data
     return item
