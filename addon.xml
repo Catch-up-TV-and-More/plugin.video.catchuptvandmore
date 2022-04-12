@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta22" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta23" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -136,6 +136,9 @@ Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
 [FR - MYCANAL] Give choose for the live links (PR #760)
 [FR - MYCANAL] Make flake 8 happy
 [Project] Add headers for license_key in get_stream_with_quality
+[FR - ANTENNEREUNION] Fix live
+[FR - MYCANAL] Workaround for drm protected content (3 commits) (PR #761, issue #48) thanks @Arias800
+[UK - UKTVPLAY] Fix file to retrieve token needed for lives (issue #541 and #762)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
