@@ -108,7 +108,7 @@ def list_sections(plugin, item_id, program_url, **kwargs):
 
         for (key, value) in jsonData.items():
             if type(value) is dict:
-                value = value['href']         
+                value = value['href']
             program_title = key
             program_url = URL_ROOT + value
 
@@ -164,7 +164,7 @@ def list_videos(plugin, item_id, program_url, **kwargs):
                                                 is_playable=True,
                                                 is_downloadable=True)
                             yield item
-                    
+
             except (KeyError, IndexError):
                 continue
 
