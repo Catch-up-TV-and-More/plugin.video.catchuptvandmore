@@ -171,7 +171,7 @@ menu = {
     'tr_live': {
         'route': '/resources/lib/main:generic_menu',
         'label': 30070,
-        'thumb': 'channels/lt.png',
+        'thumb': 'channels/tr.png',
         'enabled': True,
         'order': 21
     }
