@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2018, SylvainCecchetto
+# Copyright: (c) 2022, itasli
 # GNU General Public License v2.0+ (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 
 # This file is part of Catch-up TV & More
@@ -13,8 +13,6 @@ import urlquick
 from resources.lib import resolver_proxy
 
 
-# TODO
-
 URL_ROOT = 'https://www.showtv.com.tr'
 
 URL_LIVE = URL_ROOT + '/canli-yayin'
@@ -22,11 +20,11 @@ URL_LIVE = URL_ROOT + '/canli-yayin'
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    """Get video URL and start video player"""
+
     resp = urlquick.get(URL_LIVE)
     root = resp.parse()
 
-    for live in root.iterfind(".//div[@class='htplay_video']"):
-        res = json.loads(live.attrib['data-ht'])
-    
-    return res['ht_stream_m3u8']
+    dict = json.loads(root.findall(".//div[@class='htplay_video']")[0].attrib['data-ht'])
+    video_url = dict['ht_stream_m3u8']
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")

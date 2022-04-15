@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2016, SylvainCecchetto
+# Copyright: (c) 2022, itasli
 # GNU General Public License v2.0+ (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 
 # This file is part of Catch-up TV & More
@@ -25,12 +25,20 @@ menu = {
         'enabled': True,
         'order': 1
     },
-        'show': {
+    'show': {
         'resolver': '/resources/lib/channels/tr/show:get_live_url',
-        'label': 'SHOW TV',
+        'label': 'Show TV',
         'thumb': 'channels/tr/show.png',
         'fanart': 'channels/tr/show_fanart.jpg',
         'enabled': True,
         'order': 2
+    },
+    'kanal7': {
+        'resolver': '/resources/lib/channels/tr/kanal7:get_live_url',
+        'label': 'Kanal7',
+        'thumb': 'channels/tr/kanal7.png',
+        'fanart': 'channels/tr/kanal7_fanart.jpg',
+        'enabled': True,
+        'order': 3
     }
 }

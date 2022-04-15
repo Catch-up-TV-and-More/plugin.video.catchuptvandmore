@@ -13,15 +13,15 @@ import urlquick
 from resources.lib import resolver_proxy
 
 
-URL_ROOT = 'https://www.fox.com.tr'
+URL_ROOT = 'https://www.kanal7.com'
 
-URL_LIVE = URL_ROOT + '/canli-yayin'
+URL_LIVE = URL_ROOT + '/canli-izle'
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    video_url = re.compile('source : \'(.*?)\'').findall(resp.text)[0]
+    video_url = re.compile('\'video-source\',\'(.*?)\'').findall(resp.text)[0]
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    return video_url
