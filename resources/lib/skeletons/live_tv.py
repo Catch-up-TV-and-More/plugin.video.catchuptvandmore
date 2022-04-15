@@ -167,5 +167,12 @@ menu = {
         'thumb': 'channels/lt.png',
         'enabled': True,
         'order': 20
+    },
+    'tr_live': {
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30070,
+        'thumb': 'channels/lt.png',
+        'enabled': True,
+        'order': 21
     }
 }
