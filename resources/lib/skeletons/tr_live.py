@@ -24,21 +24,4 @@ menu = {
         'fanart': 'channels/tr/fox_fanart.jpg',
         'enabled': True,
         'order': 1
-    },
-    'show': {
-        'resolver': '/resources/lib/channels/tr/show:get_live_url',
-        'label': 'Show TV',
-        'thumb': 'channels/tr/show.png',
-        'fanart': 'channels/tr/show_fanart.jpg',
-        'enabled': True,
-        'order': 2
-    },
-    'kanal7': {
-        'resolver': '/resources/lib/channels/tr/kanal7:get_live_url',
-        'label': 'Kanal7',
-        'thumb': 'channels/tr/kanal7.png',
-        'fanart': 'channels/tr/kanal7_fanart.jpg',
-        'enabled': True,
-        'order': 3
-    }
 }
