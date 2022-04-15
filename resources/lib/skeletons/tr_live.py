@@ -24,4 +24,5 @@ menu = {
         'fanart': 'channels/tr/fox_fanart.jpg',
         'enabled': True,
         'order': 1
+    }
 }
