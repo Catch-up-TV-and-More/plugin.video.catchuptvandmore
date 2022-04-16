@@ -40,5 +40,13 @@ menu = {
         'fanart': 'channels/tr/kanald_fanart.jpg',
         'enabled': True,
         'order': 3
+    },
+    'star': {
+        'resolver': '/resources/lib/channels/tr/star:get_live_url',
+        'label': 'Star TV',
+        'thumb': 'channels/tr/star.png',
+        'fanart': 'channels/tr/star_fanart.jpg',
+        'enabled': True,
+        'order': 4
     }
 }
