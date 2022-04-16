@@ -32,5 +32,13 @@ menu = {
         'fanart': 'channels/tr/show_fanart.jpg',
         'enabled': True,
         'order': 2
+    },
+    'kanald': {
+        'resolver': '/resources/lib/channels/tr/kanald:get_live_url',
+        'label': 'Kanal D',
+        'thumb': 'channels/tr/kanald.png',
+        'fanart': 'channels/tr/kanald_fanart.jpg',
+        'enabled': True,
+        'order': 3
     }
 }
