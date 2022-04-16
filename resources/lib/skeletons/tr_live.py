@@ -17,19 +17,19 @@ from __future__ import unicode_literals
 root = 'live_tv'
 
 menu = {
-    'fox': {
-        'resolver': '/resources/lib/channels/tr/fox:get_live_url',
-        'label': 'FOX',
-        'thumb': 'channels/tr/fox.png',
-        'fanart': 'channels/tr/fox_fanart.jpg',
-        'enabled': True,
-        'order': 1
-    },
     'show': {
         'resolver': '/resources/lib/channels/tr/show:get_live_url',
         'label': 'Show TV',
         'thumb': 'channels/tr/show.png',
         'fanart': 'channels/tr/show_fanart.jpg',
+        'enabled': True,
+        'order': 1
+    },
+    'star': {
+        'resolver': '/resources/lib/channels/tr/star:get_live_url',
+        'label': 'Star TV',
+        'thumb': 'channels/tr/star.png',
+        'fanart': 'channels/tr/star_fanart.jpg',
         'enabled': True,
         'order': 2
     },
@@ -41,12 +41,20 @@ menu = {
         'enabled': True,
         'order': 3
     },
-    'star': {
-        'resolver': '/resources/lib/channels/tr/star:get_live_url',
-        'label': 'Star TV',
-        'thumb': 'channels/tr/star.png',
-        'fanart': 'channels/tr/star_fanart.jpg',
+    'fox': {
+        'resolver': '/resources/lib/channels/tr/fox:get_live_url',
+        'label': 'FOX',
+        'thumb': 'channels/tr/fox.png',
+        'fanart': 'channels/tr/fox_fanart.jpg',
         'enabled': True,
         'order': 4
-    }
+    },
+    'kanal7': {
+        'resolver': '/resources/lib/channels/tr/kanal7:get_live_url',
+        'label': 'Kanal 7',
+        'thumb': 'channels/tr/kanal7.png',
+        'fanart': 'channels/tr/kanal7_fanart.jpg',
+        'enabled': True,
+        'order': 5
+    },
 }
