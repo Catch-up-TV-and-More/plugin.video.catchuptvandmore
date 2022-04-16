@@ -25,11 +25,11 @@ menu = {
         'enabled': True,
         'order': 1
     },
-    'show': {
-        'resolver': '/resources/lib/channels/tr/show:get_live_url',
-        'label': 'Show TV',
-        'thumb': 'channels/tr/show.png',
-        'fanart': 'channels/tr/show_fanart.jpg',
+    'kanal7': {
+        'resolver': '/resources/lib/channels/tr/kanal7:get_live_url',
+        'label': 'Kanal 7',
+        'thumb': 'channels/tr/kanal7.png',
+        'fanart': 'channels/tr/kanal7_fanart.jpg',
         'enabled': True,
         'order': 2
     },
@@ -41,12 +41,20 @@ menu = {
         'enabled': True,
         'order': 3
     },
+    'show': {
+        'resolver': '/resources/lib/channels/tr/show:get_live_url',
+        'label': 'Show TV',
+        'thumb': 'channels/tr/show.png',
+        'fanart': 'channels/tr/show_fanart.jpg',
+        'enabled': True,
+        'order': 4
+    },
     'star': {
         'resolver': '/resources/lib/channels/tr/star:get_live_url',
         'label': 'Star TV',
         'thumb': 'channels/tr/star.png',
         'fanart': 'channels/tr/star_fanart.jpg',
         'enabled': True,
-        'order': 4
-    }
+        'order': 5
+    },
 }
