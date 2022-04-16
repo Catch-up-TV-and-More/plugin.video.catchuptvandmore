@@ -24,5 +24,13 @@ menu = {
         'fanart': 'channels/tr/fox_fanart.jpg',
         'enabled': True,
         'order': 1
+    },
+    'show': {
+        'resolver': '/resources/lib/channels/tr/show:get_live_url',
+        'label': 'Show TV',
+        'thumb': 'channels/tr/show.png',
+        'fanart': 'channels/tr/show_fanart.jpg',
+        'enabled': True,
+        'order': 2
     }
 }
