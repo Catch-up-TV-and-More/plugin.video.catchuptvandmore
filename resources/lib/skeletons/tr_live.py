@@ -49,13 +49,21 @@ menu = {
         'enabled': True,
         'order': 4
     },
+    'showmax': {
+        'resolver': '/resources/lib/channels/tr/showmax:get_live_url',
+        'label': 'ShowMax TV',
+        'thumb': 'channels/tr/showmax.png',
+        'fanart': 'channels/tr/showmax_fanart.jpg',
+        'enabled': True,
+        'order': 5
+    },
     'star': {
         'resolver': '/resources/lib/channels/tr/star:get_live_url',
         'label': 'Star TV',
         'thumb': 'channels/tr/star.png',
         'fanart': 'channels/tr/star_fanart.jpg',
         'enabled': True,
-        'order': 5
+        'order': 6
     },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
@@ -63,6 +71,6 @@ menu = {
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 6
+        'order': 7
     },
 }
