@@ -33,13 +33,21 @@ menu = {
         'enabled': True,
         'order': 2
     },
+    'haberturk': {
+        'resolver': '/resources/lib/channels/tr/haberturk:get_live_url',
+        'label': 'Haberturk',
+        'thumb': 'channels/tr/haberturk.png',
+        'fanart': 'channels/tr/haberturk_fanart.jpg',
+        'enabled': True,
+        'order': 3
+    },
     'kanal7': {
         'resolver': '/resources/lib/channels/tr/kanal7:get_live_url',
         'label': 'Kanal 7',
         'thumb': 'channels/tr/kanal7.png',
         'fanart': 'channels/tr/kanal7_fanart.jpg',
         'enabled': True,
-        'order': 3
+        'order': 4
     },
     'kanald': {
         'resolver': '/resources/lib/channels/tr/kanald:get_live_url',
@@ -47,7 +55,7 @@ menu = {
         'thumb': 'channels/tr/kanald.png',
         'fanart': 'channels/tr/kanald_fanart.jpg',
         'enabled': True,
-        'order': 4
+        'order': 5
     },
     'show': {
         'resolver': '/resources/lib/channels/tr/show:get_live_url',
@@ -55,7 +63,7 @@ menu = {
         'thumb': 'channels/tr/show.png',
         'fanart': 'channels/tr/show_fanart.jpg',
         'enabled': True,
-        'order': 5
+        'order': 6
     },
     'showmax': {
         'resolver': '/resources/lib/channels/tr/showmax:get_live_url',
@@ -63,7 +71,7 @@ menu = {
         'thumb': 'channels/tr/showmax.png',
         'fanart': 'channels/tr/showmax_fanart.jpg',
         'enabled': True,
-        'order': 6
+        'order': 7
     },
     'star': {
         'resolver': '/resources/lib/channels/tr/star:get_live_url',
@@ -71,7 +79,7 @@ menu = {
         'thumb': 'channels/tr/star.png',
         'fanart': 'channels/tr/star_fanart.jpg',
         'enabled': True,
-        'order': 7
+        'order': 8
     },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
@@ -79,6 +87,6 @@ menu = {
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 8
+        'order': 9
     },
 }
