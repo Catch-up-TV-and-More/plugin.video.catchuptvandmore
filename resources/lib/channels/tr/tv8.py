@@ -13,7 +13,7 @@ import urlquick
 from resources.lib import resolver_proxy
 
 
-URL_ROOT = 'https://www.tv8.com.tr/canli-yayin'
+URL_ROOT = 'https://www.tv8.com.tr'
 
 URL_LIVE = URL_ROOT + '/canli-yayin'
 
