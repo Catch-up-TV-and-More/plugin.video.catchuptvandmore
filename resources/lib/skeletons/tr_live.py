@@ -89,12 +89,20 @@ menu = {
         'enabled': True,
         'order': 9
     },
+    'tele1': {
+        'resolver': '/resources/lib/channels/tr/tele1:get_live_url',
+        'label': 'Tele1',
+        'thumb': 'channels/tr/tele1.png',
+        'fanart': 'channels/tr/tele1_fanart.jpg',
+        'enabled': True,
+        'order': 10
+    },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
         'label': 'TV 8',
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 10
+        'order': 11
     },
 }
