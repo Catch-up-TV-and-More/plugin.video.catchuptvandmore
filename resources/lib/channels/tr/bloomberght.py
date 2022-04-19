@@ -24,7 +24,7 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE)
     root = resp.parse()
 
-    dict = json.loads(root.findall(".//div[@class='htplay_video']")[0].attrib['data-ht'])
+    dict = json.loads(root.findall(".//div[@class='htplay_video']")[1].attrib['data-ht'])
     video_url = dict['ht_stream_m3u8']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
