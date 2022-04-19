@@ -15,6 +15,9 @@ from kodi_six import xbmcplugin
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
 
+import os
+import xbmcvfs
+
 # TO DO
 
 # Live
@@ -30,6 +33,14 @@ URL_VIDEOS_JSON = "https://player.api.stv.tv/v1/episodes"
 
 URL_BRIGHTCOVE_DATAS = "https://player.stv.tv/player-web/players/vod/bundle.js"
 
+HOME              = xbmcvfs.translatePath('special://home/')
+ADDONS            = os.path.join(HOME,     'addons')
+RESOURCE_IMAGES   = os.path.join(ADDONS,   'resource.images.catchuptvandmore')
+RESOURCES         = os.path.join(RESOURCE_IMAGES,   'resources')
+CHANNELS          = os.path.join(RESOURCES,         'channels')
+UK_CHANNELS       = os.path.join(CHANNELS,          'uk')
+fanartpath        = os.path.join(UK_CHANNELS,       'stv_fanart.jpg')
+iconpath          = os.path.join(UK_CHANNELS,       'stv.png')
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
@@ -40,6 +51,8 @@ def list_categories(plugin, item_id, **kwargs):
     # Most popular category
     item = Listitem()
     item.label = Script.localize(30727)
+    item.art["thumb"] = iconpath
+    item.art["fanart"] = fanartpath
     item.set_callback(list_videos, item_id=item_id, order_by="-views")
     item_post_treatment(item)
     yield item
@@ -47,6 +60,8 @@ def list_categories(plugin, item_id, **kwargs):
     # Recently added category
     item = Listitem()
     item.label = Script.localize(30728)
+    item.art["thumb"] = iconpath
+    item.art["fanart"] = fanartpath
     item.set_callback(list_videos, item_id=item_id, order_by="-availability.from")
     item_post_treatment(item)
     yield item
@@ -58,6 +73,8 @@ def list_categories(plugin, item_id, **kwargs):
         item.art["thumb"] = item.art["landscape"] = category_datas["images"][
             "_filepath"
         ]
+        item.art["thumb"] = iconpath
+        item.art["fanart"] = fanartpath
         item.set_callback(
             list_programs, item_id=item_id, category_guid=category_datas["guid"]
         )
