@@ -73,13 +73,21 @@ menu = {
         'enabled': True,
         'order': 7
     },
+    'ntv': {
+        'resolver': '/resources/lib/channels/tr/ntv:get_live_url',
+        'label': 'NTV',
+        'thumb': 'channels/tr/ntv.png',
+        'fanart': 'channels/tr/ntv_fanart.jpg',
+        'enabled': True,
+        'order': 8
+    },
     'show': {
         'resolver': '/resources/lib/channels/tr/show:get_live_url',
         'label': 'Show TV',
         'thumb': 'channels/tr/show.png',
         'fanart': 'channels/tr/show_fanart.jpg',
         'enabled': True,
-        'order': 8
+        'order': 9
     },
     'showmax': {
         'resolver': '/resources/lib/channels/tr/showmax:get_live_url',
@@ -87,7 +95,7 @@ menu = {
         'thumb': 'channels/tr/showmax.png',
         'fanart': 'channels/tr/showmax_fanart.jpg',
         'enabled': True,
-        'order': 9
+        'order': 10
     },
     'star': {
         'resolver': '/resources/lib/channels/tr/star:get_live_url',
@@ -95,7 +103,7 @@ menu = {
         'thumb': 'channels/tr/star.png',
         'fanart': 'channels/tr/star_fanart.jpg',
         'enabled': True,
-        'order': 10
+        'order': 11
     },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
@@ -103,6 +111,6 @@ menu = {
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 11
+        'order': 12
     },
 }
