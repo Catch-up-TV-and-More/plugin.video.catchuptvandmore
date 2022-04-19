@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta23" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta24" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -139,6 +139,25 @@ Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
 [FR - ANTENNEREUNION] Fix live
 [FR - MYCANAL] Workaround for drm protected content (3 commits) (PR #761, issue #48) thanks @Arias800
 [UK - UKTVPLAY] Fix file to retrieve token needed for lives (issue #541 and #762)
+[US - ABCNEWS] Partially fix #140 (issue #120 PR #765) thanks @Arias800
+[US - ABCNEWS] Fix Flake 8 (PR #765) thanks @Arias800
+[FR - TEBEO] Fix replay (PR #769)
+[FR - CALEDONIA] Fix replay (PR #770)
+[TR - FOX] Add channel (PR #771) thanks @itasli
+addons.xml: Fix translation (PR #772)
+[TR - Show TV] Add channel (PR #774) thanks @itasli
+[TR -Kanal D] Add channel (PR #775) thanks @itasli
+[TR - Star TV] Add channel (PR #776) thanks @itasli
+[TR - Kanal 7] Add channel (PR #777) thanks @itasli
+[TR - TV 8] Add channel (PR #778) thanks @itasli
+[TR - ShowMax] Add channel (PR #779) thanks @itasli
+[TR - Haber Global] Add channel (PR #782) thanks @itasli
+[TR - TV 8] Fix url (PR #782) thanks @itasli
+[TR - Haberturk] Add channel (PR #783) thanks @itasli
+[TR - Bloomberg HT] Add channel (PR #786) thanks @itasli
+[TR - NTV] Add channel (PR #787) thanks @itasli
+[TR - 360 TV] Add channel (PR #788) thanks @itasli
+[TR - Tele1] Add channel (PR #789) thanks @itasli
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
