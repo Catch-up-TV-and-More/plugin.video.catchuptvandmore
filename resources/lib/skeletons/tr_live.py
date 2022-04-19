@@ -115,7 +115,7 @@ menu = {
     },
     'tele1': {
         'resolver': '/resources/lib/channels/tr/tele1:get_live_url',
-        'label': 'Star TV',
+        'label': 'Tele1',
         'thumb': 'channels/tr/tele1.png',
         'fanart': 'channels/tr/tele1_fanart.jpg',
         'enabled': True,
@@ -123,7 +123,7 @@ menu = {
     },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
-        'label': 'Tele1',
+        'label': 'TV 8',
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
