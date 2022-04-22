@@ -10,7 +10,7 @@ import re
 from codequick import Resolver
 import urlquick
 
-from resources.lib import resolver_proxy
+from resources.lib import resolver_proxy, web_utils
 
 
 URL_ROOT = 'https://www.kanald.com.tr'
@@ -24,4 +24,4 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE)
     video_url = re.compile('\"contentUrl\":\"https://media.duhnet.tv(.*?)\"').findall(resp.text)[0]
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls", headers={"User-Agent": web_utils.get_random_ua()})
