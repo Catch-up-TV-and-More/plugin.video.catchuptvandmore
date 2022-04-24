@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta24" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta25" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -158,6 +158,12 @@ addons.xml: Fix translation (PR #772)
 [TR - NTV] Add channel (PR #787) thanks @itasli
 [TR - 360 TV] Add channel (PR #788) thanks @itasli
 [TR - Tele1] Add channel (PR #789) thanks @itasli
+[TR - Bloomberg] Retrieve the good url (PR #790) thanks @itasli
+[TR - Kanal D] Added custom headers (PR #793) thanks @itasli
+[TR - Cine5] Add Channel (PR #794) thanks @itasli
+[TR - Teve 2] Add Channel (PR #796) thanks @itasli
+[FR - TVPI] Fix replay
+[JP - TVER] Fix replay
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
