@@ -129,12 +129,20 @@ menu = {
         'enabled': True,
         'order': 14
     },
+    'teve2': {
+        'resolver': '/resources/lib/channels/tr/teve2:get_live_url',
+        'label': 'Teve2',
+        'thumb': 'channels/tr/teve2.png',
+        'fanart': 'channels/tr/teve2_fanart.jpg',
+        'enabled': True,
+        'order': 15
+    },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
         'label': 'TV 8',
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 15
+        'order': 16
     },
 }
