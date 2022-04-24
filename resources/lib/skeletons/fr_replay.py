@@ -304,7 +304,7 @@ menu = {
         "order": 87,
     },
     "tvpifr": {
-        "route": "/resources/lib/channels/fr/tvpifr:TOTO",
+        "route": "/resources/lib/channels/fr/tvpifr:list_categories",
         "label": "TVPI télévision d'ici",
         "thumb": "channels/fr/tvpifr.png",
         "fanart": "channels/fr/tvpifr_fanart.jpg",
