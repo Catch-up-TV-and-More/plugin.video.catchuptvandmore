@@ -35,7 +35,7 @@ BROADCASTER = {
     'abc': ['ABCテレビ'],
     'cx': ['フジテレビ', 'テレビ愛媛', 'テレビ宮崎', 'さんいん中央テレビ', 'BSフジ', '北海道文化放送', '仙台放送', '福井テレビ', 'テレビ西日本', '東海テレビ', 'STSサガテレビ', '沖縄テレビ', 'テレビ熊本', 'OHK 岡山放送', 'テレビ静岡'],
     'ex': ['テレビ朝日', 'KBCテレビ', 'BS朝日', 'KAB熊本朝日放送', '静岡朝日テレビ'],
-    'ktv':['カンテレ'],
+    'ktv': ['カンテレ'],
     'mbs': ['MBS毎日放送'],
     'nhk': ['NHK', 'NHK総合・東京', 'NHK Eテレ・東京'],
     'ntv': ['日テレ', '山梨放送', 'BS日テレ', 'KKTくまもと県民テレビ', '日本海テレビ', 'TeNY', 'tvk', 'Daiichi-TV', '中京テレビ', 'FBS福岡放送', 'テレ玉', 'テレビ信州', '高知放送', '長崎国際テレビ', 'STV札幌テレビ放送', '福島中央テレビ', 'TOKYO MX', 'チバテレ', '広島テレビオンデマンド', 'RAB青森放送', '鹿児島読売テレビ', 'BS11', '南海放送', '福井放送'],
@@ -54,10 +54,10 @@ def list_categories(plugin, item_id, **kwargs):
     data = resp.json()
     uid = data['result']['platform_uid']
     token = data['result']['platform_token']
-    resp = urlquick.get(URL_REPLAY_PROGRAM.format(uid, token), headers={'x-tver-platform-type' : 'web'})
+    resp = urlquick.get(URL_REPLAY_PROGRAM.format(uid, token), headers={'x-tver-platform-type': 'web'})
     programs = resp.json()
 
-    list_program=[]
+    list_program = []
     for program in programs['result']['contents']:
         if program['content']['broadcasterName'] in BROADCASTER[item_id]:
             program_title = program['content']['seriesTitle']
@@ -80,8 +80,8 @@ def list_episodes(plugin, item_id, program_title, programs, **kwargs):
             video_type = program['type']
             item.art['thumb'] = item.art['landscape'] = URL_VIDEO_PICTURE.format(video_type, video_id)
             resp = urlquick.get(URL_VIDEOS_REPLAY.format(video_type, video_id),
-                        headers={'User-Agent': web_utils.get_random_ua()},
-                        max_age=-1)
+                                headers={'User-Agent': web_utils.get_random_ua()},
+                                max_age=-1)
             data = resp.json()
             item.info['plot'] = data['description']
             item.set_callback(get_video_url, data)
@@ -112,7 +112,7 @@ def get_video_url(plugin, data, **kwargs):
         'User-Agent': web_utils.get_random_ua(),
         'Accept': 'application/json;pk=%s' % policy,
         'X-Forwarded-For': plugin.setting.get_string('header_x-forwarded-for')
-        }
+    }
     URL_JSON_VIDEO = URL_BRIGHTCOVE_VIDEO_JSON % (data_account, ref, data_video)
     json_parser = urlquick.get(URL_JSON_VIDEO, headers=headers).json()
 
