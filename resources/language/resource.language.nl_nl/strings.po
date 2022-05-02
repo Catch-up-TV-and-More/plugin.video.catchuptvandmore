@@ -387,6 +387,18 @@ msgctxt "#30176"
 msgid "Canal+ group channels"
 msgstr ""
 
+msgctxt "#30177"
+msgid "TV5 monde: Choose region"
+msgstr ""
+
+msgctxt "#30178"
+msgid "France, Belgium, Switzerland"
+msgstr ""
+
+msgctxt "#30179"
+msgid "Europe, outside FBS"
+msgstr ""
+
 msgctxt "#30190"
 msgid "MyCanal links"
 msgstr ""
