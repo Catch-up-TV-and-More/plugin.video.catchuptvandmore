@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta25" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta26" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -146,7 +146,7 @@ Settings: Add InputStream adaptive settings link (PR #717) thanks @darodi
 [TR - FOX] Add channel (PR #771) thanks @itasli
 addons.xml: Fix translation (PR #772)
 [TR - Show TV] Add channel (PR #774) thanks @itasli
-[TR -Kanal D] Add channel (PR #775) thanks @itasli
+[TR - Kanal D] Add channel (PR #775) thanks @itasli
 [TR - Star TV] Add channel (PR #776) thanks @itasli
 [TR - Kanal 7] Add channel (PR #777) thanks @itasli
 [TR - TV 8] Add channel (PR #778) thanks @itasli
@@ -164,6 +164,9 @@ addons.xml: Fix translation (PR #772)
 [TR - Teve 2] Add Channel (PR #796) thanks @itasli
 [FR - TVPI] Fix replay
 [JP - TVER] Fix replay
+[WO- TV5MONDE] TV5Monde live outside FBS (PR #803 issue #802) thanks @darodi
+[TR - ATV] Add channel (PR #806) thanks @itasli 
+[WO - ARTE] Fix replay (PR #807)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
