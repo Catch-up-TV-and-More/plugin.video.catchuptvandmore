@@ -77,7 +77,7 @@ URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json
 URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
 
 # desired_language, videoid
-URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v1/config/%s/%s'
+URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
 
 
 def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
@@ -483,28 +483,9 @@ def get_arte_video_stream(plugin,
                           download_mode=False):
     url = URL_REPLAY_ARTE % (desired_language, video_id)
     j = urlquick.get(url).json()
-    stream_datas = j['videoJsonPlayer']['VSR']
-
-    all_streams_label = []
-    all_streams_url = []
-    for stream in sorted(stream_datas.keys()):
-        if stream_datas[stream]['quality'] == 'XQ':
-            try:
-                all_streams_label.append(stream_datas[stream]['versionLibelle'])
-            except Exception:
-                all_streams_label.append('Stream ' + str(len(all_streams_label)))
-            all_streams_url.append(stream_datas[stream]['url'])
-
-    if len(all_streams_url) == 1:
-        url_selected = all_streams_url[0]
-    else:
-        seleted_item = xbmcgui.Dialog().select(plugin.localize(30709), all_streams_label)
-        if seleted_item > -1:
-            url_selected = all_streams_url[seleted_item]
-        else:
-            return False
+    video_url = j['data']['attributes']['streams'][0]['url']
 
     if download_mode:
-        return download.download_video(url_selected)
+        return download.download_video(video_url)
 
-    return get_stream_with_quality(plugin, url_selected, manifest_type="hls")
+    return get_stream_with_quality(plugin, video_url, manifest_type="hls")
