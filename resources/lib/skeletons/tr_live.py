@@ -25,16 +25,16 @@ menu = {
         'enabled': True,
         'order': 1
     },
-    'ahaber': {
-        'resolver': '/resources/lib/channels/tr/ahaber:get_live_url',
+    'ahaberhd': {
+        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
         'label': 'A Haber',
         'thumb': 'channels/tr/ahaber.png',
         'fanart': 'channels/tr/ahaber_fanart.jpg',
         'enabled': True,
         'order': 2
     },
-    'aspor': {
-        'resolver': '/resources/lib/channels/tr/aspor:get_live_url',
+    'asporhd': {
+        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
         'label': 'A Spor',
         'thumb': 'channels/tr/aspor.png',
         'fanart': 'channels/tr/aspor_fanart.jpg',
@@ -49,8 +49,8 @@ menu = {
         'enabled': True,
         'order': 4
     },
-    'a2': {
-        'resolver': '/resources/lib/channels/tr/a2:get_live_url',
+    'a2tv': {
+        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
         'label': 'a2',
         'thumb': 'channels/tr/a2.png',
         'fanart': 'channels/tr/a2_fanart.jpg',
