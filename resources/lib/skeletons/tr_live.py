@@ -41,7 +41,7 @@ menu = {
         'enabled': True,
         'order': 3
     },
-    'atv': {
+    'atvhd': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
         'label': 'atv',
         'thumb': 'channels/tr/atv.png',
