@@ -25,7 +25,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     headers = {"User-Agent": web_utils.get_random_ua(), 'Referer': URL_LIVE}
 
-    resp = urlquick.get(URL_LICENCE_KEY % ('atvhd', 'atvhd'), headers=headers, max_age=-1)
+    resp = urlquick.get(URL_LICENCE_KEY % (item_id, item_id), headers=headers, max_age=-1)
     video_url = re.compile('\"Url\":\"(.*?)\"').findall(resp.text)[0]
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls", headers=headers)
