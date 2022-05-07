@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta26" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta27" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -167,6 +167,21 @@ addons.xml: Fix translation (PR #772)
 [WO- TV5MONDE] TV5Monde live outside FBS (PR #803 issue #802) thanks @darodi
 [TR - ATV] Add channel (PR #806) thanks @itasli 
 [WO - ARTE] Fix replay (PR #807)
+[TR - A2] Add channel (PR #808) thanks @itasli
+[TR - A HABER] Add channel (PR #809) thanks @itasli
+[TR - A SPOR] Add channel (PR #810) thanks @itasli
+[TR - ATV] Use item_id instead of hardcoded string (PR #811) thanks @itasli
+[TR - ATV] Merged A2, ASPOR & AHABER into one file (PR #813) thanks @itasli
+[TR - A PARA] Add channel (PR #814) thanks @itasli
+[TR - CNNTURK] Add channel (PR #815) thanks @itasli
+[CA -TVA] Fix replay (PR #817)
+[TR - 24TV] Add channel (PR #816) thanks @itasli
+[TR - TV 5] Add channel (PR #819) thanks @itasli
+[TR - ULKE TV] Add channel (PR #820) thanks @itasli
+[TR - VAV TV] Add channel (PR #821) thanks @itasli
+[TR - MINIKA COCUK] Add channel (PR #822) thanks @itasli
+[CA - TVA] Use get_stream_with_quality (PR #823)
+[TR - MINIKA GO] Add channel (PR #824) thanks @itasli
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
