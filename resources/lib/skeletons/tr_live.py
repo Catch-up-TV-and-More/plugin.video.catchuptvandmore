@@ -209,13 +209,53 @@ menu = {
         'enabled': True,
         'order': 24
     },
+    'trt1': {
+        'resolver': '/resources/lib/channels/tr/trt:get_live_url',
+        'label': 'TRT 1',
+        'thumb': 'channels/tr/trt1.png',
+        'fanart': 'channels/tr/trt1_fanart.jpg',
+        'enabled': True,
+        'order': 25
+    },
+    'trt2': {
+        'resolver': '/resources/lib/channels/tr/trt:get_live_url',
+        'label': 'TRT 2',
+        'thumb': 'channels/tr/trt2.png',
+        'fanart': 'channels/tr/trt2_fanart.jpg',
+        'enabled': True,
+        'order': 26
+    },
+    'trtavaz': {
+        'resolver': '/resources/lib/channels/tr/trt:get_live_url',
+        'label': 'TRT Avaz',
+        'thumb': 'channels/tr/trtavaz.png',
+        'fanart': 'channels/tr/trtavaz_fanart.jpg',
+        'enabled': True,
+        'order': 27
+    },
+    'trtbelgesel': {
+        'resolver': '/resources/lib/channels/tr/trt:get_live_url',
+        'label': 'TRT Belgesel',
+        'thumb': 'channels/tr/trtbelgesel.png',
+        'fanart': 'channels/tr/trtbelgesel_fanart.jpg',
+        'enabled': True,
+        'order': 28
+    },
+    'trtcocuk': {
+        'resolver': '/resources/lib/channels/tr/trt:get_live_url',
+        'label': 'TRT Çocuk',
+        'thumb': 'channels/tr/trtcocuk.png',
+        'fanart': 'channels/tr/trtcocuk_fanart.jpg',
+        'enabled': True,
+        'order': 29
+    },
     'tv5': {
         'resolver': '/resources/lib/channels/tr/tv5:get_live_url',
         'label': 'TV 5',
         'thumb': 'channels/tr/tv5.png',
         'fanart': 'channels/tr/tv5_fanart.jpg',
         'enabled': True,
-        'order': 25
+        'order': 30
     },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
@@ -223,7 +263,7 @@ menu = {
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 26
+        'order': 31
     },
     'tvnet': {
         'resolver': '/resources/lib/channels/tr/tvnet:get_live_url',
@@ -231,7 +271,7 @@ menu = {
         'thumb': 'channels/tr/tvnet.jpg',
         'fanart': 'channels/tr/tvnet_fanart.jpg',
         'enabled': True,
-        'order': 27
+        'order': 32
     },
     'ulke': {
         'resolver': '/resources/lib/channels/tr/ulke:get_live_url',
@@ -239,7 +279,7 @@ menu = {
         'thumb': 'channels/tr/ulke.png',
         'fanart': 'channels/tr/ulke_fanart.jpg',
         'enabled': True,
-        'order': 28
+        'order': 33
     },
     'vavtv': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
@@ -247,6 +287,6 @@ menu = {
         'thumb': 'channels/tr/vav.png',
         'fanart': 'channels/tr/vav_fanart.jpg',
         'enabled': True,
-        'order': 29
+        'order': 34
     },
 }
