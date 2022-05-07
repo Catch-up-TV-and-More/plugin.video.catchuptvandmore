@@ -209,4 +209,12 @@ menu = {
         'enabled': True,
         'order': 24
     },
+    'ulke': {
+        'resolver': '/resources/lib/channels/tr/ulke:get_live_url',
+        'label': 'Ulke TV',
+        'thumb': 'channels/tr/ulke.png',
+        'fanart': 'channels/tr/ulke_fanart.jpg',
+        'enabled': True,
+        'order': 25
+    },
 }
