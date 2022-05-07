@@ -17,13 +17,21 @@ from __future__ import unicode_literals
 root = 'live_tv'
 
 menu = {
+    '24tv': {
+        'resolver': '/resources/lib/channels/tr/24tv:get_live_url',
+        'label': '360 TV',
+        'thumb': 'channels/tr/24.png',
+        'fanart': 'channels/tr/24_fanart.jpg',
+        'enabled': True,
+        'order': 1
+    },
     '360tv': {
         'resolver': '/resources/lib/channels/tr/360tv:get_live_url',
         'label': '360 TV',
-        'thumb': 'channels/tr/360tv.png',
-        'fanart': 'channels/tr/360tv_fanart.jpg',
+        'thumb': 'channels/tr/360.png',
+        'fanart': 'channels/tr/360_fanart.jpg',
         'enabled': True,
-        'order': 1
+        'order': 2
     },
     'ahaberhd': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
@@ -31,7 +39,7 @@ menu = {
         'thumb': 'channels/tr/ahaber.png',
         'fanart': 'channels/tr/ahaber_fanart.jpg',
         'enabled': True,
-        'order': 2
+        'order': 3
     },
     'aparahd': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
@@ -39,7 +47,7 @@ menu = {
         'thumb': 'channels/tr/apara.png',
         'fanart': 'channels/tr/apara_fanart.jpg',
         'enabled': True,
-        'order': 3
+        'order': 4
     },
     'asporhd': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
@@ -47,7 +55,7 @@ menu = {
         'thumb': 'channels/tr/aspor.png',
         'fanart': 'channels/tr/aspor_fanart.jpg',
         'enabled': True,
-        'order': 4
+        'order': 5
     },
     'atvhd': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
@@ -55,7 +63,7 @@ menu = {
         'thumb': 'channels/tr/atv.png',
         'fanart': 'channels/tr/atv_fanart.jpg',
         'enabled': True,
-        'order': 5
+        'order': 6
     },
     'a2tv': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
@@ -63,7 +71,7 @@ menu = {
         'thumb': 'channels/tr/a2.png',
         'fanart': 'channels/tr/a2_fanart.jpg',
         'enabled': True,
-        'order': 6
+        'order': 7
     },
     'beyaz': {
         'resolver': '/resources/lib/channels/tr/beyaz:get_live_url',
@@ -71,7 +79,7 @@ menu = {
         'thumb': 'channels/tr/beyaz.png',
         'fanart': 'channels/tr/beyaz_fanart.jpg',
         'enabled': True,
-        'order': 7
+        'order': 8
     },
     'bloomberght': {
         'resolver': '/resources/lib/channels/tr/bloomberght:get_live_url',
@@ -79,7 +87,7 @@ menu = {
         'thumb': 'channels/tr/bloomberght.png',
         'fanart': 'channels/tr/bloomberght_fanart.jpg',
         'enabled': True,
-        'order': 8
+        'order': 9
     },
     'cine5': {
         'resolver': '/resources/lib/channels/tr/cine5:get_live_url',
@@ -87,7 +95,7 @@ menu = {
         'thumb': 'channels/tr/cine5.png',
         'fanart': 'channels/tr/cine5_fanart.jpg',
         'enabled': True,
-        'order': 9
+        'order': 10
     },
     'cnnturk': {
         'resolver': '/resources/lib/channels/tr/cnnturk:get_live_url',
@@ -95,7 +103,7 @@ menu = {
         'thumb': 'channels/tr/cnnturk.png',
         'fanart': 'channels/tr/cnnturk_fanart.jpg',
         'enabled': True,
-        'order': 10
+        'order': 11
     },
     'fox': {
         'resolver': '/resources/lib/channels/tr/fox:get_live_url',
@@ -103,7 +111,7 @@ menu = {
         'thumb': 'channels/tr/fox.png',
         'fanart': 'channels/tr/fox_fanart.jpg',
         'enabled': True,
-        'order': 11
+        'order': 12
     },
     'haberglobal': {
         'resolver': '/resources/lib/channels/tr/haberglobal:get_live_url',
@@ -111,7 +119,7 @@ menu = {
         'thumb': 'channels/tr/haberglobal.png',
         'fanart': 'channels/tr/haberglobal_fanart.jpg',
         'enabled': True,
-        'order': 12
+        'order': 13
     },
     'haberturk': {
         'resolver': '/resources/lib/channels/tr/haberturk:get_live_url',
@@ -119,7 +127,7 @@ menu = {
         'thumb': 'channels/tr/haberturk.png',
         'fanart': 'channels/tr/haberturk_fanart.jpg',
         'enabled': True,
-        'order': 13
+        'order': 14
     },
     'kanal7': {
         'resolver': '/resources/lib/channels/tr/kanal7:get_live_url',
@@ -127,7 +135,7 @@ menu = {
         'thumb': 'channels/tr/kanal7.png',
         'fanart': 'channels/tr/kanal7_fanart.jpg',
         'enabled': True,
-        'order': 14
+        'order': 15
     },
     'kanald': {
         'resolver': '/resources/lib/channels/tr/kanald:get_live_url',
@@ -135,7 +143,7 @@ menu = {
         'thumb': 'channels/tr/kanald.png',
         'fanart': 'channels/tr/kanald_fanart.jpg',
         'enabled': True,
-        'order': 15
+        'order': 16
     },
     'ntv': {
         'resolver': '/resources/lib/channels/tr/ntv:get_live_url',
@@ -143,7 +151,7 @@ menu = {
         'thumb': 'channels/tr/ntv.png',
         'fanart': 'channels/tr/ntv_fanart.jpg',
         'enabled': True,
-        'order': 16
+        'order': 17
     },
     'show': {
         'resolver': '/resources/lib/channels/tr/show:get_live_url',
@@ -151,7 +159,7 @@ menu = {
         'thumb': 'channels/tr/show.png',
         'fanart': 'channels/tr/show_fanart.jpg',
         'enabled': True,
-        'order': 17
+        'order': 18
     },
     'showmax': {
         'resolver': '/resources/lib/channels/tr/showmax:get_live_url',
@@ -159,7 +167,7 @@ menu = {
         'thumb': 'channels/tr/showmax.png',
         'fanart': 'channels/tr/showmax_fanart.jpg',
         'enabled': True,
-        'order': 18
+        'order': 19
     },
     'star': {
         'resolver': '/resources/lib/channels/tr/star:get_live_url',
@@ -167,7 +175,7 @@ menu = {
         'thumb': 'channels/tr/star.png',
         'fanart': 'channels/tr/star_fanart.jpg',
         'enabled': True,
-        'order': 19
+        'order': 20
     },
     'tele1': {
         'resolver': '/resources/lib/channels/tr/tele1:get_live_url',
@@ -175,7 +183,7 @@ menu = {
         'thumb': 'channels/tr/tele1.png',
         'fanart': 'channels/tr/tele1_fanart.jpg',
         'enabled': True,
-        'order': 20
+        'order': 21
     },
     'teve2': {
         'resolver': '/resources/lib/channels/tr/teve2:get_live_url',
@@ -183,7 +191,7 @@ menu = {
         'thumb': 'channels/tr/teve2.png',
         'fanart': 'channels/tr/teve2_fanart.jpg',
         'enabled': True,
-        'order': 21
+        'order': 22
     },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
@@ -191,6 +199,6 @@ menu = {
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 22
+        'order': 23
     },
 }
