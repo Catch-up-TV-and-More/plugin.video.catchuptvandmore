@@ -217,4 +217,12 @@ menu = {
         'enabled': True,
         'order': 25
     },
+    'vavtv': {
+        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'label': 'Vav TV',
+        'thumb': 'channels/tr/vav.png',
+        'fanart': 'channels/tr/vav_fanart.jpg',
+        'enabled': True,
+        'order': 26
+    },
 }
