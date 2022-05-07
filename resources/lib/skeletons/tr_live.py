@@ -193,12 +193,20 @@ menu = {
         'enabled': True,
         'order': 22
     },
+    'tv5': {
+        'resolver': '/resources/lib/channels/tr/tv5:get_live_url',
+        'label': 'TV 5',
+        'thumb': 'channels/tr/tv5.png',
+        'fanart': 'channels/tr/tv5_fanart.jpg',
+        'enabled': True,
+        'order': 23
+    },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
         'label': 'TV 8',
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 23
+        'order': 24
     },
 }
