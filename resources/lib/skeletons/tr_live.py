@@ -225,13 +225,21 @@ menu = {
         'enabled': True,
         'order': 26
     },
+    'tvnet': {
+        'resolver': '/resources/lib/channels/tr/tvnet:get_live_url',
+        'label': 'Tvnet',
+        'thumb': 'channels/tr/tvnet.jpg',
+        'fanart': 'channels/tr/tvnet_fanart.jpg',
+        'enabled': True,
+        'order': 27
+    },
     'ulke': {
         'resolver': '/resources/lib/channels/tr/ulke:get_live_url',
         'label': 'Ulke TV',
         'thumb': 'channels/tr/ulke.png',
         'fanart': 'channels/tr/ulke_fanart.jpg',
         'enabled': True,
-        'order': 27
+        'order': 28
     },
     'vavtv': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
@@ -239,6 +247,6 @@ menu = {
         'thumb': 'channels/tr/vav.png',
         'fanart': 'channels/tr/vav_fanart.jpg',
         'enabled': True,
-        'order': 28
+        'order': 29
     },
 }
