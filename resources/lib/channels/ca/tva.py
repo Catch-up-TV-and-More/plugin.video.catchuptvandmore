@@ -258,11 +258,11 @@ def get_video_url(plugin,
     data_player = re.compile(
         r'data-player\=\"(.*?)\"').findall(resp.text)[0]
     data_video_id = re.compile(
-        r'data-video-id\=\"(.*?)\"').findall(resp.text)[0]
+        r'\"referenceId\":\"(.*?)\"').findall(resp.text)[0]
 
     # Method to get JSON from 'edge.api.brightcove.com'
     resp = urlquick.get(
-        URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
+        URL_BRIGHTCOVE_VIDEO_JSON % (data_account, "ref:%s"%data_video_id),
         headers={
             'User-Agent':
             web_utils.get_random_ua(),
