@@ -19,7 +19,7 @@ root = 'live_tv'
 menu = {
     '24tv': {
         'resolver': '/resources/lib/channels/tr/24tv:get_live_url',
-        'label': '360 TV',
+        'label': '24 TV',
         'thumb': 'channels/tr/24.png',
         'fanart': 'channels/tr/24_fanart.jpg',
         'enabled': True,
@@ -33,13 +33,21 @@ menu = {
         'enabled': True,
         'order': 2
     },
+    'a2tv': {
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
+        'label': 'a2',
+        'thumb': 'channels/tr/a2.png',
+        'fanart': 'channels/tr/a2_fanart.jpg',
+        'enabled': True,
+        'order': 3
+    },
     'ahaberhd': {
         'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'A Haber',
         'thumb': 'channels/tr/ahaber.png',
         'fanart': 'channels/tr/ahaber_fanart.jpg',
         'enabled': True,
-        'order': 3
+        'order': 4
     },
     'aparahd': {
         'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
@@ -47,7 +55,7 @@ menu = {
         'thumb': 'channels/tr/apara.png',
         'fanart': 'channels/tr/apara_fanart.jpg',
         'enabled': True,
-        'order': 4
+        'order': 5
     },
     'asporhd': {
         'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
@@ -55,7 +63,7 @@ menu = {
         'thumb': 'channels/tr/aspor.png',
         'fanart': 'channels/tr/aspor_fanart.jpg',
         'enabled': True,
-        'order': 5
+        'order': 6
     },
     'atvhd': {
         'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
@@ -63,21 +71,13 @@ menu = {
         'thumb': 'channels/tr/atv.png',
         'fanart': 'channels/tr/atv_fanart.jpg',
         'enabled': True,
-        'order': 6
+        'order': 7
     },
     'atvavrupa': {
         'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'atv Avrupa',
         'thumb': 'channels/tr/atvavrupa.png',
         'fanart': 'channels/tr/atvavrupa_fanart.jpg',
-        'enabled': True,
-        'order': 7
-    },
-    'a2tv': {
-        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
-        'label': 'a2',
-        'thumb': 'channels/tr/a2.png',
-        'fanart': 'channels/tr/a2_fanart.jpg',
         'enabled': True,
         'order': 8
     },
