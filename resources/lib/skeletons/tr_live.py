@@ -82,7 +82,7 @@ menu = {
         'order': 8
     },
     'bloomberght': {
-        'resolver': '/resources/lib/channels/tr/bloomberght:get_live_url',
+        'resolver': '/resources/lib/channels/tr/cinergroup:get_live_url',
         'label': 'Bloomberg HT',
         'thumb': 'channels/tr/bloomberght.png',
         'fanart': 'channels/tr/bloomberght_fanart.jpg',
@@ -122,8 +122,8 @@ menu = {
         'order': 13
     },
     'haberturk': {
-        'resolver': '/resources/lib/channels/tr/haberturk:get_live_url',
-        'label': 'Haberturk',
+        'resolver': '/resources/lib/channels/tr/cinergroup:get_live_url',
+        'label': 'Haber Türk',
         'thumb': 'channels/tr/haberturk.png',
         'fanart': 'channels/tr/haberturk_fanart.jpg',
         'enabled': True,
@@ -169,8 +169,8 @@ menu = {
         'enabled': True,
         'order': 19
     },
-    'show': {
-        'resolver': '/resources/lib/channels/tr/show:get_live_url',
+    'showtv': {
+        'resolver': '/resources/lib/channels/tr/cinergroup:get_live_url',
         'label': 'Show TV',
         'thumb': 'channels/tr/show.png',
         'fanart': 'channels/tr/show_fanart.jpg',
@@ -178,12 +178,20 @@ menu = {
         'order': 20
     },
     'showmax': {
-        'resolver': '/resources/lib/channels/tr/showmax:get_live_url',
-        'label': 'ShowMax TV',
+        'resolver': '/resources/lib/channels/tr/cinergroup:get_live_url',
+        'label': 'Show MAX',
         'thumb': 'channels/tr/showmax.png',
         'fanart': 'channels/tr/showmax_fanart.jpg',
         'enabled': True,
         'order': 21
+    },
+    'showturk': {
+        'resolver': '/resources/lib/channels/tr/cinergroup:get_live_url',
+        'label': 'Show Türk',
+        'thumb': 'channels/tr/showturk.png',
+        'fanart': 'channels/tr/showturk_fanart.jpg',
+        'enabled': True,
+        'order': 22
     },
     'star': {
         'resolver': '/resources/lib/channels/tr/star:get_live_url',
@@ -191,7 +199,7 @@ menu = {
         'thumb': 'channels/tr/star.png',
         'fanart': 'channels/tr/star_fanart.jpg',
         'enabled': True,
-        'order': 22
+        'order': 23
     },
     'tele1': {
         'resolver': '/resources/lib/channels/tr/tele1:get_live_url',
@@ -199,7 +207,7 @@ menu = {
         'thumb': 'channels/tr/tele1.png',
         'fanart': 'channels/tr/tele1_fanart.jpg',
         'enabled': True,
-        'order': 23
+        'order': 24
     },
     'teve2': {
         'resolver': '/resources/lib/channels/tr/teve2:get_live_url',
@@ -207,7 +215,7 @@ menu = {
         'thumb': 'channels/tr/teve2.png',
         'fanart': 'channels/tr/teve2_fanart.jpg',
         'enabled': True,
-        'order': 24
+        'order': 25
     },
     'trt1': {
         'resolver': '/resources/lib/channels/tr/trt:get_live_url',
@@ -215,7 +223,7 @@ menu = {
         'thumb': 'channels/tr/trt1.png',
         'fanart': 'channels/tr/trt1_fanart.jpg',
         'enabled': True,
-        'order': 25
+        'order': 26
     },
     'trt2': {
         'resolver': '/resources/lib/channels/tr/trt:get_live_url',
@@ -223,7 +231,7 @@ menu = {
         'thumb': 'channels/tr/trt2.png',
         'fanart': 'channels/tr/trt2_fanart.jpg',
         'enabled': True,
-        'order': 26
+        'order': 27
     },
     'trtavaz': {
         'resolver': '/resources/lib/channels/tr/trt:get_live_url',
@@ -231,7 +239,7 @@ menu = {
         'thumb': 'channels/tr/trtavaz.png',
         'fanart': 'channels/tr/trtavaz_fanart.jpg',
         'enabled': True,
-        'order': 27
+        'order': 28
     },
     'trtbelgesel': {
         'resolver': '/resources/lib/channels/tr/trt:get_live_url',
@@ -239,7 +247,7 @@ menu = {
         'thumb': 'channels/tr/trtbelgesel.png',
         'fanart': 'channels/tr/trtbelgesel_fanart.jpg',
         'enabled': True,
-        'order': 28
+        'order': 29
     },
     'trtcocuk': {
         'resolver': '/resources/lib/channels/tr/trt:get_live_url',
@@ -247,7 +255,7 @@ menu = {
         'thumb': 'channels/tr/trtcocuk.png',
         'fanart': 'channels/tr/trtcocuk_fanart.jpg',
         'enabled': True,
-        'order': 29
+        'order': 30
     },
     'trthaber': {
         'resolver': '/resources/lib/channels/tr/trt:get_live_url',
@@ -255,7 +263,7 @@ menu = {
         'thumb': 'channels/tr/trthaber.png',
         'fanart': 'channels/tr/trthaber_fanart.jpg',
         'enabled': True,
-        'order': 30
+        'order': 31
     },
     'tv5': {
         'resolver': '/resources/lib/channels/tr/tv5:get_live_url',
@@ -263,7 +271,7 @@ menu = {
         'thumb': 'channels/tr/tv5.png',
         'fanart': 'channels/tr/tv5_fanart.jpg',
         'enabled': True,
-        'order': 31
+        'order': 32
     },
     'tv8': {
         'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
@@ -271,7 +279,7 @@ menu = {
         'thumb': 'channels/tr/tv8.png',
         'fanart': 'channels/tr/tv8_fanart.jpg',
         'enabled': True,
-        'order': 32
+        'order': 33
     },
     'tvnet': {
         'resolver': '/resources/lib/channels/tr/tvnet:get_live_url',
@@ -279,7 +287,7 @@ menu = {
         'thumb': 'channels/tr/tvnet.jpg',
         'fanart': 'channels/tr/tvnet_fanart.jpg',
         'enabled': True,
-        'order': 33
+        'order': 34
     },
     'ulke': {
         'resolver': '/resources/lib/channels/tr/ulke:get_live_url',
@@ -287,7 +295,7 @@ menu = {
         'thumb': 'channels/tr/ulke.png',
         'fanart': 'channels/tr/ulke_fanart.jpg',
         'enabled': True,
-        'order': 34
+        'order': 35
     },
     'vavtv': {
         'resolver': '/resources/lib/channels/tr/atv:get_live_url',
@@ -295,6 +303,6 @@ menu = {
         'thumb': 'channels/tr/vav.png',
         'fanart': 'channels/tr/vav_fanart.jpg',
         'enabled': True,
-        'order': 35
+        'order': 36
     },
 }
