@@ -24,4 +24,7 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE)
     video_url = re.compile('\'video-source\',\'(.*?)\'').findall(resp.text)[0]
 
+    if item_id == "kanal7avrupa":
+        video_url = re.compile('\'video-source\',\'(.*?)\'').findall(resp.text)[1]
+
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
