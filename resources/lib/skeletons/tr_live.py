@@ -154,7 +154,7 @@ menu = {
         'order': 17
     },
     'kanald': {
-        'resolver': '/resources/lib/channels/tr/kanald:get_live_url',
+        'resolver': '/resources/lib/channels/tr/dogan:get_live_url',
         'label': 'Kanal D',
         'thumb': 'channels/tr/kanald.png',
         'fanart': 'channels/tr/kanald_fanart.jpg',
