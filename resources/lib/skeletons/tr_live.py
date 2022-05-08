@@ -313,13 +313,21 @@ menu = {
         'enabled': True,
         'order': 37
     },
+    'tv8int': {
+        'resolver': '/resources/lib/channels/tr/tv8:get_live_url',
+        'label': 'TV 8 Int',
+        'thumb': 'channels/tr/tv8int.png',
+        'fanart': 'channels/tr/tv8int_fanart.jpg',
+        'enabled': True,
+        'order': 38
+    },
     'tvnet': {
         'resolver': '/resources/lib/channels/tr/tvnet:get_live_url',
         'label': 'Tvnet',
         'thumb': 'channels/tr/tvnet.jpg',
         'fanart': 'channels/tr/tvnet_fanart.jpg',
         'enabled': True,
-        'order': 38
+        'order': 39
     },
     'ulke': {
         'resolver': '/resources/lib/channels/tr/ulke:get_live_url',
@@ -327,7 +335,7 @@ menu = {
         'thumb': 'channels/tr/ulke.png',
         'fanart': 'channels/tr/ulke_fanart.jpg',
         'enabled': True,
-        'order': 39
+        'order': 40
     },
     'vavtv': {
         'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
@@ -335,6 +343,6 @@ menu = {
         'thumb': 'channels/tr/vav.png',
         'fanart': 'channels/tr/vav_fanart.jpg',
         'enabled': True,
-        'order': 40
+        'order': 41
     },
 }
