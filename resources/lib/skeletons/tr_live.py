@@ -34,7 +34,7 @@ menu = {
         'order': 2
     },
     'ahaberhd': {
-        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'A Haber',
         'thumb': 'channels/tr/ahaber.png',
         'fanart': 'channels/tr/ahaber_fanart.jpg',
@@ -42,7 +42,7 @@ menu = {
         'order': 3
     },
     'aparahd': {
-        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'A Para',
         'thumb': 'channels/tr/apara.png',
         'fanart': 'channels/tr/apara_fanart.jpg',
@@ -50,7 +50,7 @@ menu = {
         'order': 4
     },
     'asporhd': {
-        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'A Spor',
         'thumb': 'channels/tr/aspor.png',
         'fanart': 'channels/tr/aspor_fanart.jpg',
@@ -58,7 +58,7 @@ menu = {
         'order': 5
     },
     'atvhd': {
-        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'atv',
         'thumb': 'channels/tr/atv.png',
         'fanart': 'channels/tr/atv_fanart.jpg',
@@ -74,7 +74,7 @@ menu = {
         'order': 7
     },
     'a2tv': {
-        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'a2',
         'thumb': 'channels/tr/a2.png',
         'fanart': 'channels/tr/a2_fanart.jpg',
@@ -154,7 +154,7 @@ menu = {
         'order': 17
     },
     'minikagococuk': {
-        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'Minika Çocuk',
         'thumb': 'channels/tr/minikacocuk.png',
         'fanart': 'channels/tr/minikacocuk_fanart.jpg',
@@ -162,7 +162,7 @@ menu = {
         'order': 18
     },
     'minikago': {
-        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'Minika Go',
         'thumb': 'channels/tr/minikago.png',
         'fanart': 'channels/tr/minikago_fanart.jpg',
@@ -306,7 +306,7 @@ menu = {
         'order': 36
     },
     'vavtv': {
-        'resolver': '/resources/lib/channels/tr/atv:get_live_url',
+        'resolver': '/resources/lib/channels/tr/turkuvaz:get_live_url',
         'label': 'Vav TV',
         'thumb': 'channels/tr/vav.png',
         'fanart': 'channels/tr/vav_fanart.jpg',
