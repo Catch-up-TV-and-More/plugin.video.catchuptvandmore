@@ -6,11 +6,17 @@
 
 from __future__ import unicode_literals
 import os
-from enum import Enum
+import sys
 
+if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
+    from enum import Enum
+else:
+    from resources.lib.enum import Enum
+
+# noinspection PyUnresolvedReferences
 from codequick import Script, utils
 import urlquick
-
+# noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui, xbmcvfs
 
 
