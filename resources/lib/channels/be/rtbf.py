@@ -547,6 +547,9 @@ def get_video_url(plugin,
         }
         item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
         item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
+        stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
+        if stream_bitrate_limit > 0:
+            item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
@@ -742,6 +745,9 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
         }
         item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
         item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
+        stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
+        if stream_bitrate_limit > 0:
+            item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
