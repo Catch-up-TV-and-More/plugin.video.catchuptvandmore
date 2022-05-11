@@ -171,7 +171,7 @@ addons.xml: Fix translation (PR #772)
 [TR - A HABER] Add channel (PR #809) thanks @itasli
 [TR - A SPOR] Add channel (PR #810) thanks @itasli
 [TR - ATV] Use item_id instead of hardcoded string (PR #811) thanks @itasli
-[TR - ATV] Merged A2, ASPOR & AHABER into one file (PR #813) thanks @itasli
+[TR - ATV] Merged A2, ASPOR &amp; AHABER into one file (PR #813) thanks @itasli
 [TR - A PARA] Add channel (PR #814) thanks @itasli
 [TR - CNNTURK] Add channel (PR #815) thanks @itasli
 [CA -TVA] Fix replay (PR #817)
