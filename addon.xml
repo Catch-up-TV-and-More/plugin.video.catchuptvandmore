@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta27" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta28" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -182,6 +182,20 @@ addons.xml: Fix translation (PR #772)
 [TR - MINIKA COCUK] Add channel (PR #822) thanks @itasli
 [CA - TVA] Use get_stream_with_quality (PR #823)
 [TR - MINIKA GO] Add channel (PR #824) thanks @itasli
+[TR - TVNET] Add channel (PR #825) thanks @itasli
+[TR - TRT] Add channels (PR #826) thanks @itasli
+[TR - TRT Haber] Add channel (PR #827) thanks @itasli
+[TR - CINERGROUP] Merged Cinergroup channels (PR #828) thanks @itasli
+[TR - AVRUPA] Add channel (PR #830) thanks @itasli
+[TR - TURKUVAZ] Rename atv.py file thanks @itasli
+[TR] Fix skeleton
+[TR - EURO STAR] Add channel (PR #831) thanks @itasli
+[TR - DOGAN] Rename kanald.py file (PR #832) thanks @itasli
+[TR - DOGAN] Added Euro D (PR #833) thanks @itasli
+[TR - KANAL 7] Add Kanal 7 Avrupa (PR #834) thanks @itasli
+[TR - TV8] Add TV8 Int (PR #835) thanks @itasli
+[TR - DOGUS] Added Dogus group channels (PR #836) thanks @itasli
+[BE - RTBFAuvio] Limit bitrate for live and drm stream (PR #838 issue #837) thaks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
