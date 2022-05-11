@@ -81,7 +81,7 @@ URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
 
 
 def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
-                                     append_query_string=False, verify=True):
+                                     append_query_string=False, verify=True, subtitles=None):
     item = Listitem()
     if manifest_type == 'hls':
         stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
@@ -107,7 +107,9 @@ def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=N
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
 
-    # TODO add subtitles?
+    if subtitles is not None:
+        item.subtitles.append(subtitles)
+
     return item
 
 
@@ -130,7 +132,8 @@ def get_stream_with_quality(plugin,
                             headers=None,
                             map_audio=False,
                             append_query_string=False,
-                            verify=True):
+                            verify=True,
+                            subtitles=None):
 
     """ Returns the stream for the bitrate or the requested quality.
 
@@ -141,6 +144,7 @@ def get_stream_with_quality(plugin,
     :param bool append_query_string:    Should the existing query string be appended?
     :param bool map_audio:              Map audio streams
     :param bool verify:                 verify ssl?
+    :param str subtitles:               subtitles url
 
     :return: An item for the stream
     :rtype: Listitem
@@ -159,7 +163,7 @@ def get_stream_with_quality(plugin,
                                                     headers=headers,
                                                     map_audio=map_audio,
                                                     append_query_string=append_query_string,
-                                                    verify=verify)
+                                                    verify=verify, subtitles=subtitles)
 
     item = Listitem()
     item.path = video_url
@@ -181,6 +185,9 @@ def get_stream_with_quality(plugin,
         stream_headers = urlencode(headers)
         item.property['inputstream.adaptive.stream_headers'] = stream_headers
         item.property['inputstream.adaptive.license_key'] = '|{}'.format(stream_headers)
+
+    if subtitles is not None:
+        item.subtitles.append(subtitles)
 
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
@@ -311,7 +318,8 @@ def get_brightcove_video_json(plugin,
                               data_account,
                               data_player,
                               data_video_id,
-                              download_mode=False):
+                              download_mode=False,
+                              subtitles=None):
     # Method to get JSON from 'edge.api.brightcove.com'
     resp = urlquick.get(
         URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
@@ -339,7 +347,7 @@ def get_brightcove_video_json(plugin,
 
     if download_mode:
         return download.download_video(video_url)
-    return get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    return get_stream_with_quality(plugin, video_url, manifest_type="hls", subtitles=subtitles)
 
 
 # MTVN Services Part
