@@ -389,8 +389,11 @@ def list_sub_categories(plugin, item_id, category_datas, category_id, **kwargs):
 
 
 @Route.register
-def list_videos_category(plugin, item_id, cat_id, **kwargs):
-    resp = urlquick.get(URL_VIDEOS_BY_CAT_ID % (cat_id, PARTNER_KEY))
+def list_videos_category(plugin, item_id, cat_id, offset=0, **kwargs):
+    url = URL_VIDEOS_BY_CAT_ID % (cat_id, PARTNER_KEY)
+    if offset > 0:
+        url += ('&offset=%s' % offset)
+    resp = urlquick.get(url)
     json_parser = resp.json()
 
     for video_datas in json_parser:
@@ -448,6 +451,9 @@ def list_videos_category(plugin, item_id, cat_id, **kwargs):
                             is_playable=True,
                             is_downloadable=True)
         yield item
+
+    if len(json_parser) == 100:
+        yield Listitem.next_page(item_id=item_id, cat_id=cat_id, offset=(offset + 100), callback=list_videos_category)
 
 
 @Route.register
