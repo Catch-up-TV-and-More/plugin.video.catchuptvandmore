@@ -9,13 +9,13 @@ from __future__ import unicode_literals
 import json
 import re
 from builtins import str
-from enum import Enum
 
 import urlquick
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
 from resources.lib import download, web_utils, resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
+from resources.lib.addon_utils import Enum
 
 # TODO Rework filter for all videos
 

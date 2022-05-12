@@ -21,13 +21,13 @@ try:
     from urllib.parse import quote, urlencode
 except ImportError:
     from urllib import quote, urlencode
-
-from enum import Enum
+# noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route
+# noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 
 from resources.lib import resolver_proxy, web_utils
-from resources.lib.addon_utils import get_item_media_path
+from resources.lib.addon_utils import get_item_media_path, Enum
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, \
     get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
