@@ -158,6 +158,4 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE_JSON % item_id)
     json_parser = json.loads(resp.text)
     url = json_parser["results"]["streamUrl"]
-    # TODO ?
-    # return resolver_proxy.get_stream_with_quality(plugin, url, manifest_type="hls")
-    return url
+    return resolver_proxy.get_stream_with_quality(plugin, url, manifest_type="hls")
