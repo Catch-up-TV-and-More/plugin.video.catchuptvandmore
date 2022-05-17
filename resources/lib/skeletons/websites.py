@@ -160,5 +160,13 @@ menu = {
         'fanart': 'websites/philharmoniedeparis_fanart.jpg',
         'enabled': True,
         'order': 18
+    },
+    'veely': {
+        'route': '/resources/lib/websites/veely:website_root',
+        'label': 'veely',
+        'thumb': 'websites/veely.png',
+        'fanart': 'websites/veely.png',
+        'enabled': True,
+        'order': 19
     }
 }
