@@ -87,7 +87,7 @@ def video_list(plugin, url):
         plot_containers = content.iterfind(".//div[@class]")
         for plot_container in plot_containers:
             if 'field-type-text-with-summary' in plot_container.get('class'):
-                item.plot = plot_container.findtext(".//div[@class='field-item']")
+                item.info['plot'] = plot_container.findtext(".//div[@class='field-item']")
                 break
 
         image = article.find(".//img").get("src")
