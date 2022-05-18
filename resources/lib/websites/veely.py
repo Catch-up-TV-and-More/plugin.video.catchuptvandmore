@@ -15,7 +15,7 @@ from codequick import Listitem, Resolver, Route, Script
 from codequick.utils import urljoin_partial
 
 from resources.lib import resolver_proxy
-from resources.lib.web_utils import get_random_ua
+from resources.lib.web_utils import get_random_ua, unquote_plus
 
 DATA_PLAYER_PREFIX = "data-player-"
 DATA_PREFIX = "data-"
@@ -46,13 +46,16 @@ def website_root(plugin, item_id, **kwargs):
         if url == '/' or url == '/apps' or url == '/tvguide' or url == '/live/':
             continue
 
-        # item.art["thumb"] = get_item_media_path('channels/websites/veely.png')
         item.set_callback(list_programs, url=url)
         yield item
 
 
 def yield_carousels(url):
     main = urlquick.get(url, max_age=-1).parse("main")
+
+    found_plot = main.find(".//div[@class='series-hero__infoblock']")
+    found_image = main.find(".//div[@class='series-hero__carousel']//img")
+
     for div in main.findall(".//div"):
 
         if div.get("class") is None \
@@ -69,7 +72,20 @@ def yield_carousels(url):
                 item = Listitem()
                 i += 1
                 item.label = serie.text
-                items = list_carousel_items(episodes_div)
+
+                if found_plot is None:
+                    item.info['plot'] = item.label
+                elif found_plot.text is not None:
+                    item.info['plot'] = found_plot.text
+                elif found_plot.find(".//p") is None:
+                    item.info['plot'] = item.label
+                else:
+                    item.info['plot'] = found_plot.find(".//p").text
+
+                if found_image is not None:
+                    item.art["thumb"] = append_schema(found_image.get("src"))
+
+                items = list_carousel_items(episodes_div, item.info['plot'])
                 if len(items) == 0:
                     continue
                 item.set_callback(list_items, items=items)
@@ -87,7 +103,7 @@ def yield_carousels(url):
             yield item
 
 
-def list_carousel_items(div):
+def list_carousel_items(div, plot=None):
     items = []
     for anchor_tag in div.iterfind("a"):
         if anchor_tag.get("class") is None or "thumbnail" not in anchor_tag.get("class").split(' '):
@@ -96,8 +112,16 @@ def list_carousel_items(div):
         item = Listitem()
         item.label = anchor_tag.find(".//div[@class='title-info']//h3").text
         url = "%s" % anchor_tag.get("href")
-        item.art["thumb"] = anchor_tag.find(".//img").get("src")
+        img_src = anchor_tag.find(".//img").get("data-src")
+        item.art["thumb"] = append_schema(img_src)
+
+        if plot is not None:
+            item.info['plot'] = plot
+
         if "/watch/" in url or "/live/" in url:
+            if "/live/" in url:
+                item.info['plot'] = item.label
+                item.label = unquote_plus(url.split('/')[len(url.split('/')) - 1])
             item.set_callback(play_video, url=url)
         else:
             item.set_callback(list_programs, url=url)
@@ -126,12 +150,20 @@ def list_programs(plugin, url, **kwargs):
                 continue
             item = Listitem()
             item.label = url_tag.find(".//img").get("alt")
+            item.info['plot'] = item.label
             tag_url = url_tag.get("href")
-            item.art["thumb"] = url_tag.find(".//img").get("src")
+            img_src = url_tag.find(".//img").get("data-src")
+            item.art["thumb"] = append_schema(img_src)
             item.set_callback(list_programs, url=tag_url)
             yield item
     else:
         yield from yield_carousels(program)
+
+
+def append_schema(url):
+    if not url.startswith("http://") and not url.startswith("https://"):
+        url = re.sub(r'/$', '', URL_ROOT) + ("" if url.startswith("/") else "/") + url
+    return url
 
 
 @Resolver.register
