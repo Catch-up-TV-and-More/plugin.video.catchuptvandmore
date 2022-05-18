@@ -9,6 +9,7 @@ import json
 import sys
 from random import randint
 
+# noinspection PyUnresolvedReferences
 from codequick import Script
 import urlquick
 
