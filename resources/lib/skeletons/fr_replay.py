@@ -167,14 +167,6 @@ menu = {
         "enabled": True,
         "order": 44,
     },
-    "gameone": {
-        "route": "/resources/lib/channels/fr/gameone:list_programs",
-        "label": "Game One",
-        "thumb": "channels/fr/gameone.png",
-        "fanart": "channels/fr/gameone_fanart.jpg",
-        "enabled": True,
-        "order": 53,
-    },
     "lumni": {
         "route": "/resources/lib/channels/fr/lumni:list_categories",
         "label": "Lumni (francetv)",
@@ -318,14 +310,6 @@ menu = {
         "fanart": "channels/fr/paramountchannel_fr_fanart.jpg",
         "enabled": True,
         "order": 93,
-    },
-    "mtv_fr": {
-        "route": "/resources/lib/channels/fr/mtv_fr:list_categories",
-        "label": "MTV (FR)",
-        "thumb": "channels/fr/mtv_fr.png",
-        "fanart": "channels/fr/mtv_fr_fanart.jpg",
-        "enabled": True,
-        "order": 94,
     },
     "tebesud": {
         "route": "/resources/lib/channels/fr/tebeo:list_categories",
