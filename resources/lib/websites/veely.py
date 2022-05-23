@@ -7,12 +7,13 @@
 from __future__ import unicode_literals
 
 import re
+from xml.etree import ElementTree
 
 import urlquick
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
-from codequick.utils import urljoin_partial
+from codequick.utils import urljoin_partial, strip_tags
 
 from resources.lib import resolver_proxy
 from resources.lib.web_utils import get_random_ua, unquote_plus
@@ -28,6 +29,9 @@ URL_ON_DEMAND = url_constructor('explore/6165')
 
 SSMP_API = "https://mm-v2.simplestream.com/ssmp/api.php?id=%s&env=%s"
 STREAM_API = "https://v2-streams-elb.simplestreamcdn.com/api/%s/stream/%s?key=%s&platform=firefox"
+
+SEASON_EPISODE_PATTERN = re.compile(r'S(\d+)\s.*Ep(\d+)')
+DURATION_PATTERN = re.compile(r'(\d+) min')
 
 
 @Route.register
@@ -117,6 +121,24 @@ def list_carousel_items(div, plot=None):
 
         if plot is not None:
             item.info['plot'] = plot
+
+        season_episode_tag = anchor_tag.find(".//p[@class='details']//span[@class='pull-left']")
+        if season_episode_tag is not None and season_episode_tag.text is not None:
+            season_episode = SEASON_EPISODE_PATTERN.findall(season_episode_tag.text)
+            if len(season_episode) > 0:
+                item.info['mediatype'] = "episode"
+                episode_str = season_episode[0][1]
+                item.info['episode'] = int(episode_str)
+                season_str = season_episode[0][0]
+                item.info['season'] = int(season_str)
+                item.label = "S" + season_str + "E" + episode_str + " - " + item.label
+
+        duration_tag = anchor_tag.find(".//p[@class='details']//span[@class='duration pull-right']")
+        if duration_tag is not None:
+            duration_html = ElementTree.tostring(duration_tag, encoding='utf8', method='html')
+            duration = DURATION_PATTERN.findall(strip_tags(str(duration_html)))
+            if len(duration) > 0:
+                item.info['duration'] = int(duration[0]) * 60
 
         if "/watch/" in url or "/live/" in url:
             if "/live/" in url:
