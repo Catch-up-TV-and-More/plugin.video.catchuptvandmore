@@ -75,7 +75,7 @@ def website_homepage(plugin, item_id, **kwargs):
         yield item
 
 
-@Route.register
+@Route.register(autosort=False, content_type="videos")
 def list_search(plugin, search_query, item_id, start=0, **kwargs):
     if search_query is None or len(search_query) == 0:
         yield False
@@ -104,7 +104,7 @@ def list_search(plugin, search_query, item_id, start=0, **kwargs):
                         {
                             "plus": "",
                             "values": [
-                                "%s" % search_query
+                                "%s" % re.sub(r'\s+', '*', search_query)
                             ]
                         }
                     ]
