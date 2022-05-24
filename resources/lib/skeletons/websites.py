@@ -168,5 +168,13 @@ menu = {
         'fanart': 'websites/veely.png',
         'enabled': True,
         'order': 19
+    },
+    'sonuma': {
+        'route': '/resources/lib/websites/sonuma:website_root',
+        'label': 'sonuma',
+        'thumb': 'websites/sonuma.png',
+        'fanart': 'websites/sonuma.png',
+        'enabled': True,
+        'order': 20
     }
 }

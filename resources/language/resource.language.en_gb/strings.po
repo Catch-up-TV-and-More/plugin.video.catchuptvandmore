@@ -569,7 +569,7 @@ msgstr ""
 
 
 
-# Reserved space for other tab/category in settins (from 30290 to 30339)
+# Reserved space for other tab/category in settings (from 30290 to 30339)
 
 
 
@@ -927,6 +927,9 @@ msgctxt "#30730"
 msgid "Downloading TV guide..."
 msgstr ""
 
+msgctxt "#30731"
+msgid "Homepage"
+msgstr ""
 
 # Favourites (from 30800 to 30859)
 
