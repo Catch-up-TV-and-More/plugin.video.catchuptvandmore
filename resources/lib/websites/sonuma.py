@@ -75,10 +75,10 @@ def website_homepage(plugin, item_id, **kwargs):
         yield item
 
 
-@Route.register
+@Route.register(autosort=False, content_type="videos")
 def list_search(plugin, search_query, item_id, start=0, **kwargs):
     if search_query is None or len(search_query) == 0:
-        return False
+        yield False
 
     rows = 50
 
@@ -104,7 +104,7 @@ def list_search(plugin, search_query, item_id, start=0, **kwargs):
                         {
                             "plus": "",
                             "values": [
-                                "%s" % search_query
+                                "%s" % re.sub(r'\s+', '*', search_query)
                             ]
                         }
                     ]
@@ -116,9 +116,13 @@ def list_search(plugin, search_query, item_id, start=0, **kwargs):
     resp = urlquick.post(ASSETS_API, json=query, headers=HEADERS, max_age=-1)
     json_parser = resp.json()
 
+    num_found = json_parser["numFound"]
+    if int(num_found) == 0:
+        plugin.notify(plugin.localize(30718), '')
+        yield False
+
     yield from yield_assets(json_parser)
 
-    num_found = json_parser["numFound"]
     new_start = (start + rows)
     if num_found is not None and int(num_found) > rows and new_start < num_found:
         yield Listitem.next_page(search_query=search_query, item_id=item_id, start=new_start, callback=list_search)
@@ -178,9 +182,13 @@ def list_thematique(plugin, item_id, thematique_id, start=0, **kwargs):
     resp = urlquick.post(ASSETS_API, json=query, headers=HEADERS, max_age=-1)
     json_parser = resp.json()
 
+    num_found = json_parser["numFound"]
+    if int(num_found) == 0:
+        plugin.notify(plugin.localize(30718), '')
+        yield False
+
     yield from yield_assets(json_parser)
 
-    num_found = json_parser["numFound"]
     new_start = (start + rows)
     if num_found is not None and int(num_found) > rows and new_start < num_found:
         yield Listitem.next_page(item_id=item_id, id=thematique_id, start=new_start, callback=list_thematique)
@@ -203,9 +211,13 @@ def latest(plugin, item_id, start=0, **kwargs):
     resp = urlquick.post(ASSETS_API, json=query, headers=HEADERS, max_age=-1)
     json_parser = resp.json()
 
+    num_found = json_parser["numFound"]
+    if int(num_found) == 0:
+        plugin.notify(plugin.localize(30718), '')
+        yield False
+
     yield from yield_assets(json_parser)
 
-    num_found = json_parser["numFound"]
     new_start = (start + rows)
     if num_found is not None and int(num_found) > rows and new_start < num_found:
         yield Listitem.next_page(item_id=item_id, start=new_start, callback=latest)
@@ -220,9 +232,13 @@ def list_mediablock(plugin, item_id, mediablock, start=0, **kwargs):
     resp = urlquick.post(ASSETS_API, json=query, headers=HEADERS, max_age=-1)
     json_parser = resp.json()
 
+    num_found = json_parser["numFound"]
+    if int(num_found) == 0:
+        plugin.notify(plugin.localize(30718), '')
+        yield False
+
     yield from yield_assets(json_parser)
 
-    num_found = json_parser["numFound"]
     new_start = (start + rows)
     if num_found is not None and int(num_found) > rows and new_start < int(num_found):
         yield Listitem.next_page(item_id=item_id, mediablock=mediablock, start=new_start, callback=list_mediablock)
