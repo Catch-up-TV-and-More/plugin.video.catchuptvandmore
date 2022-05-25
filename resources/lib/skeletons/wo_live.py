@@ -36,7 +36,7 @@ menu = {
                 'xmltv_id': 'euronews.rai.it'
             },
             'ES': {},
-            'PT': {}, 'RU': {}, 'TR': {}, 'FA': {}, 'GR': {},
+            'PT': {}, 'RU': {}, 'RO': {}, 'TR': {}, 'FA': {}, 'GR': {},
             'HU': {}
         },
         'enabled': True,
