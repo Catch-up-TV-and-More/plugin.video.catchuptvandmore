@@ -191,7 +191,10 @@ def list_thematique(plugin, item_id, thematique_id, start=0, **kwargs):
 
     new_start = (start + rows)
     if num_found is not None and int(num_found) > rows and new_start < num_found:
-        yield Listitem.next_page(item_id=item_id, id=thematique_id, start=new_start, callback=list_thematique)
+        yield Listitem.next_page(item_id=item_id,
+                                 thematique_id=thematique_id,
+                                 start=new_start,
+                                 callback=list_thematique)
 
 
 @Route.register(autosort=False, content_type="videos")
