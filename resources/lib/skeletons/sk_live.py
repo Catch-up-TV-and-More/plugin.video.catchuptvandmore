@@ -29,8 +29,8 @@ menu = {
     'jojplus': {
         'resolver': '/resources/lib/channels/sk/joj:get_live_url',
         'label': 'Televízia PLUS',
-        'thumb': 'channels/sk/joj.png',
-        'fanart': 'channels/sk/joj.png',
+        'thumb': 'channels/sk/jojplus.png',
+        'fanart': 'channels/sk/jojplus.png',
         'm3u_group': 'Slovakia',
         'enabled': True,
         'order': 2
@@ -38,8 +38,8 @@ menu = {
     'jojwau': {
         'resolver': '/resources/lib/channels/sk/joj:get_live_url',
         'label': 'Televízia WAU',
-        'thumb': 'channels/sk/joj.png',
-        'fanart': 'channels/sk/joj.png',
+        'thumb': 'channels/sk/jojwau.png',
+        'fanart': 'channels/sk/jojwau.png',
         'm3u_group': 'Slovakia',
         'enabled': True,
         'order': 3
@@ -47,8 +47,8 @@ menu = {
     'jojfamily': {
         'resolver': '/resources/lib/channels/sk/joj:get_live_url',
         'label': 'JOJ Family',
-        'thumb': 'channels/sk/joj.png',
-        'fanart': 'channels/sk/joj.png',
+        'thumb': 'channels/sk/jojfamily.png',
+        'fanart': 'channels/sk/jojfamily.png',
         'm3u_group': 'Slovakia',
         'enabled': True,
         'order': 4
