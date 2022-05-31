@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta29" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta30" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -203,6 +203,21 @@ addons.xml: Fix translation (PR #772)
 [Project] Make Enum compatible with python 2.7 and kodi 18 (PR #846 issue #830) thanks @darodi
 [Website - NYTIMES] Fix fails to open, with error: KeyError 'data' (PR #847 issue #844) thanks @darodi
 [FR - ANTENNEREUNION] Fix live and replay (PR #848 issue #737) thanks @darodi
+[Website - VEELY] Add live and replay (PR #852 issue #850) thanks @darodi
+[Website - VEELY] Add thumbnails and plots (PR #853 issue #850) thanks @darodi
+[BE - Bouke] Fix plot (PR #854) thanks @darodi
+[FR - GameOne] Removed (PR #858) thanks @darodi
+[FR - MTV] Removed (PR #859) thanks @darodi
+[Website - VEELY] Add seasons, episodes and duration (PR #862)
+[FR - CNEWS] Fix replay
+[Website - SONUMA] Add site (PR #866 issue #861) thanks @darodi
+[Website - SONUMA] Better management of empty lists (PR #867) thanks @darodi
+[Website - SONUMA] Improve search (PR #867) thanks @darodi
+[WO - Euronews] Add Romania live (PR #869) thanks @darodi
+[Website - SONUMA] Fix next page thematique (PR #872) thanks @darodi
+[FR - LCI] Fix replay (PR #875 issue #874) thanks @darodi
+[FR - LA1ERE] Use https
+[FR - FRANCETV] Fix live for regions
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
