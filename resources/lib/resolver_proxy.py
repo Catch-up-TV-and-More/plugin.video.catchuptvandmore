@@ -469,14 +469,14 @@ def get_francetv_live_stream(plugin, live_id):
     # Move Live TV on the new API
     json_parser_live_id = json.loads(
         urlquick.get(URL_FRANCETV_PROGRAM_INFO % (live_id, geoip_value),
-                     max_age=-1).text)['video']
+                     max_age=-1).text)
 
     try:
-        final_url = json_parser_live_id['url']
+        final_url = json_parser_live_id['video']['token']
     except Exception:
         return None
 
-    json_parser2 = json.loads(urlquick.get(URL_FRANCETV_HDFAUTH_URL % final_url, max_age=-1).text)
+    json_parser2 = json.loads(urlquick.get(final_url, max_age=-1).text)
     headers = {
         "User-Agent": web_utils.get_random_ua()
     }
