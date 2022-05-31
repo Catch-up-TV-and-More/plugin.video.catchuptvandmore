@@ -174,5 +174,12 @@ menu = {
         'thumb': 'channels/tr.png',
         'enabled': True,
         'order': 21
+    },
+    'sk_live': {
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30071,
+        'thumb': 'channels/sk.png',
+        'enabled': True,
+        'order': 22
     }
 }
