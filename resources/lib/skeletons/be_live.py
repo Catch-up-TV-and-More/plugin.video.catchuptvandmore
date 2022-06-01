@@ -348,5 +348,14 @@ menu = {
         'm3u_group': 'Belgique fr',
         'enabled': True,
         'order': 38,
+    },
+    'notele': {
+        'resolver': '/resources/lib/channels/be/notele:get_live_url',
+        'label': 'notélé',
+        'thumb': 'channels/be/notele.png',
+        'fanart': 'channels/be/notele_fanart.jpg',
+        'm3u_group': 'Belgique fr',
+        'enabled': True,
+        'order': 39,
     }
 }
