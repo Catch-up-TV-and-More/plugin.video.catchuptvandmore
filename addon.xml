@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta30" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta31" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -218,6 +218,13 @@ addons.xml: Fix translation (PR #772)
 [FR - LCI] Fix replay (PR #875 issue #874) thanks @darodi
 [FR - LA1ERE] Use https
 [FR - FRANCETV] Fix live for regions
+[SK - JOJ] Add lives (PR #878 issue #876) thanks @darodi
+[SK - JOJ] Add images (PR #878 issue #876) thanks @darodi
+[BE - Canal Zoom] Add live (PR #884 issue #879) thanks @darodi
+[BE - MATELE] Add live (PR #885 issue #881) thanks @darodi
+[BE - NOTELE] Add live (PR #886 issue #883) thanks @darodi
+[BE - MNM] Add live (PR #887 issue #882) thanks @darodi
+[BE - CITY-MUSIC] Add live (PR #888 issue #880) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
