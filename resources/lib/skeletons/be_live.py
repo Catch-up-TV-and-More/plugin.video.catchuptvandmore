@@ -339,5 +339,14 @@ menu = {
         'm3u_group': 'Belgique fr',
         'enabled': True,
         'order': 37,
+    },
+    'matele': {
+        'resolver': '/resources/lib/channels/be/matele:get_live_url',
+        'label': 'MATELE',
+        'thumb': 'channels/be/matele.png',
+        'fanart': 'channels/be/matele.png',
+        'm3u_group': 'Belgique fr',
+        'enabled': True,
+        'order': 38,
     }
 }
