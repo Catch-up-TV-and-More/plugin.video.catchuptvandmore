@@ -330,5 +330,14 @@ menu = {
         'm3u_group': 'België nl',
         'enabled': True,
         'order': 36,
+    },
+    'canalzoom': {
+        'resolver': '/resources/lib/channels/be/canalzoom:get_live_url',
+        'label': 'Canal Zoom',
+        'thumb': 'channels/be/canalzoom.png',
+        'fanart': 'channels/be/canalzoom.png',
+        'm3u_group': 'Belgique fr',
+        'enabled': True,
+        'order': 37,
     }
 }
