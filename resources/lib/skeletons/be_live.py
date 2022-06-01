@@ -366,5 +366,14 @@ menu = {
         'm3u_group': 'België nl',
         'enabled': True,
         'order': 40,
+    },
+    'citymusic': {
+        'resolver': '/resources/lib/channels/be/citymusic:get_live_url',
+        'label': 'City-Music',
+        'thumb': 'channels/be/citymusic.png',
+        'fanart': 'channels/be/citymusic.png',
+        'm3u_group': 'België nl',
+        'enabled': True,
+        'order': 41,
     }
 }
