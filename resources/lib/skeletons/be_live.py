@@ -357,5 +357,14 @@ menu = {
         'm3u_group': 'Belgique fr',
         'enabled': True,
         'order': 39,
+    },
+    'mnm': {
+        'resolver': '/resources/lib/channels/be/mnm:get_live_url',
+        'label': 'MNM',
+        'thumb': 'channels/be/mnm.png',
+        'fanart': 'channels/be/mnm.png',
+        'm3u_group': 'België nl',
+        'enabled': True,
+        'order': 40,
     }
 }
