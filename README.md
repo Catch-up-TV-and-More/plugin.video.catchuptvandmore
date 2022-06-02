@@ -6,7 +6,7 @@
 
 ![CI](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/workflows/CI/badge.svg?branch=dev)
 
-## Descritpion
+## Description
 [Catch-Up TV & More](https://kodi.tv/addon/plugins-video-add-ons/catch-tv-more) est un plugin vidéo pour le media center Kodi (ex XBMC).
 Cette extension regroupe l'ensemble des vidéos des différents services et chaînes de Replay TV (rattrapage TV). De plus, cette extension vous permet d'accéder rapidement aux vidéos et contenus proposés par certains sites internet.
 Catch-Up TV & More est compatible avec les versions de Kodi "17 Krypton" et supérieures.
