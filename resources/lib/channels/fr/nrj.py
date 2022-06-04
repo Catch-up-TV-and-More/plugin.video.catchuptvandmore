@@ -12,7 +12,7 @@ from codequick import Listitem, Resolver, Route
 import htmlement
 import urlquick
 
-from resources.lib import download
+from resources.lib import resolver_proxy, download
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.menu_utils import item_post_treatment
 
@@ -170,7 +170,7 @@ def get_video_url(plugin,
 
     if download_mode:
         return download.download_video(stream_url)
-    return stream_url
+    return resolver_proxy.get_stream_with_quality(plugin, stream_url, manifest_type="hls")
 
 
 @Resolver.register
@@ -219,4 +219,4 @@ def get_live_url(plugin, item_id, **kwargs):
 
     url_live_json = live_data.get('data-options')
     url_live_json_jsonparser = json.loads(url_live_json)
-    return url_live_json_jsonparser["file"]
+    return resolver_proxy.get_stream_with_quality(plugin, url_live_json_jsonparser["file"], manifest_type="hls")
