@@ -47,11 +47,13 @@ def get_token():
         + ":"
         + addon.getSetting('rmcbfmplay.password')
     )
-    url = "https://sso-client.sfr.fr/cas/services/rest/3.2/createToken.json"
+
+    url = "https://sso.rmcbfmplay.com/cas/services/rest/3.2/createToken.json"
     params = {"duration": 86400}
     headers = {
         "secret": "Basic Uk1DQkZNUGxheUFuZHJvaWR2MTptb2ViaXVzMTk3MA==",
-        "Authorization": "Basic " + base64.b64encode(autorization.encode("utf-8")).decode("utf-8"),
+        "Authorization": "Basic %s" % base64.b64encode(autorization.encode("utf-8")).decode("utf-8"),
+        "User-Agent": USER_AGENT
     }
 
     resp = urlquick.get(url, params=params, headers=headers).json()
