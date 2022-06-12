@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta31" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta32" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -225,6 +225,9 @@ addons.xml: Fix translation (PR #772)
 [BE - NOTELE] Add live (PR #886 issue #883) thanks @darodi
 [BE - MNM] Add live (PR #887 issue #882) thanks @darodi
 [BE - CITY-MUSIC] Add live (PR #888 issue #880) thanks @darodi
+[Project] Fix README typo PR #899) thanks @JohnVeness
+[FR - NRJ] Use get_stream_with_quality
+[FR - RMCBFMPLAY] Update url for token
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
