@@ -249,6 +249,11 @@ def item_post_treatment(item, is_playable=False, is_downloadable=False):
                         Script.localize(30800),
                         is_playable=is_playable)
 
+    # delete_for_submission_start
+    # Connect/Disconnect VPN
+    add_vpn_context(item)
+    # delete_for_submission_end
+
     return
 
 
