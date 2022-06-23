@@ -26,7 +26,7 @@ def get_live_url(plugin, item_id, **kwargs):
     live_url = "https://tv8-tb-live.ercdn.net/tv8-geo/"
 
     resp = urlquick.get(video_url)
-    
+
     if item_id == "tv8":
         tokens = re.compile('(\?.*)').findall(resp.text)[0]
         video_url = live_url + "tv8hd.m3u8" + tokens

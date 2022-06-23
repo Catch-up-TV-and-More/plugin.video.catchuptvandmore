@@ -466,7 +466,7 @@ def get_francetv_live_stream(plugin, live_id):
     if not geoip_value:
         geoip_value = 'FR'
 
-    headers = {"User-Agent":  web_utils.get_random_ua()}
+    headers = {"User-Agent": web_utils.get_random_ua()}
 
     # Move Live TV on the new API
     json_parser_live_id = json.loads(
