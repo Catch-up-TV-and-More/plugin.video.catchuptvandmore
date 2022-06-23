@@ -23,10 +23,15 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
     video_url = re.compile('file: \"(.*?)\"').findall(resp.text)[0]
+    live_url = "https://tv8-tb-live.ercdn.net/tv8-geo/"
 
+    resp = urlquick.get(video_url)
+    
     if item_id == "tv8":
-        video_url.replace('playlist', 'tv8hd')
+        tokens = re.compile('(\?.*)').findall(resp.text)[0]
+        video_url = live_url + "tv8hd.m3u8" + tokens
     elif item_id == "tv8int":
-        video_url.replace('playlist', 'tv8int')
+        tokens = re.compile('(\?.*)').findall(resp.text)[0]
+        video_url = live_url + "tv8int.m3u8" + tokens
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
