@@ -102,6 +102,6 @@ def get_live_url(plugin, item_id, **kwargs):
 
     live_datas_url = root.find('.//iframe').get('src')
     resp2 = urlquick.get(live_datas_url, max_age=-1)
-    video_url = 'https:' + re.compile(r'OVSPlayer.URL \= \'(.*?)\'').findall(resp2.text)[0]
+    video_url = re.compile(r'DLPlayer.URL \= \'(.*?)\'').findall(resp2.text)[0]
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
