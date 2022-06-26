@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta33" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta34" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -229,7 +229,11 @@ addons.xml: Fix translation (PR #772)
 [FR - NRJ] Use get_stream_with_quality
 [FR - RMCBFMPLAY] Update url for token
 [Project] Add vpn context (PR #898) thanks @darodi
-[FR - FRANCETV] Fix live      
+[FR - FRANCETV] Fix live
+[TR - TV8] Fix TV8 HD selection (PR #899) thanks @itasli
+[Project] Make Flake8 happy
+[FR - TEBEO] Fix live
+[FR - TEBEO] Use get_stream_with_quality for replay
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
