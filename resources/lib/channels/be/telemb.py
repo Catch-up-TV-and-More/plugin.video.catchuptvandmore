@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 from builtins import str
 import re
 
+import json
 from codequick import Listitem, Resolver, Route
 import urlquick
 
@@ -21,7 +22,7 @@ URL_ROOT = 'https://www.telemb.be'
 
 URL_LIVE = URL_ROOT + '/direct'
 
-URL_STREAM_LIVE = 'https://telemb.fcst.tv/player/embed/%s'
+LIVE_PLAYER = 'https://tvlocales-player.freecaster.com/embed/%s.json'
 
 PATTERN_M3U8 = re.compile(r'file\":\"(.*?)\"')
 
@@ -92,16 +93,12 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+
     resp = urlquick.get(URL_LIVE, max_age=-1)
     root = resp.parse()
-    live_datas = root.findall('.//iframe')[0].get('src')
 
-    resp2 = urlquick.get(live_datas, max_age=-1)
-    m3u8_files = PATTERN_M3U8.findall(resp2.text)
-    if len(m3u8_files) == 0:
-        plugin.notify(plugin.localize(30600), plugin.localize(30716))
-        return False
+    live_data = root.findall(".//div[@class='freecaster-player']")[0].get('data-fc-token')
+    resp2 = urlquick.get(LIVE_PLAYER % live_data, max_age=-1)
+    video_url = json.loads(resp2.text)['video']['src'][0]['src']
 
-    url = m3u8_files[0].replace("\\", "")
-
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=url, manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
