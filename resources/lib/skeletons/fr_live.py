@@ -539,13 +539,14 @@ menu = {
         'fanart': 'channels/fr/bfmregions_fanart.jpeg',
         'm3u_group': 'Région',
         'available_languages': {
+            "BFM ALSACE": {},
             "BFM DICI HAUTE-PROVENCE": {},
             "BFM Grand Lille": {},
             "BFM Grand Littoral": {},
             "BFM Lyon": {},
             "BFM MARSEILLE PROVENCE": {},
             "BFM NICE COTE D'AZUR": {},
-            "BFM Paris": {},
+            "BFM PARIS ILE-DE-FRANCE": {},
             "BFM TOULON VAR": {},
         },
         'enabled': True,
@@ -559,15 +560,6 @@ menu = {
         'm3u_group': 'Région',
         'enabled': True,
         'order': 70
-    },
-    'alsace20': {
-        'resolver': '/resources/lib/channels/fr/alsace20:get_live_url',
-        'label': 'Alsace 20',
-        'thumb': 'channels/fr/alsace20.png',
-        'fanart': 'channels/fr/alsace20_fanart.jpg',
-        'm3u_group': 'Région',
-        'enabled': True,
-        'order': 71
     },
     'biptv': {
         'resolver': '/resources/lib/channels/fr/biptv:get_live_url',
