@@ -123,4 +123,3 @@ def get_live_url(plugin, item_id, **kwargs):
     video_url = json.loads(resp2.text)['video']['src'][0]['src']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
-
