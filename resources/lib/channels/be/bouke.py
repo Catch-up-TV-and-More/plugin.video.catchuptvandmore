@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 import re
 
+import json
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route
 # noinspection PyUnresolvedReferences
@@ -21,17 +22,13 @@ url_constructor = urljoin_partial(URL_ROOT)
 
 URL_LIVE = url_constructor('direct')
 
-# "live_url":"https:\/\/bouke.fcst.tv\/player\/embed\/3674291"
-PATTERN_LIVE_URL = re.compile(r'live_url\":\"(.*?)\"')
+LIVE_PLAYER = 'https://tvlocales-player.freecaster.com/embed/%s.json'
 
 # <script src="https://bouke.fcst.tv/embed/3733922.js?id=video_3733922&amp;autoplay=false"></script>
 PATTERN_VIDEO_URL = re.compile(r'script src=\"(.*?/embed/.+.js.*?)\"')
 
 # \"src\":[\"https:\\\/\\\/bouke-vod.freecaster.com\\\/vod\\\/bouke\\\/2NFCKxV842\\\/master.m3u8\"
 PATTERN_VIDEO_M3U8 = re.compile(r'\\\"src\\\":\[\\\"(.*?\.m3u8)\\\"')
-
-# "src":["https:\/\/bouke-live.freecaster.com\/live\/bouke\/bouke.m3u8"]
-PATTERN_LIVE_M3U8 = re.compile(r'\"src\":\[\"(.*?\.m3u8)\"]')
 
 HEADERS = {
     "User-Agent": get_random_ua(),
@@ -121,15 +118,9 @@ def play_video(plugin, url):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE, headers=HEADERS, max_age=-1)
-    player_urls = PATTERN_LIVE_URL.findall(resp.text)
-    if len(player_urls) == 0:
-        return False
+    live_data = re.compile(r"live_token\":\"(.*?)\"").findall(resp.text)[0]
+    resp2 = urlquick.get(LIVE_PLAYER % live_data, max_age=-1)
+    video_url = json.loads(resp2.text)['video']['src'][0]['src']
 
-    player_url = unquote_plus(player_urls[0]).replace("\\", "")
-    resp2 = urlquick.get(player_url, max_age=-1)
-    m3u8_array = PATTERN_LIVE_M3U8.findall(resp2.text)
-    if len(m3u8_array) == 0:
-        return False
-    video_url = m3u8_array[0].replace("\\", "")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
