@@ -545,7 +545,7 @@ menu = {
             "BFM Lyon": {},
             "BFM MARSEILLE PROVENCE": {},
             "BFM NICE COTE D'AZUR": {},
-            "BFM Paris": {},
+            "BFM PARIS ILE-DE-FRANCE": {},
             "BFM TOULON VAR": {},
         },
         'enabled': True,
