@@ -779,9 +779,9 @@ menu = {
         'enabled': False,
         'order': 120
     },
-    '01TV': {
+    'TECH & CO': {
         'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
-        'label': '01Net TV',
+        'label': 'TECH & CO',
         'thumb': 'channels/fr/01net.png',
         'fanart': 'channels/fr/01net_fanart.jpg',
         'm3u_group': 'Satellite/FAI',
