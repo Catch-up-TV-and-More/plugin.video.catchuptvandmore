@@ -24,5 +24,5 @@ def get_live_url(plugin, item_id, **kwargs):
         video_page = possibility.get('src')
         if item_id in video_page:
             resp2 = urlquick.get(video_page)
-            video_url = 'https:' + re.compile(r"file: \'(.*?)\'").findall(resp2.text)[0]
+            video_url = 'http:' + re.compile(r"file: \'(.*?)\'").findall(resp2.text)[0]
             return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
