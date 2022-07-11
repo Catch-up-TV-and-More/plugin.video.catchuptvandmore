@@ -9,14 +9,14 @@ from __future__ import unicode_literals
 import re
 from builtins import str
 
+import json
 import urlquick
 from codequick import Listitem, Resolver, Route
 
 from resources.lib import download, resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
 
-# "https://tvlux.fcst.tv/player/embed/3426115.js"
-PATTERN_PLAYER = re.compile(r'"(https://.*?/player/embed/.*?\.js.*?)"')
+LIVE_PLAYER = 'https://tvlocales-player.freecaster.com/embed/%s.json'
 
 # \"src\":[\"https:\\\/\\\/tvlux-live.freecaster.com\\\/live\\\/tvlux\\\/tvlux.m3u8\"]
 PATTERN_M3U8 = re.compile(r'https?:[^,]*?\.m3u8')
@@ -126,15 +126,10 @@ def get_video_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE, max_age=-1)
-    found_players = PATTERN_PLAYER.findall(resp.text)
-    if len(found_players) == 0:
-        plugin.notify(plugin.localize(30600), plugin.localize(30716))
-        return False
+    root = resp.parse()
 
-    resp2 = urlquick.get(found_players[0], max_age=-1)
-    found_m3u8_objects = PATTERN_M3U8.findall(resp2.text)
-    if len(found_m3u8_objects) == 0:
-        plugin.notify(plugin.localize(30600), plugin.localize(30716))
-        return False
-    url = found_m3u8_objects[0].replace('\\', '')
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=url, manifest_type="hls")
+    live_data = root.findall(".//div[@class='freecaster-player']")[0].get('data-fc-token')
+    resp2 = urlquick.get(LIVE_PLAYER % live_data, max_age=-1)
+    video_url = json.loads(resp2.text)['video']['src'][0]['src']
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
