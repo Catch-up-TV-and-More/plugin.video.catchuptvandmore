@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta37" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta38" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -241,6 +241,14 @@ addons.xml: Fix translation (PR #772)
 [BE - ROBTV] Use get_stream_with_quality
 [CN - CCTV] Fix live (PR #903 issue #900 #902) thanks @darodi
 [CH - SRGSSR] Fix live
+[FR - BFM] Rename BFM Paris into BFM PARIS ILE-DE-FRANCE (PR #908) thanks @Yetigenial
+[FR - ALSACE20] Alsace 20 is BFM Alsace now (PR #908) thanks @Yetigenial
+[FR - 01TV] 01TV is TECH and CO now (PR #908) thanks @Yetigenial
+[BE - TVLUX] Fix live (issue #912)
+[Project - settings.xml] Fix a typo
+[BE - BOULKE] Fix live (issue #912)
+[BE - TVCOM] Fix live (issue #912)
+Project: Make compliant with Kodi 18 (issue #910)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
