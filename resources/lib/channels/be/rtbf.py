@@ -507,7 +507,8 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
             yield item
 
     if not item_found:
-        return False
+        yield False
+        return
 
 
 @Resolver.register
@@ -605,7 +606,8 @@ def set_live_url(plugin, item_id, **kwargs):
 
     if "url_streaming" not in json_parser:
         plugin.notify(plugin.localize(30600), plugin.localize(30716))
-        return False
+        yield False
+        return
 
     is_drm = json_parser["drm"]
     if is_drm:
@@ -666,7 +668,8 @@ def list_lives(plugin, item_id, **kwargs):
 
         if "url_streaming" not in live_datas:
             plugin.notify(plugin.localize(30600), plugin.localize(30716))
-            return False
+            yield False
+            return
 
         is_drm = live_datas["drm"]
         if is_drm:
