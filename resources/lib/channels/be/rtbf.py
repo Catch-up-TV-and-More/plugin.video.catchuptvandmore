@@ -317,8 +317,11 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
                     video_url = video_datas["url_streaming"]["url_hls"]
                 else:
                     video_url = video_datas["url_streaming"]["url"]
-        else:
+        elif "url_embed" in video_datas:
             video_url = video_datas["url_embed"]
+            is_drm = False
+        else:
+            video_url = video_datas["url"]
             is_drm = False
 
         video_id = video_datas["id"]
