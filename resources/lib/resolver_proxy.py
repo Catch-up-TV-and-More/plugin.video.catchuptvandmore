@@ -318,25 +318,36 @@ def get_brightcove_video_json(plugin,
                               data_account,
                               data_player,
                               data_video_id,
+                              policy_key=None,
                               download_mode=False,
                               subtitles=None):
-    # Method to get JSON from 'edge.api.brightcove.com'
-    resp = urlquick.get(
-        URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
-        headers={
-            'User-Agent': web_utils.get_random_ua(),
-            'Accept': 'application/json;pk=%s' %
-                      (get_brightcove_policy_key(data_account, data_player)),
-            'X-Forwarded-For': plugin.setting.get_string('header_x-forwarded-for')
-        })
-    json_parser = json.loads(resp.text)
+    if policy_key is None:
+        # Method to get JSON from 'edge.api.brightcove.com'
+        key = get_brightcove_policy_key(data_account, data_player)
+    else:
+        key = policy_key
 
+    headers = {
+        'User-Agent': web_utils.get_random_ua(),
+        'Accept': 'application/json;pk=%s' % key,
+        'X-Forwarded-For': plugin.setting.get_string('header_x-forwarded-for')
+    }
+    resp = urlquick.get(URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id), headers=headers)
+
+    json_parser = json.loads(resp.text)
+    manifest = 'hls'
     video_url = ''
+    is_drm = 0
     if 'sources' in json_parser:
         for url in json_parser["sources"]:
             if 'src' in url:
-                if 'm3u8' in url["src"]:
+                if 'm3u8' in url["src"] and is_drm == 0:
                     video_url = url["src"]
+                if 'key_systems' in url:
+                    if 'com.widevine.alpha' in url["key_systems"]:
+                        manifest = 'mpd'
+                        video_url = url["src"]
+                        is_drm = 1
     else:
         if json_parser[0]['error_code'] == "ACCESS_DENIED":
             plugin.notify('ERROR', plugin.localize(30713))
@@ -347,7 +358,7 @@ def get_brightcove_video_json(plugin,
 
     if download_mode:
         return download.download_video(video_url)
-    return get_stream_with_quality(plugin, video_url, manifest_type="hls", subtitles=subtitles)
+    return get_stream_with_quality(plugin, video_url=video_url, manifest_type=manifest, subtitles=subtitles)
 
 
 # MTVN Services Part

@@ -19,7 +19,7 @@ from resources.lib.menu_utils import item_post_treatment
 
 PATTERN_PLAYER = re.compile(r"PLAYER_ID:\"(.*?)\"")
 PATTERN_ACCOUNT = re.compile(r"ACCOUNT_ID:\"(.*?)\"")
-
+PATTERN_KEY = re.compile(r"POLICY_KEY:\"(.*?)\"")
 # Live
 URL_LIVE_JSON = "https://player.api.stv.tv/v1/streams/%s/"
 # channel name
@@ -142,12 +142,12 @@ def list_videos(plugin, item_id, program_guid=None, order_by=None, **kwargs):
 def get_video_url(plugin, item_id, video_id, subtitle, download_mode=False, **kwargs):
     resp = urlquick.get(URL_BRIGHTCOVE_DATAS)
 
-    data_account = PATTERN_ACCOUNT.findall(resp.text)[1]
-    data_player = PATTERN_PLAYER.findall(resp.text)[1]
+    data_account = PATTERN_ACCOUNT.findall(resp.text)[0]
+    data_player = PATTERN_PLAYER.findall(resp.text)[0]
+    key = PATTERN_KEY.findall(resp.text)[0]
     data_video_id = video_id
 
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, download_mode,
-                                                    subtitles=subtitle)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, key, download_mode, subtitle)
 
 
 @Resolver.register
