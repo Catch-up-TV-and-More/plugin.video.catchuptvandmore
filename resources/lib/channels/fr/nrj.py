@@ -170,7 +170,7 @@ def get_video_url(plugin,
 
     if download_mode:
         return download.download_video(stream_url)
-    return resolver_proxy.get_stream_with_quality(plugin, stream_url, manifest_type="hls")
+    return stream_url
 
 
 @Resolver.register
