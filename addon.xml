@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta40" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.38~beta41" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -252,6 +252,7 @@ Project: Make compliant with Kodi 18 (issue #910)
 [BE - RTBF] Make compliant with Kodi 18
 [BE - RTBF] Fix error when url_embed is missing (PR #916) thanks @darodi
 [UK - STV] Fix replay
+[FR - NRJ] Do not use get_stream_with_quality for replay
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
