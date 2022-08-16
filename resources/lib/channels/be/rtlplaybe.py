@@ -209,9 +209,9 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                                       item_id=item_id,
                                       program_id=search_id)
                     item_post_treatment(item)
+                    yield
                     yield item
                 else:
-
                     is_downloadable = False
                     if get_kodi_version() < 18:
                         is_downloadable = True
@@ -236,6 +236,7 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                         item_post_treatment(item,
                                             is_playable=True,
                                             is_downloadable=is_downloadable)
+                        yield
                         yield item
 
 
