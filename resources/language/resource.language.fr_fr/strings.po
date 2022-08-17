@@ -535,6 +535,14 @@ msgctxt "#30257"
 msgid "Schedules Direct lineup"
 msgstr "Lineup Schedules Direct"
 
+msgctxt "#30258"
+msgid "RTBF auvio Login"
+msgstr "Login RTBF auvio"
+
+msgctxt "#30259"
+msgid "RTBF auvio Password"
+msgstr "Mot de passe RTBF auvio"
+
 
 # TV integration (from 30270 to 30289)
 
