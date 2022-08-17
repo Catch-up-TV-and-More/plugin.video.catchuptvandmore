@@ -5,12 +5,16 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
+
+import base64
 import json
 import re
 
 import inputstreamhelper
+# noinspection PyUnresolvedReferences
 from codequick import Route, Resolver, Listitem
 import htmlement
+# noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 import urlquick
 
@@ -78,6 +82,12 @@ URL_LIVE_LADEUX = 'https://rtbf-live.fl.freecaster.net/live/rtbf/geo/drm/ladeux_
 URL_LIVE_LATROIS = 'https://rtbf-live.fl.freecaster.net/live/rtbf/geo/drm/latrois_aes.m3u8'
 
 URL_ROOT_LIVE = 'https://www.rtbf.be/auvio/direct#/'
+
+# redbee variables
+GIGYA_API_KEY = '3_kWKuPgcdAybqnqxq_MvHVk0-6PN8Zk8pIIkJM_yXOu-qLPDDsGOtIDFfpGivtbeO'
+REDBEE_BASE_URL = 'https://exposure.api.redbee.live/v2/customer/RTBF/businessunit/Auvio'
+RTBF_LOGIN_URL = 'https://login.rtbf.be/accounts.login'
+RTBF_GETJWT_URL = 'https://login.rtbf.be/accounts.getJWT'
 
 
 def get_partner_key():
@@ -160,6 +170,7 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
     resp = urlquick.get(URL_LIST_SEARCH % (search_query, PARTNER_KEY))
     json_parser = resp.json()
     for results_datas in json_parser["results"]:
+        is_redbee = False
         video_datas = results_datas["data"]
         if "subtitle" in video_datas:
             video_title = video_datas["title"] + ' - ' + video_datas["subtitle"]
@@ -190,9 +201,15 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                     video_url = video_datas["url_streaming"]["url_hls"]
                 else:
                     video_url = video_datas["url_streaming"]["url"]
-        else:
+        elif "url_embed" in video_datas:
             video_url = video_datas["url_embed"]
             is_drm = False
+        else:
+            video_url = video_datas["url"]
+            is_drm = False
+            if "tarmac" in video_url:
+                is_redbee = True
+                is_drm = video_datas["drm"]
 
         video_id = video_datas["id"]
         item = Listitem()
@@ -205,7 +222,8 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                           item_id=item_id,
                           video_url=video_url,
                           video_id=video_id,
-                          is_drm=is_drm)
+                          is_drm=is_drm,
+                          is_redbee=is_redbee)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
@@ -287,7 +305,7 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
     json_parser = resp.json()
 
     for video_datas in json_parser:
-
+        is_redbee = False
         if "subtitle" in video_datas:
             video_title = video_datas["title"] + ' - ' + video_datas["subtitle"]
         else:
@@ -323,6 +341,9 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
         else:
             video_url = video_datas["url"]
             is_drm = False
+            if "tarmac" in video_url:
+                is_redbee = True
+                is_drm = video_datas["drm"]
 
         video_id = video_datas["id"]
         item = Listitem()
@@ -335,8 +356,9 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
                           item_id=item_id,
                           video_url=video_url,
                           video_id=video_id,
-                          is_drm=is_drm)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
+                          is_drm=is_drm,
+                          is_redbee=is_redbee)
+        item_post_treatment(item, is_playable=True, is_downloadable=not is_drm)
         yield item
 
 
@@ -400,6 +422,7 @@ def list_videos_category(plugin, item_id, cat_id, offset=0, **kwargs):
     json_parser = resp.json()
 
     for video_datas in json_parser:
+        is_redbee = False
         if "subtitle" in video_datas:
             video_title = video_datas["title"] + ' - ' + video_datas["subtitle"]
         else:
@@ -429,9 +452,16 @@ def list_videos_category(plugin, item_id, cat_id, offset=0, **kwargs):
                     video_url = video_datas["url_streaming"]["url_hls"]
                 else:
                     video_url = video_datas["url_streaming"]["url"]
-        else:
+        elif "url_embed" in video_datas:
             video_url = video_datas["url_embed"]
             is_drm = False
+        else:
+            video_url = video_datas["url"]
+            is_drm = False
+            if "tarmac" in video_url:
+                is_redbee = True
+                is_drm = video_datas["drm"]
+
         video_id = video_datas["id"]
         # is_downloadable = False
         # if video_datas["url_download"]:
@@ -449,7 +479,8 @@ def list_videos_category(plugin, item_id, cat_id, offset=0, **kwargs):
                           item_id=item_id,
                           video_url=video_url,
                           video_id=video_id,
-                          is_drm=is_drm)
+                          is_drm=is_drm,
+                          is_redbee=is_redbee)
         item_post_treatment(item,
                             is_playable=True,
                             is_downloadable=True)
@@ -514,6 +545,70 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
         return
 
 
+def get_video_redbee(plugin, video_id, is_drm):
+    login = plugin.setting.get_string('rtbf.login')
+    password = plugin.setting.get_string('rtbf.password')
+    if login == '' or password == '':
+        xbmcgui.Dialog().ok(
+            plugin.localize(30600),
+            plugin.localize(30604) % ('RTBF (BE)', 'https://www.rtbf.be/auvio/'))
+        return False
+
+    rtbf_login_data = rtbf_login(plugin, login, password)
+    if rtbf_login_data is None:
+        return False
+
+    rtbf_jwt = get_rtbf_jwt(plugin, rtbf_login_data['sessionInfo']['cookieValue'])
+    if rtbf_jwt is None:
+        return False
+
+    redbee_jwt = get_redbee_jwt(plugin, rtbf_jwt['id_token'])
+
+    video_format = get_redbee_format(plugin, video_id, redbee_jwt['sessionToken'], is_drm)
+    if video_format is None:
+        return False
+
+    video_url = video_format['mediaLocator']
+
+    if not is_drm:
+        if video_url.endswith('m3u8'):
+            return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
+        return video_url
+
+    if get_kodi_version() < 18:
+        xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
+        return False
+
+    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
+
+    license_server_url = video_format['drm']['com.widevine.alpha']['licenseServerUrl']
+    certificate_url = video_format['drm']['com.widevine.alpha']['certificateUrl']
+
+    resp_cert = urlquick.get(certificate_url, max_age=-1).text
+    certificate_data = base64.b64encode(resp_cert.encode("utf-8")).decode("utf-8")
+
+    # TODO
+    # subtitles = video_format['sprites'][0]['vtt']
+
+    item = Listitem()
+    item.path = video_url
+    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property['inputstream.adaptive.license_key'] = license_server_url + '||R{SSM}|'
+    item.property['inputstream.adaptive.server_certificate'] = certificate_data
+    # item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
+    stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
+    if stream_bitrate_limit > 0:
+        item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+    return item
+
+
 @Resolver.register
 def get_video_url(plugin,
                   item_id,
@@ -521,6 +616,7 @@ def get_video_url(plugin,
                   video_id,
                   is_drm,
                   download_mode=False,
+                  is_redbee=False,
                   **kwargs):
     if 'youtube.com' in video_url:
         video_id = video_url.rsplit('/', 1)[1]
@@ -533,10 +629,12 @@ def get_video_url(plugin,
                                                     'fr',
                                                     video_id,
                                                     download_mode)
+    if is_redbee:
+        return get_video_redbee(plugin, video_id, is_drm)
 
     if is_drm:
         if get_kodi_version() < 18:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+            xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
             return False
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
@@ -736,7 +834,7 @@ def list_lives(plugin, item_id, **kwargs):
 def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
     if is_drm:
         if get_kodi_version() < 18:
-            xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+            xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
             return False
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
@@ -766,3 +864,94 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
         return item
 
     return live_url
+
+
+# redbee functions
+def rtbf_login(plugin, user_login, user_pwd):
+    url_params = {
+        'loginID': user_login,
+        'password': user_pwd,
+        'apiKey': GIGYA_API_KEY,
+        'format': 'json',
+        'lang': 'fr'
+    }
+
+    resp = urlquick.get(RTBF_LOGIN_URL, params=url_params, max_age=-1)
+
+    if not resp:
+        plugin.notify(plugin.localize(30600), 'rtbf_login response: empty')
+        return None
+
+    json_parser = resp.json()
+
+    if 'errorMessage' in json_parser:
+        plugin.notify(plugin.localize(30600), 'rtbf_login errorMessage: %s' % (json_parser['errorMessage']))
+        return None
+
+    if json_parser['errorCode'] != 0:
+        plugin.notify(plugin.localize(30600), "rtbf_login errorCode: #%s" % (json_parser['errorCode']))
+        return None
+
+    if json_parser['statusCode'] != 200:
+        plugin.notify(plugin.localize(30600), "rtbf_login statusCode: #%s" % (json_parser['statusCode']))
+        return None
+
+    return json_parser
+
+
+def get_rtbf_jwt(plugin, login_token):
+    url_params = {
+        'apiKey': GIGYA_API_KEY,
+        'login_token': login_token,
+        'format': 'json'
+    }
+
+    resp = urlquick.get(RTBF_GETJWT_URL, params=url_params, max_age=-1)
+
+    if not resp:
+        plugin.notify(plugin.localize(30600), 'get_rtbf_jwt response: empty')
+        return None
+
+    json_parser = resp.json()
+
+    if 'errorMessage' in json_parser:
+        plugin.notify(plugin.localize(30600), 'rtbf_getJWT errorMessage: %s' % (json_parser['errorMessage']))
+
+    if json_parser['errorCode'] != 0:
+        plugin.notify(plugin.localize(30600), "rtbf_getJWT errorCode: #%s" % (json_parser['errorCode']))
+        return None
+
+    if json_parser['statusCode'] != 200:
+        plugin.notify(plugin.localize(30600), "rtbf_getJWT statusCode: #%s" % (json_parser['statusCode']))
+        return None
+
+    return json_parser
+
+
+def get_redbee_jwt(plugin, rtbf_jwt):
+    url = REDBEE_BASE_URL + '/auth/gigyaLogin'
+
+    data_string = '{"jwt":"' + rtbf_jwt + '","device":{"deviceId":"123","name":"","type":"WEB"}}'
+    data = data_string.encode("utf-8")
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    return urlquick.post(url, headers=headers, data=data, max_age=-1).json()
+
+
+def get_redbee_format(plugin, media_id, session_token, is_drm):
+    url = REDBEE_BASE_URL + '/entitlement/{}/play'.format(media_id)
+
+    headers = {
+        'Authorization': 'Bearer {}'.format(session_token)
+    }
+
+    for fmt in urlquick.get(url, headers=headers, max_age=-1).json()['formats']:
+        if fmt['format'] == 'HLS' and not is_drm:
+            return fmt
+        if fmt['format'] == 'DASH' and is_drm:
+            return fmt
+
+    return None
