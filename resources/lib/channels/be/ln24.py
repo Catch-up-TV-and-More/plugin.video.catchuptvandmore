@@ -21,6 +21,7 @@ from resources.lib.menu_utils import item_post_treatment
 URL_ROOT = 'https://www.ln24.be/'
 url_constructor = urljoin_partial(URL_ROOT)
 URL_LIVE = url_constructor('direct')
+PATTERN_VIDEO_M3U8 = re.compile(r'\"src\":\s*\"(.*?\.m3u8)\"')
 
 
 @Route.register
@@ -108,4 +109,18 @@ def play_video(plugin, url):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    return play_video(plugin, URL_LIVE)
+    resp = urlquick.get(URL_LIVE)
+    root_elem = resp.parse("iframe")
+    frame_url = root_elem.get('src')
+    resp2 = urlquick.get("https:" + frame_url)
+
+    # "media_sources": {
+    #     "live": {"src": "https:\/\/live.digiteka.com\/1\/bEg0RmFLb1JMYXRI\/dGhqbmIw\/hls\/live\/playlist.m3u8",
+    #              "id": "b7wfnkvf"}}
+
+    m3u8_array = PATTERN_VIDEO_M3U8.findall(resp2.text)
+    if len(m3u8_array) == 0:
+        return False
+    video_url = m3u8_array[0].replace("\\", "")
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
