@@ -711,20 +711,16 @@ def set_live_url(plugin, item_id, **kwargs):
         return
 
     is_drm = json_parser["drm"]
+    is_redbee = False
     if is_drm:
         if 'url_hls' in json_parser["url_streaming"]:
             live_url = json_parser["url_streaming"]["url_hls"]
             if "_drm.m3u8" in live_url:
                 live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
             if "/.m3u8?" in live_url:
-                if "laune" in live_url:
-                    live_url = URL_LIVE_LAUNE
-                elif "tipik" in live_url:
-                    live_url = URL_LIVE_LADEUX
-                elif "latrois" in live_url:
-                    live_url = URL_LIVE_LATROIS
-                else:
-                    live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
+                live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
+                if json_parser.get("external_id") is not None:
+                    is_redbee = True
             live_id = json_parser["id"]
             is_drm = False
         elif 'url_dash' in json_parser["url_streaming"]:
@@ -752,7 +748,13 @@ def set_live_url(plugin, item_id, **kwargs):
     item.label = live_title
     item.art['thumb'] = item.art['landscape'] = live_image
     item.info['plot'] = live_plot
-    item.set_callback(get_live_url, item_id=item_id, live_url=live_url, is_drm=is_drm, live_id=live_id)
+    item.set_callback(get_live_url,
+                      item_id=item_id,
+                      live_url=live_url,
+                      is_drm=is_drm,
+                      live_id=live_id,
+                      is_redbee=is_redbee,
+                      external_id=json_parser.get("external_id"))
     item_post_treatment(item, is_playable=True)
     yield item
 
@@ -773,22 +775,16 @@ def list_lives(plugin, item_id, **kwargs):
             return
 
         is_drm = live_datas["drm"]
+        is_redbee = False
         if is_drm:
             if 'url_hls' in live_datas["url_streaming"]:
                 live_url = live_datas["url_streaming"]["url_hls"]
                 if "_drm.m3u8" in live_url:
                     live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
                 if "/.m3u8?" in live_url:
-                    if "laune" in live_url:
-                        live_url = URL_LIVE_LAUNE
-                    elif "tipik" in live_url:
-                        live_url = URL_LIVE_LADEUX
-                    elif "latrois" in live_url:
-                        live_url = URL_LIVE_LATROIS
-                    else:
-                        live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
+                    if live_datas.get("external_id") is not None:
+                        is_redbee = True
                 live_id = live_datas["id"]
-                is_drm = False
             elif 'url_dash' in live_datas["url_streaming"]:
                 live_url = live_datas["url_streaming"]["url_dash"]
                 live_id = live_datas["id"]
@@ -804,8 +800,6 @@ def list_lives(plugin, item_id, **kwargs):
             live_channel_title = live_datas["channel"]["label"]
         else:
             live_channel_title = 'Exclu Auvio'
-        if live_channel_title in ['La Une', 'Tipik', 'La Trois']:
-            continue
         start_time_value = format_hours(live_datas["start_date"])
         end_time_value = format_hours(live_datas["end_date"])
         date_value = format_day(live_datas["start_date"])
@@ -825,17 +819,26 @@ def list_lives(plugin, item_id, **kwargs):
         # commented this line because otherwise sorting is made by date and then by title
         # and doesn't help to find the direct
         # item.info.date(date_time_value, '%Y/%m/%d')
-        item.set_callback(get_live_url, item_id=item_id, live_url=live_url, is_drm=is_drm, live_id=live_id)
+        item.set_callback(get_live_url,
+                          item_id=item_id,
+                          live_url=live_url,
+                          is_drm=is_drm,
+                          live_id=live_id,
+                          is_redbee=is_redbee,
+                          external_id=live_datas.get("external_id"))
         item_post_treatment(item, is_playable=True)
         yield item
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, live_url, is_drm, live_id, **kwargs):
+def get_live_url(plugin, item_id, live_url, is_drm, live_id, is_redbee=False, external_id=None, **kwargs):
     if is_drm:
         if get_kodi_version() < 18:
             xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
             return False
+
+        if is_redbee:
+            return get_video_redbee(plugin, external_id, is_drm)
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
         if not is_helper.check_inputstream():
