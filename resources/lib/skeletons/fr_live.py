@@ -862,11 +862,12 @@ menu = {
     },
     'lequipesup': {
         'resolver': '/resources/lib/channels/fr/lequipe:get_live_url',
-        'label': 'L\'Equipe',
+        'label': 'L\'Equipe Live',
         'thumb': 'channels/fr/lequipe.png',
         'fanart': 'channels/fr/lequipe_fanart.png',
         'm3u_group': 'Région',
         'available_languages': {
+            "Direct 3": {},
             "Direct 4": {},
             "Direct 5": {},
             "Direct 6": {},
