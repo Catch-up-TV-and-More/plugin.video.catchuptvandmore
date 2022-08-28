@@ -860,11 +860,11 @@ menu = {
         'enabled': True,
         'order': 129
     },
-    'lequipesup': {
+    'lequipelive': {
         'resolver': '/resources/lib/channels/fr/lequipe:get_live_url',
         'label': 'L\'Equipe Live',
-        'thumb': 'channels/fr/lequipe.png',
-        'fanart': 'channels/fr/lequipe_fanart.png',
+        'thumb': 'channels/fr/lequipelive.png',
+        'fanart': 'channels/fr/lequipelive_fanart.png',
         'm3u_group': 'TNT',
         'enabled': True,
         'order': 130
