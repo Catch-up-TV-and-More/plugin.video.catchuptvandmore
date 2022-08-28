@@ -86,7 +86,7 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    if item_id == 'lequipesup':
+    if item_id == 'lequipelive':
         resp = urlquick.get("https://www.lequipe.fr/directs", headers={'user-agent': web_utils.get_random_ua()}, max_age=-1)
         live_id = re.compile(r'<article.+?<a href="(.+?)".+?alt="(.+?)"').findall(resp.text)
         list_url = []
