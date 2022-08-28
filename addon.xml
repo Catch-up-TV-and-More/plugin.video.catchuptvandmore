@@ -254,7 +254,18 @@ Project: Make compliant with Kodi 18 (issue #910)
 [UK - STV] Fix replay (issue #913)
 [FR - NRJ] Do not use get_stream_with_quality for replay (issue #918)
 [WO - DW] Fix live (issue #922)
-[WO - FRANCE24] Fix live (issue #921, #923)
+[WO - FRANCE24] Fix live (issue #921, PR #923)
+[BE - RTLPLAY] Make compliant with Kodi 18
+[BE - RTBF] Adapt for new stream provider (redbee) (issue #920 PR #924) thanks @darodi
+[BE - LN24] Fix live (issue #925 PR #927) thanks @darodi
+[BE - RTBF] Adapt live for new stream provider (redbee) (issue #920 PR #929) thanks @darodi
+[FR - LEQUIPE] Fix skeleton
+[FR - L'equipe] Handle correctly multiple stream (PR #931) thanks @Arias800
+settings.xml: Remove unnecessary setting (PR #931) thanks @Arias800
+[FR - LEQUIPE] Fix skeleton (PR #931) thanks @Arias800
+[FR - L'equipe] Handle correctly multiple stream (PR ##931) thanks @Arias800
+[FR - L'equipe] Update fr_live.py (PR #931) thanks @Arias800
+[FR - L'équipe] Renaming item (PR #931) thanks @Arias800
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
