@@ -97,9 +97,8 @@ def get_live_url(plugin, item_id, **kwargs):
             list_q.append(a[1])
 
         if len(list_url) == 0:
-            return ''
-        if len(list_url) == 1:
-            return list_url[0]
+            plugin.notify(plugin.localize(30718), '')
+            return False
 
         ret = xbmcgui.Dialog().select(Script.localize(30174), list_q)
         if ret > -1:
