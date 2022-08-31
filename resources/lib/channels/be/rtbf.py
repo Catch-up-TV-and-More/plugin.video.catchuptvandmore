@@ -110,7 +110,7 @@ def get_partner_key():
 
 
 # partner_key
-PARTNER_KEY = '82ed2c5b7df0a9334dfbda21eccd8427' #get_partner_key()
+PARTNER_KEY = '82ed2c5b7df0a9334dfbda21eccd8427'  # get_partner_key()
 
 
 def format_hours(date, **kwargs):
