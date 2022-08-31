@@ -110,7 +110,7 @@ def get_partner_key():
 
 
 # partner_key
-PARTNER_KEY = get_partner_key()
+PARTNER_KEY = '82ed2c5b7df0a9334dfbda21eccd8427' #get_partner_key()
 
 
 def format_hours(date, **kwargs):
@@ -597,7 +597,7 @@ def get_video_redbee(plugin, video_id, is_drm):
     item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property['inputstream.adaptive.license_key'] = license_server_url + '||R{SSM}|'
+    item.property['inputstream.adaptive.license_key'] = license_server_url + '|User-Agent=Mozilla%2F5.0%20(X11%3B%20Linux%20x86_64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F49.0.2623.87%20Safari%2F537.36&Content-Type=|R{SSM}|'
     item.property['inputstream.adaptive.server_certificate'] = certificate_data
     # item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
     stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
@@ -712,6 +712,8 @@ def set_live_url(plugin, item_id, **kwargs):
 
     is_drm = json_parser["drm"]
     is_redbee = False
+    if json_parser.get("external_id") is not None:
+        is_redbee = True
     if is_drm:
         if 'url_hls' in json_parser["url_streaming"]:
             live_url = json_parser["url_streaming"]["url_hls"]
@@ -719,17 +721,13 @@ def set_live_url(plugin, item_id, **kwargs):
                 live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
             if "/.m3u8?" in live_url:
                 live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
-                if json_parser.get("external_id") is not None:
-                    is_redbee = True
             live_id = json_parser["id"]
-            is_drm = False
         elif 'url_dash' in json_parser["url_streaming"]:
             live_url = json_parser["url_streaming"]["url_dash"]
             live_id = json_parser["id"]
         else:
             live_url = json_parser["url_streaming"]["url_hls"]
             live_id = json_parser["id"]
-            is_drm = False
     else:
         live_url = json_parser["url_streaming"]["url_hls"]
         live_id = json_parser["id"]
@@ -776,14 +774,13 @@ def list_lives(plugin, item_id, **kwargs):
 
         is_drm = live_datas["drm"]
         is_redbee = False
+        if live_datas.get("external_id") is not None:
+            is_redbee = True
         if is_drm:
             if 'url_hls' in live_datas["url_streaming"]:
                 live_url = live_datas["url_streaming"]["url_hls"]
                 if "_drm.m3u8" in live_url:
                     live_url = live_url.replace('_drm.m3u8', '_aes.m3u8')
-                if "/.m3u8?" in live_url:
-                    if live_datas.get("external_id") is not None:
-                        is_redbee = True
                 live_id = live_datas["id"]
             elif 'url_dash' in live_datas["url_streaming"]:
                 live_url = live_datas["url_streaming"]["url_dash"]
@@ -791,7 +788,6 @@ def list_lives(plugin, item_id, **kwargs):
             else:
                 live_url = live_datas["url_streaming"]["url_hls"]
                 live_id = live_datas["id"]
-                is_drm = False
         else:
             live_url = live_datas["url_streaming"]["url_hls"]
             live_id = live_datas["id"]
@@ -832,13 +828,12 @@ def list_lives(plugin, item_id, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, live_url, is_drm, live_id, is_redbee=False, external_id=None, **kwargs):
+    if is_redbee:
+        return get_video_redbee(plugin, external_id, is_drm)
     if is_drm:
         if get_kodi_version() < 18:
             xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
             return False
-
-        if is_redbee:
-            return get_video_redbee(plugin, external_id, is_drm)
 
         is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
         if not is_helper.check_inputstream():
