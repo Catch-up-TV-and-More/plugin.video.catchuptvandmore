@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta01" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta02" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -45,6 +45,11 @@
 [Version 0.2.39]
 [FR - L'équipe] Fix bug and add a message (PR #933) thanks @Arias800
 [UK - UKTVPLAY] Fix live
+[BE - RTBF] Fix live and issue with drm on rpi (PR #937 issue #935) thanks @gael81
+[BE - RTBF] Fix flake8 (PR #938) thanks @darodi
+[GR - EPT] Add live channels (issue #926)
+Project: Add some translations
+[TR - CINNERGROUP] Fixed cinnergroup channels (PR #939) thanks @itasli
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
