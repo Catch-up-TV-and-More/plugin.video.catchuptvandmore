@@ -139,11 +139,11 @@ msgstr "בינלאומי"
 
 msgctxt "#30054"
 msgid "Belgium"
-msgstr ""
+msgstr "בלגיה"
 
 msgctxt "#30055"
 msgid "Japan"
-msgstr ""
+msgstr "יפן"
 
 msgctxt "#30056"
 msgid "Canada"
@@ -207,7 +207,7 @@ msgstr "טורקיה"
 
 msgctxt "#30071"
 msgid "Slovakia"
-msgstr ""
+msgstr "סלובקיה"
 
 msgctxt "#30072"
 msgid "Greece"

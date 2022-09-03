@@ -207,7 +207,7 @@ msgstr "Turkije"
 
 msgctxt "#30071"
 msgid "Slovakia"
-msgstr ""
+msgstr "Slowakije"
 
 msgctxt "#30072"
 msgid "Greece"
