@@ -129,7 +129,7 @@ menu = {
         'order': 9
     },
     'eptw': {
-        'route': '/resources/lib/channels/wo/eptworld:get_live_url',
+        'resolver': '/resources/lib/channels/wo/eptworld:get_live_url',
         'label': 'EPT World',
         'thumb': 'channels/wo/eptworld.png',
         'fanart': 'channels/wo/eptworld.png',
