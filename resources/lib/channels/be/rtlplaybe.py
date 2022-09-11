@@ -9,11 +9,14 @@ from __future__ import unicode_literals
 
 import json
 import re
+import sys
 from builtins import str
 
 import inputstreamhelper
 import urlquick
+# noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
+# noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 
 from resources.lib import download, web_utils
@@ -92,6 +95,8 @@ URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content
 URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chromecast/services/rtlbe_rtl_play/live?channel=%s&with=service_display_images,nextdiffusion,extra_data'
 # Chaine
 
+pyver = float('%s.%s' % sys.version_info[:2])
+
 
 @Route.register
 def rtlplay_root(plugin, **kwargs):
@@ -125,10 +130,15 @@ def rtlplay_root(plugin, **kwargs):
     item_post_treatment(item)
     yield item
 
-    item = Listitem.search(list_videos_search, item_id='rtl_play', page='0')
-    item.label = plugin.localize(30715)
-    item_post_treatment(item)
-    yield item
+    # deactivate search for kodi <=18
+    # see
+    # https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/issues/911
+    # https://stackoverflow.com/questions/15809296/python-syntaxerror-return-with-argument-inside-generator
+    if pyver >= 3.3:
+        item = Listitem.search(list_videos_search, item_id='rtl_play', page='0')
+        item.label = plugin.localize(30715)
+        item_post_treatment(item)
+        yield item
 
 
 @Route.register
@@ -209,6 +219,9 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                                       item_id=item_id,
                                       program_id=search_id)
                     item_post_treatment(item)
+                    if pyver >= 3.3:
+                        yield item
+                    # else: TODO
                 else:
                     is_downloadable = False
                     if get_kodi_version() < 18:
@@ -234,6 +247,9 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                         item_post_treatment(item,
                                             is_playable=True,
                                             is_downloadable=is_downloadable)
+                        if pyver >= 3.3:
+                            yield item
+                        # else: TODO
 
 
 @Route.register
