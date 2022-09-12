@@ -13,7 +13,9 @@ from builtins import str
 
 import inputstreamhelper
 import urlquick
+# noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
+# noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 
 from resources.lib import download, web_utils
@@ -535,8 +537,6 @@ def get_playlist_urls(plugin,
         if current_video_id != video_id:
             continue
 
-        playlist_videos = []
-
         for clip in video['clips']:
             clip_id = str(clip['video_id'])
 
@@ -550,9 +550,7 @@ def get_playlist_urls(plugin,
                 item_id=item_id,
                 video_id=clip_id)
 
-            playlist_videos.append(video)
-
-        return playlist_videos
+            yield video
 
 
 @Resolver.register
