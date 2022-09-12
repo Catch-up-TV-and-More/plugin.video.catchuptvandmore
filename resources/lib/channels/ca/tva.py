@@ -10,17 +10,17 @@ import json
 import re
 
 import inputstreamhelper
+# noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route
 import urlquick
 
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
-from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
+from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info, \
+    INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
-
-# TO DO
-# Fix download mode when video is not DRM protected
+# TODO Fix download mode when video is not DRM protected
 
 URL_ROOT = 'https://www.qub.ca'
 
@@ -32,17 +32,23 @@ URL_LIVE = URL_ROOT + '/tvaplus/%s/en-direct'
 
 URL_INFO_STREAM = URL_ROOT + '/tvaplus%s'
 
-URL_BRIGHTCOVE_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.min.js'
 # AccountId, PlayerId
+URL_BRIGHTCOVE_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.min.js'
 
-URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/'\
-                            'playback/v1/accounts/%s/videos/%s'
 # AccountId, VideoId
+URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/' \
+                            'playback/v1/accounts/%s/videos/%s'
+
+LICENCE_PARAMS = '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) ' \
+                 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36|R{SSM}|'
+
+PATTERN_VIDEO_ID = re.compile(r'\"referenceId\":\"(.*?)\"')
+PATTERN_PLAYER = re.compile(r'data-player=\"(.*?)\"')
+PATTERN_ACCOUNT = re.compile(r'data-accound=\"(.*?)\"')
 
 
 @Route.register
 def tva_root(plugin, **kwargs):
-
     # (item_id, label, thumb, fanart)
     channels = [
         ('tva', 'TVA', 'tva.png', 'tva_fanart.jpg'),
@@ -93,7 +99,6 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_programs(plugin, item_id, category_name, next_url, **kwargs):
-
     if next_url is None:
         resp = urlquick.get(URL_CATEGORIES % item_id)
         json_parser = json.loads(resp.text)
@@ -136,18 +141,16 @@ def list_programs(plugin, item_id, category_name, next_url, **kwargs):
 
         if 'next' in json_parser:
             yield Listitem.next_page(
-                item_id=item_id, category_name=category_name, next_url=URL_API + category_datas['next'])
+                item_id=item_id, category_name=category_name, next_url=URL_API + json_parser['next'])
 
 
 @Route.register
 def list_seasons(plugin, item_id, program_slug, **kwargs):
-
     resp = urlquick.get(URL_API + '/entities?slug=%s' % program_slug)
     json_parser = json.loads(resp.text)
 
     if 'seasons' in json_parser['knownEntities']:
         for season_datas in json_parser['knownEntities']['seasons']['associatedEntities']:
-
             season_name = json_parser['knownEntities']['seasons']['name'] + ' ' + str(season_datas['seasonNumber'])
             season_number = str(season_datas['seasonNumber'])
 
@@ -170,7 +173,6 @@ def list_seasons(plugin, item_id, program_slug, **kwargs):
 
 @Route.register
 def list_videos_categories(plugin, item_id, program_slug, season_number, **kwargs):
-
     resp = urlquick.get(URL_API + '/entities?slug=%s' % program_slug)
     json_parser = json.loads(resp.text)
 
@@ -178,34 +180,37 @@ def list_videos_categories(plugin, item_id, program_slug, season_number, **kwarg
         for video_category_datas in json_parser['associatedEntities']:
             if 'associatedEntities' in video_category_datas:
                 if len(video_category_datas['associatedEntities']) > 0:
-                    video_category_name = video_category_datas['name']
-                    video_category_slug = video_category_datas['slug']
-
-                    item = Listitem()
-                    item.label = video_category_name
-                    item.set_callback(
-                        list_videos, item_id=item_id, video_category_slug=video_category_slug)
-                    item_post_treatment(item)
-                    yield item
+                    yield from yield_videos(item_id, video_category_datas)
     else:
         for season_datas in json_parser['knownEntities']['seasons']['associatedEntities']:
             if season_number == str(season_datas['seasonNumber']):
-                for video_category_datas in season_datas['associatedEntities']:
-                    if len(video_category_datas['associatedEntities']) > 0:
-                        video_category_name = video_category_datas['name']
-                        video_category_slug = video_category_datas['slug']
+                if 'associatedEntities' in season_datas:
+                    for video_category_datas in season_datas['associatedEntities']:
+                        if len(video_category_datas['associatedEntities']) > 0:
+                            yield from yield_videos(item_id, video_category_datas)
+                elif 'knownEntities' in season_datas:
+                    entities_ = season_datas['knownEntities']
+                    if 'relatedVideos' in entities_:
+                        videos_ = entities_['relatedVideos']
+                        if 'associatedEntities' in videos_:
+                            for video_category_datas in videos_['associatedEntities']:
+                                if len(video_category_datas['associatedEntities']) > 0:
+                                    yield from yield_videos(item_id, video_category_datas)
 
-                        item = Listitem()
-                        item.label = video_category_name
-                        item.set_callback(
-                            list_videos, item_id=item_id, video_category_slug=video_category_slug)
-                        item_post_treatment(item)
-                        yield item
+
+def yield_videos(item_id, element):
+    video_category_name = element.get('name') or get_selected_item_label()
+    video_category_slug = element['slug']
+    item = Listitem()
+    item.label = video_category_name
+    item.set_callback(
+        list_videos, item_id=item_id, video_category_slug=video_category_slug)
+    item_post_treatment(item)
+    yield item
 
 
 @Route.register
 def list_videos(plugin, item_id, video_category_slug, **kwargs):
-
     resp = urlquick.get(URL_API + '/entities?slug=%s' % video_category_slug)
     json_parser = json.loads(resp.text)
 
@@ -223,8 +228,7 @@ def list_videos(plugin, item_id, video_category_slug, **kwargs):
         item.art['thumb'] = item.art['landscape'] = video_image
         item.info['plot'] = video_plot
         item.info['duration'] = video_duration
-        item.set_callback(
-            get_video_url, item_id=item_id, video_slug=video_slug)
+        item.set_callback(get_video_url, item_id=item_id, video_slug=video_slug)
         item_post_treatment(item, is_playable=True, is_downloadable=False)
         yield item
 
@@ -247,18 +251,36 @@ def get_video_url(plugin,
                   video_slug,
                   download_mode=False,
                   **kwargs):
-
     is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
     if not is_helper.check_inputstream():
         return False
 
-    resp = urlquick.get(URL_INFO_STREAM % video_slug)
-    data_account = re.compile(
-        r'data-accound\=\"(.*?)\"').findall(resp.text)[0]
-    data_player = re.compile(
-        r'data-player\=\"(.*?)\"').findall(resp.text)[0]
-    data_video_id = re.compile(
-        r'\"referenceId\":\"(.*?)\"').findall(resp.text)[0]
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Pragma": "no-cache",
+        "Cache-Control": "no-cache",
+        "Sec-Fetch-User": "?1",
+        "Connection": "keep-alive",
+        "TE": "trailers",
+        "DNT": "1"
+    }
+
+    # Create session
+    session_urlquick = urlquick.Session()
+    resp = session_urlquick.get(URL_INFO_STREAM % video_slug, headers=headers, allow_redirects=False, max_age=-1)
+
+    while 300 < resp.status_code < 400:
+        resp = session_urlquick.get(resp.next.url, headers=headers, allow_redirects=False, max_age=-1)
+
+    data_account = PATTERN_ACCOUNT.findall(resp.text)[0]
+    data_player = PATTERN_PLAYER.findall(resp.text)[0]
+    data_video_id = PATTERN_VIDEO_ID.findall(resp.text)[0]
 
     # Method to get JSON from 'edge.api.brightcove.com'
     resp = urlquick.get(
@@ -298,15 +320,13 @@ def get_video_url(plugin,
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     if is_protected_drm:
         item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property[
-            'inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36|R{SSM}|'
+        item.property['inputstream.adaptive.license_key'] = licence_url + LICENCE_PARAMS
     return item
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     resp = urlquick.get(URL_LIVE % item_id)
-    video_url = re.compile(r'videoSourceUrl\"\:\"(.*?)\"').findall(resp.text)[0]
+    video_url = re.compile(r'videoSourceUrl\":\"(.*?)\"').findall(resp.text)[0]
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
