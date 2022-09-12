@@ -7,11 +7,11 @@
 from __future__ import unicode_literals
 import re
 
+# noinspection PyUnresolvedReferences
 from codequick import Resolver
 import urlquick
 
 from resources.lib import resolver_proxy, web_utils
-
 
 # TODO
 # Add Replay
@@ -23,7 +23,6 @@ PATTERN_FILE = re.compile(r'live\":{\"src\":\"(.*?)\"')
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     video_page = None
     resp = urlquick.get(URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
     for possibility in resp.parse().findall('.//iframe'):
@@ -41,4 +40,3 @@ def get_live_url(plugin, item_id, **kwargs):
 
     video_url = found_files[0].replace("\\", "")
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
-
