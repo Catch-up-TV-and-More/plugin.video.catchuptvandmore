@@ -46,10 +46,12 @@ URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
 
+# The channel need to be on the same order has the website
 LIVE_MYCANAL = {
+    'canalplus': 'canalplus',
     'c8': 'c8',
+    'cnews': "cnews",
     'cstar': 'cstar',
-    'canalplus': 'canalplus'
 }
 
 LIVE_DAILYMOTION = {
@@ -542,8 +544,8 @@ def get_live_url(plugin, item_id, **kwargs):
     deviceKeyId, deviceId, sessionId = getKeyID()
 
     resp_app_config = requests.get("https://www.canalplus.com/chaines/%s" % item_id)
-    EPGID = re.compile('expertMode.+?"epgID":(.+?),').findall(
-        resp_app_config.text)[0]
+    EPGID = re.compile('"epgidOTT":"(.+?)"').findall(
+        resp_app_config.text)[0].split(",")
 
     json_app_config = re.compile('window.app_config=(.*?)};').findall(
         resp_app_config.text)[0]
@@ -588,7 +590,6 @@ def get_live_url(plugin, item_id, **kwargs):
             }
         }
     }
-
     requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
     try:
         requests.packages.urllib3.contrib.pyopenssl.DEFAULT_SSL_CIPHER_LIST += 'HIGH:!DH:!aNULL'
@@ -598,6 +599,8 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = requests.post('https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV', json=data, headers=hdr).json()
     liveToken = resp['ServiceResponse']['OutData']['LiveToken']
 
+    indexEPG = [i for i, t in enumerate(LIVE_MYCANAL) if t == item_id][0]
+
     data_drm = quote('''{
         "ServiceRequest":
         {
@@ -605,10 +608,10 @@ def get_live_url(plugin, item_id, **kwargs):
             {
                 "ChallengeInfo": "b{SSM}",
                 "DeviceKeyId": "''' + deviceKeyId + '''",
-                "EpgId": ''' + EPGID + ''',
+                "EpgId": ''' + EPGID[indexEPG] + ''',
                 "LiveToken": "''' + liveToken + '''",
                 "Mode": "MKPL",
-                "UserKeyId": "_tl1sb683u"
+                "UserKeyId": "_vf1itm7yv"
             }
         }
     }''')
