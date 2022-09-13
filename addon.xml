@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta03" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta04" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -57,6 +57,13 @@ Project: Remove an useless file
 [BE - RTBF] [BE - RTBF] Adapt live for new stream provider (redbee) - fix replays in categories (PR #946) thanks @darodi
 [BE - RTLPLAYBE] Make compliant with Kodi18
 [BE - RTLPLAYBE] make search work again in kodi >=19 (PR #948) thanks @darodi
+[BE - RTLPLAYBE] yield playlist (PR #949) thanks @darodi
+[FR - TV7Bordeaux] Fix live
+[FR - M6] yield playlist (PR #951) thanks @darodi
+[FR - TV7Bordeaux] Fix flake (PR #951) thanks @darodi
+[FR - Mycanal] Fix index error (PR #947 issue #950)
+[FR - CNEWS] Sort the replay in a more coherent way (PR #952 issue #943) thanks @darodi
+[CA - TVA] Fix replay (PR #953 issue #945) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
