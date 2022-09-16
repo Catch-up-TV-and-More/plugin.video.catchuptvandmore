@@ -24,7 +24,7 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://www.qub.ca'
 
-URL_API = URL_ROOT + '/proxy/pfu/content-delivery-service/v1'
+URL_API = 'https://api.qub.ca/content-delivery-service/v1'
 
 URL_CATEGORIES = URL_API + '/entities?slug=/%s'
 
@@ -45,6 +45,19 @@ LICENCE_PARAMS = '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64)
 PATTERN_VIDEO_ID = re.compile(r'\"referenceId\":\"(.*?)\"')
 PATTERN_PLAYER = re.compile(r'data-player=\"(.*?)\"')
 PATTERN_ACCOUNT = re.compile(r'data-accound=\"(.*?)\"')
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+    "X-API-Key": "f1c19163-0c32-4189-8b3a-10fb28512551/web-app-ssr",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-site",
+    "Pragma": "no-cache",
+    "Cache-Control": "no-cache",
+    "referrer": "https://www.qub.ca/",
+}
 
 
 @Route.register
@@ -82,7 +95,8 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    resp = urlquick.get(URL_CATEGORIES % item_id)
+
+    resp = urlquick.get(URL_CATEGORIES % item_id, headers=HEADERS)
     json_parser = json.loads(resp.text)
 
     for category_datas in json_parser['associatedEntities']:
@@ -100,7 +114,7 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_programs(plugin, item_id, category_name, next_url, **kwargs):
     if next_url is None:
-        resp = urlquick.get(URL_CATEGORIES % item_id)
+        resp = urlquick.get(URL_CATEGORIES % item_id, headers=HEADERS)
         json_parser = json.loads(resp.text)
 
         for category_datas in json_parser['associatedEntities']:
@@ -146,7 +160,7 @@ def list_programs(plugin, item_id, category_name, next_url, **kwargs):
 
 @Route.register
 def list_seasons(plugin, item_id, program_slug, **kwargs):
-    resp = urlquick.get(URL_API + '/entities?slug=%s' % program_slug)
+    resp = urlquick.get(URL_API + '/entities?slug=%s' % program_slug, headers=HEADERS)
     json_parser = json.loads(resp.text)
 
     if 'seasons' in json_parser['knownEntities']:
@@ -173,7 +187,7 @@ def list_seasons(plugin, item_id, program_slug, **kwargs):
 
 @Route.register
 def list_videos_categories(plugin, item_id, program_slug, season_number, **kwargs):
-    resp = urlquick.get(URL_API + '/entities?slug=%s' % program_slug)
+    resp = urlquick.get(URL_API + '/entities?slug=%s' % program_slug, headers=HEADERS)
     json_parser = json.loads(resp.text)
 
     if season_number == '-1':
@@ -211,7 +225,7 @@ def yield_videos(item_id, element):
 
 @Route.register
 def list_videos(plugin, item_id, video_category_slug, **kwargs):
-    resp = urlquick.get(URL_API + '/entities?slug=%s' % video_category_slug)
+    resp = urlquick.get(URL_API + '/entities?slug=%s' % video_category_slug, headers=HEADERS)
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser['associatedEntities']:
