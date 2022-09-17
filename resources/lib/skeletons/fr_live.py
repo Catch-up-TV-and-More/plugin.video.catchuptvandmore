@@ -925,4 +925,13 @@ menu = {
         'enabled': True,
         'order': 135
     },
+    'pitchoun': {
+        'resolver': '/resources/lib/channels/fr/pitchoun:get_live_url',
+        'label': 'TVPitchoun.fr',
+        'thumb': 'channels/fr/pitchoun.png',
+        'fanart': 'channels/fr/pitchoun.png',
+        'm3u_group': 'Satellite/FAI',
+        'enabled': True,
+        'order': 136
+    },
 }
