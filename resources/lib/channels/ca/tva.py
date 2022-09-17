@@ -13,6 +13,7 @@ import inputstreamhelper
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route
 import urlquick
+import requests
 
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
@@ -264,13 +265,8 @@ def get_video_url(plugin,
     if not is_helper.check_inputstream():
         return False
 
-    # Create session
-    session_urlquick = urlquick.Session()
-    resp = session_urlquick.get(URL_INFO_STREAM % video_slug, headers=VIDEO_HEADERS, allow_redirects=False,
-                                max_age=-1)
-
-    while 300 < resp.status_code < 400:
-        resp = session_urlquick.get(resp.next.url, headers=VIDEO_HEADERS, allow_redirects=False, max_age=-1)
+    cookies = {}
+    resp = requests.get(URL_INFO_STREAM % video_slug, headers=VIDEO_HEADERS, cookies=cookies)
 
     data_account = PATTERN_ACCOUNT.findall(resp.text)[0]
     data_player = PATTERN_PLAYER.findall(resp.text)[0]
@@ -320,11 +316,8 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    session_urlquick = urlquick.Session()
-    resp = session_urlquick.get(URL_LIVE % item_id, headers=VIDEO_HEADERS, allow_redirects=False, max_age=-1)
-
-    while 300 < resp.status_code < 400:
-        resp = session_urlquick.get(resp.next.url, headers=VIDEO_HEADERS, allow_redirects=False, max_age=-1)
+    cookies = {}
+    resp = requests.get(URL_LIVE % item_id, headers=VIDEO_HEADERS, cookies=cookies)
 
     video_url = re.compile(r'videoSourceUrl\":\"(.*?)\"').findall(resp.text)[0]
 
