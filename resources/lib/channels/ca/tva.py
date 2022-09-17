@@ -33,16 +33,6 @@ URL_LIVE = URL_ROOT + '/tvaplus/%s/en-direct'
 
 URL_INFO_STREAM = URL_ROOT + '/tvaplus%s'
 
-# AccountId, PlayerId
-URL_BRIGHTCOVE_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.min.js'
-
-# AccountId, VideoId
-URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/' \
-                            'playback/v1/accounts/%s/videos/%s'
-
-LICENCE_PARAMS = '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) ' \
-                 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36|R{SSM}|'
-
 PATTERN_VIDEO_ID = re.compile(r'\"referenceId\":\"(.*?)\"')
 PATTERN_PLAYER = re.compile(r'data-player=\"(.*?)\"')
 PATTERN_ACCOUNT = re.compile(r'data-accound=\"(.*?)\"')
@@ -247,71 +237,17 @@ def list_videos(plugin, item_id, video_category_slug, **kwargs):
             item_id=item_id, video_category_slug=json_parser['next'])
 
 
-# BRIGHTCOVE Part
-def get_brightcove_policy_key(data_account, data_player):
-    """Get policy key"""
-    file_js = urlquick.get(URL_BRIGHTCOVE_POLICY_KEY %
-                           (data_account, data_player))
-    return re.compile('policyKey:"(.+?)"').findall(file_js.text)[0]
-
-
 @Resolver.register
-def get_video_url(plugin,
-                  item_id,
-                  video_slug,
-                  download_mode=False,
-                  **kwargs):
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
+def get_video_url(plugin, item_id, video_slug, download_mode=False, **kwargs):
 
     cookies = {}
     resp = requests.get(URL_INFO_STREAM % video_slug, headers=VIDEO_HEADERS, cookies=cookies)
 
     data_account = PATTERN_ACCOUNT.findall(resp.text)[0]
     data_player = PATTERN_PLAYER.findall(resp.text)[0]
-    data_video_id = PATTERN_VIDEO_ID.findall(resp.text)[0]
+    data_video_id = "ref:%s" % PATTERN_VIDEO_ID.findall(resp.text)[0]
 
-    # Method to get JSON from 'edge.api.brightcove.com'
-    resp = urlquick.get(
-        URL_BRIGHTCOVE_VIDEO_JSON % (data_account, "ref:%s" % data_video_id),
-        headers={
-            'User-Agent': web_utils.get_random_ua(),
-            'Accept': 'application/json;pk=%s' % (get_brightcove_policy_key(data_account, data_player)),
-            'X-Forwarded-For': plugin.setting.get_string('header_x-forwarded-for')
-        })
-    json_parser = json.loads(resp.text)
-
-    video_url = ''
-    licence_url = ''
-    is_protected_drm = False
-    if 'sources' in json_parser:
-        for url in json_parser["sources"]:
-            if 'src' in url:
-                if 'manifest.mpd' in url["src"]:
-                    video_url = url["src"]
-                    if 'key_systems' in url:
-                        licence_url = url['key_systems']['com.widevine.alpha']['license_url']
-                        is_protected_drm = True
-    else:
-        if json_parser[0]['error_code'] == "ACCESS_DENIED":
-            plugin.notify('ERROR', plugin.localize(30713))
-            return False
-
-    if video_url == '':
-        return False
-
-    item = Listitem()
-    item.path = video_url
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    if is_protected_drm:
-        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-        item.property['inputstream.adaptive.license_key'] = licence_url + LICENCE_PARAMS
-    return item
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)
 
 
 @Resolver.register

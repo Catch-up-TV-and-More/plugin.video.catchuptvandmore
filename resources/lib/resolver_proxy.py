@@ -130,6 +130,7 @@ def get_stream_with_quality(plugin,
                             video_url,
                             manifest_type="hls",
                             headers=None,
+                            license_url=None,
                             map_audio=False,
                             append_query_string=False,
                             verify=True,
@@ -168,6 +169,7 @@ def get_stream_with_quality(plugin,
     item = Listitem()
     item.path = video_url
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     item.property["inputstream.adaptive.manifest_type"] = manifest_type
 
     # set max bandwidth
@@ -181,10 +183,13 @@ def get_stream_with_quality(plugin,
         if bitrate != 0:
             item.property["inputstream.adaptive.max_bandwidth"] = str(bitrate * 1000)
 
-    if headers is not None:
-        stream_headers = urlencode(headers)
-        item.property['inputstream.adaptive.stream_headers'] = stream_headers
-        item.property['inputstream.adaptive.license_key'] = '|{}'.format(stream_headers)
+    if headers is None:
+        headers = {"User-Agent": web_utils.get_random_ua()}
+    stream_headers = urlencode(headers)
+    item.property['inputstream.adaptive.stream_headers'] = stream_headers
+    if license_url is None:
+        license_url = ''
+    item.property['inputstream.adaptive.license_key'] = '%s|%s|R{SSM}|' % (license_url, stream_headers)
 
     if subtitles is not None:
         item.subtitles.append(subtitles)
@@ -335,19 +340,20 @@ def get_brightcove_video_json(plugin,
     resp = urlquick.get(URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id), headers=headers)
 
     json_parser = json.loads(resp.text)
-    manifest = 'hls'
     video_url = ''
-    is_drm = 0
+    license_url = None
+    is_drm = False
+
     if 'sources' in json_parser:
         for url in json_parser["sources"]:
             if 'src' in url:
-                if 'm3u8' in url["src"] and is_drm == 0:
-                    video_url = url["src"]
-                if 'key_systems' in url:
-                    if 'com.widevine.alpha' in url["key_systems"]:
-                        manifest = 'mpd'
-                        video_url = url["src"]
-                        is_drm = 1
+                video_url = url["src"]
+                if 'm3u8' in video_url and is_drm is False:
+                    manifest = 'hls'
+                if 'manifest.mpd' in video_url:
+                    manifest = 'mpd'
+                    license_url = url['key_systems']['com.widevine.alpha']['license_url']
+                    is_drm = True
     else:
         if json_parser[0]['error_code'] == "ACCESS_DENIED":
             plugin.notify('ERROR', plugin.localize(30713))
@@ -358,7 +364,7 @@ def get_brightcove_video_json(plugin,
 
     if download_mode:
         return download.download_video(video_url)
-    return get_stream_with_quality(plugin, video_url=video_url, manifest_type=manifest, subtitles=subtitles)
+    return get_stream_with_quality(plugin, video_url=video_url, manifest_type=manifest, headers=headers, license_url=license_url, subtitles=subtitles)
 
 
 # MTVN Services Part
