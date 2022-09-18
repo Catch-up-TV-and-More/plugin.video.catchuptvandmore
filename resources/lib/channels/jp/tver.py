@@ -8,11 +8,10 @@ from __future__ import unicode_literals
 import json
 import re
 
-import inputstreamhelper
 from codequick import Listitem, Resolver, Route
 import urlquick
 
-from resources.lib import web_utils
+from resources.lib import web_utils, resolver_proxy
 from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
@@ -92,10 +91,6 @@ def list_episodes(plugin, item_id, program_title, programs, **kwargs):
 @Resolver.register
 def get_video_url(plugin, data, **kwargs):
 
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
-
     if 'videoID' in data['video']:
         data_video = data['video']['videoID']
         ref = ''
@@ -105,36 +100,6 @@ def get_video_url(plugin, data, **kwargs):
     data_account = data['video']['accountID']
     data_player = data['video']['playerID']
 
-    # Method to get JSON from 'edge.api.brightcove.com'
-    file_js = urlquick.get(URL_BRIGHTCOVE_POLICY_KEY % (data_account, data_player))
-    policy = re.compile('policyKey:"(.+?)"').findall(file_js.text)[0]
-    headers = {
-        'User-Agent': web_utils.get_random_ua(),
-        'Accept': 'application/json;pk=%s' % policy,
-        'X-Forwarded-For': plugin.setting.get_string('header_x-forwarded-for')
-    }
-    URL_JSON_VIDEO = URL_BRIGHTCOVE_VIDEO_JSON % (data_account, ref, data_video)
-    json_parser = urlquick.get(URL_JSON_VIDEO, headers=headers).json()
+    data_video_id = ref + data_video
 
-    video_url = ''
-    if 'sources' in json_parser:
-        for url in json_parser["sources"]:
-            if 'src' in url:
-                if 'manifest.mpd' in url["src"]:
-                    video_url = url["src"]
-    else:
-        if json_parser[0]['error_code'] == "ACCESS_DENIED":
-            plugin.notify('ERROR', plugin.localize(30713))
-            return False
-
-    if video_url == '':
-        return False
-
-    item = Listitem()
-    item.path = video_url
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    return item
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)

@@ -352,8 +352,10 @@ def get_brightcove_video_json(plugin,
                     manifest = 'hls'
                 if 'manifest.mpd' in video_url:
                     manifest = 'mpd'
-                    license_url = url['key_systems']['com.widevine.alpha']['license_url']
                     is_drm = True
+                    if 'key_systems' in url:
+                        license_url = url['key_systems']['com.widevine.alpha']['license_url']
+
     else:
         if json_parser[0]['error_code'] == "ACCESS_DENIED":
             plugin.notify('ERROR', plugin.localize(30713))
