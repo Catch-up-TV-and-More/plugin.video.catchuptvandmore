@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta04" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta05" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -64,6 +64,13 @@ Project: Remove an useless file
 [FR - Mycanal] Fix index error (PR #947 issue #950)
 [FR - CNEWS] Sort the replay in a more coherent way (PR #952 issue #943) thanks @darodi
 [CA - TVA] Fix replay (PR #953 issue #945) thanks @darodi
+[CA - TVA] Fix replay - api change (PR #955) thanks @darodi
+[CA - TVA] Fix live (PR #956) thanks @darodi
+[CA - TVA] Simplify the requests
+[CA - telequebec] Add section "En vedette" in replay (films, ...) (PR #958) thanks @darodi
+[CA - TVA] Enable multiple resolutions
+[JP - TVER] Use the Brightcove helper for replay
+[BE - LN24] Fix some replays (PR #960) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
