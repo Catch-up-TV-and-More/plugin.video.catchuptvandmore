@@ -228,8 +228,8 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
 
     json_parser = urlquick.get(URL_LIVE_JSON,
-                        headers={'User-Agent': web_utils.get_random_ua()},
-                        max_age=-1).json()
+                               headers={'User-Agent': web_utils.get_random_ua()},
+                               max_age=-1).json()
 
     for live in json_parser["result"]:
         if live["channel"] == item_id:
