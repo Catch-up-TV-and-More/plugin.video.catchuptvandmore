@@ -22,12 +22,12 @@ try:
 except ImportError:
     from urllib import quote, urlencode
 # noinspection PyUnresolvedReferences
-from codequick import Listitem, Resolver, Route
+from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 
 from resources.lib import resolver_proxy, web_utils
-from resources.lib.addon_utils import get_item_media_path, Enum
+from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, \
     get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
@@ -59,11 +59,6 @@ LIVE_DAILYMOTION = {
     'cstar': 'x5gv5v0',
     'canalplus': 'x5gv6be'
 }
-
-
-class CANALPLUS_links(Enum):
-    DAILYMOTION = "1"
-    DEFAULT = "0"
 
 
 def getKeyID():
@@ -538,7 +533,10 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    if CANALPLUS_links.DAILYMOTION.value == plugin.setting.get_string('canalplusgroup'):
+    list_q = ["MyCanal", "Dailymotion"]
+
+    ret = xbmcgui.Dialog().select(Script.localize(30174), list_q)
+    if ret == 1:
         return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION[item_id], False)
 
     deviceKeyId, deviceId, sessionId = getKeyID()
