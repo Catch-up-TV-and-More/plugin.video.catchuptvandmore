@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta05" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta06" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -71,6 +71,10 @@ Project: Remove an useless file
 [CA - TVA] Enable multiple resolutions
 [JP - TVER] Use the Brightcove helper for replay
 [BE - LN24] Fix some replays (PR #960) thanks @darodi
+[FR - Franceinfo) Fix aired date (PR #961) thanks @Arias800
+[FR - Franceinfo] Fix flake8 (PR #961) thanks @Arias800
+[FR - Mycanal] New stream selection menu (PR #962) thanks @Arias800
+[UK - CHANNEL4] Add replay
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
