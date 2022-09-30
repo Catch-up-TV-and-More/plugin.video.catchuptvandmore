@@ -27,7 +27,10 @@ URL_CATEGORIES = URL_ROOT + '/api/homepage'
 URL_VOD = URL_ROOT + '/vod/stream/'
 URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/widevine/acquire'
 
+URL_LIVE = URL_ROOT + '/simulcast/channels/%s'
+
 BASIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+LICENSE_HEADERS = "User-Agent=%s&Content-Type=application/json&Referer=%s" % (web_utils.get_random_ua(), URL_ROOT)
 
 
 @Route.register
@@ -131,7 +134,43 @@ def get_video(plugin, programmeId, assetId, **kwargs):
         "message": "b{SSM}"
     })
 
-    LICENSE_HEADERS = "User-Agent=%s&Content-Type=application/json&Referer=%s" % (web_utils.get_random_ua(), URL_ROOT)
+    item = Listitem()
+    item.path = url
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property['inputstream.adaptive.license_key'] = '%s|%s|%s|JBlicense' % (URL_LICENSE, LICENSE_HEADERS, payload)
+
+    return item
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, **kwargs):
+    url_video_json = URL_LIVE % item_id
+    resp = urlquick.get(url_video_json, max_age=-1)
+
+    json_video = json.loads(resp.text)
+    for field in json_video['channelInfo']['videoProfiles']:
+        if field['name'] == 'dashwv-live-stream-iso-dash-sp-tl':
+            token = field['streams'][0]['token']
+            url = field['streams'][0]['uri']
+            break
+
+    cipher = AES.new(bytes('n9cLieYkqwzNCqvi', 'UTF-8'), AES.MODE_CBC, bytes('odzcU3WdUiXLucVd', 'UTF-8'))
+    full_decoded_token = unpad(cipher.decrypt(base64.b64decode(token)), 16, style='pkcs7').decode('UTF-8')
+    decoded_token = re.compile(r'\&t\=(.*?)$').findall(full_decoded_token)[0]
+
+    payload = json.dumps({
+        "token": decoded_token,
+        "video": {
+            "type": "simulcast",
+            "url": url
+        },
+        "message": "b{SSM}"
+    })
 
     item = Listitem()
     item.path = url
