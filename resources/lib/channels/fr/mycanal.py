@@ -22,7 +22,7 @@ try:
 except ImportError:
     from urllib import quote, urlencode
 # noinspection PyUnresolvedReferences
-from codequick import Listitem, Resolver, Route
+from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 
@@ -42,9 +42,16 @@ URL_REPLAY = URL_ROOT_SITE + '/chaines/%s'
 
 URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken'
 
+LIVE_TOKEN_URL = 'https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV'
+
 URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
+
+LICENSE_URL = 'https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
+
+CERTIFICATE_URL = 'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin'
+
 
 # The channel need to be on the same order has the website
 LIVE_MYCANAL = {
@@ -478,9 +485,7 @@ def get_video_url(plugin,
         jsonparser_real_stream_datas = session_requests.get(
             jsonparser_stream_datas['@medias'], headers=headers).json()
 
-        certificate_data = base64.b64encode(requests.get(
-            'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode(
-            'utf-8')
+        certificate_data = base64.b64encode(requests.get(CERTIFICATE_URL).content).decode('utf-8')
 
         subtitle_url = ''
         item = Listitem()
@@ -533,94 +538,86 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    try:
-        deviceKeyId, deviceId, sessionId = getKeyID()
-
-        resp_app_config = requests.get("https://www.canalplus.com/chaines/%s" % item_id)
-        EPGID = re.compile('"epgidOTT":"(.+?)"').findall(
-            resp_app_config.text)[0].split(",")
-
-        json_app_config = re.compile('window.app_config=(.*?)};').findall(
-            resp_app_config.text)[0]
-        json_app_config_parser = json.loads(json_app_config + ('}'))
-        portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
-
-        data = {
-            "deviceId": deviceId,
-            "sessionId": sessionId,
-            "vect": "INTERNET",
-            "media": "PC",
-            "portailId": portail_id,
-            "zone": "cpfra",
-            "noCache": "false",
-            "analytics": "false",
-            "trackingPub": "false",
-            "anonymousTracking": "true"
-        }
-
-        hdr = {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Origin": "https://www.canalplus.com",
-            "Referer": "https://www.canalplus.com/",
-            "User-Agent": web_utils.get_random_ua()
-        }
-
-        resp = requests.post('https://pass-api-v2.canal-plus.com/services/apipublique/createToken', data=data, headers=hdr, timeout=3).json()
-        passToken = resp['response']['passToken']
-
-        data = {
-            "ServiceRequest": {
-                "InData": {
-                    "DeviceKeyId": deviceKeyId,
-                    "PassData": {
-                        "Id": 0,
-                        "Token": passToken
-                    },
-                    "PDSData": {
-                        "GroupTypes": "1;2;4"
-                    },
-                    "UserKeyId": "_tl1sb683u"
-                }
-            }
-        }
-        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
-        try:
-            requests.packages.urllib3.contrib.pyopenssl.DEFAULT_SSL_CIPHER_LIST += 'HIGH:!DH:!aNULL'
-        except AttributeError:
-            # no pyopenssl support used / needed / available
-            pass
-        resp = requests.post('https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV', json=data, headers=hdr).json()
-        liveToken = resp['ServiceResponse']['OutData']['LiveToken']
-
-        indexEPG = [i for i, t in enumerate(LIVE_MYCANAL) if t == item_id][0]
-
-        data_drm = quote('''{
-            "ServiceRequest":
-            {
-                "InData":
-                {
-                    "ChallengeInfo": "b{SSM}",
-                    "DeviceKeyId": "''' + deviceKeyId + '''",
-                    "EpgId": ''' + EPGID[indexEPG] + ''',
-                    "LiveToken": "''' + liveToken + '''",
-                    "Mode": "MKPL",
-                    "UserKeyId": "_vf1itm7yv"
-                }
-            }
-        }''')
-
-        if item_id == "canalplus":
-            item_id = "canalplusclair"
-
-        resp = requests.get("https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/" + item_id + "-hd.json").json()
-        url_stream = resp["primary"]["src"]
-    except Exception:
-        # Fallback to the second stream.
+    if xbmcgui.Dialog().select(Script.localize(30174), ["MyCanal", "Dailymotion"]):
         return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION[item_id], False)
 
-    LICENSE_URL = 'https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
+    deviceKeyId, deviceId, sessionId = getKeyID()
 
-    certificate_data = base64.b64encode(requests.get('https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin').content).decode('utf-8')
+    resp_app_config = requests.get("https://www.canalplus.com/chaines/%s" % item_id)
+    EPGID = re.compile('\"epgidOTT\":\"(.+?)\"').findall(
+        resp_app_config.text)[0].split(",")
+
+    json_app_config = re.compile('window.app_config=(.*?)};').findall(
+        resp_app_config.text)[0]
+    json_app_config_parser = json.loads(json_app_config + ('}'))
+    portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
+
+    data = {
+        "deviceId": deviceId,
+        "sessionId": sessionId,
+        "vect": "INTERNET",
+        "media": "PC",
+        "portailId": portail_id,
+        "zone": "cpfra",
+        "noCache": "false",
+        "analytics": "false",
+        "trackingPub": "false",
+        "anonymousTracking": "true"
+    }
+
+    hdr = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Origin": "https://www.canalplus.com",
+        "Referer": "https://www.canalplus.com/",
+        "User-Agent": web_utils.get_random_ua()
+    }
+
+    resp = requests.post(URL_TOKEN, data=data, headers=hdr, timeout=3).json()
+    passToken = resp['response']['passToken']
+
+    data = {
+        "ServiceRequest": {
+            "InData": {
+                "DeviceKeyId": deviceKeyId,
+                "PassData": {"Id": 0, "Token": passToken},
+                "PDSData": {"GroupTypes": "1;2;4"},
+                "UserKeyId": "_tl1sb683u"
+            }
+        }
+    }
+    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
+    try:
+        requests.packages.urllib3.contrib.pyopenssl.DEFAULT_SSL_CIPHER_LIST += 'HIGH:!DH:!aNULL'
+    except AttributeError:
+        # no pyopenssl support used / needed / available
+        pass
+    resp = requests.post(LIVE_TOKEN_URL, json=data, headers=hdr).json()
+    liveToken = resp['ServiceResponse']['OutData']['LiveToken']
+
+    indexEPG = [i for i, t in enumerate(LIVE_MYCANAL) if t == item_id][0]
+
+    data_drm = quote('''{
+        "ServiceRequest":
+        {
+            "InData":
+            {
+                "ChallengeInfo": "b{SSM}",
+                "DeviceKeyId": "''' + deviceKeyId + '''",
+                "EpgId": ''' + EPGID[indexEPG] + ''',
+                "LiveToken": "''' + liveToken + '''",
+                "Mode": "MKPL",
+                "UserKeyId": "_vf1itm7yv"
+            }
+        }
+    }''')
+
+    if item_id == "canalplus":
+        item_id = "canalplusclair"
+
+    resp = requests.get("https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/" + item_id + "-hd.json").json()
+    url_stream = resp["primary"]["src"]
+
+    certificate_data = base64.b64encode(requests.get(CERTIFICATE_URL).content).decode('utf-8')
 
     item = Listitem()
     item.label = get_selected_item_label()
