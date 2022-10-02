@@ -344,18 +344,20 @@ def get_brightcove_video_json(plugin,
     license_url = None
     is_drm = False
 
+    print("json_parser = %s" % json_parser)
     if 'sources' in json_parser:
         for url in json_parser["sources"]:
+            # Workaroud Inputstream adative can not some types of AES crypted streams
             if 'src' in url:
-                video_url = url["src"]
-                if 'm3u8' in video_url and is_drm is False:
+                if ('m3u8' in url["src"] or 'container' in url) and (is_drm is False):
                     manifest = 'hls'
-                if 'manifest.mpd' in video_url:
+                    video_url = url["src"]
+                if 'manifest.mpd' in url["src"]:
                     manifest = 'mpd'
+                    video_url = url["src"]
                     is_drm = True
                     if 'key_systems' in url:
                         license_url = url['key_systems']['com.widevine.alpha']['license_url']
-
     else:
         if json_parser[0]['error_code'] == "ACCESS_DENIED":
             plugin.notify('ERROR', plugin.localize(30713))
