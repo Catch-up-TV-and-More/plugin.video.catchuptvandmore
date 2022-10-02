@@ -15,6 +15,9 @@ from codequick import Listitem, Resolver, Route
 from kodi_six import xbmcgui
 import urlquick
 
+import os
+import xbmcvfs
+
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
@@ -69,6 +72,14 @@ URL_LOGIN_MODAL = 'https://uktvplay.uktv.co.uk/account/'
 
 URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate/'
 
+HOME              = xbmcvfs.translatePath('special://home/')
+ADDONS            = os.path.join(HOME,     'addons')
+RESOURCE_IMAGES   = os.path.join(ADDONS,   'resource.images.catchuptvandmore')
+RESOURCES         = os.path.join(RESOURCE_IMAGES,   'resources')
+CHANNELS          = os.path.join(RESOURCES,         'channels')
+UK_CHANNELS       = os.path.join(CHANNELS,          'uk')
+fanartpath        = os.path.join(UK_CHANNELS,       'uktvplay_fanart.jpg')
+iconpath          = os.path.join(UK_CHANNELS,       'uktvplay.png')
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
@@ -77,6 +88,8 @@ def list_categories(plugin, item_id, **kwargs):
     """
     item = Listitem()
     item.label = 'A-Z'
+    item.art["thumb"] = iconpath
+    item.art["fanart"] = fanartpath
     item.set_callback(list_letters, item_id=item_id)
     item_post_treatment(item)
     yield item
@@ -89,6 +102,8 @@ def list_categories(plugin, item_id, **kwargs):
         category_slug = category_datas["slug"]
         item = Listitem()
         item.label = category_title
+        item.art["thumb"] = iconpath
+        item.art["fanart"] = fanartpath
         item.set_callback(list_sub_categories,
                           item_id=item_id,
                           category_slug=category_slug)
@@ -109,6 +124,8 @@ def list_sub_categories(plugin, item_id, category_slug, **kwargs):
                 sub_category_slug = sub_category_datas["slug"]
                 item = Listitem()
                 item.label = sub_category_title
+                item.art["thumb"] = iconpath
+                item.art["fanart"] = fanartpath
                 item.set_callback(list_programs_sub_categories,
                                   item_id=item_id,
                                   sub_category_slug=sub_category_slug)
@@ -149,6 +166,8 @@ def list_letters(plugin, item_id, **kwargs):
     for letter_value in LETTER_LIST:
         item = Listitem()
         item.label = letter_value
+        item.art["thumb"] = iconpath
+        item.art["fanart"] = fanartpath
         item.set_callback(list_programs,
                           item_id=item_id,
                           letter_value=letter_value)
