@@ -19,9 +19,16 @@ from resources.lib.menu_utils import item_post_treatment
 
 from resources.lib import resolver_proxy, web_utils
 
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
+try:
+    from Crypto.Cipher import AES
+except:
+    from Cryptodome.Cipher import AES
 
+try:
+    from Crypto.Util.Padding import unpad
+except:
+    from Cryptodome.Util.Padding import unpad
+    
 URL_ROOT = 'https://www.channel4.com'
 URL_CATEGORIES = URL_ROOT + '/api/homepage'
 URL_VOD = URL_ROOT + '/vod/stream/'
