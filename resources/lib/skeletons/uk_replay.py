@@ -43,7 +43,7 @@ menu = {
     },
     "channel4": {
         "route": "/resources/lib/channels/uk/channel4:list_categories",
-        "label": "Channel 4",
+        "label": "All 4",
         "thumb": "channels/uk/channel4.png",
         "fanart": "channels/uk/channel4_fanart.jpg",
         "enabled": True,
