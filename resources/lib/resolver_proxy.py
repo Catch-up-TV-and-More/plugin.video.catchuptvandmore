@@ -174,16 +174,19 @@ def get_stream_with_quality(plugin,
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     item.property["inputstream.adaptive.manifest_type"] = manifest_type
 
-    # set max bandwidth
-    stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
-    if stream_bitrate_limit > 0:
-        item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
-    elif manifest_type == "hls" and Quality.BEST.value != plugin.setting.get_string('quality') and bypass is False:
-        url, bitrate = M3u8(video_url, headers).get_url_and_bitrate_for_quality()
-        if url is None and bitrate is None:
-            return False
-        if bitrate != 0:
-            item.property["inputstream.adaptive.max_bandwidth"] = str(bitrate * 1000)
+    # Useless with Kodi 20 and adaptive stream.
+    # IA detect the bandwidth and choose the right stream iself
+    if get_kodi_version() < 20:
+        # set max bandwidth
+        stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
+        if stream_bitrate_limit > 0:
+            item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
+        elif manifest_type == "hls" and Quality.BEST.value != plugin.setting.get_string('quality') and bypass is False:
+            url, bitrate = M3u8(video_url, headers).get_url_and_bitrate_for_quality()
+            if url is None and bitrate is None:
+                return False
+            if bitrate != 0:
+                item.property["inputstream.adaptive.max_bandwidth"] = str(bitrate * 1000)
 
     if headers is None:
         headers = {"User-Agent": web_utils.get_random_ua()}
