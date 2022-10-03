@@ -134,18 +134,20 @@ def get_stream_with_quality(plugin,
                             map_audio=False,
                             append_query_string=False,
                             verify=True,
-                            subtitles=None):
+                            subtitles=None,
+                            bypass=False):
 
     """ Returns the stream for the bitrate or the requested quality.
 
     :param plugin:                      plugin
     :param str video_url:               The url to download
     :param str manifest_type:           Manifest type
-    :param headers                      the headers
+    :param dict headers                 the headers
     :param bool append_query_string:    Should the existing query string be appended?
     :param bool map_audio:              Map audio streams
     :param bool verify:                 verify ssl?
     :param str subtitles:               subtitles url
+    :param bool bypass                  use IA to read stream with only one resolution
 
     :return: An item for the stream
     :rtype: Listitem
@@ -176,7 +178,7 @@ def get_stream_with_quality(plugin,
     stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
     if stream_bitrate_limit > 0:
         item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
-    elif manifest_type == "hls" and Quality.BEST.value != plugin.setting.get_string('quality'):
+    elif manifest_type == "hls" and Quality.BEST.value != plugin.setting.get_string('quality') and bypass is False:
         url, bitrate = M3u8(video_url, headers).get_url_and_bitrate_for_quality()
         if url is None and bitrate is None:
             return False

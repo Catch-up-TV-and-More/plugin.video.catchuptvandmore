@@ -35,4 +35,12 @@ menu = {
         "enabled": True,
         "order": 2,
     },
+    "enlace": {
+        "resolver": "/resources/lib/channels/pe/enlace:get_live_url",
+        "label": "Enlace",
+        "thumb": "channels/pe/enlace.png",
+        "fanart": "channels/pe/enlace_fanart.jpg",
+        "enabled": True,
+        "order": 3,
+    },
 }
