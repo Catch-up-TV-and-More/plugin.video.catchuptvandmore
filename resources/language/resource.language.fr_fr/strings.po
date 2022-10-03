@@ -213,6 +213,10 @@ msgctxt "#30072"
 msgid "Greece"
 msgstr "Grèce"
 
+msgctxt "#30073"
+msgid "Peru"
+msgstr "Pérou"
+
 # Channels (from 30080 to 30129)
 
 msgctxt "#30080"
@@ -287,6 +291,9 @@ msgctxt "#30097"
 msgid "Moroccan channels"
 msgstr "Chaînes marocaines"
 
+msgctxt "#30098"
+msgid "Peruvian channels"
+msgstr "Chaînes péruviennes"
 
 # Websites (from 30130 to 30149)
 

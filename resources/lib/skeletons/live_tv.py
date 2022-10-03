@@ -189,5 +189,11 @@ menu = {
         'enabled': True,
         'order': 23
     },
-
+    'pe_live': {
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30073,
+        'thumb': 'channels/pe.png',
+        'enabled': True,
+        'order': 24
+    },
 }
