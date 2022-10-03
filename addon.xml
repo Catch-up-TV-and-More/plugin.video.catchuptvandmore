@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta06" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta07" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -75,6 +75,13 @@ Project: Remove an useless file
 [FR - Franceinfo] Fix flake8 (PR #961) thanks @Arias800
 [FR - Mycanal] New stream selection menu (PR #962) thanks @Arias800
 [UK - CHANNEL4] Add replay
+[FR - Mycanal] Add a dialog box to choose the stream (PR #962) @Arias800
+[UK - CHANNEL4] Add lives (issue #767)
+[FR] Use get_stream_with_quality in a few more places
+[Project]: If possible, avoid MP4 container in Brightcove helper (issue #965)
+[UK - CHANNEL4] Fix import of crypto module (issue #963) thanks @berkhornet
+[PE - ATV] Add lives
+[PE - ENLACE] Add live
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
