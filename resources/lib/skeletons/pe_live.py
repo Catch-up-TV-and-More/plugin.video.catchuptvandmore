@@ -43,4 +43,12 @@ menu = {
         "enabled": True,
         "order": 3,
     },
+    "panamericana": {
+        "resolver": "/resources/lib/channels/pe/panamericana:get_live_url",
+        "label": "Panamericana TV",
+        "thumb": "channels/pe/panamericana.png",
+        "fanart": "channels/pe/panamericana_fanart.jpg",
+        "enabled": True,
+        "order": 4,
+    },
 }

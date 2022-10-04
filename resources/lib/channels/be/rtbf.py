@@ -172,6 +172,8 @@ def list_categories(plugin, item_id, **kwargs):
 def list_videos_search(plugin, search_query, item_id, page, **kwargs):
     resp = urlquick.get(URL_LIST_SEARCH % (search_query, PARTNER_KEY))
     json_parser = resp.json()
+
+    item_found = False
     for results_datas in json_parser["results"]:
         is_redbee = False
         video_datas = results_datas["data"]
@@ -228,13 +230,20 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                           is_drm=is_drm,
                           is_redbee=is_redbee)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
+        item_found = True
         yield item
+
+    if not item_found:
+        plugin.notify(plugin.localize(30600), plugin.localize(30718))
+        yield False
 
 
 @Route.register
 def list_videos_search_prog(plugin, search_query, item_id, page, **kwargs):
     resp = urlquick.get(URL_LIST_SEARCH_PROG % (search_query, PARTNER_KEY))
     json_parser = resp.json()
+
+    item_found = False
 
     for search_datas in json_parser["results"]:
         search_title = search_datas["data"]["label"]
@@ -247,7 +256,12 @@ def list_videos_search_prog(plugin, search_query, item_id, page, **kwargs):
                           item_id=item_id,
                           program_id=search_id)
         item_post_treatment(item)
+        item_found = True
         yield item
+
+    if not item_found:
+        plugin.notify(plugin.localize(30600), plugin.localize(30718))
+        yield False
 
 
 # Not used at the moment but could be used if we want to display all the programs per channel via API
