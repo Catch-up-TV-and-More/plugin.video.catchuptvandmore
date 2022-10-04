@@ -901,10 +901,6 @@ msgctxt "#30721"
 msgid "Content requiring a subscription"
 msgstr "Contenu nécessitant un abonnement"
 
-msgctxt "#30722"
-msgid "TV guide"
-msgstr "Guide TV"
-
 msgctxt "#30723"
 msgid "An error occurred while getting TV guide"
 msgstr "Une erreur s'est produite lors de l'obtention du guide TV"
@@ -932,10 +928,6 @@ msgstr "Ajouté récemment"
 msgctxt "#30729"
 msgid "Emissions"
 msgstr "Émissions"
-
-msgctxt "#30730"
-msgid "Downloading TV guide..."
-msgstr "Téléchargement du guide TV"
 
 msgctxt "#30731"
 msgid "Homepage"
