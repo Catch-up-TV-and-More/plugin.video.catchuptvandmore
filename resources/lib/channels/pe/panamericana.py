@@ -21,9 +21,7 @@ URL_LIVE = "https://panamericana.pe/tvenvivo/"
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    video_page = None
     resp = urlquick.get(URL_LIVE, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
-
 
     live_id = re.compile(r'video\: \"(.*?)\"').findall(resp.text)[0]
     print('live_id = %s' % live_id)
