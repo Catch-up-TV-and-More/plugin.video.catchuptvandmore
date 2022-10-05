@@ -901,10 +901,6 @@ msgctxt "#30721"
 msgid "Content requiring a subscription"
 msgstr "Inhoud vereist een abonnement"
 
-msgctxt "#30722"
-msgid "TV guide"
-msgstr "Tv-gids"
-
 msgctxt "#30723"
 msgid "An error occurred while getting TV guide"
 msgstr "Er trap een fout op bij het ophalen van de Tv-gids"
@@ -931,10 +927,6 @@ msgstr ""
 
 msgctxt "#30729"
 msgid "Emissions"
-msgstr ""
-
-msgctxt "#30730"
-msgid "Downloading TV guide..."
 msgstr ""
 
 msgctxt "#30731"
