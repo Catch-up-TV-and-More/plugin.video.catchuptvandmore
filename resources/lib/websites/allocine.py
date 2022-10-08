@@ -18,10 +18,7 @@ from resources.lib.menu_utils import item_post_treatment
 from resources.lib.kodi_utils import PY3
 
 # TO DO
-# Get Last_Page (for Programs, Videos) / Fix Last_page
 # Get Partner Id ?
-# Todo get Aired, Year, Date of the Video
-# News Videos - Need work
 
 URL_ROOT = 'http://www.allocine.fr'
 
@@ -50,18 +47,19 @@ SPLIT_CODE = "ACr"
 
 def convertMonth(string):
     m = {
-     'janvier': 1,
-     'février': 2,
-     'mars': 3,
-     'avril': 4,
-     'mai': 5,
-     'juin': 6,
-     'juillet': 7,
-     'août': 8,
-     'septembre': 9,
-     'octobre': 10,
-     'novembre': 11,
-     'décembre': 12}
+        'janvier': 1,
+        'février': 2,
+        'mars': 3,
+        'avril': 4,
+        'mai': 5,
+        'juin': 6,
+        'juillet': 7,
+        'août': 8,
+        'septembre': 9,
+        'octobre': 10,
+        'novembre': 11,
+        'décembre': 12,
+        }
     return m[string]
 
 
@@ -70,13 +68,9 @@ def html_decode(s):
     Returns the ASCII decoded version of the given HTML string. This does
     NOT remove normal HTML tags like <p>.
     """
-    htmlCodes = (
-             ("'", '&#39;'),
-             ('"', '&quot;'),
-             ('>', '&gt;'),
-             ('<', '&lt;'),
-             ('&', '&amp;')
-        )
+
+    htmlCodes = (("'", '&#39;'), ('"', '&quot;'), ('>', '&gt;'), ('<',
+                 '&lt;'), ('&', '&amp;'))
     for code in htmlCodes:
         s = s.replace(code[1], code[0])
     return s
