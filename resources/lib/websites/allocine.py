@@ -50,19 +50,18 @@ SPLIT_CODE = "ACr"
 
 def convertMonth(string):
     m = {
-        'janvier': 1,
-        'février': 2,
-        'mars': 3,
-        'avril': 4,
-        'mai': 5,
-        'juin': 6,
-        'juillet': 7,
-        'août': 8,
-        'septembre': 9,
-        'octobre': 10,
-        'novembre': 11,
-        'décembre': 12
-        }
+     'janvier': 1,
+     'février': 2,
+     'mars': 3,
+     'avril': 4,
+     'mai': 5,
+     'juin': 6,
+     'juillet': 7,
+     'août': 8,
+     'septembre': 9,
+     'octobre': 10,
+     'novembre': 11,
+     'décembre': 12}
     return m[string]
 
 
@@ -72,11 +71,11 @@ def html_decode(s):
     NOT remove normal HTML tags like <p>.
     """
     htmlCodes = (
-            ("'", '&#39;'),
-            ('"', '&quot;'),
-            ('>', '&gt;'),
-            ('<', '&lt;'),
-            ('&', '&amp;')
+             ("'", '&#39;'),
+             ('"', '&quot;'),
+             ('>', '&gt;'),
+             ('<', '&lt;'),
+             ('&', '&amp;')
         )
     for code in htmlCodes:
         s = s.replace(code[1], code[0])
@@ -710,7 +709,7 @@ def get_video_url(plugin,
                   download_mode=False,
                   loop=1,
                   **kwargs):
-    
+
     """Get video URL and start video player"""
     resp = urlquick.get(video_url, max_age=-1).text
 
@@ -718,7 +717,7 @@ def get_video_url(plugin,
         video_url = URL_ROOT + re.compile(r'class="trailer item" href="(.+?)"').findall(resp)[0].replace("&amp;", "&")
 
         resp = urlquick.get(video_url, max_age=-1).text
-        video_list = re.compile(r'meta ".+?span class="(.+?) .+?">(.+?)<', re.DOTALL).findall(resp) 
+        video_list = re.compile(r'meta ".+?span class="(.+?) .+?">(.+?)<', re.DOTALL).findall(resp)
 
         list_url = []
         list_q = []
@@ -738,7 +737,7 @@ def get_video_url(plugin,
         resp = urlquick.get(video_url, max_age=-1).text
 
     if 'iframe src="about:blank"' in resp:
-        url_video_resolver = re.compile(r'iframe.+?data-src="(.+?)"').findall(resp)[0] 
+        url_video_resolver = re.compile(r'iframe.+?data-src="(.+?)"').findall(resp)[0]
         if 'youtube' in url_video_resolver:
             video_id = re.compile(
                 r'www.youtube.com/embed/([^/]+)').findall(url_video_resolver)[0]
