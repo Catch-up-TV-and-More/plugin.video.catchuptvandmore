@@ -409,6 +409,10 @@ msgctxt "#30179"
 msgid "Europe, outside FBS"
 msgstr ""
 
+msgctxt "#30180"
+msgid "Video quality"
+msgstr ""
+
 msgctxt "#30192"
 msgid "BEST"
 msgstr ""
