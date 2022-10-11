@@ -13,6 +13,8 @@ import urlquick
 from kodi_six import xbmcgui
 
 from resources.lib import resolver_proxy, web_utils
+
+from resources.lib.addon_utils import Quality
 from resources.lib.menu_utils import item_post_treatment
 from datetime import datetime
 
@@ -61,7 +63,6 @@ def list_videos(plugin, item_id, program_page, **kwargs):
         emission_page = URL_ROOT + program.find(".//a").get('href')
         if program.find(".//span") is not None:
             full_date = re.compile(r"^.*\r?\n.*\r?\n(.*)").findall(program.find(".//span").text)[0].replace(' ', '')
-            #full_date = re.compile(r"^(.*?)à(.*?)$").findall(full_date)
             date_time = datetime.strptime(full_date, "%d/%m/%Yà%Hh%M")
             item.info.date(full_date, "%d/%m/%Yà%Hh%M")
             item.info['plot'] = "Emission de %s" % (date_time.strftime("%HH%M"))
@@ -88,10 +89,15 @@ def get_video_url(plugin, item_id, emission_page, **kwargs):
     definition = []
     for source in json_parser['jwconf']['playlist'][0]['sources']:
         urls.append(source['file'])
-        definition.append(source.get('label').replace('mp4_','') + 'p')
+        definition.append(source.get('label').replace('mp4_', '') + 'p')
 
-    choose_rate = xbmcgui.Dialog().select(Script.localize(30180), definition)
-    video_url = urls[choose_rate]
+    quality = Script.setting.get_string('quality')
+    if quality == Quality.WORST.value:
+        video_url = urls[len(urls) - 1]
+    elif quality == Quality.BEST.value or quality == Quality.DEFAULT.value:
+        video_url = urls[0]
+    else:
+        video_url = urls[xbmcgui.Dialog().select(Script.localize(30180), definition)]
 
     return video_url
 
