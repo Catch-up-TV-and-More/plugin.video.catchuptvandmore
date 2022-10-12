@@ -359,4 +359,12 @@ menu = {
         "enabled": True,
         "order": 123,
     },
+    "weo": {
+        "route": "/resources/lib/channels/fr/weo:list_categories",
+        "label": "Weo",
+        "thumb": "channels/fr/weo.png",
+        "fanart": "channels/fr/weo_fanart.jpg",
+        "enabled": True,
+        "order": 124,
+    },
 }
