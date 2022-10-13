@@ -473,6 +473,7 @@ menu = {
         'label': 'viàATV',
         'thumb': 'channels/fr/viaatv.png',
         'fanart': 'channels/fr/viaatv_fanart.jpg',
+        'xmltv_id': 'C295.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 34
@@ -491,6 +492,7 @@ menu = {
         'label': 'viàLMTv Sarthe',
         'thumb': 'channels/fr/vialmtv.png',
         'fanart': 'channels/fr/vialmtv_fanart.jpg',
+        'xmltv_id': 'C535.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 36
@@ -594,6 +596,7 @@ menu = {
         'label': 'Mont Blanc Live TV',
         'thumb': 'channels/fr/mblivetv.png',
         'fanart': 'channels/fr/mblivetv_fanart.jpg',
+        'xmltv_id': 'C421.api.telerama.fr',
         'm3u_group': 'Satellite/FAI',
         'enabled': False,
         'order': 46
@@ -630,6 +633,7 @@ menu = {
         'label': 'TéléNantes',
         'thumb': 'channels/fr/telenantes.png',
         'fanart': 'channels/fr/telenantes_fanart.jpg',
+        'xmltv_id': 'C491.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 50
@@ -657,6 +661,7 @@ menu = {
         'label': 'TV7 Bordeaux',
         'thumb': 'channels/fr/tv7bordeaux.png',
         'fanart': 'channels/fr/tv7bordeaux_fanart.jpg',
+        'xmltv_id': 'C273.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 53
@@ -684,6 +689,7 @@ menu = {
         'label': 'TVR',
         'thumb': 'channels/fr/tvr.png',
         'fanart': 'channels/fr/tvr_fanart.jpg',
+        'xmltv_id': 'C539.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 56
@@ -693,6 +699,7 @@ menu = {
         'label': 'TVT Val de Loire',
         'thumb': 'channels/fr/tvt.png',
         'fanart': 'channels/fr/tvt_fanart.jpg',
+        'xmltv_id': 'C540.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 57
@@ -785,6 +792,7 @@ menu = {
         'label': 'KTO',
         'thumb': 'channels/fr/kto.png',
         'fanart': 'channels/fr/kto_fanart.jpg',
+        'xmltv_id': 'C110.api.telerama.fr',
         'm3u_group': 'Satellite/FAI',
         'enabled': True,
         'order': 67
