@@ -38,10 +38,8 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_episodes(plugin, item_id, url_category, **kwargs):
-    print('url = %s' % url_category)
     resp = urlquick.get(url_category, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
-    print('root ={}'.format(root))
 
     for element in root.iterfind('.//div[@class="container"]'):
         if element.find('.//div[@class="col-lg-3 col-md-3 col-sm-3"]') is not None:
@@ -54,8 +52,6 @@ def list_episodes(plugin, item_id, url_category, **kwargs):
         detail = episode.find('.//div[@class="emission_preview_container"]')
         picture = re.compile(r'\'(.*?)\'').findall(detail.get('style'))[0]
         item.art['thumb'] = item.art['landscape'] = picture
-        print('detail style = %s' % detail.get('style'))
-        print('detail onclick = %s' % detail.get('onclick'))
 
         video_url = re.compile(r'openVideo\(\'([0-9]+)\'\,').findall(detail.get('onclick'))[0]
         item.set_callback(get_video_url, item_id=item_id, video_url=video_url)
