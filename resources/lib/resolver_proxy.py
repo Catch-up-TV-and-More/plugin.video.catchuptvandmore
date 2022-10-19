@@ -299,7 +299,7 @@ def get_stream_vimeo(plugin,
 
     if download_mode:
         return download.download_video(final_video_url)
-    return final_video_url
+    return get_stream_with_quality(plugin, video_url=final_video_url)
 
 
 # Facebook Part
