@@ -181,7 +181,7 @@ def get_stream_with_quality(plugin,
         stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
         if stream_bitrate_limit > 0:
             item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
-        elif manifest_type == "hls" and Quality.BEST.value != plugin.setting.get_string('quality') and bypass is False:
+        elif manifest_type == "hls" and Quality['BEST'] != plugin.setting.get_string('quality') and bypass is False:
             url, bitrate = M3u8(video_url, headers).get_url_and_bitrate_for_quality()
             if url is None and bitrate is None:
                 return False

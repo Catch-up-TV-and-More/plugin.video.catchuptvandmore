@@ -6,12 +6,6 @@
 
 from __future__ import unicode_literals
 import os
-import sys
-
-if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
-    from enum import Enum
-else:
-    from resources.lib.enum import Enum
 
 # noinspection PyUnresolvedReferences
 from codequick import Script, utils
@@ -20,11 +14,12 @@ import urlquick
 from kodi_six import xbmcgui, xbmcvfs
 
 
-class Quality(Enum):
-    BEST = "0"
-    DEFAULT = "1"
-    DIALOG = "2"
-    WORST = "3"
+Quality = {
+    "BEST": "0",
+    "DEFAULT": "1",
+    "DIALOG": "2",
+    "WORST": "3"
+}
 
 
 def get_item_label(item_id, item_infos={}, append_selected_lang=True):
@@ -88,20 +83,20 @@ def get_quality_YTDL(download_mode=False):
     # If not download mode get the 'quality' setting
     if not download_mode:
         quality = Script.setting.get_string('quality')
-        if quality == Quality.BEST.value:
+        if quality == Quality['BEST']:
             return 3
 
-        if quality == Quality.DEFAULT.value:
+        if quality == Quality['DEFAULT']:
             return 3
 
-        if quality == Quality.DIALOG.value:
+        if quality == Quality['DIALOG']:
             youtube_dl_quality = ['SD', '720p', '1080p', 'Highest Available']
             selected_item = xbmcgui.Dialog().select(
                 Script.localize(30709),
                 youtube_dl_quality)
             return selected_item
 
-        if quality == Quality.WORST.value:
+        if quality == Quality['WORST']:
             return 0
 
         return 3
