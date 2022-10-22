@@ -12,4 +12,4 @@ from codequick import Resolver
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    return 'http://api.new.livestream.com/accounts/27755193/events/8511193/live.m3u8'
+    return 'https://live.zendzend.com/streams/29375_399410/playlist.m3u8'
