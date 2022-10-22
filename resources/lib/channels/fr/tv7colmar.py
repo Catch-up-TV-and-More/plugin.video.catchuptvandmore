@@ -86,3 +86,16 @@ def get_video_url(plugin, url, **kwargs):
         video_url = urls[xbmcgui.Dialog().select(Script.localize(30180), definition)]
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="mpd")
+
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, **kwargs):
+    resp = urlquick.get(URL_ROOT, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
+    root = resp.parse("div", attrs={"class": "HDR_VISIO"})
+    live_url = URL_ROOT + root.get('data-url')+'&mode=html'
+    resp = urlquick.get(live_url, headers=GENERIC_HEADERS, max_age=-1)
+    datas = json.loads(resp.text)
+    video_url = datas['files']['auto']
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="mpd")
