@@ -10,189 +10,150 @@ import json
 from codequick import Listitem, Resolver, Route
 import urlquick
 
-from resources.lib.addon_utils import get_item_media_path
+# noinspection PyUnresolvedReferences
+from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
+from resources.lib.addon_utils import get_item_media_path
 
+CORONA_URL = 'https://corona.channel5.com/shows/'
+BASIS_URL = CORONA_URL + '%s/seasons'
 
-URL_ROOT = 'https://d349g9zuie06uo.cloudfront.net'
-# API My5.tv
+URL_SEASONS = BASIS_URL + '.json'
+URL_EPISODES = BASIS_URL + '/%s/episodes.json'
+FEEDS_API = 'https://feeds-api.channel5.com/collections/%s/concise.json'
 
-URL_LIST_CHANNELS = URL_ROOT + '/isl/api/v1/dataservice/SiteMap?device=my5desktop&$format=json'
+URL_VIEW_ALL = CORONA_URL + 'search.json'
+URL_WATCHABLE = 'https://corona.channel5.com/watchables/search.json'
+IMG_URL = 'https://api-images.channel5.com/otis/images/episode/%s/320x180.jpg'
 
-URL_LIST_ITEMS_OF_CHANNEL = URL_ROOT + "/isl/api/v1/dataservice/Pages('%s')?device=my5desktop&$format=json"
-# channelId
+GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
-URL_PROGRAMS = URL_ROOT + "/isl/api/v1/dataservice/ItemLists('%s')/Items?$expand=Metadata,Images,Ratings,Offers&$select=Slug,CustomId,Id,Title,ShortTitle,ShortDescription,CreatedDate,Images/Id,Images/ImageClass&device=my5desktop&$inlinecount=allpages&$format=json"
-# ListItemId
+feeds_api_params = {
+    'vod_available': 'my5desktop',
+    'friendly': '1'
+}
 
-URL_SEASONS = URL_ROOT + "/isl/api/v1/dataservice/Items('%s')/ChildItems?$expand=Metadata,Images,Ratings,Offers&$select=Slug,CustomId,Id,Title,ShortTitle,ShortDescription,ItemType,ParentId,CreatedDate&device=my5desktop&$format=json"
-# ProgramId
+view_api_params = {
+    'platform': 'my5desktop',
+    'friendly': '1'
+}
 
-URL_VIDEOS = URL_ROOT + "/isl/api/v1/dataservice/Items('%s')/ChildItems?$expand=Metadata,Images,Ratings,Offers&$select=Slug,CustomId,Id,Title,ShortDescription,ItemType,ParentId,CreatedDate,Images/Id,Images/ImageClass&device=my5desktop&$format=json"
-# SeasonId
-
-URL_VIDEO_DATAS = URL_ROOT + "/isl/api/v1/dataservice/Items('%s')?$expand=Offers,Metadata,Images,Rating,Trailers,Trailers/Images&$select=CustomId,Id,Title&device=my5desktop&$format=json"
-
-URL_IMAGES = URL_ROOT + "/isl/api/v1/dataservice/ResizeImage/$value?ImageId='%s'&EntityId='%s'&EntityType='Item'"
 # ImageId, EntityId
 
 
 @Route.register
-def channels(plugin, **kwargs):
-    """
-    List all france.tv channels
-    """
-    # (item_id, label, thumb, fanart)
-    channels = [
-        ('timeline', 'Channel Timeline', 'timeline.png', 'timeline_fanart.jpg'),
-        ('plutotvparanormal', 'Pluto TV Paranormal', 'plutotvparanormal.png', 'plutotvparanormal_fanart.jpg'),
-        ('plutotvretro', 'Pluto TV Retro', 'plutotvretro.png', 'plutotvretro_fanart.jpg'),
-        ('reeltruthcrime', 'Reel Truth Crime', 'reeltruthcrime.png', 'reeltruthcrime_fanart.jpg'),
-        ('five', 'Channel 5', 'five.png', 'five_fanart.jpg'),
-        ('fiveusa', '5 USA', 'fiveusa.png', 'fiveusa_fanart.jpg'),
-        ('fivestar', '5 Star', 'fivestar.png', 'fivestar_fanart.jpg'),
-        ('spike', 'Spike', 'spike.png', 'spike_fanart.jpg'),
-        ('blaze', 'Blaze', 'blaze.png', 'blaze_fanart.jpg'),
-        ('5spike', '5Spike', '5spike.png', '5spike_fanart.jpg'),
-        ('5select', '5Select', '5select.png', '5select_fanart.jpg'),
-        ('bet', 'Channel BET', 'bet.png', 'bet_fanart.jpg'),
-        ('paramount', 'Channel Paramount Network', 'paramount.png', 'paramount_fanart.jpg'),
-        ('pbsamerica', 'Channel PBS America', 'pbsamerica.png', 'pbsamerica_fanart.jpg'),
-        ('realstories', 'Channel Real Stories', 'realstories.png', 'realstories_fanart.jpg'),
-        ('plutotvchristmas', 'Pluto TV Christmas', 'plutotvchristmas.png', 'plutotvchristmas_fanart.jpg'),
-        ('togethertv', 'Channel Together TV', 'togethertv.png', 'togethertv_fanart.jpg'),
-        ('nextbyhot', 'NEXT by HOT', 'nextbyhot.png', 'nextbyhot_fanart.jpg'),
-        ('plutotvdrama', 'PLUTO TV DRAMA', 'plutotvdrama.png', 'plutotvdrama_fanart.jpg'),
-        ('plutotvmovies', 'PLUTO TV MOVIES', 'plutotvmovies.png', 'plutotvmovies_fanart.jpg'),
-        ('plutotvfood', 'PLUTO TV Food', 'plutotvfood.png', 'plutotvfood_fanart.jpg'),
-        ('mastersoffood', 'Masters of Food', 'mastersoffood.png', 'mastersoffood_fanart.jpg'),
-        ('wwe', 'WWE', 'wwe.png', 'wwe_fanart.jpg'),
-        ('smithsonian', 'Smithsonian', 'smithsonian.png', 'smithsonian_fanart.jpg')
-    ]
-
-    for channel_infos in channels:
+def list_categories(plugin, item_id, **kwargs):
+    resp = urlquick.get(FEEDS_API % 'PLC_My5SubGenreBrowsePageSubNav', headers=GENERIC_HEADERS, params=feeds_api_params)
+    root = json.loads(resp.text)
+    for i in range(int(root['total_items'])):
         item = Listitem()
-        item.label = channel_infos[1]
-        item.art["thumb"] = get_item_media_path('channels/uk/' + channel_infos[2])
-        item.art["fanart"] = get_item_media_path('channels/uk/' + channel_infos[3])
-        item.set_callback(list_programs, channel_infos[0])
+        item.label = root['filters']['contents'][i]['title']
+        browse_name = root['filters']['contents'][i]['id']
+        item.set_callback(list_subcategories, item_id=item_id, browse_name=browse_name)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, **kwargs):
-    """
-    Build programs listing
-    """
-    resp = urlquick.get(URL_LIST_CHANNELS)
-    json_parser = json.loads(resp.text)
+def list_subcategories(plugin, item_id, browse_name, **kwargs):
+    resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params)
+    root = json.loads(resp.text)
+    item_number = int(root['total_items'])
 
-    channel_id = None
-    for site_datas in json_parser["value"][0]["ChildPages"]:
-        if 'channels' in site_datas["Path"]:
-            for channel_datas in site_datas["ChildPages"]:
-                if item_id in channel_datas["Path"]:
-                    channel_id = channel_datas["Id"]
-
-    if channel_id is not None:
-        resp2 = urlquick.get(URL_LIST_ITEMS_OF_CHANNEL % channel_id)
-        json_parser2 = json.loads(resp2.text)
-
-        list_items_id = json_parser2["Blocks"][0]["Entries"][0]["ItemListId"]
-
-        resp3 = urlquick.get(URL_PROGRAMS % list_items_id)
-        json_parser3 = json.loads(resp3.text)
-
-        for program_datas in json_parser3["value"]:
-            program_title = program_datas["Title"]
-            program_image = URL_IMAGES % (program_datas["Images"][0]["Id"],
-                                          program_datas["Id"])
-            program_plot = program_datas["ShortDescription"]
-            program_id = program_datas["Id"]
-
+    if root['filters']['type'] == 'Collection':
+        for i in range(item_number):
             item = Listitem()
-            item.label = program_title
-            item.art['thumb'] = item.art['landscape'] = program_image
-            item.info['plot'] = program_plot
-            item.set_callback(
-                list_seasons, item_id=item_id, program_id=program_id)
+            item.label = root['filters']['contents'][i]['title']
+            browse_name = root['filters']['contents'][i]['id']
+            item.set_callback(list_collections, item_id=item_id, browse_name=browse_name,)
+            item_post_treatment(item)
+            yield item
+    else:
+        ids = root['filters']['ids']
+        watchable_params = '?limit=%s10&offset=0s&platform=my5desktop&friendly=1' % str(item_number)
+        for i in range(item_number):
+            watchable_params = watchable_params + '&ids[]=%s' % ids[i]
+        resp = urlquick.get(URL_WATCHABLE % browse_name, headers=GENERIC_HEADERS)
+
+        for watchable in root['watchables']:
+            item = Listitem()
+            item.Label = watchable['sh_title']
+            item.info['plot'] = watchable['title']
+            item.art['thumb'] = item.art['landscape'] = IMG_URL % watchable['id']
+            fname = watchable['f_name']
+            season_f_name = watchable['season_f_name']
+
+            item.set_callback(get_video_url, item_id=item_id, fname=fname, season_f_name=season_f_name)
+            yield item
+
+
+@Route.register
+def list_watchables(plugin, itemid, browse_name, offset, item_number, ids):
+    return False
+
+
+@Route.register
+def list_collections(plugin, item_id, browse_name, offset, **kwargs):
+    resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params)
+    root = json.loads(resp.text)
+    subgenre = root['filters']['vod_subgenres']
+    view_all_params = {
+        'platform': 'my5desktop',
+        'friendly': '1',
+        'limit': '10',
+        'offset': offset,
+        'vod_subgenres[]': subgenre
+    }
+    resp = urlquick.get(URL_VIEW_ALL, headers=GENERIC_HEADERS, params=view_all_params)
+    root = json.loads(resp.text)
+
+    for emission in root['shows']:
+        item = Listitem()
+        item.label = emission['title']
+        item.info['plot'] = emission['s_desc']
+        fname = emission['f_name']
+        item.set_callback(list_seasons, item_id=item_id, fname=fname)
+        item_post_treatment(item)
+        yield item
+
+    if 'next_page_url' in root:
+        offset = str(int(offset) + int(view_all_params['limit']))
+        yield Listitem.next_page(item_id=item_id, browse_name=browse_name, offset=offset)
+
+
+@Route.register
+def list_seasons(plugin, item_id, fname, **kwargs):
+    resp = urlquick.get(URL_SEASONS % fname, headers=GENERIC_HEADERS, params=view_api_params)
+    if resp.ok:
+        root = json.loads(resp.text)
+
+        for season in root['seasons']:
+            item = Listitem()
+            season_number = season['seasonNumber']
+            item.label = 'Season ' + season_number
+            item.set_callback(list_episodes, item_id=item_id, fname=fname, season_number=season_number)
             item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_seasons(plugin, item_id, program_id, **kwargs):
+def list_episodes(plugin, item_id, fname, season_number, **kwargs):
+    resp = urlquick.get(URL_EPISODES % (fname, season_number), headers=GENERIC_HEADERS, params=view_api_params)
+    root = json.loads(resp.text)
 
-    resp = urlquick.get(URL_SEASONS % program_id)
-    json_parser = json.loads(resp.text)
-
-    for season_datas in json_parser["value"]:
-        season_title = season_datas["Title"]
-        season_plot = season_datas["ShortDescription"]
-        season_id = season_datas["Id"]
-
+    for episode in root['episodes']:
         item = Listitem()
-        item.label = season_title
-        item.info['plot'] = season_plot
-        item.set_callback(list_videos, item_id=item_id, season_id=season_id)
+        picture_id = episode['id']
+        item.art['thumb'] = item.art['landscape'] = IMG_URL % picture_id
+        item.label = episode['title']
+        item.info['plot'] = episode['s_desc']
+        season_f_name = episode['sea_f_name']
+        fname = episode['f_name']
+        item.set_callback(get_video_url, item_id=item_id, fname=fname, season_f_name=season_f_name)
         item_post_treatment(item)
         yield item
 
 
-@Route.register
-def list_videos(plugin, item_id, season_id, **kwargs):
-
-    resp = urlquick.get(URL_VIDEOS % season_id)
-    json_parser = json.loads(resp.text)
-
-    for video_datas in json_parser["value"]:
-        video_title = video_datas["Title"]
-        video_image = URL_IMAGES % (video_datas["Images"][0]["Id"],
-                                    video_datas["Id"])
-        video_plot = video_datas["ShortDescription"]
-        video_id = video_datas["Id"]
-
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
-        item.info['plot'] = video_plot
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_id=video_id)
-        item_post_treatment(item, is_playable=True, is_downloadable=False)
-        yield item
-
-
 @Resolver.register
-def get_video_url(plugin, item_id, video_id, **kwargs):
-
-    # To Uncomment
-    # resp = urlquick.get(URL_VIDEO_DATAS % video_id)
-    # json_parser = json.loads(resp.text)
-
-    # stream_id = json_parser["CustomId"]
+def get_video_url(plugin, item_id, f_name, season_f_name, **kwargs):
     return False
-    # TODO get information of MPD and DRM
-
-    # https://cassie.channel5.com/api/v2/media/my5desktop/C5266140007.json?timestamp=1556276765&auth=T94kIINU2_4yHswfsXfzzyD6IYjCOGr8DvLXQ_q1QkQ
-    # StreamId C5266140007
-    # Get/Generate timestamp
-    # Get/Generate Auth
-    # Try to understand the response (maybe cypher) - already test to decode base64
-
-    # Subtitle
-    # https://akasubs.akamaized.net/webvtt/C5266140007/C5266140007A.vtt
-    # StreamId + StreamId+"A"
-
-    # Stream video
-    # https://akadash0.akamaized.net/cenc/C5266140007/C5266140007A/20190423155330/C5266140007A.mpd
-    # StreamId + StreamId+"A"
-    # Get/Generate the value (20190423155330)
-
-    # DRM Licence
-    # https://cassie.channel5.com/api/v2/licences/widevine/75/C5266140007?expiry=1556363165&tag=66616664383363653633396536393661366238333864333036396435306664343639306139303930
-    # StreamId
-    # Get/Generate Expiry
-    # Get/Generate Tag

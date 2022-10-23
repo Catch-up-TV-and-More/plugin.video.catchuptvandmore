@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta08" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta09" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -92,6 +92,22 @@ Project: Remove an useless file
 [FR - Mytf1] Fix US replay (PR #972 issue #917) thanks @Arias800
 [FR - WEO] Use the quality setting
 [PE - ENLACE] Use the quality setting
+[FR - LACHAINENORMANDE] La chaîne normande is BFM NORMANDIE now
+[FR - TVT] Add replay
+[FR] Add some TV Guide
+[FR - TNTV] Add replay
+[FR - TLC] Add replay
+[Project] Use get_stream_with_quality in Vimeo helper
+[FR - TVVENDEE] Add replay
+[FR - TLC] Remove debug traces
+[FR - BIPTV] Add replay
+[FR - TELENANTES] Add replay
+[UK - CHANNEL4] Fix replay when there is no season
+[FR - TV7COLMAR] Add replay
+[FR - TV7COLMAR] Add live
+[UK - MY5] Add site scraping
+[PROJECT] Remove dependency on Enum
+[BE] Update live links for ATV, ROBTV, TVL and TVOOST (PR #975) thanks @penos64
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

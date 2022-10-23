@@ -11,7 +11,7 @@ from codequick import Resolver
 
 from resources.lib import resolver_proxy
 
-URL_LIVE_STREAM = 'http://api.new.livestream.com/accounts/27755193/events/8452381/live.m3u8'
+URL_LIVE_STREAM = 'https://live.zendzend.com/streams/29375_107244/1080n/index.m3u8'
 
 
 @Resolver.register

@@ -17,7 +17,7 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://www.robtv.be'
 
-URL_LIVE = 'https://api.new.livestream.com/accounts/27755193/events/8462344/live.m3u8'
+URL_LIVE = 'https://live.zendzend.com/streams/29375_395477/1080n/index.m3u8'
 
 
 @Resolver.register
