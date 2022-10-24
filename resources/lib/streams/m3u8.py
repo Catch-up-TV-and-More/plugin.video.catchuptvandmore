@@ -219,7 +219,7 @@ class M3u8(object):
                                                  % (x.resolution, x.bitrate), self.media_streams))
         all_videos_urls = list(map(lambda x: x.url, self.media_streams))
 
-        if desired_quality == Quality['DIALOG']
+        if desired_quality == Quality['DIALOG']:
             selected_item = xbmcgui.Dialog().select(
                 Script.localize(30709),
                 all_video_qualities)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta09" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta10" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -108,6 +108,7 @@ Project: Remove an useless file
 [UK - MY5] Add site scraping
 [PROJECT] Remove dependency on Enum
 [BE] Update live links for ATV, ROBTV, TVL and TVOOST (PR #975) thanks @penos64
+[PROJECT] Fix some forgotten dependencies on Enum
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
