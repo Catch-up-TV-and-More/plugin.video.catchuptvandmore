@@ -76,11 +76,11 @@ def get_video_url(plugin, url, **kwargs):
         urls.append(datas['files'][source])
 
     quality = Script.setting.get_string('quality')
-    if quality == Quality.WORST.value:
+    if quality == Quality['WORST']:
         video_url = urls[len(urls) - 1]
-    elif quality == Quality.BEST.value:
+    elif quality == Quality['BEST']:
         video_url = urls[1]
-    elif quality == Quality.DEFAULT.value:
+    elif quality == Quality['DEFAULT']:
         video_url = urls[0]
     else:
         video_url = urls[xbmcgui.Dialog().select(Script.localize(30180), definition)]

@@ -261,7 +261,7 @@ def get_live_url(plugin, item_id, **kwargs):
         root = lives_stream_jsonparser["stream"].split('master.m3u8')[0]
 
     lines = m3u8_video_auto.text.splitlines()
-    if DESIRED_QUALITY == Quality.DIALOG.value:
+    if DESIRED_QUALITY == Quality['DIALOG']:
         all_datas_videos_quality = []
         all_datas_videos_path = []
         for k in range(0, len(lines) - 1):
@@ -280,7 +280,7 @@ def get_live_url(plugin, item_id, **kwargs):
         return all_datas_videos_path[selected_item]
 
     url = False
-    if DESIRED_QUALITY == Quality.BEST.value:
+    if DESIRED_QUALITY == Quality['BEST']:
         # Last video in the Best
         for k in range(0, len(lines) - 1):
             if 'RESOLUTION=' in lines[k]:
