@@ -128,7 +128,7 @@ def play_video(plugin, url):
         resp2 = urlquick.get("https:" + frame_url)
 
         quality = Script.setting.get_string('quality')
-        if quality == Quality.WORST.value:
+        if quality == Quality['WORST']:
             mp4_videos = PATTERN_VIDEO_WORST.findall(resp2.text)
         else:
             mp4_videos = PATTERN_VIDEO_BEST.findall(resp2.text)

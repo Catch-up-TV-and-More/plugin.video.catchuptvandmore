@@ -198,7 +198,7 @@ def get_video_url(plugin,
                 url_hd = url[1]
             url_default = url[1]
 
-        if DESIRED_QUALITY == Quality.DIALOG.value:
+        if DESIRED_QUALITY == Quality['DIALOG']:
             items = []
             for url in urls:
                 items.append(url[0])

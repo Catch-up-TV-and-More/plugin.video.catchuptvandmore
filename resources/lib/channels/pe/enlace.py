@@ -34,9 +34,9 @@ def get_live_url(plugin, item_id, **kwargs):
     }
 
     quality = Script.setting.get_string('quality')
-    if quality == Quality.WORST.value:
+    if quality == Quality['WORST']:
         video_url = rate[0]
-    elif quality == Quality.BEST.value or quality == Quality.DEFAULT.value:
+    elif quality == Quality['BEST'] or quality == Quality['DEFAULT']:
         video_url = rate[len(rate) - 1]
     else:
         video_url = rate[xbmcgui.Dialog().select(Script.localize(30180), ["160p", "360p", "480p"])]

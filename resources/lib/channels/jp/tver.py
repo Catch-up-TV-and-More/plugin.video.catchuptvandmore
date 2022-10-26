@@ -18,7 +18,7 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_REPLAY_SERVICE = 'https://platform-api.tver.jp/v2/api/platform_users/browser/create'
 
-URL_REPLAY_PROGRAM = 'https://platform-api.tver.jp/service/api/v1/callSearch?platform_uid={}&platform_token={}'
+URL_REPLAY_PROGRAM = 'https://platform-api.tver.jp/service/api/v1/callTagSearch/{}?platform_uid={}&platform_token={}'
 
 URL_VIDEOS_REPLAY = 'https://statics.tver.jp/content/{}/{}.json?v=v2.0.0'
 
@@ -29,6 +29,21 @@ URL_BRIGHTCOVE_POLICY_KEY = 'http://players.brightcove.net/%s/%s_default/index.m
 
 URL_BRIGHTCOVE_VIDEO_JSON = 'https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s%s'
 # AccountId, VideoId
+
+BROADCASTER_ID = {
+    'abc': 'abc',
+    'cx': 'fns',
+    'ex': 'exnetwork',
+    'ktv': 'ktv',
+    'mbs': 'mbs',
+    'nhk': 'nhknet',
+    'ntv': 'nns',
+    'tbs': 'jnn',
+    'tver': 'tver',
+    'tvo': 'tvo',
+    'tx': 'txn',
+    'ytv': 'ytv'
+}
 
 BROADCASTER = {
     'abc': ['ABCテレビ'],
@@ -53,7 +68,7 @@ def list_categories(plugin, item_id, **kwargs):
     data = resp.json()
     uid = data['result']['platform_uid']
     token = data['result']['platform_token']
-    resp = urlquick.get(URL_REPLAY_PROGRAM.format(uid, token), headers={'x-tver-platform-type': 'web'})
+    resp = urlquick.get(URL_REPLAY_PROGRAM.format(BROADCASTER_ID[item_id], uid, token), headers={'x-tver-platform-type': 'web'})
     programs = resp.json()
 
     list_program = []

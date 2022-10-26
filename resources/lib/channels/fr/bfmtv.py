@@ -165,7 +165,7 @@ def get_video_url(plugin,
 
     video_streams = json_parser['video']['medias']
     final_video_url = ''
-    if DESIRED_QUALITY == Quality.DIALOG.value:
+    if DESIRED_QUALITY == Quality['DIALOG']:
         all_datas_videos_quality = []
         all_datas_videos_path = []
 
@@ -185,7 +185,7 @@ def get_video_url(plugin,
         else:
             return False
 
-    elif DESIRED_QUALITY == Quality.BEST.value:
+    elif DESIRED_QUALITY == Quality['BEST']:
         # GET LAST NODE (VIDEO BEST QUALITY)
         url_best_quality = ''
         for datas in video_streams:
