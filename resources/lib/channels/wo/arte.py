@@ -23,6 +23,7 @@ from resources.lib.menu_utils import item_post_treatment
 #   Most viewed
 #   Add some videos Arte Concerts
 
+URL_ARTE = 'https://www.arte.tv'
 URL_ROOT = 'https://www.arte.tv/%s/'
 # Language
 
@@ -71,11 +72,11 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
     url = URL_ROOT % DESIRED_LANGUAGE.lower()
-    return list_zone(plugin, item_id, url)
+    return list_zone(plugin, url)
 
 
 @Route.register
-def list_zone(plugin, item_id, url):
+def list_zone(plugin, url):
     j = extract_json_from_html(url)
     zones = j['props']['pageProps']['initialPage']['zones']
     for zone in zones:
@@ -90,16 +91,13 @@ def list_zone(plugin, item_id, url):
         item.label = zone['title']
         item.info['plot'] = zone['description']
 
-        item.set_callback(list_data,
-                          item_id=item_id,
-                          url=url,
-                          zone_id=zone['id'])
+        item.set_callback(list_data, url=url, zone_id=zone['id'])
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_data(plugin, item_id, url, zone_id):
+def list_data(plugin, url, zone_id):
     j = extract_json_from_html(url)
     zones = j['props']['pageProps']['initialPage']['zones']
     for zone in zones:
@@ -145,31 +143,19 @@ def list_data(plugin, item_id, url, zone_id):
             pass
 
         if data['kind']['code'].lower() in ['shows', 'show']:
-            item.set_callback(get_video_url, item_id=item_id, video_id=data['programId'])
-            item_post_treatment(
-                item,
-                is_playable=True,
-                is_downloadable=True)
+            item.set_callback(get_video_url, video_id=data['programId'])
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
         else:
             # Assume it's a folder
-            item.set_callback(list_zone,
-                              item_id=item_id,
-                              url=data['url'])
+            item.set_callback(list_zone, url=URL_ARTE + data['url'])
             item_post_treatment(item)
         yield item
 
 
 @Resolver.register
-def get_video_url(plugin,
-                  item_id,
-                  video_id,
-                  download_mode=False,
-                  **kwargs):
+def get_video_url(plugin, video_id, download_mode=False, **kwargs):
 
-    return resolver_proxy.get_arte_video_stream(plugin,
-                                                DESIRED_LANGUAGE.lower(),
-                                                video_id,
-                                                download_mode)
+    return resolver_proxy.get_arte_video_stream(plugin, DESIRED_LANGUAGE.lower(), video_id, download_mode)
 
 
 @Resolver.register
