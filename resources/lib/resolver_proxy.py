@@ -349,7 +349,6 @@ def get_brightcove_video_json(plugin,
     license_url = None
     is_drm = False
 
-    print("json_parser = %s" % json_parser)
     if 'sources' in json_parser:
         for url in json_parser["sources"]:
             # Workaroud Inputstream adative can not some types of AES crypted streams
