@@ -247,7 +247,7 @@ def get_video_url(plugin, item_id, video_slug, download_mode=False, **kwargs):
     data_player = PATTERN_PLAYER.findall(resp.text)[0]
     data_video_id = "ref:%s" % PATTERN_VIDEO_ID.findall(resp.text)[0]
 
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, None, download_mode)
 
 
 @Resolver.register

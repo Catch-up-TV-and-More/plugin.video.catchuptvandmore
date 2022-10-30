@@ -107,7 +107,7 @@ def list_videos(plugin, page, token, atts, **kwargs):
         video_desc = video.find(".//h3").find(".//a")
         item.label = video_desc.get('title')
         video_url = video_desc.get('href')
-        item.set_callback(get_video_url, video_url=video_url)
+        item.set_callback(get_video_url, video_url=video_url, is_playable=True, is_downloadable=True)
         yield item
 
     if json_parser['td_hide_next'] is False:
@@ -115,7 +115,7 @@ def list_videos(plugin, page, token, atts, **kwargs):
 
 
 @Resolver.register
-def get_video_url(plugin, video_url, **kwargs):
+def get_video_url(plugin, video_url, download_mode=False, **kwargs):
     resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
 
@@ -129,7 +129,7 @@ def get_video_url(plugin, video_url, **kwargs):
     data_account = player.get('data-account')
     data_player = player.get('data-player')
     data_video_id = player.get('data-video-id')
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, None, download_mode)
 
 
 @Resolver.register
