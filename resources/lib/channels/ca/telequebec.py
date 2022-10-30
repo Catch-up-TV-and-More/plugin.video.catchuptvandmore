@@ -219,8 +219,7 @@ def get_video_url(plugin,
     data_account = json_parser2["data"]["stream"]["video_provider_details"]["account_id"]
     data_player = 'default'
     data_video_id = json_parser2["data"]["stream"]["url"]
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account,
-                                                    data_player, data_video_id)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, None, download_mode)
 
 
 @Resolver.register

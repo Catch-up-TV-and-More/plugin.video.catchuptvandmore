@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 import re
 from builtins import str
+import base64
 
 from codequick import Listitem, Resolver, Route, Script
 import urlquick
@@ -17,8 +18,8 @@ from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
 
 
-URL_ROOT = "https://www.tntv.pf/"
-URL_API = URL_ROOT + 'tntv/wp-admin/admin-ajax.php'
+URL_ROOT = "https://www.tntv.pf"
+URL_API = URL_ROOT + "/tntv/wp-admin/admin-ajax.php"
 URL_LIVE = URL_ROOT + "/direct"
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
@@ -30,58 +31,62 @@ def list_categories(plugin, item_id, **kwargs):
     root = resp.parse()
     duplicate = []
 
-    for liste in root.iterfind(".//li"):
-        for category in liste.iterfind(".//a"):
-            if category.get('href') is not None:
-                program = category.get('href')
-                if 'category/programme' in program:
-                    category_name = category.find(".//div[@class='tdb-menu-item-text']").text
-                    if category_name not in duplicate:
-                        duplicate.append(category_name)
-                        item = Listitem()
-                        item.label = category.find(".//div[@class='tdb-menu-item-text']").text
-                        item.set_callback(list_subcategories, item_id=item_id, program=liste)
-                        item_post_treatment(item)
-                        yield item
+    for subject in root.iterfind(".//li"):
+        if subject.get('class') is not None and 'taxonomy' in subject.get('class'):
+            for category in subject.findall(".//a"):
+                if category.get('href') is not None:
+                    program = category.get('href')
+                    if 'category/programme' in program:
+                        category_name = category.find(".//div[@class='tdb-menu-item-text']").text
+                        if category_name not in duplicate:
+                            duplicate.append(category_name)
+                            item = Listitem()
+                            item.label = category.find(".//div[@class='tdb-menu-item-text']").text
+                            item.set_callback(list_subcategories, subject=subject)
+                            item_post_treatment(item)
+                            yield item
 
 
 @Route.register
-def list_subcategories(plugin, item_id, program, **kwargs):
-    submenu = program.find(".//ul[@class='sub-menu']")
-    for menu in submenu.iterfind(".//li"):
+def list_subcategories(plugin, subject, **kwargs):
+    for submenu in subject.find(".//ul[@class='sub-menu']").iterfind(".//li"):
+        submenu_url = submenu.find(".//a").get('href')
+        if submenu_url[0] == '/':
+            submenu_url = URL_ROOT + submenu_url
+
+        sub_page = urlquick.get(submenu_url, headers=GENERIC_HEADERS, max_age=-1)
+        sub_page_text = sub_page.text
+        picture_url = re.compile(r'property\=\"og\:image\" content\=\"(.*?)\"').findall(sub_page_text)[0]
+        for defered_script in sub_page.parse().iterfind('.//script'):
+            script = defered_script.get('src')
+            if script is not None and 'data:text/javascript;base64,' in script:
+                coded_script = re.compile(r'data:text\/[^;]+;base64,([^"]+)$').findall(script)[0]
+                decoded_script = base64.b64decode(coded_script).decode("utf-8")
+                if 'tdBlockNonce' in decoded_script:
+                    token = re.compile(r'tdBlockNonce\=\"(.*?)\"').findall(decoded_script)[0]
+                if 'block_tdi_84.atts' in decoded_script:
+                    atts = re.compile(r'block\_tdi\_84\.atts \= \'\{(.*?)\}\'').findall(decoded_script)[0].replace('+', ' ')
+
         item = Listitem()
-        menu_url = menu.find(".//a").get('href')
-        if menu_url[0] == '/':
-            menu_url = URL_ROOT + menu_url
-        sub_page = urlquick.get(menu_url, headers=GENERIC_HEADERS).text
-        picture_url = re.compile(r'property\=\"og\:image\" content\=\"(.*?)\"').findall(sub_page)[0]
         item.art['thumb'] = item.art['landscape'] = picture_url
-        item.label = menu.find(".//div").text
-        item.set_callback(list_videos, item_id=item_id, menu_url=menu_url, page='1')
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        item.label = submenu.find(".//div").text
+        item.set_callback(list_videos, page='1', token=token, atts=atts)
+        item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, menu_url, page, **kwargs):
-    API_HEADERS = {
-        'User-Agent': 'Mozilla',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Origin': URL_ROOT,
-        'Referer': menu_url,
-    }
-
+def list_videos(plugin, page, token, atts, **kwargs):
     data = {
+        'td_atts': "{" + atts + "}",
         'action': 'td_ajax_block',
         'td_block_id': 'tdi_84',
         'td_column_number': '3',
         'td_current_page': page,
         'block_type': 'tdb_single_related',
-        'td_magic_token': '07b55c8f0f',
         'td_filter_value': '',
-        'td_user_action': ''
+        'td_user_action': '',
+        'td_magic_token': token,
     }
 
     params = {
@@ -89,7 +94,7 @@ def list_videos(plugin, item_id, menu_url, page, **kwargs):
         'v': '12',
     }
 
-    resp = urlquick.post(URL_API, headers=API_HEADERS, params=params, data=data, max_age=-1)
+    resp = urlquick.post(URL_API, headers=GENERIC_HEADERS, params=params, data=data, max_age=-1)
     json_parser = json.loads(resp.text)
     root = htmlement.fromstring(json_parser['td_data'])
 
@@ -102,15 +107,15 @@ def list_videos(plugin, item_id, menu_url, page, **kwargs):
         video_desc = video.find(".//h3").find(".//a")
         item.label = video_desc.get('title')
         video_url = video_desc.get('href')
-        item.set_callback(get_video_url, item_id=item_id, video_url=video_url)
+        item.set_callback(get_video_url, video_url=video_url, is_playable=True, is_downloadable=True)
         yield item
 
     if json_parser['td_hide_next'] is False:
-        yield Listitem.next_page(item_id=item_id, menu_url=menu_url, page=str(int(page) + 1))
+        yield Listitem.next_page(page=str(int(page) + 1), token=token, atts=atts)
 
 
 @Resolver.register
-def get_video_url(plugin, item_id, video_url, **kwargs):
+def get_video_url(plugin, video_url, download_mode=False, **kwargs):
     resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
 
@@ -124,7 +129,7 @@ def get_video_url(plugin, item_id, video_url, **kwargs):
     data_account = player.get('data-account')
     data_player = player.get('data-player')
     data_video_id = player.get('data-video-id')
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, None, download_mode)
 
 
 @Resolver.register

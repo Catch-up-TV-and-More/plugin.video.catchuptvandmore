@@ -99,12 +99,12 @@ def list_episodes(plugin, item_id, program_title, programs, **kwargs):
             data = resp.json()
             item.info['plot'] = data['description']
             item.set_callback(get_video_url, data)
-            item_post_treatment(item)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
 
 @Resolver.register
-def get_video_url(plugin, data, **kwargs):
+def get_video_url(plugin, data, download_mode=False, **kwargs):
 
     if 'videoID' in data['video']:
         data_video = data['video']['videoID']
@@ -117,4 +117,4 @@ def get_video_url(plugin, data, **kwargs):
 
     data_video_id = ref + data_video
 
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, None, download_mode)
