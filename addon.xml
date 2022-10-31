@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta10" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta11" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -109,6 +109,17 @@ Project: Remove an useless file
 [PROJECT] Remove dependency on Enum
 [BE] Update live links for ATV, ROBTV, TVL and TVOOST (PR #975) thanks @penos64
 [PROJECT] Fix some forgotten dependencies on Enum
+[JP - TVER] Fix API URL (issue #976) thanks @Jelena
+[FR - TNTV] Fix list of videos in replay
+[PROJECT] Remove debug trace
+[PROJECT] Enable download mode in replay using Brightcove not drmed videos
+[WO - ARTE] Fix folders URL in replay (issue #980)
+[FR - TV78] Add live
+[CN - CCTV] Disable non-working streams
+[FR - ALSACE20] Remove replay item and file
+[FR - TV78] Add replay
+[PROJECT] Uniformize the country sorting
+[FR - PARAMOUNTCHANNELFR] Remove since the site is down
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

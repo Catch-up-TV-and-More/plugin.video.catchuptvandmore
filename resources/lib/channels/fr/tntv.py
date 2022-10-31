@@ -123,7 +123,7 @@ def get_video_url(plugin, video_url, download_mode=False, **kwargs):
         if player.get('lazy') is None:
             video_id = re.compile(r'embed\/\?feature').findall(player.get('src'))
             if len(video_id) > 0:
-                return resolver_proxy.get_stream_youtube(plugin, video_id)
+                return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
 
     player = root.find('.//video-js')
     data_account = player.get('data-account')
