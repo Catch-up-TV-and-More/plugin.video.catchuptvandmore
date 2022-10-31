@@ -82,7 +82,7 @@ def get_video_url(plugin, url, download_mode=False, **kwargs):
     complete_url = root.find('.//iframe[@itemprop="video"]').get('src')
     video_id = re.compile('embed\/(.*?)\?rel').findall(complete_url)[0]
 
-    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode=False)
+    return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
 
 
 @Resolver.register
