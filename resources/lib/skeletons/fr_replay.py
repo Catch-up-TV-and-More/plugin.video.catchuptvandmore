@@ -390,13 +390,5 @@ menu = {
         "fanart": "channels/fr/jone_fanart.jpg",
         "enabled": True,
         "order": 46,
-    },
-    "ouatchtv": {
-        "route": "/resources/lib/channels/fr/ouatchtv:list_programs",
-        "label": "Ouatch TV",
-        "thumb": "channels/fr/ouatchtv.png",
-        "fanart": "channels/fr/ouatchtv_fanart.jpg",
-        "enabled": False,
-        "order": 51,
-    },
+    }
 }
