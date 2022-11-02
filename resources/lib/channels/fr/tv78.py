@@ -69,7 +69,7 @@ def list_videos(plugin, url, **kwargs):
             url = emission_.get('href')
             item.label = emission_.text
             item.info['plot'] = emission.find('.//div[@class="post-description"]').find('.//p').text
-            item.set_callback(get_video_url, url)
+            item.set_callback(get_video_url, url=url)
             item_post_treatment(item, is_playable=True, is_downloadable=True)
             yield item
 
