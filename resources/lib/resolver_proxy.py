@@ -135,7 +135,8 @@ def get_stream_with_quality(plugin,
                             append_query_string=False,
                             verify=True,
                             subtitles=None,
-                            bypass=False):
+                            bypass=False,
+                            workaround=None):
 
     """ Returns the stream for the bitrate or the requested quality.
 
@@ -147,7 +148,8 @@ def get_stream_with_quality(plugin,
     :param bool map_audio:              Map audio streams
     :param bool verify:                 verify ssl?
     :param str subtitles:               subtitles url
-    :param bool bypass                  use IA to read stream with only one resolution
+    :param bool bypass:                 use IA to read stream with only one resolution
+    :param str workaround:              workaround an inpustream adaptive bug for live split in chapters (see IA issue #1066)
 
     :return: An item for the stream
     :rtype: Listitem
@@ -173,6 +175,9 @@ def get_stream_with_quality(plugin,
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     item.property["inputstream.adaptive.manifest_type"] = manifest_type
+    if workaround is not None:
+        item.property['ResumeTime'] = '43200'  # 12 hours buffer, can be changed if not enough
+        item.property['TotalTime'] = workaround
 
     # Useless with Kodi 20 and adaptive stream.
     # IA detect the bandwidth and choose the right stream iself
