@@ -14,7 +14,7 @@ from codequick import Route, Resolver, Listitem, utils, Script
 from kodi_six import xbmcgui, xbmcplugin
 import urlquick
 
-from resources.lib import web_utils
+from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
@@ -266,24 +266,13 @@ def get_video_url(plugin,
         xbmcgui.Dialog().ok('Info', plugin.localize(30603))
         return False
 
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
-
-    item = Listitem()
-    item.path = json_parser['delivery']['url']
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    video_url = json_parser['delivery']['url']
     try:
-        item.property['inputstream.adaptive.license_key'] = json_parser['delivery']['drm-server']
+        license_url = json_parser['delivery']['drm-server']
     except Exception:
-        item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
+        license_url = URL_LICENCE_KEY % video_id
 
-    return item
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url)
 
 
 @Resolver.register
@@ -297,18 +286,11 @@ def get_live_url(plugin, item_id, **kwargs):
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
+    video_url = json_parser['delivery']['url']
+    license_url = URL_LICENCE_KEY % video_id
+    if video_id == 'L_TF1':
+        workaround = '1'
+    else:
+        workaround = None
 
-    item = Listitem()
-    item.path = json_parser['delivery']['url']
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % video_id
-
-    return item
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, workaround=workaround)
