@@ -74,7 +74,7 @@ def list_sub_categories(plugin, item_id, category_filter_argument, **kwargs):
     json_parser = json.loads(resp.text)
 
     for category in json_parser["components"][0]["filters"]:
-        if category_filter_argument in category['filterArgument']:
+        if category['filterArgument'] and category_filter_argument in category['filterArgument']:
             for sub_category_datas in category['options']:
                 sub_category_name = sub_category_datas['display']
                 sub_category_value = ''
