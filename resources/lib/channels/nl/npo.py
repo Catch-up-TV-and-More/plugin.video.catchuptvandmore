@@ -56,7 +56,7 @@ def list_categories(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_CATEGORIES % API_KEY)
     json_parser = json.loads(resp.text)
 
-    for category in json_parser["components"][0]["filters"]:
+    for category in json_parser['components'][0]['filters']:
         category_name = category['title']
         category_filter_argument = category['filterArgument']
 
@@ -72,14 +72,14 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_sub_categories(plugin, item_id, category_filter_argument, **kwargs):
-
     resp = urlquick.get(URL_CATEGORIES % API_KEY)
     json_parser = json.loads(resp.text)
 
-    for category in json_parser["components"][0]["filters"]:
+    for category in json_parser['components'][0]['filters']:
         if category['filterArgument'] and category_filter_argument in category['filterArgument']:
             for sub_category_datas in category['options']:
                 sub_category_name = sub_category_datas['display']
+                
                 sub_category_value = ''
                 if sub_category_datas['value'] is not None:
                     sub_category_value = sub_category_datas['value']
@@ -104,15 +104,15 @@ def list_programs(plugin, item_id, category_filter_argument,
                         (category_filter_argument, sub_category_value, page))
     json_parser = json.loads(resp.text)
 
-    for program_datas in json_parser["components"][1]["data"]["items"]:
-
-        program_title = program_datas["title"]
-        if 'header' in program_datas["images"]:
-            program_image = URL_IMAGE % program_datas["images"]["header"]["id"]
-        else:
-            program_image = ''
-        program_plot = program_datas["description"]
-        program_url = program_datas["_links"]["page"]["href"]
+    for program_datas in json_parser['components'][1]['data']['items']:
+        program_title = program_datas['title']
+        
+        program_image = ''
+        if 'header' in program_datas['images']:
+            program_image = URL_IMAGE % program_datas['images']['header']['id']
+        
+        program_plot = program_datas['description']
+        program_url = program_datas['_links']['page']['href']
 
         item = Listitem()
         item.label = program_title
@@ -126,6 +126,7 @@ def list_programs(plugin, item_id, category_filter_argument,
         else:
             item.set_callback(
                 list_videos_episodes, item_id=item_id, program_url=program_url)
+        
         item_post_treatment(item)
         yield item
 
@@ -138,19 +139,19 @@ def list_programs(plugin, item_id, category_filter_argument,
 
 @Route.register
 def list_videos_episodes(plugin, item_id, program_url, **kwargs):
-
     resp = urlquick.get(program_url + '?ApiKey=%s' % API_KEY)
     json_parser = json.loads(resp.text)
 
-    video_datas = json_parser["components"][0]["episode"]
-    video_title = video_datas["title"]
-    if 'header' in video_datas["images"]:
-        video_image = URL_IMAGE % video_datas["images"]["header"]["id"]
-    else:
-        video_image = ''
-    video_plot = video_datas["description"]
-    video_id = video_datas["id"]
-    video_duration = video_datas["duration"]
+    video_data = json_parser['components'][0]['episode']
+    video_title = video_data['title']
+    
+    video_image = ''
+    if 'header' in video_data['images']:
+        video_image = URL_IMAGE % video_data['images']['header']['id']
+        
+    video_plot = video_data['description']
+    video_id = video_data['id']
+    video_duration = video_data['duration']
     
     broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
     date_value = broadcast_datetime.strftime('%Y-%m-%d')
@@ -160,7 +161,7 @@ def list_videos_episodes(plugin, item_id, program_url, **kwargs):
     item.art['thumb'] = item.art['landscape'] = video_image
     item.info['plot'] = video_plot
     item.info['duration'] = video_duration
-    item.info.date(date_value, "%Y-%m-%d")
+    item.info.date(date_value, '%Y-%m-%d')
     item.set_callback(
         get_video_url,
         item_id=item_id,
@@ -271,9 +272,9 @@ def get_video_url(plugin,
     api_token = json_parser_token['token']
 
     # Build PAYLOAD
-    payload = {"_token": api_token}
+    payload = {'_token': api_token}
 
-    cookies = {"npo_session": session_token}
+    cookies = {'npo_session': session_token}
 
     resp2 = urlquick.post(
         URL_TOKEN_ID % video_id, cookies=cookies, data=payload, max_age=-1)
@@ -283,27 +284,28 @@ def get_video_url(plugin,
     resp3 = urlquick.get(URL_STREAM % (video_id, token_id), max_age=-1)
     json_parser2 = json.loads(resp3.text)
 
-    if "html" in json_parser2 and "Dit programma mag niet bekeken worden vanaf jouw locatie (33)." in json_parser2["html"]:
+    if 'html' in json_parser2 and 'Dit programma mag niet bekeken worden vanaf jouw locatie (33).' in json_parser2['html']:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
-    if "html" in json_parser2 and "Dit programma is niet (meer) beschikbaar (15)." in json_parser2["html"]:
+    if 'html' in json_parser2 and 'Dit programma is niet (meer) beschikbaar (15).' in json_parser2['html']:
         plugin.notify('ERROR', plugin.localize(30710))
         return False
 
-    licence_url = json_parser2["stream"]["keySystemOptions"][0]["options"][
-        "licenseUrl"]
-    licence_url_header = json_parser2["stream"]["keySystemOptions"][0][
-        "options"]["httpRequestHeaders"]
-    xcdata_value = licence_url_header["x-custom-data"]
+    licence_url = json_parser2['stream']['keySystemOptions'][0]['options'][
+        'licenseUrl']
+    licence_url_header = json_parser2['stream']['keySystemOptions'][0][
+        'options']['httpRequestHeaders']
+    xcdata_value = licence_url_header['x-custom-data']
 
     item = Listitem()
-    item.path = json_parser2["stream"]["src"]
+    item.path = json_parser2['stream']['src']
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
     if plugin.setting.get_boolean('active_subtitle'):
         item.subtitles.append(URL_SUBTITLE % video_id)
+    
     item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
@@ -335,15 +337,15 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE_ID % item_id, max_age=-1)
 
     video_id = ''
-    list_media_id = re.compile(r'media-id\=\"(.*?)\"').findall(resp.text)
+    list_media_id = re.compile(r'media-id\=\'(.*?)\'').findall(resp.text)
     for media_id in list_media_id:
         if 'LI_' in media_id:
             video_id = media_id
 
     # Build PAYLOAD
-    payload = {"_token": api_token}
+    payload = {'_token': api_token}
 
-    cookies = {"npo_session": session_token}
+    cookies = {'npo_session': session_token}
 
     resp2 = urlquick.post(URL_TOKEN_ID % video_id,
                           cookies=cookies,
@@ -355,24 +357,25 @@ def get_live_url(plugin, item_id, **kwargs):
     resp3 = urlquick.get(URL_STREAM % (video_id, token_id), max_age=-1)
     json_parser2 = json.loads(resp3.text)
 
-    if "html" in json_parser2 and "Vanwege uitzendrechten is het niet mogelijk om deze uitzending buiten Nederland te bekijken." in json_parser2[
-            "html"]:
+    if 'html' in json_parser2 and 'Vanwege uitzendrechten is het niet mogelijk om deze uitzending buiten Nederland te bekijken.' in json_parser2[
+            'html']:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
-    licence_url = json_parser2["stream"]["keySystemOptions"][0]["options"][
-        "licenseUrl"]
-    licence_url_header = json_parser2["stream"]["keySystemOptions"][0][
-        "options"]["httpRequestHeaders"]
-    xcdata_value = licence_url_header["x-custom-data"]
+    licence_url = json_parser2['stream']['keySystemOptions'][0]['options'][
+        'licenseUrl']
+    licence_url_header = json_parser2['stream']['keySystemOptions'][0][
+        'options']['httpRequestHeaders']
+    xcdata_value = licence_url_header['x-custom-data']
 
     item = Listitem()
-    item.path = json_parser2["stream"]["src"]
+    item.path = json_parser2['stream']['src']
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
     if plugin.setting.get_boolean('active_subtitle'):
         item.subtitles.append(URL_SUBTITLE % video_id)
+    
     item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
