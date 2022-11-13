@@ -8,6 +8,9 @@ from __future__ import unicode_literals
 from builtins import str
 import json
 import re
+import pytz
+import time
+from datetime import datetime
 
 import inputstreamhelper
 from codequick import Listitem, Resolver, Route
@@ -148,7 +151,9 @@ def list_videos_episodes(plugin, item_id, program_url, **kwargs):
     video_plot = video_datas["description"]
     video_id = video_datas["id"]
     video_duration = video_datas["duration"]
-    date_value = video_datas['broadcastDate'].split('T')[0]
+    
+    broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
+    date_value = broadcast_datetime.strftime('%Y-%m-%d')
 
     item = Listitem()
     item.label = video_title
@@ -166,91 +171,80 @@ def list_videos_episodes(plugin, item_id, program_url, **kwargs):
 
 @Route.register
 def list_videos_franchise(plugin, item_id, program_url, **kwargs):
-
     if 'page=' in program_url:
         resp = urlquick.get(program_url + '&ApiKey=%s' % (API_KEY))
         json_parser = json.loads(resp.text)
-
-        for video_datas in json_parser["items"]:
-            if 'title' not in video_datas:
-                continue
-
-            if not video_datas['title']:
-                continue
-
-            subtitle = ''
-            if 'seasonNumber' in video_datas and 'episodeNumber' in video_datas:
-                if video_datas['seasonNumber'] is not None and video_datas['episodeNumber'] is not None:
-                    subtitle = " - S%sE%s" % (
-                        str(video_datas['seasonNumber']),
-                        str(video_datas['episodeNumber']))
-
-            video_title = video_datas["title"] + subtitle
-            if 'header' in video_datas["images"]:
-                video_image = URL_IMAGE % video_datas["images"]["header"]["id"]
-            else:
-                video_image = ''
-            video_plot = video_datas["description"]
-            video_id = video_datas["id"]
-            video_duration = video_datas["duration"]
-            date_value = video_datas['broadcastDate'].split('T')[0]
-
-            item = Listitem()
-            item.label = video_title
-            item.art['thumb'] = item.art['landscape'] = video_image
-            item.info['plot'] = video_plot
-            item.info['duration'] = video_duration
-            item.info.date(date_value, "%Y-%m-%d")
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_id=video_id)
-            item_post_treatment(item, is_playable=True, is_downloadable=False)
-            yield item
-
-        if 'next' in json_parser["_links"]:
-            yield Listitem.next_page(
-                item_id=item_id,
-                program_url=json_parser["_links"]['next']['href'])
-
+        response_data = json_parser
     else:
         resp = urlquick.get(program_url.replace('/router', '') + '?ApiKey=%s' % API_KEY)
         json_parser = json.loads(resp.text)
+        response_data = json_parser['components'][2]['data']
+    
+    # Check if there's a second episode on the same day
+    include_time_string = False
+    for video_data in response_data['items']:
+        broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
+        
+        for ref_video_data in response_data['items']:
+            ref_broadcast_datetime = get_localized_datetime(ref_video_data['broadcastDate'])
+            if (video_data['episodeTitle'] == ref_video_data['episodeTitle'] 
+                and video_data['id'] != ref_video_data['id']
+                and broadcast_datetime.strftime('%Y-%m-%d') == ref_broadcast_datetime.strftime('%Y-%m-%d')):
+            
+                include_time_string = True
+                break
+                
+        if include_time_string:
+            break
+    
+    for video_data in response_data['items']:
+        if 'title' not in video_data or not video_data['title']:
+            continue
 
-        for video_datas in json_parser["components"][2]["data"]["items"]:
-            try:
-                video_title = str(video_datas["title"] + " - S%sE%s" % (
-                    str(video_datas['seasonNumber']),
-                    str(video_datas['episodeNumber'])))
-            except Exception:
-                video_title = str(video_datas["title"])
-            if 'header' in video_datas["images"]:
-                video_image = URL_IMAGE % video_datas["images"]["header"]["id"]
-            else:
-                video_image = ''
-            video_plot = video_datas["description"]
-            video_id = video_datas["id"]
-            video_duration = video_datas["duration"]
-            date_value = video_datas['broadcastDate'].split('T')[0]
+        broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
+        
+        time_string = ''
+        if include_time_string:
+            time_string = ' (%s)' % broadcast_datetime.strftime('%H:%M')
+        
+        subtitle = ''
+        if ('seasonNumber' in video_data 
+                and 'episodeNumber' in video_data
+                and video_data['seasonNumber']
+                and video_data['episodeNumber']):
+            
+            subtitle = ' - S%sE%s' % (
+                str(video_data['seasonNumber']),
+                str(video_data['episodeNumber']))
 
-            item = Listitem()
-            item.label = video_title
-            item.art['thumb'] = item.art['landscape'] = video_image
-            item.info['plot'] = video_plot
-            item.info['duration'] = video_duration
-            item.info.date(date_value, "%Y-%m-%d")
-            item.set_callback(
-                get_video_url,
-                item_id=item_id,
-                video_id=video_id)
-            item_post_treatment(item, is_playable=True, is_downloadable=False)
-            yield item
+        video_title = video_data['title'] + time_string + subtitle
+        
+        video_image = ''
+        if 'header' in video_data['images']:
+            video_image = URL_IMAGE % video_data['images']['header']['id']
+            
+        video_plot = video_data['description']
+        video_id = video_data['id']
+        video_duration = video_data['duration']
+        date_value = broadcast_datetime.strftime('%Y-%m-%d')
 
-        if 'next' in json_parser["components"][2]["data"]["_links"]:
-            yield Listitem.next_page(
-                item_id=item_id,
-                program_url=json_parser["components"][2]["data"]["_links"][
-                    'next']['href'])
+        item = Listitem()
+        item.label = video_title
+        item.art['thumb'] = item.art['landscape'] = video_image
+        item.info['plot'] = video_plot
+        item.info['duration'] = video_duration
+        item.info.date(date_value, '%Y-%m-%d')
+        item.set_callback(
+            get_video_url,
+            item_id=item_id,
+            video_id=video_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=False)
+        yield item
+
+    if 'next' in response_data['_links']:
+        yield Listitem.next_page(
+            item_id=item_id,
+            program_url=response_data['_links']['next']['href'])
 
 
 @Resolver.register
@@ -387,3 +381,19 @@ def get_live_url(plugin, item_id, **kwargs):
         'inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&x-custom-data=%s|R{SSM}|' % xcdata_value
 
     return item
+    
+    
+def get_localized_datetime(timestamp):
+    try:
+        utc_datetime = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')
+    except TypeError:
+        utc_datetime = datetime(*(time.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')[0:6]))
+        
+    utc_datetime.replace(tzinfo=pytz.utc)
+    local_timezone = pytz.timezone('Europe/Amsterdam')
+    local_datetime = utc_datetime.astimezone(local_timezone)
+    
+    return local_datetime
+    
+    
+    
