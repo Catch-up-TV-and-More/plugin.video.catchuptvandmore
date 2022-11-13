@@ -42,7 +42,7 @@ URL_CATEGORIES = URL_API + '/page/catalogue?ApiKey=%s'
 
 API_KEY = '07896f1ee72645f68bc75581d7f00d54'
 
-URL_IMAGE = 'https://images.poms.omroep.nl/image/s1280/c1280x720/%s.jpg'
+URL_IMAGE = 'https://images.poms.omroep.nl/image/s1280/c1280x720/%s'
 # ImageId
 
 
