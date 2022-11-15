@@ -173,67 +173,12 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
     resp = urlquick.get(URL_LIST_SEARCH % (search_query, PARTNER_KEY))
     json_parser = resp.json()
 
-    item_found = False
+    found_result = {"value": False}
     for results_datas in json_parser["results"]:
-        is_redbee = False
-        video_datas = results_datas["data"]
-        if "subtitle" in video_datas:
-            video_title = video_datas["title"] + ' - ' + video_datas["subtitle"]
-        else:
-            video_title = video_datas["title"]
-        video_image = video_datas["images"]["illustration"]["16x9"]["1248x702"]
-        video_plot = ''
-        if "description" in video_datas:
-            video_plot = video_datas["description"]
-        video_duration = video_datas["duration"]
-        date_value = format_day(video_datas["date_publish_from"])
-        if "url_streaming" in video_datas:
-            is_drm = video_datas["drm"]
-            if is_drm:
-                if "url_hls" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_hls"]
-                    if "master.m3u8" in video_url:
-                        video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
-                    is_drm = False
-                elif "url_dash" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_dash"]
-                    is_drm = video_datas["drm"]
-                else:
-                    video_url = video_datas["url_streaming"]["url"]
-                    is_drm = False
-            else:
-                if "url_hls" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_hls"]
-                else:
-                    video_url = video_datas["url_streaming"]["url"]
-        elif "url_embed" in video_datas:
-            video_url = video_datas["url_embed"]
-            is_drm = False
-        else:
-            video_url = video_datas["url"]
-            is_drm = False
-            if "tarmac" in video_url:
-                is_redbee = True
-                is_drm = video_datas["drm"]
+        video_data = results_datas["data"]
+        yield from yield_video_data(item_id, video_data, found_result)
 
-        video_id = video_datas["id"]
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
-        item.info['plot'] = video_plot
-        item.info['duration'] = video_duration
-        item.info.date(date_value, '%Y/%m/%d')
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_url=video_url,
-                          video_id=video_id,
-                          is_drm=is_drm,
-                          is_redbee=is_redbee)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        item_found = True
-        yield item
-
-    if not item_found:
+    if not found_result["value"]:
         plugin.notify(plugin.localize(30600), plugin.localize(30718))
         yield False
 
@@ -321,62 +266,9 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
     resp = urlquick.get(URL_JSON_EMISSION_BY_ID % (program_id, PARTNER_KEY))
     json_parser = resp.json()
 
-    for video_datas in json_parser:
-        is_redbee = False
-        if "subtitle" in video_datas:
-            video_title = video_datas["title"] + ' - ' + video_datas["subtitle"]
-        else:
-            video_title = video_datas["title"]
-        video_image = video_datas["images"]["illustration"]["16x9"]["1248x702"]
-        video_plot = ''
-        if "description" in video_datas:
-            video_plot = video_datas["description"]
-        video_duration = video_datas["duration"]
-        date_value = format_day(video_datas["date_publish_from"])
-        if "url_streaming" in video_datas:
-            is_drm = video_datas["drm"]
-            if is_drm:
-                if "url_hls" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_hls"]
-                    if "master.m3u8" in video_url:
-                        video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
-                    is_drm = False
-                elif "url_dash" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_dash"]
-                    is_drm = video_datas["drm"]
-                else:
-                    video_url = video_datas["url_streaming"]["url"]
-                    is_drm = False
-            else:
-                if "url_hls" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_hls"]
-                else:
-                    video_url = video_datas["url_streaming"]["url"]
-        elif "url_embed" in video_datas:
-            video_url = video_datas["url_embed"]
-            is_drm = False
-        else:
-            video_url = video_datas["url"]
-            is_drm = False
-            if "tarmac" in video_url:
-                is_redbee = True
-                is_drm = video_datas["drm"]
-
-        video_id = video_datas["id"]
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
-        item.info['plot'] = video_plot
-        item.info['duration'] = video_duration
-        item.info.date(date_value, '%Y/%m/%d')
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_url=video_url,
-                          video_id=video_id,
-                          is_drm=is_drm,
-                          is_redbee=is_redbee)
-        item_post_treatment(item, is_playable=True, is_downloadable=not is_drm)
-        yield item
+    found_result = {"value": False}
+    for video_data in json_parser:
+        yield from yield_video_data(item_id, video_data, found_result)
 
 
 @Route.register
@@ -438,73 +330,72 @@ def list_videos_category(plugin, item_id, cat_id, offset=0, **kwargs):
     resp = urlquick.get(url)
     json_parser = resp.json()
 
-    for video_datas in json_parser:
-        is_redbee = False
-        if "subtitle" in video_datas:
-            video_title = video_datas["title"] + ' - ' + video_datas["subtitle"]
-        else:
-            video_title = video_datas["title"]
-        video_image = video_datas["images"]["illustration"]["16x9"]["1248x702"]
-        video_plot = ''
-        if "description" in video_datas:
-            video_plot = video_datas["description"]
-        video_duration = video_datas["duration"]
-        date_value = format_day(video_datas["date_publish_from"])
-        if "url_streaming" in video_datas:
-            is_drm = video_datas["drm"]
-            if is_drm:
-                if "url_hls" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_hls"]
-                    if "master.m3u8" in video_url:
-                        video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
-                    is_drm = False
-                elif "url_dash" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_dash"]
-                    is_drm = video_datas["drm"]
-                else:
-                    video_url = video_datas["url_streaming"]["url"]
-                    is_drm = False
-            else:
-                if "url_hls" in video_datas["url_streaming"]:
-                    video_url = video_datas["url_streaming"]["url_hls"]
-                else:
-                    video_url = video_datas["url_streaming"]["url"]
-        elif "url_embed" in video_datas:
-            video_url = video_datas["url_embed"]
-            is_drm = False
-        else:
-            video_url = video_datas["url"]
-            is_drm = False
-            if "tarmac" in video_url:
-                is_redbee = True
-                is_drm = video_datas["drm"]
-
-        video_id = video_datas["id"]
-        # is_downloadable = False
-        # if video_datas["url_download"]:
-        # is_downloadable = True
-        # video_url = video_datas["url_download"]
-
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
-        item.info['plot'] = video_plot
-        item.info['duration'] = video_duration
-        item.info.date(date_value, '%Y/%m/%d')
-
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_url=video_url,
-                          video_id=video_id,
-                          is_drm=is_drm,
-                          is_redbee=is_redbee)
-        item_post_treatment(item,
-                            is_playable=True,
-                            is_downloadable=True)
-        yield item
+    found_result = {"value": False}
+    for video_data in json_parser:
+        yield from yield_video_data(item_id, video_data, found_result)
 
     if len(json_parser) == 100:
         yield Listitem.next_page(item_id=item_id, cat_id=cat_id, offset=(offset + 100), callback=list_videos_category)
+
+
+def yield_video_data(item_id, video_data, found_result):
+    is_redbee = False
+    if "subtitle" in video_data:
+        video_title = video_data["title"] + ' - ' + video_data["subtitle"]
+    else:
+        video_title = video_data["title"]
+    video_image = video_data["images"]["illustration"]["16x9"]["1248x702"]
+    video_plot = ''
+    if "description" in video_data:
+        video_plot = video_data["description"]
+    video_duration = video_data["duration"]
+    date_value = format_day(video_data["date_publish_from"])
+    if "url_streaming" in video_data:
+        is_drm = video_data["drm"]
+        if is_drm:
+            if "url_hls" in video_data["url_streaming"]:
+                video_url = video_data["url_streaming"]["url_hls"]
+                if "master.m3u8" in video_url:
+                    video_url = video_url.replace('/master.m3u8', '-aes/master.m3u8')
+                is_drm = False
+            elif "url_dash" in video_data["url_streaming"]:
+                video_url = video_data["url_streaming"]["url_dash"]
+                is_drm = video_data["drm"]
+            else:
+                video_url = video_data["url_streaming"]["url"]
+                is_drm = False
+        else:
+            if "url_hls" in video_data["url_streaming"]:
+                video_url = video_data["url_streaming"]["url_hls"]
+            else:
+                video_url = video_data["url_streaming"]["url"]
+    elif "url_embed" in video_data:
+        video_url = video_data["url_embed"]
+        is_drm = False
+    else:
+        video_url = video_data["url"]
+        is_drm = False
+        if "tarmac" in video_url:
+            is_redbee = True
+            is_drm = video_data["drm"]
+    video_id = video_data["id"]
+    item = Listitem()
+    item.label = video_title
+    item.art['thumb'] = item.art['landscape'] = video_image
+    item.info['plot'] = video_plot
+    item.info['duration'] = video_duration
+    item.info.date(date_value, '%Y/%m/%d')
+    item.set_callback(get_video_url,
+                      item_id=item_id,
+                      video_url=video_url,
+                      video_id=video_id,
+                      is_drm=is_drm,
+                      is_redbee=is_redbee)
+    item_post_treatment(item,
+                        is_playable=True,
+                        is_downloadable=not is_drm)
+    found_result["value"] = True
+    yield item
 
 
 @Route.register
@@ -581,13 +472,13 @@ def get_video_redbee(plugin, video_id, is_drm):
 
     redbee_jwt = get_redbee_jwt(plugin, rtbf_jwt['id_token'])
 
-    video_format = get_redbee_format(plugin, video_id, redbee_jwt['sessionToken'], is_drm)
+    video_format, forced_drm = get_redbee_format(plugin, video_id, redbee_jwt['sessionToken'], is_drm)
     if video_format is None:
         return False
 
     video_url = video_format['mediaLocator']
 
-    if not is_drm:
+    if not is_drm and not forced_drm:
         if video_url.endswith('m3u8'):
             return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
         return video_url
@@ -970,10 +861,16 @@ def get_redbee_format(plugin, media_id, session_token, is_drm):
         'Authorization': 'Bearer {}'.format(session_token)
     }
 
-    for fmt in urlquick.get(url, headers=headers, max_age=-1).json()['formats']:
-        if fmt['format'] == 'HLS' and not is_drm:
-            return fmt
-        if fmt['format'] == 'DASH' and is_drm:
-            return fmt
+    formats = urlquick.get(url, headers=headers, max_age=-1).json()['formats']
 
-    return None
+    if not is_drm:
+        for fmt in formats:
+            if fmt['format'] == 'HLS' and not is_drm and not fmt['drm']:
+                return fmt, is_drm
+
+    # all formats have drm, switch to DASH
+    for fmt in formats:
+        if fmt['format'] == 'DASH':
+            return fmt, True
+
+    return None, True
