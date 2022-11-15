@@ -153,7 +153,8 @@ def list_videos_episodes(plugin, item_id, program_url, **kwargs):
     video_id = video_data['id']
     video_duration = video_data['duration']
     
-    date_value = video_datas['broadcastDate'].split('T')[0]
+    broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
+    date_value = broadcast_datetime.strftime('%Y-%m-%d')
 
     item = Listitem()
     item.label = video_title
@@ -226,7 +227,7 @@ def list_videos_franchise(plugin, item_id, program_url, **kwargs):
         video_plot = video_data['description']
         video_id = video_data['id']
         video_duration = video_data['duration']
-        date_value = video_datas['broadcastDate'].split('T')[0]
+        date_value = broadcast_datetime.strftime('%Y-%m-%d')
 
         item = Listitem()
         item.label = video_title
