@@ -153,8 +153,7 @@ def list_videos_episodes(plugin, item_id, program_url, **kwargs):
     video_id = video_data['id']
     video_duration = video_data['duration']
     
-    broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
-    date_value = broadcast_datetime.strftime('%Y-%m-%d')
+    date_value = video_datas['broadcastDate'].split('T')[0]
 
     item = Listitem()
     item.label = video_title
@@ -227,7 +226,7 @@ def list_videos_franchise(plugin, item_id, program_url, **kwargs):
         video_plot = video_data['description']
         video_id = video_data['id']
         video_duration = video_data['duration']
-        date_value = broadcast_datetime.strftime('%Y-%m-%d')
+        date_value = video_datas['broadcastDate'].split('T')[0]
 
         item = Listitem()
         item.label = video_title
@@ -391,8 +390,9 @@ def get_localized_datetime(timestamp):
         utc_datetime = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')
     except TypeError:
         utc_datetime = datetime(*(time.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')[0:6]))
-        
-    utc_datetime.replace(tzinfo=pytz.utc)
+    
+    utc_datetime = pytz.utc.localize(utc_datetime)
+    
     local_timezone = pytz.timezone('Europe/Amsterdam')
     local_datetime = utc_datetime.astimezone(local_timezone)
     
