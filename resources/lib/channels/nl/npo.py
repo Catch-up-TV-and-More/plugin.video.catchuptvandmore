@@ -79,7 +79,7 @@ def list_sub_categories(plugin, item_id, category_filter_argument, **kwargs):
         if category['filterArgument'] and category_filter_argument in category['filterArgument']:
             for sub_category_datas in category['options']:
                 sub_category_name = sub_category_datas['display']
-                
+
                 sub_category_value = ''
                 if sub_category_datas['value'] is not None:
                     sub_category_value = sub_category_datas['value']
@@ -106,11 +106,11 @@ def list_programs(plugin, item_id, category_filter_argument,
 
     for program_datas in json_parser['components'][1]['data']['items']:
         program_title = program_datas['title']
-        
+
         program_image = ''
         if 'header' in program_datas['images']:
             program_image = URL_IMAGE % program_datas['images']['header']['id']
-        
+
         program_plot = program_datas['description']
         program_url = program_datas['_links']['page']['href']
 
@@ -126,7 +126,7 @@ def list_programs(plugin, item_id, category_filter_argument,
         else:
             item.set_callback(
                 list_videos_episodes, item_id=item_id, program_url=program_url)
-        
+
         item_post_treatment(item)
         yield item
 
@@ -144,15 +144,15 @@ def list_videos_episodes(plugin, item_id, program_url, **kwargs):
 
     video_data = json_parser['components'][0]['episode']
     video_title = video_data['title']
-    
+
     video_image = ''
     if 'header' in video_data['images']:
         video_image = URL_IMAGE % video_data['images']['header']['id']
-        
+
     video_plot = video_data['description']
     video_id = video_data['id']
     video_duration = video_data['duration']
-    
+
     broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
     date_value = broadcast_datetime.strftime('%Y-%m-%d')
 
@@ -180,50 +180,50 @@ def list_videos_franchise(plugin, item_id, program_url, **kwargs):
         resp = urlquick.get(program_url.replace('/router', '') + '?ApiKey=%s' % API_KEY)
         json_parser = json.loads(resp.text)
         response_data = json_parser['components'][2]['data']
-    
+
     # Check if there's a second episode on the same day
     include_time_string = False
     for video_data in response_data['items']:
         broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
-        
+
         for ref_video_data in response_data['items']:
             ref_broadcast_datetime = get_localized_datetime(ref_video_data['broadcastDate'])
-            if (video_data['episodeTitle'] == ref_video_data['episodeTitle'] 
-                and video_data['id'] != ref_video_data['id']
-                and broadcast_datetime.strftime('%Y-%m-%d') == ref_broadcast_datetime.strftime('%Y-%m-%d')):
-            
+            if (video_data['episodeTitle'] == ref_video_data['episodeTitle']
+                    and video_data['id'] != ref_video_data['id']
+                    and broadcast_datetime.strftime('%Y-%m-%d') == ref_broadcast_datetime.strftime('%Y-%m-%d')):
+
                 include_time_string = True
                 break
-                
+
         if include_time_string:
             break
-    
+
     for video_data in response_data['items']:
         if 'title' not in video_data or not video_data['title']:
             continue
 
         broadcast_datetime = get_localized_datetime(video_data['broadcastDate'])
-        
+
         time_string = ''
         if include_time_string:
             time_string = ' (%s)' % broadcast_datetime.strftime('%H:%M')
-        
+
         subtitle = ''
-        if ('seasonNumber' in video_data 
+        if ('seasonNumber' in video_data
                 and 'episodeNumber' in video_data
                 and video_data['seasonNumber']
                 and video_data['episodeNumber']):
-            
+
             subtitle = ' - S%sE%s' % (
                 str(video_data['seasonNumber']),
                 str(video_data['episodeNumber']))
 
         video_title = video_data['title'] + time_string + subtitle
-        
+
         video_image = ''
         if 'header' in video_data['images']:
             video_image = URL_IMAGE % video_data['images']['header']['id']
-            
+
         video_plot = video_data['description']
         video_id = video_data['id']
         video_duration = video_data['duration']
@@ -305,7 +305,7 @@ def get_video_url(plugin,
     item.info.update(get_selected_item_info())
     if plugin.setting.get_boolean('active_subtitle'):
         item.subtitles.append(URL_SUBTITLE % video_id)
-    
+
     item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
@@ -375,7 +375,7 @@ def get_live_url(plugin, item_id, **kwargs):
     item.info.update(get_selected_item_info())
     if plugin.setting.get_boolean('active_subtitle'):
         item.subtitles.append(URL_SUBTITLE % video_id)
-    
+
     item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
@@ -384,20 +384,17 @@ def get_live_url(plugin, item_id, **kwargs):
         'inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&x-custom-data=%s|R{SSM}|' % xcdata_value
 
     return item
-    
-    
+
+
 def get_localized_datetime(timestamp):
     try:
         utc_datetime = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')
     except TypeError:
         utc_datetime = datetime(*(time.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')[0:6]))
-    
+
     utc_datetime = pytz.utc.localize(utc_datetime)
-    
+
     local_timezone = pytz.timezone('Europe/Amsterdam')
     local_datetime = utc_datetime.astimezone(local_timezone)
-    
+
     return local_datetime
-    
-    
-    
