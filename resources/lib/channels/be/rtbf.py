@@ -176,7 +176,8 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
     found_result = {"value": False}
     for results_datas in json_parser["results"]:
         video_data = results_datas["data"]
-        yield from yield_video_data(item_id, video_data, found_result)
+        for i in yield_video_data(item_id, video_data, found_result):
+            yield i
 
     if not found_result["value"]:
         plugin.notify(plugin.localize(30600), plugin.localize(30718))
@@ -268,7 +269,8 @@ def list_videos_program(plugin, item_id, program_id, **kwargs):
 
     found_result = {"value": False}
     for video_data in json_parser:
-        yield from yield_video_data(item_id, video_data, found_result)
+        for i in yield_video_data(item_id, video_data, found_result):
+            yield i
 
 
 @Route.register
@@ -332,7 +334,8 @@ def list_videos_category(plugin, item_id, cat_id, offset=0, **kwargs):
 
     found_result = {"value": False}
     for video_data in json_parser:
-        yield from yield_video_data(item_id, video_data, found_result)
+        for i in yield_video_data(item_id, video_data, found_result):
+            yield i
 
     if len(json_parser) == 100:
         yield Listitem.next_page(item_id=item_id, cat_id=cat_id, offset=(offset + 100), callback=list_videos_category)
