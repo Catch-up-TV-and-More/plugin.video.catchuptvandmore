@@ -39,7 +39,8 @@ def website_root(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_ROOT, max_age=-1)
 
     # Home page carousels
-    yield from yield_carousels(URL_ROOT)
+    for i in yield_carousels(URL_ROOT):
+        yield i
 
     # Navbar
     root_nav = resp.parse("ul", attrs={"class": "nav navbar-nav"})
@@ -179,7 +180,8 @@ def list_programs(plugin, url, **kwargs):
             item.set_callback(list_programs, url=tag_url)
             yield item
     else:
-        yield from yield_carousels(program)
+        for i in yield_carousels(program):
+            yield i
 
 
 def append_schema(url):
