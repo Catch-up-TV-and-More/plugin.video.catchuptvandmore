@@ -143,7 +143,8 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
     resp = urlquick.get(SEARCH_API % search_query, params=params, headers=headers)
     items = resp.json()["items"]
     assets = [x['asset'] for x in items]
-    yield from list_items(item_id, assets, language)
+    for i in list_items(item_id, assets, language):
+        yield i
 
 
 @Route.register
@@ -187,7 +188,8 @@ def list_programs(plugin, item_id, program_reference_id, **kwargs):
     new_url = BASE_URL_API + json_parser["contentUrl"]["url"]
     resp2 = urlquick.get(new_url)
     items = resp2.json()["items"]
-    yield from list_items(item_id, items, language)
+    for i in list_items(item_id, items, language):
+        yield i
 
 
 def list_items(item_id, items, language):
