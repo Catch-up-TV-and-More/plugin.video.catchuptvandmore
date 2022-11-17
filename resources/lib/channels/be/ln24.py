@@ -72,7 +72,8 @@ def list_videos_search(plugin, search_query, **kwargs):
     if search_query is None or len(search_query) == 0:
         return False
 
-    yield from video_list(plugin, url_constructor("recherche?ft=%s") % search_query)
+    for i in video_list(plugin, url_constructor("recherche?ft=%s") % search_query):
+        yield i
 
 
 @Route.register

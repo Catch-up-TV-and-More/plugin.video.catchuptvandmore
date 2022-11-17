@@ -112,7 +112,8 @@ def list_emissions(plugin, item_id, url, **kwargs):
                 continue
             item_url = js_player_array[0]
 
-        yield from create_item(emission, item_id, item_url, callback)
+        for i in create_item(emission, item_id, item_url, callback):
+            yield i
 
 
 def create_item(emission, item_id, item_url, callback):
@@ -149,7 +150,8 @@ def list_emission_videos(plugin, item_id, url, **kwargs):
         if len(js_player_array) == 0:
             continue
         item_url = js_player_array[0]
-        yield from create_item(video, item_id, item_url, play_video)
+        for i in create_item(video, item_id, item_url, play_video):
+            yield i
 
     pager = root_elem.find(".//nav[@class='pager']")
     if pager:
