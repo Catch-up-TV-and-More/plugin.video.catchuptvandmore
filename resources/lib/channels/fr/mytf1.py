@@ -90,7 +90,7 @@ def list_categories(plugin, item_id, **kwargs):
         'referer': 'https://www.tf1.fr/programmes-tv',
         'User-Agent': web_utils.get_random_ua()
     }
-    json_parser = urlquick.get(URL_API, params=params, headers=headers).json()
+    json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
 
     for json_key in list(json_parser['data'].keys()):
         if json_parser['data'][json_key]['label']:
@@ -120,7 +120,7 @@ def search(plugin, search_query, **kwargs):
         'id': '39d70f2bb3004cb243ee0e2e8b108a551940dd8bf9e31ef874dde1a2fe8f4d8d',
         'variables': '{"query":"%s","offset":0,"limit":500}' % search_query
     }
-    json_parser = urlquick.get(URL_API, params=params, headers=headers).json()
+    json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
     for program_item in handle_programs(json_parser['data']['searchPrograms']['items']):
         yield program_item
 
@@ -129,7 +129,7 @@ def search(plugin, search_query, **kwargs):
         'id': 'ac44a0378c28ea485c8c83cd83b12a9ee1606c4e451829ce8663287a8b001e30',
         'variables': '{"query":"%s","offset":0,"limit":500}' % search_query
     }
-    json_parser = urlquick.get(URL_API, params=params, headers=headers).json()
+    json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
     for video_item in handle_videos(json_parser['data']['searchVideos']['items']):
         yield video_item
 
@@ -199,7 +199,7 @@ def list_programs(plugin, item_id, category_id, **kwargs):
         'referer': 'https://www.tf1.fr/programmes-tv',
         'User-Agent': web_utils.get_random_ua()
     }
-    json_parser = urlquick.get(URL_API, params=params, headers=headers).json()
+    json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
     for program_item in handle_programs(json_parser['data']['programs']['items'], category_id):
         yield program_item
 
@@ -236,7 +236,7 @@ def list_videos(plugin, program_slug, video_type_value, offset, **kwargs):
         'referer': 'https://www.tf1.fr/programmes-tv',
         'User-Agent': web_utils.get_random_ua()
     }
-    json_parser = urlquick.get(URL_API, params=params, headers=headers).json()
+    json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
 
     video_items = json_parser['data']['programBySlug']['videos']['items']
 
