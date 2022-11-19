@@ -22,6 +22,7 @@ from resources.lib import download, resolver_proxy
 from resources.lib.kodi_utils import (get_kodi_version, get_selected_item_art, get_selected_item_label,
                                       get_selected_item_info, INPUTSTREAM_PROP)
 from resources.lib.menu_utils import item_post_treatment
+from resources.lib.resolver_proxy import get_stream_with_quality
 from resources.lib.web_utils import urlencode
 
 LICENSE_SERVER_HEADERS = '|User-Agent=Mozilla%2F5.0%20(X11%3B%20Linux%20x86_64)%20AppleWebKit%2F537.36%20' \
@@ -505,21 +506,14 @@ def get_video_redbee(plugin, video_id, is_drm):
     # TODO
     # subtitles = video_format['sprites'][0]['vtt']
 
-    item = Listitem()
-    item.path = video_url
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property['inputstream.adaptive.license_key'] = license_server_url + LICENSE_SERVER_HEADERS
-    item.property['inputstream.adaptive.server_certificate'] = certificate_data
-    # item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
-    stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
-    if stream_bitrate_limit > 0:
-        item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    return item
+    input_stream_properties = {
+        "license_key": license_server_url + LICENSE_SERVER_HEADERS,
+        "manifest_type": 'mpd',
+        "server_certificate": certificate_data
+    }
+
+    return get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd',
+                                   input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
@@ -566,23 +560,16 @@ def get_drm_item(plugin, video_id, video_url, url_token_parameter):
     token_url = URL_TOKEN % (url_token_parameter, video_id, PARTNER_KEY)
     token_value = urlquick.get(token_url, max_age=-1)
     json_parser_token = json.loads(token_value.text)
-    item = Listitem()
-    item.path = video_url
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    headers2 = {
-        'customdata': json_parser_token["auth_encoded_xml"],
+    input_stream_properties = {
+        "license_key": URL_LICENCE_KEY % urlencode({
+            'customdata': json_parser_token["auth_encoded_xml"],
+        }),
+        "manifest_update_parameter": 'full',
+        "manifest_type": 'mpd'
     }
-    item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % urlencode(headers2)
-    item.property['inputstream.adaptive.manifest_update_parameter'] = 'full'
-    stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
-    if stream_bitrate_limit > 0:
-        item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    return item
+
+    return get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd',
+                                   input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
