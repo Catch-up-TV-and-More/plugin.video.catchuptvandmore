@@ -136,29 +136,36 @@ def get_stream_with_quality(plugin,
                             verify=True,
                             subtitles=None,
                             bypass=False,
-                            workaround=None):
+                            workaround=None,
+                            input_stream_properties=None):
 
     """ Returns the stream for the bitrate or the requested quality.
 
     :param plugin:                      plugin
     :param str video_url:               The url to download
     :param str manifest_type:           Manifest type
-    :param dict headers                 the headers
+    :param dict headers:                the headers
+    :param str license_url:        licence url
     :param bool append_query_string:    Should the existing query string be appended?
     :param bool map_audio:              Map audio streams
     :param bool verify:                 verify ssl?
     :param str subtitles:               subtitles url
     :param bool bypass:                 use IA to read stream with only one resolution
-    :param str workaround:              workaround an inpustream adaptive bug for live split in chapters (see IA issue #1066)
+    :param str workaround:     workaround an inpustream adaptive bug for live split in chapters (see IA issue #1066)
+    :param dict input_stream_properties:            inputstream properties
 
     :return: An item for the stream
     :rtype: Listitem
 
     """
+    if ((license_url is not None or input_stream_properties is not None) and get_kodi_version()) < 18:
+        xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
+        return False
 
-    if ((not plugin.setting.get_boolean('use_ia_hls_stream') and manifest_type == "hls")
-            or (get_kodi_version() < 18)
-            or (not inputstreamhelper.Helper(manifest_type).check_inputstream())):
+    if ((license_url is None and input_stream_properties is None)
+            and ((not plugin.setting.get_boolean('use_ia_hls_stream') and manifest_type == "hls")
+                 or (get_kodi_version() < 18)
+                 or (not inputstreamhelper.Helper(manifest_type).check_inputstream()))):
 
         if plugin.setting.get_boolean('use_ytdl_stream'):
             return get_stream_default(plugin, video_url, False)
@@ -200,6 +207,15 @@ def get_stream_with_quality(plugin,
     if license_url is None:
         license_url = ''
     item.property['inputstream.adaptive.license_key'] = '%s|%s|R{SSM}|' % (license_url, stream_headers)
+
+    if input_stream_properties is not None:
+        if "manifest_update_parameter" in input_stream_properties:
+            item.property['inputstream.adaptive.manifest_update_parameter'] = input_stream_properties[
+                "manifest_update_parameter"]
+
+        if "server_certificate" in input_stream_properties:
+            item.property['inputstream.adaptive.server_certificate'] = input_stream_properties[
+                "server_certificate"]
 
     if subtitles is not None:
         item.subtitles.append(subtitles)
