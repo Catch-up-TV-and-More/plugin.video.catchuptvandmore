@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta12" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta13" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -126,6 +126,15 @@ Project: Remove an useless file
 [FR - LACHAINEMETEO] Fix replay (issue #737)
 [FR - TV78] Fix a missing positional argument in replay
 [FR - MYTF1] Workaround an inpustreamadaptive bug for TF1 live (issue #983)
+[NL - NPO] Fix 'NoneType' is not iterable error (PR #988) thanks @Forage
+[BE - RTBF] Fix replay (PR #991) thanks @darodi
+[BE - RTBF] Fix replay - convert "yield from" (PR #991) thanks @darodi
+[PROJECT] backward compatibility for "yield from" (PR #991) thanks @darodi
+[NL- NPO]: Fix infos (PR #989) thanks @Forage
+[FR - MYTF1] Do not cache webpages (issue #992)
+[BE - RTBF] Refactoring to remove code duplication and drm fix (PR #993) thanks @darodi
+[BE - RTBF] Avoid useless code
+[FR - MYTF1] Add a workaround for TMC live
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
