@@ -209,9 +209,6 @@ def get_stream_with_quality(plugin,
     item.property['inputstream.adaptive.license_key'] = '%s|%s|R{SSM}|' % (license_url, stream_headers)
 
     if input_stream_properties is not None:
-        if "license_key" in input_stream_properties:
-            item.property['inputstream.adaptive.license_key'] = input_stream_properties["license_key"]
-
         if "manifest_update_parameter" in input_stream_properties:
             item.property['inputstream.adaptive.manifest_update_parameter'] = input_stream_properties[
                 "manifest_update_parameter"]

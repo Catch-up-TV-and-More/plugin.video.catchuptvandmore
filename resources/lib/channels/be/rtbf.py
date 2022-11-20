@@ -78,7 +78,7 @@ URL_JSON_LIVE = 'https://www.rtbf.be/api/partner/generic/live/' \
 URL_JSON_LIVE_CHANNEL = 'http://www.rtbf.be/api/partner/generic/live/' \
                         'planningcurrent?v=8&channel=%s&target_site=mediaz&partner_key=%s'
 
-URL_LICENCE_KEY = 'https://wv-keyos.licensekeyserver.com/|%s|R{SSM}|'
+URL_LICENCE_KEY = 'https://wv-keyos.licensekeyserver.com/'
 
 URL_TOKEN = 'https://www.rtbf.be/api/partner/generic/drm/encauthxml?%s=%s&partner_key=%s'
 URL_LIVE_LAUNE = 'https://rtbf-live.fl.freecaster.net/live/rtbf/geo/drm/laune_aes.m3u8'
@@ -507,13 +507,12 @@ def get_video_redbee(plugin, video_id, is_drm):
     # subtitles = video_format['sprites'][0]['vtt']
 
     input_stream_properties = {
-        "license_key": license_server_url + LICENSE_SERVER_HEADERS,
-        "manifest_type": 'mpd',
         "server_certificate": certificate_data
     }
+    license_url = license_server_url + LICENSE_SERVER_HEADERS
 
-    return get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd',
-                                   input_stream_properties=input_stream_properties)
+    return get_stream_with_quality(plugin, video_url=video_url, license_url=license_url,
+                                   manifest_type='mpd', input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
@@ -551,7 +550,7 @@ def get_video_url(plugin,
         return get_drm_item(plugin, video_id, video_url, 'media_id')
 
     if video_url.endswith('m3u8'):
-        return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)
 
     return video_url
 
@@ -560,16 +559,12 @@ def get_drm_item(plugin, video_id, video_url, url_token_parameter):
     token_url = URL_TOKEN % (url_token_parameter, video_id, PARTNER_KEY)
     token_value = urlquick.get(token_url, max_age=-1)
     json_parser_token = json.loads(token_value.text)
-    input_stream_properties = {
-        "license_key": URL_LICENCE_KEY % urlencode({
-            'customdata': json_parser_token["auth_encoded_xml"],
-        }),
-        "manifest_update_parameter": 'full',
-        "manifest_type": 'mpd'
-    }
+    input_stream_properties = {"manifest_update_parameter": 'full'}
+    license_url = URL_LICENCE_KEY
+    headers = urlencode({'customdata': json_parser_token["auth_encoded_xml"]})
 
-    return get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd',
-                                   input_stream_properties=input_stream_properties)
+    return get_stream_with_quality(plugin, video_url=video_url, license_url=license_url, headers=headers,
+                                   manifest_type='mpd', input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
@@ -605,7 +600,7 @@ def get_video_url2(plugin,
         return download.download_video(stream_url)
 
     if stream_url.endswith('m3u8'):
-        return resolver_proxy.get_stream_with_quality(plugin, video_url=stream_url, manifest_type="hls")
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=stream_url)
 
     return stream_url
 
