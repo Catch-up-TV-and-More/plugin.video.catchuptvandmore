@@ -288,7 +288,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     video_url = json_parser['delivery']['url']
     license_url = URL_LICENCE_KEY % video_id
-    if video_id == 'L_TF1':
+    if video_id == 'L_TF1' or video_id == 'L_TMC':
         workaround = '1'
     else:
         workaround = None
