@@ -158,7 +158,7 @@ def get_stream_with_quality(plugin,
     :rtype: Listitem
 
     """
-    if ((license_url is not None or input_stream_properties is not None) and get_kodi_version()) < 18:
+    if (license_url is not None or input_stream_properties is not None) and (get_kodi_version() < 18):
         xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
         return False
 
