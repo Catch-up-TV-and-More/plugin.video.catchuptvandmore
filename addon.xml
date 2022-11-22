@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta13" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta14" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -135,6 +135,8 @@ Project: Remove an useless file
 [BE - RTBF] Refactoring to remove code duplication and drm fix (PR #993) thanks @darodi
 [BE - RTBF] Avoid useless code
 [FR - MYTF1] Add a workaround for TMC live
+[PROJECT] Fix a misplaced parenthesis in get_stream_with_quality (issue #996)
+[UK - CHANNEL4] Fix list when allSeriesCount is not available (issue #995)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
