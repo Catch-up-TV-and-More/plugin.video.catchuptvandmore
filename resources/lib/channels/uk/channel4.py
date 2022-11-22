@@ -96,28 +96,29 @@ def list_seasons(plugin, url, **kwargs):
             datas = json.loads(re.sub(r'^.*?{', '{', script_text).replace("undefined", "{}"))['initialData']['brand']
             if bool(datas['allSeriesCount']) is False:
                 for episode in datas['episodes']:
-                    item = Listitem()
-                    toreplace = re.compile(r'(.*?)Episode').findall(episode['title'])
-                    if bool(toreplace):
-                        item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
+                    if episode.get('assetId'):
+                        item = Listitem()
+                        toreplace = re.compile(r'(.*?)Episode').findall(episode['title'])
+                        if bool(toreplace):
+                            item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
+                        else:
+                            item.label = episode['title'] + " ({})".format(episode['originalTitle'])
+                        item.art['thumb'] = item.art['landscape'] = episode['image']['src']
+                        item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
+                        item.info['plot'] = episode['summary']
+                        item_post_treatment(item)
+                        yield item
                     else:
-                        item.label = episode['title'] + " ({})".format(episode['originalTitle'])
-                    item.art['thumb'] = item.art['landscape'] = episode['image']['src']
-                    item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
-                    item.info['plot'] = episode['summary']
-                    item_post_treatment(item)
-                    yield item
-            else:
-                series = datas['series']
-                for season in series:
-                    series_number = season['seriesNumber']
-                    item = Listitem()
-                    item.label = season['title']
-                    item.art["thumb"] = item.art["landscape"] = datas['images']['image16x9']['src']
-                    item.set_callback(get_episodes_list, series, series_number, datas)
-                    item.info['plot'] = season['summary']
-                    item_post_treatment(item)
-                    yield item
+                        series = datas['series']
+                        for season in series:
+                            series_number = season['seriesNumber']
+                            item = Listitem()
+                            item.label = season['title']
+                            item.art["thumb"] = item.art["landscape"] = datas['images']['image16x9']['src']
+                            item.set_callback(get_episodes_list, series, series_number, datas)
+                            item.info['plot'] = season['summary']
+                            item_post_treatment(item)
+                            yield item
 
 
 @Route.register
