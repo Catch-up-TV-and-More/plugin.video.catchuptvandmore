@@ -109,17 +109,17 @@ def list_seasons(plugin, url, **kwargs):
                         item.info['plot'] = episode['summary']
                         item_post_treatment(item)
                         yield item
-                    else:
-                        series = datas['series']
-                        for season in series:
-                            series_number = season['seriesNumber']
-                            item = Listitem()
-                            item.label = season['title']
-                            item.art["thumb"] = item.art["landscape"] = datas['images']['image16x9']['src']
-                            item.set_callback(get_episodes_list, series, series_number, datas)
-                            item.info['plot'] = season['summary']
-                            item_post_treatment(item)
-                            yield item
+            else:
+                series = datas['series']
+                for season in series:
+                    series_number = season['seriesNumber']
+                    item = Listitem()
+                    item.label = season['title']
+                    item.art["thumb"] = item.art["landscape"] = datas['images']['image16x9']['src']
+                    item.set_callback(get_episodes_list, series, series_number, datas)
+                    item.info['plot'] = season['summary']
+                    item_post_treatment(item)
+                    yield item
 
 
 @Route.register
