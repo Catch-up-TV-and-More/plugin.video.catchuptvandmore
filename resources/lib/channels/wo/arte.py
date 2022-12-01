@@ -147,7 +147,7 @@ def list_data(plugin, url, zone_id):
             item_post_treatment(item, is_playable=True, is_downloadable=True)
         else:
             # Assume it's a folder
-            item.set_callback(list_zone, url=URL_ARTE + data['url'])
+            item.set_callback(list_zone, url=data['url'])
             item_post_treatment(item)
         yield item
 
