@@ -82,6 +82,7 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
         if json_key not in already_listed and "Product:" in json_key and 'slug' in json_entry[json_key] and json_entry[json_key]['slug'] is not None:
             if "__typename" in json_entry[json_key] and json_entry[json_key]['__typename'] == 'Product':
                 program_title = json_entry[json_key]["title"]
+                product_type = None
                 for info in list(json_entry.keys()):
                     cond = 'collection' in json_entry[info] and json_entry[info]['collection'] is not None and '__ref' in json_entry[info]['collection']
                     cond = cond and json_entry[info]['collection']['__ref'] == json_key and 'slug' in json_entry[info] and json_entry[info]['slug'] is None
@@ -90,6 +91,8 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                         image_thumb = json.loads(re.compile(r'Image\:(.*?)$').findall(json_entry[info]["mainPortraitImage"]['__ref'])[0])['url']
                         image_landscape = json.loads(re.compile(r'Image\:(.*?)$').findall(json_entry[info]["mainLandscapeImage"]['__ref'])[0])['url']
                         present = [description, image_thumb, image_landscape]
+                        if 'productType' in json_entry[info]:
+                            product_type = json_entry[info]['productType']
 
                 data = []
                 data.append(json_entry[json_key]["slug"])
@@ -100,7 +103,10 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                 item.art['thumb'] = image_thumb
                 item.art['landscape'] = image_landscape
                 item.label = program_title
-                item.set_callback(list_seasons, data=data, present=present)
+                if product_type == 'MOVIE':
+                    item.set_callback(get_video_url, data=data)
+                else:
+                    item.set_callback(list_seasons, data=data, present=present)
                 item_post_treatment(item)
                 yield item
 
@@ -153,10 +159,10 @@ def list_episodes(plugin, data, **kwargs):
 
 @Resolver.register
 def get_video_url(plugin, data, download_mode=False, **kwargs):
-    if data[1] == '':
-        resp = urlquick.get(URL_STREAM % data[0], headers=GENERIC_HEADERS)
-    else:
+    if len(data) > 1:
         resp = urlquick.get(URL_STREAM_SEASON_EPISODE % (data[0], data[1], data[2]), headers=GENERIC_HEADERS)
+    else:
+        resp = urlquick.get(URL_STREAM % data[0], headers=GENERIC_HEADERS)
 
     json_datas = {
         'operationName': 'VideoPlayerPage',
