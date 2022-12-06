@@ -536,9 +536,15 @@ def get_arte_video_stream(plugin,
                           download_mode=False):
     url = URL_REPLAY_ARTE % (desired_language, video_id)
     j = urlquick.get(url).json()
-    video_url = j['data']['attributes']['streams'][0]['url']
+
+    language = []
+    for stream in j['data']['attributes']['streams']:
+        language.append(stream['versions'][0]['label'])
+    choose_language = xbmcgui.Dialog().select(Script.localize(30181), language)
+
+    video_url = j['data']['attributes']['streams'][choose_language]['url']
 
     if download_mode:
         return download.download_video(video_url)
 
-    return get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    return get_stream_with_quality(plugin, video_url)
