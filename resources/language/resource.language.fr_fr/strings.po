@@ -413,6 +413,10 @@ msgctxt "#30180"
 msgid "Video quality"
 msgstr "Qualité vidéo"
 
+msgctxt "#30181"
+msgid "Choose version"
+msgstr "Choix de la version"
+
 msgctxt "#30192"
 msgid "BEST"
 msgstr "MAXIMALE"
