@@ -22,6 +22,8 @@ from resources.lib.menu_utils import item_post_treatment
 URL_ROOT = 'https://www.tv5unis.ca'
 # Channel Name
 
+URL_COLLECTIONS = URL_ROOT + '/collections/%s'
+
 URL_VIDEOS_SEASON = URL_ROOT + '/%s/saisons/%s'
 # slug_program, number_season
 URL_VIDEOS = URL_ROOT + '/%s'
@@ -35,6 +37,7 @@ URL_STREAM = URL_ROOT + '/videos/%s'
 
 URL_API = 'https://api.tv5unis.ca/graphql'
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
+
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
@@ -67,156 +70,99 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_programs(plugin, item_id, category_slug, **kwargs):
+    resp = urlquick.get(URL_COLLECTIONS % category_slug, headers=GENERIC_HEADERS)
 
-    resp = urlquick.get(URL_ROOT, headers=GENERIC_HEADERS)
     json_datas = re.compile(
         r'\/json\"\>\{(.*?)\}\<\/script\>').findall(resp.text)[0]
     json_parser = json.loads('{' + json_datas + '}')
 
     json_entry = json_parser["props"]["apolloState"]
+    already_listed = []
     for json_key in list(json_entry.keys()):
-        if "__typename" not in json_entry[json_key]:
-            continue
+        if json_key not in already_listed and "Product:" in json_key and 'slug' in json_entry[json_key] and json_entry[json_key]['slug'] is not None:
+            if "__typename" in json_entry[json_key] and json_entry[json_key]['__typename'] == 'Product':
+                program_title = json_entry[json_key]["title"]
+                product_type = None
+                for info in list(json_entry.keys()):
+                    cond = 'collection' in json_entry[info] and json_entry[info]['collection'] is not None and '__ref' in json_entry[info]['collection']
+                    cond = cond and json_entry[info]['collection']['__ref'] == json_key and 'slug' in json_entry[info] and json_entry[info]['slug'] is None
+                    if ('shortSummary' in json_entry[info]) and (info == json_key or cond):
+                        description = json_entry[info]['shortSummary']
+                        image_thumb = json.loads(re.compile(r'Image\:(.*?)$').findall(json_entry[info]["mainPortraitImage"]['__ref'])[0])['url']
+                        image_landscape = json.loads(re.compile(r'Image\:(.*?)$').findall(json_entry[info]["mainLandscapeImage"]['__ref'])[0])['url']
+                        present = [description, image_thumb, image_landscape]
+                        if 'productType' in json_entry[info]:
+                            product_type = json_entry[info]['productType']
 
-        if "ProductSet" not in json_entry[json_key]["__typename"]:
-            continue
+                data = []
+                data.append(json_entry[json_key]["slug"])
+                already_listed.append(json_key)
 
-        if "slug" not in json_entry[json_key]:
-            continue
-
-        if category_slug not in json_entry[json_key]["slug"]:
-            continue
-
-        for item_data in json_entry[json_key]["items"]:
-            product_ref = item_data["product"]["__ref"]
-
-            product_slug_ref = ''
-            if json_entry[product_ref]['collection'] is not None:
-                product_slug_ref = json_entry[product_ref]['collection']['__ref']
-                program_title = json_entry[product_slug_ref]['title'] + ' - ' + json_entry[product_ref]["title"]
-            else:
-                program_title = json_entry[product_ref]["title"]
-
-            program_image = json.loads(re.compile(r'Image\:(.*?)$').findall(json_entry[product_ref]["mainLandscapeImage"]['__ref'])[0])['url']
-            program_plot = json_entry[product_ref]["shortSummary"]
-            program_type = json_entry[product_ref]["productType"]
-
-            item = Listitem()
-            item.label = program_title
-            item.art['thumb'] = item.art['landscape'] = program_image
-            item.info['plot'] = program_plot
-            if 'EPISODE' not in program_type and 'MOVIE' not in program_type and 'TRAILER' not in program_type:
-                continue
-
-            isVideo = False
-            if json_entry[product_ref]['slug'] is not None:
-                video_slug = json_entry[product_ref]['slug']
-                isVideo = True
-            elif json_entry[product_ref]['collection'] is not None:
-                video_slug = json_entry[product_slug_ref]['slug']
-                isVideo = True
-            if isVideo:
-                video_duration = ''
-                if 'duration' in json_entry[product_ref]:
-                    video_duration = json_entry[product_ref]['duration']
-                item.info['duration'] = video_duration
-                video_season_number = ''
-                if json_entry[product_ref]["seasonNumber"] is not None:
-                    video_season_number = str(json_entry[product_ref]["seasonNumber"])
-                video_episode_number = ''
-                if json_entry[product_ref]["episodeNumber"] is not None:
-                    video_episode_number = str(json_entry[product_ref]["episodeNumber"])
-                item.set_callback(
-                    get_video_url,
-                    item_id=item_id,
-                    video_slug=video_slug,
-                    video_season_number=video_season_number,
-                    video_episode_number=video_episode_number)
-                item_post_treatment(item, is_playable=True, is_downloadable=True)
-                yield item
-            else:
-                if json_entry[product_ref]['slug'] is not None:
-                    program_slug = json_entry[product_ref]['slug']
-                elif json_entry[product_ref]['collection'] is not None:
-                    program_slug = json_entry[product_slug_ref]['slug']
-                program_season_number = ''
-                if json_entry[product_ref]["seasonNumber"] is not None:
-                    program_season_number = str(json_entry[product_ref]["seasonNumber"])
-                item.set_callback(
-                    list_videos,
-                    item_id=item_id,
-                    program_slug=program_slug,
-                    program_season_number=program_season_number)
+                item = Listitem()
+                item.info['plot'] = description
+                item.art['thumb'] = image_thumb
+                item.art['landscape'] = image_landscape
+                item.label = program_title
+                if product_type == 'MOVIE':
+                    item.set_callback(get_video_url, data=data)
+                else:
+                    item.set_callback(list_seasons, data=data, present=present)
                 item_post_treatment(item)
                 yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_slug, program_season_number, **kwargs):
+def list_seasons(plugin, data, present, **kwargs):
+    resp = urlquick.get(URL_VIDEOS % data[0], headers=GENERIC_HEADERS)
+    root = resp.parse()
+    for subject in root.iterfind(".//select[@class='gtm-season-dropdown']"):
+        for option in subject.iterfind(".//option"):
+            season_text = option.text
+            season_number = option.get('value')
+            data.append(season_number)
+            item = Listitem()
+            item.info['plot'] = present[0]
+            item.art['thumb'] = present[1]
+            item.art['landscape'] = present[2]
+            item.label = season_text
+            item.set_callback(list_episodes, data=data)
+            item_post_treatment(item)
+            yield item
 
-    if program_season_number == '':
-        resp = urlquick.get(URL_VIDEOS % program_slug, headers=GENERIC_HEADERS)
-    else:
-        resp = urlquick.get(URL_VIDEOS_SEASON % (program_slug, program_season_number), headers=GENERIC_HEADERS)
 
+@Route.register
+def list_episodes(plugin, data, **kwargs):
+    resp = urlquick.get(URL_VIDEOS_SEASON % (data[0], data[1]), headers=GENERIC_HEADERS)
     json_datas = re.compile(
         r'\/json\"\>\{(.*?)\}\<\/script\>').findall(resp.text)[0]
     json_parser = json.loads('{' + json_datas + '}')
 
     json_entry = json_parser["props"]["apolloState"]
     for json_key in list(json_entry.keys()):
-        if "productType" not in json_entry[json_key]:
-            continue
+        if "Product:" in json_key:
+            product = json_entry[json_key]
+            if ('episodeNumber' in product) and (product['episodeNumber'] is not None):
+                program_title = json_entry[json_key]["title"]
+                description = json_entry[json_key]['shortSummary']
+                image_landscape = json.loads(re.compile(r'Image\:(.*?)$').findall(json_entry[json_key]["mainLandscapeImage"]['__ref'])[0])['url']
+                data.append(product['episodeNumber'])
+                item = Listitem()
+                item.info['plot'] = description
+                item.art['thumb'] = item.art['landscape'] = image_landscape
+                item.label = program_title
+                item.set_callback(get_video_url, data=data)
+                item_post_treatment(item)
+                yield item
 
-        if "EPISODE" not in json_entry[json_key]["productType"] and "TRAILER" not in json_entry[json_key]["productType"]:
-            continue
-
-        video_episode_number = ''
-        if json_entry[json_key]["episodeNumber"] is not None:
-            video_episode_number = str(json_entry[json_key]["episodeNumber"])
-        product_slug_ref = ''
-        if json_entry[json_key]['collection'] is not None:
-            product_slug_ref = json_entry[json_key]['collection']['__ref']
-            video_title = json_entry[product_slug_ref]['title']
-            if program_season_number != '':
-                video_title = video_title + ' - S%sE%s' % (program_season_number, video_episode_number)
-            if json_entry[json_key]["title"] is not None:
-                video_title = video_title + ' - ' + json_entry[json_key]['title']
-        else:
-            video_title = json_entry[json_key]["title"]
-        video_image = program_image = json.loads(re.compile(r'Image\:(.*?)$').findall(json_entry[product_ref]["mainLandscapeImage"]['__ref'])[0])['url']
-        video_plot = ''
-        if 'shortSummary' in json_entry[json_key]:
-            video_plot = json_entry[json_key]["shortSummary"]
-        video_duration = ''
-        if 'duration' in json_entry[json_key]:
-            video_duration = json_entry[json_key]['duration']
-
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
-        item.info['plot'] = video_plot
-        item.info['duration'] = video_duration
-        item.set_callback(
-            get_video_url,
-            item_id=item_id,
-            video_slug=program_slug,
-            video_season_number=program_season_number,
-            video_episode_number=video_episode_number)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+    return False
 
 
 @Resolver.register
-def get_video_url(plugin, item_id, video_slug, video_season_number,
-                  video_episode_number, download_mode=False, **kwargs):
-
-    if video_season_number == '':
-        resp = urlquick.get(URL_STREAM % video_slug, headers=GENERIC_HEADERS)
+def get_video_url(plugin, data, download_mode=False, **kwargs):
+    if len(data) > 1:
+        resp = urlquick.get(URL_STREAM_SEASON_EPISODE % (data[0], data[1], data[2]), headers=GENERIC_HEADERS)
     else:
-        resp = urlquick.get(
-            URL_STREAM_SEASON_EPISODE % (
-                video_slug, video_season_number, video_episode_number), headers=GENERIC_HEADERS)
+        resp = urlquick.get(URL_STREAM % data[0], headers=GENERIC_HEADERS)
 
     json_datas = {
         'operationName': 'VideoPlayerPage',
