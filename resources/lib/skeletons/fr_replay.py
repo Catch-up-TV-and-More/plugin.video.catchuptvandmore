@@ -311,21 +311,13 @@ menu = {
         "enabled": True,
         "order": 36,
     },
-    "via93": {
-        "route": "/resources/lib/channels/fr/via:list_categories",
-        "label": "vià93",
-        "thumb": "channels/fr/via93.png",
-        "fanart": "channels/fr/via93_fanart.jpg",
-        "enabled": True,
-        "order": 37,
-    },
     "weo": {
         "route": "/resources/lib/channels/fr/weo:list_categories",
         "label": "Wéo",
         "thumb": "channels/fr/weo.png",
         "fanart": "channels/fr/weo_fanart.jpg",
         "enabled": True,
-        "order": 38,
+        "order": 37,
     },
     "lachainemeteo": {
         "route": "/resources/lib/channels/fr/lachainemeteo:list_programs",
@@ -333,7 +325,7 @@ menu = {
         "thumb": "channels/fr/lachainemeteo.png",
         "fanart": "channels/fr/lachainemeteo_fanart.jpg",
         "enabled": True,
-        "order": 39,
+        "order": 38,
     },
     "equidia": {
         "route": "/resources/lib/channels/fr/equidia:list_categories",
@@ -341,7 +333,7 @@ menu = {
         "thumb": "channels/fr/equidia.png",
         "fanart": "channels/fr/equidia_fanart.jpg",
         "enabled": True,
-        "order": 40,
+        "order": 39,
     },
     "bsmart": {
         "route": "/resources/lib/channels/fr/bsmart:list_categories",
@@ -349,7 +341,7 @@ menu = {
         "thumb": "channels/fr/bsmart.png",
         "fanart": "channels/fr/bsmart_fanart.jpg",
         "enabled": True,
-        "order": 41,
+        "order": 40,
     },
     "jack": {
         "route": "/resources/lib/channels/fr/jack:list_programs",
@@ -357,7 +349,7 @@ menu = {
         "thumb": "channels/fr/jack.png",
         "fanart": "channels/fr/jack_fanart.jpg",
         "enabled": True,
-        "order": 42,
+        "order": 41,
     },
     "kto": {
         "route": "/resources/lib/channels/fr/kto:list_categories",
@@ -365,7 +357,7 @@ menu = {
         "thumb": "channels/fr/kto.png",
         "fanart": "channels/fr/kto_fanart.jpg",
         "enabled": True,
-        "order": 43,
+        "order": 42,
     },
     "luxetv": {
         "route": "/resources/lib/channels/fr/luxetv:list_categories",
@@ -373,7 +365,7 @@ menu = {
         "thumb": "channels/fr/luxetv.png",
         "fanart": "channels/fr/luxetv_fanart.jpg",
         "enabled": True,
-        "order": 44,
+        "order": 43,
     },
     "gong": {
         "route": "/resources/lib/channels/fr/gong:list_categories",
@@ -381,7 +373,7 @@ menu = {
         "thumb": "channels/fr/gong.png",
         "fanart": "channels/fr/gong_fanart.jpg",
         "enabled": True,
-        "order": 45,
+        "order": 44,
     },
     "j_one": {
         "route": "/resources/lib/channels/fr/j_one:list_videos",
@@ -389,6 +381,6 @@ menu = {
         "thumb": "channels/fr/jone.png",
         "fanart": "channels/fr/jone_fanart.jpg",
         "enabled": True,
-        "order": 46,
+        "order": 45,
     }
 }
