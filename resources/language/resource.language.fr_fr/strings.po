@@ -217,6 +217,11 @@ msgctxt "#30073"
 msgid "Peru"
 msgstr "Pérou"
 
+msgctxt "#30074"
+msgid "Venezuela"
+msgstr "Venezuela"
+
+
 # Channels (from 30080 to 30129)
 
 msgctxt "#30080"
