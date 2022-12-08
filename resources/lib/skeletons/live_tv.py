@@ -196,4 +196,11 @@ menu = {
         'enabled': True,
         'order': 24
     },
+    've_live': {
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30074,
+        'thumb': 'channels/ve.png',
+        'enabled': True,
+        'order': 25
+    },
 }
