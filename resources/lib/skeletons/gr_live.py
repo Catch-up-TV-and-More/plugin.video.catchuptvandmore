@@ -20,8 +20,8 @@ menu = {
     'ept1': {
         'resolver': '/resources/lib/channels/gr/ept:get_live_url',
         'label': 'EPT1',
-        'thumb': 'channels/cm/ept1.png',
-        'fanart': 'channels/cm/ept1_fanart.jpg',
+        'thumb': 'channels/gr/ept1.png',
+        'fanart': 'channels/gr/ept1_fanart.jpg',
         'enabled': True,
         'order': 1
     },
