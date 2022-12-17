@@ -204,9 +204,10 @@ def get_stream_with_quality(plugin,
         headers = {"User-Agent": web_utils.get_random_ua()}
     stream_headers = urlencode(headers)
     item.property['inputstream.adaptive.stream_headers'] = stream_headers
-    if license_url is None:
-        license_url = ''
-    item.property['inputstream.adaptive.license_key'] = '%s|%s|R{SSM}|' % (license_url, stream_headers)
+    if license_url is not None:
+        if '|' not in license_url:  # add headers only if they are not already in the url
+            license_url = '%s|%s|R{SSM}|' % (license_url, stream_headers)
+        item.property['inputstream.adaptive.license_key'] = license_url
 
     if input_stream_properties is not None:
         if "manifest_update_parameter" in input_stream_properties:
