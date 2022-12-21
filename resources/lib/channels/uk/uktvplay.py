@@ -102,8 +102,10 @@ def list_categories(plugin, item_id, **kwargs):
         category_slug = category_datas["slug"]
         item = Listitem()
         item.label = category_title
+        # START use UKTVPlay artwork instead of CUTV&More artwork 
         item.art["thumb"] = iconpath
         item.art["fanart"] = fanartpath
+        # END use UKTVPlay artwork instead of CUTV&More artwork 
         item.set_callback(list_sub_categories,
                           item_id=item_id,
                           category_slug=category_slug)
@@ -124,8 +126,10 @@ def list_sub_categories(plugin, item_id, category_slug, **kwargs):
                 sub_category_slug = sub_category_datas["slug"]
                 item = Listitem()
                 item.label = sub_category_title
+                # START use UKTVPlay artwork instead of CUTV&More artwork 
                 item.art["thumb"] = iconpath
                 item.art["fanart"] = fanartpath
+                # END use UKTVPlay artwork instead of CUTV&More artwork 
                 item.set_callback(list_programs_sub_categories,
                                   item_id=item_id,
                                   sub_category_slug=sub_category_slug)
@@ -149,7 +153,10 @@ def list_programs_sub_categories(plugin, item_id, sub_category_slug, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = item.art['landscape'] = program_image
+        # add program_title and program_image to parameters
         item.set_callback(list_seasons,
+                          program_title=program_title,
+                          program_image=program_image,
                           item_id=item_id,
                           program_slug=program_slug)
         item_post_treatment(item)
@@ -192,7 +199,10 @@ def list_programs(plugin, item_id, letter_value, **kwargs):
         item = Listitem()
         item.label = program_title
         item.art['thumb'] = item.art['landscape'] = program_image
+        # add program_title and program_image to parameters
         item.set_callback(list_seasons,
+                          program_title=program_title,
+                          program_image=program_image,
                           item_id=item_id,
                           program_slug=program_slug)
         item_post_treatment(item)
@@ -200,7 +210,8 @@ def list_programs(plugin, item_id, letter_value, **kwargs):
 
 
 @Route.register
-def list_seasons(plugin, item_id, program_slug, **kwargs):
+# add program_title and program_image to parameters
+def list_seasons(plugin, program_title, program_image, item_id, program_slug, **kwargs):
 
     resp = urlquick.get(URL_INFO_PROGRAM % program_slug)
     json_parser = json.loads(resp.text)
@@ -211,6 +222,10 @@ def list_seasons(plugin, item_id, program_slug, **kwargs):
 
         item = Listitem()
         item.label = season_title
+        # START use Program Image artwork instead of CUTV&More artwork for seasons
+        item.art["thumb"] = program_image
+        item.art["fanart"] = program_image
+        # END use Program Image artwork instead of CUTV&More artwork for seasons
         item.set_callback(list_videos, item_id=item_id, serie_id=serie_id)
         item_post_treatment(item)
         yield item
