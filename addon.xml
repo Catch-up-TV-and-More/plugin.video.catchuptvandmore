@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta15" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta16" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -141,6 +141,15 @@ Project: Remove an useless file
 [WO - ARTE] Do not add root address to fetch url (issue #1001)
 [CA - TV5UNIS] Fix replay
 [WO - ARTE] Propose multiple versions of the streams (issue #1005)
+[CA - TV5UNIS] Fix replay when program has no season
+[Project] Remove VIA93 replay of skeleton
+[VE - VENEZOLANA] Add live
+[WO - EURONEWS] Fix live (PR #1012 issue #1011) thanks @darodi
+[GR] Fix skeleton for EPT1 channel
+[WO - BVN] Fix live (issue #1019)
+[FR - MYTF1] Fix TMC live (issue #1013)
+[PROJECT] get_stream_with_quality with inpustream adaptive properties (PR #1022) thanks @darodi
+[IT - RTL] Fix live (PR #1025 issue #1024) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
