@@ -29,13 +29,13 @@ URL_ROOT = utils.urljoin_partial("https://www.tf1.fr")
 
 URL_VIDEO_STREAM = 'https://mediainfo.tf1.fr/mediainfocombo/%s?context=MYTF1&pver=5000002&platform=web&device=desktop&os=linux&osVersion=unknown&topDomain=www.tf1.fr'
 
-URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=drm-wide.tf1.fr|R{SSM}|'
-# videoId
-
-
 URL_API = 'https://www.tf1.fr/graphql/web'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+
+URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s'
+# videoId
+
 
 DESIRED_QUALITY = Script.setting['quality']
 
@@ -272,7 +272,12 @@ def get_video_url(plugin,
     except Exception:
         license_url = URL_LICENCE_KEY % video_id
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url)
+    LICENSE_HEADERS = {
+        'Content-Type': '',
+        'User-Agent': web_utils.get_random_ua()
+    }
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, headers=LICENSE_HEADERS)
 
 
 @Resolver.register
@@ -287,10 +292,20 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
 
     video_url = json_parser['delivery']['url']
-    license_url = URL_LICENCE_KEY % video_id
+    LICENSE_HEADERS = {
+        'Content-Type': '',
+        'User-Agent': web_utils.get_random_ua()
+    }
+
+    if 'drms' in json_parser['delivery']:
+        license_url = json_parser['delivery']['drms'][0]['url']
+        LICENSE_HEADERS.update({'Authorization': json_parser['delivery']['drms'][0]['h'][0]['v']})
+    else:
+        license_url = URL_LICENCE_KEY % video_id
+
     if video_id == 'L_TF1' or video_id == 'L_TMC':
         workaround = '1'
     else:
         workaround = None
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, workaround=workaround)
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, workaround=workaround, headers=LICENSE_HEADERS)

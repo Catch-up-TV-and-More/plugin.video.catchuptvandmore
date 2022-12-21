@@ -12,6 +12,8 @@ import inputstreamhelper
 from codequick import Listitem, Resolver, Route
 from kodi_six import xbmcgui
 import urlquick
+import base64
+import datetime
 
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
@@ -20,7 +22,10 @@ from resources.lib import resolver_proxy, web_utils
 URL_ROOT = 'https://www.bvn.tv'
 
 # LIVE :
-URL_LIVE = 'https://prod.npoplayer.nl/stream-link'
+URL_LIVE = URL_ROOT + '/bvnlive'
+
+# STREAM_LINK :
+URL_STRAM_LINK = 'https://prod.npoplayer.nl/stream-link'
 
 # REPLAY :
 URL_DAYS = URL_ROOT + '/uitzendinggemist/'
@@ -30,10 +35,11 @@ URL_STREAM = 'https://start-player.npo.nl/video/%s/streams?profile=dash-widevine
 # Id video, tokenId
 URL_SUBTITLE = 'https://rs.poms.omroep.nl/v1/api/subtitles/%s'
 
-#License URL
+# License URL
 LICENSE_URL = "https://npo-drm-gateway.samgcloud.nepworldwide.nl/authentication?custom_data=%s"
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+
 
 @Route.register
 def list_days(plugin, item_id, **kwargs):
@@ -150,10 +156,11 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+    resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
+    jwt = re.compile('let jwt \= \"(.*?)\"').findall(resp.text)[0]
+
     headers = {
-        'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzEzMDQ0MjYsInN1YiI6IkxJX0JWTl80NTg5MTA3IiwiaXNzIjoiYnZuIiwiY2lwIjoiMjAyLjkwLjkyLjU3IiwiYWdlIjoyNX0.wQ3Lcb6vppuPKcf2zjZN-PQW4NnJrcPnlaCmhfzXQ24',
-        'Content-type': 'application/json',
-        'Referer': 'https://www.bvn.tv/',
+        'Authorization': jwt,
         'User-Agent': web_utils.get_random_ua()
     }
 
@@ -162,7 +169,7 @@ def get_live_url(plugin, item_id, **kwargs):
         'drmType': 'widevine',
     }
 
-    resp = urlquick.post(URL_LIVE, headers=headers, json=json_data, max_age=-1)
+    resp = urlquick.post(URL_STRAM_LINK, headers=headers, json=json_data, max_age=-1)
 
     json_parser = resp.json()
 
