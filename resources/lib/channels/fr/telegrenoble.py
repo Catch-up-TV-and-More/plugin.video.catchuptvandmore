@@ -90,5 +90,7 @@ def get_video_url(plugin, video_url, download_mode=False, **kwargs):
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
-    live_id = re.compile(r'dailymotion.com/embed/video/(.*?)[\?\"]').findall(resp.text)[0]
-    return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
+    live_url = resp.parse().find('.//iframe').get('src')
+    video_id = re.compile(r'channel\=(.*?)\&').findall(live_url)[0]
+
+    return resolver_proxy.get_stream_twitch(plugin, video_id, False)

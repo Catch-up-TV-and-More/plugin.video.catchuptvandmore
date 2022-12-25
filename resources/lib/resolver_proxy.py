@@ -76,6 +76,8 @@ URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json
 
 URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
 
+URL_TWITCH = 'https://player.twitch.tv/?channel=%s'
+
 # desired_language, videoid
 URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
 
@@ -549,3 +551,9 @@ def get_arte_video_stream(plugin,
         return download.download_video(video_url)
 
     return get_stream_with_quality(plugin, video_url)
+
+
+# Twitch Part
+def get_stream_twitch(plugin, video_id, download_mode=False):
+    url_twitch = URL_TWITCH % video_id
+    return get_stream_default(plugin, url_twitch, download_mode)
