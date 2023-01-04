@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 import json
 import re
+import unidecode
 
 from codequick import Listitem, Resolver, Route, Script, utils
 import urlquick
@@ -23,7 +24,7 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://la1ere.francetvinfo.fr'
 
-URL_LIVES_JSON = URL_ROOT + '/webservices/mobile/live.json'
+URL_LIVE = 'https://www.france.tv/la1ere/%s/direct.html'
 
 URL_EMISSIONS = URL_ROOT + '/%s/emissions'
 # region
@@ -142,13 +143,9 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    final_region = kwargs.get('language', Script.setting['la_1ere.language'])
+    final_region = unidecode.unidecode(kwargs.get('language', Script.setting['la_1ere.language'])).lower()
+    resp = urlquick.get(URL_LIVE % final_region, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
+    broadcast_id = re.compile(r'videoId\"\:\"(.*?)\"', re.DOTALL).findall(resp.text)[0]
 
-    resp = urlquick.get(URL_LIVES_JSON,
-                        headers={'User-Agent': web_utils.get_random_ua()},
-                        max_age=-1)
-    json_parser = json.loads(resp.text)
+    return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
 
-    region = utils.ensure_unicode(final_region)
-    id_sivideo = json_parser[LIVE_LA1ERE_REGIONS[region]]["id_sivideo"].split('@')[0]
-    return resolver_proxy.get_francetv_live_stream(plugin, id_sivideo)
