@@ -67,12 +67,14 @@ URL_MTVNSERVICES_STREAM_ACCOUNT_EP = 'https://media-utils.mtvnservices.com/servi
                                      '&accountOverride=%s&ep=%s'
 # videoURI, accountOverride, ep
 
-URL_FRANCETV_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s' \
-                            '?country_code=%s&device_type=desktop&browser=chrome'
+URL_FRANCETV_PROGRAM_INFO = 'https://player.webservices.francetelevisions.fr/v1/videos/%s'
 # VideoId
 
 URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json&url=%s'
 # Url
+
+URL_LICENSE_FRANCETV = 'https://simulcast-b.ftven.fr/keys/hls.key'
+# URL license
 
 URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
 
@@ -80,6 +82,8 @@ URL_TWITCH = 'https://player.twitch.tv/?channel=%s'
 
 # desired_language, videoid
 URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
+
+GENERIC_HEADERS = {'USER-Agent': web_utils.get_random_ua()}
 
 
 def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
@@ -510,26 +514,24 @@ def get_francetv_video_stream(plugin,
     return False
 
 
-def get_francetv_live_stream(plugin, live_id):
+def get_francetv_live_stream(plugin, broadcast_id):
+
+    # Move Live TV on the new API
     geoip_value = web_utils.geoip()
     if not geoip_value:
         geoip_value = 'FR'
+    params = {
+        'country_code': geoip_value,
+        'browser': 'firefox',
+        'device_type': 'desktop'
+    }
+    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % broadcast_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser_live_id = json.loads(resp.text)
+    final_url = json_parser_live_id['video']['token']
 
-    headers = {"User-Agent": web_utils.get_random_ua()}
-
-    # Move Live TV on the new API
-    json_parser_live_id = json.loads(
-        urlquick.get(URL_FRANCETV_PROGRAM_INFO % (live_id, geoip_value),
-                     headers=headers, max_age=-1).text)
-
-    try:
-        final_url = json_parser_live_id['video']['token']
-    except Exception:
-        return None
-
-    json_parser2 = json.loads(urlquick.get(final_url, max_age=-1).text)
-    video_url = json_parser2['url']
-    return get_stream_with_quality(plugin, video_url, manifest_type="hls", headers=headers)
+    resp = urlquick.get(final_url, max_age=-1)
+    video_url = json.loads(resp.text)['url']
+    return get_stream_with_quality(plugin, video_url, license_url=URL_LICENSE_FRANCETV)
 
 
 # Arte Part
