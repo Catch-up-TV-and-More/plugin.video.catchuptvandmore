@@ -22,7 +22,6 @@ from resources.lib import download, resolver_proxy
 from resources.lib.kodi_utils import get_kodi_version
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.resolver_proxy import get_stream_with_quality
-from resources.lib.web_utils import urlencode
 
 LICENSE_SERVER_HEADERS = '|User-Agent=Mozilla%2F5.0%20(X11%3B%20Linux%20x86_64)%20AppleWebKit%2F537.36%20' \
                          '(KHTML%2C%20like%20Gecko)%20Chrome%2F49.0.2623.87%20Safari%2F537.36&Content-Type=|R{SSM}|'
