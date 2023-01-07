@@ -10,12 +10,12 @@ import json
 import re
 import unidecode
 
+# noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script, utils
 import urlquick
 
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
-
 
 # Channels:
 #     * La 1ère (JT, Météo, Live TV)
@@ -94,7 +94,6 @@ def list_programs(plugin, item_id, **kwargs):
 
 @Route.register
 def list_videos(plugin, item_id, program_url, **kwargs):
-
     resp = urlquick.get(program_url)
     root = resp.parse()
 
@@ -136,7 +135,6 @@ def get_video_url(plugin,
                   id_diffusion,
                   download_mode=False,
                   **kwargs):
-
     return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
                                                     download_mode)
 
@@ -148,4 +146,3 @@ def get_live_url(plugin, item_id, **kwargs):
     broadcast_id = re.compile(r'videoId\"\:\"(.*?)\"', re.DOTALL).findall(resp.text)[0]
 
     return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
-
