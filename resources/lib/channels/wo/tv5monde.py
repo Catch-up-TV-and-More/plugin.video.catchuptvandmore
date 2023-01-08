@@ -15,7 +15,6 @@ import urlquick
 from codequick import Listitem, Resolver, Route, Script
 from resources.lib import download, web_utils, resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
-from resources.lib.addon_utils import Enum
 
 # TODO Rework filter for all videos
 
@@ -27,10 +26,10 @@ M3U8_NOT_FBS = 'https://ott.tv5monde.com/Content/HLS/Live/channel(europe)/varian
 
 LIST_LIVE_TV5MONDE = {'tv5mondefbs': 'fbs', 'tv5mondeinfo': 'infoplus'}
 
-
-class LiveType(Enum):
-    FBS = "0"
-    NOT_FBS = "1"
+LIVETYPE = {
+    "FBS": "0",
+    "NOT_FBS": "1"
+}
 
 
 @Route.register
@@ -178,7 +177,7 @@ def get_video_url(plugin,
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     region = Script.setting['tv5monde.region']
-    if region == LiveType.NOT_FBS.value:
+    if region == LIVETYPE['NOT_FBS']:
         return resolver_proxy.get_stream_with_quality(plugin, video_url=M3U8_NOT_FBS, manifest_type="hls")
 
     live_id = ''
