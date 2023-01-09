@@ -217,5 +217,13 @@ menu = {
         'fanart': 'channels/wo/africa24_fanart.jpg',
         'enabled': True,
         'order': 19
+    },
+    'aljazeera': {
+        'resolver': '/resources/lib/channels/wo/aljazeera:get_live_url',
+        'label': 'Aljazeera',
+        'thumb': 'channels/wo/aljazeera.png',
+        'fanart': 'channels/wo/aljazeera_fanart.png',
+        'enabled': True,
+        'order': 20
     }
 }
