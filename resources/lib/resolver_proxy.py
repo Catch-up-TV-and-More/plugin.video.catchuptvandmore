@@ -433,17 +433,28 @@ def get_mtvnservices_stream(plugin,
     return video_url
 
 
+def __get_francetv_program_info(video_id):
+    # Move Live TV on the new API
+    geoip_value = web_utils.geoip()
+    if not geoip_value:
+        geoip_value = 'FR'
+    params = {
+        'country_code': geoip_value,
+        'browser': 'firefox',
+        'device_type': 'desktop'
+    }
+    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % video_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser_live_id = json.loads(resp.text)
+    return json_parser_live_id
+
+
 # FranceTV Part
 # FranceTV, FranceTV Sport, France Info, ...
 def get_francetv_video_stream(plugin,
                               id_diffusion,
                               download_mode=False):
-    geoip_value = web_utils.geoip()
-    if not geoip_value:
-        geoip_value = 'FR'
-    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % (id_diffusion, geoip_value),
-                        max_age=-1)
-    json_parser = resp.json()
+
+    json_parser = __get_francetv_program_info(id_diffusion)
 
     if 'video' not in json_parser:
         plugin.notify('ERROR', plugin.localize(30716))
@@ -516,17 +527,7 @@ def get_francetv_video_stream(plugin,
 
 def get_francetv_live_stream(plugin, broadcast_id):
 
-    # Move Live TV on the new API
-    geoip_value = web_utils.geoip()
-    if not geoip_value:
-        geoip_value = 'FR'
-    params = {
-        'country_code': geoip_value,
-        'browser': 'firefox',
-        'device_type': 'desktop'
-    }
-    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % broadcast_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
-    json_parser_live_id = json.loads(resp.text)
+    json_parser_live_id = __get_francetv_program_info(broadcast_id)
     final_url = json_parser_live_id['video']['token']
 
     resp = urlquick.get(final_url, max_age=-1)
