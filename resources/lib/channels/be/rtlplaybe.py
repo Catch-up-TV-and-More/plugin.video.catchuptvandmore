@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 
 import json
 import re
+
 import sys
 from builtins import str
 
@@ -60,7 +61,7 @@ URL_SUBCATEGORY = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
 # e.g. Episode 1, Episode 2, ...
 URL_VIDEOS = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
              'chromecast/services/rtlbe_rtl_play/programs/%s/videos?' \
-             'csa=6&with=clips,freemiumpacks&type=vi,vc,playlist&limit=999'\
+             'csa=6&with=clips,freemiumpacks&type=vi,vc,playlist&limit=999' \
              '&offset=0&subcat=%s&sort=subcat'
 
 URL_VIDEOS2 = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
@@ -71,7 +72,7 @@ URL_SEARCH = 'https://nhacvivxxk-dsn.algolia.net/1/indexes/*/queries?x-algolia-a
              '4.10.5)%3B%20Browser'
 
 URL_JSON_VIDEO = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
-                 'chromecast/services/rtlbe_rtl_play/videos/%s'\
+                 'chromecast/services/rtlbe_rtl_play/videos/%s' \
                  '?csa=6&with=clips,freemiumpacks'
 
 URL_IMG = 'https://images.6play.fr/v1/images/%s/raw'
@@ -83,8 +84,14 @@ URL_COMPTE_LOGIN = 'https://accounts.eu1.gigya.com/accounts.login'
 
 URL_GET_JS_ID_API_KEY = 'https://www.rtlplay.be/connexion'
 
-URL_API_KEY = 'https://www.rtlplay.be/client-%s.bundle.js'
 # Id
+URL_API_KEY = 'https://www.rtlplay.be/main-%s.bundle.js'
+
+PATTERN_API_KEY = re.compile(r'login.rtl.be\"\,key\:\"(.*?)\"')
+
+PATTERN_JS_ID = re.compile(r'main\-(.*?)\.bundle\.js')
+
+API_KEY = "3_LGnnaXIFQ_VRXofTaFTGnc6q7pM923yFB0AXSWdxADsUT0y2dVdDKmPRyQMj7LMc"
 
 URL_TOKEN_DRM = 'https://6play-users.6play.fr/v2/platforms/chromecast/services/rtlbe_rtl_play/users/%s/videos/%s/upfront-token'
 
@@ -96,6 +103,21 @@ URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chrom
 # Chaine
 
 pyver = float('%s.%s' % sys.version_info[:2])
+
+
+def get_api_key():
+    resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY)
+    found_js_id = PATTERN_JS_ID.findall(resp_js_id.text)
+    if len(found_js_id) == 0:
+        return API_KEY
+    js_id = found_js_id[0]
+    resp = urlquick.get(URL_API_KEY % js_id)
+    # Hack to force encoding of the response
+    resp.encoding = 'utf-8'
+    found_items = PATTERN_API_KEY.findall(resp.text)
+    if len(found_items) == 0:
+        return API_KEY
+    return found_items[0]
 
 
 @Route.register
@@ -143,7 +165,6 @@ def rtlplay_root(plugin, **kwargs):
 
 @Route.register
 def list_videos_search(plugin, search_query, item_id, page, **kwargs):
-
     if search_query is None or len(search_query) == 0:
         return False
 
@@ -234,15 +255,15 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
                         item.set_callback(get_video_url,
                                           item_id=item_id,
                                           video_id=search_id)
-                    # TODO playlist
-                    # else:
-                    #     item = Listitem()
-                    #     item.label = search_title
-                    #     # populate_item(item, video)
-                    #     item.set_callback(get_playlist_urls,
-                    #                       item_id=item_id,
-                    #                       video_id=search_id,
-                    #                       url=url)
+                        # TODO playlist
+                        # else:
+                        #     item = Listitem()
+                        #     item.label = search_title
+                        #     # populate_item(item, video)
+                        #     item.set_callback(get_playlist_urls,
+                        #                       item_id=item_id,
+                        #                       video_id=search_id,
+                        #                       url=url)
 
                         item_post_treatment(item,
                                             is_playable=True,
@@ -466,7 +487,6 @@ def get_video_url(plugin,
                   video_id,
                   download_mode=False,
                   **kwargs):
-
     if get_kodi_version() < 18:
         video_json = urlquick.get(URL_JSON_VIDEO % video_id,
                                   headers={
@@ -487,15 +507,9 @@ def get_video_url(plugin,
 
         return final_video_url
 
-    resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY)
-    js_id = re.compile(r'client\-(.*?)\.bundle\.js').findall(resp_js_id.text)[0]
-    resp = urlquick.get(URL_API_KEY % js_id)
+    api_key = get_api_key()
 
-    # Hack to force encoding of the response
-    resp.encoding = 'utf-8'
-    api_key = re.compile(r'login.rtl.be\"\,key\:\"(.*?)\"').findall(resp.text)[0]
-
-    if plugin.setting.get_string('rtlplaybe.login') == '' or\
+    if plugin.setting.get_string('rtlplaybe.login') == '' or \
             plugin.setting.get_string('rtlplaybe.password') == '':
         xbmcgui.Dialog().ok(
             'Info',
@@ -692,22 +706,13 @@ def get_playlist_urls(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     if get_kodi_version() < 18:
         xbmcgui.Dialog().ok('Info', plugin.localize(30602))
         return False
 
-    resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY)
-    js_id = re.compile(r'client\-(.*?)\.bundle\.js').findall(
-        resp_js_id.text)[0]
-    resp = urlquick.get(URL_API_KEY % js_id)
+    api_key = get_api_key()
 
-    # Hack to force encoding of the response
-    resp.encoding = 'utf-8'
-    api_key = re.compile(r'login.rtl.be\"\,key\:\"(.*?)\"').findall(
-        resp.text)[0]
-
-    if plugin.setting.get_string('rtlplaybe.login') == '' or\
+    if plugin.setting.get_string('rtlplaybe.login') == '' or \
             plugin.setting.get_string('rtlplaybe.password') == '':
         xbmcgui.Dialog().ok(
             plugin.localize(30600),
