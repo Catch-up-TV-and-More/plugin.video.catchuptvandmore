@@ -19,14 +19,14 @@ from codequick.utils import urljoin_partial
 # noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 
-from resources.lib import web_utils
+from resources.lib import web_utils, resolver_proxy
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import (get_kodi_version, get_selected_item_art, get_selected_item_label,
                                       get_selected_item_info, INPUTSTREAM_PROP)
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.web_utils import urlencode, get_random_ua
 
-RANDOM_UA = get_random_ua()
+GENERIC_HEADERS = get_random_ua()
 COUNTRY = web_utils.geoip()
 
 
@@ -119,7 +119,7 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
     language = Script.setting['tv5mondeplus.language']
 
     headers = {
-        "User-Agent": RANDOM_UA,
+        "User-Agent": GENERIC_HEADERS,
         "Accept": "*/*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         "Sec-Fetch-Dest": "empty",
@@ -228,7 +228,7 @@ def list_seasons(plugin, item_id, program_asset_id, **kwargs):
     language = Script.setting['tv5mondeplus.language']
 
     headers = {
-        "User-Agent": RANDOM_UA,
+        "User-Agent": GENERIC_HEADERS,
         "Accept": "*/*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         "content-type": "application/json",
@@ -284,7 +284,7 @@ def list_videos_of_season(plugin, item_id, season_id, **kwargs):
     language = Script.setting['tv5mondeplus.language']
 
     headers = {
-        "User-Agent": RANDOM_UA,
+        "User-Agent": GENERIC_HEADERS,
         "Accept": "*/*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         "content-type": "application/json",
@@ -330,7 +330,7 @@ def list_video_movie(plugin, item_id, program_asset_id, **kwargs):
     language = Script.setting['tv5mondeplus.language']
 
     headers = {
-        "User-Agent": RANDOM_UA,
+        "User-Agent": GENERIC_HEADERS,
         "Accept": "*/*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         "content-type": "application/json",
@@ -381,24 +381,11 @@ def get_video_url(plugin,
                   **kwargs):
     language = Script.setting['tv5mondeplus.language']
 
-    if get_kodi_version() < 18:
-        xbmcgui.Dialog().ok(plugin.localize(14116), plugin.localize(30602))
-        return False
-
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
-
     headers_auth = {
-        "User-Agent": RANDOM_UA,
+        "User-Agent": GENERIC_HEADERS,
         "Accept": "application/json, text/plain, */*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         "Content-Type": "application/json;charset=utf-8",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache"
     }
 
     json_body = {
@@ -416,15 +403,10 @@ def get_video_url(plugin,
     json_parser = resp.json()
 
     headers = {
-        "User-Agent": RANDOM_UA,
+        "User-Agent": GENERIC_HEADERS,
         "Accept": "application/json, text/plain, */*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         'authorization': 'Bearer %s' % json_parser["sessionToken"],
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
         "referrer": "https://www.tv5mondeplus.com/"
     }
 
@@ -441,29 +423,11 @@ def get_video_url(plugin,
 
     resp2 = urlquick.get(URL_STREAM_DATA % video_id, params=params, headers=headers)
     json_parser2 = resp2.json()
-
-    item = Listitem()
-    item.path = json_parser2["formats"][0]["mediaLocator"]
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-
-    header_license = {
-        "User-Agent": RANDOM_UA,
-        "Accept": "*/*",
-        "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
-        "referrer": "https://www.tv5mondeplus.com/"
+    video_url = json_parser2["formats"][0]["mediaLocator"]
+    license_url = json_parser2["formats"][0]["drm"]["com.widevine.alpha"]["licenseServerUrl"]
+    headers = {
+        "User-Agent": GENERIC_HEADERS,
+        "Content-Type": ''
     }
-
     license_server_url = json_parser2["formats"][0]["drm"]["com.widevine.alpha"]["licenseServerUrl"]
-    item.property['inputstream.adaptive.license_key'] = '%s|%s|R{SSM}|' \
-                                                        % (license_server_url, urlencode(header_license))
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    return item
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, headers=headers, manifest_type="mpd", license_url=license_url)
