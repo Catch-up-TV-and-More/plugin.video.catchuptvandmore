@@ -355,7 +355,12 @@ def yield_video_data(item_id, video_data, found_result):
     video_image = video_data["images"]["illustration"]["16x9"]["1248x702"]
     video_duration = video_data["duration"]
     date_value = format_day(video_data["date_publish_from"])
-    if "url_streaming" in video_data:
+
+    video_url = None
+    if "url" in video_data:
+        video_url = video_data["url"]
+        is_redbee = True
+    elif "url_streaming" in video_data:
         url_streaming = video_data["url_streaming"]
         if is_drm:
             if "url_hls" in url_streaming:
@@ -365,20 +370,14 @@ def yield_video_data(item_id, video_data, found_result):
                 is_drm = False
             elif "url_dash" in url_streaming:
                 video_url = url_streaming["url_dash"]
-            else:
-                video_url = url_streaming["url"]
-                is_drm = False
-        else:
-            if "url_hls" in url_streaming:
-                video_url = url_streaming["url_hls"]
-            else:
-                video_url = url_streaming["url"]
+        elif "url_hls" in url_streaming:
+            video_url = url_streaming["url_hls"]
     elif "url_embed" in video_data:
         video_url = video_data["url_embed"]
         is_drm = False
-    else:
-        video_url = video_data["url"]
-        is_redbee = True
+
+    if video_url is None:
+        return False
 
     item = Listitem()
     item.label = video_title
@@ -555,7 +554,8 @@ def get_drm_item(plugin, video_id, video_url, url_token_parameter):
     json_parser_token = json.loads(token_value.text)
     headers = {'customdata': json_parser_token["auth_encoded_xml"]}
     input_stream_properties = {"manifest_update_parameter": 'full'}
-    return get_stream_with_quality(plugin, video_url=video_url, headers=headers, manifest_type='mpd', license_url=URL_LICENCE_KEY, input_stream_properties=input_stream_properties)
+    return get_stream_with_quality(plugin, video_url=video_url, headers=headers, manifest_type='mpd',
+                                   license_url=URL_LICENCE_KEY, input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
