@@ -51,6 +51,9 @@ URL_STREAM_DATA = BASE_URL_API + '/v2/customer/TV5MONDE/businessunit/TV5MONDEplu
 AUTH_ANONYMOUS_API = BASE_URL_API + '/v1/customer/TV5MONDE/businessunit/TV5MONDEplus/auth/anonymous'
 SEARCH_API = BASE_URL_API + "/v2/customer/TV5MONDE/businessunit/TV5MONDEplus/content/search/query/%s"
 
+LICENSE_SERVER_HEADERS = '|User-Agent=Mozilla%2F5.0%20(X11%3B%20Linux%20x86_64)%20AppleWebKit%2F537.36%20' \
+                         '(KHTML%2C%20like%20Gecko)%20Chrome%2F49.0.2623.87%20Safari%2F537.36&Content-Type=|R{SSM}|'
+
 # TODO compute hashes instead
 OPERATION_HASHES_WEB = {
     "VODCatalogSection": "TODO",  # TODO
@@ -448,21 +451,22 @@ def get_video_url(plugin,
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
 
-    header_license = {
-        "User-Agent": RANDOM_UA,
-        "Accept": "*/*",
-        "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
-        "referrer": "https://www.tv5mondeplus.com/"
-    }
+    # header_license = {
+    #     "User-Agent": RANDOM_UA,
+    #     "Accept": "*/*",
+    #     "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
+    #     "Sec-Fetch-Dest": "empty",
+    #     "Sec-Fetch-Mode": "cors",
+    #     "Sec-Fetch-Site": "same-site",
+    #     "Pragma": "no-cache",
+    #     "Cache-Control": "no-cache",
+    #     "referrer": "https://www.tv5mondeplus.com/"
+    # }
 
     license_server_url = json_parser2["formats"][0]["drm"]["com.widevine.alpha"]["licenseServerUrl"]
-    item.property['inputstream.adaptive.license_key'] = '%s|%s|R{SSM}|' \
-                                                        % (license_server_url, urlencode(header_license))
+    # item.property['inputstream.adaptive.license_key'] = '%s|%s|R{SSM}|' \
+    #                                                     % (license_server_url, urlencode(header_license))
+    item.property['inputstream.adaptive.license_key'] = license_server_url + LICENSE_SERVER_HEADERS
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
