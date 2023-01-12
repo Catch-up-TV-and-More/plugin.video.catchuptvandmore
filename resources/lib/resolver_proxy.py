@@ -183,6 +183,9 @@ def get_stream_with_quality(plugin,
                                                     append_query_string=append_query_string,
                                                     verify=verify, subtitles=subtitles)
 
+    if headers is None:
+        headers = {"User-Agent": web_utils.get_random_ua()}
+
     item = Listitem()
     item.path = video_url
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
@@ -206,8 +209,6 @@ def get_stream_with_quality(plugin,
             if bitrate != 0:
                 item.property["inputstream.adaptive.max_bandwidth"] = str(bitrate * 1000)
 
-    if headers is None:
-        headers = {"User-Agent": web_utils.get_random_ua()}
     stream_headers = urlencode(headers)
     item.property['inputstream.adaptive.stream_headers'] = stream_headers
     if license_url is not None:
