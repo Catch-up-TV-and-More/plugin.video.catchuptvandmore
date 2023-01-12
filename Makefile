@@ -1,5 +1,5 @@
 export PYTHONPATH := $(CURDIR)/resources/lib:$(CURDIR)/tests
-PYTHON := python
+PYTHON := python3
 KODI_PYTHON_ABIS := 3.0.0 2.25.0
 
 name = $(shell xmllint --xpath 'string(/addon/@id)' addon.xml)
