@@ -10,7 +10,6 @@ from __future__ import unicode_literals
 import random
 from builtins import str
 
-import inputstreamhelper
 import urlquick
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
@@ -22,7 +21,7 @@ from kodi_six import xbmcgui
 from resources.lib import web_utils, resolver_proxy
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.kodi_utils import (get_kodi_version, get_selected_item_art, get_selected_item_label,
-                                      get_selected_item_info, INPUTSTREAM_PROP)
+                                      get_selected_item_info)
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.web_utils import urlencode, get_random_ua
 
@@ -122,11 +121,6 @@ def list_videos_search(plugin, search_query, item_id, page, **kwargs):
         "User-Agent": GENERIC_HEADERS,
         "Accept": "*/*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
         "referrer": "https://www.tv5mondeplus.com/"
     }
 
@@ -232,11 +226,6 @@ def list_seasons(plugin, item_id, program_asset_id, **kwargs):
         "Accept": "*/*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         "content-type": "application/json",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
         "referrer": "https://www.tv5mondeplus.com/details/vod/redbee:%s" % program_asset_id
     }
 
@@ -288,11 +277,6 @@ def list_videos_of_season(plugin, item_id, season_id, **kwargs):
         "Accept": "*/*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         "content-type": "application/json",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache"
     }
 
     params = {
@@ -318,9 +302,7 @@ def list_videos_of_season(plugin, item_id, season_id, **kwargs):
         item.label = video_title
         item.art['thumb'] = item.art['landscape'] = video_image
         item.info['plot'] = video_plot
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          video_id=video_id)
+        item.set_callback(get_video_url, item_id=item_id, video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=False)
         yield item
 
@@ -334,11 +316,6 @@ def list_video_movie(plugin, item_id, program_asset_id, **kwargs):
         "Accept": "*/*",
         "Accept-Language": language + ";q=0.8,en-US;q=0.5,en;q=0.3",
         "content-type": "application/json",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
         "referrer": "https://www.tv5mondeplus.com/details/vod/redbee:%s" % program_asset_id
     }
 
@@ -429,5 +406,4 @@ def get_video_url(plugin,
         "User-Agent": GENERIC_HEADERS,
         "Content-Type": ''
     }
-    license_server_url = json_parser2["formats"][0]["drm"]["com.widevine.alpha"]["licenseServerUrl"]
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, headers=headers, manifest_type="mpd", license_url=license_url)
