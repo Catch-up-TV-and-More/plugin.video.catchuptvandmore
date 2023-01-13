@@ -12,9 +12,9 @@ import re
 from codequick import Listitem, Resolver, Route
 import urlquick
 
+from kodi_six import xbmcgui
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
-
 
 # TO DO
 # Info Videos (date, plot, etc ...)
@@ -182,6 +182,11 @@ def get_video_url(plugin, data, episode, download_mode=False, **kwargs):
 
     resp = urlquick.post(URL_API, headers=GENERIC_HEADERS, json=json_datas, max_age=-1)
     data = json.loads(resp.text)
+    if data['data']['videoPlayerPage']['blocks'][1]['blockConfiguration']['product']['videoElement']['__typename'] == 'RestrictedVideo':
+        xbmcgui.Dialog().ok(
+            'Info',
+            'The video content is not available in your country due to a restriction by territories')
+        return False
     video_url = data['data']['videoPlayerPage']['blocks'][1]['blockConfiguration']['product']['videoElement']['encodings']['hls']['url']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url)
