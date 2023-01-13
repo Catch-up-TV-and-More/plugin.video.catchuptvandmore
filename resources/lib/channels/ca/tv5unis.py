@@ -12,9 +12,9 @@ import re
 from codequick import Listitem, Resolver, Route
 import urlquick
 
+from kodi_six import xbmcgui
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
-
 
 # TO DO
 # Info Videos (date, plot, etc ...)
@@ -104,7 +104,7 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                 item.art['landscape'] = image_landscape
                 item.label = program_title
                 if product_type == 'MOVIE':
-                    item.set_callback(get_video_url, data=data)
+                    item.set_callback(get_video_url, data=data, episode='')
                 else:
                     item.set_callback(list_seasons, data=data, present=present)
                 item_post_treatment(item)
@@ -150,7 +150,7 @@ def list_episodes(plugin, data, **kwargs):
                 item.info['plot'] = description
                 item.art['thumb'] = item.art['landscape'] = image_landscape
                 item.label = program_title
-                item.set_callback(get_video_url, data=data)
+                item.set_callback(get_video_url, data=data, episode=str(product['episodeNumber']))
                 item_post_treatment(item)
                 yield item
 
@@ -158,9 +158,9 @@ def list_episodes(plugin, data, **kwargs):
 
 
 @Resolver.register
-def get_video_url(plugin, data, download_mode=False, **kwargs):
+def get_video_url(plugin, data, episode, download_mode=False, **kwargs):
     if len(data) > 1:
-        resp = urlquick.get(URL_STREAM_SEASON_EPISODE % (data[0], data[1], data[2]), headers=GENERIC_HEADERS)
+        resp = urlquick.get(URL_STREAM_SEASON_EPISODE % (data[0], data[1], episode), headers=GENERIC_HEADERS)
     else:
         resp = urlquick.get(URL_STREAM % data[0], headers=GENERIC_HEADERS)
 
@@ -182,6 +182,11 @@ def get_video_url(plugin, data, download_mode=False, **kwargs):
 
     resp = urlquick.post(URL_API, headers=GENERIC_HEADERS, json=json_datas, max_age=-1)
     data = json.loads(resp.text)
+    if data['data']['videoPlayerPage']['blocks'][1]['blockConfiguration']['product']['videoElement']['__typename'] == 'RestrictedVideo':
+        xbmcgui.Dialog().ok(
+            'Info',
+            'The video content is not available in your country due to a restriction by territories')
+        return False
     video_url = data['data']['videoPlayerPage']['blocks'][1]['blockConfiguration']['product']['videoElement']['encodings']['hls']['url']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url)
