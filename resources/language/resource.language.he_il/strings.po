@@ -422,6 +422,10 @@ msgctxt "#30181"
 msgid "Choose version"
 msgstr ""
 
+msgctxt "#30182"
+msgid "France 3 Régions: Choose subregion"
+msgstr ""
+
 msgctxt "#30192"
 msgid "BEST"
 msgstr ""
