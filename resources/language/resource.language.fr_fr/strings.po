@@ -422,6 +422,10 @@ msgctxt "#30181"
 msgid "Choose version"
 msgstr "Choix de la version"
 
+msgctxt "#3082"
+msgid "France 3 Régions: Choose region"
+msgstr "France 3 Régions : Choix de la sous-région"
+
 msgctxt "#30192"
 msgid "BEST"
 msgstr "MAXIMALE"

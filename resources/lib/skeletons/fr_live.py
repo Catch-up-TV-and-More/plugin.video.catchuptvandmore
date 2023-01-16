@@ -324,85 +324,9 @@ menu = {
     'france3regions': {
         'resolver': '/resources/lib/channels/fr/france3regions:get_live_url',
         'label': 'France 3 Régions',
-        'thumb':
-        'channels/fr/france3regions.png',
-        'fanart':
-        'channels/fr/france3regions_fanart.jpg',
-        'm3u_group':
-        'Région',
-        'available_languages': {
-            'Alpes': {
-                'xmltv_id': 'C1921.api.telerama.fr'
-            },
-            'Alsace': {
-                'xmltv_id': 'C1922.api.telerama.fr'
-            },
-            'Aquitaine': {
-                'xmltv_id': 'C1923.api.telerama.fr'
-            },
-            'Auvergne': {
-                'xmltv_id': 'C1924.api.telerama.fr'
-            },
-            'Bourgogne': {
-                'xmltv_id': 'C1926.api.telerama.fr'
-            },
-            'Bretagne': {
-                'xmltv_id': 'C1927.api.telerama.fr'
-            },
-            'Centre-Val de Loire': {
-                'xmltv_id': 'C1928.api.telerama.fr'
-            },
-            'Chapagne-Ardenne': {
-                'xmltv_id': 'C1929.api.telerama.fr'
-            },
-            'Corse': {},
-            "Côte d'Azur": {
-                'xmltv_id': 'C1931.api.telerama.fr'
-            },
-            'Franche-Comté': {
-                'xmltv_id': 'C1932.api.telerama.fr'
-            },
-            'Languedoc-Roussillon': {
-                'xmltv_id': 'C1934.api.telerama.fr'
-            },
-            'Limousin': {
-                'xmltv_id': 'C1935.api.telerama.fr'
-            },
-            'Lorraine': {
-                'xmltv_id': 'C1936.api.telerama.fr'
-            },
-            'Midi-Pyrénées': {
-                'xmltv_id': 'C1937.api.telerama.fr'
-            },
-            'Nord-Pas-de-Calais': {
-                'xmltv_id': 'C1938.api.telerama.fr'
-            },
-            'Basse-Normandie': {
-                'xmltv_id': 'C1925.api.telerama.fr'
-            },
-            'Haute-Normandie': {
-                'xmltv_id': 'C1933.api.telerama.fr'
-            },
-            'Paris Île-de-France': {
-                'xmltv_id': 'C1939.api.telerama.fr'
-            },
-            'Pays de la Loire': {
-                'xmltv_id': 'C1940.api.telerama.fr'
-            },
-            'Picardie': {
-                'xmltv_id': 'C1941.api.telerama.fr'
-            },
-            'Poitou-Charentes': {
-                'xmltv_id': 'C1942.api.telerama.fr'
-            },
-            'Provence-Alpes': {
-                'xmltv_id': 'C1943.api.telerama.fr'
-            },
-            'Rhône-Alpes': {
-                'xmltv_id': 'C1944.api.telerama.fr'
-            },
-            'Nouvelle-Aquitaine': {}
-        },
+        'thumb': 'channels/fr/france3regions.png',
+        'fanart': 'channels/fr/france3regions_fanart.jpg',
+        'm3u_group': 'Région',
         'enabled': True,
         'order': 29
     },
