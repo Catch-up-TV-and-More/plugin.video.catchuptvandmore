@@ -183,6 +183,10 @@ def get_stream_with_quality(plugin,
                                                     append_query_string=append_query_string,
                                                     verify=verify, subtitles=subtitles)
 
+    is_helper = inputstreamhelper.Helper(manifest_type, drm='widevine')
+    if not is_helper.check_inputstream():
+        return False
+
     if headers is None:
         headers = {"User-Agent": web_utils.get_random_ua()}
 
