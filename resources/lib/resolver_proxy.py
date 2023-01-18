@@ -83,7 +83,7 @@ URL_TWITCH = 'https://player.twitch.tv/?channel=%s'
 # desired_language, videoid
 URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
 
-GENERIC_HEADERS = {'USER-Agent': web_utils.get_random_ua()}
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
 
 def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
@@ -188,7 +188,9 @@ def get_stream_with_quality(plugin,
         return False
 
     if headers is None:
-        headers = {"User-Agent": web_utils.get_random_ua()}
+        headers = GENERIC_HEADERS
+    else:
+        headers.update(GENERIC_HEADERS)
 
     item = Listitem()
     item.path = video_url
