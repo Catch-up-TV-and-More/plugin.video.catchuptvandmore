@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta17" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta18" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -164,6 +164,14 @@ Project: Remove an useless file
 [FR - FRANCETV] Fix live for FranceInfo (PR #1043) thanks @darodi
 [WO - Aljazeera] Add replays (PR #1040 issue #1030) thanks @darodi
 [BE - RTLPLAY] Fix API_KEY (PR #1043 issue #1041) thanks @darodi
+[PROJECT] Fix headers when dialog box for resolution is used in get_stream_with_quality (issue #1056)
+[CA - TV5UNIS] Fix bugs for episodes (PR #1052) thanks @emmaanuel
+[CA - TV5UNIS] Clean error on geographical restriction (PR #1052) thanks @emmaanuel
+[PROJECT] Delete unneeded patch file in root directory (PR #1059) thanks @darodi
+[FR - FRANCETVREGIONS] FIx live (issue #1053)
+[PROJECT] Make sure Widevine is installed when needed (parial fix for issue #1061 and issue #1018)
+[PROJECT] Fix GENERIC_HEADERS in resolver_proxy
+[FR - RFMBMCPLAY] Use the common helpers
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
