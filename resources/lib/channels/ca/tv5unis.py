@@ -102,9 +102,9 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                 item.art['landscape'] = image_landscape
                 item.label = program_title
                 if product_type == 'MOVIE':
-                    item.set_callback(get_video_url, is_episode = False, video=json_entry[json_key]["slug"])
+                    item.set_callback(get_video_url, is_episode=False, video=json_entry[json_key]["slug"])
                 else:
-                    item.set_callback(list_seasons, video=json_entry[json_key]["slug"],  present=present)
+                    item.set_callback(list_seasons, video=json_entry[json_key]["slug"], present=present)
                 item_post_treatment(item)
                 yield item
 
@@ -122,7 +122,7 @@ def list_seasons(plugin, video, present, **kwargs):
             item.art['thumb'] = present[1]
             item.art['landscape'] = present[2]
             item.label = season_text
-            item.set_callback(list_episodes, video = video, season = season_number)
+            item.set_callback(list_episodes, video=video, season=season_number)
             item_post_treatment(item)
             yield item
 
@@ -146,7 +146,7 @@ def list_episodes(plugin, video, season, **kwargs):
                 item.info['plot'] = description
                 item.art['thumb'] = item.art['landscape'] = image_landscape
                 item.label = program_title
-                item.set_callback(get_video_url, is_episode= True ,video=video, season= season, episode=str(product['episodeNumber']))
+                item.set_callback(get_video_url, is_episode=True , video=video, season= season, episode=str(product['episodeNumber']))
                 item_post_treatment(item)
                 yield item
 
@@ -154,7 +154,7 @@ def list_episodes(plugin, video, season, **kwargs):
 
 
 @Resolver.register
-def get_video_url(plugin, is_episode, video, season = None, episode = None, download_mode=False, **kwargs):
+def get_video_url(plugin, is_episode, video, season=None, episode=None, download_mode=False, **kwargs):
     if is_episode:
         resp = urlquick.get(URL_STREAM_SEASON_EPISODE % (video, season, episode), headers=GENERIC_HEADERS)
     else:
