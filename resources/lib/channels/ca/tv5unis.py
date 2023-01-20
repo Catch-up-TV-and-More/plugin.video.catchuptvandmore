@@ -146,7 +146,7 @@ def list_episodes(plugin, video, season, **kwargs):
                 item.info['plot'] = description
                 item.art['thumb'] = item.art['landscape'] = image_landscape
                 item.label = program_title
-                item.set_callback(get_video_url, is_episode=True, video=video, season= season, episode=str(product['episodeNumber']))
+                item.set_callback(get_video_url, is_episode=True, video=video, season=season, episode=str(product['episodeNumber']))
                 item_post_treatment(item)
                 yield item
 
