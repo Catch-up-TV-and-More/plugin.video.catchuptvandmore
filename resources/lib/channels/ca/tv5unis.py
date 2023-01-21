@@ -94,8 +94,6 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                         if 'productType' in json_entry[info]:
                             product_type = json_entry[info]['productType']
 
-                data = []
-                data.append(json_entry[json_key]["slug"])
                 already_listed.append(json_key)
 
                 item = Listitem()
@@ -104,35 +102,34 @@ def list_programs(plugin, item_id, category_slug, **kwargs):
                 item.art['landscape'] = image_landscape
                 item.label = program_title
                 if product_type == 'MOVIE':
-                    item.set_callback(get_video_url, data=data, episode='')
+                    item.set_callback(get_video_url, is_episode=False, video=json_entry[json_key]["slug"])
                 else:
-                    item.set_callback(list_seasons, data=data, present=present)
+                    item.set_callback(list_seasons, video=json_entry[json_key]["slug"], present=present)
                 item_post_treatment(item)
                 yield item
 
 
 @Route.register
-def list_seasons(plugin, data, present, **kwargs):
-    resp = urlquick.get(URL_VIDEOS % data[0], headers=GENERIC_HEADERS)
+def list_seasons(plugin, video, present, **kwargs):
+    resp = urlquick.get(URL_VIDEOS % video, headers=GENERIC_HEADERS)
     root = resp.parse()
     for subject in root.iterfind(".//select[@class='gtm-season-dropdown']"):
         for option in subject.iterfind(".//option"):
             season_text = option.text
             season_number = option.get('value')
-            data.append(season_number)
             item = Listitem()
             item.info['plot'] = present[0]
             item.art['thumb'] = present[1]
             item.art['landscape'] = present[2]
             item.label = season_text
-            item.set_callback(list_episodes, data=data)
+            item.set_callback(list_episodes, video=video, season=season_number)
             item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_episodes(plugin, data, **kwargs):
-    resp = urlquick.get(URL_VIDEOS_SEASON % (data[0], data[1]), headers=GENERIC_HEADERS)
+def list_episodes(plugin, video, season, **kwargs):
+    resp = urlquick.get(URL_VIDEOS_SEASON % (video, season), headers=GENERIC_HEADERS)
     json_datas = re.compile(
         r'\/json\"\>\{(.*?)\}\<\/script\>').findall(resp.text)[0]
     json_parser = json.loads('{' + json_datas + '}')
@@ -145,12 +142,11 @@ def list_episodes(plugin, data, **kwargs):
                 program_title = json_entry[json_key]["title"]
                 description = json_entry[json_key]['shortSummary']
                 image_landscape = json.loads(re.compile(r'Image\:(.*?)$').findall(json_entry[json_key]["mainLandscapeImage"]['__ref'])[0])['url']
-                data.append(product['episodeNumber'])
                 item = Listitem()
                 item.info['plot'] = description
                 item.art['thumb'] = item.art['landscape'] = image_landscape
                 item.label = program_title
-                item.set_callback(get_video_url, data=data, episode=str(product['episodeNumber']))
+                item.set_callback(get_video_url, is_episode=True, video=video, season=season, episode=str(product['episodeNumber']))
                 item_post_treatment(item)
                 yield item
 
@@ -158,11 +154,11 @@ def list_episodes(plugin, data, **kwargs):
 
 
 @Resolver.register
-def get_video_url(plugin, data, episode, download_mode=False, **kwargs):
-    if len(data) > 1:
-        resp = urlquick.get(URL_STREAM_SEASON_EPISODE % (data[0], data[1], episode), headers=GENERIC_HEADERS)
+def get_video_url(plugin, is_episode, video, season=None, episode=None, download_mode=False, **kwargs):
+    if is_episode:
+        resp = urlquick.get(URL_STREAM_SEASON_EPISODE % (video, season, episode), headers=GENERIC_HEADERS)
     else:
-        resp = urlquick.get(URL_STREAM % data[0], headers=GENERIC_HEADERS)
+        resp = urlquick.get(URL_STREAM % video, headers=GENERIC_HEADERS)
 
     json_datas = {
         'operationName': 'VideoPlayerPage',
