@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+⚠️ *Please try the last beta version and check existing issues before issuing a bug.* ⚠️
+
 ### Describe the bug
 A clear and concise description of what the bug is:
 
