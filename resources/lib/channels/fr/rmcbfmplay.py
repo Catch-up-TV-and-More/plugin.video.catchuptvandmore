@@ -279,7 +279,7 @@ def video(plugin, path, title, **kwargs):
             customdata = CUSTOMDATAREPLAY.format(web_utils.get_random_ua(), token, account_id, entitlementId)
 
             headers = {
-                'User-Agent': + web_utils.get_random_ua(),
+                'User-Agent': web_utils.get_random_ua(),
                 'customdata': customdata,
                 'Origin': 'https://www.rmcbfmplay.com',
                 'Content-Type': '',
