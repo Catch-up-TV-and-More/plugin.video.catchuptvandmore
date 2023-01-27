@@ -19,7 +19,7 @@ import urlquick
 
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
-
+from resources.lib import web_utils
 
 # TO DO
 
@@ -30,20 +30,36 @@ URL_LIVE_ID = URL_ROOT + '/live/%s'
 URL_TOKEN_ID = URL_ROOT + '/player/%s'
 # Id video
 URL_TOKEN_API = URL_ROOT + '/api/token'
-URL_STREAM = 'https://start-player.npo.nl/video/%s/streams?profile=dash-widevine&quality=npo&tokenId=%s&streamType=broadcast&mobile=0&ios=0&isChromecast=0'
+URL_STREAM = 'https://start-player.npo.nl/video/%s/streams'
 # Id video, tokenId
 URL_SUBTITLE = 'https://rs.poms.omroep.nl/v1/api/subtitles/%s'
 # Id Video
 
 URL_API = 'https://start-api.npo.nl'
 
-URL_CATEGORIES = URL_API + '/page/catalogue?ApiKey=%s'
+URL_CATEGORIES = URL_API + '/page/catalogue'
 # ApiKey
 
 API_KEY = '07896f1ee72645f68bc75581d7f00d54'
 
 URL_IMAGE = 'https://images.poms.omroep.nl/image/s1280/c1280x720/%s'
 # ImageId
+
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+
+
+def get_localized_datetime(timestamp):
+    try:
+        utc_datetime = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')
+    except TypeError:
+        utc_datetime = datetime(*(time.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')[0:6]))
+
+    utc_datetime = pytz.utc.localize(utc_datetime)
+
+    local_timezone = pytz.timezone('Europe/Amsterdam')
+    local_datetime = utc_datetime.astimezone(local_timezone)
+
+    return local_datetime
 
 
 @Route.register
@@ -53,7 +69,8 @@ def list_categories(plugin, item_id, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(URL_CATEGORIES % API_KEY)
+    params = {'ApiKey': API_KEY}
+    resp = urlquick.get(URL_CATEGORIES, params=params, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
 
     for category in json_parser['components'][0]['filters']:
@@ -72,7 +89,8 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_sub_categories(plugin, item_id, category_filter_argument, **kwargs):
-    resp = urlquick.get(URL_CATEGORIES % API_KEY)
+    params = {'ApiKey': API_KEY}
+    resp = urlquick.get(URL_CATEGORIES, params=params, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
 
     for category in json_parser['components'][0]['filters']:
@@ -100,8 +118,13 @@ def list_sub_categories(plugin, item_id, category_filter_argument, **kwargs):
 def list_programs(plugin, item_id, category_filter_argument,
                   sub_category_value, page, **kwargs):
 
-    resp = urlquick.get(URL_CATEGORIES % API_KEY + '&%s=%s&page=%s' %
-                        (category_filter_argument, sub_category_value, page))
+    params = {
+        'ApiKey': API_KEY,
+        'page': page,
+        category_filter_argument: sub_category_value
+    }
+
+    resp = urlquick.get(URL_CATEGORIES, params=params, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
 
     for program_datas in json_parser['components'][1]['data']['items']:
@@ -162,10 +185,7 @@ def list_videos_episodes(plugin, item_id, program_url, **kwargs):
     item.info['plot'] = video_plot
     item.info['duration'] = video_duration
     item.info.date(date_value, '%Y-%m-%d')
-    item.set_callback(
-        get_video_url,
-        item_id=item_id,
-        video_id=video_id)
+    item.set_callback(get_video_url, item_id=item_id, video_id=video_id)
     item_post_treatment(item, is_playable=True, is_downloadable=False)
     yield item
 
@@ -273,33 +293,39 @@ def get_video_url(plugin,
 
     # Build PAYLOAD
     payload = {'_token': api_token}
-
     cookies = {'npo_session': session_token}
 
-    resp2 = urlquick.post(
-        URL_TOKEN_ID % video_id, cookies=cookies, data=payload, max_age=-1)
-    json_parser = json.loads(resp2.text)
+    resp = urlquick.post(URL_TOKEN_ID % video_id, cookies=cookies, data=payload, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser = json.loads(resp.text)
     token_id = json_parser['token']
 
-    resp3 = urlquick.get(URL_STREAM % (video_id, token_id), max_age=-1)
-    json_parser2 = json.loads(resp3.text)
+    params = {
+        'profile': 'dash-widevine',
+        'quality': 'npo',
+        'tokenId': token_id,
+        'streamType': 'broadcast',
+        'mobile': '0',
+        'ios': '0',
+        'isChromecast': '0'
+    }
 
-    if 'html' in json_parser2 and 'Dit programma mag niet bekeken worden vanaf jouw locatie (33).' in json_parser2['html']:
+    resp = urlquick.get(URL_STREAM % video_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser = json.loads(resp.text)
+
+    if 'html' in json_parser and 'Dit programma mag niet bekeken worden vanaf jouw locatie (33).' in json_parser['html']:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
-    if 'html' in json_parser2 and 'Dit programma is niet (meer) beschikbaar (15).' in json_parser2['html']:
+    if 'html' in json_parser and 'Dit programma is niet (meer) beschikbaar (15).' in json_parser['html']:
         plugin.notify('ERROR', plugin.localize(30710))
         return False
 
-    licence_url = json_parser2['stream']['keySystemOptions'][0]['options'][
-        'licenseUrl']
-    licence_url_header = json_parser2['stream']['keySystemOptions'][0][
-        'options']['httpRequestHeaders']
+    licence_url = json_parser['stream']['keySystemOptions'][0]['options']['licenseUrl']
+    licence_url_header = json_parser['stream']['keySystemOptions'][0]['options']['httpRequestHeaders']
     xcdata_value = licence_url_header['x-custom-data']
 
     item = Listitem()
-    item.path = json_parser2['stream']['src']
+    item.path = json_parser['stream']['src']
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
@@ -334,42 +360,44 @@ def get_live_url(plugin, item_id, **kwargs):
     json_parser_token = json.loads(resp_token.text)
     api_token = json_parser_token['token']
 
-    resp = urlquick.get(URL_LIVE_ID % item_id, max_age=-1)
+    resp = urlquick.get(URL_LIVE_ID % item_id, headers=GENERIC_HEADERS, max_age=-1)
 
     video_id = ''
-    list_media_id = re.compile(r'media-id\=\'(.*?)\'').findall(resp.text)
+    list_media_id = re.compile(r'media-id\=\"(.*?)\"').findall(resp.text)
     for media_id in list_media_id:
         if 'LI_' in media_id:
             video_id = media_id
 
     # Build PAYLOAD
     payload = {'_token': api_token}
-
     cookies = {'npo_session': session_token}
 
-    resp2 = urlquick.post(URL_TOKEN_ID % video_id,
-                          cookies=cookies,
-                          data=payload,
-                          max_age=-1)
-    json_parser = json.loads(resp2.text)
+    resp = urlquick.post(URL_TOKEN_ID % video_id, cookies=cookies, data=payload, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser = json.loads(resp.text)
     token_id = json_parser['token']
 
-    resp3 = urlquick.get(URL_STREAM % (video_id, token_id), max_age=-1)
-    json_parser2 = json.loads(resp3.text)
+    params = {
+        'profile': 'dash-widevine',
+        'quality': 'npo',
+        'tokenId': token_id,
+        'streamType': 'broadcast',
+        'mobile': '0',
+        'ios': '0',
+        'isChromecast': '0'
+    }
+    resp = urlquick.get(URL_STREAM % video_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser = json.loads(resp.text)
 
-    if 'html' in json_parser2 and 'Vanwege uitzendrechten is het niet mogelijk om deze uitzending buiten Nederland te bekijken.' in json_parser2[
-            'html']:
+    if 'html' in json_parser and 'Vanwege uitzendrechten is het niet mogelijk om deze uitzending buiten Nederland te bekijken.' in json_parser['html']:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
-    licence_url = json_parser2['stream']['keySystemOptions'][0]['options'][
-        'licenseUrl']
-    licence_url_header = json_parser2['stream']['keySystemOptions'][0][
-        'options']['httpRequestHeaders']
+    licence_url = json_parser['stream']['keySystemOptions'][0]['options']['licenseUrl']
+    licence_url_header = json_parser['stream']['keySystemOptions'][0]['options']['httpRequestHeaders']
     xcdata_value = licence_url_header['x-custom-data']
 
     item = Listitem()
-    item.path = json_parser2['stream']['src']
+    item.path = json_parser['stream']['src']
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
@@ -384,17 +412,3 @@ def get_live_url(plugin, item_id, **kwargs):
         'inputstream.adaptive.license_key'] = licence_url + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&x-custom-data=%s|R{SSM}|' % xcdata_value
 
     return item
-
-
-def get_localized_datetime(timestamp):
-    try:
-        utc_datetime = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')
-    except TypeError:
-        utc_datetime = datetime(*(time.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ')[0:6]))
-
-    utc_datetime = pytz.utc.localize(utc_datetime)
-
-    local_timezone = pytz.timezone('Europe/Amsterdam')
-    local_datetime = utc_datetime.astimezone(local_timezone)
-
-    return local_datetime
