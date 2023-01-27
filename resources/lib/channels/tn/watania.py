@@ -16,7 +16,7 @@ from resources.lib import resolver_proxy, web_utils
 URL_ROOT = 'http://www.%s.tn/'
 
 # Live
-URL_LIVE= URL_ROOT + 'البث-المباشر/محتوى'
+URL_LIVE = URL_ROOT + 'البث-المباشر/محتوى'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
