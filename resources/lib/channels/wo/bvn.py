@@ -50,7 +50,7 @@ def list_days(plugin, item_id, **kwargs):
     - ...
     """
 
-    resp = urlquick.get(URL_DAYS)
+    resp = urlquick.get(URL_DAYS, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse("div", attrs={"id": "missed"})
 
     day_id = 0
@@ -67,7 +67,7 @@ def list_days(plugin, item_id, **kwargs):
 
 @Route.register
 def list_videos(plugin, item_id, day_id, **kwargs):
-    resp = urlquick.get(URL_DAYS)
+    resp = urlquick.get(URL_DAYS, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse("ul", attrs={"id": "slick-missed-day-%s" % (day_id)})
 
     for broadcast in root.iterfind(".//li"):
@@ -111,13 +111,13 @@ def get_video_url(plugin,
     if not is_helper.check_inputstream():
         return False
 
-    resp = urlquick.get(video_url, max_age=-1)
+    resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
 
     token_id = re.compile(r'start\-player\.npo\.nl\/embed\/(.*?)\"').findall(
         resp.text)[0]
     video_id = re.compile(r'\"iframe\-(.*?)\"').findall(resp.text)[0]
 
-    resp2 = urlquick.get(URL_STREAM % (video_id, token_id), max_age=-1)
+    resp2 = urlquick.get(URL_STREAM % (video_id, token_id), headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp2.text)
 
     if "html" in json_parser and "Deze video mag niet bekeken worden vanaf jouw locatie" in json_parser[
