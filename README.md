@@ -31,8 +31,12 @@ Catch-Up TV & More is compatible with Kodi "17 Krypton" and higher versions.
 * **English**: <https://catch-up-tv-and-more.github.io/websites/>
 
 ## Bugs et améliorations — *Bugs and improvements*
-Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenue ! GitHub ou e-mail.
-*Bug reports, suggestions for improvements or content additions are welcome! GitHub or e-mail.*
+Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenus ! GitHub ou e-mail.
+⚠️Veuillez tester la dernière version beta avant de soumettre un bug.⚠️
+
+*Bug reports, suggestions for improvements or content additions are welcome ! GitHub or e-mail.*
+*⚠️Please try the last beta version before issuing a bug.⚠️*
+
 
 ## Forums
 
