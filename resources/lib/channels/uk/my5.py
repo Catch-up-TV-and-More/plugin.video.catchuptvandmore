@@ -46,8 +46,13 @@ FEEDS_API = 'https://feeds-api.channel5.com/collections/%s/concise.json'
 
 URL_VIEW_ALL = CORONA_URL + 'search.json'
 URL_WATCHABLE = 'https://corona.channel5.com/watchables/search.json'
+URL_SHOWS = 'https://corona.channel5.com/shows/search.json'
 IMG_URL = 'https://api-images.channel5.com/otis/images/episode/%s/320x180.jpg'
 SHOW_IMG_URL = 'https://api-images.channel5.com/otis/images/show/%s/320x180.jpg'
+
+
+ONEOFF = 'https://corona.channel5.com/shows/%s/episodes/next.json'
+
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
@@ -418,7 +423,6 @@ def mangle(st):
     return (result)
 
 def b6(iv):
-    print("iv in function is ",iv)
     Z4Z = 22
     p4Z = 2
 
@@ -474,7 +478,6 @@ def ivArray(N3n):
 
 def ivParse(N3n):
     l9u = len(N3n)
-    print("l9u is ", l9u)
     z9u = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
     d3n = [ None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 62, None, None, None, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, None, None, None, 64, None, None, None, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, None, None, None, None, None, None, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 ]
     D9u = "="
@@ -671,29 +674,32 @@ def dataProcess(a480, k6, iv4):
     return(tempB, pg6, offs)
 
 # this is probably really inefficient code, json habdling still confussess me
-def getUseful(s):
-    licUrl = []
-    streamUrl = []
-    fixed = s[1:]
-    keyserver = 'NA'
-    streamUrl ='NA'
-    subtitile = 'NA'
-    data = json.loads(fixed)
+def getUseful(data):
+    keyserver = 'NA' 
+    streamUrl = 'NA'
+    subtitle = 'NA'
+    
 
-    for x in data['assets']:
-      try:
-         for d in x['renditions']:
-           if 'hwdash' in d['url']:
-             streamUrl = d['url']
-             subtitile = x['subtitleurl']
-           if 'widevine' in x['keyserver']:
-             keyserver = x['keyserver']
-      except:
-         pass
+    # dumped json parsing for old school regexp, i hate json .....
+    try:
+       keyserver = re.search('"https://cassie(.+?)widevine(.+?)"', data).group(0)
+       keyserver = keyserver.replace('"', '')
+    except AttributeError:
+       keyserver = 'NA'
 
+    try:
+       streamUrl = re.search('"https://(.+?)dash(.+?)cenc(.+?)"', data).group(0)
+       streamUrl = streamUrl.replace('"', '')
+    except AttributeError:
+       streamUrl = 'NA'
 
+    try:
+       subtitle = re.search('"https://akathumbnails(.+?).vtt"', data).group(0)
+       subtitle = subtitle.replace('"', '')
+    except AttributeError:
+       subtitle = 'NA'
 
-    return  (streamUrl, keyserver, subtitile)
+    return  (streamUrl, keyserver, subtitle)
 
          
 
@@ -724,7 +730,8 @@ def list_categories(plugin, **kwargs):
         item_id = 1
         item.label = root['filters']['contents'][i]['title']
         browse_name = root['filters']['contents'][i]['id']
-        item.set_callback(list_subcategories, item_id=item_id, browse_name=browse_name)
+        offset = "0"
+        item.set_callback(list_subcategories, item_id=item_id, browse_name=browse_name, offset=offset)
         item_post_treatment(item)
         yield item
      except:
@@ -732,14 +739,59 @@ def list_categories(plugin, **kwargs):
 
 
 @Route.register
-def list_subcategories(plugin, item_id, browse_name, **kwargs):
-    resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params)
-    root = json.loads(resp.text)
-    item_number = int(root['total_items'])
+def list_subcategories(plugin, item_id, browse_name, offset, **kwargs):
+    if (browse_name == "PLC_My5AllShows"):
+       watchable_params = '?limit=12&offset=%s&platform=my5desktop&friendly=1' % str(offset)
+       s = URL_SHOWS + watchable_params
+       resp = urlquick.get(s, headers=GENERIC_HEADERS, params=feeds_api_params)
+       root = json.loads(resp.text)
+       item_number = int(root['size'])
+       for emission in root['shows']:
+        try:
+         standalone = emission['standalone']
+         standalone = "yes"
+        except:
+         standalone = "no"
 
-    if root['filters']['type'] == 'Collection':
-        offset = 0
-        for i in range(item_number):
+        if (standalone == "yes"):
+         item = Listitem()
+         item.label = emission['title']
+         item.info['plot'] = emission['s_desc']
+         fname = emission['f_name']
+         picture_id = emission['id']
+         item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % picture_id
+         item.set_callback(get_video_url, item_id=item_id, fname=fname, season_f_name="", show_id="show_id", standalone="yes")
+         item_post_treatment(item)
+         yield item
+
+        else:
+         try:
+          item = Listitem()
+          title = emission['title']
+          item.label = title
+          item.info['plot'] = emission['s_desc']
+          fname = emission['f_name']
+          picture_id = emission['id']
+          item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % picture_id
+          item.set_callback(list_seasons, item_id=item_id, fname=fname, pid=picture_id, title=title)
+          item_post_treatment(item)
+          yield item
+         except:
+          pass
+
+       if 'next_page_url' in root:
+          offset = str(int(offset) + int(root['limit']))
+          yield Listitem.next_page(item_id=item_id, browse_name=browse_name, offset=offset)
+
+
+    else:
+       resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params)
+       root = json.loads(resp.text)
+       item_number = int(root['total_items'])
+
+       if root['filters']['type'] == 'Collection':
+         offset = 0
+         for i in range(item_number):
           try:
             item = Listitem()
             item.label = root['filters']['contents'][i]['title']
@@ -749,7 +801,7 @@ def list_subcategories(plugin, item_id, browse_name, **kwargs):
             yield item
           except:
             pass
-    else:
+       elif root['filters']['type'] == 'Show':
         ids = root['filters']['ids']
         watchable_params = '?limit=%s&offset=0s&platform=my5desktop&friendly=1' % str(item_number)
         for i in range(item_number):
@@ -757,7 +809,33 @@ def list_subcategories(plugin, item_id, browse_name, **kwargs):
             watchable_params = watchable_params + '&ids[]=%s' % ids[i]
           except:
             pass
-        s = URL_WATCHABLE + watchable_params
+
+
+        resp = urlquick.get(URL_SHOWS + watchable_params, headers=GENERIC_HEADERS)
+        root = json.loads(resp.text)
+        for watchable in root['shows']:
+          try:
+            item = Listitem()
+            item.label = watchable['title']
+            item.info['plot'] = watchable['s_desc']
+            item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % watchable['id']
+            show_id = watchable['id']
+            fname = watchable['f_name']
+            item.set_callback(get_video_url, item_id=item_id, fname=fname, season_f_name="season_f_name", show_id=show_id, standalone="yes")
+            item_post_treatment(item)
+            yield item
+          except:
+            pass
+
+
+       elif root['filters']['type'] == 'Watchable':
+        ids = root['filters']['ids']
+        watchable_params = '?limit=%s&offset=0s&platform=my5desktop&friendly=1' % str(item_number)
+        for i in range(item_number):
+          try:
+            watchable_params = watchable_params + '&ids[]=%s' % ids[i]
+          except:
+            pass
         resp = urlquick.get(URL_WATCHABLE + watchable_params, headers=GENERIC_HEADERS)
         root = json.loads(resp.text)
 
@@ -777,6 +855,7 @@ def list_subcategories(plugin, item_id, browse_name, **kwargs):
             yield item
           except:
             pass
+
 
 
 @Route.register
