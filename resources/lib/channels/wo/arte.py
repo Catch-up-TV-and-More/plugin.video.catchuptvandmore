@@ -13,7 +13,7 @@ import inputstreamhelper
 import urlquick
 from codequick import Listitem, Resolver, Route, Script
 from resources.lib import resolver_proxy, web_utils
-from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
+from resources.lib.kodi_utils import (get_selected_item_art,
                                       get_selected_item_info,
                                       get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
@@ -27,8 +27,6 @@ URL_ARTE = 'https://www.arte.tv'
 URL_ROOT = 'https://www.arte.tv/%s/'
 # Language
 
-URL_TOKEN = 'https://static-cdn.arte.tv/guide/manifest.js'
-
 URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/LIVE'
 # Langue, ...
 
@@ -37,6 +35,8 @@ URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/LIVE'
 
 URL_VIDEOS_2 = 'http://www.arte.tv/hbbtvv2/services/web/index.php/OPA/v3/videos/collection/%s/%s/%s'
 # VideosCode, Page, language
+
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
 DESIRED_LANGUAGE = Script.setting['arte.language']
 
@@ -57,7 +57,7 @@ CORRECT_MONTH = {
 
 
 def extract_json_from_html(url):
-    html = urlquick.get(url).text
+    html = urlquick.get(url, headers=GENERIC_HEADERS, max_age=-1).text
     json_value = re.compile(r'application/json">(.*?)\}<').findall(html)[0]
     return json.loads(json_value + '}')
 
@@ -78,13 +78,13 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_zone(plugin, url):
     j = extract_json_from_html(url)
-    zones = j['props']['pageProps']['initialPage']['zones']
+    zones = j['props']['pageProps']['initialPage']['value']['zones']
     for zone in zones:
         # Avoid empty folders
-        if not zone['data']:
+        if not zone['content']['data']:
             continue
         # Avoid infinite loop
-        if len(zone['data']) == 1 and zone['data'][0]['url'] == url:
+        if URL_ARTE + zone['content']['data'][0]['url'] == url:
             continue
 
         item = Listitem()
@@ -99,12 +99,12 @@ def list_zone(plugin, url):
 @Route.register
 def list_data(plugin, url, zone_id):
     j = extract_json_from_html(url)
-    zones = j['props']['pageProps']['initialPage']['zones']
+    zones = j['props']['pageProps']['initialPage']['value']['zones']
     for zone in zones:
         if zone_id == zone['id']:
-            data = zone['data']
+            data = zone['content']['data']
             break
-    for data in zone['data']:
+    for data in zone['content']['data']:
         title = data['title']
         if 'subtitle' in data and data['subtitle']:
             title += ' - ' + data['subtitle']
@@ -113,27 +113,8 @@ def list_data(plugin, url, zone_id):
         item.label = title
         item.info['plot'] = data.get('shortDescription', None)
 
-        images = data['images']
-        thumb = None
-        fanart = None
-        if 'square' in images:
-            try:
-                thumb = data['images']['square']['resolutions'][-1]['url']
-            except Exception:
-                pass
-        if 'portrait' in images and thumb is None:
-            try:
-                thumb = data['images']['portrait']['resolutions'][-1]['url']
-            except Exception:
-                pass
-        try:
-            fanart = data['images']['landscape']['resolutions'][-1]['url']
-        except Exception:
-            pass
-        if fanart:
-            item.art['fanart'] = item.art['thumb'] = fanart
-        if thumb:
-            item.art['thumb'] = thumb
+        if 'mainImage' in data:
+            item.art['thumb'] = data['mainImage']['url'].replace('__SIZE__', '940x530')
 
         item.info['duration'] = data.get('duration', None)
 
@@ -142,12 +123,12 @@ def list_data(plugin, url, zone_id):
         except Exception:
             pass
 
-        if data['kind']['code'].lower() in ['shows', 'show']:
+        if data['kind']['code'] in ['SHOWS', 'SHOW']:
             item.set_callback(get_video_url, video_id=data['programId'])
             item_post_treatment(item, is_playable=True, is_downloadable=True)
         else:
             # Assume it's a folder
-            item.set_callback(list_zone, url=data['url'])
+            item.set_callback(list_zone, url=URL_ARTE + data['url'])
             item_post_treatment(item)
         yield item
 
@@ -161,26 +142,8 @@ def get_video_url(plugin, video_id, download_mode=False, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', DESIRED_LANGUAGE)
+    resp = urlquick.get(URL_LIVE_ARTE % final_language.lower(), headers=GENERIC_HEADERS)
+    json_parser = json.loads(resp.text)
 
-    try:
-        resp = urlquick.get(URL_TOKEN)
-        token = re.compile(r'token\"\:\"(.*?)\"').findall(resp.text)[0]
-    except Exception:
-        token = 'MzYyZDYyYmM1Y2Q3ZWRlZWFjMmIyZjZjNTRiMGY4MzY4NzBhOWQ5YjE4MGQ1NGFiODJmOTFlZDQwN2FkOTZjMQ'
-
-    headers = {
-        'Authorization': 'Bearer %s' % token
-    }
-    resp2 = urlquick.get(URL_LIVE_ARTE % final_language.lower(), headers=headers)
-    json_parser = json.loads(resp2.text)
-
-    is_helper = inputstreamhelper.Helper("hls")
-    if not is_helper.check_inputstream():
-        return False
-
-    item = Listitem()
-    item.path = json_parser["data"]["attributes"]["streams"][0]["url"]
-    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    item.property["inputstream.adaptive.manifest_type"] = "hls"
-
-    return item
+    video_url = json_parser["data"]["attributes"]["streams"][0]["url"]
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)
