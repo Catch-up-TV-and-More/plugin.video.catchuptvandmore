@@ -13,7 +13,7 @@ import inputstreamhelper
 import urlquick
 from codequick import Listitem, Resolver, Route, Script
 from resources.lib import resolver_proxy, web_utils
-from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
+from resources.lib.kodi_utils import (get_selected_item_art,
                                       get_selected_item_info,
                                       get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
@@ -26,8 +26,6 @@ from resources.lib.menu_utils import item_post_treatment
 URL_ARTE = 'https://www.arte.tv'
 URL_ROOT = 'https://www.arte.tv/%s/'
 # Language
-
-URL_TOKEN = 'https://static-cdn.arte.tv/guide/manifest.js'
 
 URL_LIVE_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/LIVE'
 # Langue, ...
@@ -144,26 +142,8 @@ def get_video_url(plugin, video_id, download_mode=False, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', DESIRED_LANGUAGE)
+    resp = urlquick.get(URL_LIVE_ARTE % final_language.lower(), headers=GENERIC_HEADERS)
+    json_parser = json.loads(resp.text)
 
-    try:
-        resp = urlquick.get(URL_TOKEN)
-        token = re.compile(r'token\"\:\"(.*?)\"').findall(resp.text)[0]
-    except Exception:
-        token = 'MzYyZDYyYmM1Y2Q3ZWRlZWFjMmIyZjZjNTRiMGY4MzY4NzBhOWQ5YjE4MGQ1NGFiODJmOTFlZDQwN2FkOTZjMQ'
-
-    headers = {
-        'Authorization': 'Bearer %s' % token
-    }
-    resp2 = urlquick.get(URL_LIVE_ARTE % final_language.lower(), headers=headers)
-    json_parser = json.loads(resp2.text)
-
-    is_helper = inputstreamhelper.Helper("hls")
-    if not is_helper.check_inputstream():
-        return False
-
-    item = Listitem()
-    item.path = json_parser["data"]["attributes"]["streams"][0]["url"]
-    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    item.property["inputstream.adaptive.manifest_type"] = "hls"
-
-    return item
+    video_url = json_parser["data"]["attributes"]["streams"][0]["url"]
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)
