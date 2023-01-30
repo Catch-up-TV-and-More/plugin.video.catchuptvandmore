@@ -741,7 +741,7 @@ def list_categories(plugin, **kwargs):
 @Route.register
 def list_subcategories(plugin, item_id, browse_name, offset, **kwargs):
     if (browse_name == "PLC_My5AllShows"):
-       watchable_params = '?limit=12&offset=%s&platform=my5desktop&friendly=1' % str(offset)
+       watchable_params = '?limit=25&offset=%s&platform=my5desktop&friendly=1' % str(offset)
        s = URL_SHOWS + watchable_params
        resp = urlquick.get(s, headers=GENERIC_HEADERS, params=feeds_api_params)
        root = json.loads(resp.text)
@@ -871,7 +871,7 @@ def list_collections(plugin, item_id, browse_name, offset, **kwargs):
     view_all_params = {
         'platform': 'my5desktop',
         'friendly': '1',
-        'limit': '10',
+        'limit': '25',
         'offset': offset,
         'vod_subgenres[]': subgenre
     }
