@@ -17,6 +17,10 @@ import time
 import ctypes
 import math
 
+# MY5-001: import xbmvvfs, os
+import os
+import xbmcvfs
+
 #from kodi_six import xbmcgui
 from codequick import Listitem, Resolver, Route
 #import urlquick
@@ -59,6 +63,16 @@ GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 LICC_URL = 'https://cassie.channel5.com/api/v2/media/my5desktopng/%s.json?timestamp=%s'
 KEYURL = "https://player.akamaized.net/html5player/core/html5-c5-player.js"
 CERT_URL = 'https://c5apps.channel5.com/wv/c5-wv-app-cert-20170524.bin'
+
+#MY5-001: Customise My5 artwork - create constants
+HOME              = xbmcvfs.translatePath('special://home/')
+ADDONS            = os.path.join(HOME,     'addons')
+RESOURCE_IMAGES   = os.path.join(ADDONS,   'resource.images.catchuptvandmore')
+RESOURCES         = os.path.join(RESOURCE_IMAGES,   'resources')
+CHANNELS          = os.path.join(RESOURCES,         'channels')
+UK_CHANNELS       = os.path.join(CHANNELS,          'uk')
+fanartpath        = os.path.join(UK_CHANNELS,       'my5_fanart.jpg')
+iconpath          = os.path.join(UK_CHANNELS,       'my5.png')
 
 feeds_api_params = {
     'vod_available': 'my5desktop',
@@ -733,6 +747,9 @@ def list_categories(plugin, **kwargs):
         offset = "0"
         item.set_callback(list_subcategories, item_id=item_id, browse_name=browse_name, offset=offset)
         item_post_treatment(item)
+        # MY5-001: display My5 artwork instead of CUTV artwork
+        item.art["thumb"] = iconpath
+        item.art["fanart"] = fanartpath
         yield item
      except:
         pass
@@ -798,6 +815,9 @@ def list_subcategories(plugin, item_id, browse_name, offset, **kwargs):
             browse_name = root['filters']['contents'][i]['id']
             item.set_callback(list_collections, item_id=item_id, browse_name=browse_name, offset=offset)
             item_post_treatment(item)
+            # MY5-001: display My5 artwork instead of CUTV artwork
+            item.art["thumb"] = iconpath
+            item.art["fanart"] = fanartpath
             yield item
           except:
             pass
