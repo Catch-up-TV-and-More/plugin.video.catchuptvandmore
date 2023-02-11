@@ -78,7 +78,7 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_zone(plugin, url):
     j = extract_json_from_html(url)
-    zones = j['props']['pageProps']['initialPage']['value']['zones']
+    zones = j['props']['pageProps']['props']['page']['value']['zones']
     for zone in zones:
         # Avoid empty folders
         if not zone['content']['data']:
@@ -99,7 +99,7 @@ def list_zone(plugin, url):
 @Route.register
 def list_data(plugin, url, zone_id):
     j = extract_json_from_html(url)
-    zones = j['props']['pageProps']['initialPage']['value']['zones']
+    zones = j['props']['pageProps']['props']['page']['value']['zones']
     for zone in zones:
         if zone_id == zone['id']:
             data = zone['content']['data']
