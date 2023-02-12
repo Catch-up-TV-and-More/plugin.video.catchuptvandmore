@@ -82,7 +82,7 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
     params = {
-        'id': '83ae0bfb82e29a71ad00e07122cca81e840cf88f5d4595f65ffb171bdb701543',
+        'id': '909c68c0',
         'variables': '{}'
     }
     headers = {
@@ -117,7 +117,7 @@ def search(plugin, search_query, **kwargs):
 
     # Programs
     params = {
-        'id': '39d70f2bb3004cb243ee0e2e8b108a551940dd8bf9e31ef874dde1a2fe8f4d8d',
+        'id': 'e78b188',
         'variables': '{"query":"%s","offset":0,"limit":500}' % search_query
     }
     json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
@@ -126,7 +126,7 @@ def search(plugin, search_query, **kwargs):
 
     # Videos
     params = {
-        'id': 'ac44a0378c28ea485c8c83cd83b12a9ee1606c4e451829ce8663287a8b001e30',
+        'id': '4fde02d6',
         'variables': '{"query":"%s","offset":0,"limit":500}' % search_query
     }
     json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
@@ -160,14 +160,14 @@ def handle_programs(program_items, category_id=None):
 
 def handle_videos(video_items):
     for video_datas in video_items:
-        video_title = video_datas['title']
+        video_title = video_datas['decoration']['label']
         try:
             video_image = video_datas['decoration']['images'][1]['sources'][0]['url']
         except Exception:
             video_image = ''
         video_plot = video_datas['decoration']['description']
-        video_duration = video_datas['publicPlayingInfos']['duration']
-        video_id = video_datas['streamId']
+        video_duration = video_datas['playingInfos']['duration']
+        video_id = video_datas['id']
 
         item = Listitem()
         item.label = video_title
@@ -191,7 +191,7 @@ def list_programs(plugin, item_id, category_id, **kwargs):
     """
 
     params = {
-        'id': '400be301099f781dbee5bf2641b3bfba74f9fb6c13a54a22cae1fde916e42c7a',
+        'id': '483ce0f',
         'variables': '{"context":{"persona":"PERSONA_2","application":"WEB","device":"DESKTOP","os":"WINDOWS"},"filter":{"channel":"%s"},"offset":0,"limit":500}' % item_id
     }
     headers = {
@@ -228,7 +228,7 @@ def list_program_categories(plugin, program_slug, **kwargs):
 def list_videos(plugin, program_slug, video_type_value, offset, **kwargs):
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
     params = {
-        'id': '6708f510f2af7e75114ab3c4378142b2ce25cd636ff5a1ae11f47ce7ad9c4a91',
+        'id': 'a6f9cf0e',
         'variables': '{"programSlug":"%s","offset":%d,"limit":20,"sort":{"type":"DATE","order":"DESC"},"types":["%s"]}' % (program_slug, int(offset), video_type_value)
     }
     headers = {
