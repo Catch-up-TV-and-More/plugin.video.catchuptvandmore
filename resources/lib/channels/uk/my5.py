@@ -719,7 +719,7 @@ def getUseful(s):
         for i in u:
           streamUrl = i['url']
 
-    return  (streamUrl, keyserver, subtitle)
+    return  (streamUrl, keyserver, subtitile)
 
          
 
