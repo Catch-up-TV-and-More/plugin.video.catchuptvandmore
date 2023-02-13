@@ -343,4 +343,44 @@ menu = {
         'enabled': False,
         'order': 39
     },
+    'C5': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'Channel 5 from My5',
+        'thumb': 'channels/uk/five.png',
+        'fanart': 'channels/uk/five_fanart.jpg',
+        'enabled': True,
+        'order': 40
+    },
+    'C6': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Star from My5',
+        'thumb': 'channels/uk/fivestar.png',
+        'fanart': 'channels/uk/fivestar_fanart.jpg',
+        'enabled': True,
+        'order': 41
+    },
+    'C7': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 USA from My5',
+        'thumb': 'channels/uk/fiveusa.png',
+        'fanart': 'channels/uk/fiveusa_fanart.jpg',
+        'enabled': True,
+        'order': 42
+    },
+    'C0': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Action from My5',
+        'thumb': 'channels/uk/5action.png',
+        'fanart': 'channels/uk/5action_fanart.jpg',
+        'enabled': True,
+        'order': 43
+    },
+    'C8': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Select from My5',
+        'thumb': 'channels/uk/5select.png',
+        'fanart': 'channels/uk/5select_fanart.jpg',
+        'enabled': True,
+        'order': 44
+    },
 }

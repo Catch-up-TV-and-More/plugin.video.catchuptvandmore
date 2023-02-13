@@ -4,6 +4,8 @@
 
 # This file is part of Catch-up TV & More
 
+# called my5.py in dev tree, python3 kodi 19/20
+
 
 from __future__ import unicode_literals
 
@@ -39,7 +41,8 @@ from resources.lib import resolver_proxy, web_utils
 from resources.lib.resolver_proxy import get_stream_with_quality
 
 
-
+# Local HTTP server to mangle live fetched mpd
+LOCAL_URL = 'http://127.0.0.1:5057/5LIVE'
 
 CORONA_URL = 'https://corona.channel5.com/shows/'
 BASIS_URL = CORONA_URL + '%s/seasons'
@@ -61,6 +64,7 @@ ONEOFF = 'https://corona.channel5.com/shows/%s/episodes/next.json'
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
 LICC_URL = 'https://cassie.channel5.com/api/v2/media/my5desktopng/%s.json?timestamp=%s'
+LIVE_LICC_URL = 'https://cassie.channel5.com/api/v2/live_media/my5desktopng/%s.json?timestamp=%s'
 KEYURL = "https://player.akamaized.net/html5player/core/html5-c5-player.js"
 CERT_URL = 'https://c5apps.channel5.com/wv/c5-wv-app-cert-20170524.bin'
 
@@ -143,12 +147,20 @@ def cassieoarraymod(A23):
    q5N = 1240
    e5N = 728
    A32 = []
+   x = len(A23)
+   xbmc.log("XXXX %s" % x, level=xbmc.LOGERROR)
    for x in A23:
      A32.append(x)
-   for x in range(22,30):
-     A32.append(0)
-   A32[(e5N & 0xffffffff) >> 5] |= 128 << 24 - e5N % 32
-   A32.append(1240)
+   if (len(A23) > 22):
+     for x in range(22,30):
+       A32.append(0)
+     A32[(e5N & 0xffffffff) >> 5] |= 128 << 24 - e5N % 32
+     A32.append(1240)
+   else:
+     A32[21] |= 128
+     for x in range(22,31):
+        A32.append(0)
+     A32.append(1208)
    return(A32)
 
 
@@ -329,7 +341,7 @@ def doProcessBlock(D5r,o0r,S6k,Y5k):
 
 
 
-def getdata(ui):
+def getdata(ui,watching):
    # We need 2 things from the js file, the long string of gibberish and the short
    # string to OR with,
    # I assume short string is always 6 digits long to regexp search on
@@ -385,7 +397,11 @@ def getdata(ui):
 
    timeStamp = str( int(time.time()) ) 
 
-   CALL_URL = LICC_URL % (ui, timeStamp)
+   
+   if (watching == "vod"): 
+      CALL_URL = LICC_URL % (ui, timeStamp)
+   else:
+      CALL_URL = LIVE_LICC_URL % (ui, timeStamp)
 
    array23 = cassiearray(CALL_URL)
    array32 = cassieoarraymod(array23)
@@ -688,30 +704,20 @@ def dataProcess(a480, k6, iv4):
     return(tempB, pg6, offs)
 
 # this is probably really inefficient code, json habdling still confussess me
-def getUseful(data):
-    keyserver = 'NA' 
-    streamUrl = 'NA'
-    subtitle = 'NA'
-    
-
-    # dumped json parsing for old school regexp, i hate json .....
-    try:
-       keyserver = re.search('"https://cassie(.+?)widevine(.+?)"', data).group(0)
-       keyserver = keyserver.replace('"', '')
-    except AttributeError:
-       keyserver = 'NA'
-
-    try:
-       streamUrl = re.search('"https://(.+?)dash(.+?)cenc(.+?)"', data).group(0)
-       streamUrl = streamUrl.replace('"', '')
-    except AttributeError:
-       streamUrl = 'NA'
-
-    try:
-       subtitle = re.search('"https://akathumbnails(.+?).vtt"', data).group(0)
-       subtitle = subtitle.replace('"', '')
-    except AttributeError:
-       subtitle = 'NA'
+def getUseful(s):
+    # back to json parsing to also do live urls .....
+    keyserver = 'NA'
+    streamUrl ='NA'
+    subtitile = 'NA'
+    fixed = s[1:]
+    data = json.loads(fixed)
+    jsonData = data['assets']
+    for x in jsonData:
+      if (x['drm'] == "widevine" ):
+        keyserver = (x['keyserver'])
+        u = (x['renditions'])
+        for i in u:
+          streamUrl = i['url']
 
     return  (streamUrl, keyserver, subtitle)
 
@@ -999,7 +1005,7 @@ def get_video_url(plugin, item_id, fname, season_f_name, show_id, standalone, **
           pass
 
 
-    LICFULL_URL, aesKey  = getdata(show_id)
+    LICFULL_URL, aesKey  = getdata(show_id, "vod")
     (iv,data)=ivdata(LICFULL_URL)
     (stream,drmurl,suburl) = part2(iv,aesKey,data)
     xbmc.log("Stream : %s" % stream, level=xbmc.LOGERROR)
@@ -1025,3 +1031,38 @@ def get_video_url(plugin, item_id, fname, season_f_name, show_id, standalone, **
     item.property[ 'inputstream.adaptive.server_certificate'] = cert_data
     item.property['inputstream.adaptive.license_key'] = license_url
     return item
+    
+@Resolver.register
+def get_live_url(plugin, item_id, **kwargs):
+
+    LICFULL_URL, aesKey  = getdata(item_id,"live")
+    (iv,data)=ivdata(LICFULL_URL)
+    (stream,drmurl,suburl) = part2(iv,aesKey,data)
+    xbmc.log("Stream : %s" % stream, level=xbmc.LOGERROR)
+    xbmc.log("Licensce :  %s" % drmurl, level=xbmc.LOGERROR)
+
+    # Send request to local web server
+
+    # get server certiticate data and b64 it
+    resp = urlquick.get(CERT_URL)
+    content = resp.content
+    cert_data = (base64.b64encode(content)).decode('ascii')
+
+    stream_headers = urlencode(lic_headers)
+    license_url = '%s|%s|R{SSM}|' % (drmurl, stream_headers)
+
+    #stream = 'http://127.0.0.1:5057/5LIVE?id=' + dstream
+
+    item = Listitem()
+    item.path = stream
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property[ 'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    item.property[ 'inputstream.adaptive.server_certificate'] = cert_data
+    item.property['inputstream.adaptive.license_key'] = license_url
+    return item
+
+
