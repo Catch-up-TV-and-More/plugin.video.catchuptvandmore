@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta19" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta20" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -179,9 +179,13 @@ Project: Remove an useless file
 [NL - NPO] Fix a unfortunate copy/paste and some cleanups (issue #1072)
 [TN - WATANIA] Fix live (issue #1068)
 [TN - NESSMA] Fix missing headers (issue #1068)
-[PROJECT] Bug report template (PR #1077 et #1078) thanks @darodi
+[PROJECT] Bug report template (PR #1077 and #1078) thanks @darodi
 [WO - ARTE] Fix replay (issue #1083)
 [WO - ARTE] Simplify live
+[TN - ELJIWWARETTOUSNI] Add live (issue #1085)
+[FR - LCP] Fix live (issue #1090)
+[WO - ARTE] Fix replay
+[FR - MYTF1] Fix replay (PR #1093 issue #1091 and #1092) thanks @remzouille
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
