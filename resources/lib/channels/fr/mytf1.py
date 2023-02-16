@@ -126,7 +126,7 @@ def search(plugin, search_query, **kwargs):
 
     # Videos
     params = {
-        'id': '4fde02d6',
+        'id': 'b2dc9439',
         'variables': '{"query":"%s","offset":0,"limit":500}' % search_query
     }
     json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
