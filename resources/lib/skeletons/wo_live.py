@@ -37,7 +37,7 @@ menu = {
             },
             'ES': {},
             'PT': {}, 'RU': {}, 'RO': {}, 'TR': {}, 'FA': {}, 'GR': {},
-            'HU': {}
+            'HU': {}, 'BG': {}
         },
         'enabled': True,
         'order': 1
