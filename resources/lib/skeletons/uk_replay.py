@@ -66,11 +66,11 @@ menu = {
         "order": 6,
     },
     "my5": {
-        "route": "/resources/lib/channels/uk/my5:channels",
+        "route": "/resources/lib/channels/uk/my5:list_categories",
         "label": "My 5",
         "thumb": "channels/uk/my5.png",
         "fanart": "channels/uk/my5_fanart.jpg",
-        "enabled": False,
+        "enabled": True,
         "order": 7,
     },
     "uklocaltv": {
