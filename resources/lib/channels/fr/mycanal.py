@@ -42,13 +42,21 @@ URL_REPLAY = URL_ROOT_SITE + '/chaines/%s'
 
 URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken'
 
-LIVE_TOKEN_URL = 'https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV'
+LIVE_TOKEN_URL = 'https://secure-browser.canalplus-bo.net/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV'
 
 URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
 
 URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
 
-LICENSE_URL = 'https://secure-webtv.canal-plus.com/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
+URL_JSON = "https://dsh-m013.ora02.live-scy.canalplus-cdn.net/plfiles/v2/metr/dash-ssl/%s-hd.json"
+
+PARAMS_URL_JSON = {
+    'device': 'PC',
+    'route': 'scy-ora02',
+    'edge': 'routemeup.canalplus-bo.net'
+}
+
+LICENSE_URL = 'https://secure-browser.canalplus-bo.net/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
 
 CERTIFICATE_URL = 'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin'
 
@@ -614,7 +622,7 @@ def get_live_url(plugin, item_id, **kwargs):
     if item_id == "canalplus":
         item_id = "canalplusclair"
 
-    resp = requests.get("https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/" + item_id + "-hd.json").json()
+    resp = requests.get(URL_JSON % item_id, params=PARAMS_URL_JSON).json()
     url_stream = resp["primary"]["src"]
 
     certificate_data = base64.b64encode(requests.get(CERTIFICATE_URL).content).decode('utf-8')
