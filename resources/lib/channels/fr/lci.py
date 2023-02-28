@@ -8,10 +8,8 @@
 from __future__ import unicode_literals
 
 import json
-import re
-
-import inputstreamhelper
 import urlquick
+
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, utils
 
@@ -29,9 +27,15 @@ URL_ROOT = "https://www.tf1info.fr"
 URL_EMISSION = URL_ROOT + '/emissions'
 URL_LCI_EMISSIONS = URL_EMISSION + '/?channel=lci'
 
-# "https://mediainfo.tf1.fr/mediainfocombo/%s?context=MYTF1&pver=4015000&topDomain=unknown&platform=web&device=desktop&os=windows&osVersion=10.0&playerVersion=4.15.0&productName=mytf1&productVersion=0.0.0&browser=firefox&browserVersion=100"
-
-URL_VIDEO_STREAM = "https://mediainfo.tf1.fr/mediainfocombo/%s?context=MYTF1&pver=4008002&platform=web&os=linux&osVersion=unknown&topDomain=www.tf1.fr"
+URL_VIDEO_STREAM = "https://mediainfo.tf1.fr/mediainfocombo/%s"
+PARAMS_VIDEO_STREAM = {
+    'context': 'MYTF1',
+    'pver': '4008002',
+    'platform': 'web',
+    'os': 'linux',
+    'osVersion': 'unknown',
+    'topDomain': 'www.tf1.fr'
+}
 
 # videoId
 URL_LICENCE_KEY = "https://drm-wide.tf1.fr/proxy?id=%s"
@@ -89,7 +93,7 @@ def get_video_url(plugin, video_url, download_mode=False, **kwargs):
     json_parser = json.loads(root.text)
     video_id = json_parser["props"]["pageProps"]["page"]["video"]["id"]
 
-    json_parser = urlquick.get(URL_VIDEO_STREAM % video_id, headers=GENERIC_HEADERS, max_age=-1).json()
+    json_parser = urlquick.get(URL_VIDEO_STREAM % video_id, params=PARAMS_VIDEO_STREAM, headers=GENERIC_HEADERS, max_age=-1).json()
     if json_parser["delivery"]["code"] > 400:
         plugin.notify("ERROR", plugin.localize(30713))
         return False
@@ -107,29 +111,13 @@ def get_video_url(plugin, video_url, download_mode=False, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     video_id = "L_%s" % item_id.upper()
-    json_parser = urlquick.get(URL_VIDEO_STREAM % video_id,
-                               headers={"User-Agent": web_utils.get_random_ua()},
-                               max_age=-1).json()
+    json_parser = urlquick.get(URL_VIDEO_STREAM % video_id, params=PARAMS_VIDEO_STREAM, headers=GENERIC_HEADERS, max_age=-1).json()
 
     if json_parser["delivery"]["code"] > 400:
         plugin.notify("ERROR", plugin.localize(30713))
         return False
 
-    is_helper = inputstreamhelper.Helper("mpd", drm="widevine")
-    if not is_helper.check_inputstream():
-        return False
+    video_url = json_parser["delivery"]["url"]
+    license_url = URL_LICENCE_KEY % video_id
 
-    item = Listitem()
-    item.path = json_parser["delivery"]["url"]
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    item.property["inputstream.adaptive.manifest_type"] = "mpd"
-    item.property["inputstream.adaptive.license_type"] = "com.widevine.alpha"
-    item.property["inputstream.adaptive.license_key"] = URL_LICENCE_KEY % video_id
-    stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
-    if stream_bitrate_limit > 0:
-        item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
-
-    return item
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url)
