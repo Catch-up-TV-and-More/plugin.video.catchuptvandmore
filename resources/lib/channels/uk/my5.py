@@ -124,17 +124,21 @@ def part2(iv, aesKey, rdata):
 
 @Route.register
 def list_categories(plugin, **kwargs):
-    resp = urlquick.get(FEEDS_API % 'PLC_My5SubGenreBrowsePageSubNav', headers=GENERIC_HEADERS, params=feeds_api_params, max_age=-1)
+    resp = urlquick.get(FEEDS_API % 'PLC_My5SubGenreBrowsePageSubNav', headers=GENERIC_HEADERS,
+                        params=feeds_api_params, max_age=-1)
     root = json.loads(resp.text)
-
     for i in range(int(root['total_items'])):
-        item = Listitem()
-        item.label = root['filters']['contents'][i]['title']
-        browse_name = root['filters']['contents'][i]['id']
-        offset = "0"
-        item.set_callback(list_subcategories, browse_name=browse_name, offset=offset)
-        item_post_treatment(item)
-        yield item
+        # need a try as sometimes the web page reports more total_items than there is listed
+        try:
+            item = Listitem()
+            item.label = root['filters']['contents'][i]['title']
+            browse_name = root['filters']['contents'][i]['id']
+            offset = "0"
+            item.set_callback(list_subcategories, browse_name=browse_name, offset=offset)
+            item_post_treatment(item)
+            yield item
+        except (IndexError, ValueError, AttributeError):
+            pass
 
 
 @Route.register
@@ -146,9 +150,9 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
             'platform': 'my5desktop',
             'friendly': '1',
         }
-        params = feeds_api_params.copy()
-        resp = urlquick.get(URL_SHOWS, headers=GENERIC_HEADERS, params=params.update(w_params), max_age=-1)
+        resp = urlquick.get(URL_SHOWS, headers=GENERIC_HEADERS, params=w_params, max_age=-1)
         root = json.loads(resp.text)
+
         item_number = int(root['size'])
 
         for emission in root['shows']:
@@ -160,7 +164,8 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
             picture_id = emission['id']
             item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % picture_id
             if "standalone" in emission:
-                item.set_callback(get_video_url, fname=fname, season_f_name="", show_id="show_id", standalone="yes")
+                item.set_callback(get_video_url, fname=fname, season_f_name="",
+                                  show_id="show_id", standalone="yes")
             else:
                 item.set_callback(list_seasons, fname=fname, pid=picture_id, title=title)
             item_post_treatment(item)
@@ -169,19 +174,24 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
             offset = str(int(offset) + int(root['limit']))
             yield Listitem.next_page(browse_name=browse_name, offset=offset)
     else:
-        resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params, max_age=-1)
+        resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS,
+                            params=feeds_api_params, max_age=-1)
         root = json.loads(resp.text)
         item_number = int(root['total_items'])
 
         if root['filters']['type'] == 'Collection':
             offset = 0
-            for i in range(item_number):
-                item = Listitem()
-                item.label = root['filters']['contents'][i]['title']
-                browse_name = root['filters']['contents'][i]['id']
-                item.set_callback(list_collections, browse_name=browse_name, offset=offset)
-                item_post_treatment(item)
-                yield item
+            # need a try as sometimes the web page reports more total_items than there is listed
+            try:
+                for i in range(item_number):
+                    item = Listitem()
+                    item.label = root['filters']['contents'][i]['title']
+                    browse_name = root['filters']['contents'][i]['id']
+                    item.set_callback(list_collections, browse_name=browse_name, offset=offset)
+                    item_post_treatment(item)
+                    yield item
+            except (IndexError, ValueError, AttributeError):
+                pass
         elif root['filters']['type'] == 'Show':
             ids = root['filters']['ids']
             w_params = {
@@ -204,7 +214,8 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
                 item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % watchable['id']
                 show_id = watchable['id']
                 fname = watchable['f_name']
-                item.set_callback(get_video_url, fname=fname, season_f_name="season_f_name", show_id=show_id, standalone="yes")
+                item.set_callback(get_video_url, fname=fname, season_f_name="season_f_name",
+                                  show_id=show_id, standalone="yes")
                 item_post_treatment(item)
                 yield item
         elif root['filters']['type'] == 'Watchable':
@@ -230,14 +241,16 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
                 item.info['duration'] = int(int(watchable['len']) // 1000)
                 item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % watchable['sh_id']
                 show_id = watchable['id']
-                item.set_callback(get_video_url, fname="fname", season_f_name="season_f_name", show_id=show_id, standalone="no")
+                item.set_callback(get_video_url, fname="fname", season_f_name="season_f_name",
+                                  show_id=show_id, standalone="no")
                 item_post_treatment(item)
                 yield item
 
 
 @Route.register
 def list_collections(plugin, browse_name, offset, **kwargs):
-    resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params, max_age=-1)
+    resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS,
+                        params=feeds_api_params, max_age=-1)
     root = json.loads(resp.text)
     subgenre = root['filters']['vod_subgenres']
     view_all_params = {
@@ -259,7 +272,8 @@ def list_collections(plugin, browse_name, offset, **kwargs):
         picture_id = emission['id']
         item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % picture_id
         if "standalone" in emission:
-            item.set_callback(get_video_url, fname=fname, season_f_name="", show_id="show_id", standalone="yes")
+            item.set_callback(get_video_url, fname=fname, season_f_name="",
+                              show_id="show_id", standalone="yes")
         else:
             item.set_callback(list_seasons, fname=fname, pid=picture_id, title=title)
         item_post_treatment(item)
@@ -286,7 +300,8 @@ def list_seasons(plugin, fname, pid, title, **kwargs):
 
 @Route.register
 def list_episodes(plugin, fname, season_number, **kwargs):
-    resp = urlquick.get(URL_EPISODES % (fname, season_number), headers=GENERIC_HEADERS, params=view_api_params, max_age=-1)
+    resp = urlquick.get(URL_EPISODES % (fname, season_number), headers=GENERIC_HEADERS,
+                        params=view_api_params, max_age=-1)
     root = json.loads(resp.text)
 
     for episode in root['episodes']:
@@ -300,7 +315,8 @@ def list_episodes(plugin, fname, season_number, **kwargs):
         season_f_name = episode['sea_f_name']
         fname = episode['f_name']
         show_id = episode['id']
-        item.set_callback(get_video_url, fname=fname, season_f_name=season_f_name, show_id=show_id, standalone="no")
+        item.set_callback(get_video_url, fname=fname, season_f_name=season_f_name,
+                          show_id=show_id, standalone="no")
         item_post_treatment(item)
         yield item
 
@@ -308,7 +324,8 @@ def list_episodes(plugin, fname, season_number, **kwargs):
 @Resolver.register
 def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
     if (standalone == "yes"):
-        resp = urlquick.get(ONEOFF % fname, headers=GENERIC_HEADERS, params=view_api_params, max_age=-1)
+        resp = urlquick.get(ONEOFF % fname, headers=GENERIC_HEADERS,
+                            params=view_api_params, max_age=-1)
         root = json.loads(resp.text)
         show_id = root['id']
 
@@ -316,4 +333,16 @@ def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
     iv, data = ivdata(LICFULL_URL, auth)
     video_url, drm_url, suburl = part2(iv, aesKey, data)
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url, manifest_type='mpd', headers=lic_headers)
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
+                                                  manifest_type='mpd', headers=lic_headers)
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, **kwargs):
+
+    LICFULL_URL, auth, aesKey = getdata(item_id, 'live_media')
+    iv, data = ivdata(LICFULL_URL, auth)
+    video_url, drm_url, suburl = part2(iv, aesKey, data)
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
+                                                  manifest_type='mpd', headers=lic_headers)
