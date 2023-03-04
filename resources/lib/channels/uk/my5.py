@@ -335,3 +335,14 @@ def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
                                                   manifest_type='mpd', headers=lic_headers)
+
+
+@Resolver.register
+def get_live_url(plugin, item_id, **kwargs):
+
+    LICFULL_URL, auth, aesKey = getdata(item_id, 'live_media')
+    iv, data = ivdata(LICFULL_URL, auth)
+    video_url, drm_url, sub_url = part2(iv, aesKey, data)
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
+                                                  manifest_type='mpd', headers=lic_headers)
