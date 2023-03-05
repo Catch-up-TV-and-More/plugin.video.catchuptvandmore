@@ -346,7 +346,7 @@ menu = {
     'C5': {
         'resolver': '/resources/lib/channels/uk/my5:get_live_url',
         'label': 'Channel 5 from My5',
-        'thumb': 'channels/uk/my55.png',
+        'thumb': 'channels/uk/five.png',
         'fanart': 'channels/uk/five_fanart.jpg',
         'enabled': True,
         'order': 40
