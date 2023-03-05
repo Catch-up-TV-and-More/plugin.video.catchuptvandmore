@@ -18,13 +18,10 @@ import htmlement
 from kodi_six import xbmcgui
 import urlquick
 
-from resources.lib import download, resolver_proxy
+from resources.lib import download, web_utils, resolver_proxy
 from resources.lib.kodi_utils import get_kodi_version
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.resolver_proxy import get_stream_with_quality
-
-LICENSE_SERVER_HEADERS = '|User-Agent=Mozilla%2F5.0%20(X11%3B%20Linux%20x86_64)%20AppleWebKit%2F537.36%20' \
-                         '(KHTML%2C%20like%20Gecko)%20Chrome%2F49.0.2623.87%20Safari%2F537.36&Content-Type=|R{SSM}|'
 
 # TODO
 # Add geoblock (info in JSON)
@@ -91,17 +88,22 @@ REDBEE_BASE_URL = 'https://exposure.api.redbee.live/v2/customer/RTBF/businessuni
 RTBF_LOGIN_URL = 'https://login.rtbf.be/accounts.login'
 RTBF_GETJWT_URL = 'https://login.rtbf.be/accounts.getJWT'
 
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+
+# partner_key
+PARTNER_KEY = '82ed2c5b7df0a9334dfbda21eccd8427'  # get_partner_key()
+
 
 def get_partner_key():
     # Get partner key
-    resp = urlquick.get(URL_ROOT_LIVE, max_age=-1)
+    resp = urlquick.get(URL_ROOT_LIVE, headers=GENERIC_HEADERS, max_age=-1)
     list_js_files = re.compile(
         r'<script type="text/javascript" src="(.*?)">').findall(resp.text)
 
     # Brute force :)
     partner_key_value = ''
     for js_file in list_js_files:
-        resp2 = urlquick.get(js_file)
+        resp2 = urlquick.get(js_file, headers=GENERIC_HEADERS, max_age=-1)
         partner_key_datas = re.compile('partner_key: \'(.+?)\'').findall(
             resp2.text)
         if len(partner_key_datas) > 0:
@@ -109,10 +111,6 @@ def get_partner_key():
             break
     # print 'partner_key_value : ' + partner_key_value
     return partner_key_value
-
-
-# partner_key
-PARTNER_KEY = '82ed2c5b7df0a9334dfbda21eccd8427'  # get_partner_key()
 
 
 def format_hours(date, **kwargs):
@@ -169,7 +167,7 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_videos_search(plugin, search_query, item_id, page, **kwargs):
-    resp = urlquick.get(URL_LIST_SEARCH % (search_query, PARTNER_KEY))
+    resp = urlquick.get(URL_LIST_SEARCH % (search_query, PARTNER_KEY), headers=GENERIC_HEADERS, max_age=-1)
     json_parser = resp.json()
 
     found_result = {"value": False}
@@ -213,7 +211,7 @@ def list_videos_search_prog(plugin, search_query, item_id, page, **kwargs):
 # (doesn't work at the moment because display folders that are empties)
 @Route.register
 def list_channels(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIST_TV_CHANNELS % PARTNER_KEY)
+    resp = urlquick.get(URL_LIST_TV_CHANNELS % PARTNER_KEY, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = resp.json()
 
     for channel_datas in json_parser:
@@ -232,7 +230,7 @@ def list_channels(plugin, item_id, **kwargs):
 
 @Route.register
 def list_programs(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_EMISSIONS_AUVIO)
+    resp = urlquick.get(URL_EMISSIONS_AUVIO, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
 
     for program_datas in root.iterfind(
@@ -263,7 +261,7 @@ def list_programs(plugin, item_id, **kwargs):
 
 @Route.register
 def list_videos_program(plugin, item_id, program_id, **kwargs):
-    resp = urlquick.get(URL_JSON_EMISSION_BY_ID % (program_id, PARTNER_KEY))
+    resp = urlquick.get(URL_JSON_EMISSION_BY_ID % (program_id, PARTNER_KEY), headers=GENERIC_HEADERS, max_age=-1)
     json_parser = resp.json()
 
     found_result = {"value": False}
@@ -287,13 +285,14 @@ def list_sub_categories(plugin, item_id, category_datas, category_id, **kwargs):
         yield item
 
     category_url = 'https://www.rtbf.be/auvio/categorie?id=' + str(category_id)
-    resp = urlquick.get(category_url)
+    resp = urlquick.get(category_url, headers=GENERIC_HEADERS, max_age=-1)
 
     list_data_uuid = re.compile(r'data-uuid=\"(.*?)\"').findall(resp.text)
     for sub_category_data_uuid in list_data_uuid:
         resp2 = urlquick.get(
             URL_SUB_CATEGORIES %
-            (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
+            (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]),
+            headers=GENERIC_HEADERS, max_age=-1)
         json_parser = json.loads(resp2.text)
         if sub_category_data_uuid in json_parser["blocks"]:
 
@@ -328,7 +327,7 @@ def list_videos_category(plugin, item_id, cat_id, offset=0, **kwargs):
     url = URL_VIDEOS_BY_CAT_ID % (cat_id, PARTNER_KEY)
     if offset > 0:
         url += ('&offset=%s' % offset)
-    resp = urlquick.get(url)
+    resp = urlquick.get(url, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = resp.json()
 
     found_result = {"value": False}
@@ -403,7 +402,8 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
                                 sub_category_id, **kwargs):
     resp = urlquick.get(
         URL_SUB_CATEGORIES %
-        (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]))
+        (sub_category_data_uuid, sub_category_data_uuid.split('-')[1]),
+        headers=GENERIC_HEADERS, max_age=-1)
     json_parser = resp.json()
 
     parser = htmlement.HTMLement()
@@ -494,18 +494,21 @@ def get_video_redbee(plugin, video_id, is_drm):
     license_server_url = video_format['drm']['com.widevine.alpha']['licenseServerUrl']
     certificate_url = video_format['drm']['com.widevine.alpha']['certificateUrl']
 
-    resp_cert = urlquick.get(certificate_url, max_age=-1).text
+    resp_cert = urlquick.get(certificate_url, headers=GENERIC_HEADERS, max_age=-1).text
     certificate_data = base64.b64encode(resp_cert.encode("utf-8")).decode("utf-8")
 
     # TODO
     # subtitles = video_format['sprites'][0]['vtt']
 
-    license_url = license_server_url + LICENSE_SERVER_HEADERS
+    headers = {
+        'User-Agent': web_utils.get_random_ua(),
+        'Content-Type': ''
+    }
 
     input_stream_properties = {"server_certificate": certificate_data}
 
-    return get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd', license_url=license_url,
-                                   input_stream_properties=input_stream_properties)
+    return get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd', headers=headers,
+                                   license_url=license_server_url, input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
@@ -532,14 +535,6 @@ def get_video_url(plugin,
         return get_video_redbee(plugin, video_id, is_drm)
 
     if is_drm:
-        if get_kodi_version() < 18:
-            xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
-            return False
-
-        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-        if not is_helper.check_inputstream():
-            return False
-
         return get_drm_item(plugin, video_id, video_url, 'media_id')
 
     if video_url.endswith('m3u8'):
@@ -550,7 +545,7 @@ def get_video_url(plugin,
 
 def get_drm_item(plugin, video_id, video_url, url_token_parameter):
     token_url = URL_TOKEN % (url_token_parameter, video_id, PARTNER_KEY)
-    token_value = urlquick.get(token_url, max_age=-1)
+    token_value = urlquick.get(token_url, headers=GENERIC_HEADERS, max_age=-1)
     json_parser_token = json.loads(token_value.text)
     headers = {'customdata': json_parser_token["auth_encoded_xml"]}
     input_stream_properties = {"manifest_update_parameter": 'full'}
@@ -564,7 +559,7 @@ def get_video_url2(plugin,
                    video_id,
                    download_mode=False,
                    **kwargs):
-    resp = urlquick.get(URL_VIDEO_BY_ID % video_id, max_age=-1)
+    resp = urlquick.get(URL_VIDEO_BY_ID % video_id, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(
         re.compile('data-media=\"(.*?)\"').findall(resp.text)[0].replace(
             '&quot;', '"'))
@@ -598,7 +593,7 @@ def get_video_url2(plugin,
 
 @Resolver.register
 def set_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_JSON_LIVE_CHANNEL % (item_id, PARTNER_KEY), max_age=-1)
+    resp = urlquick.get(URL_JSON_LIVE_CHANNEL % (item_id, PARTNER_KEY), headers=GENERIC_HEADERS, max_age=-1)
     video_data = resp.json()
 
     if "url_streaming" not in video_data:
@@ -672,7 +667,7 @@ def get_live_item(item_id, video_data, found_result=None):
 
 @Route.register
 def list_lives(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_JSON_LIVE % PARTNER_KEY, max_age=-1)
+    resp = urlquick.get(URL_JSON_LIVE % PARTNER_KEY, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = resp.json()
 
     found_result = {"value": False}
@@ -696,14 +691,6 @@ def get_live_url(plugin, item_id, live_url, is_drm, live_id, is_redbee=False, ex
     if is_redbee:
         return get_video_redbee(plugin, external_id, is_drm)
     if is_drm:
-        if get_kodi_version() < 18:
-            xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
-            return False
-
-        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-        if not is_helper.check_inputstream():
-            return False
-
         return get_drm_item(plugin, live_id, live_url, 'planning_id')
 
     return live_url
@@ -719,7 +706,7 @@ def rtbf_login(plugin, user_login, user_pwd):
         'lang': 'fr'
     }
 
-    resp = urlquick.get(RTBF_LOGIN_URL, params=url_params, max_age=-1)
+    resp = urlquick.get(RTBF_LOGIN_URL, params=url_params, headers=GENERIC_HEADERS, max_age=-1)
 
     if not resp:
         plugin.notify(plugin.localize(30600), 'rtbf_login response: empty')
@@ -749,7 +736,7 @@ def get_rtbf_jwt(plugin, login_token):
         'format': 'json'
     }
 
-    resp = urlquick.get(RTBF_GETJWT_URL, params=url_params, max_age=-1)
+    resp = urlquick.get(RTBF_GETJWT_URL, params=url_params, headers=GENERIC_HEADERS, max_age=-1)
 
     if not resp:
         plugin.notify(plugin.localize(30600), 'get_rtbf_jwt response: empty')
@@ -778,6 +765,7 @@ def get_redbee_jwt(plugin, rtbf_jwt):
     data = data_string.encode("utf-8")
 
     headers = {
+        'User-Agent': web_utils.get_random_ua(),
         'Content-Type': 'application/json'
     }
 
@@ -788,6 +776,7 @@ def get_redbee_format(plugin, media_id, session_token, is_drm):
     url = REDBEE_BASE_URL + '/entitlement/{}/play'.format(media_id)
 
     headers = {
+        'User-Agent': web_utils.get_random_ua(),
         'Authorization': 'Bearer {}'.format(session_token)
     }
 
