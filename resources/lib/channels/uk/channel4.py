@@ -150,6 +150,13 @@ def get_video(plugin, programmeId, assetId, **kwargs):
             url = field['streams'][0]['uri']
             break
 
+    subtitle_url = ''
+    if plugin.setting.get_boolean('active_subtitle'):
+        for field in json_video['subtitlesAssets']:
+            if field['format'] == 'sami_001':
+                subtitle_url = field['url']
+                break
+
     cipher = AES.new(bytes('n9cLieYkqwzNCqvi', 'UTF-8'), AES.MODE_CBC, bytes('odzcU3WdUiXLucVd', 'UTF-8'))
     decoded_token = unpad(cipher.decrypt(base64.b64decode(token)), 16, style='pkcs7').decode('UTF-8').split('|')[1]
 
@@ -165,6 +172,8 @@ def get_video(plugin, programmeId, assetId, **kwargs):
 
     item = Listitem()
     item.path = url
+    if 'http' in subtitle_url:
+        item.subtitles.append(subtitle_url)
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
