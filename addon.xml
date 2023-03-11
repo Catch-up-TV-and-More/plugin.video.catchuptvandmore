@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta20" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta21" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -186,6 +186,18 @@ Project: Remove an useless file
 [FR - LCP] Fix live (issue #1090)
 [WO - ARTE] Fix replay
 [FR - MYTF1] Fix replay (PR #1093 issue #1091 and #1092) thanks @remzouille
+[FR - MYTF1] Fix search in replay (PR #1096) thanks @remzouille
+[WO - EURONEWS] Add Bulgarian language (PR #1104) thanks @adrien3287
+[FR - LA1ERE] Do not use unicode for compatibility
+[FR - LCI] Fix replay (issue #1108)
+[FR - LCI] Use resolver_proxy.get_stream_with_quality in live
+[FR - MYCANAL] Update endpoint (PR #1109 issue #1102) thanks @Arias800
+[UK - MY5] Activate replay (PR #1107 issue #973) thanks @nictjir
+[UK - MY5] Fix for the web page reporting more total_items than there is listed (PR #1114) thanks @nictjir
+[UK - MY5] Implement live (PR #1114 issue #973) thanks @nictjir
+[BE - RTBF] Remove useless code and add generic header
+[UK - MY5] Fix live skeleton
+[UK - CHANNEL4] Add subtitles (PR #1119) thanks @clement.dufour
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
