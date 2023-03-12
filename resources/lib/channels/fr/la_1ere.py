@@ -8,7 +8,6 @@
 from __future__ import unicode_literals
 import json
 import re
-import unidecode
 
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script, utils
@@ -141,7 +140,7 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    final_region = unidecode.unidecode(kwargs.get('language', Script.setting['la_1ere.language'])).lower()
+    final_region = LIVE_LA1ERE_REGIONS[utils.ensure_unicode(Script.setting['la_1ere.language'])]
     resp = urlquick.get(URL_LIVE % final_region, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
     broadcast_id = re.compile(r'videoId\"\:\"(.*?)\"', re.DOTALL).findall(resp.text)[0]
 

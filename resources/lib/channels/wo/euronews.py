@@ -31,7 +31,9 @@ def get_live_url(plugin, item_id, **kwargs):
     elif final_language == 'AR':
         url_live_json = URL_LIVE_API % ('arabic', lang)
     elif final_language == 'RO':
-        return resolver_proxy.get_stream_youtube(plugin, 'tdwXKd9Gqb8', False)
+        return resolver_proxy.get_stream_youtube(plugin, 'PHFADeLxJ2w', False)
+    elif final_language == 'BG':
+        return resolver_proxy.get_stream_youtube(plugin, 'P7dqy-tvU08', False)
     else:
         url_live_json = URL_LIVE_API % (lang, lang)
 
