@@ -12,6 +12,10 @@ import urlquick
 import urllib
 import time
 
+# MY5-001: import xbmvvfs, os
+import os
+import xbmcvfs
+
 from codequick import Listitem, Resolver, Route
 
 try:
@@ -41,6 +45,16 @@ ONEOFF = CORONA_URL + 'shows/%s/episodes/next.json'
 LIC_BASE = 'https://cassie.channel5.com/api/v2'
 LICC_URL = LIC_BASE + '/%s/my5desktopng/%s.json?timestamp=%s'
 KEYURL = "https://player.akamaized.net/html5player/core/html5-c5-player.js"
+
+# MY5-001: Customise My5 artwork - create constants
+HOME              = xbmcvfs.translatePath('special://home/')
+ADDONS            = os.path.join(HOME,     'addons')
+RESOURCE_IMAGES   = os.path.join(ADDONS,   'resource.images.catchuptvandmore')
+RESOURCES         = os.path.join(RESOURCE_IMAGES,   'resources')
+CHANNELS          = os.path.join(RESOURCES,         'channels')
+UK_CHANNELS       = os.path.join(CHANNELS,          'uk')
+fanartpath        = os.path.join(UK_CHANNELS,       'my5_fanart.jpg')
+iconpath          = os.path.join(UK_CHANNELS,       'my5.png')
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 feeds_api_params = {
@@ -136,6 +150,9 @@ def list_categories(plugin, **kwargs):
             offset = "0"
             item.set_callback(list_subcategories, browse_name=browse_name, offset=offset)
             item_post_treatment(item)
+            # MY5-001: display My5 artwork instead of CUTV artwork
+            item.art["thumb"] = iconpath
+            item.art["fanart"] = fanartpath
             yield item
         except (IndexError, ValueError, AttributeError):
             pass
@@ -190,6 +207,9 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
                     item.set_callback(list_collections, browse_name=browse_name, offset=offset)
                     item_post_treatment(item)
                     yield item
+                    # MY5-001: display My5 artwork instead of CUTV artwork
+                    item.art["thumb"] = iconpath
+                    item.art["fanart"] = fanartpath
             except (IndexError, ValueError, AttributeError):
                 pass
         elif root['filters']['type'] == 'Show':
