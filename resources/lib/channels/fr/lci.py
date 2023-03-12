@@ -8,9 +8,8 @@
 from __future__ import unicode_literals
 
 import json
-import re
-
 import urlquick
+
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, utils
 

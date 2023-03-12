@@ -71,7 +71,7 @@ menu = {
         "thumb": "channels/uk/my5.png",
         "fanart": "channels/uk/my5_fanart.jpg",
         "enabled": True,
-        "order": 1,
+        "order": 7,
     },
     "uklocaltv": {
         "route": "/resources/lib/channels/uk/uklocaltv:channels",
