@@ -490,12 +490,15 @@ def get_video_redbee(plugin, video_id, is_drm):
     is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
     if not is_helper.check_inputstream():
         return False
-
-    license_server_url = video_format['drm']['com.widevine.alpha']['licenseServerUrl']
-    certificate_url = video_format['drm']['com.widevine.alpha']['certificateUrl']
-
-    resp_cert = urlquick.get(certificate_url, headers=GENERIC_HEADERS, max_age=-1).text
-    certificate_data = base64.b64encode(resp_cert.encode("utf-8")).decode("utf-8")
+    
+    if 'drm' in  video_format:
+        license_server_url = video_format['drm']['com.widevine.alpha']['licenseServerUrl']
+        certificate_url = video_format['drm']['com.widevine.alpha']['certificateUrl']
+        resp_cert = urlquick.get(certificate_url, headers=GENERIC_HEADERS, max_age=-1).text
+        certificate_data = base64.b64encode(resp_cert.encode("utf-8")).decode("utf-8") 
+    else:
+        return get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd")
+       
 
     # TODO
     # subtitles = video_format['sprites'][0]['vtt']
