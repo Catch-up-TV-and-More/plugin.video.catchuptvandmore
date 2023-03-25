@@ -21,7 +21,6 @@ import urlquick
 from resources.lib import download, web_utils, resolver_proxy
 from resources.lib.kodi_utils import get_kodi_version
 from resources.lib.menu_utils import item_post_treatment
-from resources.lib.resolver_proxy import get_stream_with_quality
 
 # TODO
 # Add geoblock (info in JSON)
@@ -217,13 +216,10 @@ def list_channels(plugin, item_id, **kwargs):
     for channel_datas in json_parser:
         channel_title = channel_datas["name"]
         channel_image = channel_datas["images"]["illustration"]["16x9"]["1248x702"]
-        channel_key = channel_datas["key"]
         item = Listitem()
         item.label = channel_title
         item.art['thumb'] = item.art['landscape'] = channel_image
-        item.set_callback(list_programs,
-                          item_id=item_id,
-                          channel_key=channel_key)
+        item.set_callback(list_programs, item_id=item_id)
         item_post_treatment(item)
         yield item
 
@@ -480,22 +476,20 @@ def get_video_redbee(plugin, video_id, is_drm):
 
     if not is_drm and not forced_drm:
         if video_url.endswith('m3u8'):
-            return get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
+            return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
         return video_url
 
     if get_kodi_version() < 18:
         xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
         return False
 
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
-
-    license_server_url = video_format['drm']['com.widevine.alpha']['licenseServerUrl']
-    certificate_url = video_format['drm']['com.widevine.alpha']['certificateUrl']
-
-    resp_cert = urlquick.get(certificate_url, headers=GENERIC_HEADERS, max_age=-1).text
-    certificate_data = base64.b64encode(resp_cert.encode("utf-8")).decode("utf-8")
+    if 'drm' in video_format:
+        license_server_url = video_format['drm']['com.widevine.alpha']['licenseServerUrl']
+        certificate_url = video_format['drm']['com.widevine.alpha']['certificateUrl']
+        resp_cert = urlquick.get(certificate_url, headers=GENERIC_HEADERS, max_age=-1).text
+        certificate_data = base64.b64encode(resp_cert.encode("utf-8")).decode("utf-8")
+    else:
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd")
 
     # TODO
     # subtitles = video_format['sprites'][0]['vtt']
@@ -507,8 +501,8 @@ def get_video_redbee(plugin, video_id, is_drm):
 
     input_stream_properties = {"server_certificate": certificate_data}
 
-    return get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd', headers=headers,
-                                   license_url=license_server_url, input_stream_properties=input_stream_properties)
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd', headers=headers,
+                                                  license_url=license_server_url, input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
@@ -522,15 +516,12 @@ def get_video_url(plugin,
                   **kwargs):
     if 'youtube.com' in video_url:
         video_id = video_url.rsplit('/', 1)[1]
-        return resolver_proxy.get_stream_youtube(plugin, video_id,
-                                                 download_mode)
+        return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
 
     if 'arte.tv' in video_url:
         video_id = re.compile("(?<=fr%2F)(.*)(?=&autostart)").findall(video_url)[0]
-        return resolver_proxy.get_arte_video_stream(plugin,
-                                                    'fr',
-                                                    video_id,
-                                                    download_mode)
+        return resolver_proxy.get_arte_video_stream(plugin, 'fr', video_id, download_mode)
+
     if is_redbee:
         return get_video_redbee(plugin, video_id, is_drm)
 
@@ -538,7 +529,7 @@ def get_video_url(plugin,
         return get_drm_item(plugin, video_id, video_url, 'media_id')
 
     if video_url.endswith('m3u8'):
-        return get_stream_with_quality(plugin, video_url=video_url)
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)
 
     return video_url
 
@@ -549,16 +540,12 @@ def get_drm_item(plugin, video_id, video_url, url_token_parameter):
     json_parser_token = json.loads(token_value.text)
     headers = {'customdata': json_parser_token["auth_encoded_xml"]}
     input_stream_properties = {"manifest_update_parameter": 'full'}
-    return get_stream_with_quality(plugin, video_url=video_url, headers=headers, manifest_type='mpd',
-                                   license_url=URL_LICENCE_KEY, input_stream_properties=input_stream_properties)
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, headers=headers, manifest_type='mpd',
+                                                  license_url=URL_LICENCE_KEY, input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
-def get_video_url2(plugin,
-                   item_id,
-                   video_id,
-                   download_mode=False,
-                   **kwargs):
+def get_video_url2(plugin, item_id, video_id, download_mode=False, **kwargs):
     resp = urlquick.get(URL_VIDEO_BY_ID % video_id, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(
         re.compile('data-media=\"(.*?)\"').findall(resp.text)[0].replace(
@@ -569,8 +556,7 @@ def get_video_url2(plugin,
         if url is not None:
             if 'youtube.com' in url:
                 video_id = url.rsplit('/', 1)[1]
-                return resolver_proxy.get_stream_youtube(plugin, video_id,
-                                                         download_mode)
+                return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
             return url
         else:
             asset_id = json_parser.get("assetId")
@@ -586,7 +572,7 @@ def get_video_url2(plugin,
         return download.download_video(stream_url)
 
     if stream_url.endswith('m3u8'):
-        return get_stream_with_quality(plugin, video_url=stream_url)
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=stream_url)
 
     return stream_url
 
