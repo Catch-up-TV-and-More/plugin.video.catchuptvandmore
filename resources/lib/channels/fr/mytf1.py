@@ -303,9 +303,9 @@ def get_live_url(plugin, item_id, **kwargs):
     else:
         license_url = URL_LICENCE_KEY % video_id
 
-    if video_id == 'L_TF1' or video_id == 'L_TMC':
-        workaround = '1'
-    else:
+    if video_id == 'L_TF1-SERIES-FILMS':
         workaround = None
+    else:
+        workaround = '1'
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, workaround=workaround, headers=LICENSE_HEADERS)

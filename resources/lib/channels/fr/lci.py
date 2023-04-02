@@ -120,4 +120,4 @@ def get_live_url(plugin, item_id, **kwargs):
     video_url = json_parser["delivery"]["url"]
     license_url = URL_LICENCE_KEY % video_id
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url)
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, workaround='1')
