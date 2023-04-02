@@ -20,7 +20,7 @@ import xbmcgui
 # Rework Date/AIred
 URL_ROOT = 'https://www.lequipe.fr'
 
-URL_LIVE = URL_ROOT + '/directs'
+URL_LIVE = URL_ROOT + '/tv'
 
 URL_API_LEQUIPE = URL_ROOT + '/equipehd/applis/filtres/videosfiltres.json'
 
@@ -87,28 +87,29 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
-    live_id = re.compile(r'<article.+?<a href="(.+?)".+?alt="(.+?)"').findall(resp.text)
+    root = resp.parse()
+
     list_url = []
-    list_q = []
+    list_channel = []
 
-    for a in live_id:
-        list_url.append(a[0])
-        list_q.append(a[1])
+    try:
+        video_list = root.find('.//div[@class="RemoteVideoListWidget"]')
+        for link in video_list.findall('.//a[@class="Link"]'):
+            url = re.compile(r'live\/(.*?)$').findall(link.get('href'))[0]
+            channel = link.find('.//img').get('alt')
+            list_url.append(url)
+            list_channel.append(channel)
 
-    if len(list_url) == 0:
-        plugin.notify(plugin.localize(30718), '')
-        return False
+    except Exception:
+        list_channel.append("La chaine l'Équipe")
+        list_url.append('x2lefik')
 
     if item_id == 'lequipelive':
-        ret = xbmcgui.Dialog().select(Script.localize(30174), list_q)
+        ret = xbmcgui.Dialog().select(Script.localize(30174), list_channel)
     else:
         ret = 0
 
-    if ret > -1:
-        live_id = list_url[ret]
-        resp = urlquick.get(live_id, headers=GENERIC_HEADERS, max_age=-1)
-        live_id = re.compile(r'"embedUrl": "(.+?)",').findall(resp.text)[0].rsplit('/', 1)[-1]
+    live_id = list_url[ret]
 
     return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
