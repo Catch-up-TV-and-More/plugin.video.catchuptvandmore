@@ -448,7 +448,7 @@ def __get_francetv_program_info(video_id):
     params = {
         'country_code': geoip_value,
         'browser': 'firefox',
-        'device_type': 'desktop'
+        'device_type': 'mobile'
     }
     resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % video_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
     json_parser_live_id = json.loads(resp.text)
