@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta22" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta23" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -204,6 +204,11 @@ Project: Remove an useless file
 [CA - ICITOUTV] Fix replay (issue #1125)
 [FR - LCI] Workaround the delay bug in Inputstream Adaptive (issue #1118)
 [FR - MYTF1] Workaround the delay bug in Inputstream Adaptive
+[FR - LEQUIPE] Fix live
+[FR - SUDRADIO] Fix live (issue #1134)
+[FR - FRANCETV] Fix replay (PR #1135) thanks @Arias800
+[WEBSITE - VEELY] Compatibility wih Python2
+[Project] Remove Via-GrandParis from skeleton. Channel stopped
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
