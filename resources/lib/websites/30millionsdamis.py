@@ -49,7 +49,7 @@ def list_videos(plugin, item_id, page, category_url, **kwargs):
     for episode in root.iterfind(".//div[@class='news-latest']"):
         at_least_one_item = True
         item = Listitem()
-        item.label = episode.find('.//a').get('title')
+        item.label = episode.find('.//h2/a').text
         video_url = URL_ROOT + episode.find('.//a').get('href')
         item.art['thumb'] = item.art['landscape'] = URL_ROOT + episode.find('.//img').get('src')
 
