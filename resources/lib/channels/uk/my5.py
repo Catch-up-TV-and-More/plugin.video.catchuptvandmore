@@ -9,10 +9,14 @@ import re
 import json
 import base64
 import urlquick
-import urllib
 import time
 
 from codequick import Listitem, Resolver, Route
+
+try:
+    import urllib.parse
+except ImportError:
+    import urllib
 
 try:
     from Crypto.Cipher import AES
@@ -63,10 +67,20 @@ lic_headers = {
 def getdata(ui, media):
     resp = urlquick.get(KEYURL, headers=GENERIC_HEADERS, max_age=-1)
     content = resp.content.decode("utf-8", "ignore")
-
     ss = re.compile(r';}}}\)\(\'(......)\'\)};').search(content).group(1)
     m = re.compile(r'\(\){return "(.{3000,})";\}').search(content).group(1)
-    z = [ord(c) for c in urllib.parse.unquote(m)]
+
+    timeStamp = str(int(time.time()))
+    CALL_URL = LICC_URL % (media, ui, timeStamp)
+
+    try:
+        h = urllib.parse.unquote(m)
+        hmac_update = bytes(CALL_URL, encoding="utf-8")
+    except Exception:
+        h = urllib.unquote(m.encode('utf-8')).decode('utf-8', 'ignore')
+        hmac_update = str(CALL_URL)
+
+    z = [ord(c) for c in h]
     y = 0
     sout = ""
     for x in z:
@@ -77,14 +91,12 @@ def getdata(ui, media):
             sout = sout + chr(k)
         y = y + 1
 
-    m = re.compile(r'SSL_MA..(.{24})..(.{24})').search(sout)
-    timeStamp = str(int(time.time()))
-    CALL_URL = LICC_URL % (media, ui, timeStamp)
-    h = HMAC.new(base64.urlsafe_b64decode(m.group(1)), digestmod=SHA256)
-    h.update(bytes(CALL_URL, encoding="utf-8"))
-    auth = str(base64.urlsafe_b64encode(h.digest()))[2:-2].replace("+", "-").replace("/", "_")
+    m = re.compile(r'SSL_MA..(.{24})..(.{24})').findall(sout)[0]
+    h = HMAC.new(base64.urlsafe_b64decode(str(m[0])), digestmod=SHA256)
+    h.update(hmac_update)
+    auth = base64.urlsafe_b64encode(h.digest()).decode('utf-8')[:-1].replace("+", "-").replace("/", "_")
 
-    return CALL_URL, auth, m.group(2)
+    return CALL_URL, auth, m[1]
 
 
 def ivdata(lic_full, auth):
