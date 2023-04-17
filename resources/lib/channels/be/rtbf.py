@@ -475,7 +475,7 @@ def get_video_redbee(plugin, video_id, is_drm):
     video_url = video_format['mediaLocator']
 
     if not is_drm and not forced_drm:
-        if video_url.endswith('m3u8'):
+        if re.match('.*m3u8.*', video_url) is not None:
             return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
         return video_url
 
