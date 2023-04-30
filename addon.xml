@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta24" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta25" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -214,6 +214,8 @@ Project: Remove an useless file
 [WEBSITES - 30MILLIONSDAMIS] Fix label (PR #1139) thanks @wwark
 [UK - CHANNEL4] Add subtitles formats (PR #1141) thanks @clement.dufour
 [UK - MY5] Compatibility with Leia
+[BE - RTBF] Small fix for m3u8 (PR #1142) thanks @darodi
+[FR - FIGAROTV] Add live for Figaro TV Île-de-France
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
