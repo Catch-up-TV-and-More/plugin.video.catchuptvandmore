@@ -12,7 +12,6 @@ import re
 from six.moves import urllib
 from builtins import str
 
-import inputstreamhelper
 import urlquick
 import xbmcaddon
 from codequick import Listitem, Resolver, Route, Script
@@ -367,7 +366,7 @@ def get_live_url(plugin, item_id, **kwargs):
                 if stream["drm"] == "WIDEVINE":
 
                     # Workaround for IA bug : https://github.com/xbmc/inputstream.adaptive/issues/804
-                    response = urlquick.get(stream["url"])
+                    response = urlquick.get(stream["url"], headers=GENERIC_HEADERS, max_age=-1)
                     video_url = re.search('<Location>([^<]+)</Location>', response.text).group(1).replace(';', '&')
                     customdata = CUSTOMDATALIVE.format(web_utils.get_random_ua(), token, "undefined")
                     headers = {
