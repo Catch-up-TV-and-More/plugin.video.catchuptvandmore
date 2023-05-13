@@ -221,6 +221,9 @@ msgctxt "#30074"
 msgid "Venezuela"
 msgstr "Venezuela"
 
+msgctxt "#30075"
+msgid "Luxembourg"
+msgstr "Luxembourg"
 
 # Channels (from 30080 to 30129)
 
