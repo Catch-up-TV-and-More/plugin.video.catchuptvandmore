@@ -127,6 +127,11 @@ def get_live_url(plugin, item_id, **kwargs):
         video_url = re.compile(r'file\: \"(.*?)\"').findall(resp.text)[0]
         return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)
 
+    if 'webtvmanager' in src_datas:
+        resp = urlquick.get(src_datas, headers=GENERIC_HEADERS, max_age=-1)
+        video_url = resp.parse().find('.//source').get('src')
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)
+
     live_id = re.compile(r'v=(.*?)\&').findall(src_datas)[0]
     datas = {
         'action': 'video_info',
