@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta26" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta27" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -220,6 +220,9 @@ Project: Remove an useless file
 [CA - NTVCA] Update live link
 [LU - RTL] Add lives
 [FR - VIA] Add viàTéléPaese live
+[UK - SKYNEWS] Fix live
+[UK - BLAZE] Fix live
+[WEBSITES - FOSDEM] Update LAST_YEAR_XML to 2023 (PR #1153) thanks @wwark
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
