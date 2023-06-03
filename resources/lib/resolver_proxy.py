@@ -521,7 +521,10 @@ def get_francetv_video_stream(plugin,
             stream_headers = urlencode(headers)
             json_parser2 = json.loads(urlquick.get(url_selected, headers=headers, max_age=-1).text)
             resp3 = urlquick.get(json_parser2['url'], headers=headers, max_age=-1, allow_redirects=False)
-            location_url = resp3.headers['location']
+            if resp3.status_code < 400 and resp3.status_code >= 300:
+                location_url = resp3.headers['location']
+            else:
+                location_url = resp3.url
             item.path = location_url
             item.property['inputstream.adaptive.stream_headers'] = stream_headers
             if download_mode:
