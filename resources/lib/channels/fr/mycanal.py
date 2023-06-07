@@ -5,16 +5,20 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-import json
-import re
-import requests
-import time
-import random
-import math
-import inputstreamhelper
-import urlquick
+
 import base64
+import json
+import math
 import pickle
+import random
+import re
+import time
+
+# noinspection PyUnresolvedReferences
+import inputstreamhelper
+import requests
+import urlquick
+# noinspection PyUnresolvedReferences
 import xbmcvfs
 
 try:
@@ -33,7 +37,7 @@ from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, ge
 from resources.lib.menu_utils import item_post_treatment
 
 # URL :
-URL_ROOT_SITE = 'https://www.mycanal.fr'
+URL_ROOT_SITE = 'https://www.canalplus.com'
 # Channel
 
 # Replay channel :
@@ -44,9 +48,9 @@ URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken
 
 LIVE_TOKEN_URL = 'https://secure-browser.canalplus-bo.net/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV'
 
-URL_VIDEO_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/playset/unit/%s'
-
-URL_STREAM_DATAS = 'https://secure-gen-hapi.canal-plus.com/conso/view'
+SECURE_GEN_HAPI = 'https://secure-gen-hapi.canal-plus.com'
+URL_VIDEO_DATAS = SECURE_GEN_HAPI + '/conso/playset/unit/%s'
+URL_STREAM_DATAS = SECURE_GEN_HAPI + '/conso/view'
 
 URL_JSON = "https://dsh-m013.ora02.live-scy.canalplus-cdn.net/plfiles/v2/metr/dash-ssl/%s-hd.json"
 
@@ -59,7 +63,6 @@ PARAMS_URL_JSON = {
 LICENSE_URL = 'https://secure-browser.canalplus-bo.net/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
 
 CERTIFICATE_URL = 'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin'
-
 
 # The channel need to be on the same order has the website
 LIVE_MYCANAL = {
@@ -75,10 +78,14 @@ LIVE_DAILYMOTION = {
     'canalplus': 'x5gv6be'
 }
 
+REACT_QUERY_STATE = re.compile(r'window.REACT_QUERY_STATE\s*=\s*(.*?);\s*document\.documentElement\.classList\.remove')
+WINDOW_DATA = re.compile(r'window.__data=(.*?);\s*window.REACT_QUERY_STATE')
+
 
 def getKeyID():
     def rnd():
         return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
+
     ts = int(1000 * time.time())
 
     deviceKeyId = str(ts) + '-' + rnd()
@@ -127,30 +134,40 @@ def list_categories(plugin, item_id, **kwargs):
     """
 
     resp = urlquick.get(URL_REPLAY % item_id)
-    json_replay = re.compile(
-        r'window.__data=(.*?); window.app_config').findall(resp.text)[0]
-    json_parser = json.loads(json_replay)
+    # window_data = WINDOW_DATA.findall(resp.text)[0]
+    # json_window_data = json.loads(window_data)
+    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0]
+    json_react_query_state = json.loads(react_query_state)
 
-    for category in json_parser["templates"]["landing"]["strates"]:
+    # for category in json_window_data["application"]["navigation"]:
+    #     title = category['displayName']
+    #     item = Listitem()
+    #     item.label = title
+    #     item.set_callback(list_contents, item_id=item_id, key_value='key_value')
+    #     item_post_treatment(item)
+    #     yield item
+
+    for category in json_react_query_state["queries"][0]["state"]["data"]["strates"]:
         if category["type"] == "carrousel":
             title = category['context']['context_page_title']
             key_value = category['reactKey']
             item = Listitem()
             item.label = title
-            item.set_callback(
-                list_contents, item_id=item_id, key_value=key_value)
+            item.set_callback(list_contents, item_id=item_id, key_value=key_value)
             item_post_treatment(item)
             yield item
         elif category["type"] == "contentRow":
             if 'title' in category:
                 title = category['title']
+            elif 'no title' not in category['context']['context_list_category']:
+                title = category['context']['context_list_category']
             else:
-                title = json_parser["page"]["displayName"]
+                title = category['context']['context_list_id']
+                continue
             key_value = category['reactKey']
             item = Listitem()
             item.label = title
-            item.set_callback(
-                list_contents, item_id=item_id, key_value=key_value)
+            item.set_callback(list_contents, item_id=item_id, key_value=key_value)
             item_post_treatment(item)
             yield item
 
@@ -158,11 +175,10 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_contents(plugin, item_id, key_value, **kwargs):
     resp = urlquick.get(URL_REPLAY % item_id)
-    json_replay = re.compile(
-        r'window.__data=(.*?); window.app_config').findall(resp.text)[0]
-    json_parser = json.loads(json_replay)
+    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0]
+    json_react_query_state = json.loads(react_query_state)
 
-    for category in json_parser["templates"]["landing"]["strates"]:
+    for category in json_react_query_state["queries"][0]["state"]["data"]["strates"]:
         if category['reactKey'] != key_value:
             continue
 
@@ -411,8 +427,7 @@ def get_video_url(plugin,
         # Get Portail Id
         session_requests = requests.session()
         resp_app_config = session_requests.get(URL_REPLAY % item_id)
-        json_app_config = re.compile('window.app_config=(.*?)};').findall(
-            resp_app_config.text)[0]
+        json_app_config = re.compile('window.app_config=(.*?)};').findall(resp_app_config.text)[0]
         json_app_config_parser = json.loads(json_app_config + ('}'))
         portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
 
@@ -462,7 +477,9 @@ def get_video_url(plugin,
             return False
 
         for stream_datas in value_datas_jsonparser["available"]:
-            if stream_datas['drmType'] == "DRM MKPC Widevine DASH" or stream_datas['drmType'] == "Non protégé":
+            if stream_datas['drmType'] == "DRM MKPC Widevine DASH" \
+                    or stream_datas['drmType'] == "Non protégé" \
+                    or stream_datas['drmType'] == "UNPROTECTED":
                 payload = {
                     'comMode': stream_datas['comMode'],
                     'contentId': stream_datas['contentId'],
@@ -490,8 +507,8 @@ def get_video_url(plugin,
         jsonparser_stream_datas = session_requests.put(
             URL_STREAM_DATAS, data=payload, headers=headers).json()
 
-        jsonparser_real_stream_datas = session_requests.get(
-            jsonparser_stream_datas['@medias'], headers=headers).json()
+        jsonparser_real_stream_datas = session_requests.get(SECURE_GEN_HAPI +
+                                                            jsonparser_stream_datas['@medias'], headers=headers).json()
 
         certificate_data = base64.b64encode(requests.get(CERTIFICATE_URL).content).decode('utf-8')
 
@@ -499,9 +516,15 @@ def get_video_url(plugin,
         item = Listitem()
         stream_data_type = "VM" if 'VM' in jsonparser_real_stream_datas else "VF"
 
-        item.path = jsonparser_real_stream_datas[stream_data_type][0]["media"][0]["distribURL"]
+        if stream_data_type in jsonparser_real_stream_datas:
+            first_stream = jsonparser_real_stream_datas[stream_data_type][0]
+            item.path = first_stream["media"][0]["distribURL"]
+        else:
+            first_stream = jsonparser_real_stream_datas[0]
+            item.path = first_stream["files"][0]["distribURL"]
+
         if plugin.setting.get_boolean('active_subtitle'):
-            for asset in jsonparser_real_stream_datas[stream_data_type][0]["files"]:
+            for asset in first_stream["files"]:
                 if 'vtt' in asset["mimeType"]:
                     subtitle_url = asset['distribURL']
 
