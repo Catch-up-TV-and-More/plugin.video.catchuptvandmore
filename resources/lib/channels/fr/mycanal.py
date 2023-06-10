@@ -36,17 +36,11 @@ from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, ge
     get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
-# URL :
 URL_ROOT_SITE = 'https://www.canalplus.com'
-# Channel
-
-# Replay channel :
 URL_REPLAY = URL_ROOT_SITE + '/chaines/%s'
 # Channel name
 
 URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken'
-
-LIVE_TOKEN_URL = 'https://secure-browser.canalplus-bo.net/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV'
 
 SECURE_GEN_HAPI = 'https://secure-gen-hapi.canal-plus.com'
 URL_VIDEO_DATAS = SECURE_GEN_HAPI + '/conso/playset/unit/%s'
@@ -60,7 +54,9 @@ PARAMS_URL_JSON = {
     'edge': 'routemeup.canalplus-bo.net'
 }
 
-LICENSE_URL = 'https://secure-browser.canalplus-bo.net/WebPortal/ottlivetv/api/V4/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
+CANALPLUS_BO_NET_API = 'https://secure-browser.canalplus-bo.net/WebPortal/ottlivetv/api/V4'
+LIVE_TOKEN_URL = CANALPLUS_BO_NET_API + '/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV'
+LICENSE_URL = CANALPLUS_BO_NET_API + '/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
 
 CERTIFICATE_URL = 'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin'
 
@@ -425,10 +421,11 @@ def get_video_url(plugin,
         deviceKeyId, device_id_first, sessionId = getKeyID()
 
         # Get Portail Id
+        # session_requests = urlquick.Session()
         session_requests = requests.session()
         resp_app_config = session_requests.get(URL_REPLAY % item_id)
         json_app_config = re.compile('window.app_config=(.*?)};').findall(resp_app_config.text)[0]
-        json_app_config_parser = json.loads(json_app_config + ('}'))
+        json_app_config_parser = json.loads(json_app_config + '}')
         portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
 
         headers = {"User-Agent": web_utils.get_random_ua(),
@@ -449,7 +446,7 @@ def get_video_url(plugin,
         device_id = json_token_parser["response"]["userData"]["deviceId"].split(':')[0]
 
         video_id = next_url.split('/')[-1].split('.json')[0]
-        headers = {
+        secure_gen_hapi_headers = {
             'Accept': 'application/json, text/plain, */*',
             'Authorization': 'PASS Token="%s"' % pass_token,
             'Content-Type': 'application/json; charset=UTF-8',
@@ -459,6 +456,7 @@ def get_video_url(plugin,
             'XX-Profile-Id': '0',
             'XX-SERVICE': 'mycanal',
             'User-Agent': web_utils.get_random_ua(),
+            'Origin': 'https://www.mycanal.fr'
         }
 
         # Fix an ssl issue on some device.
@@ -469,7 +467,7 @@ def get_video_url(plugin,
             # no pyopenssl support used / needed / available
             pass
 
-        value_datas_jsonparser = session_requests.get(URL_VIDEO_DATAS % video_id, headers=headers).json()
+        value_datas_jsonparser = session_requests.get(URL_VIDEO_DATAS % video_id, headers=secure_gen_hapi_headers).json()
 
         if 'available' not in value_datas_jsonparser:
             # Some videos required an account
@@ -493,22 +491,13 @@ def get_video_url(plugin,
                 break
 
         payload = json.dumps(payload)
-        headers = {'Accept': 'application/json, text/plain, */*',
-                   'Authorization': 'PASS Token="%s"' % pass_token,
-                   'Content-Type': 'application/json; charset=UTF-8',
-                   'XX-DEVICE': 'pc %s' % device_id,
-                   'XX-DOMAIN': 'cpfra',
-                   'XX-OPERATOR': 'pc',
-                   'XX-Profile-Id': '0',
-                   'XX-SERVICE': 'mycanal',
-                   'User-Agent': web_utils.get_random_ua(),
-                   }
 
         jsonparser_stream_datas = session_requests.put(
-            URL_STREAM_DATAS, data=payload, headers=headers).json()
+            URL_STREAM_DATAS, data=payload, headers=secure_gen_hapi_headers).json()
 
         jsonparser_real_stream_datas = session_requests.get(SECURE_GEN_HAPI +
-                                                            jsonparser_stream_datas['@medias'], headers=headers).json()
+                                                            jsonparser_stream_datas['@medias'],
+                                                            headers=secure_gen_hapi_headers).json()
 
         certificate_data = base64.b64encode(requests.get(CERTIFICATE_URL).content).decode('utf-8')
 
@@ -521,11 +510,19 @@ def get_video_url(plugin,
             item.path = first_stream["media"][0]["distribURL"]
         else:
             first_stream = jsonparser_real_stream_datas[0]
-            item.path = first_stream["files"][0]["distribURL"]
+            files = first_stream["files"]
+            found_file = False
+            for file in files:
+                if file["type"] == 'video':
+                    item.path = file["distribURL"]
+                    found_file = True
+                    break
+            if not found_file:
+                return False
 
         if plugin.setting.get_boolean('active_subtitle'):
             for asset in first_stream["files"]:
-                if 'vtt' in asset["mimeType"]:
+                if 'vtt' in asset["mimeType"] or asset["type"] == 'subtitle':
                     subtitle_url = asset['distribURL']
 
         item.label = get_selected_item_label()
@@ -539,18 +536,8 @@ def get_video_url(plugin,
         if ".mpd" in item.path:
             item.property['inputstream.adaptive.manifest_type'] = 'mpd'
             item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            headers2 = {
-                'Accept': 'application/json, text/plain, */*',
-                'Authorization': 'PASS Token="%s"' % pass_token,
-                'Content-Type': 'text/plain',
-                'User-Agent': web_utils.get_random_ua(),
-                'Origin': 'https://www.mycanal.fr',
-                'XX-DEVICE': 'pc %s' % device_id,
-                'XX-DOMAIN': 'cpfra',
-                'XX-OPERATOR': 'pc',
-                'XX-Profile-Id': '0',
-                'XX-SERVICE': 'mycanal',
-            }
+            headers2 = secure_gen_hapi_headers.copy()
+            headers2.update({'Content-Type': 'text/plain'})
 
             with xbmcvfs.File('special://userdata/addon_data/plugin.video.catchuptvandmore/headersCanal', 'wb') as f1:
                 pickle.dump(headers2, f1)
