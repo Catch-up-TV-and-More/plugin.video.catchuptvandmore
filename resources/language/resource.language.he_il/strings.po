@@ -562,6 +562,14 @@ msgctxt "#30259"
 msgid "RTBF auvio Password"
 msgstr ""
 
+msgctxt "#30244"
+msgid "MyTF1 Login"
+msgstr ""
+
+msgctxt "#30245"
+msgid "MyTF1 Password"
+msgstr ""
+
 
 # TV integration (from 30270 to 30289)
 
