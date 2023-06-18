@@ -23,6 +23,8 @@ from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.menu_utils import item_post_treatment
 
+USER_AGENT_FIREFOX = "Mozilla/5.0 (Windows NT 10.0; rv:114.0) Gecko/20100101 Firefox/114.0"
+
 MYTF1_ROOT = "https://www.tf1.fr"
 
 API_KEY = "3_hWgJdARhz_7l1oOp3a8BDLoR9cuWZpUaKG4aqF7gum9_iK3uTZ2VlDBl8ANf8FVk"
@@ -277,7 +279,7 @@ def get_video_url(plugin,
         return False
 
     headers_video_stream = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": USER_AGENT_FIREFOX,
         "authorization": "Bearer %s" % token,
     }
 
@@ -310,13 +312,13 @@ def get_video_url(plugin,
 def get_token(plugin):
     session = urlquick.session()
     bootstrap_headers = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": USER_AGENT_FIREFOX,
         "Accept": "*/*",
         "referrer": MYTF1_ROOT
     }
     session.get(ACCOUNTS_BOOTSTRAP, headers=bootstrap_headers, max_age=-1)
     cookie_consent_headers = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": USER_AGENT_FIREFOX,
         "Accept": "*/*",
         "Content-Type": "application/atom+xml;type=entry;charset=utf-8",
         "Authorization": "SharedAccessSignature sr=ddlprdcomhub000.servicebus.windows.net"
@@ -360,7 +362,7 @@ def get_token(plugin):
     }
     session.post(COOKIE_CONSENTS_MESSAGES, headers=cookie_consent_headers, data=post_body, max_age=-1)
     headers_login = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": USER_AGENT_FIREFOX,
         "Accept": "*/*",
         "Content-Type": "application/x-www-form-urlencoded",
         "referrer": MYTF1_ROOT
@@ -389,7 +391,7 @@ def get_token(plugin):
     response = session.post(ACCOUNTS_LOGIN, headers=headers_login, data=post_body_login, max_age=-1)
     login_json = response.json()
     headers_gigya = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": USER_AGENT_FIREFOX,
         "Accept": "*/*",
         "content-type": "application/json"
     }
@@ -411,7 +413,7 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
 
     headers_video_stream = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": USER_AGENT_FIREFOX,
         "authorization": "Bearer %s" % token,
     }
 
