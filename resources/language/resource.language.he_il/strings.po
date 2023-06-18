@@ -562,11 +562,11 @@ msgctxt "#30259"
 msgid "RTBF auvio Password"
 msgstr ""
 
-msgctxt "#30244"
+msgctxt "#30260"
 msgid "MyTF1 Login"
 msgstr ""
 
-msgctxt "#30245"
+msgctxt "#30261"
 msgid "MyTF1 Password"
 msgstr ""
 

@@ -405,8 +405,18 @@ def get_token(plugin):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     video_id = 'L_%s' % item_id.upper()
+
+    is_ok, session, token = get_token(plugin)
+    if not is_ok:
+        return False
+
+    headers_video_stream = {
+        "User-Agent": web_utils.get_random_ua(),
+        "authorization": "Bearer %s" % token,
+    }
+
     url_json = URL_VIDEO_STREAM % video_id
-    json_parser = urlquick.get(url_json, GENERIC_HEADERS, max_age=-1).json()
+    json_parser = session.get(url_json, headers_video_stream, max_age=-1).json()
 
     if json_parser['delivery']['code'] > 400:
         plugin.notify('ERROR', plugin.localize(30713))
