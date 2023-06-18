@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta27" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta28" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -223,6 +223,9 @@ Project: Remove an useless file
 [UK - SKYNEWS] Fix live
 [UK - BLAZE] Fix live
 [WEBSITES - FOSDEM] Update LAST_YEAR_XML to 2023 (PR #1153) thanks @wwark
+[FR - FRANCETV] Handle FranceTV stream with no redirect (PR #1157) thanks @mirwan
+[PROJECT] Create CODE_OF_CONDUCT.md (PR #1165) thanks @darodi
+[FR - MYTF1] DRM API changed (PR #1164) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
