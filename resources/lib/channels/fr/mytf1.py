@@ -6,36 +6,51 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-from builtins import str
-import json
 
-import inputstreamhelper
-from codequick import Route, Resolver, Listitem, utils, Script
-from kodi_six import xbmcgui, xbmcplugin
+import time
+from builtins import str
+from datetime import datetime
+
+# noinspection PyUnresolvedReferences
 import urlquick
+# noinspection PyUnresolvedReferences
+from codequick import Route, Resolver, Listitem, utils, Script
+# noinspection PyUnresolvedReferences
+from kodi_six import xbmcgui, xbmcplugin
 
 from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
-from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
+MYTF1_ROOT = "https://www.tf1.fr"
+
+API_KEY = "3_hWgJdARhz_7l1oOp3a8BDLoR9cuWZpUaKG4aqF7gum9_iK3uTZ2VlDBl8ANf8FVk"
+
+# uid, signature, timestamp
+BODY_GIGYA = "{\"uid\":\"%s\",\"signature\":\"%s\",\"timestamp\":%s,\"consent_ids\":[\"1\",\"2\",\"3\",\"4\",\"10001\",\"10003\",\"10005\",\"10007\",\"10013\",\"10015\",\"10017\",\"10019\",\"10009\",\"10011\",\"13002\",\"13001\",\"10004\",\"10014\",\"10016\",\"10018\",\"10020\",\"10010\",\"10012\",\"10006\",\"10008\"]}"
+TOKEN_GIGYA_WEB = "https://www.tf1.fr/token/gigya/web"
 
 # TO DO
 # Readd Playlist (if needed)
 # Add more infos videos (saison, episodes, casts, etc ...)
 # Find a way to get Id for each API call
 
-URL_ROOT = utils.urljoin_partial("https://www.tf1.fr")
+URL_ROOT = utils.urljoin_partial(MYTF1_ROOT)
 
-URL_VIDEO_STREAM = 'https://mediainfo.tf1.fr/mediainfocombo/%s?context=MYTF1&pver=5000002&platform=web&device=desktop&os=linux&osVersion=unknown&topDomain=www.tf1.fr'
+URL_VIDEO_STREAM = 'https://mediainfo.tf1.fr/mediainfocombo/%s'
 
 URL_API = 'https://www.tf1.fr/graphql/web'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
+USER_AGENT_FIREFOX = "Mozilla/5.0 (Windows NT 10.0; rv:114.0) Gecko/20100101 Firefox/114.0"
+
 URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s'
 # videoId
 
+
+ACCOUNTS_LOGIN = "https://compte.tf1.fr/accounts.login"
+ACCOUNTS_BOOTSTRAP = "https://compte.tf1.fr/accounts.webSdkBootstrap"
 
 DESIRED_QUALITY = Script.setting['quality']
 
@@ -46,9 +61,64 @@ VIDEO_TYPES = {
 }
 
 
+def get_token(plugin):
+    session = urlquick.session()
+    bootstrap_headers = {
+        "User-Agent": USER_AGENT_FIREFOX,
+        "referrer": MYTF1_ROOT
+    }
+    bootstrap_params = {
+        'apiKey': API_KEY,
+        'pageURL': 'https%3A%2F%2Fwww.tf1.fr%2F',
+        'sd': 'js_latest',
+        'sdkBuild': '13987',
+        'format': 'json'
+    }
+
+    session.get(ACCOUNTS_BOOTSTRAP, headers=bootstrap_headers, params=bootstrap_params, max_age=-1)
+    headers_login = {
+        "User-Agent": USER_AGENT_FIREFOX,
+        "Content-Type": "application/x-www-form-urlencoded",
+        "referrer": MYTF1_ROOT
+    }
+
+    if plugin.setting.get_string('mytf1.login') == '' or plugin.setting.get_string('mytf1.password') == '':
+        xbmcgui.Dialog().ok('Info', plugin.localize(30604) % ('myft1', 'https://www.tf1.fr/mon-compte'))
+        return False, None, None
+
+    post_body_login = {
+        "loginID": (plugin.setting.get_string('mytf1.login')),
+        "password": (plugin.setting.get_string('mytf1.password')),
+        "sessionExpiration": 31536000,
+        "targetEnv": "jssdk",
+        "include": "identities-all,data,profile,preferences,",
+        "includeUserInfo": "true",
+        "loginMode": "standard",
+        "lang": "fr",
+        "APIKey": API_KEY,
+        "sdk": "js_latest",
+        "authMode": "cookie",
+        "pageURL": MYTF1_ROOT,
+        "sdkBuild": 13987,
+        "format": "json"
+    }
+    response = session.post(ACCOUNTS_LOGIN, headers=headers_login, data=post_body_login, max_age=-1)
+    login_json = response.json()
+    headers_gigya = {
+        "User-Agent": web_utils.get_random_ua(),
+        "content-type": "application/json"
+    }
+    post_body_gigya = BODY_GIGYA % (login_json['userInfo']['UID'],
+                                    login_json['userInfo']['UIDSignature'],
+                                    int(login_json['userInfo']['signatureTimestamp']))
+    response = session.post(TOKEN_GIGYA_WEB, headers=headers_gigya, data=post_body_gigya, max_age=-1)
+    json_token = response.json()
+    token = json_token['token']
+    return True, session, token
+
+
 @Route.register
 def mytf1_root(plugin, **kwargs):
-
     # (item_id, label, thumb, fanart)
     channels = [
         ('tf1', 'TF1', 'tf1.png', 'tf1_fanart.jpg'),
@@ -229,7 +299,9 @@ def list_videos(plugin, program_slug, video_type_value, offset, **kwargs):
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
     params = {
         'id': 'a6f9cf0e',
-        'variables': '{"programSlug":"%s","offset":%d,"limit":20,"sort":{"type":"DATE","order":"DESC"},"types":["%s"]}' % (program_slug, int(offset), video_type_value)
+        'variables': '{"programSlug":"%s","offset":%d,"limit":20,'
+                     '"sort":{"type":"DATE","order":"DESC"},"types":["%s"]}' % (
+                         program_slug, int(offset), video_type_value)
     }
     headers = {
         'content-type': 'application/json',
@@ -254,9 +326,29 @@ def get_video_url(plugin,
                   video_id,
                   download_mode=False,
                   **kwargs):
+    is_ok, session, token = get_token(plugin)
+    if not is_ok:
+        return False
+
+    headers_video_stream = {
+        "User-Agent": USER_AGENT_FIREFOX,
+        "authorization": "Bearer %s" % token,
+    }
+    params = {
+        'context': 'MYTF1',
+        'pver': '5010000',
+        'platform': 'web',
+        'device': 'desktop',
+        'os': 'windows',
+        'osVersion': '10.0',
+        'topDomain': 'unknown',
+        'playerVersion': '5.10.0',
+        'productName': 'mytf1',
+        'productVersion': '2.59.1'
+    }
 
     url_json = URL_VIDEO_STREAM % video_id
-    json_parser = urlquick.get(url_json, headers=GENERIC_HEADERS, max_age=-1).json()
+    json_parser = session.get(url_json, headers=headers_video_stream, params=params, max_age=-1).json()
 
     if json_parser['delivery']['code'] > 400:
         plugin.notify('ERROR', plugin.localize(30716))
@@ -272,34 +364,56 @@ def get_video_url(plugin,
     except Exception:
         license_url = URL_LICENCE_KEY % video_id
 
-    LICENSE_HEADERS = {
+    license_headers = {
         'Content-Type': '',
         'User-Agent': web_utils.get_random_ua()
     }
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, headers=LICENSE_HEADERS)
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd",
+                                                  license_url=license_url, headers=license_headers)
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
     video_id = 'L_%s' % item_id.upper()
+
+    is_ok, session, token = get_token(plugin)
+    if not is_ok:
+        return False
+
+    headers_video_stream = {
+        "User-Agent": USER_AGENT_FIREFOX,
+        "authorization": "Bearer %s" % token,
+    }
+    params = {
+        'context': 'MYTF1',
+        'pver': '5010000',
+        'platform': 'web',
+        'device': 'desktop',
+        'os': 'windows',
+        'osVersion': '10.0',
+        'topDomain': 'unknown',
+        'playerVersion': '5.10.0',
+        'productName': 'mytf1',
+        'productVersion': '2.59.1'
+    }
+
     url_json = URL_VIDEO_STREAM % video_id
-    json_parser = urlquick.get(url_json, GENERIC_HEADERS, max_age=-1).json()
+    json_parser = session.get(url_json, headers=headers_video_stream, params=params, max_age=-1).json()
 
     if json_parser['delivery']['code'] > 400:
         plugin.notify('ERROR', plugin.localize(30713))
         return False
 
     video_url = json_parser['delivery']['url']
-    LICENSE_HEADERS = {
+    license_headers = {
         'Content-Type': '',
         'User-Agent': web_utils.get_random_ua()
     }
 
     if 'drms' in json_parser['delivery']:
         license_url = json_parser['delivery']['drms'][0]['url']
-        LICENSE_HEADERS.update({'Authorization': json_parser['delivery']['drms'][0]['h'][0]['v']})
+        license_headers.update({'Authorization': json_parser['delivery']['drms'][0]['h'][0]['v']})
     else:
         license_url = URL_LICENCE_KEY % video_id
 
@@ -308,4 +422,6 @@ def get_live_url(plugin, item_id, **kwargs):
     else:
         workaround = '1'
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, workaround=workaround, headers=LICENSE_HEADERS)
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url,
+                                                  manifest_type="mpd", license_url=license_url,
+                                                  workaround=workaround, headers=license_headers)
