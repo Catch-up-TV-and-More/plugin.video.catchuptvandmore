@@ -98,17 +98,18 @@ URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content
 
 URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chromecast/services/6play/live?channel=%s&with=service_display_images,nextdiffusion,extra_data'
 
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
 # Chaine
 
 
 def get_api_key():
-    resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY)
+    resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY, headers=GENERIC_HEADERS)
     found_js_id = PATTERN_JS_ID.findall(resp_js_id.text)
     if len(found_js_id) == 0:
         return API_KEY
     js_id = found_js_id[0]
-    resp = urlquick.get(URL_API_KEY % js_id)
+    resp = urlquick.get(URL_API_KEY % js_id, headers=GENERIC_HEADERS)
     # Hack to force encoding of the response
     resp.encoding = 'utf-8'
     found_items = PATTERN_API_KEY.findall(resp.text)
@@ -203,9 +204,9 @@ def list_categories(plugin, item_id, **kwargs):
             item_id == 'fun_radio' or \
             item_id == 'courses' or \
             item_id == 'gulli':
-        resp = urlquick.get(URL_ROOT % item_id)
+        resp = urlquick.get(URL_ROOT % item_id, headers=GENERIC_HEADERS)
     else:
-        resp = urlquick.get(URL_ROOT % (item_id + 'replay'))
+        resp = urlquick.get(URL_ROOT % (item_id + 'replay'), headers=GENERIC_HEADERS)
     json_parser = resp.json()
 
     for array in json_parser:
@@ -228,7 +229,7 @@ def list_programs(plugin, item_id, category_id, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(URL_CATEGORY % category_id)
+    resp = urlquick.get(URL_CATEGORY % category_id, headers=GENERIC_HEADERS)
     json_parser = resp.json()
 
     for array in json_parser:
@@ -252,7 +253,7 @@ def list_program_categories(plugin, item_id, program_id, **kwargs):
     - Saison 1
     - ...
     """
-    resp = urlquick.get(URL_SUBCATEGORY % program_id)
+    resp = urlquick.get(URL_SUBCATEGORY % program_id, headers=GENERIC_HEADERS)
     json_parser = resp.json()
 
     for sub_category in json_parser['program_subcats']:
@@ -308,7 +309,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
         url = URL_VIDEOS2 % program_id
     else:
         url = URL_VIDEOS % (program_id, sub_category_id)
-    resp = urlquick.get(url)
+    resp = urlquick.get(url, headers=GENERIC_HEADERS)
     json_parser = resp.json()
 
     if not json_parser:
@@ -545,7 +546,7 @@ def get_playlist_urls(plugin,
                       video_id,
                       url,
                       **kwargs):
-    resp = urlquick.get(url)
+    resp = urlquick.get(url, headers=GENERIC_HEADERS)
     json_parser = resp.json()
 
     for video in json_parser:
