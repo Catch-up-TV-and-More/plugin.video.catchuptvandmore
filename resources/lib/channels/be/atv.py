@@ -11,7 +11,7 @@ from codequick import Resolver
 
 from resources.lib import resolver_proxy
 
-URL_LIVE_STREAM = 'https://live.zendzend.com/streams/29375_107244/1080n/index.m3u8'
+URL_LIVE_STREAM = 'https://live.zendzend.com/cmaf/29375_107244/master.m3u8?HLS_version=ts'
 
 
 @Resolver.register
