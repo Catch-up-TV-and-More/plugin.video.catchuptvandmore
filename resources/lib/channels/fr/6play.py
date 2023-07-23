@@ -19,12 +19,10 @@ from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
 from kodi_six import xbmcgui
 
-from resources.lib import download, web_utils
+from resources.lib import download, resolver_proxy, web_utils
+from resources.lib.kodi_utils import get_kodi_version
 from resources.lib.addon_utils import get_item_media_path, Quality
-from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_kodi_version,
-                                      get_selected_item_art,
-                                      get_selected_item_info,
-                                      get_selected_item_label)
+
 from resources.lib.menu_utils import item_post_treatment
 
 # TO DO
@@ -40,8 +38,7 @@ URL_ROOT = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
            'm6group_androidmob/services/%s/folders?limit=999&offset=0'
 
 URL_ALL_PROGRAMS = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
-                   'm6group_androidmob/services/6play/programs' \
-                   '?limit=999&offset=0&csa=6&firstLetter=%s&with=rights'
+                   'm6group_androidmob/services/6play/programs'
 
 # Url to get catgory's programs
 # e.g. Le meilleur patissier, La france à un incroyable talent, ...
@@ -96,9 +93,13 @@ URL_TOKEN_DRM = 'https://6play-users.6play.fr/v2/platforms/chromecast/services/6
 URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&x-dt-auth-token=%s|R{SSM}|JBlicense'
 # Referer, Token
 
-URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chromecast/services/6play/live?channel=%s&with=service_display_images,nextdiffusion,extra_data'
+URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chromecast/services/6play/live'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+M6_HEADERS = {
+    'User-Agent': web_utils.get_random_ua(),
+    'x-customer-name': 'm6web'
+}
 
 # Chaine
 
@@ -167,10 +168,16 @@ def list_all_programs(plugin, item_id, **kwargs):
 
 @Route.register
 def list_all_programs_by_letter(plugin, item_id, letter, **kwargs):
-    resp = urlquick.get(URL_ALL_PROGRAMS % letter,
-                        headers={
-                            'User-Agent': web_utils.get_random_ua(),
-                            'x-customer-name': 'm6web'})
+
+    params = {
+        'limit': '999',
+        'offset': '0',
+        'csa': '6',
+        'firstLetter': letter,
+        'with': 'rights'
+    }
+
+    resp = urlquick.get(URL_ALL_PROGRAMS, headers=M6_HEADERS, params=params, max_age=-1)
     json_parser = resp.json()
 
     at_least_one_item = False
@@ -330,18 +337,13 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
 
         if 'type' in video and video['type'] == 'playlist':
             populate_item(item, video)
-            item.set_callback(get_playlist_urls,
-                              item_id=item_id,
-                              video_id=video_id,
-                              url=url)
+            item.set_callback(get_playlist_urls, item_id=item_id, video_id=video_id, url=url)
         else:
             populate_item(item, video['clips'][0])
             item.set_callback(get_video_url,
                               item_id=item_id,
                               video_id=video_id)
-        item_post_treatment(item,
-                            is_playable=True,
-                            is_downloadable=is_downloadable)
+        item_post_treatment(item, is_playable=True, is_downloadable=is_downloadable)
         yield item
 
     if not at_least_one_item:
@@ -350,18 +352,9 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
 
 
 @Resolver.register
-def get_video_url(plugin,
-                  item_id,
-                  video_id,
-                  download_mode=False,
-                  **kwargs):
+def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
     if get_kodi_version() < 18:
-        video_json = urlquick.get(URL_JSON_VIDEO % video_id,
-                                  headers={
-                                      'User-Agent': web_utils.get_random_ua(),
-                                      'x-customer-name': 'm6web'
-                                  },
-                                  max_age=-1)
+        video_json = urlquick.get(URL_JSON_VIDEO % video_id, headers=M6_HEADERS, max_age=-1)
         json_parser = json.loads(video_json.text)
 
         video_assets = json_parser['clips'][0]['assets']
@@ -393,12 +386,11 @@ def get_video_url(plugin,
         "callback": "jsonp_3bbusffr388pem4"
     }
     # LOGIN
-    resp2 = urlquick.post(URL_COMPTE_LOGIN,
-                          data=payload,
-                          headers={
-                              'User-Agent': web_utils.get_random_ua(),
-                              'referer': 'https://www.6play.fr/connexion'
-                          })
+    headers = {
+        'User-Agent': web_utils.get_random_ua(),
+        'referer': 'https://www.6play.fr/connexion'
+    }
+    resp2 = urlquick.post(URL_COMPTE_LOGIN, data=payload, headers=headers, max_age=-1)
     json_parser = json.loads(resp2.text.replace('jsonp_3bbusffr388pem4(', '').replace(');', ''))
 
     if "UID" not in json_parser:
@@ -427,12 +419,7 @@ def get_video_url(plugin,
     token_jsonparser = json.loads(token_json.text)
     token = token_jsonparser["token"]
 
-    video_json = urlquick.get(URL_JSON_VIDEO % video_id,
-                              headers={
-                                  'User-Agent': web_utils.get_random_ua(),
-                                  'x-customer-name': 'm6web'
-                              },
-                              max_age=-1)
+    video_json = urlquick.get(URL_JSON_VIDEO % video_id, headers=M6_HEADERS, max_age=-1)
     json_parser = json.loads(video_json.text)
 
     video_assets = json_parser['clips'][0]['assets']
@@ -441,7 +428,7 @@ def get_video_url(plugin,
         plugin.notify('ERROR', plugin.localize(30721))
         return False
 
-    subtitle_url = ''
+    subtitle_url = None
     if plugin.setting.get_boolean('active_subtitle'):
         for asset in video_assets:
             if 'subtitle_vtt' in asset["type"]:
@@ -449,35 +436,22 @@ def get_video_url(plugin,
 
     for asset in video_assets:
         if 'usp_dashcenc_h264' in asset["type"]:
-            item = Listitem()
-            dummy_req = urlquick.get(asset['full_physical_path'],
-                                     headers={'User-Agent': web_utils.get_random_ua()},
-                                     allow_redirects=False)
+            dummy_req = urlquick.get(asset['full_physical_path'], headers=GENERIC_HEADERS, allow_redirects=False)
             if 'location' in dummy_req.headers:
-                item.path = dummy_req.headers['location']
+                video_url = dummy_req.headers['location']
             else:
-                item.path = asset['full_physical_path']
-            if 'http' in subtitle_url:
-                item.subtitles.append(subtitle_url)
-            item.label = get_selected_item_label()
-            item.art.update(get_selected_item_art())
-            item.info.update(get_selected_item_info())
-            item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            item.property['inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
-            return item
+                video_url = asset['full_physical_path']
+            return resolver_proxy.get_stream_with_quality(
+                plugin, video_url=video_url, manifest_type='mpd',
+                subtitles=subtitle_url, license_url=URL_LICENCE_KEY % token)
+
     for asset in video_assets:
         if 'http_h264' in asset["type"]:
             if "hd" in asset["video_quality"]:
-                item = Listitem()
-                item.path = asset['full_physical_path']
-                if 'http' in subtitle_url:
-                    item.subtitles.append(subtitle_url)
-                item.label = get_selected_item_label()
-                item.art.update(get_selected_item_art())
-                item.info.update(get_selected_item_info())
-                return item
+                video_url = asset['full_physical_path']
+                return resolver_proxy.get_stream_with_quality(
+                    plugin, video_url=video_url, subtitles=subtitle_url)
+
     return False
 
 
@@ -494,10 +468,7 @@ def get_final_video_url(plugin, video_assets, asset_type=None):
                 all_datas_videos_quality.append(asset["video_quality"])
                 all_datas_videos_path.append(asset['full_physical_path'])
             elif 'h264' in asset["type"]:
-                manifest = urlquick.get(
-                    asset['full_physical_path'],
-                    headers={'User-Agent': web_utils.get_random_ua()},
-                    max_age=-1)
+                manifest = urlquick.get(asset['full_physical_path'], headers=GENERIC_HEADERS, max_age=-1)
                 if 'drm' not in manifest.text:
                     all_datas_videos_quality.append(asset["video_quality"])
                     all_datas_videos_path.append(asset['full_physical_path'])
@@ -573,9 +544,6 @@ def get_playlist_urls(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    if get_kodi_version() < 18:
-        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
-        return False
 
     api_key = get_api_key()
 
@@ -611,12 +579,9 @@ def get_live_url(plugin, item_id, **kwargs):
     account_timestamp = json_parser["signatureTimestamp"]
     account_signature = json_parser["UIDSignature"]
 
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
-
     # Build PAYLOAD headers
     payload_headers = {
+        'User-Agent': web_utils.get_random_ua(),
         'x-auth-gigya-signature': account_signature,
         'x-auth-gigya-signature-timestamp': account_timestamp,
         'x-auth-gigya-uid': account_id,
@@ -624,54 +589,31 @@ def get_live_url(plugin, item_id, **kwargs):
     }
 
     if item_id == '6ter':
-        token_json = urlquick.get(
-            URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % '6T'),
-            headers=payload_headers,
-            max_age=-1)
-    elif item_id == 'fun_radio' or \
-            item_id == 'rtl2' or \
-            item_id == 'gulli':
-        token_json = urlquick.get(
-            URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % item_id),
-            headers=payload_headers,
-            max_age=-1)
+        ITEM_ID = '6T'
+    elif item_id in {'fun_radio', 'rtl2', 'gulli'}:
+        ITEM_ID = item_id
     else:
-        token_json = urlquick.get(
-            URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % item_id.upper()),
-            headers=payload_headers,
-            max_age=-1)
+        ITEM_ID = item_id.upper()
+
+    URL_TOKEN = URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % ITEM_ID)
+    token_json = urlquick.get(URL_TOKEN, headers=payload_headers, max_age=-1)
     token_jsonparser = json.loads(token_json.text)
     token = token_jsonparser["token"]
 
-    if item_id == '6ter':
-        video_json = urlquick.get(
-            URL_LIVE_JSON % '6T',
-            headers={'User-Agent': web_utils.get_random_ua()},
-            max_age=-1)
-        json_parser = json.loads(video_json.text)
-        video_assets = json_parser['6T'][0]['live']['assets']
-    elif item_id == 'fun_radio' or \
-            item_id == 'rtl2' or \
-            item_id == 'gulli':
-        video_json = urlquick.get(
-            URL_LIVE_JSON % (item_id),
-            headers={'User-Agent': web_utils.get_random_ua()},
-            max_age=-1)
-        json_parser = json.loads(video_json.text)
-        video_assets = json_parser[item_id][0]['live']['assets']
-    else:
-        video_json = urlquick.get(
-            URL_LIVE_JSON % (item_id.upper()),
-            headers={'User-Agent': web_utils.get_random_ua()},
-            max_age=-1)
-        json_parser = json.loads(video_json.text)
-        video_assets = json_parser[item_id.upper()][0]['live']['assets']
+    params = {
+        'channel': ITEM_ID,
+        'with': 'service_display_images,nextdiffusion,extra_data'
+    }
+
+    video_json = urlquick.get(URL_LIVE_JSON, params=params, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser = json.loads(video_json.text)
+    video_assets = json_parser[item_id.upper()][0]['live']['assets']
 
     if not video_assets:
         plugin.notify('INFO', plugin.localize(30716))
         return False
 
-    subtitle_url = ''
+    subtitle_url = None
     if plugin.setting.get_boolean('active_subtitle'):
         for asset in video_assets:
             if 'subtitle_vtt' in asset["type"]:
@@ -683,19 +625,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     for asset in video_assets:
         if 'delta_dashcenc_h264' in asset["type"]:
-            item = Listitem()
-            item.path = final_video_url
-            if 'http' in subtitle_url:
-                item.subtitles.append(subtitle_url)
-            item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.property[
-                'inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            item.property[
-                'inputstream.adaptive.license_key'] = URL_LICENCE_KEY % token
-
-            item.label = get_selected_item_label()
-            item.art.update(get_selected_item_art())
-            item.info.update(get_selected_item_info())
-            return item
+            return resolver_proxy.get_stream_with_quality(
+                plugin, video_url=final_video_url, manifest_type='mpd',
+                subtitles=subtitle_url, license_url=URL_LICENCE_KEY % token)
     return False
