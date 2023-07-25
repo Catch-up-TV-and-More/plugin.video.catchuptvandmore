@@ -144,8 +144,8 @@ def play_video(plugin, url):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE)
-    root_elem = resp.parse("iframe")
-    frame_url = root_elem.get('src')
+    root_elem = resp.parse("div", attrs={"role": "main"})
+    frame_url = root_elem.find(".//iframe").get('src')
     resp2 = urlquick.get("https:" + frame_url)
 
     m3u8_array = PATTERN_VIDEO_M3U8.findall(resp2.text)
