@@ -515,11 +515,11 @@ menu = {
         'enabled': True,
         'order': 45
     },
-    'idf1': {
-        'resolver': '/resources/lib/channels/fr/idf1:get_live_url',
-        'label': 'IDF 1',
-        'thumb': 'channels/fr/idf1.png',
-        'fanart': 'channels/fr/idf1_fanart.jpg',
+    '20minutes': {
+        'resolver': '/resources/lib/channels/fr/20minutes:get_live_url',
+        'label': '20 Minutes Île de France',
+        'thumb': 'channels/fr/20minutes.png',
+        'fanart': 'channels/fr/20minutes_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 46
