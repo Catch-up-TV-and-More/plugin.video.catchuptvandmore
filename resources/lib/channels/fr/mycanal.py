@@ -132,8 +132,6 @@ def list_categories(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_REPLAY % item_id)
     # window_data = WINDOW_DATA.findall(resp.text)[0]
     # json_window_data = json.loads(window_data)
-    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0]
-    json_react_query_state = json.loads(react_query_state)
 
     # for category in json_window_data["application"]["navigation"]:
     #     title = category['displayName']
@@ -143,10 +141,13 @@ def list_categories(plugin, item_id, **kwargs):
     #     item_post_treatment(item)
     #     yield item
 
+    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0]
+    json_react_query_state = json.loads(react_query_state)
+
     for category in json_react_query_state["queries"][0]["state"]["data"]["strates"]:
         if category["type"] == "carrousel":
             title = category['context']['context_page_title']
-            key_value = category['reactKey']
+            key_value = category['reactKey'] if 'reactKey' in category else None
             item = Listitem()
             item.label = title
             item.set_callback(list_contents, item_id=item_id, key_value=key_value)
@@ -158,9 +159,9 @@ def list_categories(plugin, item_id, **kwargs):
             elif 'no title' not in category['context']['context_list_category']:
                 title = category['context']['context_list_category']
             else:
-                title = category['context']['context_list_id']
+                # title = category['context']['context_list_id']
                 continue
-            key_value = category['reactKey']
+            key_value = category['reactKey'] if 'reactKey' in category else None
             item = Listitem()
             item.label = title
             item.set_callback(list_contents, item_id=item_id, key_value=key_value)
@@ -175,7 +176,7 @@ def list_contents(plugin, item_id, key_value, **kwargs):
     json_react_query_state = json.loads(react_query_state)
 
     for category in json_react_query_state["queries"][0]["state"]["data"]["strates"]:
-        if category['reactKey'] != key_value:
+        if 'reactKey' in category and category['reactKey'] != key_value:
             continue
 
         for content in category["contents"]:
@@ -441,7 +442,8 @@ def get_video_url(plugin,
             'sessionId': sessionId,
         }
 
-        json_token_parser = session_requests.post(URL_TOKEN, data=payload, headers=headers).json()
+        resp = session_requests.post(URL_TOKEN, data=payload, headers=headers)
+        json_token_parser = resp.json()
         pass_token = json_token_parser["response"]["passToken"]
         device_id = json_token_parser["response"]["userData"]["deviceId"].split(':')[0]
 
@@ -467,7 +469,8 @@ def get_video_url(plugin,
             # no pyopenssl support used / needed / available
             pass
 
-        value_datas_jsonparser = session_requests.get(URL_VIDEO_DATAS % video_id, headers=secure_gen_hapi_headers).json()
+        value_datas_jsonparser = session_requests.get(URL_VIDEO_DATAS % video_id,
+                                                      headers=secure_gen_hapi_headers).json()
 
         if 'available' not in value_datas_jsonparser:
             # Some videos required an account
@@ -475,9 +478,7 @@ def get_video_url(plugin,
             return False
 
         for stream_datas in value_datas_jsonparser["available"]:
-            if stream_datas['drmType'] == "DRM MKPC Widevine DASH" \
-                    or stream_datas['drmType'] == "Non protégé" \
-                    or stream_datas['drmType'] == "UNPROTECTED":
+            if 'drmType' in stream_datas and is_valid_drm(stream_datas['drmType']):
                 payload = {
                     'comMode': stream_datas['comMode'],
                     'contentId': stream_datas['contentId'],
@@ -494,6 +495,13 @@ def get_video_url(plugin,
 
         jsonparser_stream_datas = session_requests.put(
             URL_STREAM_DATAS, data=payload, headers=secure_gen_hapi_headers).json()
+
+        if ('@medias' not in jsonparser_stream_datas
+                and 'message' in jsonparser_stream_datas
+                and 'status' in jsonparser_stream_datas
+                and jsonparser_stream_datas['status'] != 200):
+            xbmcgui.Dialog().ok('Info', jsonparser_stream_datas['message'])
+            return False
 
         jsonparser_real_stream_datas = session_requests.get(SECURE_GEN_HAPI +
                                                             jsonparser_stream_datas['@medias'],
@@ -554,6 +562,14 @@ def get_video_url(plugin,
     return json_parser["detail"]["informations"]["playsets"]["available"][0]["videoURL"]
 
 
+def is_valid_drm(drm_type):
+    return (drm_type == "DRM MKPC Widevine DASH"
+            or drm_type == "Non protégé"
+            or drm_type == "UNPROTECTED"
+            or drm_type == 'DRM_MKPC_WIDEVINE_DASH'
+            or drm_type == 'DRM_WIDEVINE')
+
+
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     if xbmcgui.Dialog().select(Script.localize(30174), ["MyCanal", "Dailymotion"]):
@@ -567,7 +583,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     json_app_config = re.compile('window.app_config=(.*?)};').findall(
         resp_app_config.text)[0]
-    json_app_config_parser = json.loads(json_app_config + ('}'))
+    json_app_config_parser = json.loads(json_app_config + '}')
     portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
 
     data = {
