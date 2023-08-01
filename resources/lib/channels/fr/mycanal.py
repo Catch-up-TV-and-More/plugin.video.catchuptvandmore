@@ -24,6 +24,7 @@ import xbmcvfs
 try:
     from urllib.parse import quote, urlencode
 except ImportError:
+    # noinspection PyUnresolvedReferences
     from urllib import quote, urlencode
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
@@ -36,9 +37,14 @@ from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, ge
     get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
-URL_ROOT_SITE = 'https://www.canalplus.com'
-URL_REPLAY = URL_ROOT_SITE + '/chaines/%s'
+URL_REPLAY_CHANNEL = 'https://www.canalplus.com/chaines/%s'
 # Channel name
+
+
+OFFER_ZONE = "cpfra"
+DEVICE_ID = "3"
+DRM_ID = "31"
+OFFER_LOCATION = 'fr'
 
 URL_TOKEN = 'https://pass-api-v2.canal-plus.com/services/apipublique/createToken'
 
@@ -46,6 +52,8 @@ SECURE_GEN_HAPI = 'https://secure-gen-hapi.canal-plus.com'
 URL_VIDEO_DATAS = SECURE_GEN_HAPI + '/conso/playset/unit/%s'
 URL_STREAM_DATAS = SECURE_GEN_HAPI + '/conso/view'
 
+# URL_JSON = "https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/%s-hd.json?token=%s"
+# URL_JSON = "https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/%s-hd.json"
 URL_JSON = "https://dsh-m013.ora02.live-scy.canalplus-cdn.net/plfiles/v2/metr/dash-ssl/%s-hd.json"
 
 PARAMS_URL_JSON = {
@@ -55,8 +63,10 @@ PARAMS_URL_JSON = {
 }
 
 CANALPLUS_BO_NET_API = 'https://secure-browser.canalplus-bo.net/WebPortal/ottlivetv/api/V4'
-LIVE_TOKEN_URL = CANALPLUS_BO_NET_API + '/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV'
 LICENSE_URL = CANALPLUS_BO_NET_API + '/zones/cpfra/devices/31/apps/1/jobs/GetLicence'
+
+CANALPLUSTECH_PRO_API = 'https://ltv.slc-app-aka.prod.bo.canal.canalplustech.pro/api/V4'
+LIVE_TOKEN_URL = CANALPLUSTECH_PRO_API + '/zones/cpfra/devices/3/apps/1/jobs/InitLiveTV'
 
 CERTIFICATE_URL = 'https://secure-webtv-static.canal-plus.com/widevine/cert/cert_license_widevine_com.bin'
 
@@ -78,16 +88,16 @@ REACT_QUERY_STATE = re.compile(r'window.REACT_QUERY_STATE\s*=\s*(.*?);\s*documen
 WINDOW_DATA = re.compile(r'window.__data=(.*?);\s*window.REACT_QUERY_STATE')
 
 
-def getKeyID():
+def get_key_id():
     def rnd():
         return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
 
     ts = int(1000 * time.time())
 
-    deviceKeyId = str(ts) + '-' + rnd()
-    deviceId = deviceKeyId + ':0:' + str(ts + 2000) + '-' + rnd()
-    sessionId = str(ts + 3000) + '-' + rnd()
-    return deviceKeyId, deviceId, sessionId
+    device_key_id = str(ts) + '-' + rnd()
+    device_id_full = device_key_id + ':0:' + str(ts + 2000) + '-' + rnd()
+    session_id = str(ts + 3000) + '-' + rnd()
+    return device_key_id, device_id_full, session_id
 
 
 @Route.register
@@ -114,13 +124,13 @@ def mycanal_root(plugin, **kwargs):
         item.label = channel_infos[1]
         item.art["thumb"] = get_item_media_path('channels/fr/' + channel_infos[2])
         item.art["fanart"] = get_item_media_path('channels/fr/' + channel_infos[3])
-        item.set_callback(list_categories, channel_infos[0])
+        item.set_callback(list_channel, channel_infos[0])
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_categories(plugin, item_id, **kwargs):
+def list_channel(plugin, item_id, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -129,7 +139,7 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
 
-    resp = urlquick.get(URL_REPLAY % item_id)
+    resp = urlquick.get(URL_REPLAY_CHANNEL % item_id)
     # window_data = WINDOW_DATA.findall(resp.text)[0]
     # json_window_data = json.loads(window_data)
 
@@ -150,7 +160,7 @@ def list_categories(plugin, item_id, **kwargs):
             key_value = category['reactKey'] if 'reactKey' in category else None
             item = Listitem()
             item.label = title
-            item.set_callback(list_contents, item_id=item_id, key_value=key_value)
+            item.set_callback(list_contents, item_id=item_id, key_value=key_value, category=category)
             item_post_treatment(item)
             yield item
         elif category["type"] == "contentRow":
@@ -162,48 +172,58 @@ def list_categories(plugin, item_id, **kwargs):
                 # title = category['context']['context_list_id']
                 continue
             key_value = category['reactKey'] if 'reactKey' in category else None
+            if 'strateMode' in category and category['strateMode'] == 'liveTV':
+                continue
             item = Listitem()
             item.label = title
-            item.set_callback(list_contents, item_id=item_id, key_value=key_value)
+            item.set_callback(list_contents, item_id=item_id, key_value=key_value, category=category)
             item_post_treatment(item)
             yield item
 
 
 @Route.register
-def list_contents(plugin, item_id, key_value, **kwargs):
-    resp = urlquick.get(URL_REPLAY % item_id)
-    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0]
-    json_react_query_state = json.loads(react_query_state)
+def list_contents(plugin, item_id, key_value, category, **kwargs):
 
-    for category in json_react_query_state["queries"][0]["state"]["data"]["strates"]:
-        if 'reactKey' in category and category['reactKey'] != key_value:
+    if category is None:
+        if key_value is None:
+            return False
+        category = find_category(item_id, key_value)
+
+    if category is None:
+        return False
+
+    for content in category["contents"]:
+        if content["type"] == 'article':
             continue
 
-        for content in category["contents"]:
-            if content["type"] == 'article':
-                continue
-
-            content_title = content["onClick"]["displayName"]
-            content_image = ''
-            if 'URLImageOptimizedRegular' in content_image:
-                if 'http' in content["URLImageOptimizedRegular"]:
-                    content_image = content["URLImageOptimizedRegular"]
-                else:
-                    content_image = content["URLImage"]
+        content_title = content["onClick"]["displayName"]
+        content_image = ''
+        if 'URLImageOptimizedRegular' in content_image:
+            if 'http' in content["URLImageOptimizedRegular"]:
+                content_image = content["URLImageOptimizedRegular"]
             else:
-                if 'URLImage' in content:
-                    content_image = content["URLImage"]
-            content_url = content["onClick"]["URLPage"]
+                content_image = content["URLImage"]
+        else:
+            if 'URLImage' in content:
+                content_image = content["URLImage"]
+        content_url = content["onClick"]["URLPage"]
 
-            item = Listitem()
-            item.label = content_title
-            item.art['thumb'] = item.art['landscape'] = content_image
-            item.set_callback(
-                list_programs,
-                item_id=item_id,
-                next_url=content_url)
-            item_post_treatment(item)
-            yield item
+        item = Listitem()
+        item.label = content_title
+        item.art['thumb'] = item.art['landscape'] = content_image
+        item.set_callback(list_programs, item_id=item_id, next_url=content_url)
+        item_post_treatment(item)
+        yield item
+
+
+def find_category(item_id, key_value):
+    resp = urlquick.get(URL_REPLAY_CHANNEL % item_id)
+    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0]
+    json_react_query_state = json.loads(react_query_state)
+    for category in json_react_query_state["queries"][0]["state"]["data"]["strates"]:
+        if 'reactKey' in category and category['reactKey'] == key_value:
+            return category
+    return None
 
 
 @Route.register
@@ -221,11 +241,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
                 item = Listitem()
                 item.label = strate_title
 
-                item.set_callback(
-                    list_sub_programs,
-                    item_id=item_id,
-                    next_url=next_url,
-                    strate_title=strate_title)
+                item.set_callback(list_sub_programs, item_id=item_id, next_url=next_url, strate_title=strate_title)
                 item_post_treatment(item)
                 yield item
 
@@ -236,9 +252,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
         for video_datas in json_parser["episodes"]['contents']:
             video_title = program_title + ' - ' + video_datas['title']
             video_image = video_datas['URLImage']
-            video_plot = ''
-            if 'summary' in video_datas:
-                video_plot = video_datas['summary']
+            video_plot = video_datas['summary'] if 'summary' in video_datas else ''
             if 'contentAvailability' in video_datas:
                 video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
             else:
@@ -289,9 +303,7 @@ def list_programs(plugin, item_id, next_url, **kwargs):
             else:
                 video_title = program_title + ' - ' + video_datas['title']
             video_image = video_datas['URLImage']
-            video_plot = ''
-            if 'summary' in video_datas:
-                video_plot = video_datas['summary']
+            video_plot = video_datas['summary'] if 'summary' in video_datas else ''
             if 'contentAvailability' in video_datas:
                 video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
             else:
@@ -375,9 +387,7 @@ def list_videos(plugin, item_id, next_url, **kwargs):
     for video_datas in json_parser["episodes"]['contents']:
         video_title = program_title + ' - ' + video_datas['title']
         video_image = video_datas['URLImage']
-        video_plot = ''
-        if 'summary' in video_datas:
-            video_plot = video_datas['summary']
+        video_plot = video_datas['summary'] if 'summary' in video_datas else ''
         if 'contentAvailability' in video_datas:
             video_url = video_datas["contentAvailability"]["availabilities"]["stream"]["URLMedias"]
         else:
@@ -411,41 +421,34 @@ def get_video_url(plugin,
             xbmcgui.Dialog().ok('Info', plugin.localize(30602))
             return False
 
-        is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-        if not is_helper.check_inputstream():
-            return False
 
         if download_mode:
             xbmcgui.Dialog().ok('Info', plugin.localize(30603))
             return False
 
-        deviceKeyId, device_id_first, sessionId = getKeyID()
+        fix_cipher()
 
-        # Get Portail Id
+        device_key_id, device_id_full, session_id = get_key_id()
+
         # session_requests = urlquick.Session()
-        session_requests = requests.session()
-        resp_app_config = session_requests.get(URL_REPLAY % item_id)
-        json_app_config = re.compile('window.app_config=(.*?)};').findall(resp_app_config.text)[0]
-        json_app_config_parser = json.loads(json_app_config + '}')
-        portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
+        session_requests = requests.sessions.Session()
 
-        headers = {"User-Agent": web_utils.get_random_ua(),
-                   "Origin": "https://www.canalplus.com",
-                   "Referer": "https://www.canalplus.com/", }
+        certificate_url, license_url, live_init, pass_url, portail_id = get_config(plugin, session_requests)
 
-        # Get PassToken
-        payload = {
-            'deviceId': device_id_first,
-            'vect': 'INTERNET',
-            'media': 'web',
-            'portailId': portail_id,
-            'sessionId': sessionId,
+        data_pass = {
+            "deviceId": device_id_full,
+            "media": "web",
+            "noCache": "false",
+            "portailId": portail_id,
+            "sessionId": session_id,
+            "passIdType": "pass",
+            "vect": "INTERNET",
+            "offerZone": OFFER_ZONE,
         }
 
-        resp = session_requests.post(URL_TOKEN, data=payload, headers=headers)
-        json_token_parser = resp.json()
-        pass_token = json_token_parser["response"]["passToken"]
-        device_id = json_token_parser["response"]["userData"]["deviceId"].split(':')[0]
+        pass_token, device_id = get_pass_token(plugin, data_pass, pass_url, session_requests)
+        if pass_token is None:
+            return False
 
         video_id = next_url.split('/')[-1].split('.json')[0]
         secure_gen_hapi_headers = {
@@ -453,7 +456,7 @@ def get_video_url(plugin,
             'Authorization': 'PASS Token="%s"' % pass_token,
             'Content-Type': 'application/json; charset=UTF-8',
             'XX-DEVICE': 'pc %s' % device_id,
-            'XX-DOMAIN': 'cpfra',
+            'XX-DOMAIN': OFFER_ZONE,
             'XX-OPERATOR': 'pc',
             'XX-Profile-Id': '0',
             'XX-SERVICE': 'mycanal',
@@ -461,22 +464,16 @@ def get_video_url(plugin,
             'Origin': 'https://www.mycanal.fr'
         }
 
-        # Fix an ssl issue on some device.
-        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
-        try:
-            requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
-        except AttributeError:
-            # no pyopenssl support used / needed / available
-            pass
-
         value_datas_jsonparser = session_requests.get(URL_VIDEO_DATAS % video_id,
                                                       headers=secure_gen_hapi_headers).json()
 
         if 'available' not in value_datas_jsonparser:
-            # Some videos required an account
+            # Some videos require an account
             # Get error
             return False
 
+        payload = None
+        drm_type = None
         for stream_datas in value_datas_jsonparser["available"]:
             if 'drmType' in stream_datas and is_valid_drm(stream_datas['drmType']):
                 payload = {
@@ -488,39 +485,41 @@ def get_video_url(plugin,
                     'functionalType': stream_datas['functionalType'],
                     'hash': stream_datas['hash'],
                     'idKey': stream_datas['idKey'],
-                    'quality': stream_datas['quality']}
+                    'quality': stream_datas['quality']
+                }
+                drm_type = stream_datas['drmType']
                 break
 
-        payload = json.dumps(payload)
-
-        jsonparser_stream_datas = session_requests.put(
-            URL_STREAM_DATAS, data=payload, headers=secure_gen_hapi_headers).json()
-
-        if ('@medias' not in jsonparser_stream_datas
-                and 'message' in jsonparser_stream_datas
-                and 'status' in jsonparser_stream_datas
-                and jsonparser_stream_datas['status'] != 200):
-            xbmcgui.Dialog().ok('Info', jsonparser_stream_datas['message'])
+        if payload is None:
             return False
 
-        jsonparser_real_stream_datas = session_requests.get(SECURE_GEN_HAPI +
-                                                            jsonparser_stream_datas['@medias'],
-                                                            headers=secure_gen_hapi_headers).json()
+        payload = json.dumps(payload)
+        json_stream_data = session_requests.put(URL_STREAM_DATAS, data=payload,
+                                                headers=secure_gen_hapi_headers).json()
+
+        if ('@medias' not in json_stream_data
+                and 'message' in json_stream_data
+                and 'status' in json_stream_data
+                and json_stream_data['status'] != 200):
+            xbmcgui.Dialog().ok('Info', json_stream_data['message'])
+            return False
+
+        json_real_stream_data = session_requests.get(SECURE_GEN_HAPI +
+                                                     json_stream_data['@medias'],
+                                                     headers=secure_gen_hapi_headers).json()
 
         certificate_data = base64.b64encode(requests.get(CERTIFICATE_URL).content).decode('utf-8')
 
-        subtitle_url = ''
         item = Listitem()
-        stream_data_type = "VM" if 'VM' in jsonparser_real_stream_datas else "VF"
+        stream_data_type = "VM" if 'VM' in json_real_stream_data else "VF"
 
-        if stream_data_type in jsonparser_real_stream_datas:
-            first_stream = jsonparser_real_stream_datas[stream_data_type][0]
+        if stream_data_type in json_real_stream_data:
+            first_stream = json_real_stream_data[stream_data_type][0]
             item.path = first_stream["media"][0]["distribURL"]
         else:
-            first_stream = jsonparser_real_stream_datas[0]
-            files = first_stream["files"]
+            first_stream = json_real_stream_data[0]
             found_file = False
-            for file in files:
+            for file in first_stream["files"]:
                 if file["type"] == 'video':
                     item.path = file["distribURL"]
                     found_file = True
@@ -528,38 +527,60 @@ def get_video_url(plugin,
             if not found_file:
                 return False
 
-        if plugin.setting.get_boolean('active_subtitle'):
-            for asset in first_stream["files"]:
-                if 'vtt' in asset["mimeType"] or asset["type"] == 'subtitle':
-                    subtitle_url = asset['distribURL']
-
         item.label = get_selected_item_label()
         item.art.update(get_selected_item_art())
         item.info.update(get_selected_item_info())
         item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
 
-        if 'http' in subtitle_url:
-            item.subtitles.append(subtitle_url)
+        set_subtitles(first_stream, item, plugin)
+
+        if ".ism" in item.path:
+            is_helper = inputstreamhelper.Helper('ism')
+            if not is_helper.check_inputstream():
+                return False
+
+            item.property['inputstream.adaptive.manifest_type'] = 'ism'
+            # item.property['inputstream.adaptive.server_certificate'] = certificate_data
+            item.path += "/manifest"
+            return item
 
         if ".mpd" in item.path:
-            item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-            item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-            headers2 = secure_gen_hapi_headers.copy()
-            headers2.update({'Content-Type': 'text/plain'})
 
-            with xbmcvfs.File('special://userdata/addon_data/plugin.video.catchuptvandmore/headersCanal', 'wb') as f1:
-                pickle.dump(headers2, f1)
+            is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
+            if not is_helper.check_inputstream():
+                return False
 
-            # Return HTTP 200 but the response is not correctly interpreted by inputstream
-            # (https://github.com/peak3d/inputstream.adaptive/issues/267)
-            licence = "http://127.0.0.1:5057/license=" + jsonparser_stream_datas['@licence']
-            licence += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers2)
-            item.property['inputstream.adaptive.license_key'] = licence
-            item.property['inputstream.adaptive.server_certificate'] = certificate_data
+            create_item_mpd(certificate_data, item, json_stream_data, secure_gen_hapi_headers)
+
         return item
 
     json_parser = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1).json()
     return json_parser["detail"]["informations"]["playsets"]["available"][0]["videoURL"]
+
+
+def create_item_mpd(certificate_data, item, json_stream_data, secure_gen_hapi_headers):
+    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
+    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+    headers = secure_gen_hapi_headers.copy()
+    headers.update({'Content-Type': 'text/plain'})
+    with xbmcvfs.File('special://userdata/addon_data/plugin.video.catchuptvandmore/headersCanal', 'wb') as f1:
+        pickle.dump(headers, f1)
+    # Return HTTP 200 but the response is not correctly interpreted by inputstream
+    # (https://github.com/peak3d/inputstream.adaptive/issues/267)
+    licence = "http://127.0.0.1:5057/license=" + json_stream_data['@licence']
+    licence += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers)
+    item.property['inputstream.adaptive.license_key'] = licence
+    item.property['inputstream.adaptive.server_certificate'] = certificate_data
+
+
+def set_subtitles(first_stream, item, plugin):
+    url = ''
+    if plugin.setting.get_boolean('active_subtitle'):
+        for file in first_stream["files"]:
+            if 'vtt' in file["mimeType"] or file["type"] == 'subtitle':
+                url = file['distribURL']
+    if 'http' in url:
+        item.subtitles.append(url)
 
 
 def is_valid_drm(drm_type):
@@ -575,94 +596,162 @@ def get_live_url(plugin, item_id, **kwargs):
     if xbmcgui.Dialog().select(Script.localize(30174), ["MyCanal", "Dailymotion"]):
         return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION[item_id], False)
 
-    deviceKeyId, deviceId, sessionId = getKeyID()
+    fix_cipher()
+    device_key_id, device_id_full, session_id = get_key_id()
 
-    resp_app_config = requests.get("https://www.canalplus.com/chaines/%s" % item_id)
-    EPGID = re.compile('\"epgidOTT\":\"(.+?)\"').findall(
-        resp_app_config.text)[0].split(",")
+    # session_requests = urlquick.Session()
+    session_requests = requests.sessions.Session()
 
-    json_app_config = re.compile('window.app_config=(.*?)};').findall(
-        resp_app_config.text)[0]
-    json_app_config_parser = json.loads(json_app_config + '}')
-    portail_id = json_app_config_parser["api"]["pass"]["portailIdEncrypted"]
+    certificate_url, license_url, live_init, pass_url, portail_id = get_config(plugin, session_requests)
 
-    data = {
-        "deviceId": deviceId,
-        "sessionId": sessionId,
-        "vect": "INTERNET",
-        "media": "PC",
-        "portailId": portail_id,
-        "zone": "cpfra",
+    resp_app_config = session_requests.get("https://www.canalplus.com/chaines/%s" % item_id)
+    epg_id = re.compile('\"epgidOTT\":\"(.+?)\"').findall(resp_app_config.text)[0].split(",")
+
+    data_pass = {
+        "deviceId": device_id_full,
+        "media": "web",
         "noCache": "false",
-        "analytics": "false",
-        "trackingPub": "false",
-        "anonymousTracking": "true"
+        "portailId": portail_id,
+        "sessionId": session_id,
+        "passIdType": "pass",
+        "vect": "INTERNET",
+        "offerZone": OFFER_ZONE,
     }
 
-    hdr = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Origin": "https://www.canalplus.com",
-        "Referer": "https://www.canalplus.com/",
-        "User-Agent": web_utils.get_random_ua()
-    }
+    pass_token, device_id = get_pass_token(plugin, data_pass, pass_url, session_requests)
+    if pass_token is None:
+        return False
 
-    resp = requests.post(URL_TOKEN, data=data, headers=hdr, timeout=3).json()
-    passToken = resp['response']['passToken']
+    live_token = get_live_token(plugin, device_key_id, live_init, pass_token, session_requests)
+    if live_token is None:
+        return False
 
-    data = {
-        "ServiceRequest": {
-            "InData": {
-                "DeviceKeyId": deviceKeyId,
-                "PassData": {"Id": 0, "Token": passToken},
-                "PDSData": {"GroupTypes": "1;2;4"},
-                "UserKeyId": "_tl1sb683u"
-            }
-        }
-    }
-    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
-    try:
-        requests.packages.urllib3.contrib.pyopenssl.DEFAULT_SSL_CIPHER_LIST += 'HIGH:!DH:!aNULL'
-    except AttributeError:
-        # no pyopenssl support used / needed / available
-        pass
-    resp = requests.post(LIVE_TOKEN_URL, json=data, headers=hdr).json()
-    liveToken = resp['ServiceResponse']['OutData']['LiveToken']
-
-    indexEPG = [i for i, t in enumerate(LIVE_MYCANAL) if t == item_id][0]
-
+    index_epg = [i for i, t in enumerate(LIVE_MYCANAL) if t == item_id][0]
     data_drm = quote('''{
         "ServiceRequest":
         {
             "InData":
             {
                 "ChallengeInfo": "b{SSM}",
-                "DeviceKeyId": "''' + deviceKeyId + '''",
-                "EpgId": ''' + EPGID[indexEPG] + ''',
-                "LiveToken": "''' + liveToken + '''",
+                "DeviceKeyId": "''' + device_key_id + '''",
+                "EpgId": ''' + epg_id[index_epg] + ''',
+                "LiveToken": "''' + live_token + '''",
                 "Mode": "MKPL",
                 "UserKeyId": "_vf1itm7yv"
             }
         }
     }''')
-
     if item_id == "canalplus":
         item_id = "canalplusclair"
+    resp = session_requests.get(URL_JSON % item_id, params=PARAMS_URL_JSON)
+    if not resp:
+        plugin.notify(plugin.localize(30600), 'get dash-ssl response: empty')
+        return None
+    resp_json = resp.json()
+    url_stream = resp_json["primary"]["src"]
 
-    resp = requests.get(URL_JSON % item_id, params=PARAMS_URL_JSON).json()
-    url_stream = resp["primary"]["src"]
+    certificate_data = get_certificate_data(plugin, certificate_url, session_requests)
+    if certificate_data is None:
+        return False
 
-    certificate_data = base64.b64encode(requests.get(CERTIFICATE_URL).content).decode('utf-8')
+    return create_item_live(certificate_data, data_drm, license_url, url_stream)
 
+
+def create_item_live(certificate_data, data_drm, license_url, url_stream):
+    headers_licence = {
+        'User-Agent': web_utils.get_random_ua(),
+        'Content-Type': ''
+    }
     item = Listitem()
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
-
     item.path = url_stream
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property['inputstream.adaptive.license_key'] = LICENSE_URL + '||' + data_drm + '|JBLicenseInfo'
+    item.property['inputstream.adaptive.license_key'] = license_url + '|' + urlencode(
+        headers_licence) + '|' + data_drm + '|JBLicenseInfo'
     item.property['inputstream.adaptive.server_certificate'] = certificate_data
     return item
+
+
+def get_certificate_data(plugin, certificate_url, session_requests):
+    headers = {
+        "User-Agent": web_utils.get_random_ua(),
+        "Accept": "application/json, text/plain, */*",
+        "referrer": "https://www.canalplus.com/"
+    }
+    resp = session_requests.get(certificate_url, headers=headers)
+    if not resp:
+        plugin.notify(plugin.localize(30600), 'get_certificate_data response: empty')
+        return None
+    return base64.b64encode(resp.content).decode('utf-8')
+
+
+def get_live_token(plugin, device_key_id, live_init, pass_token, session_requests):
+    data = {
+        "ServiceRequest": {
+            "InData": {
+                "DeviceKeyId": device_key_id,
+                "PassData": {"Id": 0, "Token": pass_token},
+                "PDSData": {"GroupTypes": "1;2;4"},
+                "UserKeyId": "_tl1sb683u"
+            }
+        }
+    }
+    headers = {
+        "User-Agent": web_utils.get_random_ua(),
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "referrer": "https://www.canalplus.com/"
+    }
+    resp = session_requests.post(live_init, json=data, headers=headers)
+    if not resp:
+        plugin.notify(plugin.localize(30600), 'get_pass_token response: empty')
+        return None
+    resp_json = resp.json()
+    return resp_json['ServiceResponse']['OutData']['LiveToken']
+
+
+def fix_cipher():
+    # Fix a ssl issue on some device.
+    # noinspection PyUnresolvedReferences
+    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+    try:
+        # noinspection PyUnresolvedReferences
+        requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+    except AttributeError:
+        # no pyopenssl support used / needed / available
+        pass
+
+
+def get_pass_token(plugin, data_pass, pass_url, session_requests):
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Origin": "https://www.canalplus.com",
+        "Referer": "https://www.canalplus.com/",
+        "User-Agent": web_utils.get_random_ua()
+    }
+    resp = session_requests.post(pass_url, data=data_pass, headers=headers, timeout=3)
+    if not resp:
+        plugin.notify(plugin.localize(30600), 'get_pass_token response: empty')
+        return None, None
+    resp_json = resp.json()
+    pass_token = resp_json['response']['passToken']
+    device_id = resp_json["response"]["userData"]["deviceId"].split(':')[0]
+    return pass_token, device_id
+
+
+def get_config(plugin, session_requests):
+    resp = session_requests.get("https://player.canalplus.com/one/configs/v2/10/mycanal/prod.json")
+    if not resp:
+        plugin.notify(plugin.localize(30600), 'get_config response: empty')
+        return None
+    resp_json = resp.json()
+    live_init = resp_json['live']['init'].format(offerZone=OFFER_ZONE, deviceId=DEVICE_ID)
+    pass_url = resp_json['pass']['url'].format(offerLocation=OFFER_LOCATION)
+    certificate_url = resp_json['drm']['certificates']['widevine']
+    portail_id = resp_json['pass']['portailId']
+    license_url = resp_json['live']['licence'].format(offerZone=OFFER_ZONE, drmId=DRM_ID)
+    return certificate_url, license_url, live_init, pass_url, portail_id
