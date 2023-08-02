@@ -183,7 +183,6 @@ def list_channel(plugin, item_id, **kwargs):
 
 @Route.register
 def list_contents(plugin, item_id, key_value, category, **kwargs):
-
     if category is None:
         if key_value is None:
             return False
@@ -421,7 +420,6 @@ def get_video_url(plugin,
             xbmcgui.Dialog().ok('Info', plugin.localize(30602))
             return False
 
-
         if download_mode:
             xbmcgui.Dialog().ok('Info', plugin.localize(30603))
             return False
@@ -538,6 +536,9 @@ def get_video_url(plugin,
             is_helper = inputstreamhelper.Helper('ism')
             if not is_helper.check_inputstream():
                 return False
+
+            if drm_type != "UNPROTECTED":
+                pass  # TODO
 
             item.property['inputstream.adaptive.manifest_type'] = 'ism'
             # item.property['inputstream.adaptive.server_certificate'] = certificate_data
