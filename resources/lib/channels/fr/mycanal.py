@@ -469,6 +469,7 @@ def get_video_url(plugin,
         if 'available' not in value_datas_jsonparser:
             # Some videos require an account
             # Get error
+            plugin.notify('ERROR', plugin.localize(30712))
             return False
 
         payload = None
