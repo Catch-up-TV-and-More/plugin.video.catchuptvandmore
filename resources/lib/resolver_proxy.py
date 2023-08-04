@@ -233,7 +233,14 @@ def get_stream_with_quality(plugin,
     item = Listitem()
     item.path = video_url
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+
+    if input_stream_properties is not None and "license_type" in input_stream_properties:
+        if input_stream_properties["license_type"] is not None:
+            item.property['inputstream.adaptive.license_type'] = input_stream_properties["license_type"]
+        else:
+            pass
+    else:
+        item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
     item.property["inputstream.adaptive.manifest_type"] = manifest_type
     if workaround is not None:
         item.property['ResumeTime'] = '43200'  # 12 hours buffer, can be changed if not enough
