@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta29" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta30" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -228,6 +228,12 @@ Project: Remove an useless file
 [FR - MYTF1] DRM API changed (PR #1164) thanks @darodi
 [BE] Fix some live links (PR #1177) thanks @peno64
 [FR - 6PLAY] Add headers
+[FR - 6PLAY] Simplify code
+[BE] Fix live (PR #1180) thanks @darodi
+[FR - 20MINUTES] IDF1 is now 20Minutes Île de France
+[BE AB] Fix live (PR #1182) thanks @darodi
+[FR - MYCANAL] New urls and APIs (PR #1160) thanks @darodi
+[PROJECT] Fix drm in resolver_proxy (PR #1160) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
