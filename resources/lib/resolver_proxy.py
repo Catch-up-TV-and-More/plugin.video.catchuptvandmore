@@ -175,13 +175,13 @@ def get_stream_with_quality(plugin,
 
         if plugin.setting.get_boolean('use_ytdl_stream'):
             return get_stream_default(plugin, video_url, False)
-        else:
-            return __get_non_ia_stream_with_quality(plugin, video_url,
-                                                    manifest_type=manifest_type,
-                                                    headers=headers,
-                                                    map_audio=map_audio,
-                                                    append_query_string=append_query_string,
-                                                    verify=verify, subtitles=subtitles)
+
+        return __get_non_ia_stream_with_quality(plugin, video_url,
+                                                manifest_type=manifest_type,
+                                                headers=headers,
+                                                map_audio=map_audio,
+                                                append_query_string=append_query_string,
+                                                verify=verify, subtitles=subtitles)
 
     is_helper = inputstreamhelper.Helper(manifest_type, drm='widevine')
     if not is_helper.check_inputstream():
@@ -201,19 +201,9 @@ def get_stream_with_quality(plugin,
         item.property['ResumeTime'] = '43200'  # 12 hours buffer, can be changed if not enough
         item.property['TotalTime'] = workaround
 
-    # Useless with Kodi 20 and adaptive stream.
-    # IA detect the bandwidth and choose the right stream iself
-    if get_kodi_version() < 20:
-        # set max bandwidth
-        stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
-        if stream_bitrate_limit > 0:
-            item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
-        elif manifest_type == "hls" and Quality['BEST'] != plugin.setting.get_string('quality') and bypass is False:
-            url, bitrate = M3u8(video_url, headers).get_url_and_bitrate_for_quality()
-            if url is None and bitrate is None:
-                return False
-            if bitrate != 0:
-                item.property["inputstream.adaptive.max_bandwidth"] = str(bitrate * 1000)
+    is_ok = __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type)
+    if not is_ok:
+        return False
 
     stream_headers = urlencode(headers)
     item.property['inputstream.adaptive.stream_headers'] = stream_headers
@@ -223,7 +213,7 @@ def get_stream_with_quality(plugin,
         item.property['inputstream.adaptive.license_key'] = license_url
 
     if input_stream_properties is not None:
-        if "manifest_update_parameter" in input_stream_properties:
+        if "manifest_update_parameter" in input_stream_properties and get_kodi_version() < 21:
             item.property['inputstream.adaptive.manifest_update_parameter'] = input_stream_properties[
                 "manifest_update_parameter"]
 
@@ -238,6 +228,44 @@ def get_stream_with_quality(plugin,
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())
     return item
+
+
+def __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type) -> bool:
+    """
+    @param plugin: plugin
+    @param video_url: video url
+    @param bypass: use IA to read stream with only one resolution
+    @param headers: the headers
+    @param item: the item on which the quality should be set
+    @param manifest_type: manifest type
+
+    @return: boolean: false when quality is not chosen in dialog box
+    """
+    if get_kodi_version() < 20:
+        stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
+        if stream_bitrate_limit > 0:
+            item.property["inputstream.adaptive.max_bandwidth"] = str(stream_bitrate_limit * 1000)
+        elif manifest_type == "hls" and Quality['BEST'] != plugin.setting.get_string('quality') and bypass is False:
+            url, bitrate = M3u8(video_url, headers).get_url_and_bitrate_for_quality()
+            if url is None and bitrate is None:
+                return False
+            if bitrate != 0:
+                item.property["inputstream.adaptive.max_bandwidth"] = str(bitrate * 1000)
+    else:
+        # see https://github.com/xbmc/inputstream.adaptive/wiki/ \
+        # Stream-selection-types-properties#inputstreamadaptivechooser_bandwidth_max
+        stream_bitrate_limit = plugin.setting.get_int('stream_bitrate_limit')
+        if stream_bitrate_limit > 0:
+            item.property['inputstream.adaptive.stream_selection_type'] = 'adaptive'
+            item.property['inputstream.adaptive.chooser_bandwidth_max'] = str(stream_bitrate_limit * 1000)
+        elif Quality['DIALOG'] == plugin.setting.get_string('quality'):
+            item.property['inputstream.adaptive.stream_selection_type'] = 'ask-quality'
+        elif Quality['WORST'] == plugin.setting.get_string('quality'):
+            item.property['inputstream.adaptive.stream_selection_type'] = 'fixed-res'
+            item.property['inputstream.adaptive.chooser_resolution_max'] = '480p'
+            item.property['inputstream.adaptive.chooser_resolution_secure_max'] = '480p'
+
+    return True
 
 
 def get_stream_default(plugin,

@@ -37,7 +37,8 @@ from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, ge
     get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
-URL_REPLAY_CHANNEL = 'https://www.canalplus.com/chaines/%s'
+URL_ROOT = 'https://www.canalplus.com/'
+URL_REPLAY_CHANNEL = URL_ROOT + 'chaines/%s'
 # Channel name
 
 
@@ -52,8 +53,6 @@ SECURE_GEN_HAPI = 'https://secure-gen-hapi.canal-plus.com'
 URL_VIDEO_DATAS = SECURE_GEN_HAPI + '/conso/playset/unit/%s'
 URL_STREAM_DATAS = SECURE_GEN_HAPI + '/conso/view'
 
-# URL_JSON = "https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/%s-hd.json?token=%s"
-# URL_JSON = "https://routemeup.canalplus-bo.net/plfiles/v2/metr/dash-ssl/%s-hd.json"
 URL_JSON = "https://dsh-m013.ora02.live-scy.canalplus-cdn.net/plfiles/v2/metr/dash-ssl/%s-hd.json"
 
 PARAMS_URL_JSON = {
@@ -570,7 +569,7 @@ def create_item_mpd(certificate_data, item, json_stream_data, secure_gen_hapi_he
         pickle.dump(headers, f1)
     # Return HTTP 200 but the response is not correctly interpreted by inputstream
     # (https://github.com/peak3d/inputstream.adaptive/issues/267)
-    licence = "http://127.0.0.1:5057/license=" + json_stream_data['@licence']
+    licence = "http://127.0.0.1:5057/license=" + SECURE_GEN_HAPI + json_stream_data['@licence']
     licence += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers)
     item.property['inputstream.adaptive.license_key'] = licence
     item.property['inputstream.adaptive.server_certificate'] = certificate_data
@@ -607,7 +606,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     certificate_url, license_url, live_init, pass_url, portail_id = get_config(plugin, session_requests)
 
-    resp_app_config = session_requests.get("https://www.canalplus.com/chaines/%s" % item_id)
+    resp_app_config = session_requests.get(URL_REPLAY_CHANNEL % item_id)
     epg_id = re.compile('\"epgidOTT\":\"(.+?)\"').findall(resp_app_config.text)[0].split(",")
 
     data_pass = {
@@ -630,6 +629,7 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
 
     index_epg = [i for i, t in enumerate(LIVE_MYCANAL) if t == item_id][0]
+    # body_data = urllib.parse.quote(json.dumps(dict_data))
     data_drm = quote('''{
         "ServiceRequest":
         {
@@ -683,7 +683,7 @@ def get_certificate_data(plugin, certificate_url, session_requests):
     headers = {
         "User-Agent": web_utils.get_random_ua(),
         "Accept": "application/json, text/plain, */*",
-        "referrer": "https://www.canalplus.com/"
+        "referrer": URL_ROOT
     }
     resp = session_requests.get(certificate_url, headers=headers)
     if not resp:
@@ -707,7 +707,7 @@ def get_live_token(plugin, device_key_id, live_init, pass_token, session_request
         "User-Agent": web_utils.get_random_ua(),
         "Accept": "application/json, text/plain, */*",
         "Content-Type": "application/json",
-        "referrer": "https://www.canalplus.com/"
+        "referrer": URL_ROOT
     }
     resp = session_requests.post(live_init, json=data, headers=headers)
     if not resp:
@@ -732,8 +732,8 @@ def fix_cipher():
 def get_pass_token(plugin, data_pass, pass_url, session_requests):
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
-        "Origin": "https://www.canalplus.com",
-        "Referer": "https://www.canalplus.com/",
+        "Origin": URL_ROOT,
+        "Referer": URL_ROOT,
         "User-Agent": web_utils.get_random_ua()
     }
     resp = session_requests.post(pass_url, data=data_pass, headers=headers, timeout=3)
