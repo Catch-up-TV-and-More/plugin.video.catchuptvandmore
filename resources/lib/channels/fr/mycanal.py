@@ -99,29 +99,34 @@ def get_key_id():
     return device_key_id, device_id_full, session_id
 
 
-def create_item_mpd(certificate_data, item, json_stream_data, secure_gen_hapi_headers):
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
+def create_item_mpd(plugin, certificate_data, item, json_stream_data, secure_gen_hapi_headers, subtitles):
     headers = secure_gen_hapi_headers.copy()
     headers.update({'Content-Type': 'text/plain'})
     with xbmcvfs.File('special://userdata/addon_data/plugin.video.catchuptvandmore/headersCanal', 'wb') as f1:
         pickle.dump(headers, f1)
     # Return HTTP 200 but the response is not correctly interpreted by inputstream
     # (https://github.com/peak3d/inputstream.adaptive/issues/267)
-    licence = "http://127.0.0.1:5057/license=" + SECURE_GEN_HAPI + json_stream_data['@licence']
-    licence += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers)
-    item.property['inputstream.adaptive.license_key'] = licence
-    item.property['inputstream.adaptive.server_certificate'] = certificate_data
+    license_url = "http://127.0.0.1:5057/license=" + SECURE_GEN_HAPI + json_stream_data['@licence']
+    license_url += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers)
+
+    input_stream_properties = {"server_certificate": certificate_data}
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=item.path, manifest_type="mpd",
+                                                  license_url=license_url, headers=headers,
+                                                  subtitles=subtitles,
+                                                  input_stream_properties=input_stream_properties)
 
 
-def set_subtitles(first_stream, item, plugin):
+def set_subtitles(plugin, stream, item):
     url = ''
     if plugin.setting.get_boolean('active_subtitle'):
-        for file in first_stream["files"]:
+        for file in stream["files"]:
             if 'vtt' in file["mimeType"] or file["type"] == 'subtitle':
                 url = file['distribURL']
     if 'http' in url:
         item.subtitles.append(url)
+        return url
+    return None
 
 
 def is_valid_drm(drm_type):
@@ -607,7 +612,7 @@ def get_video_url(plugin,
         item.info.update(get_selected_item_info())
         item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
 
-        set_subtitles(first_stream, item, plugin)
+        subtitles = set_subtitles(plugin, first_stream, item)
 
         if ".ism" in item.path:
             is_helper = inputstreamhelper.Helper('ism')
@@ -615,11 +620,16 @@ def get_video_url(plugin,
                 return False
 
             if drm_type != "UNPROTECTED":
-                pass  # TODO
+                plugin.notify("INFO", "ism + drm not implemented", Script.NOTIFY_INFO)
+                return False
 
-            item.property['inputstream.adaptive.manifest_type'] = 'ism'
-            item.path += "/manifest"
-            return item
+            video_url = item.path + "/manifest"
+            input_stream_properties = {"license_type": None}
+
+            return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url,
+                                                          manifest_type="ism",
+                                                          input_stream_properties=input_stream_properties,
+                                                          subtitles=subtitles)
 
         if ".mpd" in item.path:
 
@@ -627,7 +637,7 @@ def get_video_url(plugin,
             if not is_helper.check_inputstream():
                 return False
 
-            create_item_mpd(certificate_data, item, json_stream_data, secure_gen_hapi_headers)
+            return create_item_mpd(plugin, certificate_data, item, json_stream_data, secure_gen_hapi_headers, subtitles)
 
         return item
 
