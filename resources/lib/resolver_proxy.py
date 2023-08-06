@@ -119,7 +119,7 @@ def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=N
     return item
 
 
-def __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type) -> bool:
+def __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type):
     """
     @param plugin: plugin
     @param video_url: video url
