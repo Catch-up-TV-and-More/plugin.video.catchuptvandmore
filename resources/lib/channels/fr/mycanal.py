@@ -20,6 +20,8 @@ import requests
 import urlquick
 # noinspection PyUnresolvedReferences
 import xbmcvfs
+# noinspection PyUnresolvedReferences
+from xbmc import getCondVisibility
 
 try:
     from urllib.parse import quote, urlencode
@@ -109,7 +111,14 @@ def create_item_mpd(plugin, certificate_data, item, json_stream_data, secure_gen
     license_url = "http://127.0.0.1:5057/license=" + SECURE_GEN_HAPI + json_stream_data['@licence']
     license_url += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers)
 
-    input_stream_properties = {"server_certificate": certificate_data}
+    if getCondVisibility('system.platform.android'):
+        input_stream_properties = {"server_certificate": certificate_data}
+    else:
+        # image doesn't work for big resolutions if device is not certified like android
+        input_stream_properties = {
+            "server_certificate": certificate_data,
+            "chooser_resolution_secure_max": "640p"
+        }
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=item.path, manifest_type="mpd",
                                                   license_url=license_url, headers=headers,
