@@ -155,7 +155,12 @@ def get_certificate_data(plugin, certificate_url, session_requests):
 def fix_cipher():
     # Fix a ssl issue on some device.
     # noinspection PyUnresolvedReferences
-    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+    try:
+        # noinspection PyUnresolvedReferences
+        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+    except AttributeError:
+        # no pyopenssl support used / needed / available
+        pass
     try:
         # noinspection PyUnresolvedReferences
         requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
