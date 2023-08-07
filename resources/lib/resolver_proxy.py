@@ -119,7 +119,7 @@ def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=N
     return item
 
 
-def __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type):
+def __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type, input_stream_properties):
     """
     @param plugin: plugin
     @param video_url: video url
@@ -127,6 +127,7 @@ def __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type):
     @param headers: the headers
     @param item: the item on which the quality should be set
     @param manifest_type: manifest type
+    @param input_stream_properties: input_stream_properties
 
     @return: boolean: false when quality is not chosen in dialog box
     """
@@ -153,6 +154,10 @@ def __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type):
             item.property['inputstream.adaptive.stream_selection_type'] = 'fixed-res'
             item.property['inputstream.adaptive.chooser_resolution_max'] = '480p'
             item.property['inputstream.adaptive.chooser_resolution_secure_max'] = '480p'
+
+        if input_stream_properties is not None and "chooser_resolution_secure_max" in input_stream_properties:
+            item.property['inputstream.adaptive.chooser_resolution_secure_max'] = input_stream_properties[
+                "chooser_resolution_secure_max"]
 
     return True
 
@@ -246,7 +251,7 @@ def get_stream_with_quality(plugin,
         item.property['ResumeTime'] = '43200'  # 12 hours buffer, can be changed if not enough
         item.property['TotalTime'] = workaround
 
-    is_ok = __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type)
+    is_ok = __set_ia_quality(plugin, video_url, bypass, headers, item, manifest_type, input_stream_properties)
     if not is_ok:
         return False
 
