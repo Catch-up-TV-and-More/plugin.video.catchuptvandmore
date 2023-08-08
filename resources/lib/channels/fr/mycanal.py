@@ -113,7 +113,7 @@ def create_item_mpd(plugin, certificate_data, item, json_stream_data, secure_gen
     license_url = "http://127.0.0.1:5057/license=" + SECURE_GEN_HAPI + json_stream_data['@licence']
     license_url += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers)
 
-    if getCondVisibility('system.platform.android'):
+    if getCondVisibility('system.platform.android') or plugin.setting.get_boolean('device_l1'):
         input_stream_properties = {"server_certificate": certificate_data}
     else:
         # image doesn't work for big resolutions if device is not certified like android

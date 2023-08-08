@@ -313,6 +313,10 @@ msgctxt "#30150"
 msgid "Video quality"
 msgstr ""
 
+msgctxt "#30151"
+msgid "Device is L1 certified"
+msgstr ""
+
 msgctxt "#30152"
 msgid "Contents"
 msgstr ""
