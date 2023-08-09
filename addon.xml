@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta30" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta31" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -234,6 +234,11 @@ Project: Remove an useless file
 [BE AB] Fix live (PR #1182) thanks @darodi
 [FR - MYCANAL] New urls and APIs (PR #1160) thanks @darodi
 [PROJECT] Fix drm in resolver_proxy (PR #1160) thanks @darodi
+[PROJECT] resolver_proxy : allow inputstream adaptive without license type (PR #1188) thanks @darodi
+[FR - MYCANAL] Use get_stream_with_quality (PR #1188) thanks @darodi
+[PROJECT] resolver_proxy : python 2 compatibility (PR #1190) thanks @darodi
+[FR - MYCANAL] Force 640p in DRM for devices not certified (PR #1194) thanks @darodi
+[PROJECT] Add dependabot.yml (PR #1194) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
