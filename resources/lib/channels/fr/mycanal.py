@@ -20,6 +20,8 @@ import requests
 import urlquick
 # noinspection PyUnresolvedReferences
 import xbmcvfs
+# noinspection PyUnresolvedReferences
+from xbmc import getCondVisibility
 
 try:
     from urllib.parse import quote, urlencode
@@ -89,7 +91,9 @@ WINDOW_DATA = re.compile(r'window.__data=(.*?);\s*window.REACT_QUERY_STATE')
 
 def get_key_id():
     def rnd():
-        return str(hex(math.floor((1 + random.random()) * 9007199254740991)))[4:]
+        floor = math.floor((1 + random.random()) * 9007199254740991)
+        s = hex(int(floor))
+        return str(s)[4:]
 
     ts = int(1000 * time.time())
 
@@ -109,7 +113,14 @@ def create_item_mpd(plugin, certificate_data, item, json_stream_data, secure_gen
     license_url = "http://127.0.0.1:5057/license=" + SECURE_GEN_HAPI + json_stream_data['@licence']
     license_url += '?drmConfig=mkpl::true|%s|b{SSM}|B' % urlencode(headers)
 
-    input_stream_properties = {"server_certificate": certificate_data}
+    if getCondVisibility('system.platform.android') or plugin.setting.get_boolean('device_l1'):
+        input_stream_properties = {"server_certificate": certificate_data}
+    else:
+        # image doesn't work for big resolutions if device is not certified like android
+        input_stream_properties = {
+            "server_certificate": certificate_data,
+            "chooser_resolution_secure_max": "640p"
+        }
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=item.path, manifest_type="mpd",
                                                   license_url=license_url, headers=headers,
@@ -153,7 +164,12 @@ def get_certificate_data(plugin, certificate_url, session_requests):
 def fix_cipher():
     # Fix a ssl issue on some device.
     # noinspection PyUnresolvedReferences
-    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+    try:
+        # noinspection PyUnresolvedReferences
+        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+    except AttributeError:
+        # no pyopenssl support used / needed / available
+        pass
     try:
         # noinspection PyUnresolvedReferences
         requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
@@ -268,11 +284,11 @@ def list_channel(plugin, item_id, **kwargs):
 def list_contents(plugin, item_id, key_value, category, **kwargs):
     if category is None:
         if key_value is None:
-            return False
+            yield False
         category = find_category(item_id, key_value)
 
     if category is None:
-        return False
+        yield False
 
     for content in category["contents"]:
         if content["type"] == 'article':
