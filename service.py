@@ -25,7 +25,12 @@ except ImportError:  # Python 2
 addon = xbmcaddon.Addon(id='plugin.video.catchuptvandmore')
 
 requests.packages.urllib3.disable_warnings()
-requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+try:
+    # noinspection PyUnresolvedReferences
+    requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+except AttributeError:
+    # no pyopenssl support used / needed / available
+    pass
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context

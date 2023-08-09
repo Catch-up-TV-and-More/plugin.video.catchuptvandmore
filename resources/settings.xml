@@ -32,7 +32,9 @@
             <setting label="30198" type="bool" id="use_ia_hls_stream" default="true" enable="System.HasAddon(inputstream.adaptive)" />
             <setting label="30197" type="action" subsetting="true"  action="Addon.OpenSettings(inputstream.adaptive)" option="close" enable="eq(-1,true)"/>
             <setting label="30199" type="bool" id="use_ytdl_stream" default="false" enable="eq(-2,false) + !System.HasAddon(inputstream.adaptive)"/>
-
+            <setting label="30151" type="bool" id="device_l1" default="false" enable="System.HasAddon(inputstream.adaptive)">
+                <level>3</level>
+            </setting>
 
         <!-- Content -->
         <setting label="30152" type="lsep" />
