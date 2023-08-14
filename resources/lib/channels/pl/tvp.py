@@ -71,8 +71,30 @@ CHANNEL_ID_MAP = {
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    tvp3_region = kwargs.get('language', Script.setting['tvp3.language'])
+    channels = _get_channels()
+    if channels is None:
+        plugin.notify('INFO', plugin.localize(30716))
+        return False
 
+    live_id = _get_live_id(channels, _get_channel_id(item_id, **kwargs))
+    if live_id is None:
+        # Stream is not available - channel not found on scrapped page
+        plugin.notify('INFO', plugin.localize(30716))
+        return False
+
+    live_stream_url = _get_live_stream_url(live_id)
+    if live_stream_url is None:
+        plugin.notify('INFO', plugin.localize(30716))
+        return False
+
+    return live_stream_url
+
+
+def _get_channels():
+    """
+    Extract the listing of channels from TVP page as a list of JSON elments.
+    None if HTTP request fails or infomation moved to another place in the HTML page.
+    """
     resp = urlquick.get(
         LIVE_MAIN_URL, headers={'User-Agent': web_utils.get_random_ua()},
         max_age=-1, timeout=30)
@@ -86,37 +108,47 @@ def get_live_url(plugin, item_id, **kwargs):
             break
 
     if channels_str is None:
-        # Stream is not available - channel not found on scrapped page
-        plugin.notify('INFO', plugin.localize(30716))
-        return False
+        return None
 
     try:
         channels = json.loads(channels_str)
-    except Exception as error:
-        plugin.notify('INFO', plugin.localize(30716))
-        return False
+        return channels.get('channels')
+    except Exception:
+        return None
 
 
-    live_id = None
-    for channel in channels.get('channels'):
-        # TVP3 is a channel shared for every regions.
-        # channel region info taken from additional parameter
-        if "tvp3" == item_id:
-            item_id = LIVE_TVP3_REGIONS[tvp3_region]
-        # Get live video information from selected channel
-        if CHANNEL_ID_MAP[item_id] == channel.get('id'):
-            print('poloniachannel', channel)
+def _get_channel_id(item_id, **kwargs):
+    """
+    Get the id of the channel in TVP page from id internal to catchuptvandmore plugin.
+    TVP3 is a channel shared for every regions.
+    Channel region info taken from additional parameter
+    """
+    if "tvp3" == item_id:
+        tvp3_region = kwargs.get('language', Script.setting['tvp3.language'])
+        item_id = LIVE_TVP3_REGIONS[tvp3_region]
+    return CHANNEL_ID_MAP[item_id]
+
+
+def _get_live_id(channels, channel_id):
+    """
+    Get the id of the live video broadcasted by the channel
+    None if channel cannot be found or it hasn't any video / live info associated.
+    """
+    for channel in channels:
+        if channel.get('id') == channel_id:
             if channel.get('items', None) is not None:
                 for item in channel.get('items', []):
                     live_id = item.get('video_id', None)
                     if live_id is not None:
-                        break
+                        return live_id
+    return None
 
-    if live_id is None:
-        # Stream is not available - channel not found on scrapped page
-        plugin.notify('INFO', plugin.localize(30716))
-        return False
 
+def _get_live_stream_url(live_id):
+    """
+    Get URL to playable m3u8 of the live stream.
+    None if HTTP request to get info fails or if there is no m3u8 / mpeg / hls data associated.
+    """
     try:
         live_streams_url = urlquick.get(
             URL_STREAMS.format(live_id=live_id), headers={
@@ -126,18 +158,12 @@ def get_live_url(plugin, item_id, **kwargs):
             },
             max_age=-1, timeout=30)
         live_streams = live_streams_url.json()
-    except Exception as error:
-        plugin.notify('INFO', plugin.localize(30716))
-        return False
+    except Exception:
+        return None
 
     live_stream_url = None
     if live_streams.get('formats', None) is not None:
         for stream_format in live_streams.get('formats'):
             if 'application/x-mpegurl' == stream_format.get('mimeType'):
                 live_stream_url = stream_format.get('url')
-
-    if live_stream_url is None:
-        plugin.notify('INFO', plugin.localize(30716))
-        return False
-
     return live_stream_url
