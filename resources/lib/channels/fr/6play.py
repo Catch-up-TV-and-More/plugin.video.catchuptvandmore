@@ -588,26 +588,25 @@ def get_live_url(plugin, item_id, **kwargs):
         'x-customer-name': 'm6web'
     }
 
+    live_item_id = item_id.upper()
     if item_id == '6ter':
-        ITEM_ID = '6T'
+        live_item_id = '6T'
     elif item_id in {'fun_radio', 'rtl2', 'gulli'}:
-        ITEM_ID = item_id
-    else:
-        ITEM_ID = item_id.upper()
+        live_item_id = item_id
 
-    URL_TOKEN = URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % ITEM_ID)
-    token_json = urlquick.get(URL_TOKEN, headers=payload_headers, max_age=-1)
+    url_token = URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % live_item_id)
+    token_json = urlquick.get(url_token, headers=payload_headers, max_age=-1)
     token_jsonparser = json.loads(token_json.text)
     token = token_jsonparser["token"]
 
     params = {
-        'channel': ITEM_ID,
+        'channel': live_item_id,
         'with': 'service_display_images,nextdiffusion,extra_data'
     }
 
     video_json = urlquick.get(URL_LIVE_JSON, params=params, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(video_json.text)
-    video_assets = json_parser[item_id.upper()][0]['live']['assets']
+    video_assets = json_parser[live_item_id][0]['live']['assets']
 
     if not video_assets:
         plugin.notify('INFO', plugin.localize(30716))
