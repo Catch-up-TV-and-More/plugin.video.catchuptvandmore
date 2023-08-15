@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta31" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta32" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -239,6 +239,8 @@ Project: Remove an useless file
 [PROJECT] resolver_proxy : python 2 compatibility (PR #1190) thanks @darodi
 [FR - MYCANAL] Force 640p in DRM for devices not certified (PR #1194) thanks @darodi
 [PROJECT] Add dependabot.yml (PR #1194) thanks @darodi
+[PL - TVP] Fix and add few PL TVP live channels (PR #1200) thanks @thomas-ernest
+[UK - STV] Image is not available always (issue #1205)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
