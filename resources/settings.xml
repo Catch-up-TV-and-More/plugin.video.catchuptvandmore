@@ -114,9 +114,6 @@
         <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
-            <setting label="30240" type="text" id="nrj.login" default=""/>
-            <setting label="30241" type="text" id="nrj.password" option="hidden" default=""/>
-
             <setting label="30260" type="text" id="mytf1.login" default=""/>
             <setting label="30261" type="text" id="mytf1.password" option="hidden" default=""/>
 

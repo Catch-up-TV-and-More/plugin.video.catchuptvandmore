@@ -486,14 +486,6 @@ msgstr ""
 
 # Accounts (from 30240 to 30269)
 
-msgctxt "#30240"
-msgid "NRJ Login"
-msgstr ""
-
-msgctxt "#30241"
-msgid "NRJ Password"
-msgstr ""
-
 msgctxt "#30242"
 msgid "VRT NU Login"
 msgstr ""
