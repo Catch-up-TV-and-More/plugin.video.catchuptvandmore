@@ -246,7 +246,9 @@ def get_stream_with_quality(plugin,
             pass
     else:
         item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property["inputstream.adaptive.manifest_type"] = manifest_type
+    if get_kodi_version() < 21:
+        # mandatory until Kodi 20, deprecated on Kodi 21
+        item.property["inputstream.adaptive.manifest_type"] = manifest_type
     if workaround is not None:
         item.property['ResumeTime'] = '43200'  # 12 hours buffer, can be changed if not enough
         item.property['TotalTime'] = workaround
@@ -257,7 +259,11 @@ def get_stream_with_quality(plugin,
 
     if license_url is not None:
         stream_headers = urlencode(headers)
-        item.property['inputstream.adaptive.stream_headers'] = stream_headers
+        if get_kodi_version() == 20:
+            item.property['inputstream.adaptive.manifest_headers'] = stream_headers
+        else:
+            item.property['inputstream.adaptive.stream_headers'] = stream_headers
+
         if '|' not in license_url:  # add headers only if they are not already in the url
             license_url = '%s|%s|R{SSM}|' % (license_url, stream_headers)
         item.property['inputstream.adaptive.license_key'] = license_url
@@ -341,7 +347,7 @@ def get_stream_vimeo(plugin,
             max_age=-1)
     json_vimeo = json.loads(
         '{' +
-        re.compile('var config \= \{(.*?)\}\;').findall(html_vimeo.text)[0] +
+        re.compile('var config = \{(.*?)};').findall(html_vimeo.text)[0] +
         '}')
     hls_json = json_vimeo["request"]["files"]["hls"]
     default_cdn = hls_json["default_cdn"]
@@ -360,7 +366,7 @@ def get_stream_facebook(plugin,
     return get_stream_default(plugin, url_facebook, download_mode)
 
 
-# Youtube Part
+# YouTube Part
 def get_stream_youtube(plugin, video_id, download_mode=False):
     url_youtube = URL_YOUTUBE % video_id
     return get_stream_default(plugin, url_youtube, download_mode)
@@ -371,7 +377,7 @@ def get_brightcove_policy_key(data_account, data_player):
     """Get policy key"""
     file_js = urlquick.get(URL_BRIGHTCOVE_POLICY_KEY %
                            (data_account, data_player))
-    return re.compile(r'policyKey\:\"(.*?)\"').findall(file_js.text)[0]
+    return re.compile(r'policyKey:\"(.*?)\"').findall(file_js.text)[0]
 
 
 def get_brightcove_video_json(plugin,
@@ -399,6 +405,7 @@ def get_brightcove_video_json(plugin,
     license_url = None
     is_drm = False
 
+    manifest = 'hls'
     if 'sources' in json_parser:
         for url in json_parser["sources"]:
             # Workaroud Inputstream adative can not some types of AES crypted streams
@@ -422,7 +429,8 @@ def get_brightcove_video_json(plugin,
 
     if download_mode:
         return download.download_video(video_url)
-    return get_stream_with_quality(plugin, video_url=video_url, manifest_type=manifest, headers=headers, license_url=license_url, subtitles=subtitles)
+    return get_stream_with_quality(plugin, video_url=video_url, manifest_type=manifest, headers=headers,
+                                   license_url=license_url, subtitles=subtitles)
 
 
 # MTVN Services Part
@@ -536,12 +544,15 @@ def get_francetv_video_stream(plugin,
             stream_headers = urlencode(headers)
             json_parser2 = json.loads(urlquick.get(url_selected, headers=headers, max_age=-1).text)
             resp3 = urlquick.get(json_parser2['url'], headers=headers, max_age=-1, allow_redirects=False)
-            if resp3.status_code < 400 and resp3.status_code >= 300:
+            if 400 > resp3.status_code >= 300:
                 location_url = resp3.headers['location']
             else:
                 location_url = resp3.url
             item.path = location_url
-            item.property['inputstream.adaptive.stream_headers'] = stream_headers
+            if get_kodi_version() == 20:
+                item.property['inputstream.adaptive.manifest_headers'] = stream_headers
+            else:
+                item.property['inputstream.adaptive.stream_headers'] = stream_headers
             if download_mode:
                 return download.download_video(item.path)
         return item
