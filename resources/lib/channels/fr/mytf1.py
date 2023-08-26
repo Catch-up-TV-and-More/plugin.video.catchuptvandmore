@@ -350,7 +350,7 @@ def get_video_url(plugin,
     url_json = URL_VIDEO_STREAM % video_id
     json_parser = session.get(url_json, headers=headers_video_stream, params=params, max_age=-1).json()
 
-    if json_parser['delivery']['code'] > 400:
+    if json_parser['delivery']['code'] >= 400:
         plugin.notify('ERROR', plugin.localize(30716))
         return False
 
