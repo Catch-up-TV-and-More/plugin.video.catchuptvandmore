@@ -5,19 +5,16 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
+
 import json
 import re
 
-import inputstreamhelper
-from codequick import Listitem, Resolver, Route
-from kodi_six import xbmcgui
 import urlquick
-import base64
-import datetime
+# noinspection PyUnresolvedReferences
+from codequick import Listitem, Resolver, Route
 
-from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
-from resources.lib.menu_utils import item_post_treatment
 from resources.lib import resolver_proxy, web_utils
+from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://www.bvn.tv'
 
@@ -68,7 +65,7 @@ def list_days(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, day_id, **kwargs):
     resp = urlquick.get(URL_DAYS, headers=GENERIC_HEADERS, max_age=-1)
-    root = resp.parse("ul", attrs={"id": "slick-missed-day-%s" % (day_id)})
+    root = resp.parse("ul", attrs={"id": "slick-missed-day-%s" % day_id})
 
     for broadcast in root.iterfind(".//li"):
         video_time = broadcast.find(
@@ -80,7 +77,7 @@ def list_videos(plugin, item_id, day_id, **kwargs):
         subtitle = broadcast.find(
             "span[@class='m-section__scroll__item__bottom__title--sub']")
         if subtitle is not None and subtitle.text is not None:
-            video_title += ": " + subtitle
+            video_title += ": " + subtitle.text
 
         video_image = URL_ROOT + broadcast.find('.//img').get('data-src')
         video_url = URL_ROOT + broadcast.find('.//a').get('href')
@@ -101,9 +98,9 @@ def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
 
     resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
 
-    token_id = re.compile(r'start\-player\.npo\.nl\/embed\/(.*?)\"').findall(
+    token_id = re.compile(r'start-player\.npo\.nl/embed/(.*?)\"').findall(
         resp.text)[0]
-    video_id = re.compile(r'\"iframe\-(.*?)\"').findall(resp.text)[0]
+    video_id = re.compile(r'\"iframe-(.*?)\"').findall(resp.text)[0]
 
     params = {
         'profile': 'dash-widevine',
@@ -152,7 +149,7 @@ def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
-    jwt = re.compile('let jwt \= \"(.*?)\"').findall(resp.text)[0]
+    jwt = re.compile('let jwt[^=]*= \"(.*?)\"').findall(resp.text)[0]
 
     headers = {
         'Authorization': jwt,
