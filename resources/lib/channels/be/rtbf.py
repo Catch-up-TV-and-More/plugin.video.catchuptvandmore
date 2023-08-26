@@ -9,8 +9,8 @@ from __future__ import unicode_literals
 import base64
 import json
 import re
+import random
 
-import inputstreamhelper
 # noinspection PyUnresolvedReferences
 from codequick import Route, Resolver, Listitem
 import htmlement
@@ -22,9 +22,34 @@ from resources.lib import download, web_utils, resolver_proxy
 from resources.lib.kodi_utils import get_kodi_version
 from resources.lib.menu_utils import item_post_treatment
 
-# TODO
-# Add geoblock (info in JSON)
-# Add Quality Mode
+# TODO oauth helper class to persist tokens until expiration
+
+# TODO manage favorites
+# GET https://u2c-service.rtbf.be/auvio/v1.20/users/{UID}/favorites?
+# type=PROGRAM&userAgent=Chrome-web-3.0
+
+
+#  with   "headers": {
+#         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/116.0",
+#         "Accept": "*/*",
+#         "Accept-Language": "fr-BE,en-US;q=0.7,en;q=0.3",
+#         "authorization": "Bearer ...",
+#         "x-rtbf-redbee": "Bearer ...",
+#         "referrer": "https://auvio.rtbf.be/"
+#     }
+# and {UID} from RTBF_LOGIN_URL
+
+# TODO manage play history
+# GET https://u2c-service.rtbf.be/auvio/v1.20/users/{UID}/play-history?isOngoing=true&_limit=16&userAgent=Chrome-web-3.0
+# same headers and {UID}
+
+# TODO Add geo-block (info in JSON)
+
+# TODO clean up old APIs used before redbee?
+
+AUTH_SERVICE_API_TOKEN = "https://auth-service.rtbf.be/oauth/v1/token"
+
+AUVIO_ROOT = "https://auvio.rtbf.be/"
 
 URL_EMISSIONS_AUVIO = 'https://www.rtbf.be/auvio/emissions'
 
@@ -49,10 +74,7 @@ URL_PROGRAMS2 = 'https://www.rtbf.be/api/partner/generic/embed/program?v=1&partn
 URL_LIST_TV_CHANNELS = 'https://www.rtbf.be/api/partner/generic/epg/channellist?v=7&type=tv&partner_key=%s'
 URL_PROGRAMS = 'https://www.rtbf.be/api/partner/generic/program/getprograms?channel=%s&partner_key=%s'
 
-URL_LIST_SEARCH = 'https://www.rtbf.be/api/partner/generic/search/query?index=media&q=%s&type=media&target_site' \
-                  '=mediaz&v=8&partner_key=%s '
-URL_LIST_SEARCH_PROG = 'https://www.rtbf.be/api/partner/generic/search/query?index=program&is_paid=0&q=%s&target_site' \
-                       '=mediaz&v=8&partner_key=%s '
+URL_LIST_SEARCH = 'https://bff-service.rtbf.be/auvio/v1.20/search?query=%s'
 
 URL_SUB_CATEGORIES = 'https://www.rtbf.be/news/api/block?data[0][uuid]=%s&data[0][type]=widget&data[0][settings][id]=%s'
 # data-uuid and part of data-uuid
@@ -128,15 +150,11 @@ def format_day(date, **kwargs):
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
-    item = Listitem.search(list_videos_search, item_id=item_id, page='0')
+    item = Listitem.search(list_search, item_id=item_id, page='0')
     item_post_treatment(item)
     yield item
 
-    item = Listitem.search(list_videos_search_prog, item_id=item_id, page='0')
-    item.label = plugin.localize(30715)
-    item_post_treatment(item)
-    yield item
-
+    # all programs
     item = Listitem()
     item.label = plugin.localize(30717)
     item.set_callback(list_programs, item_id=item_id)
@@ -165,45 +183,118 @@ def list_categories(plugin, item_id, **kwargs):
 
 
 @Route.register
-def list_videos_search(plugin, search_query, item_id, page, **kwargs):
-    resp = urlquick.get(URL_LIST_SEARCH % (search_query, PARTNER_KEY), headers=GENERIC_HEADERS, max_age=-1)
+def list_search(plugin, search_query, item_id, page, **kwargs):
+    is_ok, session_token, id_token = get_redbee_session_token(plugin)
+    if is_ok is False:
+        yield False
+
+    rtbf_oauth = get_rtbf_token(plugin, id_token)
+    if rtbf_oauth is None:
+        yield False
+
+    headers = {
+        'User-Agent': web_utils.get_random_ua(),
+        'Content-Type': '',
+        'authorization': 'Bearer %s' % rtbf_oauth['access_token'],
+        'x-rtbf-redbee': 'Bearer %s' % session_token,
+        'referrer': AUVIO_ROOT
+    }
+
+    resp = urlquick.get(URL_LIST_SEARCH % search_query, headers=headers, max_age=-1)
     json_parser = resp.json()
 
-    found_result = {"value": False}
-    for results_datas in json_parser["results"]:
-        video_data = results_datas["data"]
-        for i in yield_video_data(item_id, video_data, found_result):
-            yield i
+    result_status = json_parser["status"]
+    found_result = False
+    if result_status == 200:
+        if "data" in json_parser:
+            for data_item in json_parser["data"]:
+                if (data_item['type'] == "PROGRAM_LIST"
+                        or (data_item['type'] == "MEDIA_LIST"
+                            and not data_item['content'][0]['resourceType'] == 'LIVE')):
+                    item = Listitem()
+                    item.label = data_item['title']
+                    item.set_callback(list_search_content,
+                                      item_id=item_id,
+                                      content=data_item['content'])
+                    item_post_treatment(item)
+                    found_result = True
+                    yield item
 
-    if not found_result["value"]:
+                elif data_item['type'] == "MEDIA_PREMIUM_LIST":
+                    pass  # I don't have an account to implement this
+
+    if not found_result:
         plugin.notify(plugin.localize(30600), plugin.localize(30718))
         yield False
 
 
 @Route.register
-def list_videos_search_prog(plugin, search_query, item_id, page, **kwargs):
-    resp = urlquick.get(URL_LIST_SEARCH_PROG % (search_query, PARTNER_KEY))
-    json_parser = resp.json()
+def list_search_content(plugin, item_id, content, **kwargs):
+    for content_item in content:
+        if content_item['resourceType'] == "PROGRAM":
+            item = Listitem()
+            item.label = content_item['title']
+            item.art['thumb'] = item.art['landscape'] = content_item['illustration']['l']
+            item.set_callback(list_videos_program,
+                              item_id=item_id,
+                              program_id=content_item['id'])
+            item_post_treatment(item)
+            yield item
 
-    item_found = False
+        elif content_item['resourceType'] == "MEDIA" and content_item['type'] == "VIDEO":
+            item = Listitem()
+            item.label = content_item['title']
+            if "subtitle" in content_item:
+                item.label += " - " + content_item['subtitle']
+            item.art['thumb'] = item.art['landscape'] = content_item['illustration']['l']
+            item.info['plot'] = content_item['description']
+            item.info['duration'] = content_item['duration']
+            date_value = format_day(content_item["publishedFrom"])
+            item.info.date(date_value, '%Y/%m/%d')
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              video_url=None,
+                              video_id=content_item['assetId'],
+                              is_drm=True,
+                              is_redbee=True)
+            item_post_treatment(item,
+                                is_playable=True,
+                                is_downloadable=False)
+            yield item
 
-    for search_datas in json_parser["results"]:
-        search_title = search_datas["data"]["label"]
-        search_id = search_datas["id"]
-        search_image = search_datas["data"]["images"]["illustration"]["16x9"]["1248x702"]
-        item = Listitem()
-        item.label = search_title
-        item.art['thumb'] = item.art['landscape'] = search_image
-        item.set_callback(list_videos_program,
-                          item_id=item_id,
-                          program_id=search_id)
-        item_post_treatment(item)
-        item_found = True
-        yield item
 
-    if not item_found:
-        plugin.notify(plugin.localize(30600), plugin.localize(30718))
-        yield False
+def get_random_uuid():
+    # TODO hexa random 8-4-4-4-12 at each login and persisted?
+    return '-'.join([random_hexa(8), random_hexa(4), random_hexa(4), random_hexa(4), random_hexa(12)])
+
+
+def random_hexa(i):
+    return ''.join(random.choice('0123456789abcdef') for _ in range(i))
+
+
+def get_rtbf_token(plugin, id_token):
+    headers_oauth = {
+        'User-Agent': web_utils.get_random_ua(),
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    body_oauth = {
+        'grant_type': "gigya",
+        "client_id": "94efc52c-f55f-4c40-84fc-b4b5bd7de3ca",
+        "client_secret": "gVF7hFScJrDGwWu9uzu0mYdlKXxBKASczO2Q6K3y",
+        "platform": "WEB",
+        "device_id": get_random_uuid(),
+        "token": id_token,
+        "scope": "visitor"
+    }
+
+    resp = urlquick.post(AUTH_SERVICE_API_TOKEN, headers=headers_oauth, data=body_oauth, max_age=-1)
+    if not resp:
+        plugin.notify(plugin.localize(30600), 'rtbf_login response: empty')
+        return None
+
+    return resp.json()
 
 
 # Not used at the moment but could be used if we want to display all the programs per channel via API
@@ -450,25 +541,11 @@ def list_videos_sub_category_dl(plugin, item_id, sub_category_data_uuid,
 
 
 def get_video_redbee(plugin, video_id, is_drm):
-    login = plugin.setting.get_string('rtbf.login')
-    password = plugin.setting.get_string('rtbf.password')
-    if login == '' or password == '':
-        xbmcgui.Dialog().ok(
-            plugin.localize(30600),
-            plugin.localize(30604) % ('RTBF (BE)', 'https://www.rtbf.be/auvio/'))
+    is_ok, session_token, _ = get_redbee_session_token(plugin)
+    if is_ok is False:
         return False
 
-    rtbf_login_data = rtbf_login(plugin, login, password)
-    if rtbf_login_data is None:
-        return False
-
-    rtbf_jwt = get_rtbf_jwt(plugin, rtbf_login_data['sessionInfo']['cookieValue'])
-    if rtbf_jwt is None:
-        return False
-
-    redbee_jwt = get_redbee_jwt(plugin, rtbf_jwt['id_token'])
-
-    video_format, forced_drm = get_redbee_format(plugin, video_id, redbee_jwt['sessionToken'], is_drm)
+    video_format, forced_drm = get_redbee_format(plugin, video_id, session_token, is_drm)
     if video_format is None:
         return False
 
@@ -491,7 +568,7 @@ def get_video_redbee(plugin, video_id, is_drm):
     else:
         return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd")
 
-    # TODO
+    # TODO subtitles?
     # subtitles = video_format['sprites'][0]['vtt']
 
     headers = {
@@ -502,7 +579,37 @@ def get_video_redbee(plugin, video_id, is_drm):
     input_stream_properties = {"server_certificate": certificate_data}
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd', headers=headers,
-                                                  license_url=license_server_url, input_stream_properties=input_stream_properties)
+                                                  license_url=license_server_url,
+                                                  input_stream_properties=input_stream_properties)
+
+
+def get_redbee_session_token(plugin):
+    """
+    @param plugin: the plugin
+    @return:
+        is_ok: false if an error happened;
+        session_token ;
+        id_token
+    """
+    login = plugin.setting.get_string('rtbf.login')
+    password = plugin.setting.get_string('rtbf.password')
+    if login == '' or password == '':
+        xbmcgui.Dialog().ok(
+            plugin.localize(30600),
+            plugin.localize(30604) % ('RTBF (BE)', 'https://www.rtbf.be/auvio/'))
+        return False, None, None
+
+    rtbf_login_data = rtbf_login(plugin, login, password)
+    if rtbf_login_data is None:
+        return False, None, None
+
+    rtbf_jwt = get_rtbf_jwt(plugin, rtbf_login_data['sessionInfo']['cookieValue'])
+    if rtbf_jwt is None:
+        return False, None, None
+
+    id_token = rtbf_jwt['id_token']
+    redbee_jwt = get_redbee_jwt(plugin, id_token)
+    return True, redbee_jwt['sessionToken'], id_token
 
 
 @Resolver.register
@@ -514,6 +621,9 @@ def get_video_url(plugin,
                   download_mode=False,
                   is_redbee=False,
                   **kwargs):
+    if is_redbee:
+        return get_video_redbee(plugin, video_id, is_drm)
+
     if 'youtube.com' in video_url:
         video_id = video_url.rsplit('/', 1)[1]
         return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
@@ -521,9 +631,6 @@ def get_video_url(plugin,
     if 'arte.tv' in video_url:
         video_id = re.compile("(?<=fr%2F)(.*)(?=&autostart)").findall(video_url)[0]
         return resolver_proxy.get_arte_video_stream(plugin, 'fr', video_id, download_mode)
-
-    if is_redbee:
-        return get_video_redbee(plugin, video_id, is_drm)
 
     if is_drm:
         return get_drm_item(plugin, video_id, video_url, 'media_id')
@@ -534,6 +641,7 @@ def get_video_url(plugin,
     return video_url
 
 
+# TODO clean up? redbee is used instead everywhere now?
 def get_drm_item(plugin, video_id, video_url, url_token_parameter):
     token_url = URL_TOKEN % (url_token_parameter, video_id, PARTNER_KEY)
     token_value = urlquick.get(token_url, headers=GENERIC_HEADERS, max_age=-1)
@@ -541,7 +649,8 @@ def get_drm_item(plugin, video_id, video_url, url_token_parameter):
     headers = {'customdata': json_parser_token["auth_encoded_xml"]}
     input_stream_properties = {"manifest_update_parameter": 'full'}
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, headers=headers, manifest_type='mpd',
-                                                  license_url=URL_LICENCE_KEY, input_stream_properties=input_stream_properties)
+                                                  license_url=URL_LICENCE_KEY,
+                                                  input_stream_properties=input_stream_properties)
 
 
 @Resolver.register
@@ -747,7 +856,7 @@ def get_rtbf_jwt(plugin, login_token):
 def get_redbee_jwt(plugin, rtbf_jwt):
     url = REDBEE_BASE_URL + '/auth/gigyaLogin'
 
-    data_string = '{"jwt":"' + rtbf_jwt + '","device":{"deviceId":"123","name":"","type":"WEB"}}'
+    data_string = '{"jwt":"' + rtbf_jwt + ('","device":{"deviceId":"%s","name":"","type":"WEB"}}' % get_random_uuid())
     data = data_string.encode("utf-8")
 
     headers = {
