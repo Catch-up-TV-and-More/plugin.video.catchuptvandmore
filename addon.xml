@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta33" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta34" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -244,6 +244,11 @@ Project: Remove an useless file
 [FR - 6PLAY] fix KeyError (PR #1207 issue #1204 issue #1208) thanks @darodi
 [PROJECT] Headers should be populated only if license is available in resolver_proxy.get_stream_with_quality
 [FR - NRJ] Fix live (issue #1208)
+[PROJECT] Use inputstream adaptive for Dailymotion link in resolver_proxy (PR #) thanks @Arias800
+[PROJECT] Update resolver_proxy.py (PR #1214) thanks @darodi
+[WO - BVN] Fix live (PR #1216) thanks @darodi
+[FR - MYFT1] Fix error handling for 400 http status code (PR #1217) thanks @darodi
+[BE - RTBF] New search API (PR #1218) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
