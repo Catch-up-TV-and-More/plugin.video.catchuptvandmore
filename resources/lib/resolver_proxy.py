@@ -311,7 +311,7 @@ def get_stream_dailymotion(plugin,
                            video_id,
                            download_mode=False):
 
-    if (get_kodi_version() < 20 or download_mode):
+    if download_mode:
         url_dailymotion = URL_DAILYMOTION_EMBED % video_id
         return get_stream_default(plugin, url_dailymotion, download_mode)
     else:
@@ -322,8 +322,8 @@ def get_stream_dailymotion(plugin,
         if "qualities" not in json_parser:
             plugin.notify('ERROR', plugin.localize(30716))
 
-        video_path = json_parser["qualities"]["auto"][0]["url"]
-        return video_path
+        url = json_parser["qualities"]["auto"][0]["url"]
+        return get_stream_with_quality(plugin, url)
 
 
 # Vimeo Part
