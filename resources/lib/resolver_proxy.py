@@ -76,7 +76,7 @@ URL_FRANCETV_HDFAUTH_URL = 'https://hdfauthftv-a.akamaihd.net/esi/TA?format=json
 URL_LICENSE_FRANCETV = 'https://simulcast-b.ftven.fr/keys/hls.key'
 # URL license
 
-URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s?integration=inline&GK_PV5_NEON=1'
+URL_DAILYMOTION_EMBED_2 = 'https://www.dailymotion.com/player/metadata/video/%s'
 
 URL_TWITCH = 'https://player.twitch.tv/?channel=%s'
 
@@ -309,14 +309,18 @@ def get_stream_kaltura(plugin,
 # DailyMotion Part
 def get_stream_dailymotion(plugin,
                            video_id,
-                           download_mode=False):
+                           download_mode=False,
+                           embeder=None):
 
     if download_mode:
         url_dailymotion = URL_DAILYMOTION_EMBED % video_id
         return get_stream_default(plugin, url_dailymotion, download_mode)
     else:
+        if embeder is None:
+            embeder = ''
+        params = {'embedder': embeder}
         url_dmotion = URL_DAILYMOTION_EMBED_2 % video_id
-        resp = urlquick.get(url_dmotion, headers=GENERIC_HEADERS, max_age=-1)
+        resp = urlquick.get(url_dmotion, headers=GENERIC_HEADERS, params=params, max_age=-1)
         json_parser = json.loads(resp.text)
 
         if "qualities" not in json_parser:
