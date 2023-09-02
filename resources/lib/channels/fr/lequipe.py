@@ -24,6 +24,8 @@ URL_LIVE = URL_ROOT + '/tv'
 
 URL_API_LEQUIPE = URL_ROOT + '/equipehd/applis/filtres/videosfiltres.json'
 
+EMBEDER_URL = URL_LIVE + '/videos/live/%s'
+
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
 
@@ -111,5 +113,6 @@ def get_live_url(plugin, item_id, **kwargs):
         ret = 0
 
     live_id = list_url[ret]
+    embeder = EMBEDER_URL % live_id
 
-    return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)
+    return resolver_proxy.get_stream_dailymotion(plugin, live_id, False, embeder)
