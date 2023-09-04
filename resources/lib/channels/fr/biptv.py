@@ -71,18 +71,6 @@ def get_video_url(plugin, item_id, video_url, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(
-        URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
-    url_m3u8 = re.compile(r'source src=\"(.*?)\"').findall(resp.text)[0]
-    root = os.path.dirname(url_m3u8)
-    manifest = urlquick.get(
-        url_m3u8,
-        headers={'User-Agent': web_utils.get_random_ua()},
-        max_age=-1)
-
-    real_stream = ''
-    lines = manifest.text.splitlines()
-    for k in range(0, len(lines) - 1):
-        if 'biptvstream_orig' in lines[k]:
-            real_stream = root + '/' + lines[k]
-    return real_stream
+    resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
+    video_url = resp.parse().find(".//source").get("src")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url)
