@@ -412,7 +412,7 @@ menu = {
         'enabled': True,
         'order': 35
     },
-    'viamatele': {
+    'matele': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
         'label': 'viàMaTélé',
         'thumb': 'channels/fr/viamatele.png',
