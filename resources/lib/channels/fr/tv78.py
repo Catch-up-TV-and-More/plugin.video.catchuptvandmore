@@ -14,7 +14,7 @@ from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://www.tv78.com'
-URL_LIVE = URL_ROOT + '/webtv'
+URL_LIVE = URL_ROOT + '/le-live'
 URL_REPLAY = URL_ROOT + '/emissions-replay/'
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
@@ -89,7 +89,6 @@ def get_video_url(plugin, url, download_mode=False, **kwargs):
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
-    root = resp.parse()
-    video_url = root.find('.//source').get('src')
+    video_url = re.compile('source src\=\"(.*?)\"').findall(resp.text)[0]
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url)
