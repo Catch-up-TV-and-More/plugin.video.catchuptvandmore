@@ -83,11 +83,11 @@ menu = {
         'enabled': True,
         'order': 9
     },
-    'rtl_info': {
+    'rtl_play': {
         'resolver': '/resources/lib/channels/be/rtlplaybe:get_live_url',
-        'label': 'RTL INFO',
-        'thumb': 'channels/be/rtlinfo.png',
-        'fanart': 'channels/be/rtlinfo_fanart.jpg',
+        'label': 'RTL Play',
+        'thumb': 'channels/be/rtlplay.png',
+        'fanart': 'channels/be/rtlplay_fanart.jpg',
         'm3u_group': 'Belgique fr',
         'enabled': True,
         'order': 10
