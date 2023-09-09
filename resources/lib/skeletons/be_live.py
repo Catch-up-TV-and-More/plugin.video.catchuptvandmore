@@ -157,15 +157,6 @@ menu = {
         'enabled': True,
         'order': 17
     },
-    'rtl_sport': {
-        'resolver': '/resources/lib/channels/be/rtlplaybe:get_live_url',
-        'label': 'RTL Sport',
-        'thumb': 'channels/be/rtlsport.png',
-        'fanart': 'channels/be/rtlsport_fanart.jpg',
-        'm3u_group': 'Belgique fr',
-        'enabled': True,
-        'order': 18
-    },
     'tvcom': {
         'resolver': '/resources/lib/channels/be/tvcom:get_live_url',
         'label': 'TV Com',
