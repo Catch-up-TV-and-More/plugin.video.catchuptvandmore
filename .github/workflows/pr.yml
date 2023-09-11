@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out plugin repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
@@ -30,11 +30,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out plugin repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: plugin.video.catchuptvandmore
       - name: Check out simulator repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: simulator
           repository: Catch-up-TV-and-More/catchuptvandmore-test
@@ -56,7 +56,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Check out plugin repository
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v4
   #     - name: Set up Python 3.8
   #       uses: actions/setup-python@v4
   #       with:
