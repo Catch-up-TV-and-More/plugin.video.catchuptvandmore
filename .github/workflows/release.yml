@@ -14,14 +14,14 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Check out plugin repository master branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           path: master
           ref: master
 
       - name: Check out plugin repository dev branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: dev
           ref: dev
@@ -137,7 +137,7 @@ jobs:
           python-version: 3.8
 
       - name: Check out repository.catchuptvandmore repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: Catch-up-TV-and-More/repository.catchuptvandmore
           token: ${{ secrets.GITHUB_ACTIONS_ACCESS_TOKEN }}
