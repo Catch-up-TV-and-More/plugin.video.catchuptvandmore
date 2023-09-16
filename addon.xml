@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta37" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta38" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -261,6 +261,10 @@ Project: Remove an useless file
 [BE - RTLPLAY] Fix live and replays (PR #1222 issue #1221) thanks @darodi
 [BE - LIVE] Remove rtl_sport from skeleton (PR #1225) thanks @darodi
 [FR - TVPI] Fix live
+[FR - FRANCEINTER] Fix live
+[FR - TVVENDEE] Fix live
+[FR - LMTV] Fix live
+[FR] Remove Gong live from skeleton
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
