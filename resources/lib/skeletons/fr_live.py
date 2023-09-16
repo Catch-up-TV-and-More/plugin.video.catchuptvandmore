@@ -402,16 +402,6 @@ menu = {
         'enabled': True,
         'order': 34
     },
-    'vialmtv': {
-        'resolver': '/resources/lib/channels/fr/via:get_live_url',
-        'label': 'viàLMTv Sarthe',
-        'thumb': 'channels/fr/vialmtv.png',
-        'fanart': 'channels/fr/vialmtv_fanart.jpg',
-        'xmltv_id': 'C535.api.telerama.fr',
-        'm3u_group': 'Région',
-        'enabled': True,
-        'order': 35
-    },
     'matele': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
         'label': 'viàMaTélé',
@@ -419,7 +409,7 @@ menu = {
         'fanart': 'channels/fr/viamatele_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 36
+        'order': 35
     },
     'viamoselle': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
@@ -429,7 +419,7 @@ menu = {
         'xmltv_id': 'C1045.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 37
+        'order': 36
     },
     'viaoccitanie': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
@@ -438,7 +428,7 @@ menu = {
         'fanart': 'channels/fr/viaoccitanie_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 38
+        'order': 37
     },
     'viatelepaese': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
@@ -447,7 +437,7 @@ menu = {
         'fanart': 'channels/fr/viatelepaese_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 39
+        'order': 38
     },
     'viavosges': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
@@ -456,7 +446,7 @@ menu = {
         'fanart': 'channels/fr/viavosges_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 40
+        'order': 39
     },
     'BFM_regions': {
         'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
@@ -477,7 +467,7 @@ menu = {
             "BFM TOULON VAR": {},
         },
         'enabled': True,
-        'order': 41
+        'order': 40
     },
     'albitv': {
         'resolver': '/resources/lib/channels/fr/albitv:get_live_url',
@@ -486,7 +476,7 @@ menu = {
         'fanart': 'channels/fr/albitv_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 42
+        'order': 41
     },
     'biptv': {
         'resolver': '/resources/lib/channels/fr/biptv:get_live_url',
@@ -495,7 +485,7 @@ menu = {
         'fanart': 'channels/fr/biptv_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 43
+        'order': 42
     },
     'dicitv': {
         'resolver': '/resources/lib/channels/fr/dicitv:get_live_url',
@@ -504,7 +494,7 @@ menu = {
         'fanart': 'channels/fr/dicitv_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 44
+        'order': 43
     },
     'figarotv': {
         'resolver': '/resources/lib/channels/fr/figarotv:get_live_url',
@@ -513,13 +503,23 @@ menu = {
         'fanart': 'channels/fr/figarotv_ile_de_france_fanart.png',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 45
+        'order': 44
     },
     '20minutes': {
         'resolver': '/resources/lib/channels/fr/20minutes:get_live_url',
         'label': '20 Minutes Île de France',
         'thumb': 'channels/fr/20minutes.png',
         'fanart': 'channels/fr/20minutes_fanart.jpg',
+        'm3u_group': 'Région',
+        'enabled': True,
+        'order': 45
+    },
+    'lmtv': {
+        'resolver': '/resources/lib/channels/fr/lmtv:get_live_url',
+        'label': 'LMTV Sarthe',
+        'thumb': 'channels/fr/LMTV_Sarthe.png',
+        'fanart': 'channels/fr/LMTV_Sarthe_fanart.png',
+        'xmltv_id': 'C535.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
         'order': 46
