@@ -15,12 +15,12 @@ URL_LIVE = {
     'tvpabc2': 'https://krainaabc.tvp.pl/sess/TVPlayer2/api.php?@method=getTvpConfig&@callback=__anthill_jsonp_401__&corsHost=krainaabc.tvp.pl&id=57181933'
 }
 
+
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE[item_id],
                         headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1, timeout=30)
-    print('newresp=', resp.text)
 
     # extract json content from jsonp reply
     resp_json_body = resp.text.split("(", 1)[1]
