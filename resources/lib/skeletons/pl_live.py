@@ -17,60 +17,82 @@ from __future__ import unicode_literals
 root = 'live_tv'
 
 menu = {
+    'tvp1': {
+        'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
+        'label': 'TVP 1',
+        'thumb': 'channels/pl/tvp1.png',
+        'fanart': 'channels/pl/tvp.png',
+        'enabled': True,
+        'order': 1
+    },
+    'tvp2': {
+        'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
+        'label': 'TVP 2',
+        'thumb': 'channels/pl/tvp2.png',
+        'fanart': 'channels/pl/tvp.png',
+        'enabled': True,
+        'order': 2
+    },
     'tvp3': {
         'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
         'label': 'TVP 3',
-        'thumb':
-        'channels/pl/tvp3.png',
-        'fanart':
-        'channels/pl/tvp3_fanart.jpg',
+        'thumb': 'channels/pl/tvp3.png',
+        'fanart': 'channels/pl/tvp.png',
         'available_languages': {
             "Białystok": {}, "Bydgoszcz": {}, "Gdańsk": {}, "Gorzów Wielkopolski": {},
             "Katowice": {}, "Kielce": {}, "Kraków": {}, "Lublin": {}, "Łódź": {}, "Olsztyn": {},
             "Opole": {}, "Poznań": {}, "Rzeszów": {}, "Szczecin": {}, "Warszawa": {}, "Wrocław": {}
         },
         'enabled': True,
-        'order': 1
+        'order': 3
     },
     'tvpinfo': {
         'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
         'label': 'TVP Info',
         'thumb': 'channels/pl/tvpinfo.png',
-        'fanart': 'channels/pl/tvpinfo_fanart.jpg',
+        'fanart': 'channels/pl/tvpinfo_fanart.png',
         'enabled': True,
-        'order': 2
+        'order': 4
     },
     'tvpworld': {
         'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
         'label': 'TVP World',
         'thumb': 'channels/pl/tvpworld.png',
-        'fanart': 'channels/pl/tvpworld_fanart.jpg',
+        'fanart': 'channels/pl/tvp.png',
         'enabled': True,
-        'order': 3
+        'order': 5
+    },
+    'tvppolonia': {
+        'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
+        'label': 'TVP Polonia',
+        'thumb': 'channels/pl/tvppolonia.png',
+        'fanart': 'channels/pl/tvp.png',
+        'enabled': True,
+        'order': 6
     },
     'tvpwilno': {
         'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
         'label': 'TVP Wilno',
         'thumb': 'channels/pl/tvpwilno.png',
-        'fanart': 'channels/pl/tvpwilno_fanart.jpg',
+        'fanart': 'channels/pl/tvp.png',
         'enabled': True,
-        'order': 4
+        'order': 7
     },
     'tvpalfa': {
         'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
         'label': 'TVP Alfa',
         'thumb': 'channels/pl/tvpalfa.png',
-        'fanart': 'channels/pl/tvpalfa.png',
+        'fanart': 'channels/pl/tvp.png',
         'enabled': True,
-        'order': 5
+        'order': 8
     },
     'ua1': {
         'resolver': '/resources/lib/channels/pl/tvp:get_live_url',
         'label': 'UA 1',
         'thumb': 'channels/pl/ua1.png',
-        'fanart': 'channels/pl/ua1.png',
+        'fanart': 'channels/pl/tvp.png',
         'enabled': True,
-        'order': 6
+        'order': 9
     },
     'tvpabc': {
         'resolver': '/resources/lib/channels/pl/tvpabc:get_live_url',
@@ -78,7 +100,7 @@ menu = {
         'thumb': 'channels/pl/tvpabc.png',
         'fanart': 'channels/pl/tvpabc_fanart.jpg',
         'enabled': True,
-        'order': 7
+        'order': 10
     },
     'tvpabc2': {
         'resolver': '/resources/lib/channels/pl/tvpabc:get_live_url',
@@ -86,6 +108,6 @@ menu = {
         'thumb': 'channels/pl/tvpabc2.png',
         'fanart': 'channels/pl/tvpabc_fanart.jpg',
         'enabled': True,
-        'order': 8
+        'order': 11
     },
 }
