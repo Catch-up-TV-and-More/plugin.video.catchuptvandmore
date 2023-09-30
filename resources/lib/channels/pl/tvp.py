@@ -76,7 +76,7 @@ def _get_channels():
     Extract the listing of channels from TVP page as a list of JSON elments.
     None if HTTP request fails or infomation moved to another place in the HTML page.
     """
-    resp = urlquick.get(LIVE_MAIN_URL, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(LIVE_MAIN_URL, headers=GENERIC_HEADERS, max_age=-1, timeout=30)
     root = resp.parse()
 
     channels_str = None
@@ -135,10 +135,14 @@ def _get_live_stream_url(live_id):
     }
     url = URL_STREAMS.format(live_id=live_id)
     try:
-        live_streams_url = urlquick.get(url, headers=headers, max_age=-1)
+        live_streams_url = urlquick.get(url, headers=headers, max_age=-1, timeout=30)
         live_streams = live_streams_url.json()
     except Exception:
         return None
+
+    live_stream_status = live_streams.get('status', None)
+    if live_stream_status is not None and live_stream_status != 'OK':
+        return live_stream_status
 
     live_stream_url = None
     if live_streams.get('formats', None) is not None:
@@ -164,6 +168,9 @@ def get_live_url(plugin, item_id, **kwargs):
     live_stream_url = _get_live_stream_url(live_id)
     if live_stream_url is None:
         plugin.notify('INFO', plugin.localize(30716))
+        return False
+    if not live_stream_url.startswith('http'):
+        plugin.notify('INFO', plugin.localize(30891))
         return False
 
     return live_stream_url
