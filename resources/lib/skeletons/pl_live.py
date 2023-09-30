@@ -94,4 +94,20 @@ menu = {
         'enabled': True,
         'order': 9
     },
+    'tvpabc': {
+        'resolver': '/resources/lib/channels/pl/tvpabc:get_live_url',
+        'label': 'TVP ABC',
+        'thumb': 'channels/pl/tvpabc.png',
+        'fanart': 'channels/pl/tvpabc_fanart.jpg',
+        'enabled': True,
+        'order': 10
+    },
+    'tvpabc2': {
+        'resolver': '/resources/lib/channels/pl/tvpabc:get_live_url',
+        'label': 'TVP ABC 2',
+        'thumb': 'channels/pl/tvpabc2.png',
+        'fanart': 'channels/pl/tvpabc_fanart.jpg',
+        'enabled': True,
+        'order': 11
+    },
 }
