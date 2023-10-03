@@ -55,8 +55,8 @@ menu = {
     'pl_replay': {
         'route': '/resources/lib/main:generic_menu',
         'label': 30058,
-        'thumb': 'channels/us.png',
-        'enabled': False,
+        'thumb': 'channels/pl.png',
+        'enabled': True,
         'order': 6
     },
     'es_replay': {
