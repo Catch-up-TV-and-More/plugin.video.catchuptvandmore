@@ -25,4 +25,12 @@ menu = {
         'enabled': True,
         'order': 1
     },
+    'play-puls': {
+        'route': '/resources/lib/channels/pl/playpuls:list_programs',
+        'label': 'Play Puls',
+        'thumb': 'channels/pl/playpuls.png',
+        'fanart': 'channels/pl/playpuls_fanart.jpg',
+        'enabled': True,
+        'order': 2
+    },
 }
