@@ -18,11 +18,19 @@ root = 'replay'
 
 menu = {
     'tvp-vod': {
-        'route': '/resources/lib/channels/pl/tvp:list_programs',
+        'route': '/resources/lib/channels/pl/tvpvod:list_programs',
         'label': 'TVP VOD',
         'thumb': 'channels/pl/tvpvod.png',
         'fanart': 'channels/pl/tvpvod_fanart.jpg',
+        'enabled': False,
+        'order': 10
+    },
+    'play-puls': {
+        'route': '/resources/lib/channels/pl/playpuls:list_programs',
+        'label': 'Play Puls',
+        'thumb': 'channels/pl/playpuls.png',
+        'fanart': 'channels/pl/playpuls_fanart.jpg',
         'enabled': True,
-        'order': 1
+        'order': 20
     },
 }
