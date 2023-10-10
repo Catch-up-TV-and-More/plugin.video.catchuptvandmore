@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta38" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta39" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -265,6 +265,11 @@ Project: Remove an useless file
 [FR - TVVENDEE] Fix live
 [FR - LMTV] Fix live
 [FR] Remove Gong live from skeleton
+[PL - TVP] Display a message, when TVP server does not allow playing channels (PR #1230) thanks @thomas-ernest
+PROJECT: Restore channels in PL live skeleton (PR #1230) thanks @thomas-ernest
+[PL - TVABC] Add lives (PR #1230) thanks @thomas-ernest
+[PL - TVP] Add replay (PR #1232) thanks @thomas-ernest
+[PL - PLAYPULS] Add replay (PR #1233) thanks @thomas-ernest
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
