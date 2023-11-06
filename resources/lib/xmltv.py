@@ -484,6 +484,7 @@ xmltv_infos = {
             'keyword': 'tv_guide_ca_'
         }
 }
+xmltv_infos['sfrtv_live'] = xmltv_infos['fr_live']
 
 
 def get_xmltv_url(country_id, date):

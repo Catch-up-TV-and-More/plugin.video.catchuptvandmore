@@ -566,6 +566,15 @@ msgctxt "#30261"
 msgid "MyTF1 Password"
 msgstr ""
 
+msgctxt "#30262"
+msgid "SFR TV login"
+msgstr ""
+
+msgctxt "#30263"
+msgid "SFR TV password"
+msgstr ""
+
+
 # TV integration (from 30270 to 30289)
 
 msgctxt "#30270"
