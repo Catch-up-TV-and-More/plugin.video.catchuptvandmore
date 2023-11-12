@@ -57,7 +57,6 @@ def get_sfrtv_user_profile(plugin, token):
                         }).json()
 
 
-@Route.register
 def get_token(plugin, with_dialog=True):
     username = plugin.setting.get_string('sfrtv.login')
     password = plugin.setting.get_string('sfrtv.password')
@@ -236,7 +235,7 @@ def get_categories(plugin, store_id):
 
 
 @Route.register(autosort=False)
-def list_categories(plugin, store_id):
+def list_categories(plugin, store_id, **kwargs):
     categories = get_categories(plugin, store_id)
 
     for category in categories:
@@ -268,7 +267,7 @@ def get_products(plugin, category_id, page):
 
 
 @Route.register(autosort=False)
-def list_products(plugin, category_id, page):
+def list_products(plugin, category_id, page, **kwargs):
     # Pagination seems to be blocked at 20 videos (the "page" parameter doesn't change anything),
     # so let's paginate at 100 videos
     n_loop = 5
@@ -303,7 +302,7 @@ def get_product_details(plugin, product_id):
 
 
 @Route.register(autosort=False)
-def list_product_details(plugin, product_id):
+def list_product_details(plugin, product_id, **kwargs):
     token = get_token(plugin)
     if not token:
         yield False
@@ -381,7 +380,7 @@ def get_replay_url(plugin, product_id, token):
 
 
 @Resolver.register
-def get_replay_stream(plugin, product_id):
+def get_replay_stream(plugin, product_id, **kwargs):
     token = get_token(plugin)
     if not token:
         return False
