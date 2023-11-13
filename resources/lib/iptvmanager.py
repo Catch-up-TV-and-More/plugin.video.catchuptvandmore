@@ -68,7 +68,7 @@ def get_all_live_tv_channels():
 
     Returns:
         list: Format: (coutry_order, country_id, country_label, country_infos, [channels]),
-                      Channel format: (channel_order, channel_id, channel_label, channel_infos, lang)
+                      Channel format: (channel_order, channel_id, channel_label, channel_infos, lang, folder_id)
     """
     country_channels = []
     live_tv_dict = importlib.import_module('resources.lib.skeletons.live_tv').menu
@@ -86,11 +86,8 @@ def get_all_live_tv_channels():
                     module_name, function_name = channel_infos['list_channels_function'].split(':')
                     module = importlib.import_module(module_name)
                     for ch_infos in getattr(module, function_name)():
-                        # With a prefixed id to avoid conflicts with the country's "classic" channels
                         folder_id = channel_id
-                        ch_id = folder_id + '.' + ch_infos['id']
-                        ch_label = get_item_label(ch_infos['id'], ch_infos)
-                        channels.append((ch_infos['order'], ch_id, ch_label, ch_infos, None, folder_id))
+                        channels.append((ch_infos['order'], ch_infos['id'], ch_infos['label'], ch_infos, None, folder_id))
                 continue
             # Check if this channel has multiple language
             if 'available_languages' in channel_infos:
@@ -129,6 +126,8 @@ def select_channels(plugin):
 
         for (channel_order, channel_id, channel_label, channel_infos, lang, folder_id) in channels:
             channel_key = channel_id if not lang else channel_id + ' ' + lang
+            if folder_id:
+                channel_key = folder_id + '.' + channel_key
             if channel_key not in tv_integration_settings['enabled_channels'][country_id]:
                 tv_integration_settings['enabled_channels'][country_id][channel_key] = {'enabled': False}
 
@@ -194,15 +193,14 @@ class IPTVManager:
         for (country_order, country_id, country_label, country_infos, channels) in country_channels:
             for (channel_order, channel_id, channel_label, channel_infos, lang, folder_id) in channels:
                 channel_key = channel_id if not lang else channel_id + ' ' + lang
+                if folder_id:
+                    channel_key = folder_id + '.' + channel_key
                 if not tv_integration_settings['enabled_channels'].get(country_id, {}).get(channel_key, {}).get('enabled', False):
                     continue
 
                 json_stream = {}
                 json_stream['name'] = channel_label
                 resolver = channel_infos['resolver'].replace(':', '/')
-                if folder_id:
-                    # clean-up the extra-prefix
-                    channel_id = channel_id.replace(folder_id + '.', '', 1)
                 params = {
                     'item_id': channel_id
                 }
@@ -246,6 +244,8 @@ class IPTVManager:
         for (country_order, country_id, country_label, country_infos, channels) in country_channels:
             for (channel_order, channel_id, channel_label, channel_infos, lang, folder_id) in channels:
                 channel_key = channel_id if not lang else channel_id + ' ' + lang
+                if folder_id:
+                    channel_key = folder_id + '.' + channel_key
                 if not tv_integration_settings['enabled_channels'].get(country_id, {}).get(channel_key, {}).get('enabled', False):
                     continue
 
