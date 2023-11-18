@@ -794,7 +794,7 @@ menu = {
         'order': 75
     },
     'lequipelive': {
-        'resolver': '/resources/lib/channels/fr/lequipe:get_live_url',
+        'route': '/resources/lib/channels/fr/lequipe:get_multi_live_url',
         'label': 'L\'Equipe Live',
         'thumb': 'channels/fr/lequipelive.png',
         'fanart': 'channels/fr/lequipelive_fanart.png',

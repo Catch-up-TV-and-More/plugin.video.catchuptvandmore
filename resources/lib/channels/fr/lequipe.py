@@ -84,35 +84,29 @@ def list_videos(plugin, item_id, program_url, page, **kwargs):
 @Resolver.register
 def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
 
-    return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode)
+    embeder = EMBEDER_URL % video_id
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode, embeder)
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+    return resolver_proxy.get_stream_dailymotion(plugin, 'x2lefik', False, EMBEDER_URL % 'x2lefik')
+
+
+@Route.register
+def get_multi_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
-
-    list_url = []
-    list_channel = []
-
-    try:
-        video_list = root.find('.//div[@class="RemoteVideoListWidget"]')
-        for link in video_list.findall('.//a[@class="Link"]'):
-            url = re.compile(r'live\/(.*?)$').findall(link.get('href'))[0]
-            channel = link.find('.//img').get('alt')
-            list_url.append(url)
-            list_channel.append(channel)
-
-    except Exception:
-        list_channel.append("La chaine l'Équipe")
-        list_url.append('x2lefik')
-
-    if item_id == 'lequipelive':
-        ret = xbmcgui.Dialog().select(Script.localize(30174), list_channel)
-    else:
-        ret = 0
-
-    live_id = list_url[ret]
-    embeder = EMBEDER_URL % live_id
-
-    return resolver_proxy.get_stream_dailymotion(plugin, live_id, False, embeder)
+    for video_list in root.iterfind('.//a[@class="Link"]'):
+        item = Listitem()
+        for div_title in video_list.iterfind('.//div'):
+            if div_title is not None and div_title.get('class') == "ArticleTags__items js-ob-internal-reco":
+                for d_title in div_title.iterfind('.//div[@class="ArticleTags__item"]'):
+                    if 'font' not in d_title.get('style'):
+                        item.label = d_title.text
+                item.info['plot'] = video_list.find('.//h2[@class="ColeaderWidget__title"]').text
+                item.art["thumb"] = item.art["thumb"] = video_list.find(".//img").get('src')
+                video_id = re.compile(r'live\/(.*?)$').findall(video_list.get('href'))[0]
+                item.set_callback(get_video_url, item_id, video_id=video_id)
+                item_post_treatment(item)
+                yield item
