@@ -384,7 +384,7 @@ menu = {
         "order": 45,
     },
     "sfrtv": {
-        "route": "/resources/lib/channels/fr/sfrtv:list_stores",
+        "route": "/resources/lib/channels/fr/sfrtv:list_programs",
         "label": "SFR TV",
         "thumb": "channels/fr/sfrtv.png",
         "enabled": True,

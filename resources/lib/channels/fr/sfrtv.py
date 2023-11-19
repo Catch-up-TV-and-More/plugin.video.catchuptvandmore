@@ -29,6 +29,7 @@ CATEGORIES_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/stores/{}/
 PRODUCTS_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v2/categories/{}/contents'
 PRODUCT_DETAILS_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/{}/detail'
 PRODUCT_OPTIONS_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v3/content/{}/options'
+SEARCH_TEXT_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v2/search/text'
 CUSTOMDATA_REPLAY = ('description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC'
                      '&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken'
                      '&tokenSSO={}&type=REPLAY')
@@ -198,15 +199,19 @@ def get_stores(plugin, token):
 
 
 @Route.register(autosort=False)
-def list_stores(plugin, **kwargs):
+def list_programs(plugin, **kwargs):
     token = get_token(plugin)
     if not token:
         yield False
         return
 
-    stores = get_stores(plugin, token)
+    # Search feature
+    item = Listitem.search(search)
+    item_post_treatment(item)
+    yield item
 
-    for store in stores:
+    # Stores
+    for store in get_stores(plugin, token):
         item = Listitem()
         item.label = store['title']
 
@@ -249,7 +254,7 @@ def list_categories(plugin, store_id, **kwargs):
 
 
 def get_products(plugin, category_id, page):
-    resp = urlquick.get(PRODUCTS_URL.format(category_id),
+    return urlquick.get(PRODUCTS_URL.format(category_id),
                         params={
                             'app': 'gen8',
                             'device': 'browser',
@@ -260,10 +265,7 @@ def get_products(plugin, category_id, page):
                             'Accept': 'application/json',
                             'Referer': 'https://tv.sfr.fr/',
                             'User-Agent': USER_AGENT
-                        },
-                        max_age=900)
-    products = resp.json()
-    return products
+                        }).json()
 
 
 @Route.register(autosort=False)
@@ -288,11 +290,11 @@ def list_products(plugin, category_id, page, **kwargs):
             break
 
 
-def get_product_details(plugin, product_id):
+def get_product_details(plugin, product_id, universe='PROVIDER', **kwargs):
     return urlquick.get(PRODUCT_DETAILS_URL.format(product_id),
                         params={
                             'accountTypes': 'LAND',
-                            'universe': 'PROVIDER'
+                            'universe': universe
                         },
                         headers={
                             'Accept': 'application/json',
@@ -308,7 +310,7 @@ def list_product_details(plugin, product_id, **kwargs):
         yield False
         return
 
-    product_details = get_product_details(plugin, product_id)
+    product_details = get_product_details(plugin, product_id, **kwargs)
 
     if 'seasons' in product_details:
         for season in product_details['seasons']:
@@ -327,10 +329,12 @@ def build_product_item(plugin, product):
 
     item.label = product['title']
 
-    if 'description' in product:
+    if 'description' in product and product['description']:
         item.info['plot'] = product['description']
+    elif 'shortDescription' in product and product['shortDescription']:
+        item.info['plot'] = product['shortDescription']
 
-    if 'duration' in product:
+    if 'duration' in product and product['duration']:
         item.info['duration'] = product['duration']
 
     if 'seasonNumber' in product and product['seasonNumber']:
@@ -340,19 +344,20 @@ def build_product_item(plugin, product):
         item.info['mediatype'] = 'episode'
         item.info['episode'] = product['episodeNumber']
 
-    if 'diffusionDate' in product:
+    if 'diffusionDate' in product and product['diffusionDate']:
         dt = datetime.fromtimestamp(int(product['diffusionDate'] / 1000))
         dt_format = '%d/%m/%Y'
         item.info.date(dt.strftime(dt_format), dt_format)
 
     for image in product.get('images', []):
-        if image['format'] == '2/3' and not item.art.get('thumb', None):
+        if image['format'] == '2/3' and not item.art.get('thumb'):
             item.art['thumb'] = image['url']
         elif image['format'] == '16/9':
             item.art['thumb'] = image['url']
 
-    item.set_callback(list_product_details if product.get('type', '') in ['Serie', 'Season'] else get_replay_stream,
-                      product_id=product['id'])
+    item.set_callback(list_product_details if product.get('type', '') in ['Serie', 'Season', 'CONTENT'] else get_replay_stream,
+                      product_id=product['id'],
+                      universe=product['universe'] if 'universe' in product else 'PROVIDER')
 
     item_post_treatment(item)
 
@@ -373,9 +378,11 @@ def get_replay_url(plugin, product_id, token):
                                        'Referer': 'https://tv.sfr.fr/',
                                        'User-Agent': USER_AGENT
                                    }).json()
-    for stream in product_options[0]['offers'][0]['streams']:
-        if stream['drm'] == 'WIDEVINE':
-            return stream['url']
+    for option in product_options:
+        for offer in option['offers']:
+            for stream in offer['streams']:
+                if stream['drm'] == 'WIDEVINE':
+                    return stream['url']
     return None
 
 
@@ -401,6 +408,40 @@ def get_replay_stream(plugin, product_id, **kwargs):
                                                   license_url=LICENSE_URL,
                                                   manifest_type='mpd',
                                                   headers=headers)
+
+
+def get_products_to_search(plugin, keyword, page=0, size=25, **kwargs):
+
+    search_result = urlquick.get(SEARCH_TEXT_URL,
+                                 params={
+                                     'app': 'gen8',
+                                     'device': 'browser',
+                                     'keyword': keyword,
+                                     'page': page,
+                                     'size': size
+                                 },
+                                 headers={
+                                     'Accept': 'application/json',
+                                     'Referer': 'https://tv.sfr.fr/',
+                                     'User-Agent': USER_AGENT
+                                 }).json()
+
+    has_next_page = (search_result['count'] - ((page + 1) * size)) > 0
+
+    return search_result['content'], page, has_next_page
+
+
+@Route.register(autosort=False)
+def search(plugin, search_query, **kwargs):
+    products, page, has_next_page = get_products_to_search(plugin, search_query, **kwargs)
+
+    for product in products:
+        yield build_product_item(plugin, product)
+
+    if has_next_page:
+        yield Listitem.next_page(search_query=search_query,
+                                 callback=search,
+                                 page=page + 1)
 
 
 def get_active_services(plugin, token):
@@ -446,7 +487,7 @@ def list_live_channels(plugin=Script):
     channels_dict = importlib.import_module('resources.lib.skeletons.sfrtv_live').menu
 
     for serv in active_services:
-        channel_infos = channels_dict.get(serv['serviceId'], None)
+        channel_infos = channels_dict.get(serv['serviceId'])
 
         if not channel_infos:
             channel_infos = {
@@ -488,7 +529,7 @@ def list_lives(plugin, item_id, **kwargs):
 
             for image in serv.get('images', []):
                 if image.get('type', '') == 'color':
-                    item.art['thumb'] = item.art['landscape'] = image.get('url', None)
+                    item.art['thumb'] = item.art['landscape'] = image.get('url')
 
             # Playcount is useless for live streams
             item.info['playcount'] = 0
