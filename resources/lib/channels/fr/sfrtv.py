@@ -10,12 +10,13 @@ import os
 from codequick import Listitem, Resolver, Route, Script
 from codequick.storage import Cache
 from kodi_six import xbmcgui
-from resources.lib import web_utils, resolver_proxy
+from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.main import tv_guide_menu
 
 CACHE_FILE = os.path.join(Route.get_info("profile"), u".sfrtv_cache.sqlite")
-USER_AGENT = web_utils.get_random_ua()
+USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 '
+              'Safari/537.36')  # fixed as the list of connected devices is limited
 TOKEN_MAX_AGE = 840  # 14 minutes to be under the 15 mn token validity limit
 CONFIG_URL = 'https://tv.sfr.fr/configs/config.json'
 LOGIN_URL = 'https://www.sfr.fr/cas/login'
