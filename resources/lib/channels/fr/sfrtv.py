@@ -171,6 +171,10 @@ def get_token(plugin, with_dialog=True):
 def get_stores(plugin, token):
     struct_menu = urlquick.get(STRUCT_MENU_URL,
                                params={
+                                   'accountTypes': 'LAND',
+                                   'infrastructures': 'FTTH',
+                                   'operators': 'sfr',
+                                   'noTracking': 'false',
                                    'app': 'gen8',
                                    'device': 'browser'
                                },
@@ -184,7 +188,11 @@ def get_stores(plugin, token):
                         params={
                             'app': 'gen8',
                             'device': 'browser',
-                            'token': token
+                            'token': token,
+                            'operators': 'sfr',
+                            'infrastructures': 'FTTH',
+                            'accountTypes': 'LAND',
+                            'noTracking': 'false',
                         },
                         headers={
                             'Accept': 'application/json',
@@ -229,7 +237,11 @@ def get_categories(plugin, store_id):
     categories_infos = urlquick.get(CATEGORIES_URL.format(store_id),
                                     params={
                                         'app': 'gen8',
-                                        'device': 'browser'
+                                        'device': 'browser',
+                                        'accountTypes': 'LAND',
+                                        'infrastructures': 'FTTH',
+                                        'operators': 'sfr',
+                                        'noTracking': 'false'
                                     },
                                     headers={
                                         'Accept': 'application/json',
@@ -258,6 +270,10 @@ def get_products(plugin, category_id, page):
                         params={
                             'app': 'gen8',
                             'device': 'browser',
+                            'accountTypes': 'LAND',
+                            'infrastructures': 'FTTH',
+                            'operators': 'sfr',
+                            'noTracking': 'false',
                             'page': page,
                             'size': MAX_PRODUCTS
                         },
@@ -294,6 +310,9 @@ def get_product_details(plugin, product_id, universe='PROVIDER', **kwargs):
     return urlquick.get(PRODUCT_DETAILS_URL.format(product_id),
                         params={
                             'accountTypes': 'LAND',
+                            'infrastructures': 'FTTH',
+                            'operators': 'sfr',
+                            'noTracking': 'false',
                             'universe': universe
                         },
                         headers={
@@ -371,6 +390,9 @@ def get_replay_url(plugin, product_id, token):
                                        'device': 'browser',
                                        'token': token,
                                        'accountTypes': 'LAND',
+                                       'infrastructures': 'FTTH',
+                                       'operators': 'sfr',
+                                       'noTracking': 'false',
                                        'universe': 'PROVIDER'
                                    },
                                    headers={
