@@ -462,9 +462,11 @@ def search(plugin, search_query, **kwargs):
         yield build_product_item(plugin, product)
 
     if has_next_page:
-        yield Listitem.next_page(search_query=search_query,
-                                 callback=search,
-                                 page=page + 1)
+        item = Listitem.next_page(search_query=search_query,
+                                  callback=search,
+                                  page=page + 1)
+        item.property['SpecialSort'] = 'bottom'
+        yield item
 
 
 def get_active_services(plugin, token):
