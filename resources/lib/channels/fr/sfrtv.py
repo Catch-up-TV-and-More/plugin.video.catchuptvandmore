@@ -287,7 +287,7 @@ def get_products(plugin, category_id, page):
 
 @Route.register(autosort=False)
 def list_products(plugin, category_id, page, **kwargs):
-    # Pagination seems to be blocked at 20 videos (the "page" parameter doesn't change anything),
+    # Pagination seems to be blocked at 20 videos (the "size" parameter doesn't change anything),
     # so let's paginate at 100 videos
     n_loop = 5
     for x in range(n_loop):
@@ -296,7 +296,7 @@ def list_products(plugin, category_id, page, **kwargs):
         for product in products:
             yield build_product_item(plugin, product)
 
-        if len(products) == MAX_PRODUCTS:
+        if len(products) == MAX_PRODUCTS:  # didn't find "count" or "total" information
             if x < (n_loop - 1):
                 page += 1
             else:
