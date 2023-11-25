@@ -5,8 +5,8 @@ import base64
 from datetime import datetime
 import importlib
 import json
-import urlquick
 import os
+import urlquick
 from codequick import Listitem, Resolver, Route, Script
 from codequick.storage import Cache
 from kodi_six import xbmcgui
@@ -38,25 +38,29 @@ CUSTOMDATA_LIVE = ('description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.
                    '&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken'
                    '&tokenSSO={}&type=LIVEOTT&accountId={}')
 MAX_PRODUCTS = 20
+REQUEST_TIMEOUT = 30
+PRODUCT_DETAILS_TYPES = ['Serie', 'Season', 'CONTENT']
 
 
 def get_sfrtv_config(plugin):
     return urlquick.get(CONFIG_URL,
-                        headers={
-                            'User-Agent': USER_AGENT
-                        }).json()
+                        headers={'User-Agent': USER_AGENT},
+                        timeout=REQUEST_TIMEOUT).json()
 
 
 def get_sfrtv_user_profile(plugin, token):
+    params = {
+        'token': token
+    }
+    headers = {
+        'Accept': 'application/json, text/plain, */*',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
     return urlquick.get(USER_PROFILE_URL,
-                        params={
-                            'token': token
-                        },
-                        headers={
-                            'Accept': 'application/json, text/plain, */*',
-                            'Referer': 'https://tv.sfr.fr/',
-                            'User-Agent': USER_AGENT
-                        }).json()
+                        params=params,
+                        headers=headers,
+                        timeout=REQUEST_TIMEOUT).json()
 
 
 def get_token(plugin, with_dialog=True):
@@ -79,21 +83,24 @@ def get_token(plugin, with_dialog=True):
 
     session = urlquick.Session()
 
+    params = {
+        'client_id': sfrtv_client_id,
+        'scope': 'openid',
+        'response_type': 'token',
+        'redirect_uri': 'https://tv.sfr.fr/'
+    }
+    headers = {
+        'user-agent': USER_AGENT,
+        'authority': 'www.sfr.fr',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'referer': 'https://tv.sfr.fr/',
+    }
     resp = session.get(ACCESS_TOKEN_URL,
-                       params={
-                           'client_id': sfrtv_client_id,
-                           'scope': 'openid',
-                           'response_type': 'token',
-                           'redirect_uri': 'https://tv.sfr.fr/'
-                       },
-                       headers={
-                           'user-agent': USER_AGENT,
-                           'authority': 'www.sfr.fr',
-                           'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                           'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-                           'referer': 'https://tv.sfr.fr/',
-                       },
-                       max_age=-1)
+                       params=params,
+                       headers=headers,
+                       max_age=-1,
+                       timeout=REQUEST_TIMEOUT)
 
     root = resp.parse()
     form_elt = root.find(".//form[@name='loginForm']")
@@ -102,52 +109,59 @@ def get_token(plugin, with_dialog=True):
     execution = form_elt.find(".//input[@name='execution']").get('value')
     event_id = form_elt.find(".//input[@name='_eventId']").get('value')
 
+    params = {
+        'domain': 'mire-sfr',
+        'service': 'https://www.sfr.fr/cas/oidc/callbackAuthorize'
+    }
+    headers = {
+        'user-agent': USER_AGENT,
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'authority': 'www.sfr.fr',
+        'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'content-type': 'application/x-www-form-urlencoded',
+        'origin': 'https://www.sfr.fr',
+        'referer': resp.url,
+    }
+    data = {
+        'lt': lt,
+        'execution': execution,
+        'lrt': lrt,
+        '_eventId': event_id,
+        'username': username,
+        'password': password,
+        'remember-me': 'on',
+        'identifier': ''
+    }
     session.post(
         LOGIN_URL,
-        params={
-            'domain': 'mire-sfr',
-            'service': 'https://www.sfr.fr/cas/oidc/callbackAuthorize'
-        },
-        headers={
-            'user-agent': USER_AGENT,
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'authority': 'www.sfr.fr',
-            'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-            'content-type': 'application/x-www-form-urlencoded',
-            'origin': 'https://www.sfr.fr',
-            'referer': resp.url,
-        },
-        data={
-            'lt': lt,
-            'execution': execution,
-            'lrt': lrt,
-            '_eventId': event_id,
-            'username': username,
-            'password': password,
-            'remember-me': 'on',
-            'identifier': ''
-        },
-        max_age=-1
+        params=params,
+        headers=headers,
+        data=data,
+        max_age=-1,
+        timeout=REQUEST_TIMEOUT
     )
 
+    params = {
+        'client_id': sfrtv_client_id,
+        'scope': 'openid',
+        'response_type': 'token',
+        'redirect_uri': 'https://tv.sfr.fr/',
+        'token': 'true',
+        'gateway': 'true'
+    }
+    headers = {
+        'user-agent': USER_AGENT,
+        'authority': 'www.sfr.fr',
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'origin': 'https://tv.sfr.fr',
+        'referer': 'https://tv.sfr.fr/',
+    }
     resp = session.get(ACCESS_TOKEN_URL,
-                       params={
-                           'client_id': sfrtv_client_id,
-                           'scope': 'openid',
-                           'response_type': 'token',
-                           'redirect_uri': 'https://tv.sfr.fr/',
-                           'token': 'true',
-                           'gateway': 'true'
-                       },
-                       headers={
-                           'user-agent': USER_AGENT,
-                           'authority': 'www.sfr.fr',
-                           'accept': 'application/json, text/plain, */*',
-                           'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-                           'origin': 'https://tv.sfr.fr',
-                           'referer': 'https://tv.sfr.fr/',
-                       },
-                       max_age=-1)
+                       params=params,
+                       headers=headers,
+                       max_age=-1,
+                       timeout=REQUEST_TIMEOUT)
     access_token_b64_bytes = resp.content
     access_token_b64 = access_token_b64_bytes.decode('ascii')
     if not access_token_b64:
@@ -170,37 +184,43 @@ def get_token(plugin, with_dialog=True):
 
 
 def get_stores(plugin, token):
+    params = {
+        'accountTypes': 'LAND',
+        'infrastructures': 'FTTH',
+        'operators': 'sfr',
+        'noTracking': 'false',
+        'app': 'gen8',
+        'device': 'browser'
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
     struct_menu = urlquick.get(STRUCT_MENU_URL,
-                               params={
-                                   'accountTypes': 'LAND',
-                                   'infrastructures': 'FTTH',
-                                   'operators': 'sfr',
-                                   'noTracking': 'false',
-                                   'app': 'gen8',
-                                   'device': 'browser'
-                               },
-                               headers={
-                                   'Accept': 'application/json',
-                                   'Referer': 'https://tv.sfr.fr/',
-                                   'User-Agent': USER_AGENT
-                               }).json()
+                               params=params,
+                               headers=headers,
+                               timeout=REQUEST_TIMEOUT).json()
     spot_id = struct_menu['spots'][0]['id']
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'token': token,
+        'operators': 'sfr',
+        'infrastructures': 'FTTH',
+        'accountTypes': 'LAND',
+        'noTracking': 'false',
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
     menu = urlquick.get(MENU_URL.format(spot_id),
-                        params={
-                            'app': 'gen8',
-                            'device': 'browser',
-                            'token': token,
-                            'operators': 'sfr',
-                            'infrastructures': 'FTTH',
-                            'accountTypes': 'LAND',
-                            'noTracking': 'false',
-                        },
-                        headers={
-                            'Accept': 'application/json',
-                            'Referer': 'https://tv.sfr.fr/',
-                            'User-Agent': USER_AGENT
-                        },
-                        max_age=TOKEN_MAX_AGE).json()
+                        params=params,
+                        headers=headers,
+                        max_age=TOKEN_MAX_AGE,
+                        timeout=REQUEST_TIMEOUT).json()
     return list(map(lambda t: {'id': t['action']['actionIds']['storeId'],
                                'title': t['title'],
                                'images': t['images']},
@@ -235,20 +255,23 @@ def list_programs(plugin, **kwargs):
 
 
 def get_categories(plugin, store_id):
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'accountTypes': 'LAND',
+        'infrastructures': 'FTTH',
+        'operators': 'sfr',
+        'noTracking': 'false'
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
     categories_infos = urlquick.get(CATEGORIES_URL.format(store_id),
-                                    params={
-                                        'app': 'gen8',
-                                        'device': 'browser',
-                                        'accountTypes': 'LAND',
-                                        'infrastructures': 'FTTH',
-                                        'operators': 'sfr',
-                                        'noTracking': 'false'
-                                    },
-                                    headers={
-                                        'Accept': 'application/json',
-                                        'Referer': 'https://tv.sfr.fr/',
-                                        'User-Agent': USER_AGENT
-                                    }).json()
+                                    params=params,
+                                    headers=headers,
+                                    timeout=REQUEST_TIMEOUT).json()
     return categories_infos['categories']
 
 
@@ -267,22 +290,25 @@ def list_categories(plugin, store_id, **kwargs):
 
 
 def get_products(plugin, category_id, page):
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'accountTypes': 'LAND',
+        'infrastructures': 'FTTH',
+        'operators': 'sfr',
+        'noTracking': 'false',
+        'page': page,
+        'size': MAX_PRODUCTS
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
     return urlquick.get(PRODUCTS_URL.format(category_id),
-                        params={
-                            'app': 'gen8',
-                            'device': 'browser',
-                            'accountTypes': 'LAND',
-                            'infrastructures': 'FTTH',
-                            'operators': 'sfr',
-                            'noTracking': 'false',
-                            'page': page,
-                            'size': MAX_PRODUCTS
-                        },
-                        headers={
-                            'Accept': 'application/json',
-                            'Referer': 'https://tv.sfr.fr/',
-                            'User-Agent': USER_AGENT
-                        }).json()
+                        params=params,
+                        headers=headers,
+                        timeout=REQUEST_TIMEOUT).json()
 
 
 @Route.register(autosort=False)
@@ -308,19 +334,22 @@ def list_products(plugin, category_id, page, **kwargs):
 
 
 def get_product_details(plugin, product_id, universe='PROVIDER', **kwargs):
+    params = {
+        'accountTypes': 'LAND',
+        'infrastructures': 'FTTH',
+        'operators': 'sfr',
+        'noTracking': 'false',
+        'universe': universe
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
     return urlquick.get(PRODUCT_DETAILS_URL.format(product_id),
-                        params={
-                            'accountTypes': 'LAND',
-                            'infrastructures': 'FTTH',
-                            'operators': 'sfr',
-                            'noTracking': 'false',
-                            'universe': universe
-                        },
-                        headers={
-                            'Accept': 'application/json',
-                            'Referer': 'https://tv.sfr.fr/',
-                            'User-Agent': USER_AGENT
-                        }).json()
+                        params=params,
+                        headers=headers,
+                        timeout=REQUEST_TIMEOUT).json()
 
 
 @Route.register(autosort=False)
@@ -375,7 +404,7 @@ def build_product_item(plugin, product):
         elif image['format'] == '16/9':
             item.art['thumb'] = image['url']
 
-    item.set_callback(list_product_details if product.get('type', '') in ['Serie', 'Season', 'CONTENT'] else get_replay_stream,
+    item.set_callback(list_product_details if product.get('type', '') in PRODUCT_DETAILS_TYPES else get_replay_stream,
                       product_id=product['id'],
                       universe=product['universe'] if 'universe' in product else 'PROVIDER')
 
@@ -385,22 +414,25 @@ def build_product_item(plugin, product):
 
 
 def get_replay_url(plugin, product_id, token):
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'token': token,
+        'accountTypes': 'LAND',
+        'infrastructures': 'FTTH',
+        'operators': 'sfr',
+        'noTracking': 'false',
+        'universe': 'PROVIDER'
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
     product_options = urlquick.get(PRODUCT_OPTIONS_URL.format(product_id),
-                                   params={
-                                       'app': 'gen8',
-                                       'device': 'browser',
-                                       'token': token,
-                                       'accountTypes': 'LAND',
-                                       'infrastructures': 'FTTH',
-                                       'operators': 'sfr',
-                                       'noTracking': 'false',
-                                       'universe': 'PROVIDER'
-                                   },
-                                   headers={
-                                       'Accept': 'application/json',
-                                       'Referer': 'https://tv.sfr.fr/',
-                                       'User-Agent': USER_AGENT
-                                   }).json()
+                                   params=params,
+                                   headers=headers,
+                                   timeout=REQUEST_TIMEOUT).json()
     for option in product_options:
         for offer in option['offers']:
             for stream in offer['streams']:
@@ -434,20 +466,22 @@ def get_replay_stream(plugin, product_id, **kwargs):
 
 
 def get_products_to_search(plugin, keyword, page=0, size=25, **kwargs):
-
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'keyword': keyword,
+        'page': page,
+        'size': size
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
     search_result = urlquick.get(SEARCH_TEXT_URL,
-                                 params={
-                                     'app': 'gen8',
-                                     'device': 'browser',
-                                     'keyword': keyword,
-                                     'page': page,
-                                     'size': size
-                                 },
-                                 headers={
-                                     'Accept': 'application/json',
-                                     'Referer': 'https://tv.sfr.fr/',
-                                     'User-Agent': USER_AGENT
-                                 }).json()
+                                 params=params,
+                                 headers=headers,
+                                 timeout=REQUEST_TIMEOUT).json()
 
     has_next_page = (search_result['count'] - ((page + 1) * size)) > 0
 
@@ -470,21 +504,24 @@ def search(plugin, search_query, **kwargs):
 
 
 def get_active_services(plugin, token):
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'token': token
+    }
+    headers = {
+        'User-Agent': USER_AGENT,
+        'Accept': 'application/json',
+        'Accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Origin': 'https://tv.sfr.fr',
+        'Referer': 'https://tv.sfr.fr/',
+        'Connection': 'keep-alive'
+    }
     services = urlquick.get(SERVICE_URL,
-                            params={
-                                'app': 'gen8',
-                                'device': 'browser',
-                                'token': token
-                            },
-                            headers={
-                                'User-Agent': USER_AGENT,
-                                'Accept': 'application/json',
-                                'Accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-                                'Origin': 'https://tv.sfr.fr',
-                                'Referer': 'https://tv.sfr.fr/',
-                                'Connection': 'keep-alive'
-                            },
-                            max_age=TOKEN_MAX_AGE).json()
+                            params=params,
+                            headers=headers,
+                            max_age=TOKEN_MAX_AGE,
+                            timeout=REQUEST_TIMEOUT).json()
     active_services = list(filter(lambda c: c['access'], services))
     return active_services
 
@@ -573,7 +610,10 @@ def get_live_url(plugin, service_id, token):
             for stream in serv['streams']:
                 if stream['drm'] == 'WIDEVINE':
                     # Workaround for IA bug : https://github.com/xbmc/inputstream.adaptive/issues/804
-                    response = urlquick.get(stream['url'], headers={'User-Agent': USER_AGENT}, max_age=-1)
+                    response = urlquick.get(stream['url'],
+                                            headers={'User-Agent': USER_AGENT},
+                                            max_age=-1,
+                                            timeout=REQUEST_TIMEOUT)
                     live_url = response.xml().find('{urn:mpeg:dash:schema:mpd:2011}Location').text
                     return live_url
     return None
