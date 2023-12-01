@@ -396,7 +396,7 @@ def list_product_details(plugin, product_id, **kwargs):
 
     if 'seasons' in product_details:
         for season in product_details['seasons']:
-            season_details = get_product_details(plugin, season['id'])
+            season_details = get_product_details(plugin, season['id'], **kwargs)
             yield build_product_item(plugin, season_details)
     elif 'episodes' in product_details:
         for episode in product_details['episodes']:
@@ -438,7 +438,7 @@ def build_product_item(plugin, product):
             item.art['thumb'] = image['url']
 
     item.set_callback(list_product_details if product.get('type', '') in PRODUCT_DETAILS_TYPES else get_replay_stream,
-                      product_id=product['id'],
+                      product['id'],
                       universe=product['universe'] if 'universe' in product else 'PROVIDER')
 
     item_post_treatment(item)
@@ -446,7 +446,7 @@ def build_product_item(plugin, product):
     return item
 
 
-def get_replay_url(plugin, product_id, token):
+def get_replay_url(plugin, product_id, token, universe='PROVIDER', **kwargs):
     params = {
         'app': 'gen8',
         'device': 'browser',
@@ -455,7 +455,7 @@ def get_replay_url(plugin, product_id, token):
         'infrastructures': 'FTTH',
         'operators': 'sfr',
         'noTracking': 'false',
-        'universe': 'PROVIDER'
+        'universe': universe
     }
     headers = {
         'Accept': 'application/json',
@@ -480,7 +480,7 @@ def get_replay_stream(plugin, product_id, **kwargs):
     if not token:
         return False
 
-    replay_url = get_replay_url(plugin, product_id, token)
+    replay_url = get_replay_url(plugin, product_id, token, **kwargs)
     if not replay_url:
         return False
 
