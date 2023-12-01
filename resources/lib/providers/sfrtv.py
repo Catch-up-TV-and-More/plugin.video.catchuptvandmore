@@ -30,6 +30,7 @@ MENU_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v2/spot/{}/conten
 CATEGORIES_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/stores/{}/categories'
 PRODUCTS_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v2/categories/{}/contents'
 PRODUCT_DETAILS_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/{}/detail'
+EPISODES_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/{}/episodes'
 PRODUCT_OPTIONS_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v3/content/{}/options'
 SEARCH_TEXT_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v2/search/text'
 CUSTOMDATA_REPLAY = ('description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC'
@@ -399,11 +400,57 @@ def list_product_details(plugin, product_id, **kwargs):
             season_details = get_product_details(plugin, season['id'], **kwargs)
             yield build_product_item(plugin, season_details)
     elif 'episodes' in product_details:
-        for episode in product_details['episodes']:
-            episode_details = get_product_details(plugin, episode['id'])
-            yield build_product_item(plugin, episode_details)
+        for episode in list_episodes(plugin, product_id, **kwargs):
+            yield episode
     else:
         yield build_product_item(plugin, product_details)
+
+
+def get_episodes(plugin, season_id, universe='PROVIDER', page=0, size=10, **kwargs):
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'accountTypes': 'LAND',
+        'infrastructures': 'FTTH',
+        'operators': 'sfr',
+        'noTracking': 'false',
+        'universe': universe,
+        'page': page,
+        'size': size,
+        'sortBy': 'DIFFUSIONDATE',
+        'sorting': 'DESC'
+    }
+    headers = {
+        'User-Agent': USER_AGENT,
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'Origin': 'https://tv.sfr.fr',
+        'Connection': 'keep-alive'
+    }
+    search_result = urlquick.get(EPISODES_URL.format(season_id),
+                                 params=params,
+                                 headers=headers,
+                                 timeout=REQUEST_TIMEOUT).json()
+
+    has_next_page = (search_result['count'] - ((page + 1) * size)) > 0
+
+    return search_result['content'], page, has_next_page
+
+
+@Route.register(autosort=False)
+def list_episodes(plugin, season_id, **kwargs):
+    episodes, page, has_next_page = get_episodes(plugin, season_id, **kwargs)
+
+    for episode in episodes:
+        yield build_product_item(plugin, episode)
+
+    if has_next_page:
+        item = Listitem.next_page(callback=list_episodes,
+                                  season_id=season_id,
+                                  page=page + 1,
+                                  **kwargs)
+        item.property['SpecialSort'] = 'bottom'
+        yield item
 
 
 def build_product_item(plugin, product):
