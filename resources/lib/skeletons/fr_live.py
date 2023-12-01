@@ -857,13 +857,5 @@ menu = {
         },
         'enabled': True,
         'order': 81
-    },
-    'sfrtv': {
-        'route': '/resources/lib/channels/fr/sfrtv:list_lives',
-        'list_channels_function': 'resources.lib.channels.fr.sfrtv:list_live_channels',
-        'label': 'SFR TV',
-        'thumb': 'channels/fr/sfrtv.png',
-        'enabled': True,
-        'order': 82
     }
 }

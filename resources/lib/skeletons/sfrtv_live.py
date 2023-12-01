@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 
 menu = {
     'NEUF_TF1': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'TF1',
         'thumb': 'channels/fr/tf1.png',
         'fanart': 'channels/fr/tf1_fanart.jpg',
@@ -20,7 +20,7 @@ menu = {
         'order': 1
     },
     'NEUF_FRANCE2': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'France 2',
         'thumb': 'channels/fr/france2.png',
         'fanart': 'channels/fr/france2_fanart.jpg',
@@ -31,7 +31,7 @@ menu = {
         'order': 2
     },
     'NEUF_FRANCE3': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'France 3',
         'thumb': 'channels/fr/france3.png',
         'fanart': 'channels/fr/france3_fanart.jpg',
@@ -42,7 +42,7 @@ menu = {
         'order': 3
     },
     'NEUF_FRANCE5': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'France 5',
         'thumb': 'channels/fr/france5.png',
         'fanart': 'channels/fr/france5_fanart.jpg',
@@ -53,7 +53,7 @@ menu = {
         'order': 5
     },
     'NEUF_M6': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'M6',
         'thumb': 'channels/fr/m6.png',
         'fanart': 'channels/fr/m6_fanart.jpg',
@@ -64,7 +64,7 @@ menu = {
         'order': 6
     },
     'NEUF_ARTE': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'Arte',
         'thumb': 'channels/fr/arte.png',
         'fanart': 'channels/fr/arte_fanart.jpg',
@@ -75,7 +75,7 @@ menu = {
         'order': 7
     },
     'NEUF_DIRECT8': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'C8',
         'thumb': 'channels/fr/c8.png',
         'fanart': 'channels/fr/c8_fanart.jpg',
@@ -86,7 +86,7 @@ menu = {
         'order': 8
     },
     'NEUF_W9': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'W9',
         'thumb': 'channels/fr/w9.png',
         'fanart': 'channels/fr/w9_fanart.jpg',
@@ -97,7 +97,7 @@ menu = {
         'order': 9
     },
     'NEUF_TMC': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'TMC',
         'thumb': 'channels/fr/tmc.png',
         'fanart': 'channels/fr/tmc_fanart.jpg',
@@ -108,7 +108,7 @@ menu = {
         'order': 10
     },
     'NEUF_NT1': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'TFX',
         'thumb': 'channels/fr/tfx.png',
         'fanart': 'channels/fr/tfx_fanart.jpg',
@@ -119,7 +119,7 @@ menu = {
         'order': 11
     },
     'NEUF_NRJ12': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'NRJ12',
         'thumb': 'channels/fr/nrj12.png',
         'fanart': 'channels/fr/nrj12_fanart.jpg',
@@ -130,7 +130,7 @@ menu = {
         'order': 12
     },
     'NEUF_LCP': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'LCP',
         'thumb': 'channels/fr/lcp.png',
         'fanart': 'channels/fr/lcp_fanart.jpg',
@@ -141,7 +141,7 @@ menu = {
         'order': 13
     },
     'NEUF_FRANCE4': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'France 4',
         'thumb': 'channels/fr/france4.png',
         'fanart': 'channels/fr/france4_fanart.jpg',
@@ -152,7 +152,7 @@ menu = {
         'order': 14
     },
     'NEUF_BFMTV': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'BFM TV',
         'thumb': 'channels/fr/bfmtv.png',
         'fanart': 'channels/fr/bfmtv_fanart.jpg',
@@ -163,7 +163,7 @@ menu = {
         'order': 15
     },
     'NEUF_ITELE': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'CNews',
         'thumb': 'channels/fr/cnews.png',
         'fanart': 'channels/fr/cnews_fanart.jpg',
@@ -174,7 +174,7 @@ menu = {
         'order': 16
     },
     'NEUF_VIRGIN17': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'CStar',
         'thumb': 'channels/fr/cstar.png',
         'fanart': 'channels/fr/cstar_fanart.jpg',
@@ -185,7 +185,7 @@ menu = {
         'order': 17
     },
     'NEUF_GULLI': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'Gulli',
         'thumb': 'channels/fr/gulli.png',
         'fanart': 'channels/fr/gulli_fanart.jpg',
@@ -196,7 +196,7 @@ menu = {
         'order': 18
     },
     'NEUF_HD1': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'TF1 Séries-Films',
         'thumb': 'channels/fr/tf1seriesfilms.png',
         'fanart': 'channels/fr/tf1seriesfilms_fanart.jpg',
@@ -207,7 +207,7 @@ menu = {
         'order': 20
     },
     'NEUF_LEQUIPETV': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'La chaine l’Équipe',
         'thumb': 'channels/fr/lequipe.png',
         'fanart': 'channels/fr/lequipe_fanart.jpg',
@@ -218,7 +218,7 @@ menu = {
         'order': 21
     },
     'NEUF_6TER': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': '6ter',
         'thumb': 'channels/fr/6ter.png',
         'fanart': 'channels/fr/6ter_fanart.jpg',
@@ -229,7 +229,7 @@ menu = {
         'order': 22
     },
     'NEUF_NUM23': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'RMC STORY',
         'thumb': 'channels/fr/rmcstory.png',
         'fanart': 'channels/fr/rmcstory_fanart.jpg',
@@ -240,7 +240,7 @@ menu = {
         'order': 23
     },
     'NEUF_RMCDEC': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'RMC Découverte',
         'thumb': 'channels/fr/rmcdecouverte.png',
         'fanart': 'channels/fr/rmcdecouverte_fanart.jpg',
@@ -251,7 +251,7 @@ menu = {
         'order': 24
     },
     'NEUF_CHERIE25': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'Chérie 25',
         'thumb': 'channels/fr/cherie25.png',
         'fanart': 'channels/fr/cherie25_fanart.jpg',
@@ -262,7 +262,7 @@ menu = {
         'order': 25
     },
     'NEUF_LCI': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'LCI',
         'thumb': 'channels/fr/lci.png',
         'fanart': 'channels/fr/lci_fanart.jpg',
@@ -273,7 +273,7 @@ menu = {
         'order': 26
     },
     'NEUF_FRANCEINFO': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'franceinfo:',
         'thumb': 'channels/fr/franceinfo.png',
         'fanart': 'channels/fr/franceinfo_fanart.jpg',
@@ -284,7 +284,7 @@ menu = {
         'order': 27
     },
     'NEUF_GUYSEN': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'i24 news',
         'thumb': 'channels/fr/i24news.png',
         'fanart': 'channels/fr/i24news_fanart.jpg',
@@ -295,7 +295,7 @@ menu = {
         'order': 28
     },
     'NEUF_BFMBUSINESS': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'BFM Business',
         'thumb': 'channels/fr/bfmbusiness.png',
         'fanart': 'channels/fr/bfmbusiness_fanart.jpg',
@@ -306,7 +306,7 @@ menu = {
         'order': 31
     },
     'NEUF_01NET': {
-        'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+        'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
         'label': 'TECH & CO',
         'thumb': 'channels/fr/01net.png',
         'fanart': 'channels/fr/01net_fanart.jpg',
@@ -316,7 +316,7 @@ menu = {
         'order': 32
     },
     # 'NEUF_RMCSPORT1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -327,7 +327,7 @@ menu = {
     #     'order': 33
     # },
     # 'NEUF_RMCSPORT2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport 2',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -338,7 +338,7 @@ menu = {
     #     'order': 34
     # },
     # 'NEUF_BFMPARIS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM PARIS ILE-DE-FRANCE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -349,7 +349,7 @@ menu = {
     #     'order': 39
     # },
     # 'NEUF_DISCOVERYCHNL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Discovery Channel',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -360,7 +360,7 @@ menu = {
     #     'order': 40
     # },
     # 'NEUF_DISCOVERYSCN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Discovery Science',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -371,7 +371,7 @@ menu = {
     #     'order': 41
     # },
     # 'NEUF_DISCOVERYINVST': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Discovery Investigation',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -382,7 +382,7 @@ menu = {
     #     'order': 43
     # },
     # 'NEUF_FRANCE24': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 24',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -393,7 +393,7 @@ menu = {
     #     'order': 47
     # },
     # 'NEUF_EURONEWS_FR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Euronews',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -404,7 +404,7 @@ menu = {
     #     'order': 48
     # },
     # 'NEUF_13EMERUE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': '13ème rue',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -415,7 +415,7 @@ menu = {
     #     'order': 50
     # },
     # 'NEUF_SYFY': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Syfy',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -426,7 +426,7 @@ menu = {
     #     'order': 51
     # },
     # 'NEUF_EENTERTAINMENT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'E! Entertainment',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -437,7 +437,7 @@ menu = {
     #     'order': 52
     # },
     # 'NEUF_MCSMAISON': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'My Cuisine',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -448,7 +448,7 @@ menu = {
     #     'order': 55
     # },
     # 'NEUF_MTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MTV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -459,7 +459,7 @@ menu = {
     #     'order': 56
     # },
     # 'NEUF_MCM': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MCM',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -470,7 +470,7 @@ menu = {
     #     'order': 57
     # },
     # 'NEUF_AB1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'AB1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -481,7 +481,7 @@ menu = {
     #     'order': 58
     # },
     # 'NEUF_SERIECLUB': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'SERIE CLUB',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -492,7 +492,7 @@ menu = {
     #     'order': 59
     # },
     # 'NEUF_GAMEONE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Game One',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -503,7 +503,7 @@ menu = {
     #     'order': 60
     # },
     # 'NEUF_GAMEONE1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Game One +1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -514,7 +514,7 @@ menu = {
     #     'order': 61
     # },
     # 'NEUF_WARNER_TV_NEXT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Warner TV Next',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -525,7 +525,7 @@ menu = {
     #     'order': 62
     # },
     # 'NEUF_JONE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'J-One',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -536,7 +536,7 @@ menu = {
     #     'order': 63
     # },
     # 'NEUF_BET': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BET',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -547,7 +547,7 @@ menu = {
     #     'order': 64
     # },
     # 'NEUF_COMEDYCENTRAL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Comedy Central',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -558,7 +558,7 @@ menu = {
     #     'order': 65
     # },
     # 'NEUF_PARPREM': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Paris Première',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -569,7 +569,7 @@ menu = {
     #     'order': 70
     # },
     # 'NEUF_TEVA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Téva',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -580,7 +580,7 @@ menu = {
     #     'order': 71
     # },
     # 'NEUF_RTL9': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTL9',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -591,7 +591,7 @@ menu = {
     #     'order': 72
     # },
     # 'NEUF_TVBREIZH': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV Breizh',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -602,7 +602,7 @@ menu = {
     #     'order': 73
     # },
     # 'NEUF_TV5MONDE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV5 Monde',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -613,7 +613,7 @@ menu = {
     #     'order': 74
     # },
     # 'NEUF_TF1PLUSONE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TF1 + 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -624,7 +624,7 @@ menu = {
     #     'order': 75
     # },
     # 'NEUF_TMCPLUSONE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TMC + 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -635,7 +635,7 @@ menu = {
     #     'order': 76
     # },
     # 'NEUF_CPLUS_BOX_OFFICE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CANAL+ BOX OFFICE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -646,7 +646,7 @@ menu = {
     #     'order': 83
     # },
     # 'NEUF_LCPAN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'LCP-AN 24/24',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -657,7 +657,7 @@ menu = {
     #     'order': 103
     # },
     # 'NEUF_PUBSENAT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Public Sénat',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -668,7 +668,7 @@ menu = {
     #     'order': 104
     # },
     # 'NEUF_SFRSPORT1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Access',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -679,7 +679,7 @@ menu = {
     #     'order': 106
     # },
     # 'NEUF_CPLUS_LIGUE1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CANAL+ Ligue 1 Uber Eats',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -690,7 +690,7 @@ menu = {
     #     'order': 114
     # },
     # 'NEUF_BEINSPORT1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -701,7 +701,7 @@ menu = {
     #     'order': 115
     # },
     # 'NEUF_BEINSPORT2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS 2',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -712,7 +712,7 @@ menu = {
     #     'order': 116
     # },
     # 'NEUF_BEINMULTI1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS 3',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -723,7 +723,7 @@ menu = {
     #     'order': 117
     # },
     # 'NEUF_DAZN1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'DAZN 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -734,7 +734,7 @@ menu = {
     #     'order': 118
     # },
     # 'NEUF_EQUIDIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Equidia',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -745,7 +745,7 @@ menu = {
     #     'order': 119
     # },
     # 'NEUF_MGG_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MGG TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -756,7 +756,7 @@ menu = {
     #     'order': 121
     # },
     # 'NEUF_ABMOTEURS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Automoto la chaine',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -767,7 +767,7 @@ menu = {
     #     'order': 125
     # },
     # 'NEUF_GOLFCHANNEL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Golf Channel',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -778,7 +778,7 @@ menu = {
     #     'order': 126
     # },
     # 'NEUF_SPORT_EN_FRANCE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Sport en France',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -789,7 +789,7 @@ menu = {
     #     'order': 129
     # },
     # 'NEUF_OLPLAY': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'OLPLAY',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -800,7 +800,7 @@ menu = {
     #     'order': 130
     # },
     # 'NEUF_OCINEMAX': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'OCS Max',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -811,7 +811,7 @@ menu = {
     #     'order': 141
     # },
     # 'NEUF_OCINEPULP': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'OCS Pulp',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -822,7 +822,7 @@ menu = {
     #     'order': 143
     # },
     # 'NEUF_OCINEGEANTS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'OCS Geants',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -833,7 +833,7 @@ menu = {
     #     'order': 144
     # },
     # 'NEUF_CINE+PREMIER': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Ciné+ Premier',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -844,7 +844,7 @@ menu = {
     #     'order': 146
     # },
     # 'NEUF_CINE+FRISSON': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Ciné+ Frisson',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -855,7 +855,7 @@ menu = {
     #     'order': 147
     # },
     # 'NEUF_CINE+EMOTION': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Ciné+ Emotion',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -866,7 +866,7 @@ menu = {
     #     'order': 148
     # },
     # 'NEUF_CCINEMAFAMIZ': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Ciné+ Famiz',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -877,7 +877,7 @@ menu = {
     #     'order': 149
     # },
     # 'NEUF_CCINEMACLUB': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Ciné+ Club',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -888,7 +888,7 @@ menu = {
     #     'order': 150
     # },
     # 'NEUF_CCINEMACLASSIC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Ciné+ Classic',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -899,7 +899,7 @@ menu = {
     #     'order': 151
     # },
     # 'NEUF_PARAMOUNT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Paramount Channel',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -910,7 +910,7 @@ menu = {
     #     'order': 160
     # },
     # 'NEUF_PARAMOUNT+1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Paramount Channel Décalé',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -921,7 +921,7 @@ menu = {
     #     'order': 161
     # },
     # 'NEUF_TCM': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TCM Cinéma',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -932,7 +932,7 @@ menu = {
     #     'order': 162
     # },
     # 'NEUF_ACTION': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Action',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -943,7 +943,7 @@ menu = {
     #     'order': 163
     # },
     # 'NEUF_USHUAIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Ushuaia TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -954,7 +954,7 @@ menu = {
     #     'order': 173
     # },
     # 'NEUF_ESCALES': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TREK',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -965,7 +965,7 @@ menu = {
     #     'order': 174
     # },
     # 'NEUF_CRIMEDISCTRICT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Crime District',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -976,7 +976,7 @@ menu = {
     #     'order': 175
     # },
     # 'NEUF_HISTOIRE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Histoire',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -987,7 +987,7 @@ menu = {
     #     'order': 177
     # },
     # 'NEUF_TTELHISTOIRE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Toute l\'Histoire',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -998,7 +998,7 @@ menu = {
     #     'order': 178
     # },
     # 'NEUF_KTO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'KTO',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1009,7 +1009,7 @@ menu = {
     #     'order': 179
     # },
     # 'NEUF_ANIMAUX': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Animaux',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1020,7 +1020,7 @@ menu = {
     #     'order': 180
     # },
     # 'NEUF_CHASSEPECHE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Chasse et Pêche',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1031,7 +1031,7 @@ menu = {
     #     'order': 181
     # },
     # 'NEUF_ENCYCLOPEDIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Science et Vie TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1042,7 +1042,7 @@ menu = {
     #     'order': 182
     # },
     # 'NEUF_LUXETV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Luxe TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1053,7 +1053,7 @@ menu = {
     #     'order': 183
     # },
     # 'NEUF_FASHIONTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Fashion TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1064,7 +1064,7 @@ menu = {
     #     'order': 184
     # },
     # 'NEUF_MENSUP': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Men\'s Up TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1075,7 +1075,7 @@ menu = {
     #     'order': 185
     # },
     # 'NEUF_ASTRO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Astrocenter TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1086,7 +1086,7 @@ menu = {
     #     'order': 186
     # },
     # 'NEUF_MYZENTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'My Zen TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1097,7 +1097,7 @@ menu = {
     #     'order': 187
     # },
     # 'NEUF_MUSEUM_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MUSEUM TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1108,7 +1108,7 @@ menu = {
     #     'order': 191
     # },
     # 'NEUF_NICKELODEONJUNIOR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Nickelodeon Junior',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1119,7 +1119,7 @@ menu = {
     #     'order': 200
     # },
     # 'NEUF_BOOMERANG': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Boomerang',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1130,7 +1130,7 @@ menu = {
     #     'order': 201
     # },
     # 'NEUF_BOOMERANG+1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Boomerang +1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1141,7 +1141,7 @@ menu = {
     #     'order': 202
     # },
     # 'NEUF_TIJI': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TIJI',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1152,7 +1152,7 @@ menu = {
     #     'order': 203
     # },
     # 'NEUF_DREAMWORKS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'DREAMWORKS',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1163,7 +1163,7 @@ menu = {
     #     'order': 204
     # },
     # 'NEUF_NICKELODEON': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Nickelodeon',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1174,7 +1174,7 @@ menu = {
     #     'order': 205
     # },
     # 'NEUF_NICKELODEONPLUSONE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Nickelodeon+1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1185,7 +1185,7 @@ menu = {
     #     'order': 206
     # },
     # 'NEUF_CANALJ': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CANAL J',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1196,7 +1196,7 @@ menu = {
     #     'order': 210
     # },
     # 'NEUF_CARTOONNETWORK': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Cartoon Network',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1207,7 +1207,7 @@ menu = {
     #     'order': 211
     # },
     # 'NEUF_NICKELODEONTEEN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Nickelodeon Teen',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1218,7 +1218,7 @@ menu = {
     #     'order': 212
     # },
     # 'NEUF_CARTOONITO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Cartoonito',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1229,7 +1229,7 @@ menu = {
     #     'order': 213
     # },
     # 'NEUF_MANGAS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Mangas',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1240,7 +1240,7 @@ menu = {
     #     'order': 231
     # },
     # 'NEUF_LUCKYJACK': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Lucky Jack',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1251,7 +1251,7 @@ menu = {
     #     'order': 234
     # },
     # 'NEUF_MTVHITS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MTV Hits',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1262,7 +1262,7 @@ menu = {
     #     'order': 250
     # },
     # 'NEUF_M6MUSICHITS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'M6 Music',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1273,7 +1273,7 @@ menu = {
     #     'order': 254
     # },
     # 'NEUF_MCMPOP': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RFM TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1284,7 +1284,7 @@ menu = {
     #     'order': 255
     # },
     # 'NEUF_NRJHITS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'NRJ Hits',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1295,7 +1295,7 @@ menu = {
     #     'order': 256
     # },
     # 'NEUF_MEZZO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Mezzo',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1306,7 +1306,7 @@ menu = {
     #     'order': 260
     # },
     # 'NEUF_MEZZOHD': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Mezzo Live HD',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1317,7 +1317,7 @@ menu = {
     #     'order': 261
     # },
     # 'NEUF_TELEMELODY': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MELODY TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1328,7 +1328,7 @@ menu = {
     #     'order': 262
     # },
     # 'NEUF_TRACE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Trace Urban',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1339,7 +1339,7 @@ menu = {
     #     'order': 263
     # },
     # 'NEUF_TRACETOCA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Trace Toca',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1350,7 +1350,7 @@ menu = {
     #     'order': 264
     # },
     # 'NEUF_TRACETROP': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TRACE CARIBBEAN',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1361,7 +1361,7 @@ menu = {
     #     'order': 265
     # },
     # 'NEUF_TRACEGOSPEL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Trace Gospel',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1372,7 +1372,7 @@ menu = {
     #     'order': 266
     # },
     # 'NEUF_BEBLACKTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BBLACK Classik',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1383,7 +1383,7 @@ menu = {
     #     'order': 267
     # },
     # 'NEUF_BBLACKCARIBBEAN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BBLACK Caribbean',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1394,7 +1394,7 @@ menu = {
     #     'order': 268
     # },
     # 'NEUF_BBLACKAFRICA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BBLACK Africa',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1405,7 +1405,7 @@ menu = {
     #     'order': 269
     # },
     # 'NEUF_MELODYAFRIQUE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Melody d\'Afrique',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1416,7 +1416,7 @@ menu = {
     #     'order': 272
     # },
     # 'NEUF_BFMLYON': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM Lyon',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1427,7 +1427,7 @@ menu = {
     #     'order': 281
     # },
     # 'NEUF_BFMGRANDLILLE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM Grand Lille',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1438,7 +1438,7 @@ menu = {
     #     'order': 282
     # },
     # 'NEUF_BFMGRANDLITTORAL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM Grand Littoral',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1449,7 +1449,7 @@ menu = {
     #     'order': 283
     # },
     # 'NEUF_BFM_MARSEILLEPROV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM MARSEILLE PROVENCE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1460,7 +1460,7 @@ menu = {
     #     'order': 284
     # },
     # 'NEUF_BFM_NICECOTEDAZUR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM NICE COTE D\'AZUR',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1471,7 +1471,7 @@ menu = {
     #     'order': 285
     # },
     # 'NEUF_BFM_TOULONVAR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM TOULON VAR',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1482,7 +1482,7 @@ menu = {
     #     'order': 286
     # },
     # 'NEUF_BFM_DICI_ALPESDUSUD': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM DICI ALPES DU SUD',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1493,7 +1493,7 @@ menu = {
     #     'order': 287
     # },
     # 'NEUF_BFM_DICI_HAUTEPROVENCE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM DICI HAUTE-PROVENCE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1504,7 +1504,7 @@ menu = {
     #     'order': 288
     # },
     # 'NEUF_BFM_ALSACE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM ALSACE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1515,7 +1515,7 @@ menu = {
     #     'order': 289
     # },
     # 'NEUF_BFM_NORMANDIE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BFM NORMANDIE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1526,7 +1526,7 @@ menu = {
     #     'order': 290
     # },
     # 'NEUF_TVSUDCAMCEV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'vià30',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1537,7 +1537,7 @@ menu = {
     #     'order': 295
     # },
     # 'NEUF_VIA31': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'vià31',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1548,7 +1548,7 @@ menu = {
     #     'order': 296
     # },
     # 'NEUF_TVSUDMONTP': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'vià34',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1559,7 +1559,7 @@ menu = {
     #     'order': 297
     # },
     # 'NEUF_VIA66': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'vià66',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1570,7 +1570,7 @@ menu = {
     #     'order': 298
     # },
     # 'NEUF_BEINMULTI2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS MAX 4',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1581,7 +1581,7 @@ menu = {
     #     'order': 300
     # },
     # 'NEUF_BEINMULTI3': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS MAX 5',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1592,7 +1592,7 @@ menu = {
     #     'order': 301
     # },
     # 'NEUF_BEINMULTI4': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS MAX 6',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1603,7 +1603,7 @@ menu = {
     #     'order': 302
     # },
     # 'NEUF_BEINMULTI5': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS MAX 7',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1614,7 +1614,7 @@ menu = {
     #     'order': 303
     # },
     # 'NEUF_BEINMULTI6': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS MAX 8',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1625,7 +1625,7 @@ menu = {
     #     'order': 304
     # },
     # 'NEUF_BEINMULTI7': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS MAX 9',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1636,7 +1636,7 @@ menu = {
     #     'order': 305
     # },
     # 'NEUF_BEINMULTI8': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'beIN SPORTS MAX 10',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1647,7 +1647,7 @@ menu = {
     #     'order': 306
     # },
     # 'NEUF_RMCSPORTLIVE3': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 3',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1658,7 +1658,7 @@ menu = {
     #     'order': 316
     # },
     # 'NEUF_RMCSPORTLIVE4': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 4',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1669,7 +1669,7 @@ menu = {
     #     'order': 317
     # },
     # 'NEUF_RMCSPORTLIVE5': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 5',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1680,7 +1680,7 @@ menu = {
     #     'order': 318
     # },
     # 'NEUF_RMCSPORTLIVE6': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 6',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1691,7 +1691,7 @@ menu = {
     #     'order': 319
     # },
     # 'NEUF_RMCSPORTLIVE7': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 7',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1702,7 +1702,7 @@ menu = {
     #     'order': 320
     # },
     # 'NEUF_RMCSPORTLIVE8': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 8',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1713,7 +1713,7 @@ menu = {
     #     'order': 321
     # },
     # 'NEUF_RMCSPORTLIVE9': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 9',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1724,7 +1724,7 @@ menu = {
     #     'order': 322
     # },
     # 'NEUF_RMCSPORTLIVE10': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 10',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1735,7 +1735,7 @@ menu = {
     #     'order': 323
     # },
     # 'NEUF_RMCSPORTLIVE11': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 11',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1746,7 +1746,7 @@ menu = {
     #     'order': 324
     # },
     # 'NEUF_RMCSPORTLIVE12': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 12',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1757,7 +1757,7 @@ menu = {
     #     'order': 325
     # },
     # 'NEUF_RMCSPORTLIVE13': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 13',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1768,7 +1768,7 @@ menu = {
     #     'order': 326
     # },
     # 'NEUF_RMCSPORTLIVE14': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 14',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1779,7 +1779,7 @@ menu = {
     #     'order': 327
     # },
     # 'NEUF_RMCSPORTLIVE15': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 15',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1790,7 +1790,7 @@ menu = {
     #     'order': 328
     # },
     # 'NEUF_RMCSPORTLIVE16': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 16',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1801,7 +1801,7 @@ menu = {
     #     'order': 329
     # },
     # 'NEUF_RMCSPORTLIVE17': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 17',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1812,7 +1812,7 @@ menu = {
     #     'order': 330
     # },
     # 'NEUF_RMCSPORTLIVE18': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RMC Sport Live 18',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1823,7 +1823,7 @@ menu = {
     #     'order': 331
     # },
     # 'NEUF_FRANCE3_ALP': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Alpes',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1834,7 +1834,7 @@ menu = {
     #     'order': 431
     # },
     # 'NEUF_FRANCE3_ALS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Alsace',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1845,7 +1845,7 @@ menu = {
     #     'order': 432
     # },
     # 'NEUF_FRANCE3_AQU': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Aquitaine',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1856,7 +1856,7 @@ menu = {
     #     'order': 433
     # },
     # 'NEUF_FRANCE3_AUV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Auvergne',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1867,7 +1867,7 @@ menu = {
     #     'order': 434
     # },
     # 'NEUF_FRANCE3_BAN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Basse-Normandie',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1878,7 +1878,7 @@ menu = {
     #     'order': 435
     # },
     # 'NEUF_FRANCE3_BOU': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Bourgogne',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1889,7 +1889,7 @@ menu = {
     #     'order': 436
     # },
     # 'NEUF_FRANCE3_BRE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Bretagne',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1900,7 +1900,7 @@ menu = {
     #     'order': 437
     # },
     # 'NEUF_FRANCE3_CEN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Centre',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1911,7 +1911,7 @@ menu = {
     #     'order': 438
     # },
     # 'NEUF_FRANCE3_CHA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Champagne-Ardenne',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1922,7 +1922,7 @@ menu = {
     #     'order': 439
     # },
     # 'NEUF_FRANCE3_COR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Corse',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1933,7 +1933,7 @@ menu = {
     #     'order': 440
     # },
     # 'NEUF_FRANCE3_CAZ': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Côte d\'Azur',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1944,7 +1944,7 @@ menu = {
     #     'order': 441
     # },
     # 'NEUF_FRANCE3_FRC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Franche-Comté',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1955,7 +1955,7 @@ menu = {
     #     'order': 442
     # },
     # 'NEUF_FRANCE3_HTN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Haute-Normandie',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1966,7 +1966,7 @@ menu = {
     #     'order': 443
     # },
     # 'NEUF_FRANCE3_LAN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Languedoc',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1977,7 +1977,7 @@ menu = {
     #     'order': 444
     # },
     # 'NEUF_FRANCE3_LIM': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Limousin',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1988,7 +1988,7 @@ menu = {
     #     'order': 445
     # },
     # 'NEUF_FRANCE3_LOR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Lorraine',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -1999,7 +1999,7 @@ menu = {
     #     'order': 446
     # },
     # 'NEUF_FRANCE3_MDP': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Midi-Pyrénées',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2010,7 +2010,7 @@ menu = {
     #     'order': 447
     # },
     # 'NEUF_FRANCE3_NOR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Nord Pas-de-Calais',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2021,7 +2021,7 @@ menu = {
     #     'order': 448
     # },
     # 'NEUF_FRANCE3_PAR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Paris Ile-de-France',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2032,7 +2032,7 @@ menu = {
     #     'order': 449
     # },
     # 'NEUF_FRANCE3_PLO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Pays de Loire',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2043,7 +2043,7 @@ menu = {
     #     'order': 450
     # },
     # 'NEUF_FRANCE3_PIC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Picardie',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2054,7 +2054,7 @@ menu = {
     #     'order': 451
     # },
     # 'NEUF_FRANCE3_POC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Poitou-Charentes',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2065,7 +2065,7 @@ menu = {
     #     'order': 452
     # },
     # 'NEUF_FRANCE3_PRA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Provence Alpes',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2076,7 +2076,7 @@ menu = {
     #     'order': 453
     # },
     # 'NEUF_FRANCE3_RHA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 - Rhône-Alpes',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2087,7 +2087,7 @@ menu = {
     #     'order': 454
     # },
     # 'NEUF_FRANCE3NAQTN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 3 Nouvelle Aquitaine',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2098,7 +2098,7 @@ menu = {
     #     'order': 455
     # },
     # 'NEUF_CANAL21': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Canal 21',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2109,7 +2109,7 @@ menu = {
     #     'order': 457
     # },
     # 'NEUF_20MINUTES_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': '20 Minutes TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2120,7 +2120,7 @@ menu = {
     #     'order': 461
     # },
     # 'NEUF_TELEBOCAL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Télé Bocal',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2131,7 +2131,7 @@ menu = {
     #     'order': 464
     # },
     # 'NEUF_TVMONTREUIL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TELE-VISION MONTREUIL',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2142,7 +2142,7 @@ menu = {
     #     'order': 467
     # },
     # 'NEUF_FIGARO_TV_IDF': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Figaro TV IDF',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2153,7 +2153,7 @@ menu = {
     #     'order': 468
     # },
     # 'NEUF_TVFIL78': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV78',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2164,7 +2164,7 @@ menu = {
     #     'order': 469
     # },
     # 'NEUF_LYON_CAP_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Lyon Capitale TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2175,7 +2175,7 @@ menu = {
     #     'order': 476
     # },
     # 'NEUF_TELEGRENOBLE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Télé Grenoble',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2186,7 +2186,7 @@ menu = {
     #     'order': 477
     # },
     # 'NEUF_TL7': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TL7',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2197,7 +2197,7 @@ menu = {
     #     'order': 478
     # },
     # 'NEUF_TV8MB': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': '8 Mont Blanc',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2208,7 +2208,7 @@ menu = {
     #     'order': 480
     # },
     # 'NEUF_ILTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'IL TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2219,7 +2219,7 @@ menu = {
     #     'order': 481
     # },
     # 'NEUF_ASTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ASTV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2230,7 +2230,7 @@ menu = {
     #     'order': 482
     # },
     # 'NEUF_TELEGOHELLE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TELEGOHELLE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2241,7 +2241,7 @@ menu = {
     #     'order': 485
     # },
     # 'NEUF_WEO_PICARDIE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Wéo Picardie',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2252,7 +2252,7 @@ menu = {
     #     'order': 486
     # },
     # 'NEUF_WEO_TV_LVDN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Wéo TV, La voix du nord',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2263,7 +2263,7 @@ menu = {
     #     'order': 487
     # },
     # 'NEUF_VIA_MATELE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Vià MATÉLÉ',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2274,7 +2274,7 @@ menu = {
     #     'order': 489
     # },
     # 'NEUF_7ALIMOGES': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': '7 A LIMOGES',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2285,7 +2285,7 @@ menu = {
     #     'order': 490
     # },
     # 'NEUF_TV7BORDEAUX': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV7 Bordeaux',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2296,7 +2296,7 @@ menu = {
     #     'order': 491
     # },
     # 'NEUF_TVPI': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TVPI',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2307,7 +2307,7 @@ menu = {
     #     'order': 492
     # },
     # 'NEUF_KANALDUDE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'KANALDUDE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2318,7 +2318,7 @@ menu = {
     #     'order': 496
     # },
     # 'NEUF_TV2COM': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV2COM',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2329,7 +2329,7 @@ menu = {
     #     'order': 501
     # },
     # 'NEUF_NA_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'NA TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2340,7 +2340,7 @@ menu = {
     #     'order': 504
     # },
     # 'NEUF_CANAL32': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Canal 32',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2351,7 +2351,7 @@ menu = {
     #     'order': 505
     # },
     # 'NEUF_MIRABELTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'VIA Mirabelle',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2362,7 +2362,7 @@ menu = {
     #     'order': 506
     # },
     # 'NEUF_TVMOSAIK': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Mosaïk Cristal',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2373,7 +2373,7 @@ menu = {
     #     'order': 512
     # },
     # 'NEUF_TV8MOSELLE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV8 Moselle-Est',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2384,7 +2384,7 @@ menu = {
     #     'order': 513
     # },
     # 'NEUF_VOSGESTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'VIA Vosges',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2395,7 +2395,7 @@ menu = {
     #     'order': 514
     # },
     # 'NEUF_MARITIMA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Maritima TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2406,7 +2406,7 @@ menu = {
     #     'order': 520
     # },
     # 'NEUF_MAURIENNE_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MAURIENNE TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2417,7 +2417,7 @@ menu = {
     #     'order': 522
     # },
     # 'NEUF_ANGERSTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Angers télé',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2428,7 +2428,7 @@ menu = {
     #     'order': 523
     # },
     # 'NEUF_TLNANTES': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Télénantes',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2439,7 +2439,7 @@ menu = {
     #     'order': 524
     # },
     # 'NEUF_TVVENDEE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV Vendée',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2450,7 +2450,7 @@ menu = {
     #     'order': 525
     # },
     # 'NEUF_LM_TV_SARTHE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'LMtv Sarthe',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2461,7 +2461,7 @@ menu = {
     #     'order': 526
     # },
     # 'NEUF_TEBEO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TEBEO',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2472,7 +2472,7 @@ menu = {
     #     'order': 529
     # },
     # 'NEUF_TVRENNES': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV RENNES 35',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2483,7 +2483,7 @@ menu = {
     #     'order': 530
     # },
     # 'NEUF_TVTOURS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV Tours',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2494,7 +2494,7 @@ menu = {
     #     'order': 533
     # },
     # 'NEUF_ZOUKTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ZOUK TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2505,7 +2505,7 @@ menu = {
     #     'order': 536
     # },
     # 'NEUF_PAESETV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Télé Paese',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2516,7 +2516,7 @@ menu = {
     #     'order': 537
     # },
     # 'NEUF_CNNEUROPE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CNN International',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2527,7 +2527,7 @@ menu = {
     #     'order': 541
     # },
     # 'NEUF_BBCNEWS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BBC NEWS',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2538,7 +2538,7 @@ menu = {
     #     'order': 542
     # },
     # 'NEUF_FRANCE24ENG': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 24 Anglais',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2549,7 +2549,7 @@ menu = {
     #     'order': 543
     # },
     # 'NEUF_CNBCEUR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CNBC Europe',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2560,7 +2560,7 @@ menu = {
     #     'order': 544
     # },
     # 'NEUF_BLOOMBERG_PAN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Bloomberg PAN-European',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2571,7 +2571,7 @@ menu = {
     #     'order': 545
     # },
     # 'NEUF_ALJAZEERA_EN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Al Jazeera English',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2582,7 +2582,7 @@ menu = {
     #     'order': 546
     # },
     # 'NEUF_I24NEWSANGLAIS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'i24 News Anglais',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2593,7 +2593,7 @@ menu = {
     #     'order': 547
     # },
     # 'NEUF_NHKWORLD': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'NHK WORLD-JAPAN',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2604,7 +2604,7 @@ menu = {
     #     'order': 548
     # },
     # 'NEUF_SKYNEWS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Sky News',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2615,7 +2615,7 @@ menu = {
     #     'order': 549
     # },
     # 'NEUF_TGCOM24': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TGCOM24',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2626,7 +2626,7 @@ menu = {
     #     'order': 550
     # },
     # 'NEUF_I24NEWSARABE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'i24 News Arabe',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2637,7 +2637,7 @@ menu = {
     #     'order': 555
     # },
     # 'NEUF_FRANCE24ARA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'France 24 Arabe',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2648,7 +2648,7 @@ menu = {
     #     'order': 556
     # },
     # 'NEUF_MEDI1SAT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Medi1TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2659,7 +2659,7 @@ menu = {
     #     'order': 558
     # },
     # 'NEUF_ALARABIYA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'AL ARABIYA',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2670,7 +2670,7 @@ menu = {
     #     'order': 559
     # },
     # 'NEUF_ENNAHAR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Ennahar TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2681,7 +2681,7 @@ menu = {
     #     'order': 561
     # },
     # 'NEUF_CANAL_11': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Canal 11',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2692,7 +2692,7 @@ menu = {
     #     'order': 568
     # },
     # 'NEUF_24HTVE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': '24h',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2703,7 +2703,7 @@ menu = {
     #     'order': 574
     # },
     # 'NEUF_TVEINTL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TVE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2714,7 +2714,7 @@ menu = {
     #     'order': 575
     # },
     # 'NEUF_DWTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'DW-TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2725,7 +2725,7 @@ menu = {
     #     'order': 578
     # },
     # 'NEUF_N24': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'WELT',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2736,7 +2736,7 @@ menu = {
     #     'order': 579
     # },
     # 'NEUF_RECNEWS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Record News',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2747,7 +2747,7 @@ menu = {
     #     'order': 586
     # },
     # 'NEUF_AFRICA24': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Africa 24',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2758,7 +2758,7 @@ menu = {
     #     'order': 595
     # },
     # 'NEUF_CANAL2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Canal2',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2769,7 +2769,7 @@ menu = {
     #     'order': 597
     # },
     # 'NEUF_TVIFICCAO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TVI ficcao',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2780,7 +2780,7 @@ menu = {
     #     'order': 602
     # },
     # 'NEUF_PORTOCANAL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Porto Canal',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2791,7 +2791,7 @@ menu = {
     #     'order': 604
     # },
     # 'NEUF_LOCALVISAO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Local Visao',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2802,7 +2802,7 @@ menu = {
     #     'order': 605
     # },
     # 'NEUF_BENFICATV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Benfica TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2813,7 +2813,7 @@ menu = {
     #     'order': 608
     # },
     # 'NEUF_ABOLATV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'A BOLA TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2824,7 +2824,7 @@ menu = {
     #     'order': 609
     # },
     # 'NEUF_CANALQ': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Canal Q',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2835,7 +2835,7 @@ menu = {
     #     'order': 622
     # },
     # 'NEUF_RTPI': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTPI',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2846,7 +2846,7 @@ menu = {
     #     'order': 624
     # },
     # 'NEUF_RAI1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Rai Uno',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2857,7 +2857,7 @@ menu = {
     #     'order': 626
     # },
     # 'NEUF_RAI_SCUOLA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RAI SCUOLA',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2868,7 +2868,7 @@ menu = {
     #     'order': 629
     # },
     # 'NEUF_RAI_STORIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RAI STORIA',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2879,7 +2879,7 @@ menu = {
     #     'order': 630
     # },
     # 'NEUF_REAL_MADRID_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'REAL MADRID TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2890,7 +2890,7 @@ menu = {
     #     'order': 645
     # },
     # 'NEUF_STAR_TVE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'STAR TVE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2901,7 +2901,7 @@ menu = {
     #     'order': 646
     # },
     # 'NEUF_FLAMENCO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ALL FLAMENCO_',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2912,7 +2912,7 @@ menu = {
     #     'order': 650
     # },
     # 'NEUF_GALICIATV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TVG EUROPA',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2923,7 +2923,7 @@ menu = {
     #     'order': 651
     # },
     # 'NEUF_ETB_BASQUE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'etb basque',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2934,7 +2934,7 @@ menu = {
     #     'order': 655
     # },
     # 'NEUF_TELEMADRID': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TELE MADRID',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2945,7 +2945,7 @@ menu = {
     #     'order': 657
     # },
     # 'NEUF_ANDALUCIA_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ANDALUCIA TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2956,7 +2956,7 @@ menu = {
     #     'order': 658
     # },
     # 'NEUF_BBCENTERTAINMENT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BBC Entertainment',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2967,7 +2967,7 @@ menu = {
     #     'order': 667
     # },
     # 'NEUF_PROSIEB': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ProSieben',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2978,7 +2978,7 @@ menu = {
     #     'order': 673
     # },
     # 'NEUF_NTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'N-TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -2989,7 +2989,7 @@ menu = {
     #     'order': 674
     # },
     # 'NEUF_RTLTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTL Television',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3000,7 +3000,7 @@ menu = {
     #     'order': 675
     # },
     # 'NEUF_RTL2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTL2',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3011,7 +3011,7 @@ menu = {
     #     'order': 676
     # },
     # 'NEUF_SUPERRTL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Super RTL',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3022,7 +3022,7 @@ menu = {
     #     'order': 678
     # },
     # 'NEUF_VOX': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'VOX',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3033,7 +3033,7 @@ menu = {
     #     'order': 680
     # },
     # 'NEUF_KABELEINS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'KABEL EINS',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3044,7 +3044,7 @@ menu = {
     #     'order': 682
     # },
     # 'NEUF_RTLNITROTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTL NITRO TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3055,7 +3055,7 @@ menu = {
     #     'order': 685
     # },
     # 'NEUF_ARTEALLD': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Arte Allemand',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3066,7 +3066,7 @@ menu = {
     #     'order': 686
     # },
     # 'NEUF_TVPPOLONIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TVP Polonia',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3077,7 +3077,7 @@ menu = {
     #     'order': 700
     # },
     # 'NEUF_ARMENIA1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Armenia 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3088,7 +3088,7 @@ menu = {
     #     'order': 713
     # },
     # 'NEUF_CHANNEL1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Channel One Russia',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3099,7 +3099,7 @@ menu = {
     #     'order': 718
     # },
     # 'NEUF_RTRPLANETA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTR Planeta',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3110,7 +3110,7 @@ menu = {
     #     'order': 731
     # },
     # 'NEUF_ART_CINEMA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ART CINEMA',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3121,7 +3121,7 @@ menu = {
     #     'order': 733
     # },
     # 'NEUF_ART_AFLAM1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ART AFLAM 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3132,7 +3132,7 @@ menu = {
     #     'order': 734
     # },
     # 'NEUF_ART_AFLAM2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ART AFLAM 2',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3143,7 +3143,7 @@ menu = {
     #     'order': 735
     # },
     # 'NEUF_AL_HEKAYAT1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'AL HEKAYAT 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3154,7 +3154,7 @@ menu = {
     #     'order': 736
     # },
     # 'NEUF_AL_HEKAYAT2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'AL HEKAYAT 2',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3165,7 +3165,7 @@ menu = {
     #     'order': 737
     # },
     # 'NEUF_TVROMANIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV Romania International',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3176,7 +3176,7 @@ menu = {
     #     'order': 738
     # },
     # 'NEUF_BAHIA_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Bahia TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3187,7 +3187,7 @@ menu = {
     #     'order': 739
     # },
     # 'NEUF_TELE_MAROC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Télé Maroc',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3198,7 +3198,7 @@ menu = {
     #     'order': 740
     # },
     # 'NEUF_CANALALGERIE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Canal Algérie',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3209,7 +3209,7 @@ menu = {
     #     'order': 742
     # },
     # 'NEUF_BEURTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Beur FM TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3220,7 +3220,7 @@ menu = {
     #     'order': 746
     # },
     # 'NEUF_2MMAROC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': '2M Maroc',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3231,7 +3231,7 @@ menu = {
     #     'order': 749
     # },
     # 'NEUF_ALAOULA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Al Aoula',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3242,7 +3242,7 @@ menu = {
     #     'order': 750
     # },
     # 'NEUF_ARRYADIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Arryadia',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3253,7 +3253,7 @@ menu = {
     #     'order': 751
     # },
     # 'NEUF_ASSADISSA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Assadissa',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3264,7 +3264,7 @@ menu = {
     #     'order': 752
     # },
     # 'NEUF_WATANIA2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Watania 2',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3275,7 +3275,7 @@ menu = {
     #     'order': 758
     # },
     # 'NEUF_TNTUNISIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Tunisia 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3286,7 +3286,7 @@ menu = {
     #     'order': 759
     # },
     # 'NEUF_ASHARQ_NEWS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Asharq News',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3297,7 +3297,7 @@ menu = {
     #     'order': 760
     # },
     # 'NEUF_BRBRTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Berbère TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3308,7 +3308,7 @@ menu = {
     #     'order': 765
     # },
     # 'NEUF_SKYNEWSARABIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Sky News Arabia',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3319,7 +3319,7 @@ menu = {
     #     'order': 767
     # },
     # 'NEUF_CHADA_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CHADA TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3330,7 +3330,7 @@ menu = {
     #     'order': 768
     # },
     # 'NEUF_MBC_PLUS_DRAMA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MBC PLUS DRAMA',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3341,7 +3341,7 @@ menu = {
     #     'order': 769
     # },
     # 'NEUF_HELWA_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'HELWA TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3352,7 +3352,7 @@ menu = {
     #     'order': 770
     # },
     # 'NEUF_MBC_DRAMA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MBC Drama',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3363,7 +3363,7 @@ menu = {
     #     'order': 773
     # },
     # 'NEUF_ECHOROUKNEWS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Echorouk News',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3374,7 +3374,7 @@ menu = {
     #     'order': 774
     # },
     # 'NEUF_ELBILADTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'El Bilad TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3385,7 +3385,7 @@ menu = {
     #     'order': 775
     # },
     # 'NEUF_DIZI': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Dizi',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3396,7 +3396,7 @@ menu = {
     #     'order': 776
     # },
     # 'NEUF_ALARABY2': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Alaraby 2',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3407,7 +3407,7 @@ menu = {
     #     'order': 777
     # },
     # 'NEUF_MBC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MBC',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3418,7 +3418,7 @@ menu = {
     #     'order': 778
     # },
     # 'NEUF_ROTANACINEPLUS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Rotana Cinéma+ FR',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3429,7 +3429,7 @@ menu = {
     #     'order': 779
     # },
     # 'NEUF_MBC5': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MBC 5',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3440,7 +3440,7 @@ menu = {
     #     'order': 780
     # },
     # 'NEUF_MBC_MASR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'MBC Masr',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3451,7 +3451,7 @@ menu = {
     #     'order': 782
     # },
     # 'NEUF_ROTANACINE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Rotana Cinema',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3462,7 +3462,7 @@ menu = {
     #     'order': 783
     # },
     # 'NEUF_ROTANA_CLASSIC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Rotana Classic',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3473,7 +3473,7 @@ menu = {
     #     'order': 784
     # },
     # 'NEUF_NESMA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Nessma',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3484,7 +3484,7 @@ menu = {
     #     'order': 785
     # },
     # 'NEUF_DMC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'DMC',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3495,7 +3495,7 @@ menu = {
     #     'order': 786
     # },
     # 'NEUF_FIX_AND_FOXI': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Fix and Foxi',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3506,7 +3506,7 @@ menu = {
     #     'order': 787
     # },
     # 'NEUF_CARTHAGE_PLUS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Carthage+',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3517,7 +3517,7 @@ menu = {
     #     'order': 788
     # },
     # 'NEUF_DMC_DRAMA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'DMC Drama',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3528,7 +3528,7 @@ menu = {
     #     'order': 789
     # },
     # 'NEUF_IQRAAINTER': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Iqraa International',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3539,7 +3539,7 @@ menu = {
     #     'order': 790
     # },
     # 'NEUF_IQRAA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Iqraa TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3550,7 +3550,7 @@ menu = {
     #     'order': 791
     # },
     # 'NEUF_HOLYQURAN': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Al Majd Holy Quran',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3561,7 +3561,7 @@ menu = {
     #     'order': 792
     # },
     # 'NEUF_ALMAGH': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Al Maghribia',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3572,7 +3572,7 @@ menu = {
     #     'order': 798
     # },
     # 'NEUF_ARRABIA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Arrabiâ',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3583,7 +3583,7 @@ menu = {
     #     'order': 799
     # },
     # 'NEUF_LBC_SAT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'LBC Sat',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3594,7 +3594,7 @@ menu = {
     #     'order': 801
     # },
     # 'NEUF_MURRTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Murr TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3605,7 +3605,7 @@ menu = {
     #     'order': 805
     # },
     # 'NEUF_ROTANA_M_PLUS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Rotana M+',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3616,7 +3616,7 @@ menu = {
     #     'order': 806
     # },
     # 'NEUF_DUBAITV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Dubaï TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3627,7 +3627,7 @@ menu = {
     #     'order': 807
     # },
     # 'NEUF_ON_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ON TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3638,7 +3638,7 @@ menu = {
     #     'order': 809
     # },
     # 'NEUF_HANNIBAL': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'HANNIBAL TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3649,7 +3649,7 @@ menu = {
     #     'order': 810
     # },
     # 'NEUF_ALMASRIYA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Al Masriya',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3660,7 +3660,7 @@ menu = {
     #     'order': 813
     # },
     # 'NEUF_ISRAELI': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'The Israeli Network',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3671,7 +3671,7 @@ menu = {
     #     'order': 814
     # },
     # 'NEUF_JORDANSAT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Jordan Satellite Channel',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3682,7 +3682,7 @@ menu = {
     #     'order': 815
     # },
     # 'NEUF_EURO_STAR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Euro Star',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3693,7 +3693,7 @@ menu = {
     #     'order': 818
     # },
     # 'NEUF_EURO_D': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Euro D',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3704,7 +3704,7 @@ menu = {
     #     'order': 819
     # },
     # 'NEUF_BEIN_MOVIES': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'BEIN MOVIES',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3715,7 +3715,7 @@ menu = {
     #     'order': 821
     # },
     # 'NEUF_SHOW_MAX': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'SHOW MAX',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3726,7 +3726,7 @@ menu = {
     #     'order': 822
     # },
     # 'NEUF_ATV_AVRUPA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ATV Avrupa',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3737,7 +3737,7 @@ menu = {
     #     'order': 824
     # },
     # 'NEUF_KANAL7_AVRUPA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'KANAL 7 AVRUPA',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3748,7 +3748,7 @@ menu = {
     #     'order': 825
     # },
     # 'NEUF_APLUS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'A+',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3759,7 +3759,7 @@ menu = {
     #     'order': 838
     # },
     # 'NEUF_ORTB': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ORTB',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3770,7 +3770,7 @@ menu = {
     #     'order': 839
     # },
     # 'NEUF_NOVELAS': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'NOVELAS',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3781,7 +3781,7 @@ menu = {
     #     'order': 840
     # },
     # 'NEUF_CRTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CRTV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3792,7 +3792,7 @@ menu = {
     #     'order': 841
     # },
     # 'NEUF_CHERIFLA_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CHERIFLA TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3803,7 +3803,7 @@ menu = {
     #     'order': 844
     # },
     # 'NEUF_ORTC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ORTC',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3814,7 +3814,7 @@ menu = {
     #     'order': 845
     # },
     # 'NEUF_TELECONGO': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TV Congo',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3825,7 +3825,7 @@ menu = {
     #     'order': 846
     # },
     # 'NEUF_MABOKE_TV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Maboke TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3836,7 +3836,7 @@ menu = {
     #     'order': 847
     # },
     # 'NEUF_RTNC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTNC',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3847,7 +3847,7 @@ menu = {
     #     'order': 848
     # },
     # 'NEUF_NCI': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'NCI',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3858,7 +3858,7 @@ menu = {
     #     'order': 849
     # },
     # 'NEUF_TCI': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTI 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3869,7 +3869,7 @@ menu = {
     #     'order': 851
     # },
     # 'NEUF_CDIRECT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CDIRECT',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3880,7 +3880,7 @@ menu = {
     #     'order': 852
     # },
     # 'NEUF_GABON_1ERE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Gabon 1ère',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3891,7 +3891,7 @@ menu = {
     #     'order': 853
     # },
     # 'NEUF_RTG': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTG',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3902,7 +3902,7 @@ menu = {
     #     'order': 854
     # },
     # 'NEUF_TVM': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TVM',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3913,7 +3913,7 @@ menu = {
     #     'order': 855
     # },
     # 'NEUF_ORTM': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'ORTM',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3924,7 +3924,7 @@ menu = {
     #     'order': 856
     # },
     # 'NEUF_NOLLYWOOD': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Nollywood TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3935,7 +3935,7 @@ menu = {
     #     'order': 858
     # },
     # 'NEUF_AFRICABLE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Africâble',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3946,7 +3946,7 @@ menu = {
     #     'order': 859
     # },
     # 'NEUF_TRACEAFRICA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Trace Africa',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3957,7 +3957,7 @@ menu = {
     #     'order': 861
     # },
     # 'NEUF_VOXAFRICA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Vox Africa',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3968,7 +3968,7 @@ menu = {
     #     'order': 862
     # },
     # 'NEUF_2STV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': '2STV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3979,7 +3979,7 @@ menu = {
     #     'order': 863
     # },
     # 'NEUF_RTS1': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'RTS 1',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -3990,7 +3990,7 @@ menu = {
     #     'order': 864
     # },
     # 'NEUF_TFM': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'TFM',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4001,7 +4001,7 @@ menu = {
     #     'order': 866
     # },
     # 'NEUF_SUNU_YEUF': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'SUNU YEUF',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4012,7 +4012,7 @@ menu = {
     #     'order': 867
     # },
     # 'NEUF_BEIJINGTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Beijing TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4023,7 +4023,7 @@ menu = {
     #     'order': 878
     # },
     # 'NEUF_CCTVYULE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CCTV YuLe',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4034,7 +4034,7 @@ menu = {
     #     'order': 879
     # },
     # 'NEUF_CCTV4': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CCTV-4',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4045,7 +4045,7 @@ menu = {
     #     'order': 880
     # },
     # 'NEUF_CMC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CMC',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4056,7 +4056,7 @@ menu = {
     #     'order': 881
     # },
     # 'NEUF_HUNANTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Hunan TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4067,7 +4067,7 @@ menu = {
     #     'order': 882
     # },
     # 'NEUF_JSBCINT': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'JSBC International',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4078,7 +4078,7 @@ menu = {
     #     'order': 883
     # },
     # 'NEUF_PHOENIXCNE': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Phoenix CNE',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4089,7 +4089,7 @@ menu = {
     #     'order': 884
     # },
     # 'NEUF_DRAGONTV': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Dragon TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4100,7 +4100,7 @@ menu = {
     #     'order': 886
     # },
     # 'NEUF_XIAMENSTAR': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Great Wall Elite',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4111,7 +4111,7 @@ menu = {
     #     'order': 887
     # },
     # 'NEUF_ZTVWORLD': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'Zhejiang Star TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4122,7 +4122,7 @@ menu = {
     #     'order': 888
     # },
     # 'NEUF_GRT_GBA': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'GRT GBA Satellite TV',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4133,7 +4133,7 @@ menu = {
     #     'order': 916
     # },
     # 'NEUF_CCTVDOC': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CGTN-Documentary',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4144,7 +4144,7 @@ menu = {
     #     'order': 918
     # },
     # 'NEUF_CCTVF': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'CGTN-Français',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4155,7 +4155,7 @@ menu = {
     #     'order': 920
     # },
     # 'NEUF_NTD': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'NTD',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',
@@ -4166,7 +4166,7 @@ menu = {
     #     'order': 921
     # },
     # 'NEUF_NHK_WP': {
-    #     'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+    #     'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
     #     'label': 'NHK World Premium',
     #     'thumb': 'channels/fr/???.png',
     #     'fanart': 'channels/fr/???_fanart.jpg',

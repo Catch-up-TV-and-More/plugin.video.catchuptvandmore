@@ -126,9 +126,6 @@
             <setting label="30252" type="text" id="rmcbfmplay.login" default=""/>
             <setting label="30253" type="text" id="rmcbfmplay.password" option="hidden" default=""/>
 
-            <setting label="30262" type="text" id="sfrtv.login" default=""/>
-            <setting label="30263" type="text" id="sfrtv.password" option="hidden" default=""/>
-
         <setting label="30081" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
@@ -146,6 +143,11 @@
 
             <setting label="30250" type="text" id="uktvplay.login" default=""/>
             <setting label="30251" type="text" id="uktvplay.password" option="hidden" default=""/>
+
+        <setting label="30034" type="lsep" subsetting="true" visible="eq(1,true)"/>
+
+            <setting label="30262" type="text" id="sfrtv.login" default=""/>
+            <setting label="30263" type="text" id="sfrtv.password" option="hidden" default=""/>
 
         <setting label="30254" type="lsep" subsetting="true" visible="eq(1,true)"/>
 

@@ -11,6 +11,7 @@ from codequick import Listitem, Resolver, Route, Script
 from codequick.storage import Cache
 from kodi_six import xbmcgui
 from resources.lib import resolver_proxy
+from resources.lib.addon_utils import get_item_media_path
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.main import tv_guide_menu
 
@@ -63,13 +64,22 @@ def get_sfrtv_user_profile(plugin, token):
                         timeout=REQUEST_TIMEOUT).json()
 
 
-def get_token(plugin, with_dialog=True):
+def get_credentials_from_config(plugin, with_dialog):
     username = plugin.setting.get_string('sfrtv.login')
     password = plugin.setting.get_string('sfrtv.password')
+
     if not username or not password:
         if with_dialog:
             xbmcgui.Dialog().ok(plugin.localize(30600),
                                 plugin.localize(30604) % ('SFR TV', 'https://tv.sfr.fr'))
+        return None, None
+
+    return username, password
+
+
+def get_token(plugin, with_dialog=True):
+    username, password = get_credentials_from_config(plugin, with_dialog)
+    if not username or not password:
         return None
 
     # Unable to use urlquick cache due to authentication redirects
@@ -183,6 +193,35 @@ def get_token(plugin, with_dialog=True):
     return token
 
 
+@Route.register(autosort=False)
+def provider_root(plugin, **kwargs):
+    username, password = get_credentials_from_config(plugin, True)
+    if not username or not password:
+        yield False
+        return
+
+    # Live TV
+    item = Listitem()
+    item.label = plugin.localize(30030)
+    item.art['thumb'] = get_item_media_path('live_tv.png')
+    item.set_callback(list_lives)
+    item_post_treatment(item)
+    yield item
+
+    # Replay
+    item = Listitem()
+    item.label = 'Replay'
+    item.art['thumb'] = get_item_media_path('replay.png')
+    item.set_callback(list_stores)
+    item_post_treatment(item)
+    yield item
+
+    # Search feature
+    item = Listitem.search(search)
+    item_post_treatment(item)
+    yield item
+
+
 def get_stores(plugin, token):
     params = {
         'accountTypes': 'LAND',
@@ -228,18 +267,12 @@ def get_stores(plugin, token):
 
 
 @Route.register(autosort=False)
-def list_programs(plugin, **kwargs):
+def list_stores(plugin, **kwargs):
     token = get_token(plugin)
     if not token:
         yield False
         return
 
-    # Search feature
-    item = Listitem.search(search)
-    item_post_treatment(item)
-    yield item
-
-    # Stores
     for store in get_stores(plugin, token):
         item = Listitem()
         item.label = store['title']
@@ -553,7 +586,7 @@ def list_live_channels(plugin=Script):
 
         if not channel_infos:
             channel_infos = {
-                'resolver': '/resources/lib/channels/fr/sfrtv:get_live_stream',
+                'resolver': '/resources/lib/providers/sfrtv:get_live_stream',
                 'label': serv['name'],
                 'enabled': True,
                 'order': serv['zappingId']
@@ -567,7 +600,7 @@ def list_live_channels(plugin=Script):
 
 
 @Route.register
-def list_lives(plugin, item_id, **kwargs):
+def list_lives(plugin, **kwargs):
     token = get_token(plugin)
     if not token:
         yield False

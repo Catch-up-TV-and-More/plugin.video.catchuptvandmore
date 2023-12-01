@@ -382,12 +382,5 @@ menu = {
         "fanart": "channels/fr/jone_fanart.jpg",
         "enabled": True,
         "order": 45,
-    },
-    "sfrtv": {
-        "route": "/resources/lib/channels/fr/sfrtv:list_programs",
-        "label": "SFR TV",
-        "thumb": "channels/fr/sfrtv.png",
-        "enabled": True,
-        "order": 46,
     }
 }

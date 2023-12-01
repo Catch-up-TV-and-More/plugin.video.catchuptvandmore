@@ -118,6 +118,10 @@ msgctxt "#30033"
 msgid "Favourites"
 msgstr ""
 
+msgctxt "#30034"
+msgid "Internet service providers"
+msgstr ""
+
 
 # Countries (from 30050 to 30079)
 
