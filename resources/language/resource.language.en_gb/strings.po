@@ -118,6 +118,10 @@ msgctxt "#30033"
 msgid "Favourites"
 msgstr ""
 
+msgctxt "#30034"
+msgid "Internet service providers"
+msgstr ""
+
 
 # Countries (from 30050 to 30079)
 
@@ -566,6 +570,15 @@ msgctxt "#30261"
 msgid "MyTF1 Password"
 msgstr ""
 
+msgctxt "#30262"
+msgid "SFR TV login"
+msgstr ""
+
+msgctxt "#30263"
+msgid "SFR TV password"
+msgstr ""
+
+
 # TV integration (from 30270 to 30289)
 
 msgctxt "#30270"
@@ -955,6 +968,11 @@ msgstr ""
 msgctxt "#30731"
 msgid "Homepage"
 msgstr ""
+
+msgctxt "#30732"
+msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
+msgstr ""
+
 
 # Favourites (from 30800 to 30859)
 

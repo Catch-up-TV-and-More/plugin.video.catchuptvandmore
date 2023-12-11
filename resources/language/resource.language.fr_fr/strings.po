@@ -118,6 +118,10 @@ msgctxt "#30033"
 msgid "Favourites"
 msgstr "Favoris"
 
+msgctxt "#30034"
+msgid "Internet service providers"
+msgstr "Fournisseurs d'accès internet"
+
 
 # Countries (from 30050 to 30079)
 
@@ -566,6 +570,14 @@ msgctxt "#30261"
 msgid "Mot de passe MyTF1"
 msgstr ""
 
+msgctxt "#30262"
+msgid "SFR TV login"
+msgstr "Login SFR TV"
+
+msgctxt "#30263"
+msgid "SFR TV password"
+msgstr "Mot de passe SFR TV"
+
 
 # TV integration (from 30270 to 30289)
 
@@ -824,7 +836,7 @@ msgstr "Ce contenu est protégé par DRM. Le mode téléchargement ne fonctionne
 
 msgctxt "#30604"
 msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
-msgstr "Accèss à ce contenu nécessite un compte %s. Vous pouvez configurer votre identifiant et votre mot de passe dans la configuration de cette extension. Si vous n'avez pas de compte, vous pouvez le créer à cette URL %s."
+msgstr "Accéder à ce contenu nécessite un compte %s. Vous pouvez configurer votre identifiant et votre mot de passe dans la configuration de cette extension. Si vous n'avez pas de compte, vous pouvez le créer à cette URL %s."
 
 msgctxt "#30605"
 msgid "You can now use Kodi's TV feature to watch live TV channels from Catch-up TV & More, follow the tutorial at https://catch-up-tv-and-more.github.io/live_tv_installation/."
@@ -956,6 +968,11 @@ msgstr "Émissions"
 msgctxt "#30731"
 msgid "Homepage"
 msgstr "Accueil"
+
+msgctxt "#30732"
+msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
+msgstr "Ce contenu est payant. Pour l'acheter ou le louer, rendez-vous sur le site %s à cette URL : %s"
+
 
 # Favourites (from 30800 to 30859)
 

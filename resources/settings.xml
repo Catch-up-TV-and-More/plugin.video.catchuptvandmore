@@ -144,6 +144,11 @@
             <setting label="30250" type="text" id="uktvplay.login" default=""/>
             <setting label="30251" type="text" id="uktvplay.password" option="hidden" default=""/>
 
+        <setting label="30034" type="lsep" subsetting="true" visible="eq(1,true)"/>
+
+            <setting label="30262" type="text" id="sfrtv.login" default=""/>
+            <setting label="30263" type="text" id="sfrtv.password" option="hidden" default=""/>
+
         <setting label="30254" type="lsep" subsetting="true" visible="eq(1,true)"/>
 
             <setting label="30255" type="text" id="schedulesdirect.login" default=""/>
