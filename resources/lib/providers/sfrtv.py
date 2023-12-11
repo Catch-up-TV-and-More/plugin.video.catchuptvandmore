@@ -453,36 +453,50 @@ def list_episodes(plugin, season_id, **kwargs):
         yield item
 
 
-def build_product_item(plugin, product):
+def build_product_item(plugin, product, default_preferred_image_ratio='16/9'):
     item = Listitem()
 
     item.label = product['title']
 
-    if 'description' in product and product['description']:
+    if product.get('subTitle'):
+        item.label += ' - ' + product['subTitle']
+
+    if product.get('universe') == 'aggregate':
+        if product.get('type') == 'Season' and product.get('seasonNumber'):
+            item.label += ' - Saison ' + str(product['seasonNumber'])
+
+    if product.get('universe') == 'aggregate' or (product.get('context') and 'VOD' in product['context'].upper()):
+        if product.get('genres') and len(product['genres']) > 0:
+            item.info['genre'] = product['genres'][0]
+
+    if product.get('description'):
         item.info['plot'] = product['description']
-    elif 'shortDescription' in product and product['shortDescription']:
+    elif product.get('shortDescription'):
         item.info['plot'] = product['shortDescription']
 
-    if 'duration' in product and product['duration']:
+    if product.get('duration'):
         item.info['duration'] = product['duration']
 
-    if 'seasonNumber' in product and product['seasonNumber']:
+    if product.get('seasonNumber'):
+        item.info['mediatype'] = 'season'
         item.info['season'] = product['seasonNumber']
 
-    if 'episodeNumber' in product and product['episodeNumber']:
+    if product.get('episodeNumber'):
         item.info['mediatype'] = 'episode'
         item.info['episode'] = product['episodeNumber']
 
-    if 'diffusionDate' in product and product['diffusionDate']:
+    if product.get('diffusionDate'):
         dt = datetime.fromtimestamp(int(product['diffusionDate'] / 1000))
         dt_format = '%d/%m/%Y'
         item.info.date(dt.strftime(dt_format), dt_format)
 
-    for image in product.get('images', []):
-        if image['format'] == '2/3' and not item.art.get('thumb'):
-            item.art['thumb'] = image['url']
-        elif image['format'] == '16/9':
-            item.art['thumb'] = image['url']
+    if product.get('releaseDate'):
+        item.info['year'] = product['releaseDate']
+
+    if len(product.get('images', [])) > 0:
+        pref_ratio = product.get('preferredImageRatio') or default_preferred_image_ratio
+        item.art['thumb'] = (next((image['url'] for image in product['images'] if image['format'] == pref_ratio), None)
+                             or product['images'][0]['url'])
 
     item.set_callback(list_product_details if product.get('type', '') in PRODUCT_DETAILS_TYPES else get_replay_stream,
                       product['id'],
