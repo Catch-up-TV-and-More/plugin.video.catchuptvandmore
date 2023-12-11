@@ -25,23 +25,31 @@ ACCESS_TOKEN_URL = 'https://www.sfr.fr/cas/oidc/authorize'
 USER_PROFILE_URL = 'https://ws-backendtv.sfr.fr/heimdall-core/public/api/v2/userProfiles'
 SERVICE_URL = 'https://ws-backendtv.sfr.fr/sekai-service-plan/public/v2/service-list'
 LICENSE_URL = 'https://ws-backendtv.sfr.fr/asgard-drm-widevine/public/licence'
-STRUCT_MENU_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v2/menu/RefMenuItem::gen8-replay-v2/structure'
-MENU_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v2/spot/{}/content'
-CATEGORIES_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/stores/{}/categories'
-PRODUCTS_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v2/categories/{}/contents'
-PRODUCT_DETAILS_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/{}/detail'
-EPISODES_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/{}/episodes'
-PRODUCT_OPTIONS_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v3/content/{}/options'
+MENU_STRUCTURE_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v2/menu/{}/structure'
+SPOT_CONTENT_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v2/spot/{}/content'
+SPOT_MORE_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v2/spot/{}/more'
+TILE_CONTENT_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v2/tile/{}/content'
+STORE_CATEGORIES_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/stores/{}/categories'
+CATEGORY_CONTENTS_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v2/categories/{}/contents'
+CONTENT_DETAILS_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/{}/detail'
+CONTENT_EPISODES_URL = 'https://ws-cdn.tv.sfr.net/gaia-core/rest/api/web/v1/content/{}/episodes'
+CONTENT_OPTIONS_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v3/content/{}/options'
 SEARCH_TEXT_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v2/search/text'
-CUSTOMDATA_REPLAY = ('description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC'
-                     '&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken'
-                     '&tokenSSO={}&type=REPLAY')
-CUSTOMDATA_LIVE = ('description={}&deviceId=byPassARTHIUS&deviceName=Firefox-96.0----Windows&deviceType=PC'
+VOD_PLAY_URL = 'https://ws-backendtv.sfr.fr/gaia-core/rest/api/web/v1/vod/play'
+CUSTOMDATA_LIVE = ('description={}&deviceId=byPassARTHIUS&deviceName=Chrome-119.0.0.0----Windows&deviceType=PC'
                    '&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken'
                    '&tokenSSO={}&type=LIVEOTT&accountId={}')
-MAX_PRODUCTS = 20
+CUSTOMDATA_REPLAY = ('description={}&deviceId=byPassARTHIUS&deviceName=Chrome-119.0.0.0----Windows&deviceType=PC'
+                     '&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken'
+                     '&tokenSSO={}&type={}')
+CUSTOMDATA_VOD = ('description={}&deviceId=byPassARTHIUS&deviceName=Chrome-119.0.0.0----Windows&deviceType=PC'
+                  '&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken'
+                  '&tokenSSO={}&entitlementId={}&type={}')
+MAX_CONTENTS = 20
 REQUEST_TIMEOUT = 30
-PRODUCT_DETAILS_TYPES = ['Serie', 'Season', 'CONTENT']
+REPLAY_MENU_ID = 'RefMenuItem::gen8-replay-v2'
+VOD_MENU_ID = 'RefMenuItem::gen8-vod-v2'
+PAID_CONTENT_INDICATORS = ['inPackRented', 'inRent', 'inSVodSubscribed']
 
 
 def get_sfrtv_config(plugin):
@@ -213,7 +221,15 @@ def provider_root(plugin, **kwargs):
     item = Listitem()
     item.label = 'Replay'
     item.art['thumb'] = get_item_media_path('replay.png')
-    item.set_callback(list_stores)
+    item.set_callback(list_replay_stores)
+    item_post_treatment(item)
+    yield item
+
+    # VOD
+    item = Listitem()
+    item.label = 'VOD'
+    item.art['thumb'] = get_item_media_path('vod.png')
+    item.set_callback(list_vod_spots)
     item_post_treatment(item)
     yield item
 
@@ -223,7 +239,7 @@ def provider_root(plugin, **kwargs):
     yield item
 
 
-def get_stores(plugin, token):
+def get_menu_structure(plugin, menu_id):
     params = {
         'accountTypes': 'LAND',
         'infrastructures': 'FTTH',
@@ -237,58 +253,64 @@ def get_stores(plugin, token):
         'Referer': 'https://tv.sfr.fr/',
         'User-Agent': USER_AGENT
     }
-    struct_menu = urlquick.get(STRUCT_MENU_URL,
-                               params=params,
-                               headers=headers,
-                               timeout=REQUEST_TIMEOUT).json()
-    spot_id = struct_menu['spots'][0]['id']
-    params = {
-        'app': 'gen8',
-        'device': 'browser',
-        'token': token,
-        'operators': 'sfr',
-        'infrastructures': 'FTTH',
-        'accountTypes': 'LAND',
-        'noTracking': 'false',
-    }
+    return urlquick.get(MENU_STRUCTURE_URL.format(menu_id),
+                        params=params,
+                        headers=headers,
+                        timeout=REQUEST_TIMEOUT).json()
+
+
+def get_spot_content(plugin, spot_id, token=None):
+    if token:
+        params = {
+            'app': 'gen8',
+            'device': 'browser',
+            'token': token,
+            'operators': 'sfr',
+            'infrastructures': 'FTTH',
+            'accountTypes': 'LAND',
+            'noTracking': 'false',
+        }
+    else:
+        params = {
+            'app': 'gen8',
+            'device': 'browser',
+            'noTracking': 'false',
+        }
     headers = {
         'Accept': 'application/json',
         'Referer': 'https://tv.sfr.fr/',
         'User-Agent': USER_AGENT
     }
-    menu = urlquick.get(MENU_URL.format(spot_id),
+    return urlquick.get(SPOT_CONTENT_URL.format(spot_id),
                         params=params,
                         headers=headers,
-                        max_age=TOKEN_MAX_AGE,
+                        max_age=(TOKEN_MAX_AGE if token else -1),
                         timeout=REQUEST_TIMEOUT).json()
-    return list(map(lambda t: {'id': t['action']['actionIds']['storeId'],
-                               'title': t['title'],
-                               'images': t['images']},
-                    menu['tiles']))
+
+
+def get_replay_stores(plugin, token):
+    menu_structure = get_menu_structure(plugin, REPLAY_MENU_ID)
+
+    # only one spot for Replay
+    spot_id = menu_structure['spots'][0]['id']
+
+    spot_content = get_spot_content(plugin, spot_id, token)
+
+    return spot_content['tiles']
 
 
 @Route.register(autosort=False)
-def list_stores(plugin, **kwargs):
+def list_replay_stores(plugin, **kwargs):
     token = get_token(plugin)
     if not token:
         yield False
         return
 
-    for store in get_stores(plugin, token):
-        item = Listitem()
-        item.label = store['title']
-
-        for image in store['images']:
-            if image['format'] == 'logo':
-                item.art['thumb'] = image['url']
-
-        item.set_callback(list_categories,
-                          store_id=store['id'])
-        item_post_treatment(item)
-        yield item
+    for store in get_replay_stores(plugin, token):
+        yield build_product_item(plugin, store)
 
 
-def get_categories(plugin, store_id):
+def get_store_categories(plugin, store_id):
     params = {
         'app': 'gen8',
         'device': 'browser',
@@ -302,7 +324,7 @@ def get_categories(plugin, store_id):
         'Referer': 'https://tv.sfr.fr/',
         'User-Agent': USER_AGENT
     }
-    categories_infos = urlquick.get(CATEGORIES_URL.format(store_id),
+    categories_infos = urlquick.get(STORE_CATEGORIES_URL.format(store_id),
                                     params=params,
                                     headers=headers,
                                     timeout=REQUEST_TIMEOUT).json()
@@ -310,20 +332,19 @@ def get_categories(plugin, store_id):
 
 
 @Route.register(autosort=False)
-def list_categories(plugin, store_id, **kwargs):
-    categories = get_categories(plugin, store_id)
+def list_store_categories(plugin, store_id, **kwargs):
+    categories = get_store_categories(plugin, store_id)
 
     for category in categories:
         item = Listitem()
         item.label = category['name']
-        item.set_callback(list_products,
-                          category_id=category['id'],
-                          page=0)
+        item.set_callback(list_category_contents,
+                          category_id=category['id'])
         item_post_treatment(item)
         yield item
 
 
-def get_products(plugin, category_id, page):
+def get_category_contents(plugin, category_id, page=0):
     params = {
         'app': 'gen8',
         'device': 'browser',
@@ -332,42 +353,42 @@ def get_products(plugin, category_id, page):
         'operators': 'sfr',
         'noTracking': 'false',
         'page': page,
-        'size': MAX_PRODUCTS
+        'size': MAX_CONTENTS  # this parameter doesn't change anything (max 20 contents)
     }
     headers = {
         'Accept': 'application/json',
         'Referer': 'https://tv.sfr.fr/',
         'User-Agent': USER_AGENT
     }
-    return urlquick.get(PRODUCTS_URL.format(category_id),
+    return urlquick.get(CATEGORY_CONTENTS_URL.format(category_id),
                         params=params,
                         headers=headers,
                         timeout=REQUEST_TIMEOUT).json()
 
 
 @Route.register(autosort=False)
-def list_products(plugin, category_id, page, **kwargs):
-    # Pagination seems to be blocked at 20 videos (the "size" parameter doesn't change anything),
-    # so let's paginate at 100 videos
+def list_category_contents(plugin, category_id, page=0, **kwargs):
+    # Pagination seems to be blocked at 20 contents (the "size" parameter doesn't change anything),
+    # so let's paginate at 100 contents
     n_loop = 5
     for x in range(n_loop):
-        products = get_products(plugin, category_id, page)
+        contents = get_category_contents(plugin, category_id, page)
 
-        for product in products:
-            yield build_product_item(plugin, product)
+        for content in contents:
+            yield build_product_item(plugin, content)
 
-        if len(products) == MAX_PRODUCTS:  # didn't find "count" or "total" information
+        if len(contents) == MAX_CONTENTS:  # no "count" or "total" information
             if x < (n_loop - 1):
                 page += 1
             else:
                 yield Listitem.next_page(category_id=category_id,
-                                         callback=list_products,
+                                         callback=list_category_contents,
                                          page=page + 1)
         else:
             break
 
 
-def get_product_details(plugin, product_id, universe='PROVIDER', **kwargs):
+def get_content_details(plugin, content_id, universe='PROVIDER', **kwargs):
     params = {
         'accountTypes': 'LAND',
         'infrastructures': 'FTTH',
@@ -380,33 +401,38 @@ def get_product_details(plugin, product_id, universe='PROVIDER', **kwargs):
         'Referer': 'https://tv.sfr.fr/',
         'User-Agent': USER_AGENT
     }
-    return urlquick.get(PRODUCT_DETAILS_URL.format(product_id),
+    return urlquick.get(CONTENT_DETAILS_URL.format(content_id),
                         params=params,
                         headers=headers,
                         timeout=REQUEST_TIMEOUT).json()
 
 
 @Route.register(autosort=False)
-def list_product_details(plugin, product_id, **kwargs):
+def list_content_details(plugin, content_id, action_type='', **kwargs):
     token = get_token(plugin)
     if not token:
         yield False
         return
 
-    product_details = get_product_details(plugin, product_id, **kwargs)
+    content_details = get_content_details(plugin, content_id, **kwargs)
 
-    if 'seasons' in product_details:
-        for season in product_details['seasons']:
-            season_details = get_product_details(plugin, season['id'], **kwargs)
+    if 'seasons' in content_details:
+        for season in content_details['seasons']:
+            season_details = get_content_details(plugin, season['id'], **kwargs)
             yield build_product_item(plugin, season_details)
-    elif 'episodes' in product_details:
-        for episode in list_episodes(plugin, product_id, **kwargs):
+    elif action_type == 'displayFip' and content_details['type'] == 'Season' and content_details.get('seriesId'):
+        series_details = get_content_details(plugin, content_details['seriesId'], **kwargs)
+        for season in series_details['seasons']:
+            season_details = get_content_details(plugin, season['id'], **kwargs)
+            yield build_product_item(plugin, season_details)
+    elif 'episodes' in content_details:
+        for episode in list_content_episodes(plugin, content_id, **kwargs):
             yield episode
     else:
-        yield build_product_item(plugin, product_details)
+        yield build_product_item(plugin, content_details)
 
 
-def get_episodes(plugin, season_id, universe='PROVIDER', page=0, size=10, **kwargs):
+def get_content_episodes(plugin, season_id, universe='PROVIDER', page=0, size=10, **kwargs):
     params = {
         'app': 'gen8',
         'device': 'browser',
@@ -427,7 +453,7 @@ def get_episodes(plugin, season_id, universe='PROVIDER', page=0, size=10, **kwar
         'Origin': 'https://tv.sfr.fr',
         'Connection': 'keep-alive'
     }
-    search_result = urlquick.get(EPISODES_URL.format(season_id),
+    search_result = urlquick.get(CONTENT_EPISODES_URL.format(season_id),
                                  params=params,
                                  headers=headers,
                                  timeout=REQUEST_TIMEOUT).json()
@@ -438,14 +464,14 @@ def get_episodes(plugin, season_id, universe='PROVIDER', page=0, size=10, **kwar
 
 
 @Route.register(autosort=False)
-def list_episodes(plugin, season_id, **kwargs):
-    episodes, page, has_next_page = get_episodes(plugin, season_id, **kwargs)
+def list_content_episodes(plugin, season_id, **kwargs):
+    episodes, page, has_next_page = get_content_episodes(plugin, season_id, **kwargs)
 
     for episode in episodes:
         yield build_product_item(plugin, episode)
 
     if has_next_page:
-        item = Listitem.next_page(callback=list_episodes,
+        item = Listitem.next_page(callback=list_content_episodes,
                                   season_id=season_id,
                                   page=page + 1,
                                   **kwargs)
@@ -498,16 +524,46 @@ def build_product_item(plugin, product, default_preferred_image_ratio='16/9'):
         item.art['thumb'] = (next((image['url'] for image in product['images'] if image['format'] == pref_ratio), None)
                              or product['images'][0]['url'])
 
-    item.set_callback(list_product_details if product.get('type', '') in PRODUCT_DETAILS_TYPES else get_replay_stream,
-                      product['id'],
-                      universe=product['universe'] if 'universe' in product else 'PROVIDER')
+    product_type = product.get('type')
+    if product_type in ['Serie', 'Season', 'CONTENT']:
+        callback = list_content_details
+    elif product_type == 'BASE':
+        if 'categoryId' in product['action']['actionIds']:
+            callback = list_category_contents
+        elif 'spotId' in product['action']['actionIds']:
+            callback = list_spot_more_contents
+        elif 'tileId' in product['action']['actionIds']:
+            callback = list_tile_contents
+        else:
+            callback = list_store_categories
+    else:
+        callback = get_stream
+
+    if product_type == 'CONTENT':
+        product_id = product['action']['actionIds']['contentId']
+    elif product_type == 'BASE':
+        if 'categoryId' in product['action']['actionIds']:
+            product_id = product['action']['actionIds']['categoryId']
+        elif 'spotId' in product['action']['actionIds']:
+            product_id = product['action']['actionIds']['spotId']
+        elif 'tileId' in product['action']['actionIds']:
+            product_id = product['action']['actionIds']['tileId']
+        else:
+            product_id = product['action']['actionIds']['storeId']
+    else:
+        product_id = product['id']
+
+    item.set_callback(callback,
+                      product_id,
+                      universe=product['universe'] if 'universe' in product else 'PROVIDER',
+                      action_type=product['action']['actionType'] if 'action' in product else '')
 
     item_post_treatment(item)
 
     return item
 
 
-def get_replay_url(plugin, product_id, token, universe='PROVIDER', **kwargs):
+def get_stream_url(plugin, product_id, token, universe='PROVIDER', **kwargs):
     params = {
         'app': 'gen8',
         'device': 'browser',
@@ -523,40 +579,219 @@ def get_replay_url(plugin, product_id, token, universe='PROVIDER', **kwargs):
         'Referer': 'https://tv.sfr.fr/',
         'User-Agent': USER_AGENT
     }
-    product_options = urlquick.get(PRODUCT_OPTIONS_URL.format(product_id),
+    content_options = urlquick.get(CONTENT_OPTIONS_URL.format(product_id),
                                    params=params,
                                    headers=headers,
                                    timeout=REQUEST_TIMEOUT).json()
-    for option in product_options:
-        for offer in option['offers']:
-            for stream in offer['streams']:
+    context = ''
+    offer_id = ''
+    for option in content_options:
+        context = option['context']
+        for offer in option.get('offers', []):
+            if offer.get('buyable') and not any(map(lambda x: offer[x], PAID_CONTENT_INDICATORS)):
+                continue
+            if offer.get('offerType'):
+                context = offer['offerType']
+            if offer.get('offerId'):
+                offer_id = offer['offerId']
+            for stream in offer.get('streams', []):
                 if stream['drm'] == 'WIDEVINE':
-                    return stream['url']
-    return None
+                    return stream['url'], context, offer_id
+    return None, context, offer_id
 
 
 @Resolver.register
-def get_replay_stream(plugin, product_id, **kwargs):
+def get_stream(plugin, product_id, **kwargs):
     token = get_token(plugin)
     if not token:
         return False
 
-    replay_url = get_replay_url(plugin, product_id, token, **kwargs)
-    if not replay_url:
+    video_url, context, offer_id = get_stream_url(plugin, product_id, token, **kwargs)
+    stream_type = (context or '').upper()
+
+    if not video_url:
+        if 'VOD' in stream_type:
+            xbmcgui.Dialog().ok(plugin.localize(30600),
+                                plugin.localize(30732) % ('SFR TV', 'https://tv.sfr.fr'))
+
         return False
+
+    if 'VOD' in stream_type:
+        vod_play_info = get_vod_play_info(plugin, offer_id, token)
+        entitlement_id = vod_play_info['entitlementId']
+        custom_data = CUSTOMDATA_VOD.format(USER_AGENT, token, entitlement_id, stream_type)
+    else:
+        custom_data = CUSTOMDATA_REPLAY.format(USER_AGENT, token, stream_type)
 
     headers = {
         'User-Agent': USER_AGENT,
-        'customdata': CUSTOMDATA_REPLAY.format(USER_AGENT, token),
+        'customdata': custom_data,
         'Referer': 'https://tv.sfr.fr/',
         'content-type': 'application/octet-stream'
     }
 
     return resolver_proxy.get_stream_with_quality(plugin,
-                                                  video_url=replay_url,
+                                                  video_url=video_url,
                                                   license_url=LICENSE_URL,
                                                   manifest_type='mpd',
                                                   headers=headers)
+
+
+def get_vod_play_info(plugin, offer_id, token):
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'token': token,
+        'operators': 'sfr',
+        'infrastructures': 'FTTH',
+        'accountTypes': 'LAND',
+        'noTracking': 'false'
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
+    data = {
+        'offerId': offer_id,
+        'macAddress': 'PC',
+        'app': 'gen8',
+        'device': 'browser',
+        'token': token
+    }
+    return urlquick.post(VOD_PLAY_URL,
+                         params=params,
+                         headers=headers,
+                         json=data,
+                         max_age=-1,
+                         timeout=REQUEST_TIMEOUT).json()
+
+
+@Route.register(autosort=False)
+def list_vod_spots(plugin, **kwargs):
+
+    menu_structure = get_menu_structure(plugin, VOD_MENU_ID)
+
+    for spot in menu_structure['spots']:
+
+        if spot.get('layout') == 'poster':
+            spot_content = get_spot_content(plugin, spot['id'])
+            content = spot_content['tiles'][0]
+            yield build_product_item(plugin, content)
+            continue
+
+        if spot.get('title'):
+            label = spot['title']
+        else:
+            spot_content = get_spot_content(plugin, spot['id'])
+            label = spot_content['title']
+
+        item = Listitem()
+        item.label = label
+        item.set_callback(list_spot_contents, spot['id'])
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register(autosort=False)
+def list_spot_contents(plugin, spot_id, **kwargs):
+    token = get_token(plugin)
+    if not token:
+        yield False
+        return
+
+    spot_content = get_spot_content(plugin, spot_id, token)
+
+    for content in spot_content['tiles']:
+        yield build_product_item(plugin, content)
+
+
+def get_spot_more_content(plugin, spot_id, token, page=0, size=MAX_CONTENTS):
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'token': token,
+        'page': page,
+        'size': size,
+        'operators': 'sfr',
+        'infrastructures': 'FTTH',
+        'accountTypes': 'LAND',
+        'noTracking': 'false',
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
+    return urlquick.get(SPOT_MORE_URL.format(spot_id),
+                        params=params,
+                        headers=headers,
+                        max_age=TOKEN_MAX_AGE,
+                        timeout=REQUEST_TIMEOUT).json()
+
+
+@Route.register(autosort=False)
+def list_spot_more_contents(plugin, spot_id, page=0, **kwargs):
+    token = get_token(plugin)
+    if not token:
+        yield False
+        return
+
+    spot_content = get_spot_more_content(plugin, spot_id, token, page)
+    contents = spot_content['tiles']
+
+    for content in contents:
+        yield build_product_item(plugin, content)
+
+    if len(contents) == MAX_CONTENTS:  # no "count" or "total" information
+        yield Listitem.next_page(spot_id=spot_id,
+                                 callback=list_spot_more_contents,
+                                 page=page + 1)
+
+
+def get_tile_content(plugin, tile_id, token, page=0, size=MAX_CONTENTS):
+    params = {
+        'app': 'gen8',
+        'device': 'browser',
+        'token': token,
+        'page': page,
+        'size': size,
+        'operators': 'sfr',
+        'infrastructures': 'FTTH',
+        'accountTypes': 'LAND',
+        'noTracking': 'false',
+    }
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://tv.sfr.fr/',
+        'User-Agent': USER_AGENT
+    }
+    return urlquick.get(TILE_CONTENT_URL.format(tile_id),
+                        params=params,
+                        headers=headers,
+                        max_age=TOKEN_MAX_AGE,
+                        timeout=REQUEST_TIMEOUT).json()
+
+
+@Route.register(autosort=False)
+def list_tile_contents(plugin, tile_id, page=0, **kwargs):
+    token = get_token(plugin)
+    if not token:
+        yield False
+        return
+
+    tile_content = get_tile_content(plugin, tile_id, token, page)
+    contents = tile_content['items']
+    preferred_image_ratio = tile_content.get('preferredImageRatio')
+
+    for content in contents:
+        yield build_product_item(plugin, content, preferred_image_ratio)
+
+    if len(contents) == MAX_CONTENTS:  # no "count" or "total" information
+        yield Listitem.next_page(tile_id=tile_id,
+                                 callback=list_tile_contents,
+                                 page=page + 1)
 
 
 def get_products_to_search(plugin, keyword, page=0, size=25, **kwargs):
@@ -684,7 +919,7 @@ def list_lives(plugin, **kwargs):
             item.label = serv['name']
 
             for image in serv.get('images', []):
-                if image.get('type', '') == 'color':
+                if image.get('type') == 'color':
                     item.art['thumb'] = item.art['landscape'] = image.get('url')
 
             # Playcount is useless for live streams

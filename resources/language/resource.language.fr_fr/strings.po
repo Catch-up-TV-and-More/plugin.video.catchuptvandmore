@@ -969,6 +969,11 @@ msgctxt "#30731"
 msgid "Homepage"
 msgstr "Accueil"
 
+msgctxt "#30732"
+msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
+msgstr "Ce contenu est payant. Pour l'acheter ou le louer, rendez-vous sur le site %s à cette URL : %s"
+
+
 # Favourites (from 30800 to 30859)
 
 msgctxt "#30800"
