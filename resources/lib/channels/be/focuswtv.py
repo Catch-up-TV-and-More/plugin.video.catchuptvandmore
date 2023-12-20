@@ -13,5 +13,8 @@ from resources.lib import resolver_proxy
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
+    headers = {
+        'Referer': 'https://player.clevercast.com'
+    }
     video_url = 'https://hls-origin01-focus-wtv.cdn01.rambla.be/main/adliveorigin-focus-wtv/_definst_/WqY7Y3.smil/playlist.m3u8'
-    return resolver_proxy.get_stream_with_quality(plugin, video_url)
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, headers=headers)

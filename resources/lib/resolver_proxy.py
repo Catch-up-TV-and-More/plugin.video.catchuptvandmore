@@ -236,6 +236,10 @@ def get_stream_with_quality(plugin,
         headers.update(GENERIC_HEADERS)
 
     item = Listitem()
+    stream_headers = urlencode(headers)
+    item.property['inputstream.adaptive.stream_headers'] = stream_headers
+    if get_kodi_version() == 20:
+        item.property['inputstream.adaptive.manifest_headers'] = stream_headers
     item.path = video_url
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
 
@@ -258,10 +262,6 @@ def get_stream_with_quality(plugin,
         return False
 
     if license_url is not None:
-        stream_headers = urlencode(headers)
-        item.property['inputstream.adaptive.stream_headers'] = stream_headers
-        if get_kodi_version() == 20:
-            item.property['inputstream.adaptive.manifest_headers'] = stream_headers
 
         if '|' not in license_url:  # add headers only if they are not already in the url
             license_url = '%s|%s|R{SSM}|' % (license_url, stream_headers)
