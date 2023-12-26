@@ -267,7 +267,7 @@ menu = {
     },
     'northwaleslocal': {
         'resolver': '/resources/lib/channels/uk/uklocaltv:get_live_url',
-        'label': 'North Whales Local TV',
+        'label': 'North Wales Local TV',
         'thumb': 'channels/uk/northwaleslocal.png',
         'fanart': 'channels/uk/northwaleslocal_fanart.jpg',
         'enabled': True,
