@@ -163,20 +163,21 @@ def list_categories(plugin, item_id, **kwargs):
     json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
 
     for json_key in list(json_parser['data'].keys()):
-        if json_parser['data'][json_key]['label']:
-            category_name = json_parser['data'][json_key]['label']
-            category_id = json_parser['data'][json_key]['id']
+        try:
+            if json_parser['data'][json_key]['label']:
+                category_name = json_parser['data'][json_key]['label']
+                category_id = json_parser['data'][json_key]['id']
 
-            item = Listitem()
-            item.label = category_name
-            item.params['item_id'] = item_id
-            item.params['category_id'] = category_id
-            item.set_callback(list_programs)
-            item_post_treatment(item)
+                item = Listitem()
+                item.label = category_name
+                item.params['item_id'] = item_id
+                item.params['category_id'] = category_id
+                item.set_callback(list_programs)
+                item_post_treatment(item)
 
-            yield item
-
-
+                yield item
+        except:
+            pass
 @Route.register
 def search(plugin, search_query, **kwargs):
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
