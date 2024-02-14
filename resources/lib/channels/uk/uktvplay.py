@@ -245,11 +245,9 @@ def get_video_url(plugin, item_id, data_video_id, **kwargs):
     # create session request
     session_requests = requests.session()
 
-    # Get data_account / data_player
-    resp = session_requests.get(URL_ROOT)
-    data_account_player = re.search('//players\.brightcove\.net/([0-9]+)/([A-Za-z0-9]+)_default/', resp.text)
-    data_account = data_account_player.group(1)
-    data_player = data_account_player.group(2)
+    # Set data_account / data_player
+    data_account = '1242911124001'
+    data_player = 'H1xnMOqP'
 
     # Method to get JSON from 'edge.api.brightcove.com'
     resp2 = session_requests.get(
