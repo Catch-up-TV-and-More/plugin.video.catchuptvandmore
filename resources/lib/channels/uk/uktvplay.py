@@ -15,6 +15,8 @@ from codequick import Listitem, Resolver, Route
 from kodi_six import xbmcgui
 import urlquick
 
+from resources.lib import resolver_proxy, web_utils
+
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
@@ -58,6 +60,8 @@ URL_LIVE = 'https://uktvplay.uktv.co.uk/watch-live/%s'
 URL_STREAM_LIVE = 'https://v2-streams-elb.simplestreamcdn.com/api/live/stream/%s?key=%s&platform=chrome&user=%s'
 # data_channel, key, user
 
+URL_DATA_BRIGHTCOVE = 'https://uktvplay.co.uk/_next/static/chunks/app/(navigation)/shows/[brand]/[series]/[episode]/[videoId]/page-af077c3ba4e5c8fe.js'
+
 URL_LIVE_KEY = 'https://mp.simplestream.com/uktv/1.0.4/ss.js'
 
 URL_LIVE_TOKEN = 'https://sctoken.uktvapi.co.uk/?stream_id=%s'
@@ -68,6 +72,8 @@ URL_LOGIN_TOKEN = 'https://s3-eu-west-1.amazonaws.com/uktv-static/fgprod/play/6f
 URL_LOGIN_MODAL = 'https://uktvplay.uktv.co.uk/account/'
 
 URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate/'
+
+GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
 
 @Route.register
@@ -234,58 +240,11 @@ def get_brightcove_policy_key(data_account, data_player):
 @Resolver.register
 def get_video_url(plugin, item_id, data_video_id, **kwargs):
 
-    if get_kodi_version() < 18:
-        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
-        return False
+    resp = urlquick.get(URL_DATA_BRIGHTCOVE, headers=GENERIC_HEADERS, max_age=-1)
+    data_account = re.search('accountId:"(.+?)",', resp.text).group(1)
+    data_player = re.search('playerId:"(.+?)",', resp.text).group(1)
 
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
-
-    # create session request
-    session_requests = requests.session()
-
-    # Get data_account / data_player
-    resp = session_requests.get(URL_ROOT)
-    data_account_player = re.search('//players\.brightcove\.net/([0-9]+)/([A-Za-z0-9]+)_default/', resp.text)
-    data_account = data_account_player.group(1)
-    data_player = data_account_player.group(2)
-
-    # Method to get JSON from 'edge.api.brightcove.com'
-    resp2 = session_requests.get(
-        URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
-        headers={
-            'User-Agent':
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36',
-            'Accept':
-            'application/json;pk=%s' %
-            (get_brightcove_policy_key(data_account, data_player))
-        })
-
-    json_parser = json.loads(resp2.text)
-
-    video_url = ''
-    licence_key = ''
-    if 'sources' in json_parser:
-        for url in json_parser["sources"]:
-            if 'src' in url:
-                if 'com.widevine.alpha' in url["key_systems"]:
-                    video_url = url["src"]
-                    licence_key = url["key_systems"]['com.widevine.alpha'][
-                        'license_url']
-
-    item = Listitem()
-    item.path = video_url
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property[
-        'inputstream.adaptive.license_key'] = licence_key + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=manifest.prod.boltdns.net|R{SSM}|'
-
-    return item
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)
 
 
 @Resolver.register
