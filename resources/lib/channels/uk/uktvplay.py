@@ -62,6 +62,8 @@ URL_STREAM_LIVE = 'https://v2-streams-elb.simplestreamcdn.com/api/live/stream/%s
 
 URL_DATA_BRIGHTCOVE = 'https://uktvplay.co.uk/_next/static/chunks/app/(navigation)/shows/[brand]/[series]/[episode]/[videoId]/page-af077c3ba4e5c8fe.js'
 
+URL_CHANNEL_ID = "https://vschedules.uktv.co.uk/vod/now_and_next/"
+
 URL_LIVE_KEY = 'https://mp.simplestream.com/uktv/1.0.4/ss.js'
 
 URL_LIVE_TOKEN = 'https://sctoken.uktvapi.co.uk/?stream_id=%s'
@@ -250,19 +252,11 @@ def get_video_url(plugin, item_id, data_video_id, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    if get_kodi_version() < 18:
-        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
-        return False
-
-    is_helper = inputstreamhelper.Helper('mpd', drm='widevine')
-    if not is_helper.check_inputstream():
-        return False
-
     # create session request
-    session_requests = requests.session()
-    session_requests.get(URL_LOGIN_MODAL)
+    session_requests = urlquick.session()
+    session_requests.get(URL_LOGIN_MODAL, headers=GENERIC_HEADERS, max_age=-1)
 
-    resptokenid = session_requests.get(URL_LOGIN_TOKEN)
+    resptokenid = session_requests.get(URL_LOGIN_TOKEN, headers=GENERIC_HEADERS, max_age=-1)
     token_id = re.compile(r'tokenid\":\"(.*?)\"').findall(resptokenid.text)[0]
 
     if plugin.setting.get_string(
@@ -284,56 +278,50 @@ def get_live_url(plugin, item_id, **kwargs):
     # KO - resp2 = session_urlquick.post(
     #     URL_COMPTE_LOGIN, data=payload,
     #     headers={'User-Agent': web_utils.get_ua, 'referer': URL_COMPTE_LOGIN})
-    resplogin = session_requests.post(
-        URL_COMPTE_LOGIN, data=payload, headers={
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Origin': 'https://uktvplay.uktv.co.uk',
-            'Referer': 'https://uktvplay.uktv.co.uk/account/',
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
-            'X-TokenId': token_id,
-            'X-Version': '9.0.0'
-        })
-    if resplogin.status_code >= 400:
+    headers = {
+        'Accept': 'application/json, text/plain, */*',
+        'Origin': 'https://uktvplay.uktv.co.uk',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Referer': 'https://uktvplay.uktv.co.uk/account/',
+        'User-Agent': web_utils.get_random_ua(),
+        'X-TokenId': token_id,
+        'X-Version': '9.0.0'
+    }
+    resp = session_requests.post(URL_COMPTE_LOGIN, data=payload, headers=headers, max_age=-1)
+    if resp.status_code >= 400:
         plugin.notify('ERROR', 'UKTVPlay : ' + plugin.localize(30711))
         return False
-    json_parser_resplogin = json.loads(resplogin.content)
+    json_parser_resplogin = json.loads(resp.content)
 
     if 'home_uktvplay' in item_id:
         channel_uktvplay_id = 'home'
     else:
         channel_uktvplay_id = item_id
 
-    respdatachannel = session_requests.get(URL_LIVE % channel_uktvplay_id)
-    data_channel = re.compile(r'channelStreamId:(.*?)}').findall(
-        respdatachannel.text)[0]
+    resp = session_requests.get(URL_CHANNEL_ID, headers=GENERIC_HEADERS, max_age=-1)
+    root = json.loads(resp.text)
+    data_channel = str(root[channel_uktvplay_id][0]['channel_stream_id'])
 
-    respkey = session_requests.get(URL_LIVE_KEY)
+    respkey = session_requests.get(URL_LIVE_KEY, headers=GENERIC_HEADERS, max_age=-1)
     app_key = re.compile(r'app\_key"\ \: \"(.*?)\"').findall(respkey.text)[0]
 
-    resptoken = session_requests.get(URL_LIVE_TOKEN % data_channel)
-    json_parser_resptoken = json.loads(resptoken.text)
+    resp = session_requests.get(URL_LIVE_TOKEN % data_channel, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser_resptoken = json.loads(resp.text)
 
-    respstreamdatas = session_requests.post(
-        URL_STREAM_LIVE % (data_channel, app_key,
-                           str(json_parser_resplogin["accountId"])),
-        headers={
-            'Token-Expiry': json_parser_resptoken["expiry"],
-            'Token': json_parser_resptoken["token"],
-            'Uvid': data_channel,
-            'Userid': str(json_parser_resplogin["accountId"])
-        })
+    data_url = URL_STREAM_LIVE % (data_channel, app_key, str(json_parser_resplogin["accountId"]))
+    headers = {
+        'Token-Expiry': json_parser_resptoken["expiry"],
+        'Token': json_parser_resptoken["token"],
+        'Uvid': data_channel,
+        'Userid': str(json_parser_resplogin["accountId"]),
+        "User-Agent": web_utils.get_random_ua()
+    }
+    respstreamdatas = session_requests.post(data_url, headers=headers, max_age=-1)
     json_parser = json.loads(respstreamdatas.text)
 
-    item = Listitem()
-    item.path = json_parser["response"]["drm"]["widevine"]["stream"]
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
-    item.property['inputstream.adaptive.manifest_type'] = 'mpd'
-    item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property[
-        'inputstream.adaptive.license_key'] = json_parser["response"]["drm"]["widevine"]["licenseAcquisitionUrl"] + '|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36|R{SSM}|'
+    headers = {'Content-type': ''}
+    video_url = json_parser["response"]["drm"]["widevine"]["stream"]
+    license_url = json_parser["response"]["drm"]["widevine"]["licenseAcquisitionUrl"]
 
-    return item
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=license_url,
+                                                  headers=headers, manifest_type='mpd')
