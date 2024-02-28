@@ -73,6 +73,8 @@ URL_LOGIN_MODAL = 'https://uktvplay.uktv.co.uk/account/'
 
 URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate/'
 
+URL_CHANNEL_ID = "https://vschedules.uktv.co.uk/vod/now_and_next/"
+
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
 
@@ -304,9 +306,10 @@ def get_live_url(plugin, item_id, **kwargs):
     else:
         channel_uktvplay_id = item_id
 
-    respdatachannel = session_requests.get(URL_LIVE % channel_uktvplay_id)
-    data_channel = re.compile(r'channelStreamId:(.*?)}').findall(
-        respdatachannel.text)[0]
+    resp = session_requests.get(URL_CHANNEL_ID)
+    root = json.loads(resp.text)
+    for j in root[channel_uktvplay_id]:
+        data_channel = str((j['channel_stream_id']))
 
     respkey = session_requests.get(URL_LIVE_KEY)
     app_key = re.compile(r'app\_key"\ \: \"(.*?)\"').findall(respkey.text)[0]
