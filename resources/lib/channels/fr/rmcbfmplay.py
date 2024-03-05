@@ -104,7 +104,8 @@ def rmcbfmplay_root(plugin, path="", **kwargs):
     resp = urlquick.get(url, params=params, headers=GENERIC_HEADERS).json()
     for spot in resp["spots"]:
         item = Listitem()
-        item.label = spot["title"]
+        if "title" in spot:
+            item.label = spot["title"]
         item.set_callback(menu, "web/v1/spot/%s/content" % spot["id"])
         item_post_treatment(item)
         yield item
