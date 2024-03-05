@@ -90,20 +90,10 @@ def get_video_url(plugin,
 
     resp2 = urlquick.get(URL_REPLAY_TOKEN % stream_id,
                          headers={'X-Requested-With': 'XMLHttpRequest'})
-    json_parser = resp2.json()
 
-    video_url = json_parser['tokenizer']['url']
-    token_value = json_parser['tokenizer']['token']
-    token_expiry_value = json_parser['tokenizer']['expiry']
-    uvid_value = json_parser['tokenizer']['uvid']
-    resp3 = urlquick.get(video_url,
-                         headers={'User-Agent': web_utils.get_random_ua(),
-                                  'token': ('%s' % token_value),
-                                  'token-expiry': ('%s' % token_expiry_value),
-                                  'uvid': uvid_value},
-                         max_age=-1)
-    json_parser2 = resp3.json()
-    return json_parser2["Streams"]["Adaptive"]
+    video_url = json.loads(resp2.text)["playerSource"]["sources"][0]["src"]
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url)
 
 
 @Resolver.register
