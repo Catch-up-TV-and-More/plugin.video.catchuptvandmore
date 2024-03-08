@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.39~beta07" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta01" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -42,46 +42,9 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.39]
-[FR - L'équipe] Fix bug and add a message (PR #933) thanks @Arias800
-[UK - UKTVPLAY] Fix live
-[BE - RTBF] Fix live and issue with drm on rpi (PR #937 issue #935) thanks @gael81
-[BE - RTBF] Fix flake8 (PR #938) thanks @darodi
-[GR - EPT] Add live channels (issue #926)
-Project: Add some translations
-[TR - CINNERGROUP] Fixed cinnergroup channels (PR #939) thanks @itasli
-[TR - DOGUS GROUP] Fixed dogus group channels (PR #941) thanks @itasli
-Project: Remove an useless file
-[WO - EPTNEWS] Fix skeleton
-[TR - CINE5] Fix channel (PR #944) thanks @itasli
-[BE - RTBF] [BE - RTBF] Adapt live for new stream provider (redbee) - fix replays in categories (PR #946) thanks @darodi
-[BE - RTLPLAYBE] Make compliant with Kodi18
-[BE - RTLPLAYBE] make search work again in kodi >=19 (PR #948) thanks @darodi
-[BE - RTLPLAYBE] yield playlist (PR #949) thanks @darodi
-[FR - TV7Bordeaux] Fix live
-[FR - M6] yield playlist (PR #951) thanks @darodi
-[FR - TV7Bordeaux] Fix flake (PR #951) thanks @darodi
-[FR - Mycanal] Fix index error (PR #947 issue #950)
-[FR - CNEWS] Sort the replay in a more coherent way (PR #952 issue #943) thanks @darodi
-[CA - TVA] Fix replay (PR #953 issue #945) thanks @darodi
-[CA - TVA] Fix replay - api change (PR #955) thanks @darodi
-[CA - TVA] Fix live (PR #956) thanks @darodi
-[CA - TVA] Simplify the requests
-[CA - telequebec] Add section "En vedette" in replay (films, ...) (PR #958) thanks @darodi
-[CA - TVA] Enable multiple resolutions
-[JP - TVER] Use the Brightcove helper for replay
-[BE - LN24] Fix some replays (PR #960) thanks @darodi
-[FR - Franceinfo) Fix aired date (PR #961) thanks @Arias800
-[FR - Franceinfo] Fix flake8 (PR #961) thanks @Arias800
-[FR - Mycanal] New stream selection menu (PR #962) thanks @Arias800
-[UK - CHANNEL4] Add replay
-[FR - Mycanal] Add a dialog box to choose the stream (PR #962) @Arias800
-[UK - CHANNEL4] Add lives (issue #767)
-[FR] Use get_stream_with_quality in a few more places
-[Project]: If possible, avoid MP4 container in Brightcove helper (issue #965)
-[UK - CHANNEL4] Fix import of crypto module (issue #963) thanks @berkhornet
-[PE - ATV] Add lives
-[PE - ENLACE] Add live
+[Version 0.2.40]
+[UK - UKTVPLAY] Fix datas for Brightcove
+[FR - LCP] Fix replay
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

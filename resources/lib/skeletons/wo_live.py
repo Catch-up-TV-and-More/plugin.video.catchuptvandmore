@@ -36,8 +36,14 @@ menu = {
                 'xmltv_id': 'euronews.rai.it'
             },
             'ES': {},
-            'PT': {}, 'RU': {}, 'RO': {}, 'TR': {}, 'FA': {}, 'GR': {},
-            'HU': {}
+            'PT': {},
+            'RU': {},
+            'RO': {},
+            'TR': {},
+            'FA': {},
+            'GR': {},
+            'HU': {},
+            'BG': {}
         },
         'enabled': True,
         'order': 1
@@ -217,5 +223,13 @@ menu = {
         'fanart': 'channels/wo/africa24_fanart.jpg',
         'enabled': True,
         'order': 19
+    },
+    'aljazeera': {
+        'resolver': '/resources/lib/channels/wo/aljazeera:get_live_url',
+        'label': 'Aljazeera',
+        'thumb': 'channels/wo/aljazeera.png',
+        'fanart': 'channels/wo/aljazeera_fanart.png',
+        'enabled': True,
+        'order': 20
     }
 }

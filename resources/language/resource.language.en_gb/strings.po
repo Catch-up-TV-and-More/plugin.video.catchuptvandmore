@@ -118,6 +118,10 @@ msgctxt "#30033"
 msgid "Favourites"
 msgstr ""
 
+msgctxt "#30034"
+msgid "Internet service providers"
+msgstr ""
+
 
 # Countries (from 30050 to 30079)
 
@@ -217,6 +221,14 @@ msgctxt "#30073"
 msgid "Peru"
 msgstr ""
 
+msgctxt "#30074"
+msgid "Venezuela"
+msgstr ""
+
+msgctxt "#30075"
+msgid "Luxembourg"
+msgstr ""
+
 # Channels (from 30080 to 30129)
 
 msgctxt "#30080"
@@ -303,6 +315,10 @@ msgstr ""
 
 msgctxt "#30150"
 msgid "Video quality"
+msgstr ""
+
+msgctxt "#30151"
+msgid "Device is L1 certified"
 msgstr ""
 
 msgctxt "#30152"
@@ -409,6 +425,18 @@ msgctxt "#30179"
 msgid "Europe, outside FBS"
 msgstr ""
 
+msgctxt "#30180"
+msgid "Video quality"
+msgstr ""
+
+msgctxt "#30181"
+msgid "Choose version"
+msgstr ""
+
+msgctxt "#30182"
+msgid "France 3 Régions: Choose subregion"
+msgstr ""
+
 msgctxt "#30192"
 msgid "BEST"
 msgstr ""
@@ -461,14 +489,6 @@ msgstr ""
 
 
 # Accounts (from 30240 to 30269)
-
-msgctxt "#30240"
-msgid "NRJ Login"
-msgstr ""
-
-msgctxt "#30241"
-msgid "NRJ Password"
-msgstr ""
 
 msgctxt "#30242"
 msgid "VRT NU Login"
@@ -540,6 +560,22 @@ msgstr ""
 
 msgctxt "#30259"
 msgid "RTBF auvio Password"
+msgstr ""
+
+msgctxt "#30260"
+msgid "MyTF1 Login"
+msgstr ""
+
+msgctxt "#30261"
+msgid "MyTF1 Password"
+msgstr ""
+
+msgctxt "#30262"
+msgid "SFR TV login"
+msgstr ""
+
+msgctxt "#30263"
+msgid "SFR TV password"
 msgstr ""
 
 
@@ -932,6 +968,11 @@ msgstr ""
 msgctxt "#30731"
 msgid "Homepage"
 msgstr ""
+
+msgctxt "#30732"
+msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
+msgstr ""
+
 
 # Favourites (from 30800 to 30859)
 

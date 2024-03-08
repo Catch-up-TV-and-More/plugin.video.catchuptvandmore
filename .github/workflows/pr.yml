@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out plugin repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Set up Python 3.8
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: 3.8
       - name: Run flake8
@@ -30,16 +30,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out plugin repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: plugin.video.catchuptvandmore
       - name: Check out simulator repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: simulator
           repository: Catch-up-TV-and-More/catchuptvandmore-test
       - name: Set up Python 3.8
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: 3.8
       - name: Install dependencies
@@ -56,9 +56,9 @@ jobs:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Check out plugin repository
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v4
   #     - name: Set up Python 3.8
-  #       uses: actions/setup-python@v1
+  #       uses: actions/setup-python@v5
   #       with:
   #         python-version: 3.8
   #     - name: Install kodi-addon-checker

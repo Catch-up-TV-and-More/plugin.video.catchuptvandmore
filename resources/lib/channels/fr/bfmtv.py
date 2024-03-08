@@ -159,13 +159,11 @@ def get_video_url(plugin,
         data_account = live_datas.get('accountid')
         data_video_id = live_datas.get('videoid')
         data_player = live_datas.get('playerid')
-        return resolver_proxy.get_brightcove_video_json(plugin, data_account,
-                                                        data_player, data_video_id,
-                                                        download_mode)
+        return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, None, download_mode)
 
     video_streams = json_parser['video']['medias']
     final_video_url = ''
-    if DESIRED_QUALITY == Quality.DIALOG.value:
+    if DESIRED_QUALITY == Quality['DIALOG']:
         all_datas_videos_quality = []
         all_datas_videos_path = []
 
@@ -185,7 +183,7 @@ def get_video_url(plugin,
         else:
             return False
 
-    elif DESIRED_QUALITY == Quality.BEST.value:
+    elif DESIRED_QUALITY == Quality['BEST']:
         # GET LAST NODE (VIDEO BEST QUALITY)
         url_best_quality = ''
         for datas in video_streams:

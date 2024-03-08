@@ -72,7 +72,8 @@ def list_videos_search(plugin, search_query, **kwargs):
     if search_query is None or len(search_query) == 0:
         return False
 
-    yield from video_list(plugin, url_constructor("recherche?ft=%s") % search_query)
+    for i in video_list(plugin, url_constructor("recherche?ft=%s") % search_query):
+        yield i
 
 
 @Route.register
@@ -128,7 +129,7 @@ def play_video(plugin, url):
         resp2 = urlquick.get("https:" + frame_url)
 
         quality = Script.setting.get_string('quality')
-        if quality == Quality.WORST.value:
+        if quality == Quality['WORST']:
             mp4_videos = PATTERN_VIDEO_WORST.findall(resp2.text)
         else:
             mp4_videos = PATTERN_VIDEO_BEST.findall(resp2.text)
@@ -143,8 +144,8 @@ def play_video(plugin, url):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE)
-    root_elem = resp.parse("iframe")
-    frame_url = root_elem.get('src')
+    root_elem = resp.parse("div", attrs={"role": "main"})
+    frame_url = root_elem.find(".//iframe").get('src')
     resp2 = urlquick.get("https:" + frame_url)
 
     m3u8_array = PATTERN_VIDEO_M3U8.findall(resp2.text)

@@ -10,6 +10,7 @@ from __future__ import unicode_literals
 import base64
 import re
 import json
+from builtins import str
 
 from codequick import Listitem, Resolver, Route
 import urlquick
@@ -31,6 +32,7 @@ except ImportError:
 
 URL_ROOT = 'https://www.channel4.com'
 URL_CATEGORIES = URL_ROOT + '/api/homepage'
+URL_PROGRAMS = 'https://www.channel4.com/programmes'
 URL_VOD = URL_ROOT + '/vod/stream/'
 URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/widevine/acquire'
 
@@ -49,37 +51,39 @@ def list_categories(plugin, **kwargs):
         for key, value in b.items():
             if key == 'title' and value == 'Categories':
                 for d in b['sliceItems']:
-                    url_item = d['url']
+                    url_item = d['url'].replace('http', 'https').replace(URL_PROGRAMS, URL_ROOT)
                     item = Listitem()
                     item.label = url_item.replace('/', ' ').split()[-1]
                     item.art["thumb"] = item.art["landscape"] = d['image']['href']
-                    item.set_callback(list_programs, url=url_item.replace('http', 'https'))
+                    item.set_callback(list_programs, url=url_item, offset='0')
                     item_post_treatment(item)
                     yield item
 
 
 @Route.register
-def list_programs(plugin, url, **kwargs):
+def list_programs(plugin, url, offset, **kwargs):
     """
     Build programs listing
     """
-    programs_category = urlquick.get(url, headers=BASIC_HEADERS, max_age=-1).parse()
-    programs_number = programs_category.findall(".//div[@class='all4-text all4-typography-body discovery-header__text  secondary']")[0].text.replace('(', ' ').split()[0]
+    params = {
+        'json': 'true',
+        'offset': offset
+    }
+    programs = json.loads(urlquick.get(url, headers=BASIC_HEADERS, params=params, max_age=-1).text)
+    programs_number = programs['noOfShows']
 
-    program_counter = 0
+    for program in programs["brands"]["items"]:
+        item = Listitem()
+        item.label = program["labelText"]
+        item.art["thumb"] = item.art["landscape"] = program["imageLink"]
+        item.set_callback(list_seasons, url=program["hrefLink"])
+        item.info["plot"] = program["overlayText"]
+        item_post_treatment(item)
+        yield item
 
-    while program_counter <= int(programs_number):
-        for program in programs_category.iterfind(".//a[@class='all4-slice-item']"):
-            program_counter += 1
-            item = Listitem()
-            item.label = program.find('.//h3').text
-            item.art["thumb"] = item.art["landscape"] = program.find('.//img').get('src')
-            item.set_callback(list_seasons, url=program.get('href'))
-            item.info['plot'] = program.get('aria-label')
-            item_post_treatment(item)
-            yield item
-        if program_counter % 20 == 0:
-            programs_category = urlquick.get(url + '?offset={}'.format(program_counter), headers=BASIC_HEADERS, max_age=-1).parse()
+    nboffset = int(offset) + 15
+    if nboffset < programs_number:
+        yield Listitem.next_page(url=url, offset=str(nboffset))
 
 
 @Route.register
@@ -89,26 +93,44 @@ def list_seasons(plugin, url, **kwargs):
     for script in html_text.iterfind('.//script'):
         script_text = script.text
         if script_text is not None and script_text.split()[0] == 'window.__PARAMS__':
-            datas = json.loads(re.sub(r'^.*?{', '{', script_text).replace("undefined", "{}"))
-            series = datas['initialData']['brand']['series']
-            for season in series:
-                series_number = season['seriesNumber']
-                item = Listitem()
-                item.label = season['title']
-                item.art["thumb"] = item.art["landscape"] = datas['initialData']['brand']['images']['image16x9']['src']
-                item.set_callback(get_episodes_list, series, series_number, datas)
-                item.info['plot'] = season['summary']
-                item_post_treatment(item)
-                yield item
+            datas = json.loads(re.sub(r'^.*?{', '{', script_text).replace("undefined", "{}"))['initialData']['brand']
+            if bool(datas['allSeriesCount']) is False:
+                for episode in datas['episodes']:
+                    if episode.get('assetId'):
+                        item = Listitem()
+                        toreplace = re.compile(r'(.*?)Episode').findall(episode['title'])
+                        if bool(toreplace):
+                            item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
+                        else:
+                            item.label = episode['title'] + " ({})".format(episode['originalTitle'])
+                        item.art['thumb'] = item.art['landscape'] = episode['image']['src']
+                        item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
+                        item.info['plot'] = episode['summary']
+                        item_post_treatment(item)
+                        yield item
+            else:
+                series = datas['series']
+                for season in series:
+                    series_number = season['seriesNumber']
+                    item = Listitem()
+                    item.label = season['title']
+                    item.art["thumb"] = item.art["landscape"] = datas['images']['image16x9']['src']
+                    item.set_callback(get_episodes_list, series, series_number, datas)
+                    item.info['plot'] = season['summary']
+                    item_post_treatment(item)
+                    yield item
 
 
 @Route.register
 def get_episodes_list(plugin, series, series_number, datas, **kwargs):
-    for episode in datas['initialData']['brand']['episodes']:
+    for episode in datas['episodes']:
         if episode['seriesNumber'] == series_number and episode.get('assetId'):
             item = Listitem()
-            item.label = episode['title'].replace(series[len(series) - series_number]['title'], '')
-            item.label = item.label + " ({})".format(episode['originalTitle'])
+            toreplace = re.compile(r'(.*?)Episode').findall(episode['title'])
+            if bool(toreplace):
+                item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
+            else:
+                item.label = episode['title'] + " ({})".format(episode['originalTitle'])
             item.art['thumb'] = item.art['landscape'] = episode['image']['src']
             item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
             item.info['plot'] = episode['summary']
@@ -128,6 +150,14 @@ def get_video(plugin, programmeId, assetId, **kwargs):
             url = field['streams'][0]['uri']
             break
 
+    subtitle_url = ''
+    if plugin.setting.get_boolean('active_subtitle'):
+        supported_subtitles_formats = ['srt_009', 'sami_001']
+        for field in json_video['subtitlesAssets']:
+            if field['format'] in supported_subtitles_formats:
+                subtitle_url = field['url']
+                break
+
     cipher = AES.new(bytes('n9cLieYkqwzNCqvi', 'UTF-8'), AES.MODE_CBC, bytes('odzcU3WdUiXLucVd', 'UTF-8'))
     decoded_token = unpad(cipher.decrypt(base64.b64decode(token)), 16, style='pkcs7').decode('UTF-8').split('|')[1]
 
@@ -143,6 +173,8 @@ def get_video(plugin, programmeId, assetId, **kwargs):
 
     item = Listitem()
     item.path = url
+    if 'http' in subtitle_url:
+        item.subtitles.append(subtitle_url)
     item.label = get_selected_item_label()
     item.art.update(get_selected_item_art())
     item.info.update(get_selected_item_info())

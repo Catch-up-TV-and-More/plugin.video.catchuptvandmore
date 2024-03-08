@@ -180,14 +180,16 @@ def list_videos_categories(plugin, item_id, program_slug, season_number, **kwarg
         for video_category_datas in json_parser['associatedEntities']:
             if 'associatedEntities' in video_category_datas:
                 if len(video_category_datas['associatedEntities']) > 0:
-                    yield from yield_videos(item_id, video_category_datas)
+                    for i in yield_videos(item_id, video_category_datas):
+                        yield i
     else:
         for season_datas in json_parser['knownEntities']['seasons']['associatedEntities']:
             if season_number == str(season_datas['seasonNumber']):
                 if 'associatedEntities' in season_datas:
                     for video_category_datas in season_datas['associatedEntities']:
                         if len(video_category_datas['associatedEntities']) > 0:
-                            yield from yield_videos(item_id, video_category_datas)
+                            for i in yield_videos(item_id, video_category_datas):
+                                yield i
                 elif 'knownEntities' in season_datas:
                     entities_ = season_datas['knownEntities']
                     if 'relatedVideos' in entities_:
@@ -195,7 +197,8 @@ def list_videos_categories(plugin, item_id, program_slug, season_number, **kwarg
                         if 'associatedEntities' in videos_:
                             for video_category_datas in videos_['associatedEntities']:
                                 if len(video_category_datas['associatedEntities']) > 0:
-                                    yield from yield_videos(item_id, video_category_datas)
+                                    for i in yield_videos(item_id, video_category_datas):
+                                        yield i
 
 
 def yield_videos(item_id, element):
@@ -247,7 +250,7 @@ def get_video_url(plugin, item_id, video_slug, download_mode=False, **kwargs):
     data_player = PATTERN_PLAYER.findall(resp.text)[0]
     data_video_id = "ref:%s" % PATTERN_VIDEO_ID.findall(resp.text)[0]
 
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, None, download_mode)
 
 
 @Resolver.register

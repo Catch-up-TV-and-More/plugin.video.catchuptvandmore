@@ -219,7 +219,7 @@ class M3u8(object):
                                                  % (x.resolution, x.bitrate), self.media_streams))
         all_videos_urls = list(map(lambda x: x.url, self.media_streams))
 
-        if desired_quality == Quality.DIALOG.value:
+        if desired_quality == Quality['DIALOG']:
             selected_item = xbmcgui.Dialog().select(
                 Script.localize(30709),
                 all_video_qualities)
@@ -228,7 +228,7 @@ class M3u8(object):
 
             return all_videos_urls[selected_item], (all_video_bitrates[selected_item] + BITRATE_OFFSET)
 
-        elif desired_quality == Quality.BEST.value:
+        elif desired_quality == Quality['BEST']:
             max_resolution = 0
             url_best = self.url
             i = 0
@@ -240,7 +240,7 @@ class M3u8(object):
                 i = i + 1
             return url_best, 0  # you can return bitrate unlimited (0)
 
-        elif desired_quality == Quality.WORST.value:
+        elif desired_quality == Quality['WORST']:
             min_resolution = 99999999999999999999999
             url_worst = self.url
             bitrate_worst = 0
