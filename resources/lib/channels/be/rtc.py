@@ -19,7 +19,7 @@ URL_ROOT = 'https://www.rtc.be'
 
 URL_LIVE = URL_ROOT + '/live'
 
-LIVE_PLAYER = 'https://tvlocales-player.freecaster.com/embed/%s.json'
+URL_PLAYER = 'https://tvlocales-player.freecaster.com/embed/%s.json'
 
 URL_VIDEOS = URL_ROOT + '/videos'
 
@@ -114,24 +114,24 @@ def get_video_url(plugin,
                   download_mode=False,
                   **kwargs):
     resp = urlquick.get(video_url, max_age=-1)
+    root = resp.parse()
 
-    javascript_player_urls = re.compile(r'src="(https://rtc\.fcst\.tv/player/embed/.*?)"').findall(resp.text)
-    stream_url = ''
-    for player_url in javascript_player_urls:
-        javascript_resp = urlquick.get(player_url, max_age=-1)
-        # \"https:\\\/\\\/rtc-vod.freecaster.com\\\/vod\\\/rtc\\\/jkmYRKZBKq-720p.mp4\"
-        stream_data_array = re.compile(r'(https?:[/\\]+rtc-vod\.freecaster\.com.*?/([^/]*?)\.mp4)').findall(
-            javascript_resp.text)
-        for stream_data in stream_data_array:
-            stream_url = stream_data[0].replace("\\", "")
-
-    if stream_url == '':
-        plugin.notify(plugin.localize(30600), plugin.localize(30716))
-        return False
+    video_data = root.findall(".//div[@class='freecaster-player']")[0].get('data-fc-token')
+    resp2 = urlquick.get(URL_PLAYER % video_data, max_age=-1)
+    json_data = json.loads(resp2.text)
+    video_url = json_data['video']['src'][0]['src']
+    try:
+        subtitles = json_data['video']['tracks'][0]['src']
+    except KeyError:
+        subtitles = None
 
     if download_mode:
-        return download.download_video(stream_url)
-    return stream_url
+        return download.download_video(video_url)
+    return resolver_proxy.get_stream_with_quality(
+        plugin,
+        video_url,
+        subtitles=subtitles,
+        manifest_type="hls")
 
 
 @Resolver.register
@@ -139,8 +139,8 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE, max_age=-1)
     root = resp.parse()
 
-    live_data = root.findall(".//div[@class='freecaster-player']")[0].get('data-fc-token')
-    resp2 = urlquick.get(LIVE_PLAYER % live_data, max_age=-1)
+    live_data = root.findall(".//div[@class='freecaster-player']")[0].get('data-video-id')
+    resp2 = urlquick.get(URL_PLAYER % live_data, max_age=-1)
     video_url = json.loads(resp2.text)['video']['src'][0]['src']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
