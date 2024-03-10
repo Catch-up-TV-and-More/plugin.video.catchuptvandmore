@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta01" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta02" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -45,6 +45,11 @@
 [Version 0.2.40]
 [UK - UKTVPLAY] Fix datas for Brightcove
 [FR - LCP] Fix replay
+[UK - UKTVPLAY] Fix for channel_id (PR #1283) thanks @nictjir
+[FR - RMCBFMPLAY] Fix title (PR #1294 issue #1286) thanks @yapa69
+[BE - RTC] Fix replay and live (PR #1297) thanks @jmzambon
+[UK - BLAZE] Fix replay (PR #1293 issue #1282) thanks @nictjir
+[UK - UKTVPLAY] Fix replay (PR #1293 issue #1284) thanks @nictjir
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
