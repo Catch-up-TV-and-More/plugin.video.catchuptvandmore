@@ -50,7 +50,7 @@ def list_categories(plugin, item_id, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(URL_REPLAY)
+    resp = urlquick.get(URL_REPLAY, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
 
     for video_datas in root.iterfind(
@@ -84,26 +84,18 @@ def get_video_url(plugin,
                   download_mode=False,
                   **kwargs):
 
-    resp = urlquick.get(URL_INFO_REPLAY % video_id)
-    stream_id = re.compile(
-        r'uvid\":\"(.*?)\"').findall(resp.text)[2]
+    resp = urlquick.get(URL_INFO_REPLAY % video_id, headers=GENERIC_HEADERS, max_age=-1)
+    stream_id = re.compile(r'uvid\":\"(.*?)\"').findall(resp.text)[2]
 
-    resp2 = urlquick.get(URL_REPLAY_TOKEN % stream_id,
-                         headers={'X-Requested-With': 'XMLHttpRequest'})
-    json_parser = resp2.json()
+    headers = {
+        'X-Requested-With': 'XMLHttpRequest',
+        'User-Agent': web_utils.get_random_ua()
+    }
+    resp = urlquick.get(URL_REPLAY_TOKEN % stream_id, headers=headers, max_age=-1)
 
-    video_url = json_parser['tokenizer']['url']
-    token_value = json_parser['tokenizer']['token']
-    token_expiry_value = json_parser['tokenizer']['expiry']
-    uvid_value = json_parser['tokenizer']['uvid']
-    resp3 = urlquick.get(video_url,
-                         headers={'User-Agent': web_utils.get_random_ua(),
-                                  'token': ('%s' % token_value),
-                                  'token-expiry': ('%s' % token_expiry_value),
-                                  'uvid': uvid_value},
-                         max_age=-1)
-    json_parser2 = resp3.json()
-    return json_parser2["Streams"]["Adaptive"]
+    video_url = json.loads(resp.text)["playerSource"]["sources"][0]["src"]
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url)
 
 
 @Resolver.register
