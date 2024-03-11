@@ -475,7 +475,7 @@ def __get_francetv_program_info(video_id):
         geoip_value = 'FR'
     params = {
         'country_code': geoip_value,
-        'browser': 'firefox',
+        'os': 'iOS',
         'device_type': 'mobile'
     }
     resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % video_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
@@ -504,7 +504,7 @@ def get_francetv_video_stream(plugin,
     else:
         all_video_datas.append((video_datas['format'], None, video_datas['token']))
 
-    url_selected = all_video_datas[0][2]
+    url_selected = all_video_datas[0][2] + '&url=' + video_datas['url']
     if 'hls' in all_video_datas[0][0]:
         json_parser2 = json.loads(
             urlquick.get(url_selected, max_age=-1).text)
