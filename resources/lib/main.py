@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 from builtins import str
 import importlib
+import os
 import sys
 
 from codequick import Route, Resolver, Listitem, Script, utils
@@ -15,8 +16,14 @@ from kodi_six import xbmc, xbmcgui, xbmcplugin
 
 from resources.lib.addon_utils import get_item_label, get_item_media_path
 import resources.lib.favourites as fav
-from resources.lib.kodi_utils import build_kodi_url, get_params_in_query
+from resources.lib.kodi_utils import build_kodi_url, get_params_in_query, get_proxy
 from resources.lib.menu_utils import get_sorted_menu, add_context_menus_to_item
+
+
+proxy = get_proxy()
+if proxy:
+    os.environ['HTTP_PROXY'] = proxy
+    os.environ['HTTPS_PROXY'] = proxy
 
 
 @Route.register
