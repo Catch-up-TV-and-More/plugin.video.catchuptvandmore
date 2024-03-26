@@ -19,7 +19,7 @@ CACHE_FILE = os.path.join(Route.get_info("profile"), u".sfrtv_cache.sqlite")
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 '
               'Safari/537.36')  # fixed as the list of connected devices is limited
 TOKEN_MAX_AGE = 840  # 14 minutes to be under the 15 mn token validity limit
-CONFIG_URL = 'https://tv.sfr.fr/configs/config.json'
+CONFIG_URL = 'https://tv.sfr.fr/assets/configs/config.json'
 LOGIN_URL = 'https://www.sfr.fr/cas/login'
 ACCESS_TOKEN_URL = 'https://www.sfr.fr/cas/oidc/authorize'
 USER_PROFILE_URL = 'https://ws-backendtv.sfr.fr/heimdall-core/public/api/v2/userProfiles'
