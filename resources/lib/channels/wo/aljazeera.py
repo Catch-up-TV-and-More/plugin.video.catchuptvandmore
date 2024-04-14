@@ -122,7 +122,7 @@ def play_video(plugin, url):
 def get_live_url(plugin, item_id, **kwargs):
     # label, function_name, video_id
     channels = [
-        ('English', 'get_stream_youtube', 'GEumHK0hfdo'),
+        ('English', 'get_stream_youtube', 'gCNeDWCI0vo'),
         ('الوثائقية', 'get_stream_youtube', 'TiPYdMXt_XI'),
         ('قناة مباشر', 'get_stream_youtube', 'eksOMqVMINo'),
         ('البث الحي', 'get_brightcove_video_json', '')
