@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta02" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta03" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -50,6 +50,11 @@
 [BE - RTC] Fix replay and live (PR #1297) thanks @jmzambon
 [UK - BLAZE] Fix replay (PR #1293 issue #1282) thanks @nictjir
 [UK - UKTVPLAY] Fix replay (PR #1293 issue #1284) thanks @nictjir
+[FR - FRANCETV] Fix for replay and live thanks @SebMourlhou
+[SFRTV] Config URL has changed (PR #1309 issue #1307) thanks @SebMourlhou
+(PROJECT] Support proxy configuration (PR #1304) thanks @cedk
+[FR - MYCANAL] Fix json parser thanks @IceFreak66
+[WO - ALJAZEERA] Fix English stream
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
