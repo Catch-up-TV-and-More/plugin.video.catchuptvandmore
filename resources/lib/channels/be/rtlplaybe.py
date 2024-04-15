@@ -9,6 +9,7 @@
 from __future__ import unicode_literals
 
 import json
+import random
 import re
 import sys
 from builtins import str
@@ -746,15 +747,13 @@ def get_video_assets(plugin, token, item_id):
     return True, json_parser['blocks'][0]['content']['items'][0]['itemContent']['video']['assets']
 
 
+def random_hexa(i):
+    return ''.join(random.choice('0123456789abcdef') for _ in range(i))
+
+
 def get_device_id():
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/117.0",
-        "Accept": "*/*",
-        "Accept-Language": "fr-BE,en-US;q=0.7,en;q=0.3",
-        "referrer": ("%s/" % PUBLIC_SITE)
-    }
-    json_parser = urlquick.get(DEVICE_ID_URL, headers=headers, max_age=-1).json()
-    return json_parser['device_id']
+    uuid = '-'.join([random_hexa(8), random_hexa(4), random_hexa(4), random_hexa(4), random_hexa(12)])
+    return '_luid_' + uuid
 
 
 def get_jwt(device_id, uid, signature_timestamp, uid_signature):
@@ -813,15 +812,7 @@ def accounts_login(plugin, api_key):
         "loginID": login,
         "password": password,
         "apiKey": api_key,
-        # "sessionExpiration": "-2",
-        # "targetEnv": "jssdk",
-        # "include": "profile,data",
-        # "includeUserInfo": "true",
         "lang": "fr",
-        # "sdk": "js_latest",
-        # "authMode": "cookie",
-        # "pageURL": "https://www.rtlplay.be/",
-        # "sdkBuild": "15170",
         "format": "json"
     }
 
