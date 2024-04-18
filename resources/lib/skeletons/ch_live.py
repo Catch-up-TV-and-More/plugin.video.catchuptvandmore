@@ -173,5 +173,13 @@ menu = {
         'fanart': 'channels/ch/latele.png',
         'enabled': True,
         'order': 25
+    },
+    'canalalpha': {
+        'resolver': '/resources/lib/channels/ch/canalalpha:get_live_url',
+        'label': 'CANALALPHA',
+        'thumb': 'channels/ch/canalalpha.png',
+        'fanart': 'channels/ch/canalalpha.png',
+        'enabled': True,
+        'order': 27
     }
 }
