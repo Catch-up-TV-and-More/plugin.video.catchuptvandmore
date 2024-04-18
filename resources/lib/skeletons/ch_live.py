@@ -17,14 +17,6 @@ from __future__ import unicode_literals
 root = 'live_tv'
 
 menu = {
-    'rougetv': {
-        'resolver': '/resources/lib/channels/ch/rougetv:get_live_url',
-        'label': 'Rouge TV',
-        'thumb': 'channels/ch/rougetv.png',
-        'fanart': 'channels/ch/rougetv_fanart.jpg',
-        'enabled': True,
-        'order': 6
-    },
     'tvm3': {
         'resolver': '/resources/lib/channels/ch/tvm3:get_live_url',
         'label': 'TVM3',
@@ -189,6 +181,38 @@ menu = {
         'fanart': 'channels/ch/canalalpha.png',
         'enabled': True,
         'order': 27
+    },
+    'CARAC1': {
+        'resolver': '/resources/lib/channels/ch/carac:get_live_url',
+        'label': 'CARAC1',
+        'thumb': 'channels/ch/carac1.png',
+        'fanart': 'channels/ch/carac1.png',
+        'enabled': True,
+        'order': 28
+    },
+    'CARAC2': {
+        'resolver': '/resources/lib/channels/ch/carac:get_live_url',
+        'label': 'CARAC2',
+        'thumb': 'channels/ch/carac2.png',
+        'fanart': 'channels/ch/carac2.png',
+        'enabled': True,
+        'order': 29
+    },
+    'CARAC3': {
+        'resolver': '/resources/lib/channels/ch/carac:get_live_url',
+        'label': 'CARAC3',
+        'thumb': 'channels/ch/carac3.png',
+        'fanart': 'channels/ch/carac3.png',
+        'enabled': True,
+        'order': 30
+    },
+    'CARAC4': {
+        'resolver': '/resources/lib/channels/ch/carac:get_live_url',
+        'label': 'CARAC4',
+        'thumb': 'channels/ch/carac4.png',
+        'fanart': 'channels/ch/carac4.png',
+        'enabled': True,
+        'order': 31
     },
     'alpenwelle': {
         'resolver': '/resources/lib/channels/ch/alpenwelle:get_live_url',
