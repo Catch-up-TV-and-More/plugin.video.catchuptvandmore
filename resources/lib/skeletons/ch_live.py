@@ -181,5 +181,13 @@ menu = {
         'fanart': 'channels/ch/canal9.png',
         'enabled': True,
         'order': 26
+    },
+    'alpenwelle': {
+        'resolver': '/resources/lib/channels/ch/alpenwelle:get_live_url',
+        'label': 'alpen-welle',
+        'thumb': 'channels/ch/awpluslogo.png',
+        'fanart': 'channels/ch/awpluslogo.png',
+        'enabled': True,
+        'order': 32
     }
 }
