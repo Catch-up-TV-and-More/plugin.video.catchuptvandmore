@@ -173,5 +173,13 @@ menu = {
         'fanart': 'channels/ch/latele.png',
         'enabled': True,
         'order': 25
+    },
+    'alpenwelle': {
+        'resolver': '/resources/lib/channels/ch/alpenwelle:get_live_url',
+        'label': 'alpen-welle',
+        'thumb': 'channels/ch/awpluslogo.png',
+        'fanart': 'channels/ch/awpluslogo.png',
+        'enabled': True,
+        'order': 32
     }
 }
