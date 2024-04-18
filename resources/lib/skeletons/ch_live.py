@@ -182,6 +182,14 @@ menu = {
         'enabled': True,
         'order': 26
     },
+    'canalalpha': {
+        'resolver': '/resources/lib/channels/ch/canalalpha:get_live_url',
+        'label': 'CANALALPHA',
+        'thumb': 'channels/ch/canalalpha.png',
+        'fanart': 'channels/ch/canalalpha.png',
+        'enabled': True,
+        'order': 27
+    },
     'alpenwelle': {
         'resolver': '/resources/lib/channels/ch/alpenwelle:get_live_url',
         'label': 'alpen-welle',
