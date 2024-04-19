@@ -181,5 +181,12 @@ menu = {
         'fanart': 'channels/ch/canalalpha.png',
         'enabled': True,
         'order': 27
+    'canal9': {
+        'resolver': '/resources/lib/channels/ch/canal9:get_live_url',
+        'label': 'CANAL9',
+        'thumb': 'channels/ch/canal9.png',
+        'fanart': 'channels/ch/canal9.png',
+        'enabled': True,
+        'order': 26
     }
 }
