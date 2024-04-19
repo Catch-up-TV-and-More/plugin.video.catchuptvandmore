@@ -221,5 +221,13 @@ menu = {
         'fanart': 'channels/ch/awpluslogo.png',
         'enabled': True,
         'order': 32
+    },
+    'blick': {
+        'resolver': '/resources/lib/channels/ch/blick:get_live_url',
+        'label': 'Blick',
+        'thumb': 'channels/ch/blick.png',
+        'fanart': 'channels/ch/blick.png',
+        'enabled': True,
+        'order': 33
     }
 }
