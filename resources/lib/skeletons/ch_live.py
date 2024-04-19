@@ -237,5 +237,13 @@ menu = {
         'fanart': 'channels/ch/dieneuezeit.png',
         'enabled': True,
         'order': 34
+    },
+    'dieutv': {
+        'resolver': '/resources/lib/channels/ch/dieutv:get_live_url',
+        'label': 'DieuTV',
+        'thumb': 'channels/ch/dieutv.png',
+        'fanart': 'channels/ch/dieutv.png',
+        'enabled': True,
+        'order': 35
     }
 }
