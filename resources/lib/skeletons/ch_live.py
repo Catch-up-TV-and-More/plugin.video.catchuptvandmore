@@ -245,5 +245,13 @@ menu = {
         'fanart': 'channels/ch/dieutv.png',
         'enabled': True,
         'order': 35
+    },
+    'dritatv': {
+        'resolver': '/resources/lib/channels/ch/dritatv:get_live_url',
+        'label': 'DritaTV',
+        'thumb': 'channels/ch/dritatv.png',
+        'fanart': 'channels/ch/dritatv.png',
+        'enabled': True,
+        'order': 36
     }
 }
