@@ -229,5 +229,13 @@ menu = {
         'fanart': 'channels/ch/blick.png',
         'enabled': True,
         'order': 33
+    },
+    'dieneuezeit': {
+        'resolver': '/resources/lib/channels/ch/dieneuezeit:get_live_url',
+        'label': 'Die Neue Zeit',
+        'thumb': 'channels/ch/dieneuezeit.png',
+        'fanart': 'channels/ch/dieneuezeit.png',
+        'enabled': True,
+        'order': 34
     }
 }
