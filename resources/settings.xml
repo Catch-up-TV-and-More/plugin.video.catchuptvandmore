@@ -52,7 +52,7 @@
                 <setting label="30153" type="labelenum" id="arte.language" values="FR|DE|EN|ES|PL|IT" default="FR"/>
                 <setting label="30155" type="labelenum" id="euronews.language" values="FR|EN|AR|DE|IT|ES|PT|RU|RO|TR|FA|GR|HU|BG" default="FR"/>
                 <setting label="30154" type="labelenum" id="france24.language" values="FR|EN|AR|ES" default="FR"/>
-                <setting label="30157" type="labelenum" id="dw.language" values="EN|DE|DE+|ES|AR" default="EN"/>
+                <setting label="30157" type="labelenum" id="dw.language" values="EN|DE|ES|FR|AR" default="EN"/>
                 <setting label="30161" type="labelenum" id="qvc.language" values="JP|DE|IT|UK|US" default="UK"/>
                 <setting label="30162" type="labelenum" id="nhkworld.language" values="Outside Japan|In Japan" default="Outside Japan"/>
                 <setting label="30163" type="labelenum" id="cgtn.language" values="FR|EN|AR|ES|RU" default="FR"/>
