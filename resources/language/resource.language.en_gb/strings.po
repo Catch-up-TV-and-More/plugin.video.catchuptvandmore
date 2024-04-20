@@ -926,7 +926,7 @@ msgid "No videos found"
 msgstr ""
 
 msgctxt "#30719"
-msgid "Inputstream Adaptive not enable"
+msgid "Inputstream Adaptive not enabled"
 msgstr ""
 
 msgctxt "#30720"

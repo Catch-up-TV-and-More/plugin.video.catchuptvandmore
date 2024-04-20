@@ -9,13 +9,11 @@ from __future__ import unicode_literals
 import json
 import re
 
-import inputstreamhelper
 import urlquick
+# noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
+
 from resources.lib import resolver_proxy, web_utils
-from resources.lib.kodi_utils import (get_selected_item_art,
-                                      get_selected_item_info,
-                                      get_selected_item_label)
 from resources.lib.menu_utils import item_post_treatment
 
 # TO DO
@@ -145,5 +143,9 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE_ARTE % final_language.lower(), headers=GENERIC_HEADERS)
     json_parser = json.loads(resp.text)
 
-    video_url = json_parser["data"]["attributes"]["streams"][0]["url"]
+    streams = json_parser["data"]["attributes"]["streams"]
+    if len(streams) == 0:
+        plugin.notify(plugin.localize(30600), plugin.localize(30716))
+        return False
+    video_url = streams[0]["url"]
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)
