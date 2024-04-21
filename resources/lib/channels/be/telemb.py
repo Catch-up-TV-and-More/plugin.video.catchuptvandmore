@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2017, SylvainCecchetto
+# Copyright: (c) 2017, SylvainCecchetto, 2024, darodi
 # GNU General Public License v2.0+ (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-from builtins import str
-import re
 
 import json
-from codequick import Listitem, Resolver, Route
-import urlquick
+import re
+from builtins import str
 
-from resources.lib import download, resolver_proxy
+import urlquick
+# noinspection PyUnresolvedReferences
+from codequick import Listitem, Resolver, Route
+
+from resources.lib import download, resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
 
 # TO DO
@@ -25,6 +27,9 @@ URL_LIVE = URL_ROOT + '/direct'
 LIVE_PLAYER = 'https://tvlocales-player.freecaster.com/embed/%s.json'
 
 PATTERN_M3U8 = re.compile(r'file\":\"(.*?)\"')
+
+# example "live_token": "95d2f6c9-e85f-4388-8e9c-5962aaaa206f",
+PATTERN_LIVE_TOKEN = re.compile(r'\"live_token\":\s*\"(.*?)\",')
 
 
 @Route.register
@@ -93,12 +98,16 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
-    resp = urlquick.get(URL_LIVE, max_age=-1)
-    root = resp.parse()
-
-    live_data = root.findall(".//div[@class='freecaster-player']")[0].get('data-fc-token')
-    resp2 = urlquick.get(LIVE_PLAYER % live_data, max_age=-1)
+    headers = {
+        "User-Agent": web_utils.get_random_ua(),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "referrer": "https://www.telemb.be/",
+    }
+    resp = urlquick.get(URL_LIVE, headers=headers, max_age=-1)
+    live_tokens = PATTERN_LIVE_TOKEN.findall(resp.text)
+    if len(live_tokens) == 0:
+        return False
+    resp2 = urlquick.get(LIVE_PLAYER % live_tokens[0], max_age=-1)
     video_url = json.loads(resp2.text)['video']['src'][0]['src']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
