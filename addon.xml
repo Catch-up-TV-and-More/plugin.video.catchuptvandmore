@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta03" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta04" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -55,6 +55,24 @@
 (PROJECT] Support proxy configuration (PR #1304) thanks @cedk
 [FR - MYCANAL] Fix json parser thanks @IceFreak66
 [WO - ALJAZEERA] Fix English stream
+[BE - RTLPlay] Fix live (PR #1314 issue #1303) thanks @darodi
+[WEBSITE - INA] Complete rewrite (PR #1316 issue #1265) thanks @darodi
+[WEBSITE - INA] Search and homepage (PR #1318 issue #1265) thanks @darodi
+[Project] Need manifest headers for Omega too in get_stream_with_quality (PR #1317) thanks @SebMourihou
+[CH - CANAL9] Live  Live (PR #1319 issue #936) thanks @darodi
+[CH - AlpenWelle plus] Live (PR #1330 issue #936) thanks @darodi
+[CH - CANALALPHA] Live (PR #1330 issue #936) thanks @darodi
+[CH - CARAC] Live (PR #1330 issue #936) thanks @darod
+[CH - Blick] Live (PR #1330 issue #936) thanks @darod
+[CH - Die Neue Zeit] Live (PR #1330 issue #936) thanks @darod
+[CH - DieuTV] Live (PR #1330 issue #936) thanks @darod
+[CH - DritaTV] Live (PR #1330 issue #936) thanks @darod
+[WO - ARTE] Fix live out of bound exception (PR #1324) thanks @darodi
+[WO - icitelevision] Fix http error 406 (PR #1326) thanks @darodi
+[WO - DW] Fix live (PR #1326) thanks @darodi
+[WO - QVC] Fix live url (PR #1328) thanks @darodi
+[BE - TeleMB] Fix live url (PR #1330 issue #1329) thanks @darodi
+[BE - LN24] Fix live (PR #1331 issue #1329) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
