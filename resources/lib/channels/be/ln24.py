@@ -19,14 +19,17 @@ from resources.lib import resolver_proxy
 from resources.lib.addon_utils import Quality
 from resources.lib.menu_utils import item_post_treatment
 
-URL_ROOT = 'https://www.ln24.be/'
+URL_ROOT = 'https://www.ln24.be'
 url_constructor = urljoin_partial(URL_ROOT)
-URL_LIVE = url_constructor('direct')
 
 # "media_sources": {
 #     "live": {"src": "https:\/\/live.digiteka.com\/1\/bEg0RmFLb1JMYXRI\/dGhqbmIw\/hls\/live\/playlist.m3u8",
 #              "id": "b7wfnkvf"}}
 PATTERN_VIDEO_M3U8 = re.compile(r'\"src\":\s*\"(.*?\.m3u8)\"')
+
+# "embedUrl": "https://www.ultimedia.com/deliver/generic/iframe/mdtk/01524900/zone/2/autoplay/0/showtitle/0/src/qssu8l3"
+PATTERN_EMBED_URL = re.compile(r'\"embedUrl\":\s*\"(.*?)\"')
+# "media_sources":{"live":{"src":"https:\/\/live-ln24.digiteka.com\/1911668011\/index.m3u8"
 
 # "media_sources": {
 #     "mp4": {
@@ -47,7 +50,7 @@ def list_programs(plugin, item_id, **kwargs):
     item_post_treatment(item)
     yield item
 
-    resp = urlquick.get(url_constructor("emissions"))
+    resp = urlquick.get(url_constructor("/emissions"))
     root_elem = resp.parse("div", attrs={"class": "view-content"})
     results = root_elem.iterfind(".//article")
     for article in results:
@@ -72,7 +75,7 @@ def list_videos_search(plugin, search_query, **kwargs):
     if search_query is None or len(search_query) == 0:
         return False
 
-    for i in video_list(plugin, url_constructor("recherche?ft=%s") % search_query):
+    for i in video_list(plugin, url_constructor("/recherche?ft=%s") % search_query):
         yield i
 
 
@@ -143,11 +146,25 @@ def play_video(plugin, url):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE)
-    root_elem = resp.parse("div", attrs={"role": "main"})
-    frame_url = root_elem.find(".//iframe").get('src')
-    resp2 = urlquick.get("https:" + frame_url)
+    resp = urlquick.get(URL_ROOT)
+    root_elem = resp.parse("div", attrs={"id": "mainMenu"})
+    live_url = None
+    for a in root_elem.iterfind(".//a"):
+        href = a.get('href')
+        if "live" in href:
+            live_url = href
+            break
 
+    if live_url is None:
+        plugin.notify(plugin.localize(30600), plugin.localize(30718))
+        return False
+
+    resp1 = urlquick.get(url_constructor(live_url), max_age=-1)
+    embed_urls = PATTERN_EMBED_URL.findall(resp1.text)
+    if len(embed_urls) == 0:
+        return False
+
+    resp2 = urlquick.get(embed_urls[0])
     m3u8_array = PATTERN_VIDEO_M3U8.findall(resp2.text)
     if len(m3u8_array) == 0:
         return False
