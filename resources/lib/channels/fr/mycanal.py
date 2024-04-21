@@ -250,7 +250,7 @@ def list_channel(plugin, item_id, **kwargs):
     """
 
     resp = urlquick.get(URL_REPLAY_CHANNEL % item_id)
-    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0]
+    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0].replace("undefined", "\"undefined\"")
     json_react_query_state = json.loads(react_query_state)
 
     for category in json_react_query_state["queries"][0]["state"]["data"]["strates"]:
@@ -316,7 +316,7 @@ def list_contents(plugin, item_id, key_value, category, **kwargs):
 
 def find_category(item_id, key_value):
     resp = urlquick.get(URL_REPLAY_CHANNEL % item_id)
-    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0]
+    react_query_state = REACT_QUERY_STATE.findall(resp.text)[0].replace("undefined", "\"undefined\"")
     json_react_query_state = json.loads(react_query_state)
     for category in json_react_query_state["queries"][0]["state"]["data"]["strates"]:
         if 'reactKey' in category and category['reactKey'] == key_value:

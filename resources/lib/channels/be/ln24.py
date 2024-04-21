@@ -15,29 +15,20 @@ from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
 from codequick.utils import urljoin_partial
 
-from resources.lib import resolver_proxy
+from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import Quality
 from resources.lib.menu_utils import item_post_treatment
 
-URL_ROOT = 'https://www.ln24.be/'
+URL_ROOT = 'https://www.ln24.be'
 url_constructor = urljoin_partial(URL_ROOT)
-URL_LIVE = url_constructor('direct')
 
-# "media_sources": {
-#     "live": {"src": "https:\/\/live.digiteka.com\/1\/bEg0RmFLb1JMYXRI\/dGhqbmIw\/hls\/live\/playlist.m3u8",
-#              "id": "b7wfnkvf"}}
 PATTERN_VIDEO_M3U8 = re.compile(r'\"src\":\s*\"(.*?\.m3u8)\"')
 
-# "media_sources": {
-#     "mp4": {
-#         "mp4_720": "https:\/\/ngs15c.digiteka.com\/720p\/...2f074e4ae.mp4",
-#         "mp4_480": "https:\/\/ngs27c.digiteka.com\/480p\/...c03f229b3.mp4",
-#         "mp4_360": "https:\/\/ngs14c.digiteka.com\/360p\/...1fb8fcbcb.mp4",
-#         "mp4_240": "https:\/\/ngs21c.digiteka.com\/240p\/...c11e385a5.mp4"
-#     }
-# },
+PATTERN_EMBED_URL = re.compile(r'\"embedUrl\":\s*\"(.*?)\"'),
 PATTERN_VIDEO_BEST = re.compile(r'"mp4_720":\s*"([^"]*\.mp4)"')
 PATTERN_VIDEO_WORST = re.compile(r'"mp4_240":\s*"([^"]*\.mp4)"')
+
+GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
 
 @Route.register
@@ -47,7 +38,7 @@ def list_programs(plugin, item_id, **kwargs):
     item_post_treatment(item)
     yield item
 
-    resp = urlquick.get(url_constructor("emissions"))
+    resp = urlquick.get(url_constructor("/emissions"), headers=GENERIC_HEADERS, max_age=-1)
     root_elem = resp.parse("div", attrs={"class": "view-content"})
     results = root_elem.iterfind(".//article")
     for article in results:
@@ -72,13 +63,13 @@ def list_videos_search(plugin, search_query, **kwargs):
     if search_query is None or len(search_query) == 0:
         return False
 
-    for i in video_list(plugin, url_constructor("recherche?ft=%s") % search_query):
+    for i in video_list(plugin, url_constructor("/recherche?ft=%s") % search_query):
         yield i
 
 
 @Route.register
 def video_list(plugin, url):
-    resp = urlquick.get(url)
+    resp = urlquick.get(url, headers=GENERIC_HEADERS, max_age=-1)
 
     root_elem = resp.parse("div", attrs={"class": "view-content"})
     results = root_elem.iterfind(".//article")
@@ -118,7 +109,7 @@ def video_list(plugin, url):
 
 @Resolver.register
 def play_video(plugin, url):
-    resp = urlquick.get(url)
+    resp = urlquick.get(url, headers=GENERIC_HEADERS, max_age=-1)
     try:
         root_elem = resp.parse("video", attrs={"id": "ln24-video"})
         video_url = root_elem.find(".//source").get('src')
@@ -143,14 +134,28 @@ def play_video(plugin, url):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE)
-    root_elem = resp.parse("div", attrs={"role": "main"})
-    frame_url = root_elem.find(".//iframe").get('src')
-    resp2 = urlquick.get("https:" + frame_url)
+    resp = urlquick.get(URL_ROOT, headers=GENERIC_HEADERS, max_age=-1)
+    root_elem = resp.parse("div", attrs={"id": "mainMenu"})
+    live_url = None
+    for a in root_elem.iterfind(".//a"):
+        href = a.get('href')
+        if "live" in href:
+            live_url = href
+            break
 
-    m3u8_array = PATTERN_VIDEO_M3U8.findall(resp2.text)
+    if live_url is None:
+        plugin.notify(plugin.localize(30600), plugin.localize(30718))
+        return False
+
+    resp = urlquick.get(url_constructor(live_url), headers=GENERIC_HEADERS, max_age=-1)
+    embed_urls = PATTERN_EMBED_URL.findall(resp.text)
+    if len(embed_urls) == 0:
+        return False
+
+    resp = urlquick.get(embed_urls[0], headers=GENERIC_HEADERS, max_age=-1)
+    m3u8_array = PATTERN_VIDEO_M3U8.findall(resp.text)
     if len(m3u8_array) == 0:
         return False
     video_url = m3u8_array[0].replace("\\", "")
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)

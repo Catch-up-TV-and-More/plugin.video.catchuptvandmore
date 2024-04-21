@@ -238,7 +238,7 @@ def get_stream_with_quality(plugin,
     item = Listitem()
     stream_headers = urlencode(headers)
     item.property['inputstream.adaptive.stream_headers'] = stream_headers
-    if get_kodi_version() == 20:
+    if get_kodi_version() >= 20:
         item.property['inputstream.adaptive.manifest_headers'] = stream_headers
     item.path = video_url
     item.property[INPUTSTREAM_PROP] = "inputstream.adaptive"
