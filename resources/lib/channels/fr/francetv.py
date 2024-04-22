@@ -145,7 +145,7 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         item_post_treatment(item)
         return True
 
-    if type_ == 'sous_categorie':
+    if type_ == 'sous_categorie' or type_ == 'categorie':
         item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/sub-categories/%s' % j['url_complete']))
         item_post_treatment(item)
         return True
