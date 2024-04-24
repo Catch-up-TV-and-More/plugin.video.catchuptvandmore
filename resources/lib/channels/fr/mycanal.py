@@ -17,11 +17,15 @@ import time
 # noinspection PyUnresolvedReferences
 import inputstreamhelper
 import requests
+from requests.adapters import HTTPAdapter
 import urlquick
 # noinspection PyUnresolvedReferences
 import xbmcvfs
 # noinspection PyUnresolvedReferences
 from xbmc import getCondVisibility
+
+from urllib3.util import create_urllib3_context
+from urllib3 import PoolManager
 
 try:
     from urllib.parse import quote, urlencode
@@ -87,6 +91,18 @@ LIVE_DAILYMOTION = {
 
 REACT_QUERY_STATE = re.compile(r'window.REACT_QUERY_STATE\s*=\s*(.*?);\s*document\.documentElement\.classList\.remove')
 WINDOW_DATA = re.compile(r'window.__data=(.*?);\s*window.REACT_QUERY_STATE')
+
+
+class AddedCipherAdapter(HTTPAdapter):
+    # Fix issue SSLError: dh key too small on some device.
+    def init_poolmanager(self, connections, maxsize, block=False):
+        ctx = create_urllib3_context(ciphers=":HIGH:!DH:!aNULL")
+        self.poolmanager = PoolManager(
+            num_pools=connections,
+            maxsize=maxsize,
+            block=block,
+            ssl_context=ctx
+        )
 
 
 def get_key_id():
@@ -159,23 +175,6 @@ def get_certificate_data(plugin, certificate_url, session_requests):
         plugin.notify(plugin.localize(30600), 'get_certificate_data response: empty')
         return None
     return base64.b64encode(resp.content).decode('utf-8')
-
-
-def fix_cipher():
-    # Fix a ssl issue on some device.
-    # noinspection PyUnresolvedReferences
-    try:
-        # noinspection PyUnresolvedReferences
-        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
-    except AttributeError:
-        # no pyopenssl support used / needed / available
-        pass
-    try:
-        # noinspection PyUnresolvedReferences
-        requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
-    except AttributeError:
-        # no pyopenssl support used / needed / available
-        pass
 
 
 def get_pass_token(plugin, data_pass, pass_url, session_requests):
@@ -334,7 +333,10 @@ def list_programs(plugin, item_id, next_url, **kwargs):
 
         for strate in json_parser["strates"]:
             if strate["type"] == "contentRow" or strate["type"] == "contentGrid":
-                strate_title = program_title + ' - ' + strate["title"]
+                if 'title' in strate:
+                    strate_title = program_title + ' - ' + strate["title"]
+                else:
+                    strate_title = program_title
 
                 item = Listitem()
                 item.label = strate_title
@@ -453,9 +455,6 @@ def list_sub_programs(plugin, item_id, next_url, strate_title, **kwargs):
             if strate["type"] != "contentRow" and strate["type"] != "contentGrid":
                 continue
 
-            if strate["title"] not in strate_title:
-                continue
-
             for content_datas in strate['contents']:
                 if content_datas["type"] != 'article':
                     if 'subtitle' in content_datas:
@@ -523,11 +522,9 @@ def get_video_url(plugin,
             xbmcgui.Dialog().ok('Info', plugin.localize(30603))
             return False
 
-        fix_cipher()
-
         device_key_id, device_id_full, session_id = get_key_id()
         session_requests = requests.sessions.Session()
-
+        session_requests.mount(SECURE_GEN_HAPI, AddedCipherAdapter())
         certificate_url, license_url, live_init, pass_url, portail_id = get_config(plugin, session_requests)
 
         data_pass = {
@@ -691,10 +688,9 @@ def get_live_url(plugin, item_id, **kwargs):
     if xbmcgui.Dialog().select(Script.localize(30174), ["MyCanal", "Dailymotion"]):
         return resolver_proxy.get_stream_dailymotion(plugin, LIVE_DAILYMOTION[item_id], False)
 
-    fix_cipher()
     device_key_id, device_id_full, session_id = get_key_id()
     session_requests = requests.sessions.Session()
-
+    session_requests.mount(SECURE_GEN_HAPI, AddedCipherAdapter())
     certificate_url, license_url, live_init, pass_url, portail_id = get_config(plugin, session_requests)
 
     resp_app_config = session_requests.get(URL_REPLAY_CHANNEL % item_id)
