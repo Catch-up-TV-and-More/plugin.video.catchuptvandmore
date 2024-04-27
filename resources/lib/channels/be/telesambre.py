@@ -15,7 +15,7 @@ from codequick import Listitem, Resolver, Route
 # noinspection PyUnresolvedReferences
 from codequick.utils import urljoin_partial
 
-from resources.lib import resolver_proxy
+from resources.lib import resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://www.telesambre.be'
@@ -34,6 +34,9 @@ PATTERN_VIDEO_M3U8 = re.compile(r'\\\"src\\\":\[\\\"(.*?\.m3u8)\\\"')
 
 # \"src\":[\"https:\\\/\\\/telesambre-vod.freecaster.com\\\/vod\\\/telesambre\\\/TVL00049BA-720p.mp4\"]
 PATTERN_VIDEO_MP4 = re.compile(r'\\\"src\\\":\[\\\"(.*?\.mp4)\\\"')
+
+# "live_token":"95d2f656-50f1-432b-84a6-ce11aacdb482"
+PATTERN_LIVE_TOKEN = re.compile(r'\"live_token\":\s*\"(.*?)\"')
 
 
 @Route.register
@@ -179,11 +182,22 @@ def play_video(plugin, url, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE, max_age=-1)
-    root = resp.parse()
+    headers = {
+        "User-Agent": web_utils.get_random_ua(),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "fr-BE,en-US;q=0.7,en;q=0.3",
+        "Pragma": "no-cache",
+        "Cache-Control": "no-cache",
+        "referrer": URL_ROOT,
+    }
 
-    live_data = root.findall(".//div[@class='freecaster-player']")[0].get('data-fc-token')
-    resp2 = urlquick.get(LIVE_PLAYER % live_data, max_age=-1)
+    resp = urlquick.get(URL_LIVE, headers=headers, max_age=-1)
+    m3u8_array = PATTERN_LIVE_TOKEN.findall(resp.text)
+    if len(m3u8_array) == 0:
+        plugin.notify(plugin.localize(30600), plugin.localize(30716))
+        return False
+
+    resp2 = urlquick.get(LIVE_PLAYER % m3u8_array[0], max_age=-1)
     video_url = json.loads(resp2.text)['video']['src'][0]['src']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
