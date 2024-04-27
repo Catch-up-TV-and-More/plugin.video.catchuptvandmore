@@ -24,7 +24,7 @@ url_constructor = urljoin_partial(URL_ROOT)
 
 PATTERN_VIDEO_M3U8 = re.compile(r'\"src\":\s*\"(.*?\.m3u8)\"')
 
-PATTERN_EMBED_URL = re.compile(r'\"embedUrl\":\s*\"(.*?)\"'),
+PATTERN_EMBED_URL = re.compile(r'\"embedUrl\":\s*\"(.*?)\"')
 PATTERN_VIDEO_BEST = re.compile(r'"mp4_720":\s*"([^"]*\.mp4)"')
 PATTERN_VIDEO_WORST = re.compile(r'"mp4_240":\s*"([^"]*\.mp4)"')
 
