@@ -6,14 +6,15 @@
 
 from __future__ import unicode_literals
 
+import json
 import re
 from builtins import str
 
-import json
 import urlquick
+# noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route
 
-from resources.lib import download, resolver_proxy
+from resources.lib import download, resolver_proxy, web_utils
 from resources.lib.menu_utils import item_post_treatment
 
 LIVE_PLAYER = 'https://tvlocales-player.freecaster.com/embed/%s.json'
@@ -125,11 +126,18 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE, max_age=-1)
+    headers = {
+        "User-Agent": web_utils.get_random_ua(),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "fr-BE,en-US;q=0.7,en;q=0.3",
+        "referrer": URL_ROOT
+    }
+
+    resp = urlquick.get(URL_LIVE, headers=headers, max_age=-1)
     root = resp.parse()
 
     live_data = root.findall(".//div[@class='freecaster-player']")[0].get('data-fc-token')
-    resp2 = urlquick.get(LIVE_PLAYER % live_data, max_age=-1)
-    video_url = json.loads(resp2.text)['video']['src'][0]['src']
+    resp = urlquick.get(LIVE_PLAYER % live_data, max_age=-1)
+    video_url = json.loads(resp.text)['video']['src'][0]['src']
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, video_url)
