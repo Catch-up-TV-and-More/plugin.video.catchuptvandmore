@@ -233,7 +233,7 @@ def list_videos(plugin, item_id, serie_id, **kwargs):
 def get_video_url(plugin, item_id, data_video_id, show_name, **kwargs):
 
     resp = urlquick.get(show_name, headers=GENERIC_HEADERS, max_age=-1)
-    match = re.search('(static/chunks/app/\(navigation\)/shows/\[brand\]/\[series\]/\[episode\]/\[videoId\]/page)(.+?)."\]', resp.text, re.DOTALL)
+    match = re.search('.*\\\"(static/chunks/app/\(navigation\)/shows/.*brand.*series.*episode.*videoId.*/page)(.+?)."\]', resp.text, re.DOTALL)
 
     full_url_ids = URL_ID + match.group(1) + match.group(2)
     resp = urlquick.get(full_url_ids, headers=GENERIC_HEADERS, max_age=-1)
