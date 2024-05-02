@@ -25,7 +25,6 @@ URL_LIVE = URL_ROOT + '/direct'
 
 URL_MYVIDEOPLACE_API = 'https://player.myvideoplace.tv/ajax_actions.php'
 
-URL_LIVES = 'https://api.dailymotion.com/user/%s/videos?fields=id,thumbnail_large_url,title,views_last_hour&live_onair=1'
 URL_REPLAY = 'https://api.dailymotion.com/user/%s/videos?fields=description,duration,id,taken_time,thumbnail_large_url,title&limit=20&sort=recent&page=1'
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
@@ -67,14 +66,18 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
     url_player = resp.parse().find('.//iframe').get('src')
-    live_id = re.compile('v=(.*?)$').findall(url_player)[0]
+    live_id = re.compile('v=(.*?)\&').findall(url_player)[0]
 
     datas = {
         'action': 'video_info',
         'refvideo': live_id
     }
+    headers = {
+        "User-Agent": web_utils.get_random_ua(),
+        'referer': url_player
+    }
 
-    stream_json = urlquick.post(URL_MYVIDEOPLACE_API, data=datas, headers=GENERIC_HEADERS, max_age=-1)
+    stream_json = urlquick.post(URL_MYVIDEOPLACE_API, data=datas, headers=headers, max_age=-1)
     video_url = json.loads(stream_json.text)["data"]["bitrates"]["hls"]
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)
