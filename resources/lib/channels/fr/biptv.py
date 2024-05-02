@@ -72,5 +72,6 @@ def get_video_url(plugin, item_id, video_url, **kwargs):
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
-    video_url = resp.parse().find(".//source").get("src")
-    return resolver_proxy.get_stream_with_quality(plugin, video_url)
+    video_url = re.compile(r'source src\=\"(.*?)\"').findall(resp.text)[0]
+    headers={'referer': URL_ROOT}
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, headers=headers)
