@@ -114,7 +114,11 @@ def list_seasons(plugin, url, **kwargs):
                     series_number = season['seriesNumber']
                     item = Listitem()
                     item.label = season['title']
-                    item.art["thumb"] = item.art["landscape"] = datas['images']['image16x9']['src']
+                    if 'image16x9' in datas['images']:
+                        image = datas['images']['image16x9']['src']
+                    else:
+                        image = datas['images']['hero']['landscape']
+                    item.art["thumb"] = item.art["landscape"] = image
                     item.set_callback(get_episodes_list, series, series_number, datas)
                     item.info['plot'] = season['summary']
                     item_post_treatment(item)
