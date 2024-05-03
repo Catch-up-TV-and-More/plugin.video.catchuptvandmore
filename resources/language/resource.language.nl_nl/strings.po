@@ -1049,3 +1049,7 @@ msgstr "Deze bron vereist een betaling of abonnement"
 msgctxt "#30895"
 msgid "This resource is no longer available"
 msgstr "Deze bron is niet langer beschikbaar"
+
+msgctxt "#30896"
+msgid "No item"
+msgstr ""

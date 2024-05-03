@@ -43,8 +43,6 @@ URL_API = 'https://www.tf1.fr/graphql/web'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
-USER_AGENT_FIREFOX = "Mozilla/5.0 (Windows NT 10.0; rv:114.0) Gecko/20100101 Firefox/114.0"
-
 URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s'
 # videoId
 
@@ -64,7 +62,7 @@ VIDEO_TYPES = {
 def get_token(plugin):
     session = urlquick.session()
     bootstrap_headers = {
-        "User-Agent": USER_AGENT_FIREFOX,
+        "User-Agent": web_utils.get_random_ua(),
         "referrer": MYTF1_ROOT
     }
     bootstrap_params = {
@@ -77,7 +75,7 @@ def get_token(plugin):
 
     session.get(ACCOUNTS_BOOTSTRAP, headers=bootstrap_headers, params=bootstrap_params, max_age=-1)
     headers_login = {
-        "User-Agent": USER_AGENT_FIREFOX,
+        "User-Agent": web_utils.get_random_ua(),
         "Content-Type": "application/x-www-form-urlencoded",
         "referrer": MYTF1_ROOT
     }
@@ -124,7 +122,8 @@ def mytf1_root(plugin, **kwargs):
         ('tf1', 'TF1', 'tf1.png', 'tf1_fanart.jpg'),
         ('tmc', 'TMC', 'tmc.png', 'tmc_fanart.jpg'),
         ('tfx', 'TFX', 'tfx.png', 'tfx_fanart.jpg'),
-        ('tf1-series-films', 'TF1 Séries Films', 'tf1seriesfilms.png', 'tf1seriesfilms_fanart.jpg')
+        ('tf1-series-films', 'TF1 Séries Films', 'tf1seriesfilms.png', 'tf1seriesfilms_fanart.jpg'),
+        ('lci', 'LCI', 'lci.png', 'lci_fanart.jpg')
     ]
 
     for channel_infos in channels:
@@ -225,6 +224,13 @@ def handle_programs(program_items, category_id=None):
                               program_slug=program_slug)
             item_post_treatment(item)
             yield item
+        else:
+            continue
+    if not is_category:
+        item = Listitem()
+        item.label = Script.localize(30896)
+        item_post_treatment(item)
+        yield item
 
 
 def handle_videos(video_items):
@@ -311,8 +317,13 @@ def list_videos(plugin, program_slug, video_type_value, offset, **kwargs):
 
     video_items = json_parser['data']['programBySlug']['videos']['items']
 
-    for video_item in handle_videos(video_items):
-        yield video_item
+    if len(video_items) > 0:
+        for video_item in handle_videos(video_items):
+            yield video_item
+    else:
+        item = Listitem()
+        item.label = Script.localize(30896)
+        yield item
 
     if len(video_items) == 20:
         yield Listitem.next_page(program_slug=program_slug,
@@ -330,7 +341,7 @@ def get_video_url(plugin,
         return False
 
     headers_video_stream = {
-        "User-Agent": USER_AGENT_FIREFOX,
+        "User-Agent": web_utils.get_random_ua(),
         "authorization": "Bearer %s" % token,
     }
     params = {
@@ -381,7 +392,7 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
 
     headers_video_stream = {
-        "User-Agent": USER_AGENT_FIREFOX,
+        "User-Agent": web_utils.get_random_ua(),
         "authorization": "Bearer %s" % token,
     }
     params = {

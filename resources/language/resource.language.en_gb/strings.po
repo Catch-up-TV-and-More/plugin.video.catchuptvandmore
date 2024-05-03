@@ -1049,3 +1049,7 @@ msgstr ""
 msgctxt "#30895"
 msgid "This resource is no longer available"
 msgstr ""
+
+msgctxt "#30896"
+msgid "No item"
+msgstr ""
