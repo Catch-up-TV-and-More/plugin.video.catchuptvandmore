@@ -32,8 +32,8 @@ PARAMS_VIDEO_STREAM = {
     'context': 'MYTF1',
     'pver': '4008002',
     'platform': 'web',
-    'os': 'linux',
-    'osVersion': 'unknown',
+    'os': 'windows',
+    'osVersion': '10.0',
     'topDomain': 'www.tf1.fr'
 }
 
@@ -81,7 +81,11 @@ def list_videos(plugin, emission_url, page, **kwargs):
         yield item
 
     # More videos...
-    is_next = json_parser['props']['pageProps']['page']['data'][3]['data'][3]['data'][1]['data']['next']
+    if 'next' in json_parser:
+        is_next = json_parser['props']['pageProps']['page']['data'][3]['data'][3]['data'][1]['data']['next']
+    else:
+        is_next = None
+
     if is_next is not None:
         yield Listitem.next_page(emission_url=emission_url, page=str(int(page) + 1))
 
@@ -105,7 +109,12 @@ def get_video_url(plugin, video_url, download_mode=False, **kwargs):
     video_url = json_parser["delivery"]["url"]
     license_url = URL_LICENCE_KEY % video_id
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url)
+    headers = {
+        'Content-Type': '',
+        'User-Agent': web_utils.get_random_ua()
+    }
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, headers=headers)
 
 
 @Resolver.register
