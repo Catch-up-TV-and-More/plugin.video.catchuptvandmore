@@ -124,7 +124,8 @@ def mytf1_root(plugin, **kwargs):
         ('tf1', 'TF1', 'tf1.png', 'tf1_fanart.jpg'),
         ('tmc', 'TMC', 'tmc.png', 'tmc_fanart.jpg'),
         ('tfx', 'TFX', 'tfx.png', 'tfx_fanart.jpg'),
-        ('tf1-series-films', 'TF1 Séries Films', 'tf1seriesfilms.png', 'tf1seriesfilms_fanart.jpg')
+        ('tf1-series-films', 'TF1 Séries Films', 'tf1seriesfilms.png', 'tf1seriesfilms_fanart.jpg'),
+        ('lci', 'LCI', 'lci.png', 'lci_fanart.jpg')
     ]
 
     for channel_infos in channels:
@@ -225,6 +226,13 @@ def handle_programs(program_items, category_id=None):
                               program_slug=program_slug)
             item_post_treatment(item)
             yield item
+        else:
+            continue
+    if not is_category:
+        item = Listitem()
+        item.label = Script.localize(30896)
+        item_post_treatment(item)
+        yield item
 
 
 def handle_videos(video_items):
@@ -311,8 +319,13 @@ def list_videos(plugin, program_slug, video_type_value, offset, **kwargs):
 
     video_items = json_parser['data']['programBySlug']['videos']['items']
 
-    for video_item in handle_videos(video_items):
-        yield video_item
+    if len(video_items) > 0:
+        for video_item in handle_videos(video_items):
+            yield video_item
+    else:
+        item = Listitem()
+        item.label = Script.localize(30896)
+        yield item
 
     if len(video_items) == 20:
         yield Listitem.next_page(program_slug=program_slug,
