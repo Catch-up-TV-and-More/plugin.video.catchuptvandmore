@@ -203,6 +203,7 @@ def search(plugin, search_query, **kwargs):
 
 
 def handle_programs(program_items, category_id=None):
+    is_item = False
     for program_datas in program_items:
         is_category = False
         for category_datas in program_datas['categories']:
@@ -211,6 +212,7 @@ def handle_programs(program_items, category_id=None):
             elif category_id in category_datas['id']:
                 is_category = True
         if is_category:
+            is_item = True
             program_name = program_datas['name']
             program_slug = program_datas['slug']
             program_image = program_datas['decoration']['image']['sources'][0]['url']
@@ -224,9 +226,8 @@ def handle_programs(program_items, category_id=None):
                               program_slug=program_slug)
             item_post_treatment(item)
             yield item
-        else:
-            continue
-    if not is_category:
+
+    if not is_category and not is_item:
         item = Listitem()
         item.label = Script.localize(30896)
         item_post_treatment(item)
