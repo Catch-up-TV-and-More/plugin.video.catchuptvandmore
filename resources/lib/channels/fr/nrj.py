@@ -155,6 +155,13 @@ def get_video_url(plugin,
                   video_url,
                   download_mode=False,
                   **kwargs):
+    headers = {
+        'referer': URL_LIVE_WITH_TOKEN % item_id,
+        'User_Agent': web_utils.get_random_ua(),
+    }
+    resp = urlquick.post(URL_TOKEN, headers=headers, max_age=-1)
+    token = json.loads(resp.text)['token']
+
     # Just One format of each video (no need of QUALITY)
     resp = urlquick.get(video_url)
     root = resp.parse("div", attrs={"class": "nrjVideo-player"})
@@ -164,6 +171,7 @@ def get_video_url(plugin,
         if 'mp4' in stream.get('content'):
             stream_url = stream.get('content')
 
+    stream_url = stream_url + '?token=' + token
     if download_mode:
         return download.download_video(stream_url)
     return stream_url
