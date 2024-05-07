@@ -210,4 +210,11 @@ menu = {
         'enabled': True,
         'order': 26
     },
+    'bo_live': {
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30076,
+        'thumb': 'channels/bo.png',
+        'enabled': True,
+        'order': 27
+    }
 }
