@@ -196,18 +196,25 @@ menu = {
         'enabled': True,
         'order': 24
     },
+    'bo_live': {
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30076,
+        'thumb': 'channels/bo.png',
+        'enabled': True,
+        'order': 25
+    },
     'pe_live': {
         'route': '/resources/lib/main:generic_menu',
         'label': 30073,
         'thumb': 'channels/pe.png',
         'enabled': True,
-        'order': 25
+        'order': 26
     },
     've_live': {
         'route': '/resources/lib/main:generic_menu',
         'label': 30074,
         'thumb': 'channels/ve.png',
         'enabled': True,
-        'order': 26
-    },
+        'order': 27
+    }
 }
