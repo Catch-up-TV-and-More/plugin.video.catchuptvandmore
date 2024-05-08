@@ -857,5 +857,13 @@ menu = {
         },
         'enabled': True,
         'order': 81
+    },
+    'paris-h24': {
+        'resolver': '/resources/lib/channels/fr/francetv:get_live_url',
+        'label': 'France TV Paris 2024',
+        'thumb': 'channels/fr/paris_h24.png',
+        'fanart': 'channels/fr/paris_h24_fanart.jpg',
+        'enabled': True,
+        'order': 82
     }
 }
