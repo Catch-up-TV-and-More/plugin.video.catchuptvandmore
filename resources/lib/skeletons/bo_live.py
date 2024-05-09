@@ -35,4 +35,13 @@ menu = {
         'enabled': True,
         'order': 2
     },
+    'reduno': {
+        'resolver': '/resources/lib/channels/bo/reduno:get_live_url',
+        'label': 'Red Uno',
+        'thumb': 'channels/bo/reduno.jpg',
+        'fanart': 'channels/bo/reduno_fanart.jpg',
+        'm3u_group': 'Bolivia',
+        'enabled': True,
+        'order': 3
+    },
 }
