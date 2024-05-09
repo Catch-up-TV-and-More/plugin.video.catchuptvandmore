@@ -17,6 +17,15 @@ from __future__ import unicode_literals
 root = 'live_tv'
 
 menu = {
+    'atb': {
+        'resolver': '/resources/lib/channels/bo/atb:get_live_url',
+        'label': 'ATB',
+        'thumb': 'channels/bo/atb.png',
+        'fanart': 'channels/bo/atb_fanart.jpg',
+        'm3u_group': 'Bolivia',
+        'enabled': True,
+        'order': 1
+    },
     'bolivia_tv': {
         'resolver': '/resources/lib/channels/bo/boliviatv:get_live_url',
         'label': 'Bolivia TV',
@@ -24,6 +33,6 @@ menu = {
         'fanart': 'channels/bo/boliviatv_fanart.jpg',
         'm3u_group': 'Bolivia',
         'enabled': True,
-        'order': 1
+        'order': 2
     },
 }
