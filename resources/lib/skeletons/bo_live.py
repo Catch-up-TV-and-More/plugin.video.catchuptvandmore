@@ -44,4 +44,13 @@ menu = {
         'enabled': True,
         'order': 3
     },
+    'tvumsa': {
+        'resolver': '/resources/lib/channels/bo/tvumsa:get_live_url',
+        'label': 'TVU La Paz',
+        'thumb': 'channels/bo/tvumsa.png',
+        'fanart': 'channels/bo/tvumsa_fanart.png',
+        'm3u_group': 'Bolivia',
+        'enabled': True,
+        'order': 4
+    }
 }
