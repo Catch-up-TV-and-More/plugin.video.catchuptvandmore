@@ -80,13 +80,13 @@ def get_token(plugin):
         "referrer": TF1PLUS_ROOT
     }
 
-    if plugin.setting.get_string('TF1+.login') == '' or plugin.setting.get_string('TF1++.password') == '':
+    if plugin.setting.get_string('TF1+.login') == '' or plugin.setting.get_string('TF1+.password') == '':
         xbmcgui.Dialog().ok('Info', plugin.localize(30604) % ('TF1+', 'https://www.tf1.fr/mon-compte'))
         return False, None, None
 
     post_body_login = {
-        "loginID": (plugin.setting.get_string('tf1+.login')),
-        "password": (plugin.setting.get_string('tf1+.password')),
+        "loginID": (plugin.setting.get_string('TF1+.login')),
+        "password": (plugin.setting.get_string('TF1+.password')),
         "sessionExpiration": 31536000,
         "targetEnv": "jssdk",
         "include": "identities-all,data,profile,preferences,",

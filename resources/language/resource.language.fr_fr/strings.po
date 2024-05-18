@@ -567,12 +567,12 @@ msgid "RTBF auvio Password"
 msgstr "Mot de passe RTBF auvio"
 
 msgctxt "#30260"
-msgid "Login MyTF1"
-msgstr ""
+msgid "TF1+ Login"
+msgstr "Identifiant TF1+"
 
 msgctxt "#30261"
-msgid "Mot de passe MyTF1"
-msgstr ""
+msgid "TF1+ Password"
+msgstr "Mot de passe TF1+"
 
 msgctxt "#30262"
 msgid "SFR TV login"
