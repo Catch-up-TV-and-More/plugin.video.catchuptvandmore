@@ -82,7 +82,7 @@ def get_video_id(plugin, video_id, download_mode=False, **kwargs):
 
 @Route.register
 def list_emissions(plugin, item_id, category_url, page, **kwargs):
-    resp = urlquick.get(URL_REPLAY_CNEWS, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(URL_REPLAY_CNEWS, headers=GENERIC_HEADERS, allow_redirects=True, max_age=-1)
     data = resp.parse("div", attrs={"class": "les-emissions"})
 
     for video_datas in data.iterfind(".//a[@class='emission-item-wrapper']"):
