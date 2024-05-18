@@ -350,12 +350,12 @@ def get_video_url(plugin,
         'pver': '5010000',
         'platform': 'web',
         'device': 'desktop',
-        'os': 'windows',
-        'osVersion': '10.0',
-        'topDomain': 'unknown',
-        'playerVersion': '5.10.0',
+        'os': 'linux',
+        'osVersion': 'unknown',
+        'topDomain': TF1PLUS_ROOT,
+        'playerVersion': '5.19.0',
         'productName': 'mytf1',
-        'productVersion': '2.59.1'
+        'productVersion': '3.22.0'
     }
 
     url_json = URL_VIDEO_STREAM % video_id
@@ -371,7 +371,7 @@ def get_video_url(plugin,
 
     video_url = json_parser['delivery']['url']
     try:
-        license_url = json_parser['delivery']['drm-server']
+        license_url = json_parser['delivery']['drms'][0]['url']
     except Exception:
         license_url = URL_LICENCE_KEY % video_id
 
