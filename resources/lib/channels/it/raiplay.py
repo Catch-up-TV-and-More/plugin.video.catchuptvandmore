@@ -328,5 +328,5 @@ def get_live_url(plugin, item_id, **kwargs):
     url1 = resp1['video']['content_url'] + "&output=64"
     UserAgent = web_utils.get_random_ua()
     resp2 = urlquick.get(url1, headers={'User-Agent': UserAgent}, max_age=-1).text
-    url2 = re.findall(r"<!\[CDATA\[(.*?)\]\]>", resp2)[0] 
+    url2 = re.findall(r"<!\[CDATA\[(.*?)\]\]>", resp2)[0]
     return url2
