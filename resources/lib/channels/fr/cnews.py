@@ -82,7 +82,7 @@ def get_video_id(plugin, video_id, download_mode=False, **kwargs):
 
 @Route.register
 def list_emissions(plugin, item_id, category_url, page, **kwargs):
-    resp = urlquick.get(URL_REPLAY_CNEWS, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(URL_REPLAY_CNEWS, headers=GENERIC_HEADERS, allow_redirects=True, max_age=-1)
     data = resp.parse("div", attrs={"class": "les-emissions"})
 
     for video_datas in data.iterfind(".//a[@class='emission-item-wrapper']"):
@@ -164,11 +164,8 @@ def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
 def get_live_url(plugin, item_id, **kwargs):
     root = urlquick.get(URL_LIVE_CNEWS, headers=GENERIC_HEADERS, max_age=-1).parse()
     try:
-        live_id = root.find(".//div[@id='player_live']").get('data-videoid')
+        live_id = root.find(".//div[@data-muted='true']").get('data-videoid')
     except Exception:
-        try:
-            live_id = root.find(".//div[@id='player_live']").get('data-video-id')
-        except Exception:
-            live_id = 'x3b68jn'
+        live_id = 'x3b68jn'
 
     return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)

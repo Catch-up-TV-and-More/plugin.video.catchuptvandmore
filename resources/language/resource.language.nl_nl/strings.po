@@ -229,6 +229,10 @@ msgctxt "#30075"
 msgid "Luxembourg"
 msgstr "Luxemburgs"
 
+msgctxt "#30076"
+msgid "Bolivia"
+msgstr "Bolivia"
+
 # Channels (from 30080 to 30129)
 
 msgctxt "#30080"
@@ -563,11 +567,11 @@ msgid "RTBF auvio Password"
 msgstr ""
 
 msgctxt "#30260"
-msgid "MyTF1 Login"
+msgid "TF1+ Login"
 msgstr ""
 
 msgctxt "#30261"
-msgid "MyTF1 Password"
+msgid "TF1+ Password"
 msgstr ""
 
 msgctxt "#30262"

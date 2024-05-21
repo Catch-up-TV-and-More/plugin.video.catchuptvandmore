@@ -22,7 +22,7 @@ from resources.lib import resolver_proxy, web_utils
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.menu_utils import item_post_treatment
 
-MYTF1_ROOT = "https://www.tf1.fr"
+TF1PLUS_ROOT = "https://www.tf1.fr"
 
 API_KEY = "3_hWgJdARhz_7l1oOp3a8BDLoR9cuWZpUaKG4aqF7gum9_iK3uTZ2VlDBl8ANf8FVk"
 
@@ -35,7 +35,7 @@ TOKEN_GIGYA_WEB = "https://www.tf1.fr/token/gigya/web"
 # Add more infos videos (saison, episodes, casts, etc ...)
 # Find a way to get Id for each API call
 
-URL_ROOT = utils.urljoin_partial(MYTF1_ROOT)
+URL_ROOT = utils.urljoin_partial(TF1PLUS_ROOT)
 
 URL_VIDEO_STREAM = 'https://mediainfo.tf1.fr/mediainfocombo/%s'
 
@@ -63,7 +63,7 @@ def get_token(plugin):
     session = urlquick.session()
     bootstrap_headers = {
         "User-Agent": web_utils.get_random_ua(),
-        "referrer": MYTF1_ROOT
+        "referrer": TF1PLUS_ROOT
     }
     bootstrap_params = {
         'apiKey': API_KEY,
@@ -77,16 +77,16 @@ def get_token(plugin):
     headers_login = {
         "User-Agent": web_utils.get_random_ua(),
         "Content-Type": "application/x-www-form-urlencoded",
-        "referrer": MYTF1_ROOT
+        "referrer": TF1PLUS_ROOT
     }
 
-    if plugin.setting.get_string('mytf1.login') == '' or plugin.setting.get_string('mytf1.password') == '':
-        xbmcgui.Dialog().ok('Info', plugin.localize(30604) % ('myft1', 'https://www.tf1.fr/mon-compte'))
+    if plugin.setting.get_string('TF1+.login') == '' or plugin.setting.get_string('TF1+.password') == '':
+        xbmcgui.Dialog().ok('Info', plugin.localize(30604) % ('TF1+', 'https://www.tf1.fr/mon-compte'))
         return False, None, None
 
     post_body_login = {
-        "loginID": (plugin.setting.get_string('mytf1.login')),
-        "password": (plugin.setting.get_string('mytf1.password')),
+        "loginID": (plugin.setting.get_string('TF1+.login')),
+        "password": (plugin.setting.get_string('TF1+.password')),
         "sessionExpiration": 31536000,
         "targetEnv": "jssdk",
         "include": "identities-all,data,profile,preferences,",
@@ -96,7 +96,7 @@ def get_token(plugin):
         "APIKey": API_KEY,
         "sdk": "js_latest",
         "authMode": "cookie",
-        "pageURL": MYTF1_ROOT,
+        "pageURL": TF1PLUS_ROOT,
         "sdkBuild": 13987,
         "format": "json"
     }
@@ -116,7 +116,7 @@ def get_token(plugin):
 
 
 @Route.register
-def mytf1_root(plugin, **kwargs):
+def tf1plus_root(plugin, **kwargs):
     # (item_id, label, thumb, fanart)
     channels = [
         ('tf1', 'TF1', 'tf1.png', 'tf1_fanart.jpg'),
@@ -350,12 +350,12 @@ def get_video_url(plugin,
         'pver': '5010000',
         'platform': 'web',
         'device': 'desktop',
-        'os': 'windows',
-        'osVersion': '10.0',
-        'topDomain': 'unknown',
-        'playerVersion': '5.10.0',
+        'os': 'linux',
+        'osVersion': 'unknown',
+        'topDomain': TF1PLUS_ROOT,
+        'playerVersion': '5.19.0',
         'productName': 'mytf1',
-        'productVersion': '2.59.1'
+        'productVersion': '3.22.0'
     }
 
     url_json = URL_VIDEO_STREAM % video_id
@@ -371,7 +371,7 @@ def get_video_url(plugin,
 
     video_url = json_parser['delivery']['url']
     try:
-        license_url = json_parser['delivery']['drm-server']
+        license_url = json_parser['delivery']['drms'][0]['url']
     except Exception:
         license_url = URL_LICENCE_KEY % video_id
 

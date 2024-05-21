@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta05" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta08" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -81,6 +81,25 @@
 [BE - TVLUX] Fix live (PR #1338) thanks @darodi
 [BE - ACTV] Fix live (PR #1340) thanks @darodi
 [BE - LN24] Fix live (PR #1339) thanks @darodi
+[FR - BIPTV] Fix live
+[UK - CHANNEL4] Fix series listing in replay (issue #1344)
+[FR - BIPTV] Clean-up
+[FR - TVVENDEE] FIx live
+[FR - TLC] Fix live
+[FR - LCI] Fix KeyError: 'next' (PR #1345) thanks @jeff200
+[FR - MYTF1] Add LCI channel (PR #1345) thanks @jeff200
+[FR - MYTF1] Fix display bad items (PR #1346) thanks @jeff200
+[FR - NRJ] Fix replay (PR #1347) thanks @jeff200
+[FR] Add channel paris-h24 (PR #1349) thanks @SebMourlhou
+[BO - BOLIVIATV] Add channel (PR #1348) thanks @jimmygilles
+[BO - ATB] Add channel (PR #1348) thanks @jimmygilles
+[BO - REDUNO] Add channel (PR #1348) thanks @jimmygilles
+[BO - TVUMSA] Add channel (PR #1348) thanks @jimmygilles
+[FR - CNEWS] Fix item where live is defined
+[FR - MYTF1] MYTF1 is TF1+ now
+[FR - CNEWS] Allow redirection in replay (issue #1351)
+[FR - TF1PLUS] Fix a typo and Frenchify credential request (issue #1353)
+[FR - TF1PLUS] Try to use widevine drm (issue #1352)
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

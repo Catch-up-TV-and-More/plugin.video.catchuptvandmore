@@ -18,7 +18,7 @@ root = 'live_tv'
 
 menu = {
     'tf1': {
-        'resolver': '/resources/lib/channels/fr/mytf1:get_live_url',
+        'resolver': '/resources/lib/channels/fr/tf1plus:get_live_url',
         'label': 'TF1',
         'thumb': 'channels/fr/tf1.png',
         'fanart': 'channels/fr/tf1_fanart.jpg',
@@ -106,7 +106,7 @@ menu = {
         'order': 8
     },
     'tmc': {
-        'resolver': '/resources/lib/channels/fr/mytf1:get_live_url',
+        'resolver': '/resources/lib/channels/fr/tf1plus:get_live_url',
         'label': 'TMC',
         'thumb': 'channels/fr/tmc.png',
         'fanart': 'channels/fr/tmc_fanart.jpg',
@@ -117,7 +117,7 @@ menu = {
         'order': 9
     },
     'tfx': {
-        'resolver': '/resources/lib/channels/fr/mytf1:get_live_url',
+        'resolver': '/resources/lib/channels/fr/tf1plus:get_live_url',
         'label': 'TFX',
         'thumb': 'channels/fr/tfx.png',
         'fanart': 'channels/fr/tfx_fanart.jpg',
@@ -205,7 +205,7 @@ menu = {
         'order': 17
     },
     'tf1-series-films': {
-        'resolver': '/resources/lib/channels/fr/mytf1:get_live_url',
+        'resolver': '/resources/lib/channels/fr/tf1plus:get_live_url',
         'label': 'TF1 Séries Films',
         'thumb': 'channels/fr/tf1seriesfilms.png',
         'fanart': 'channels/fr/tf1seriesfilms_fanart.jpg',
@@ -857,5 +857,13 @@ menu = {
         },
         'enabled': True,
         'order': 81
+    },
+    'paris-h24': {
+        'resolver': '/resources/lib/channels/fr/francetv:get_live_url',
+        'label': 'France TV Paris 2024',
+        'thumb': 'channels/fr/paris_h24.png',
+        'fanart': 'channels/fr/paris_h24_fanart.jpg',
+        'enabled': True,
+        'order': 82
     }
 }

@@ -43,9 +43,9 @@ menu = {
         "enabled": True,
         "order": 3,
     },
-    "mytf1": {
-        "route": "/resources/lib/channels/fr/mytf1:mytf1_root",
-        "label": "MYTF1",
+    "TF1+": {
+        "route": "/resources/lib/channels/fr/tf1plus:tf1plus_root",
+        "label": "TF1+",
         "thumb": "channels/fr/mytf1.png",
         "fanart": "channels/fr/mytf1_fanart.jpg",
         "enabled": True,
