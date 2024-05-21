@@ -80,13 +80,13 @@ def get_token(plugin):
         "referrer": TF1PLUS_ROOT
     }
 
-    if plugin.setting.get_string('TF1+.login') == '' or plugin.setting.get_string('TF1+.password') == '':
+    if plugin.setting.get_string('TF1plus.login') == '' or plugin.setting.get_string('TF1plus.password') == '':
         xbmcgui.Dialog().ok('Info', plugin.localize(30604) % ('TF1+', 'https://www.tf1.fr/mon-compte'))
         return False, None, None
 
     post_body_login = {
-        "loginID": (plugin.setting.get_string('TF1+.login')),
-        "password": (plugin.setting.get_string('TF1+.password')),
+        "loginID": (plugin.setting.get_string('TF1plus.login')),
+        "password": (plugin.setting.get_string('TF1plus.password')),
         "sessionExpiration": 31536000,
         "targetEnv": "jssdk",
         "include": "identities-all,data,profile,preferences,",
@@ -350,12 +350,13 @@ def get_video_url(plugin,
         'pver': '5010000',
         'platform': 'web',
         'device': 'desktop',
-        'os': 'linux',
+        'os': 'windows',
         'osVersion': 'unknown',
-        'topDomain': TF1PLUS_ROOT,
+        'topDomain': 'unknown',
         'playerVersion': '5.19.0',
         'productName': 'mytf1',
-        'productVersion': '3.22.0'
+        'productVersion': '3.22.0',
+        'browser': 'firefox'
     }
 
     url_json = URL_VIDEO_STREAM % video_id

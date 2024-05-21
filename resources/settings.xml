@@ -114,8 +114,8 @@
         <setting label="30080" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="fr" default="true" visible="false"/>-->
 
-            <setting label="30260" type="text" id="TF1+.login" default=""/>
-            <setting label="30261" type="text" id="TF1+.password" option="hidden" default=""/>
+            <setting label="30260" type="text" id="TF1plus.login" default=""/>
+            <setting label="30261" type="text" id="TF1plus.password" option="hidden" default=""/>
 
             <setting label="30244" type="text" id="6play.login" default=""/>
             <setting label="30245" type="text" id="6play.password" option="hidden" default=""/>
