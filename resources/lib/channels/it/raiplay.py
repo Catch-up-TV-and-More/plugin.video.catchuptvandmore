@@ -11,7 +11,7 @@ import re
 
 import urlquick
 from codequick import Listitem, Resolver, Route, Script
-from resources.lib import download
+from resources.lib import download, web_utils
 from resources.lib.menu_utils import item_post_treatment
 
 # TO DO
@@ -323,5 +323,10 @@ def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE % item_id, max_age=-1).json()
-    return resp['video']['content_url']
+    resp1 = urlquick.get(URL_LIVE % item_id, max_age=-1).json()
+    # import web_pdb; web_pdb.set_trace()
+    url1 = resp1['video']['content_url'] + "&output=64"
+    UserAgent = web_utils.get_random_ua()
+    resp2 = urlquick.get(url1, headers={'User-Agent': UserAgent}, max_age=-1).text
+    url2 = re.findall(r"<!\[CDATA\[(.*?)\]\]>", resp2)[0] 
+    return url2
