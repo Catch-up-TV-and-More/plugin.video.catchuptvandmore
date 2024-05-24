@@ -41,7 +41,7 @@ URL_VIDEO_STREAM = 'https://mediainfo.tf1.fr/mediainfocombo/%s'
 
 URL_API = 'https://www.tf1.fr/graphql/web'
 
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 
 URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s'
 # videoId
@@ -62,7 +62,7 @@ VIDEO_TYPES = {
 def get_token(plugin):
     session = urlquick.session()
     bootstrap_headers = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": web_utils.get_random_windows_ua(),
         "referrer": TF1PLUS_ROOT
     }
     bootstrap_params = {
@@ -75,7 +75,7 @@ def get_token(plugin):
 
     session.get(ACCOUNTS_BOOTSTRAP, headers=bootstrap_headers, params=bootstrap_params, max_age=-1)
     headers_login = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": web_utils.get_random_windows_ua(),
         "Content-Type": "application/x-www-form-urlencoded",
         "referrer": TF1PLUS_ROOT
     }
@@ -103,7 +103,7 @@ def get_token(plugin):
     response = session.post(ACCOUNTS_LOGIN, headers=headers_login, data=post_body_login, max_age=-1)
     login_json = response.json()
     headers_gigya = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": web_utils.get_random_windows_ua(),
         "content-type": "application/json"
     }
     post_body_gigya = BODY_GIGYA % (login_json['userInfo']['UID'],
@@ -157,7 +157,7 @@ def list_categories(plugin, item_id, **kwargs):
     headers = {
         'content-type': 'application/json',
         'referer': 'https://www.tf1.fr/programmes-tv',
-        'User-Agent': web_utils.get_random_ua()
+        'User-Agent': web_utils.get_random_windows_ua()
     }
     json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
 
@@ -180,7 +180,7 @@ def search(plugin, search_query, **kwargs):
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
     headers = {
         'content-type': 'application/json',
-        'User-Agent': web_utils.get_random_ua()
+        'User-Agent': web_utils.get_random_windows_ua()
     }
 
     # Programs
@@ -273,7 +273,7 @@ def list_programs(plugin, item_id, category_id, **kwargs):
     headers = {
         'content-type': 'application/json',
         'referer': 'https://www.tf1.fr/programmes-tv',
-        'User-Agent': web_utils.get_random_ua()
+        'User-Agent': web_utils.get_random_windows_ua()
     }
     json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
     for program_item in handle_programs(json_parser['data']['programs']['items'], category_id):
@@ -312,7 +312,7 @@ def list_videos(plugin, program_slug, video_type_value, offset, **kwargs):
     headers = {
         'content-type': 'application/json',
         'referer': 'https://www.tf1.fr/programmes-tv',
-        'User-Agent': web_utils.get_random_ua()
+        'User-Agent': web_utils.get_random_windows_ua()
     }
     json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
 
@@ -342,7 +342,7 @@ def get_video_url(plugin,
         return False
 
     headers_video_stream = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": web_utils.get_random_windows_ua(),
         "authorization": "Bearer %s" % token,
     }
     params = {
@@ -377,7 +377,7 @@ def get_video_url(plugin,
 
     license_headers = {
         'Content-Type': '',
-        'User-Agent': web_utils.get_random_ua()
+        'User-Agent': web_utils.get_random_windows_ua()
     }
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd",
@@ -393,7 +393,7 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
 
     headers_video_stream = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": web_utils.get_random_windows_ua(),
         "authorization": "Bearer %s" % token,
     }
     params = {
@@ -419,7 +419,7 @@ def get_live_url(plugin, item_id, **kwargs):
     video_url = json_parser['delivery']['url']
     license_headers = {
         'Content-Type': '',
-        'User-Agent': web_utils.get_random_ua()
+        'User-Agent': web_utils.get_random_windows_ua()
     }
 
     if 'drms' in json_parser['delivery']:
