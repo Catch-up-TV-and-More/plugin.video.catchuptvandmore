@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta08" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta09" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -100,6 +100,11 @@
 [FR - CNEWS] Allow redirection in replay (issue #1351)
 [FR - TF1PLUS] Fix a typo and Frenchify credential request (issue #1353)
 [FR - TF1PLUS] Try to use widevine drm (issue #1352)
+[FR - CNEWS] Fix Error 403 (PR #1361 issue #1354) thanks @jeff2900
+[PROJECT] Updated random user_agents list (PR #1360) thanks @jeff2900
+[IT - RAIPLAY] Fix RaiPlay live TV (PR #1356) thanks @jmzambon
+[FR - TF1PLUS] Fix login (PR #1357 issue #1352) thanks @darodi
+[FR - TF1PLUS] Avoid Fairplay drm (PR #1357 issue #1352) thanks @darodi
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
