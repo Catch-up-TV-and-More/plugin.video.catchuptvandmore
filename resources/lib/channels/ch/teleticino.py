@@ -24,7 +24,7 @@ URL_LIVE = URL_ROOT + '/diretta'
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    list_lives = re.compile(r'file":  "(.*?)"').findall(resp.text)
+    list_lives = re.compile(r'file":\s*"(.*?)"').findall(resp.text)
     stream_url = ''
     for stream_datas in list_lives:
         if 'm3u8' in stream_datas:
