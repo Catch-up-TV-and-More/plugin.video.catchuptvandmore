@@ -12,6 +12,7 @@ import re
 import urlquick
 from codequick import Listitem, Resolver, Route, Script
 from resources.lib import download, web_utils
+from resources.lib.kodi_utils import get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
 # TO DO
@@ -325,9 +326,17 @@ def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE % item_id, headers=GENERIC_HEADERS, max_age=-1).json()
-    # import web_pdb; web_pdb.set_trace()
-    url = resp['video']['content_url'] + "&output=64"
-    resp = urlquick.get(url, headers=GENERIC_HEADERS, max_age=-1).text
+    resp1 = urlquick.get(URL_LIVE % item_id, headers=GENERIC_HEADERS, max_age=-1).json()
+    url1 = resp1['video']['content_url'] + "&output=64"
+    resp2 = urlquick.get(url1, headers=GENERIC_HEADERS, max_age=-1).text
+    live_url = re.findall(r"<!\[CDATA\[(.*?)\]\]>", resp2)[0]
 
-    return re.findall(r"<!\[CDATA\[(.*?)\]\]>", resp)[0]
+    item = Listitem()
+    item.path = live_url
+    item.label = get_selected_item_label()
+    item.art.update(get_selected_item_art())
+    item.info.update(get_selected_item_info())
+    # it seems all live streams are provided as hls
+    item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
+    item.property['inputstream.adaptive.manifest_type'] = 'hls'
+    return item
