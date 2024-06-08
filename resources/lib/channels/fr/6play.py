@@ -353,21 +353,6 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
 
 @Resolver.register
 def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
-    if get_kodi_version() < 18:
-        video_json = urlquick.get(URL_JSON_VIDEO % video_id, headers=M6_HEADERS, max_age=-1)
-        json_parser = json.loads(video_json.text)
-
-        video_assets = json_parser['clips'][0]['assets']
-
-        final_video_url = get_final_video_url(plugin, video_assets)
-        if final_video_url is None:
-            return False
-
-        if download_mode:
-            return download.download_video(final_video_url)
-
-        return final_video_url
-
     api_key = get_api_key()
 
     if plugin.setting.get_string('6play.login') == '' or \
@@ -434,79 +419,44 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
             if 'subtitle_vtt' in asset["type"]:
                 subtitle_url = asset['full_physical_path']
 
-    for asset in video_assets:
-        if 'usp_dashcenc_h264' in asset["type"]:
-            dummy_req = urlquick.get(asset['full_physical_path'], headers=GENERIC_HEADERS, allow_redirects=False)
-            if 'location' in dummy_req.headers:
-                video_url = dummy_req.headers['location']
-            else:
-                video_url = asset['full_physical_path']
-            return resolver_proxy.get_stream_with_quality(
-                plugin, video_url=video_url, manifest_type='mpd',
-                subtitles=subtitle_url, license_url=URL_LICENCE_KEY % token)
-
-    for asset in video_assets:
-        if 'http_h264' in asset["type"]:
-            if "hd" in asset["video_quality"]:
-                video_url = asset['full_physical_path']
-                return resolver_proxy.get_stream_with_quality(
-                    plugin, video_url=video_url, subtitles=subtitle_url)
+    final_video_url = get_final_video_url(plugin, video_assets, 'usp_dashcenc_h264')
+    if final_video_url is not None:
+        return resolver_proxy.get_stream_with_quality(
+            plugin, video_url=final_video_url, manifest_type='mpd',
+            subtitles=subtitle_url, license_url=URL_LICENCE_KEY % token)
 
     return False
 
 
 def get_final_video_url(plugin, video_assets, asset_type=None):
+    RES_PRIORITY = {"sd": 0, "hd": 1}
+    manifests = []
+
     if video_assets is None:
         plugin.notify('ERROR', plugin.localize(30721))
         return None
 
-    all_datas_videos_quality = []
-    all_datas_videos_path = []
     for asset in video_assets:
         if asset_type is None:
             if 'http_h264' in asset["type"]:
-                all_datas_videos_quality.append(asset["video_quality"])
-                all_datas_videos_path.append(asset['full_physical_path'])
-            elif 'h264' in asset["type"]:
-                manifest = urlquick.get(asset['full_physical_path'], headers=GENERIC_HEADERS, max_age=-1)
-                if 'drm' not in manifest.text:
-                    all_datas_videos_quality.append(asset["video_quality"])
-                    all_datas_videos_path.append(asset['full_physical_path'])
-        elif asset_type in asset["type"]:
-            all_datas_videos_quality.append(asset["video_quality"])
-            all_datas_videos_path.append(asset['full_physical_path'])
+                manifest = (asset["video_quality"].lower(), asset["full_physical_path"])
+                if manifest not in manifests:
+                    manifests.append(manifest)
+                continue
+        elif asset["type"] == asset_type:
+            manifest = (asset["video_quality"].lower(), asset["full_physical_path"])
+            if manifest not in manifests:
+                manifests.append(manifest)
 
-    if len(all_datas_videos_quality) == 0:
-        xbmcgui.Dialog().ok('Info', plugin.localize(30602))
+    final_video_url = sorted(manifests, key=lambda m: RES_PRIORITY[m[0]], reverse=True)[0][1]
+
+    if len(final_video_url) == 0:
         return None
 
-    final_video_url = all_datas_videos_path[0]
-
-    desired_quality = Script.setting.get_string('quality')
-    if desired_quality == Quality['DIALOG']:
-        selected_item = xbmcgui.Dialog().select(
-            plugin.localize(30709),
-            all_datas_videos_quality)
-        if selected_item == -1:
-            return None
-        final_video_url = all_datas_videos_path[selected_item]
-
-    elif desired_quality == Quality['BEST']:
-        url_best = ''
-        i = 0
-        for data_video in all_datas_videos_quality:
-            if 'lq' not in data_video:
-                url_best = all_datas_videos_path[i]
-            i = i + 1
-        final_video_url = url_best
-
-    elif desired_quality == Quality['WORST']:
-        final_video_url = all_datas_videos_path[0]
-        i = 0
-        for data_video in all_datas_videos_quality:
-            if 'lq' in data_video:
-                final_video_url = all_datas_videos_path[i]
-                return final_video_url
+    if 'usp_dashcenc_h264' in asset["type"]:
+        dummy_req = urlquick.get(final_video_url, headers=GENERIC_HEADERS, allow_redirects=False)
+        if 'location' in dummy_req.headers:
+            final_video_url = dummy_req.headers['location']
 
     return final_video_url
 
@@ -619,12 +569,9 @@ def get_live_url(plugin, item_id, **kwargs):
                 subtitle_url = asset['full_physical_path']
 
     final_video_url = get_final_video_url(plugin, video_assets, 'delta_dashcenc_h264')
-    if final_video_url is None:
-        return False
+    if final_video_url is not None:
+        return resolver_proxy.get_stream_with_quality(
+            plugin, video_url=final_video_url, manifest_type='mpd',
+            subtitles=subtitle_url, license_url=URL_LICENCE_KEY % token)
 
-    for asset in video_assets:
-        if 'delta_dashcenc_h264' in asset["type"]:
-            return resolver_proxy.get_stream_with_quality(
-                plugin, video_url=final_video_url, manifest_type='mpd',
-                subtitles=subtitle_url, license_url=URL_LICENCE_KEY % token)
     return False
