@@ -475,10 +475,8 @@ def get_francetv_program_info(video_id):
         geoip_value = 'FR'
     params = {
         'country_code': geoip_value,
-        'browser': 'firefox',
-        'device_type': 'desktop',
-        'player_version': '5.105.1',
         'domain': 'www.france.tv',
+        'os': 'android',
         'diffusion_mode': 'tunnel_first',
         'capabilities': 'drm',
     }
