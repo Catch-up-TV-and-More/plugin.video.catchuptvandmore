@@ -503,9 +503,9 @@ def get_francetv_video_stream(plugin,
     # Implementer Caption (found case)
     # Implement DRM (found case)
     if video_datas['drm'] is not None:
-        all_video_datas.append((video_datas['format'], video_datas['drm'], video_datas['token']))
+        all_video_datas.append((video_datas['format'], video_datas['drm'], video_datas['token']['dai']))
     else:
-        all_video_datas.append((video_datas['format'], None, video_datas['token']))
+        all_video_datas.append((video_datas['format'], None, video_datas['token']['dai']))
 
     url_selected = all_video_datas[0][2]
     params = {
@@ -569,7 +569,7 @@ def get_francetv_video_stream(plugin,
 def get_francetv_live_stream(plugin, broadcast_id):
 
     json_parser_live_id = get_francetv_program_info(broadcast_id)
-    final_url = json_parser_live_id['video']['token']
+    final_url = json_parser_live_id['video']['token']['akamai']
     params = {
         'format': 'json',
         'url': json_parser_live_id['video']['url']
