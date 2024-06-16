@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta09" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta10" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -86,10 +86,10 @@
 [FR - BIPTV] Clean-up
 [FR - TVVENDEE] FIx live
 [FR - TLC] Fix live
-[FR - LCI] Fix KeyError: 'next' (PR #1345) thanks @jeff200
-[FR - MYTF1] Add LCI channel (PR #1345) thanks @jeff200
-[FR - MYTF1] Fix display bad items (PR #1346) thanks @jeff200
-[FR - NRJ] Fix replay (PR #1347) thanks @jeff200
+[FR - LCI] Fix KeyError: 'next' (PR #1345) thanks @jeff2900
+[FR - MYTF1] Add LCI channel (PR #1345) thanks @jeff2900
+[FR - MYTF1] Fix display bad items (PR #1346) thanks @jeff2900
+[FR - NRJ] Fix replay (PR #1347) thanks @jeff2900
 [FR] Add channel paris-h24 (PR #1349) thanks @SebMourlhou
 [BO - BOLIVIATV] Add channel (PR #1348) thanks @jimmygilles
 [BO - ATB] Add channel (PR #1348) thanks @jimmygilles
@@ -105,6 +105,10 @@
 [IT - RAIPLAY] Fix RaiPlay live TV (PR #1356) thanks @jmzambon
 [FR - TF1PLUS] Fix login (PR #1357 issue #1352) thanks @darodi
 [FR - TF1PLUS] Avoid Fairplay drm (PR #1357 issue #1352) thanks @darodi
+[CH - TELETICINO] Fix Teleticino live (PR #1364) thanks @jmzambon
+[FR - FRANCETV] Fix live freeze (PR #2900 issue #1020, issue #1376) thanks @jeff2900
+[IT - RAIPLAY] Fix RaiPlay live TV (PR #1369) thanks @jmzambon
+[FR - 6PLAY] Add replay up to 1080p (PR #1372) thanks @jeff2900
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
