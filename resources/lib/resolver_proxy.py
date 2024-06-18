@@ -500,16 +500,21 @@ def get_francetv_video_stream(plugin,
     video_datas = json_parser['video']
     # Implementer Caption (found case)
     # Implement DRM (found case)
-    if video_datas['drm'] is not None:
-        all_video_datas.append((video_datas['format'], video_datas['drm'], video_datas['token']))
+    if "akamai" in video_datas['token']:
+        token = video_datas['token']['akamai']
     else:
-        all_video_datas.append((video_datas['format'], None, video_datas['token']))
+        token = video_datas['token']
+    if video_datas['drm'] is not None:
+        all_video_datas.append((video_datas['format'], video_datas['drm'], token))
+    else:
+        all_video_datas.append((video_datas['format'], None, token))
 
     url_selected = all_video_datas[0][2]
     params = {
         'format': 'json',
         'url': video_datas['url']
     }
+
     if 'hls' in all_video_datas[0][0]:
         resp = urlquick.get(url_selected, params=params, headers=GENERIC_HEADERS, max_age=-1)
         json_parser = json.loads(resp.text)
@@ -567,14 +572,37 @@ def get_francetv_video_stream(plugin,
 def get_francetv_live_stream(plugin, broadcast_id):
 
     json_parser_live_id = get_francetv_program_info(broadcast_id)
-    final_url = json_parser_live_id['video']['token']
+    if 'video' not in json_parser_live_id:
+        plugin.notify('ERROR', plugin.localize(30716))
+        return False
+
+    all_video_datas = []
+    video_datas = json_parser_live_id['video']
+    # Implementer Caption (found case)
+    # Implement DRM (found case)
+    if "akamai" in video_datas['token']:
+        token = video_datas['token']['akamai']
+    else:
+        token = video_datas['token']
+    if video_datas['drm'] is not None:
+        all_video_datas.append((video_datas['format'], video_datas['drm'], token))
+    else:
+        all_video_datas.append((video_datas['format'], None, token))
+
+    url_selected = all_video_datas[0][2]
     params = {
         'format': 'json',
-        'url': json_parser_live_id['video']['url']
+        'url': video_datas['url']
     }
-    resp = urlquick.get(final_url, params=params, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(url_selected, params=params, headers=GENERIC_HEADERS, max_age=-1)
     video_url = json.loads(resp.text)['url']
-    return get_stream_with_quality(plugin, video_url, license_url=URL_LICENSE_FRANCETV)
+    if 'hls' in all_video_datas[0][0]:
+        return video_url + '|User-Agent=' + web_utils.get_random_ua()
+    if 'dash' in all_video_datas[0][0]:
+        return get_stream_with_quality(plugin, video_url, manifest_type='mpd', license_url=URL_LICENSE_FRANCETV)
+
+    # Return info the format is not known
+    return False
 
 
 # Arte Part
