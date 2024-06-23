@@ -15,93 +15,125 @@ import urlquick
 from resources.lib import web_utils, resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
 
-
-# TODO
-# Fix Replay (DRM)
-
 URL_API = 'https://watch.blaze.tv'
 # Live
-URL_LIVE = URL_API + '/stream/live/widevine/553'
-
-# Replay
-URL_REPLAY = URL_API + '/replay/553'
-# pageId
-URL_INFO_REPLAY = URL_API + '/watch/replay/%s'
-URL_REPLAY_TOKEN = URL_API + '/stream/replay/widevine/%s'
-# video ID
+URL_LIVE = URL_API + '/live/%s'
+# Catchup
+URL_REPLAY = URL_API + '/series'
+URL_STREAM = '%s/streams/api/%s/stream/%s'
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
 
+def getPlaylist(mode, stream, streamKey, streamUvid):
+    stream = URL_STREAM % (stream, mode, streamUvid)
+    licParams = {
+        'autoplay': '1',
+        'gpdr': '1',
+        'gpdr_consent': 'undefined',
+        'platform': 'chrome',
+        'key': streamKey
+    }
+
+    resp = urlquick.get(stream, headers=GENERIC_HEADERS, params=licParams, max_age=-1)
+    video_url = json.loads(resp.text)["response"]["stream"].split('?', 1)[0]
+    return video_url
+
+
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
-    """
-    Build programs listing
-    - Les feux de l'amour
-    - ...
-    """
-    item = Listitem()
-    item.label = plugin.localize(30701)
-    item.set_callback(list_videos, item_id=item_id)
-    item_post_treatment(item)
-    yield item
-
-
-@Route.register
-def list_videos(plugin, item_id, **kwargs):
-
     resp = urlquick.get(URL_REPLAY, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
 
     for video_datas in root.iterfind(
-            ".//div[@class='col-xs-12 col-sm-6 col-md-3']"):
+            ".//div[@class='slider-card card bg-transparent border-0 "
+            "rounded position-relative mb-0 card-default']"):
 
         video_title = ''
-        if video_datas.find('.//img') is not None:
-            video_title = video_datas.find('.//img').get('alt')
-        if video_datas.find(".//span[@class='pull-left']") is not None:
-            video_title = '{} - {}'.format(
-                video_title,
-                video_datas.find(".//span[@class='pull-left']").text)
-        video_image = video_datas.find('.//img').get('data-src')
-        video_id = video_datas.find('.//a').get('data-video-id')
+        if video_datas.find('.//object') is not None:
+            video_title = video_datas.find('.//object').get('alt')
+        video_image = video_datas.find('.//object').get('data')
+        video_id = video_datas.find('.//a').get('href')
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = item.art['landscape'] = video_image
 
-        item.set_callback(get_video_url,
+        item.set_callback(list_videos,
                           item_id=item_id,
-                          video_id=video_id)
+                          video_id=video_id,
+                          video_image=video_image)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
+@Route.register
+def list_videos(plugin, item_id, video_id, video_image, **kwargs):
+
+    resp = urlquick.get(video_id, headers=GENERIC_HEADERS, max_age=-1)
+    streams = re.search('"streams":"(.+?)"', resp.text)
+    stream = streams.group(1).replace("\\", "")
+    root = resp.parse()
+
+    for video_active in root.iterfind(".//div[@id='seasonsContent']"):
+        for video_datas in video_active.iterfind(".//div[@class='row py-5']"):
+
+            video_title = ''
+            if video_datas.find('.//object') is not None:
+                video_title = video_datas.find('.//object').get('alt')
+
+            epno = ''
+            for epouter in video_datas.iterfind(".//span[@data-content-type='season-episode']"):
+                epno = epouter.find(".//span").text.strip()
+
+            seconds = ''
+            for louter in video_datas.iterfind(".//span[@data-content-type='duration']"):
+                duration = louter.find(".//span").text.strip()
+                duration_datas = duration.replace('h', '').replace('m', '').split(" ")
+                if len(duration_datas) > 1:
+                    seconds = 3600 * int(duration_datas[0]) + 60 * int(duration_datas[1])
+                else:
+                    seconds = 60 * int(duration_datas[0])
+
+            plot = ''
+            for info in video_datas.iterfind(".//p[@class='text-secondary mb-0']"):
+                plot = info.text
+            for drm_details in video_datas.iterfind(".//a[@class='d-block open-player pointer']"):
+                streamKey = drm_details.get('data-key')
+                streamUvid = drm_details.get('data-uvid')
+
+            item = Listitem()
+            item.label = video_title
+            item.info['plot'] = epno + ' ' + plot
+            item.info['duration'] = seconds
+            item.art['thumb'] = item.art['landscape'] = video_image
+
+            item.set_callback(get_video_url, item_id=item_id,
+                              streamKey=streamKey, streamUvid=streamUvid,
+                              stream=stream)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
+
+
 @Resolver.register
-def get_video_url(plugin,
-                  item_id,
-                  video_id,
-                  download_mode=False,
-                  **kwargs):
-
-    resp = urlquick.get(URL_INFO_REPLAY % video_id, headers=GENERIC_HEADERS, max_age=-1)
-    stream_id = re.compile(r'uvid\":\"(.*?)\"').findall(resp.text)[2]
-
-    headers = {
-        'X-Requested-With': 'XMLHttpRequest',
-        'User-Agent': web_utils.get_random_ua()
-    }
-    resp = urlquick.get(URL_REPLAY_TOKEN % stream_id, headers=headers, max_age=-1)
-
-    video_url = json.loads(resp.text)["playerSource"]["sources"][0]["src"]
-
+def get_video_url(plugin, item_id, streamKey, streamUvid,
+                  stream, **kwargs):
+    video_url = getPlaylist("replay", stream, streamKey, streamUvid)
     return resolver_proxy.get_stream_with_quality(plugin, video_url)
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
+    if item_id not in ["1227", "1228", "1229", "1235", "1236"]:
+        item_id = "553"
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
-    video_url = json.loads(resp.text)["playerSource"]["sources"][0]["src"]
-
+    streams = re.search('"streams":"(.+?)"', resp.text)
+    stream = str(streams.group(1)).replace("\\", "")
+    streamKey = re.findall('data-key="(.+?)"', resp.text)
+    streamUvid = re.findall('data-uvid="(.+?)"', resp.text)
+    for (k, u) in zip(streamKey, streamUvid):
+        if str(u) == item_id:
+            uvid = str(u)
+            key = str(k)
+    video_url = getPlaylist("live", stream, key, uvid)
     return resolver_proxy.get_stream_with_quality(plugin, video_url)
