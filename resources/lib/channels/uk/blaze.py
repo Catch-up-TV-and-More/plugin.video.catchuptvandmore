@@ -24,10 +24,10 @@ URL_STREAM = '%s/streams/api/%s/stream/%s'
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 licParams = {
-   'autoplay': '1',
-   'gpdr': '1',
-   'gpdr_consent': 'undefined',
-   'platform': 'chrome',
+    'autoplay': '1',
+    'gpdr': '1',
+    'gpdr_consent': 'undefined',
+    'platform': 'chrome',
 }
 
 
