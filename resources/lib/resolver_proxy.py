@@ -83,7 +83,7 @@ URL_TWITCH = 'https://player.twitch.tv/?channel=%s'
 # desired_language, videoid
 URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
 
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 
 
 def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
@@ -339,14 +339,14 @@ def get_stream_vimeo(plugin,
     if referer is not None:
         html_vimeo = urlquick.get(url_vimeo,
                                   headers={
-                                      'User-Agent': web_utils.get_random_ua(),
+                                      'User-Agent': web_utils.get_random_windows_ua(),
                                       'Referer': referer
                                   },
                                   max_age=-1)
     else:
         html_vimeo = urlquick.get(
             url_vimeo,
-            headers={'User-Agent': web_utils.get_random_ua()},
+            headers={'User-Agent': web_utils.get_random_windows_ua()},
             max_age=-1)
     json_vimeo = json.loads(
         '{' +
@@ -397,7 +397,7 @@ def get_brightcove_video_json(plugin,
         key = policy_key
 
     headers = {
-        'User-Agent': web_utils.get_random_ua(),
+        'User-Agent': web_utils.get_random_windows_ua(),
         'Accept': 'application/json;pk=%s' % key,
         'X-Forwarded-For': plugin.setting.get_string('header_x-forwarded-for')
     }
@@ -468,7 +468,7 @@ def get_mtvnservices_stream(plugin,
     return video_url
 
 
-def get_francetv_program_info(video_id):
+def get_francetv_program_info(video_id, islive=False):
     # Move Live TV on the new API
     geoip_value = web_utils.geoip()
     if not geoip_value:
@@ -480,6 +480,8 @@ def get_francetv_program_info(video_id):
         'diffusion_mode': 'tunnel_first',
         'capabilities': 'drm',
     }
+    if islive is False:
+        params.update({'browser': 'firefox', })
     resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % video_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
     return json.loads(resp.text)
 
@@ -496,54 +498,41 @@ def get_francetv_video_stream(plugin,
         plugin.notify('ERROR', plugin.localize(30716))
         return False
 
-    all_video_datas = []
     video_datas = json_parser['video']
     # Implementer Caption (found case)
     # Implement DRM (found case)
     if "akamai" in video_datas['token']:
-        token = video_datas['token']['akamai']
+        url_token = video_datas['token']['akamai']
+    elif "drm" in video_datas['token']:
+        url_token = video_datas['token']['drm']
     else:
-        token = video_datas['token']
-    if video_datas['drm'] is not None:
-        all_video_datas.append((video_datas['format'], video_datas['drm'], token))
-    else:
-        all_video_datas.append((video_datas['format'], None, token))
+        url_token = 'https://hdfauth.ftven.fr/esi/TA'
 
-    url_selected = all_video_datas[0][2]
     params = {
         'format': 'json',
         'url': video_datas['url']
     }
 
-    if 'hls' in all_video_datas[0][0]:
-        resp = urlquick.get(url_selected, params=params, headers=GENERIC_HEADERS, max_age=-1)
-        json_parser = json.loads(resp.text)
-        final_video_url = json_parser['url']
+    if 'hls' in video_datas['format']:
+        resp = urlquick.get(url_token, params=params, headers=GENERIC_HEADERS, max_age=-1)
+        final_video_url = json.loads(resp.text)['url']
         if download_mode:
             return download.download_video(final_video_url)
-        return final_video_url + '|User-Agent=' + web_utils.get_random_ua()
+        return final_video_url + '|User-Agent=' + web_utils.get_random_windows_ua()
 
-    if 'dash' in all_video_datas[0][0]:
+    if 'dash' in video_datas['format']:
+        license_key = None
         headers = {
-            'User-Agent': web_utils.get_random_ua(),
+            'User-Agent': web_utils.get_random_windows_ua(),
             'origin': 'https://www.france.tv'
         }
 
-        input_stream_properties = {'license_type': None}
-        license_key = None
-
         # DRM video
-        if not all_video_datas[0][1]:
-            resp = urlquick.get(url_selected, params=params, headers=GENERIC_HEADERS, max_age=-1)
-            json_parser = json.loads(resp.text)
-            final_video_url = json_parser['url']
-        else:
-            final_video_url = video_datas['url']
-            token_request = json.loads('{"id": "%s", "drm_type": "%s", "license_type": "%s"}'
-                                       % (id_diffusion, video_datas['drm_type'], video_datas['license_type']))
-            token = urlquick.post(video_datas['token'], json=token_request).json()['token']
+        if video_datas['drm'] is True:
+            final_video_url = urlquick.get('https://hdfauth.ftven.fr/esi/TA', params=params, headers=GENERIC_HEADERS, max_age=-1).json()['url']
+            token = urlquick.post(url_token, headers=headers, json={"id": id_diffusion, "drm_type": "widevine", "license_type": "online"}).json()['token']
             license_headers = {
-                'User-Agent': web_utils.get_random_ua(),
+                'User-Agent': web_utils.get_random_windows_ua(),
                 'nv-authorizations': token,
                 'content-type': 'Application/octet-stream',
                 'Origin': 'https://www.france.tv',
@@ -556,14 +545,13 @@ def get_francetv_video_stream(plugin,
                 'response_data': 'R'
             }
             license_key = '|'.join(license_config.values())
-            input_stream_properties = {'license_type': 'com.widevine.alpha'}
+        else:
+            final_video_url = urlquick.get(url_token, params=params, headers=GENERIC_HEADERS, max_age=-1).json()['url']
 
         return get_stream_with_quality(plugin,
                                        video_url=final_video_url,
                                        manifest_type='mpd',
-                                       input_stream_properties=input_stream_properties,
-                                       license_url=license_key,
-                                       headers=headers)
+                                       license_url=license_key)
 
     # Return info the format is not known
     return False
@@ -571,34 +559,28 @@ def get_francetv_video_stream(plugin,
 
 def get_francetv_live_stream(plugin, broadcast_id):
 
-    json_parser_live_id = get_francetv_program_info(broadcast_id)
-    if 'video' not in json_parser_live_id:
+    json_parser = get_francetv_program_info(broadcast_id, islive=True)
+
+    if 'video' not in json_parser:
         plugin.notify('ERROR', plugin.localize(30716))
         return False
 
-    all_video_datas = []
-    video_datas = json_parser_live_id['video']
-    # Implementer Caption (found case)
-    # Implement DRM (found case)
+    video_datas = json_parser['video']
     if "akamai" in video_datas['token']:
-        token = video_datas['token']['akamai']
+        url_token = video_datas['token']['akamai']
+    elif "drm" in video_datas['token']:
+        url_token = video_datas['token']['drm']
     else:
-        token = video_datas['token']
-    if video_datas['drm'] is not None:
-        all_video_datas.append((video_datas['format'], video_datas['drm'], token))
-    else:
-        all_video_datas.append((video_datas['format'], None, token))
+        url_token = 'https://hdfauth.ftven.fr/esi/TA'
 
-    url_selected = all_video_datas[0][2]
     params = {
         'format': 'json',
         'url': video_datas['url']
     }
-    resp = urlquick.get(url_selected, params=params, headers=GENERIC_HEADERS, max_age=-1)
-    video_url = json.loads(resp.text)['url']
-    if 'hls' in all_video_datas[0][0]:
-        return video_url + '|User-Agent=' + web_utils.get_random_ua()
-    if 'dash' in all_video_datas[0][0]:
+    video_url = urlquick.get(url_token, params=params, headers=GENERIC_HEADERS, max_age=-1).json()['url']
+    if 'hls' in video_datas['format']:
+        return video_url + '|User-Agent=' + web_utils.get_random_windows_ua()
+    if 'dash' in video_datas['format']:
         return get_stream_with_quality(plugin, video_url, manifest_type='mpd', license_url=URL_LICENSE_FRANCETV)
 
     # Return info the format is not known
