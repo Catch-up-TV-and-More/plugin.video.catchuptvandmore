@@ -26,7 +26,7 @@ URL_PROGRAMMES = URL_ROOT + '/programmes'
 
 URL_EMISSIONS = URL_ROOT + '/%s/emissions'
 
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 
 LIVE_FR3_REGIONS = {
     "Alpes": "alpes",

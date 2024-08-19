@@ -40,7 +40,7 @@ PARAMS_VIDEO_STREAM = {
 # videoId
 URL_LICENCE_KEY = "https://drm-wide.tf1.fr/proxy?id=%s"
 
-GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
+GENERIC_HEADERS = {"User-Agent": web_utils.get_random_windows_ua()}
 
 
 @Route.register
@@ -111,7 +111,7 @@ def get_video_url(plugin, video_url, download_mode=False, **kwargs):
 
     headers = {
         'Content-Type': '',
-        'User-Agent': web_utils.get_random_ua()
+        'User-Agent': web_utils.get_random_windows_ua()
     }
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd", license_url=license_url, headers=headers)
