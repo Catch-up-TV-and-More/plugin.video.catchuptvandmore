@@ -151,7 +151,7 @@ def get_video_url(plugin,
         stream_infos_url = json_parser['video']['long_url']
 
         resp2 = urlquick.get(stream_infos_url,
-                             headers={'User-Agent': web_utils.get_random_ua()},
+                             headers={'User-Agent': web_utils.get_random_windows_ua()},
                              max_age=-1)
 
         root = resp2.parse()
@@ -206,7 +206,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     if item_id == 'bfmbusiness':
         resp = urlquick.get(URL_LIVE_BFMBUSINESS,
-                            headers={'User-Agent': web_utils.get_random_ua()},
+                            headers={'User-Agent': web_utils.get_random_windows_ua()},
                             max_age=-1)
         root = resp.parse()
         live_datas = root.find(".//div[@class='video_block']")

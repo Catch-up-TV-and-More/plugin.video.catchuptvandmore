@@ -95,9 +95,9 @@ URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content
 
 URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chromecast/services/6play/live'
 
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 M6_HEADERS = {
-    'User-Agent': web_utils.get_random_ua(),
+    'User-Agent': web_utils.get_random_windows_ua(),
     'x-customer-name': 'm6web'
 }
 
@@ -372,7 +372,7 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
     }
     # LOGIN
     headers = {
-        'User-Agent': web_utils.get_random_ua(),
+        'User-Agent': web_utils.get_random_windows_ua(),
         'referer': 'https://www.6play.fr/connexion'
     }
     resp2 = urlquick.post(URL_COMPTE_LOGIN, data=payload, headers=headers, max_age=-1)
@@ -517,7 +517,7 @@ def get_live_url(plugin, item_id, **kwargs):
         URL_COMPTE_LOGIN,
         data=payload,
         headers={
-            'User-Agent': web_utils.get_random_ua(),
+            'User-Agent': web_utils.get_random_windows_ua(),
             'referer': 'https://www.6play.fr/connexion'})
     json_parser = json.loads(
         resp2.text.replace('jsonp_3bbusffr388pem4(', '').replace(');', ''))
@@ -531,7 +531,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     # Build PAYLOAD headers
     payload_headers = {
-        'User-Agent': web_utils.get_random_ua(),
+        'User-Agent': web_utils.get_random_windows_ua(),
         'x-auth-gigya-signature': account_signature,
         'x-auth-gigya-signature-timestamp': account_timestamp,
         'x-auth-gigya-uid': account_id,

@@ -178,6 +178,11 @@ def get_video_url(plugin,
             id_diffusion = media['catchupId']
             break
 
+        if 'idSource' in media:
+            method = 'id_diffusion'
+            id_diffusion = media['idSource']
+            break
+
         if 'streams' in media:
             method = 'stream_videos'
             for stream in media['streams']:
@@ -228,7 +233,7 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
 
     json_parser = urlquick.get(URL_LIVE_JSON,
-                               headers={'User-Agent': web_utils.get_random_ua()},
+                               headers={'User-Agent': web_utils.get_random_windows_ua()},
                                max_age=-1).json()
 
     for live in json_parser["result"]:
