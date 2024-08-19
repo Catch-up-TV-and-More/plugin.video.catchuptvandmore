@@ -28,10 +28,10 @@ from urllib3.util import create_urllib3_context
 from urllib3 import PoolManager
 
 try:
-    from urllib.parse import quote, urlencode
+    from urllib.parse import quote, urlencode, urlparse
 except ImportError:
     # noinspection PyUnresolvedReferences
-    from urllib import quote, urlencode
+    from urllib import quote, urlencode, urlparse
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
@@ -166,7 +166,7 @@ def is_valid_drm(drm_type):
 
 def get_certificate_data(plugin, certificate_url, session_requests):
     headers = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": web_utils.get_random_windows_ua(),
         "Accept": "application/json, text/plain, */*",
         "referrer": URL_ROOT
     }
@@ -182,7 +182,7 @@ def get_pass_token(plugin, data_pass, pass_url, session_requests):
         "Content-Type": "application/x-www-form-urlencoded",
         "Origin": URL_ROOT,
         "Referer": URL_ROOT,
-        "User-Agent": web_utils.get_random_ua()
+        "User-Agent": web_utils.get_random_windows_ua()
     }
     resp = session_requests.post(pass_url, data=data_pass, headers=headers, timeout=3)
     if not resp:
@@ -552,7 +552,7 @@ def get_video_url(plugin,
             'XX-OPERATOR': 'pc',
             'XX-Profile-Id': '0',
             'XX-SERVICE': 'mycanal',
-            'User-Agent': web_utils.get_random_ua(),
+            'User-Agent': web_utils.get_random_windows_ua(),
             'Origin': 'https://www.mycanal.fr'
         }
 
@@ -636,7 +636,9 @@ def get_video_url(plugin,
                 plugin.notify("INFO", "ism + drm not implemented", Script.NOTIFY_INFO)
                 return False
 
-            video_url = item.path + "/manifest"
+            parsed = urlparse(item.path)
+            parsed_url = parsed.path + "/manifest"
+            video_url = parsed._replace(path=parsed_url).geturl()
             input_stream_properties = {"license_type": None}
 
             return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url,
@@ -654,7 +656,7 @@ def get_video_url(plugin,
 
         return item
 
-    json_parser = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1).json()
+    json_parser = urlquick.get(next_url, headers={'User-Agent': web_utils.get_random_windows_ua()}, max_age=-1).json()
     return json_parser["detail"]["informations"]["playsets"]["available"][0]["videoURL"]
 
 
@@ -670,7 +672,7 @@ def get_live_token(plugin, device_key_id, live_init, pass_token, session_request
         }
     }
     headers = {
-        "User-Agent": web_utils.get_random_ua(),
+        "User-Agent": web_utils.get_random_windows_ua(),
         "Accept": "application/json, text/plain, */*",
         "Content-Type": "application/json",
         "referrer": URL_ROOT
@@ -745,7 +747,7 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
 
     headers_licence = {
-        'User-Agent': web_utils.get_random_ua(),
+        'User-Agent': web_utils.get_random_windows_ua(),
         'Content-Type': ''
     }
     item = Listitem()
