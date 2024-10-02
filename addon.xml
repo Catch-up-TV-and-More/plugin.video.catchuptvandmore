@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta10" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta11" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -109,6 +109,12 @@
 [FR - FRANCETV] Fix live freeze (PR #2900 issue #1020, issue #1376) thanks @jeff2900
 [IT - RAIPLAY] Fix RaiPlay live TV (PR #1369) thanks @jmzambon
 [FR - 6PLAY] Add replay up to 1080p (PR #1372) thanks @jeff2900
+[FR - FRANCETV] Fix error kodi 20 (PR #1378 issue #1374) thanks @jeff2900
+[UK - BLAZE] Fx replay and live (PR #1382) thanks @nictjir
+[PROJECT] Minor changes to English README (PR #1383) thanks @Sakeyjakey
+[FR] Fix ramdom headers (PR #1397) thanks @jeff2900
+[FR - FRANCETV] Fix replay drm  (PR #1398 issue #1387) thanks @jeff2900
+[FR - MYCANAL] Fix replay (PR #1399 issue #1395) thanks @jeff2900
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
