@@ -10,25 +10,26 @@ import re
 from codequick import Resolver
 import urlquick
 
-from resources.lib import web_utils
-
+from resources.lib import resolver_proxy, web_utils
 
 # TODO
 # Add Replay
 
 URL_ROOT = "https://www.sportenfrance.com"
 
+GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
+
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(
-        URL_ROOT, headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
-    root = resp.parse()
-    live_datas = root.find('.//iframe')
-    resp2 = urlquick.get(
-        live_datas.get('src'), headers={"User-Agent": web_utils.get_random_ua()}, max_age=-1)
-    stream_url = ''
-    for url in re.compile(r'videoxurl \= \'(.*?)\'').findall(resp2.text):
-        stream_url = url
-    return stream_url
+    try:
+        resp = urlquick.get(URL_ROOT, headers=GENERIC_HEADERS, max_age=-1)
+        root = resp.parse()
+        for live_datas in root.iterfind('.//div'):
+            if live_datas.get('id') is not None:
+                live_id = re.compile('player_(.*?)$').findall(live_datas.get('id'))[0]
+                return resolver_proxy.get_stream_dailymotion(plugin, live_id)
+
+    except Exception:
+        return resolver_proxy.get_stream_dailymotion(plugin, 'x8sayn8')
