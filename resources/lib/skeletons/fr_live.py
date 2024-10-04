@@ -411,16 +411,6 @@ menu = {
         'enabled': True,
         'order': 35
     },
-    'viamoselle': {
-        'resolver': '/resources/lib/channels/fr/via:get_live_url',
-        'label': 'viàMoselle',
-        'thumb': 'channels/fr/viamoselle.png',
-        'fanart': 'channels/fr/viamoselle_fanart.jpg',
-        'xmltv_id': 'C1045.api.telerama.fr',
-        'm3u_group': 'Région',
-        'enabled': True,
-        'order': 36
-    },
     'viaoccitanie': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
         'label': 'viàOccitanie',
@@ -428,7 +418,7 @@ menu = {
         'fanart': 'channels/fr/viaoccitanie_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 37
+        'order': 36
     },
     'viatelepaese': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
@@ -437,7 +427,7 @@ menu = {
         'fanart': 'channels/fr/viatelepaese_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 38
+        'order': 37
     },
     'viavosges': {
         'resolver': '/resources/lib/channels/fr/via:get_live_url',
@@ -446,7 +436,7 @@ menu = {
         'fanart': 'channels/fr/viavosges_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 39
+        'order': 38
     },
     'BFM_regions': {
         'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
@@ -467,7 +457,7 @@ menu = {
             "BFM TOULON VAR": {},
         },
         'enabled': True,
-        'order': 40
+        'order': 39
     },
     'albitv': {
         'resolver': '/resources/lib/channels/fr/albitv:get_live_url',
@@ -476,7 +466,7 @@ menu = {
         'fanart': 'channels/fr/albitv_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 41
+        'order': 40
     },
     'biptv': {
         'resolver': '/resources/lib/channels/fr/biptv:get_live_url',
@@ -485,7 +475,7 @@ menu = {
         'fanart': 'channels/fr/biptv_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 42
+        'order': 41
     },
     'dicitv': {
         'resolver': '/resources/lib/channels/fr/dicitv:get_live_url',
@@ -494,7 +484,7 @@ menu = {
         'fanart': 'channels/fr/dicitv_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 43
+        'order': 42
     },
     'figarotv': {
         'resolver': '/resources/lib/channels/fr/figarotv:get_live_url',
@@ -503,7 +493,7 @@ menu = {
         'fanart': 'channels/fr/figarotv_ile_de_france_fanart.png',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 44
+        'order': 43
     },
     '20minutes': {
         'resolver': '/resources/lib/channels/fr/20minutes:get_live_url',
@@ -512,7 +502,7 @@ menu = {
         'fanart': 'channels/fr/20minutes_fanart.jpg',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 45
+        'order': 44
     },
     'lmtv': {
         'resolver': '/resources/lib/channels/fr/lmtv:get_live_url',
@@ -522,7 +512,7 @@ menu = {
         'xmltv_id': 'C535.api.telerama.fr',
         'm3u_group': 'Région',
         'enabled': True,
-        'order': 46
+        'order': 45
     },
     'mblivetv': {
         'resolver': '/resources/lib/channels/fr/mblivetv:get_live_url',
@@ -532,6 +522,16 @@ menu = {
         'xmltv_id': 'C421.api.telerama.fr',
         'm3u_group': 'Satellite/FAI',
         'enabled': False,
+        'order': 46
+    },
+    'moselletv': {
+        'resolver': '/resources/lib/channels/fr/moselletv:get_live_url',
+        'label': 'Moselle TV',
+        'thumb': 'channels/fr/moselletv.png',
+        'fanart': 'channels/fr/moselletv_fanart.jpg',
+        'xmltv_id': 'C1045.api.telerama.fr',
+        'm3u_group': 'Région',
+        'enabled': True,
         'order': 47
     },
     'tebeo': {
