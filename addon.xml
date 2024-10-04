@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta11" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta12" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -115,6 +115,10 @@
 [FR] Fix ramdom headers (PR #1397) thanks @jeff2900
 [FR - FRANCETV] Fix replay drm  (PR #1398 issue #1387) thanks @jeff2900
 [FR - MYCANAL] Fix replay (PR #1399 issue #1395) thanks @jeff2900
+[JP - NTVNEWS24] Fix live
+[FR - SPORTENFRANCE] Fix live
+[FR - MOSELLETV] Viamoselle is MoselleTV now. Fix live
+[FR - VIAOCCITANIE] Fix live and begin to split via file
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
