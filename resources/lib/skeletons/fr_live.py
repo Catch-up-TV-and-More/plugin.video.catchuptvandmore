@@ -412,7 +412,7 @@ menu = {
         'order': 35
     },
     'viaoccitanie': {
-        'resolver': '/resources/lib/channels/fr/via:get_live_url',
+        'resolver': '/resources/lib/channels/fr/via_occitanie:get_live_url',
         'label': 'viàOccitanie',
         'thumb': 'channels/fr/viaoccitanie.png',
         'fanart': 'channels/fr/viaoccitanie_fanart.jpg',
