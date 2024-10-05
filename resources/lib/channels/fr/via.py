@@ -22,8 +22,6 @@ URL_ROOT = 'https://%s.tv'
 
 URL_LIVE = URL_ROOT + '/direct-tv/'
 
-URL_LIVE_MATELE = URL_ROOT + '/direct-2'
-
 URL_ROOT_VIAVOSGES = 'https://www.viavosges.tv'
 
 URL_LIVE_VIAVOSGES = URL_ROOT_VIAVOSGES + '/Direct.html'
@@ -98,11 +96,6 @@ def get_live_url(plugin, item_id, **kwargs):
         resp = urlquick.get(url_live_datas, headers=GENERIC_HEADERS, max_age=-1)
         video_url = json.loads(resp.text)["files"]["auto"]
         return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd')
-
-    if item_id == 'matele':
-        live_html = urlquick.get(URL_LIVE_MATELE % item_id, headers=GENERIC_HEADERS, max_age=-1)
-        video_url = live_html.parse("div", attrs={"class": "mvp-playlist-item"}).get('data-path')
-        return resolver_proxy.get_stream_with_quality(plugin, video_url)
 
     live_html = urlquick.get(URL_LIVE % item_id, headers=GENERIC_HEADERS, max_age=-1)
 

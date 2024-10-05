@@ -403,7 +403,7 @@ menu = {
         'order': 34
     },
     'matele': {
-        'resolver': '/resources/lib/channels/fr/via:get_live_url',
+        'resolver': '/resources/lib/channels/fr/via_matele:get_live_url',
         'label': 'viàMaTélé',
         'thumb': 'channels/fr/viamatele.png',
         'fanart': 'channels/fr/viamatele_fanart.jpg',
