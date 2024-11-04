@@ -13,5 +13,5 @@ setuptools >= 41
 six
 #typing-extensions == 3.7.4.1; python_version != '2.7'
 tzlocal
-xmlschema == 3.4.2; python_version == '2.7'
+xmlschema == 3.4.3; python_version == '2.7'
 urlquick
