@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 
 import json
 import re
+import uuid
 
 from builtins import str
 
@@ -88,6 +89,10 @@ PATTERN_JS_ID = re.compile(r'main-(.*?)\.bundle\.js')
 API_KEY = "3_hH5KBv25qZTd_sURpixbQW6a4OsiIzIEF2Ei_2H7TXTGLJb_1Hr4THKZianCQhWK"
 
 URL_TOKEN_DRM = 'https://6play-users.6play.fr/v2/platforms/chromecast/services/6play/users/%s/videos/%s/upfront-token'
+URL_TOKEN_REPLAY = 'https://drm.6cloud.fr/v1/customers/m6web/platforms/m6group_web/services/m6replay/users/%s/videos/%s/upfront-token'
+URL_TOKEN_LIVE = 'https://drm.6cloud.fr/v1/customers/m6web/platforms/m6group_web/services/6play/users/%s/live/%s/upfront-token'
+URL_TOKEN_UUID = 'https://front-auth.6cloud.fr/v2/platforms/m6group_web/getJwt'
+DEVICEID = '_luid_' + str(uuid.UUID(int=uuid.getnode()))
 
 # URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&Origin=https://www.6play.fr&Referer=%s&x-dt-auth-token=%s|R{SSM}|JBlicense'
 URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&x-dt-auth-token=%s|R{SSM}|JBlicense'
@@ -390,14 +395,23 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
         return False
 
     # Build PAYLOAD headers
-    payload_headers = {
+    uuid_headers = {
         'x-auth-gigya-signature': account_signature,
         'x-auth-gigya-signature-timestamp': account_timestamp,
         'x-auth-gigya-uid': account_id,
+        'x-auth-device-id': DEVICEID,
         'x-customer-name': 'm6web'
     }
+    uuid_json = urlquick.get(URL_TOKEN_UUID, headers=uuid_headers, max_age=-1)
+    uuid_jsonparser = json.loads(uuid_json.text)
+    token = uuid_jsonparser["token"]
 
-    token_json = urlquick.get(URL_TOKEN_DRM % (account_id, video_id),
+    payload_headers = {
+        'X-Customer-Name': 'm6web',
+        'X-Client-Release': '5.103.3',
+        'Authorization': 'Bearer ' + token,
+    }
+    token_json = urlquick.get(URL_TOKEN_REPLAY % (account_id, video_id),
                               headers=payload_headers,
                               max_age=-1)
 
@@ -513,14 +527,12 @@ def get_live_url(plugin, item_id, **kwargs):
         "callback": "jsonp_3bbusffr388pem4"
     }
     # LOGIN
-    resp2 = urlquick.post(
-        URL_COMPTE_LOGIN,
-        data=payload,
-        headers={
-            'User-Agent': web_utils.get_random_windows_ua(),
-            'referer': 'https://www.6play.fr/connexion'})
-    json_parser = json.loads(
-        resp2.text.replace('jsonp_3bbusffr388pem4(', '').replace(');', ''))
+    headers = {
+        'User-Agent': web_utils.get_random_windows_ua(),
+        'referer': 'https://www.6play.fr/connexion'
+    }
+    resp2 = urlquick.post(URL_COMPTE_LOGIN, data=payload, headers=headers, max_age=-1)
+    json_parser = json.loads(resp2.text.replace('jsonp_3bbusffr388pem4(', '').replace(');', ''))
 
     if "UID" not in json_parser:
         plugin.notify('ERROR', '6play : ' + plugin.localize(30711))
@@ -530,12 +542,21 @@ def get_live_url(plugin, item_id, **kwargs):
     account_signature = json_parser["UIDSignature"]
 
     # Build PAYLOAD headers
-    payload_headers = {
-        'User-Agent': web_utils.get_random_windows_ua(),
+    uuid_headers = {
         'x-auth-gigya-signature': account_signature,
         'x-auth-gigya-signature-timestamp': account_timestamp,
         'x-auth-gigya-uid': account_id,
+        'x-auth-device-id': DEVICEID,
         'x-customer-name': 'm6web'
+    }
+    uuid_json = urlquick.get(URL_TOKEN_UUID, headers=uuid_headers, max_age=-1)
+    uuid_jsonparser = json.loads(uuid_json.text)
+    token = uuid_jsonparser["token"]
+
+    payload_headers = {
+        'X-Customer-Name': 'm6web',
+        'X-Client-Release': '5.103.3',
+        'Authorization': 'Bearer ' + token,
     }
 
     live_item_id = item_id.upper()
@@ -544,7 +565,7 @@ def get_live_url(plugin, item_id, **kwargs):
     elif item_id in {'fun_radio', 'rtl2', 'gulli'}:
         live_item_id = item_id
 
-    url_token = URL_TOKEN_DRM % (account_id, 'dashcenc_%s' % live_item_id)
+    url_token = URL_TOKEN_LIVE % (account_id, 'dashcenc_%s' % live_item_id)
     token_json = urlquick.get(url_token, headers=payload_headers, max_age=-1)
     token_jsonparser = json.loads(token_json.text)
     token = token_jsonparser["token"]
