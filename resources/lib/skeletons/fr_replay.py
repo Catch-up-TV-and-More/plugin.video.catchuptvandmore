@@ -172,7 +172,7 @@ menu = {
         + ")",
         "thumb": "channels/fr/france3regions.png",
         "fanart": "channels/fr/france3regions_fanart.jpg",
-        "enabled": False,
+        "enabled": True,
         "order": 19,
     },
     "tv8montblanc": {

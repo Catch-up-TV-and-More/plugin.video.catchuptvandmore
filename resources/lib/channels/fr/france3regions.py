@@ -24,7 +24,7 @@ URL_ROOT = 'https://france3-regions.francetvinfo.fr'
 
 URL_PROGRAMMES = URL_ROOT + '/programmes'
 
-URL_EMISSIONS = URL_ROOT + '/%s/emissions'
+URL_EMISSIONS = URL_ROOT + '/%s/programmes'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 
@@ -86,62 +86,76 @@ def list_programs(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_EMISSIONS % region)
     root = resp.parse()
 
-    for program_datas in root.iterfind(
-            ".//div[@class='little-column-style--content col-sm-6 col-md-4 mobile-toggler-replace']"
-    ):
-        program_title = program_datas.find('.//h2').text
-        program_plot = program_datas.find(
-            ".//div[@class='column-style--text hidden-xs']").text
-        program_image = program_datas.find('.//img').get('data-srcset')
-        program_url = program_datas.find('.//a').get('href')
-
+    for program_datas in root.iterfind(".//div[@class='slider ']"):
+        program_title = program_datas.find('.//h2').text.strip()
+        program_id = program_datas.find('.//h2').get('id')
         item = Listitem()
         item.label = program_title
-        item.art['thumb'] = item.art['landscape'] = program_image
-        item.info['plot'] = program_plot
         item.set_callback(list_videos,
                           item_id=item_id,
-                          program_url=program_url)
+                          program_url=URL_EMISSIONS % region,
+                          program_id=program_id)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url, **kwargs):
-
+def list_videos(plugin, item_id, program_url, program_id, **kwargs):
     resp = urlquick.get(program_url)
     root = resp.parse()
 
-    for video_datas in root.iterfind(
-            ".//a[@class='slider-inline-style--content video_mosaic']"):
-        video_title = video_datas.get('title')
-        video_plot = video_datas.get('description')
-        if video_datas.find('.//img').get('data-srcset'):
-            video_image = video_datas.find('.//img').get('data-srcset')
-        else:
-            video_image = video_datas.find('.//img').get('src')
-        id_diffusion = re.compile(r'video\/(.*?)\@Regions').findall(
-            video_datas.get('href'))[0]
+    for programs_datas in root.iterfind(".//div[@class='slider ']"):
+        if program_id == programs_datas.find('.//h2').get('id'):
+            for video_datas in programs_datas.iterfind(".//li"):
+                if video_datas.find('.//span') is not None:
+                    video_title = video_datas.find('.//span').text.strip()
+                else:
+                    subtitle_value = video_datas.findall(".//div[2][@class='slider__programs__video__title']")
+                    for title_datas in subtitle_value:
+                        join_title1 = ' - '.join(title_datas.itertext()).replace('\n', '')
+                        join_title2 = ' '.join(join_title1.split())
+                    video_title = join_title2
+                id_diffusion = URL_ROOT + video_datas.find('.//a').get('href')
 
-        item = Listitem()
-        item.label = video_title
-        item.art['thumb'] = item.art['landscape'] = video_image
-        item.info['plot'] = video_plot
+                video_image = ''
+                if video_datas.find('.//img').get('data-src'):
+                    if 'http' in video_datas.find('.//img').get('data-src'):
+                        video_image = video_datas.find('.//img').get('data-src')
+                    else:
+                        video_image = URL_ROOT + video_datas.find('.//img').get('data-src')
+                else:
+                    if 'http' in video_datas.find('.//img').get('src'):
+                        video_image = video_datas.find('.//img').get('src')
+                    else:
+                        video_image = URL_ROOT + video_datas.find('.//img').get('src')
 
-        date_value = ''
-        if video_datas.find(
-                ".//p[@class='slider-inline-style--text text-light m-t-0']"
-        ).text is not None:
-            date_value = video_datas.find(
-                ".//p[@class='slider-inline-style--text text-light m-t-0']"
-            ).text.split(' du ')[1]
-            item.info.date(date_value, '%d/%m/%Y')
+                date_value = ''
+                duration_value = ''
+                if video_datas.find(".//div[@class='slider__programs__video__diffusion']") is not None:
+                    find_value = video_datas.find(".//div[@class='slider__programs__video__diffusion']").text.split(' ')
+                    join_value = ' '.join(find_value).replace('\n', '')
+                    find_duration = re.findall("\d+ min", join_value)[0]
+                    duration_value = find_duration.split(' ')[0]
+                    # date_value = re.findall("\d+/\d+", join_value)[0]
 
-        item.set_callback(get_video_url,
-                          item_id=item_id,
-                          id_diffusion=id_diffusion)
-        item_post_treatment(item, is_playable=True, is_downloadable=True)
-        yield item
+                item = Listitem()
+                item.label = video_title
+                item.art['thumb'] = item.art['landscape'] = video_image
+                # item.art["fanart"] = video_image
+                # item.info['plot'] = video_plot
+                item.label = video_title
+                item.art['thumb'] = item.art['landscape'] = video_image
+                if len(duration_value) > 0:
+                    item.info['duration'] = duration_value
+                if len(date_value) > 0:
+                    date_value = date_value + '/24'
+                    item.info.date(date_value, '%d/%m/%y')
+
+                item.set_callback(get_video_url,
+                                  item_id=item_id,
+                                  id_diffusion=id_diffusion)
+                item_post_treatment(item, is_playable=True, is_downloadable=True)
+                yield item
 
 
 @Resolver.register
@@ -150,8 +164,11 @@ def get_video_url(plugin,
                   id_diffusion,
                   download_mode=False,
                   **kwargs):
+    resp = urlquick.get(id_diffusion, headers=GENERIC_HEADERS, max_age=-1)
+    root = resp.parse()
+    video_id = root.find('.//figure[@class="magneto"]').get('data-id')
 
-    return resolver_proxy.get_francetv_video_stream(plugin, id_diffusion,
+    return resolver_proxy.get_francetv_video_stream(plugin, video_id,
                                                     download_mode)
 
 
@@ -174,8 +191,9 @@ def get_live_url(plugin, item_id, **kwargs):
     url_region = []
     for old in root.iterfind(".//li[@class='direct-item ']"):
         url_region.append(URL_ROOT + old.find(".//a").get('href'))
-        place = re.compile(r'France 3 (.*?)$').findall(old.find('.//img').get('alt'))[0]
-        region.append(place)
+        if old.find('.//img') is not None:
+            place = re.compile(r'France 3 (.*?)$').findall(old.find('.//img').get('alt'))[0]
+            region.append(place)
 
     if len(region) > 1:
         choice = url_region[xbmcgui.Dialog().select(Script.localize(30182), region)]
