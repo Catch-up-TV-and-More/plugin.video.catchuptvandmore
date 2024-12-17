@@ -27,7 +27,10 @@ URL_EMISSIONS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_em
 # num Page
 URL_VIDEOS_CNEWS = URL_ROOT_SITE + '/service/dm_loadmore/dm_emission_index_sujets/%s/0'
 
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
+# GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
+GENERIC_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0',
+}
 
 
 # num Page
@@ -56,7 +59,7 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_videos(plugin, item_id, category_url, page, **kwargs):
-    resp = urlquick.get(category_url % page, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(category_url % page, headers=GENERIC_HEADERS, verify=False, max_age=-1)
     parser = htmlement.HTMLement()
     parser.feed(resp.json())
     data = parser.close()
@@ -82,7 +85,7 @@ def get_video_id(plugin, video_id, download_mode=False, **kwargs):
 
 @Route.register
 def list_emissions(plugin, item_id, category_url, page, **kwargs):
-    resp = urlquick.get(URL_REPLAY_CNEWS, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(URL_REPLAY_CNEWS, headers=GENERIC_HEADERS, verify=False, max_age=-1)
     data = resp.parse("div", attrs={"class": "les-emissions"})
 
     for video_datas in data.iterfind(".//a[@class='emission-item-wrapper']"):
@@ -121,7 +124,7 @@ def list_emissions_old(plugin, item_id, category_url, page, **kwargs):
 
 @Route.register
 def list_videos_emission(plugin, item_id, video_url, **kwargs):
-    resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(video_url, headers=GENERIC_HEADERS, verify=False, max_age=-1)
     root = resp.parse()
 
     info = root.findall(".//p")[0].text
@@ -153,7 +156,7 @@ def list_videos_emission(plugin, item_id, video_url, **kwargs):
 
 @Resolver.register
 def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
-    root = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1).parse()
+    root = urlquick.get(video_url, headers=GENERIC_HEADERS, verify=False, max_age=-1).parse()
     video_id = root.find(".//div[@id='embed-main-video']").get('data-videoid')
 
     return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode)
@@ -161,7 +164,7 @@ def get_video_url(plugin, item_id, video_url, download_mode=False, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    root = urlquick.get(URL_LIVE_CNEWS, headers=GENERIC_HEADERS, max_age=-1).parse()
+    root = urlquick.get(URL_LIVE_CNEWS, headers=GENERIC_HEADERS, verify=False, max_age=-1).parse()
     try:
         live_id = root.find(".//div[@data-muted='true']").get('data-videoid')
     except Exception:
