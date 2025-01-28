@@ -407,11 +407,20 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+    resp = urlquick.get('https://www.france.tv', headers={'User-Agent': web_utils.get_random_windows_ua()}, max_age=-1)
+    link_chunks = re.compile(r'script src="(/_next/static/chunks/6289-.*?\.js)" async').findall(resp.text)
+    if link_chunks:
+        url_chunks = 'https://www.france.tv' + link_chunks[0]
+    else:
+        url_chunks = 'https://www.france.tv/_next/static/chunks/6289-a967d224c6406ad2.js'
 
-    if item_id in ('spectacles-et-culture', 'france-2', 'france-3', 'france-4', 'france-5', 'franceinfo', 'paris-h24'):
-        resp = urlquick.get(URL_LIVE % item_id, headers={'User-Agent': web_utils.get_random_windows_ua()}, max_age=-1)
-        broadcast_id = re.compile(r'videoId\"\:\"(.*?)\"', re.DOTALL).findall(resp.text)[0]
-        return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
+    resp = urlquick.get(url_chunks, headers={'User-Agent': web_utils.get_random_windows_ua()}, max_age=-1)
+    chunk = re.compile(r'"([A-Za-z0-9-]+?)":{label:"(.+?)",playerId:"(\w+?-\w+?-\w+?-\w+?-\w+?)"}').findall(resp.text)
+    for channel_id, channel_label, playerId in chunk:
+        if item_id == channel_id:
+            resp = urlquick.get(URL_LIVE % item_id, headers={'User-Agent': web_utils.get_random_windows_ua()}, max_age=-1)
+            broadcast_id = playerId
+            return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
 
     broadcast_id = 'SIM_France%s'
     return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id % item_id.split('-')[1])
