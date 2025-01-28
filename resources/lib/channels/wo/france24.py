@@ -19,7 +19,10 @@ LANG = Script.setting['france24.language']
 TOKEN_APP = '66b85dad-3ad5-40f3-ab32-2305fc2357ea'
 URL_API = utils.urljoin_partial('https://apis.france24.com')
 
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+# GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+GENERIC_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0',
+}
 
 
 @Route.register
@@ -27,7 +30,7 @@ def root_catchup_tv(plugin, item_id, **kwargs):
     # http://apis.france24.com/products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13?token_application=66b85dad-3ad5-40f3-ab32-2305fc2357ea
     root_json_url = 'products/get_product/78dcf358-9333-4fb2-a035-7b91e9705b13'
     root_json_r = urlquick.get(URL_API(root_json_url),
-                               headers={'User-Agent': web_utils.get_random_ua()},
+                               headers=GENERIC_HEADERS,
                                params={'token_application': TOKEN_APP})
     json_root = json.loads(root_json_r.text)
 
@@ -100,7 +103,7 @@ def list_direct_tv_jts(plugin, item_id, guid, **kwargs):
     json_url = 'products/get_product/%s' % guid
     json_r = urlquick.get(URL_API(json_url),
                           params={'token_application': TOKEN_APP},
-                          headers={'User-agent': web_utils.get_ua()})
+                          headers=GENERIC_HEADERS)
     json_v = json.loads(json_r.text)
     try:
         json_channels = json_v['result']['channels']
@@ -138,7 +141,7 @@ def list_videos(plugin, item_id, guid, page=1, **kwargs):
                           params={
                               'token_application': TOKEN_APP,
                               'page': page},
-                          headers={'User-agent': web_utils.get_ua()})
+                          headers=GENERIC_HEADERS)
     json_v = json.loads(json_r.text)
     try:
         json_list = json_v['result']['list']
@@ -173,7 +176,7 @@ def list_last_edition(plugin, item_id, guid, **kwargs):
     json_url = 'products/get_product/%s' % guid
     json_r = urlquick.get(URL_API(json_url),
                           params={'token_application': TOKEN_APP},
-                          headers={'User-agent': web_utils.get_ua()})
+                          headers=GENERIC_HEADERS)
     json_v = json.loads(json_r.text)
     try:
         json_list = json_v['result']['list']
@@ -210,7 +213,7 @@ def list_all_programs(plugin, item_id, guid, guid_program, page=1, **kwargs):
     json_url = 'products/get_product/%s' % guid
     json_r = urlquick.get(URL_API(json_url),
                           params={'token_application': TOKEN_APP},
-                          headers={'User-agent': web_utils.get_ua()})
+                          headers=GENERIC_HEADERS)
     json_v = json.loads(json_r.text)
     try:
         json_list = json_v['result']['list']
@@ -256,7 +259,7 @@ def list_program_video(plugin, item_id, nid, guid_program, page=1, **kwargs):
                               'token_application': TOKEN_APP,
                               'nid': nid,
                               'page': page},
-                          headers={'User-agent': web_utils.get_ua()})
+                          headers=GENERIC_HEADERS)
     json_v = json.loads(json_r.text)
 
     try:
