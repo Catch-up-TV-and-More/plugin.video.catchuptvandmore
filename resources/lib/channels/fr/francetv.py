@@ -415,11 +415,10 @@ def get_live_url(plugin, item_id, **kwargs):
         url_chunks = 'https://www.france.tv/_next/static/chunks/6289-a967d224c6406ad2.js'
 
     resp = urlquick.get(url_chunks, headers={'User-Agent': web_utils.get_random_windows_ua()}, max_age=-1)
-    chunk = re.compile(r'"([A-Za-z0-9-]+?)":{label:"(.+?)",playerId:"(\w+?-\w+?-\w+?-\w+?-\w+?)"}').findall(resp.text)
-    for channel_id, channel_label, playerId in chunk:
+    chunk = re.compile(r'([A-Za-z0-9-"]+?):{label:"(.+?)",playerId:"(\w+?-\w+?-\w+?-\w+?-\w+?)"}').findall(resp.text)
+    for channels_id, channels_label, broadcast_id in chunk:
+        channel_id = channels_id.strip('\"')
         if item_id == channel_id:
-            resp = urlquick.get(URL_LIVE % item_id, headers={'User-Agent': web_utils.get_random_windows_ua()}, max_age=-1)
-            broadcast_id = playerId
             return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
 
     broadcast_id = 'SIM_France%s'
