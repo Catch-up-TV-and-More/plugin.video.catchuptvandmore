@@ -53,7 +53,7 @@ def list_categories(plugin, **kwargs):
                 for d in b['sliceItems']:
                     url_item = d['url'].replace('http', 'https').replace(URL_PROGRAMS, URL_ROOT)
                     item = Listitem()
-                    item.label = url_item.replace('/', ' ').split()[-1]
+                    item.label = url_item.replace('/', ' ').split()[-1].title()
                     item.art["thumb"] = item.art["landscape"] = d['image']['href']
                     item.set_callback(list_programs, url=url_item, offset='0')
                     item_post_treatment(item)
