@@ -12,7 +12,7 @@ import re
 import json
 from builtins import str
 
-from codequick import Listitem, Resolver, Route
+from codequick import Listitem, Script, Resolver, Route
 import urlquick
 
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
@@ -67,7 +67,8 @@ def list_programs(plugin, url, offset, **kwargs):
     """
     params = {
         'json': 'true',
-        'offset': offset
+        'offset': offset,
+        'sort' : Script.setting['uk.channel4.programmes.sort.by']
     }
     programs = json.loads(urlquick.get(url, headers=BASIC_HEADERS, params=params, max_age=-1).text)
     programs_number = programs['noOfShows']
@@ -81,7 +82,7 @@ def list_programs(plugin, url, offset, **kwargs):
         item_post_treatment(item)
         yield item
 
-    nboffset = int(offset) + 15
+    nboffset = int(offset) + len(programs["brands"]["items"])
     if nboffset < programs_number:
         yield Listitem.next_page(url=url, offset=str(nboffset))
 
