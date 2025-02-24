@@ -68,7 +68,7 @@ def list_programs(plugin, url, offset, **kwargs):
     params = {
         'json': 'true',
         'offset': offset,
-        'sort' : Script.setting['uk.channel4.programmes.sort.by']
+        'sort': Script.setting['uk.channel4.programmes.sort.by']
     }
     programs = json.loads(urlquick.get(url, headers=BASIC_HEADERS, params=params, max_age=-1).text)
     programs_number = programs['noOfShows']
