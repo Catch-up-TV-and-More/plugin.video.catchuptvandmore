@@ -106,8 +106,6 @@ M6_HEADERS = {
     'x-customer-name': 'm6web'
 }
 
-# Chaine
-
 
 def get_api_key():
     resp_js_id = urlquick.get(URL_GET_JS_ID_API_KEY, headers=GENERIC_HEADERS, max_age=-1)
@@ -180,9 +178,7 @@ def sixplay_root(plugin, **kwargs):
         ('w9', 'W9', 'w9.png', 'w9_fanart.jpg'),
         ('6ter', '6ter', '6ter.png', '6ter_fanart.jpg'),
         ('gulli', 'Gulli', 'gulli.png', 'gulli_fanart.jpg'),
-        ('fun_radio', 'Fun Radio', 'funradio.png', 'funradio_fanart.jpg'),
-        ('rtl2', 'RTL 2', 'rtl2.png', 'rtl2_fanart.jpg'),
-        ('courses', 'Cage Warriors', 'cagewarriors.png', 'cagewarriors_fanart.jpg')
+        ('catagories', 'Catégories', 'm6.png', 'm6_fanart.jpg'),
     ]
 
     for channel_infos in channels:
@@ -260,7 +256,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    if item_id == 'm6':
+    if item_id == 'catagories':
         account_id, login_token = get_login_token(plugin)
         headers = {
             'authorization': 'Bearer ' + login_token,
@@ -279,51 +275,47 @@ def list_categories(plugin, item_id, **kwargs):
             max_age=-1
         )
         json_parser = resp.json()
-        for array in json_parser[0]["entries"]:
-            array_id = array['id']
-            if array_id == 'categories':
-                for catagories in array["groups"][0]["entries"]:
-                    category_name = catagories["image"]["caption"]
-                    category_id = catagories["target"]["value_layout"]["id"]
-                    item = Listitem()
-                    item.label = category_name
-                    item.set_callback(list_programs,
-                                      item_id=item_id,
-                                      category_id=category_id)
-                    item_post_treatment(item)
-                    yield item
-                break
-
-    elif item_id == 'rtl2' or \
-            item_id == 'fun_radio' or \
-            item_id == 'courses' or \
-            item_id == 'gulli':
-        resp = urlquick.get(URL_ROOT % item_id, headers=GENERIC_HEADERS, max_age=-1)
-        json_parser = resp.json()
-        for array in json_parser:
-            category_id = str(array['id'])
-            category_name = array['name']
+        if len(json_parser) > 0:
+            for array in json_parser[0]["entries"]:
+                array_id = array['id']
+                if array_id == 'categories':
+                    for catagories in array["groups"][0]["entries"]:
+                        category_name = catagories["image"]["caption"]
+                        category_id = catagories["target"]["value_layout"]["id"]
+                        item = Listitem()
+                        item.label = category_name
+                        item.set_callback(list_programs,
+                                          item_id=item_id,
+                                          category_id=category_id)
+                        item_post_treatment(item)
+                        yield item
+                    break
+        else:
+            # No items found
             item = Listitem()
-            item.label = category_name
-            item.set_callback(list_programs,
-                              item_id=item_id,
-                              category_id=category_id)
-            item_post_treatment(item)
+            item.label = Script.localize(30896)
             yield item
     else:
-        resp = urlquick.get(URL_ROOT % (item_id + 'replay'), headers=GENERIC_HEADERS, max_age=-1)
+        if item_id == 'gulli':
+            resp = urlquick.get(URL_ROOT % item_id, headers=GENERIC_HEADERS)
+        else:
+            resp = urlquick.get(URL_ROOT % (item_id + 'replay'), headers=GENERIC_HEADERS, max_age=-1)
         json_parser = resp.json()
-
-        for array in json_parser:
-            category_id = str(array['id'])
-            category_name = array['name']
-
+        if len(json_parser) > 0:
+            for array in json_parser:
+                category_id = str(array['id'])
+                category_name = array['name']
+                item = Listitem()
+                item.label = category_name
+                item.set_callback(list_programs,
+                                  item_id=item_id,
+                                  category_id=category_id)
+                item_post_treatment(item)
+                yield item
+        else:
+            # No items found
             item = Listitem()
-            item.label = category_name
-            item.set_callback(list_programs,
-                              item_id=item_id,
-                              category_id=category_id)
-            item_post_treatment(item)
+            item.label = Script.localize(30896)
             yield item
 
 
