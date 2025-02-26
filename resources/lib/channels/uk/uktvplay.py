@@ -8,20 +8,26 @@ from __future__ import unicode_literals
 from builtins import str
 import json
 import re
+import requests
+import xbmc
 
+import inputstreamhelper
 from codequick import Listitem, Resolver, Route
 from kodi_six import xbmcgui
 import urlquick
 
 from resources.lib import resolver_proxy, web_utils
 
+from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
 
 
 # TODO
 # Mode code brightcove protected by DRM in resolver_proxy
 
-URL_ROOT = 'https://uktvplay.uktv.co.uk'
+URL_ROOT = 'https://u.co.uk'
+
+URL_BRIGHTCOVE_POLICY_KEY = 'https://players.brightcove.net/%s/%s_default/index.min.js'
 
 URL_API = 'https://vschedules.uktv.co.uk'
 
@@ -44,7 +50,7 @@ URL_CATEGORIES = URL_API + '/vod/categories/'
 URL_PROGRAMS_SUBCATEGORY = URL_API + '/vod/subcategory_brands/?slug=%s&size=999'
 # Slug subcategory
 
-URL_LIVE = 'https://uktvplay.uktv.co.uk/watch-live/%s'
+URL_LIVE = 'https://u.uktv.co.uk/watch-live/%s'
 # Channel name
 
 URL_STREAM_LIVE = 'https://v2-streams-elb.simplestreamcdn.com/api/live/stream/%s?key=%s&platform=chrome&user=%s'
@@ -63,9 +69,7 @@ URL_LOGIN_MODAL = 'https://uktvplay.uktv.co.uk/account/'
 
 URL_COMPTE_LOGIN = 'https://live.mppglobal.com/api/accounts/authenticate/'
 
-URL_CHUNKS = "https://uktvplay.co.uk/shows/%s/series-%s/episode-%s/%s"
-
-URL_ID = "https://uktvplay.co.uk/_next/"
+URL_CHUNKS = "https://u.co.uk/shows/%s/series-%s/episode-%s/%s"
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
@@ -159,8 +163,8 @@ def list_letters(plugin, item_id, **kwargs):
 @Route.register
 def list_programs(plugin, item_id, letter_value, **kwargs):
 
-    FIXED_URL_PROGRAMS = URL_PROGRAMS % (letter_value.replace('0-9', '0'), letter_value)
-    resp = urlquick.get(FIXED_URL_PROGRAMS, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(URL_PROGRAMS %
+                        (letter_value.replace('0-9', '0'), letter_value))
     json_parser = json.loads(resp.text)
 
     for program_datas in json_parser:
@@ -183,7 +187,7 @@ def list_programs(plugin, item_id, letter_value, **kwargs):
 @Route.register
 def list_seasons(plugin, item_id, program_slug, **kwargs):
 
-    resp = urlquick.get(URL_INFO_PROGRAM % program_slug, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(URL_INFO_PROGRAM % program_slug)
     json_parser = json.loads(resp.text)
 
     for season_datas in json_parser["series"]:
@@ -200,7 +204,7 @@ def list_seasons(plugin, item_id, program_slug, **kwargs):
 @Route.register
 def list_videos(plugin, item_id, serie_id, **kwargs):
 
-    resp = urlquick.get(URL_VIDEOS % serie_id, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(URL_VIDEOS % serie_id)
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["episodes"]:
@@ -211,9 +215,9 @@ def list_videos(plugin, item_id, serie_id, **kwargs):
         video_duration = video_datas["duration"] * 60
         video_id = video_datas["video_id"]
 
-        show_name = URL_CHUNKS % (video_datas["brand_slug"],
-                                  video_datas["series_number"],
-                                  video_datas["episode_number"],
+        show_name = URL_CHUNKS % (video_datas["brand_slug"], 
+                                  video_datas["series_number"], 
+                                  video_datas["episode_number"], 
                                   video_datas["video_id"])
 
         item = Listitem()
@@ -229,16 +233,18 @@ def list_videos(plugin, item_id, serie_id, **kwargs):
         yield item
 
 
+# BRIGHTCOVE Part
+def get_brightcove_policy_key(data_account, data_player):
+    """Get policy key"""
+    file_js = urlquick.get(URL_BRIGHTCOVE_POLICY_KEY %
+                           (data_account, data_player))
+    return re.compile('policyKey:"(.+?)"').findall(file_js.text)[0]
+
+
 @Resolver.register
 def get_video_url(plugin, item_id, data_video_id, show_name, **kwargs):
-
-    resp = urlquick.get(show_name, headers=GENERIC_HEADERS, max_age=-1)
-    match = re.search('.*\\\"(static/chunks/app/\(navigation\)/shows/.*brand.*series.*episode.*videoId.*/page)(.+?)."\]', resp.text, re.DOTALL)
-
-    full_url_ids = URL_ID + match.group(1) + match.group(2)
-    resp = urlquick.get(full_url_ids, headers=GENERIC_HEADERS, max_age=-1)
-    data_account = re.search('accountId:"(.+?)",', resp.text).group(1)
-    data_player = re.search('playerId:"(.+?)",', resp.text).group(1)
+    data_account = "1242911124001"
+    data_player = "0RyQs9qPh"
 
     return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id)
 
