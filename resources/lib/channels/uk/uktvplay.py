@@ -215,9 +215,9 @@ def list_videos(plugin, item_id, serie_id, **kwargs):
         video_duration = video_datas["duration"] * 60
         video_id = video_datas["video_id"]
 
-        show_name = URL_CHUNKS % (video_datas["brand_slug"], 
-                                  video_datas["series_number"], 
-                                  video_datas["episode_number"], 
+        show_name = URL_CHUNKS % (video_datas["brand_slug"],
+                                  video_datas["series_number"],
+                                  video_datas["episode_number"],
                                   video_datas["video_id"])
 
         item = Listitem()
