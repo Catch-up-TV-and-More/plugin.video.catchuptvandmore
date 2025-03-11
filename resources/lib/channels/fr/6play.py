@@ -35,39 +35,39 @@ from resources.lib.menu_utils import item_post_treatment
 # Url to get channel's categories
 # e.g. Info, Divertissement, Séries, ...
 # We get an id by category
-URL_ROOT = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
+URL_ROOT = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
            'm6group_androidmob/services/%s/folders?limit=999&offset=0'
 
-URL_ALL_PROGRAMS = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
+URL_ALL_PROGRAMS = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
                    'm6group_androidmob/services/6play/programs'
 
 # Url to get catgory's programs
 # e.g. Le meilleur patissier, La france à un incroyable talent, ...
 # We get an id by program
-URL_CATEGORY = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
+URL_CATEGORY = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
                'm6group_androidmob/services/6play/folders/%s/programs' \
                '?limit=999&offset=0&csa=6&with=parentcontext'
 
 # Url to get program's subfolders
 # e.g. Saison 5, Les meilleurs moments, les recettes pas à pas, ...
 # We get an id by subfolder
-URL_SUBCATEGORY = 'http://android.middleware.6play.fr/6play/v2/platforms/' \
+URL_SUBCATEGORY = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
                   'm6group_androidmob/services/6play/programs/%s' \
                   '?with=links,subcats,rights'
 
 # Url to get shows list
 # e.g. Episode 1, Episode 2, ...
-URL_VIDEOS = 'http://chromecast.middleware.6play.fr/6play/v2/platforms/' \
-             'chromecast/services/6play/programs/%s/videos?' \
+URL_VIDEOS = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
+             'm6group_androidmob/services/6play/programs/%s/videos?' \
              'csa=6&with=clips,freemiumpacks&type=vi,vc,playlist&limit=999' \
              '&offset=0&subcat=%s&sort=subcat'
 
-URL_VIDEOS2 = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
-              'chromecast/services/6play/programs/%s/videos?' \
+URL_VIDEOS2 = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
+              'm6group_androidmob/services/6play/programs/%s/videos?' \
               'csa=6&with=clips,freemiumpacks&type=vi&limit=999&offset=0'
 
-URL_JSON_VIDEO = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/' \
-                 'chromecast/services/6play/videos/%s' \
+URL_JSON_VIDEO = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
+                 'm6group_androidmob/services/6play/videos/%s' \
                  '?csa=6&with=clips,freemiumpacks'
 
 URL_IMG = 'https://images.6play.fr/v1/images/%s/raw'
@@ -83,12 +83,10 @@ URL_GET_JS_ID_API_KEY = 'https://www.6play.fr/connexion'
 URL_API_KEY = 'https://www.6play.fr/main-%s.bundle.js'
 
 PATTERN_API_KEY = re.compile(r'\"eu1.gigya.com\",key:\"(.*?)\"')
-
 PATTERN_JS_ID = re.compile(r'main-(.*?)\.bundle\.js')
 
 API_KEY = "3_hH5KBv25qZTd_sURpixbQW6a4OsiIzIEF2Ei_2H7TXTGLJb_1Hr4THKZianCQhWK"
 
-URL_TOKEN_DRM = 'https://6play-users.6play.fr/v2/platforms/chromecast/services/6play/users/%s/videos/%s/upfront-token'
 URL_TOKEN_REPLAY = 'https://drm.6cloud.fr/v1/customers/m6web/platforms/m6group_web/services/m6replay/users/%s/videos/%s/upfront-token'
 URL_TOKEN_LIVE = 'https://drm.6cloud.fr/v1/customers/m6web/platforms/m6group_web/services/6play/users/%s/live/%s/upfront-token'
 URL_TOKEN_UUID = 'https://front-auth.6cloud.fr/v2/platforms/m6group_web/getJwt'
@@ -98,7 +96,7 @@ DEVICEID = '_luid_' + str(uuid.UUID(int=uuid.getnode()))
 URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&x-dt-auth-token=%s|R{SSM}|JBlicense'
 # Referer, Token
 
-URL_LIVE_JSON = 'https://chromecast.middleware.6play.fr/6play/v2/platforms/chromecast/services/6play/live'
+URL_LIVE_JSON = 'https://android.middleware.6play.fr/6play/v2/platforms/m6group_androidmob/services/6play/live'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 M6_HEADERS = {
@@ -166,8 +164,8 @@ def get_login_token(plugin, **kwargs):
     }
     uuid_json = urlquick.get(URL_TOKEN_UUID, headers=uuid_headers, max_age=-1)
     uuid_jsonparser = json.loads(uuid_json.text)
-    token = uuid_jsonparser["token"]
-    return account_id, token
+    login_token = uuid_jsonparser["token"]
+    return account_id, login_token
 
 
 @Route.register
@@ -178,7 +176,7 @@ def sixplay_root(plugin, **kwargs):
         ('w9', 'W9', 'w9.png', 'w9_fanart.jpg'),
         ('6ter', '6ter', '6ter.png', '6ter_fanart.jpg'),
         ('gulli', 'Gulli', 'gulli.png', 'gulli_fanart.jpg'),
-        ('catagories', 'Catégories', 'm6.png', 'm6_fanart.jpg'),
+        ('categories', 'Catégories', 'm6.png', 'm6_fanart.jpg'),
     ]
 
     for channel_infos in channels:
@@ -256,7 +254,7 @@ def list_categories(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    if item_id == 'catagories':
+    if item_id == 'categories':
         account_id, login_token = get_login_token(plugin)
         headers = {
             'authorization': 'Bearer ' + login_token,
@@ -279,9 +277,9 @@ def list_categories(plugin, item_id, **kwargs):
             for array in json_parser[0]["entries"]:
                 array_id = array['id']
                 if array_id == 'categories':
-                    for catagories in array["groups"][0]["entries"]:
-                        category_name = catagories["image"]["caption"]
-                        category_id = catagories["target"]["value_layout"]["id"]
+                    for categories in array["groups"][0]["entries"]:
+                        category_name = categories["image"]["caption"]
+                        category_id = categories["target"]["value_layout"]["id"]
                         item = Listitem()
                         item.label = category_name
                         item.set_callback(list_programs,
@@ -297,7 +295,7 @@ def list_categories(plugin, item_id, **kwargs):
             yield item
     else:
         if item_id == 'gulli':
-            resp = urlquick.get(URL_ROOT % item_id, headers=GENERIC_HEADERS)
+            resp = urlquick.get(URL_ROOT % item_id, headers=GENERIC_HEADERS, max_age=-1)
         else:
             resp = urlquick.get(URL_ROOT % (item_id + 'replay'), headers=GENERIC_HEADERS, max_age=-1)
         json_parser = resp.json()
@@ -380,6 +378,7 @@ def populate_item(item, clip_dict):
     duration = clip_dict.get('duration', None)
     if duration is not None:
         item.info['duration'] = duration
+
     item.info['plot'] = clip_dict.get('description', None)
 
     try:
@@ -406,6 +405,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
         url = URL_VIDEOS2 % program_id
     else:
         url = URL_VIDEOS % (program_id, sub_category_id)
+
     resp = urlquick.get(url, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = resp.json()
 
@@ -433,6 +433,7 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
             item.set_callback(get_video_url,
                               item_id=item_id,
                               video_id=video_id)
+
         item_post_treatment(item, is_playable=True, is_downloadable=is_downloadable)
         yield item
 
@@ -447,11 +448,11 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
     if not is_helper.check_inputstream():
         return False
 
-    account_id, token = get_login_token(plugin)
+    account_id, login_token = get_login_token(plugin)
     payload_headers = {
         'X-Customer-Name': 'm6web',
         'X-Client-Release': '5.103.3',
-        'Authorization': 'Bearer ' + token,
+        'Authorization': 'Bearer ' + login_token,
     }
     token_json = urlquick.get(URL_TOKEN_REPLAY % (account_id, video_id),
                               headers=payload_headers,
@@ -530,25 +531,21 @@ def get_playlist_urls(plugin, item_id, video_id, url, **kwargs):
 
         for clip in video['clips']:
             clip_id = str(clip['video_id'])
-
             item = Listitem()
             item.label = clip['title']
-
             populate_item(item, clip)
-
             video = get_video_url(plugin, item_id=item_id, video_id=clip_id)
-
             yield video
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    account_id, token = get_login_token(plugin)
+    account_id, login_token = get_login_token(plugin)
 
     payload_headers = {
         'X-Customer-Name': 'm6web',
         'X-Client-Release': '5.103.3',
-        'Authorization': 'Bearer ' + token,
+        'Authorization': 'Bearer ' + login_token,
     }
     live_item_id = item_id.upper()
     if item_id == '6ter':
@@ -565,7 +562,6 @@ def get_live_url(plugin, item_id, **kwargs):
         'channel': live_item_id,
         'with': 'service_display_images,nextdiffusion,extra_data'
     }
-
     video_json = urlquick.get(URL_LIVE_JSON, params=params, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(video_json.text)
     video_assets = json_parser[live_item_id][0]['live']['assets']
