@@ -9,8 +9,11 @@ import sys
 import ssl
 import xbmcvfs
 import pickle
+import threading
+import logging
 
 from kodi_six import xbmc, xbmcaddon
+from resources.lib.logger import Logger
 
 try:  # Python 3
     from http.server import BaseHTTPRequestHandler
@@ -18,11 +21,12 @@ except ImportError:  # Python 2
     from BaseHTTPServer import BaseHTTPRequestHandler
 
 try:  # Python 3
-    from socketserver import TCPServer
+    from socketserver import ThreadingTCPServer
 except ImportError:  # Python 2
-    from SocketServer import TCPServer
+    from SocketServer import ThreadingTCPServer
 
 addon = xbmcaddon.Addon(id='plugin.video.catchuptvandmore')
+LOG = Logger()
 
 requests.packages.urllib3.disable_warnings()
 try:
@@ -74,19 +78,48 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(licens)
 
 
-address = '127.0.0.1'  # Localhost
-
-port = 5057
-
-server_inst = TCPServer((address, port), SimpleHTTPRequestHandler)
-# The follow line is only for test purpose, you have to implement a way to stop the http service!
-server_inst.serve_forever()
-
-
 def autorun_addon():
     if xbmcaddon.Addon().getSetting("auto_run") == "true":
         xbmc.executebuiltin('RunAddon(plugin.video.catchuptvandmore)')
     return
 
 
-autorun_addon()
+class RunMonitor(xbmc.Monitor):
+    def __init__(self):
+        super(RunMonitor, self).__init__()
+        self.system_aborting = False
+
+    def onAbortRequested(self):
+        LOG.debug('########### onAbortrequested for abort demo')
+
+    def onNotification(self, sender, method, data):
+        if method == 'System.OnQuit' or method == 'System.OnRestart':
+            LOG.debug('######## System Aborting')
+            self.system_aborting = True
+
+
+if __name__ == "__main__":
+    LOG.info("start service")
+    monitor = RunMonitor()
+
+    address = '127.0.0.1'  # Localhost
+
+    port = 5057
+
+    server_inst = ThreadingTCPServer((address, port), SimpleHTTPRequestHandler)
+    server_thread = threading.Thread(target=server_inst.serve_forever)
+    server_thread.start()
+    LOG.info("tcp server started")
+
+    autorun_addon()
+
+    while not monitor.abortRequested() and monitor.system_aborting is False:
+        monitor.waitForAbort(5)
+
+    LOG.info("shutdown server")
+    server_inst.shutdown()
+
+    server_inst.server_close()
+
+    server_thread.join()
+    LOG.info("service ended")
