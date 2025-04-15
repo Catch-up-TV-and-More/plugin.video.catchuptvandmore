@@ -1,7 +1,11 @@
+base64
 coverage
 future
 git+git://github.com/emilsvennesson/script.module.inputstreamhelper.git@master#egg=inputstreamhelper
+http
+json
 kodi-addon-checker
+os
 polib
 pylint
 pyqrcode
