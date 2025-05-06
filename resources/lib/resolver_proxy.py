@@ -480,31 +480,24 @@ def get_mtvnservices_stream(plugin,
     return video_url
 
 
-def get_francetv_program_info(video_id, islive=False):
-    # Move Live TV on the new API
-    geoip_value = web_utils.geoip()
-    if not geoip_value:
-        geoip_value = 'FR'
-    params = {
-        'country_code': geoip_value,
-        'domain': 'www.france.tv',
-        'os': 'android',
-        'diffusion_mode': 'tunnel_first',
-        'capabilities': 'drm',
-    }
-    if islive is False:
-        params.update({'browser': 'firefox', })
-    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % video_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
-    return json.loads(resp.text)
-
-
 # FranceTV Part
 # FranceTV, FranceTV Sport, France Info, ...
 def get_francetv_video_stream(plugin,
                               id_diffusion,
                               download_mode=False):
+    geoip_value = web_utils.geoip()
+    if not geoip_value:
+        geoip_value = 'FR'
+    params = {
+        'country_code': geoip_value,
+        'capabilities': 'drm',
+        'os': 'androidtv',
+        'diffusion_mode': 'tunnel_first',
+        'offline': 'false',
+    }
 
-    json_parser = get_francetv_program_info(id_diffusion)
+    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % id_diffusion, params=params, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser = json.loads(resp.text)
 
     if 'video' not in json_parser:
         plugin.notify('ERROR', plugin.localize(30716))
@@ -572,8 +565,18 @@ def get_francetv_video_stream(plugin,
 
 
 def get_francetv_live_stream(plugin, broadcast_id):
-
-    json_parser = get_francetv_program_info(broadcast_id, islive=True)
+    geoip_value = web_utils.geoip()
+    if not geoip_value:
+        geoip_value = 'FR'
+    params = {
+        'country_code': geoip_value,
+        'capabilities': 'drm',
+        'os': 'androidtv',
+        'diffusion_mode': 'tunnel_first',
+        'offline': 'false',
+    }
+    resp = urlquick.get(URL_FRANCETV_PROGRAM_INFO % broadcast_id, params=params, headers=GENERIC_HEADERS, max_age=-1)
+    json_parser = json.loads(resp.text)
 
     if 'video' not in json_parser:
         plugin.notify('ERROR', plugin.localize(30716))
