@@ -36,7 +36,7 @@ URL_ROOT = 'https://www.%s.ch'
 URL_CATEGORIES_JSON = 'https://www.%s.ch/play/tv/'
 # channel_name
 
-URL_EMISSIONS = 'https://www.%s.ch/play/tv/%s?index=all'
+URL_SHOWLIST = 'https://il.srgssr.ch/integrationlayer/2.0/%s/showList/tv/alphabetical'
 # channel_name, name_emission
 
 URL_LIST_EPISODES = 'https://www.%s.ch/play/v3/api/%s/production/videos-by-show-id'
@@ -55,6 +55,8 @@ URL_LIVE_JSON = 'https://www.%s.ch/play/v3/api/%s/production/tv-livestreams'
 URL_TOKEN = 'https://tp.srgssr.ch/akahd/token'
 # acl
 
+URL_BYTOPICURN = 'https://il.srgssr.ch/integrationlayer/2.0/%s/page/byTopicUrn/%s'
+URL_TOPIC = 'https://il.srgssr.ch/integrationlayer/2.0/%s/topicList/tv'
 URL_INFO_VIDEO = 'https://il.srgssr.ch/integrationlayer' \
                  '/2.0/mediaComposition/byUrn/urn:%s:video:%s.json'
 
@@ -102,13 +104,11 @@ def list_categories(plugin, item_id, **kwargs):
 
         # Emission
         category = EMISSIONS_NAME[item_id]
-        category_url = URL_EMISSIONS % (item_id, category[1])
 
         item = Listitem()
         item.label = category[0]
         item.set_callback(list_programs,
-                          item_id=item_id,
-                          category_url=category_url)
+                          item_id=item_id)
         item_post_treatment(item)
         yield item
     else:
@@ -119,11 +119,11 @@ def list_categories(plugin, item_id, **kwargs):
         return False
 
     # Other categories (Info, Kids, ...)
-    resp = urlquick.get(URL_CATEGORIES_JSON % item_id, max_age=-1).content.decode()
-    json_value = re.compile(r'__remixContext = (.*?);</script>').findall(resp)[0]
-    json_parser = json.loads(json_value)
+    params = {'vector': 'TVPLAY', }
+    resp = urlquick.get(URL_TOPIC % item_id, params=params, max_age=-1).content.decode()
+    json_parser = json.loads(resp)
 
-    for category_datas in json_parser['state']['loaderData']['play-now']["initialData"]["topics"]:
+    for category_datas in json_parser["topicList"]:
         category_title = category_datas["title"]
         category_image = ''
         if 'imageUrl' in category_datas:
@@ -146,23 +146,30 @@ def list_categories(plugin, item_id, **kwargs):
 
 @Route.register
 def list_sub_categories(plugin, item_id, category_urn, **kwargs):
-    resp = urlquick.get(URL_CATEGORIES_JSON % item_id, max_age=-1).content.decode()
-    json_value = re.compile(r'__remixContext = (.*?);</script>').findall(resp)[0]
-    json_parser = json.loads(json_value)
+    params = {'isPublished': 'true', 'vector': 'TVPLAY', }
+    resp = urlquick.get(URL_BYTOPICURN % (item_id, category_urn), params=params, max_age=-1).content.decode()
+    json_parser = json.loads(resp)
 
-    for sub_category_datas in json_parser['state']['loaderData']['play-now']["initialData"]["pacPageConfigs"]["topicPages"][category_urn]['sections']:
-        sub_category_title = ''
-        if 'title' in sub_category_datas["representation"]:
-            sub_category_title = sub_category_datas["representation"]["title"]
-        else:
-            continue
+    for sub_category_datas in json_parser['sectionList']:
         section_id = sub_category_datas['id']
         section_type = sub_category_datas['sectionType']
 
+        sub_category_title = ''
+        if 'title' in sub_category_datas["representation"]['properties']:
+            sub_category_title = sub_category_datas["representation"]['properties']["title"]
+        else:
+            continue
+        sub_category_desc = ''
+        if 'description' in sub_category_datas["representation"]['properties']:
+            sub_category_desc = sub_category_datas["representation"]['properties']["description"]
+        sub_category_image = ''
+        if 'imageUrl' in sub_category_datas["representation"]['properties']:
+            sub_category_image = sub_category_datas["representation"]['properties']["imageUrl"]
+
         item = Listitem()
         item.label = sub_category_title
-        if 'imageUrl' in sub_category_datas["representation"]:
-            item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = sub_category_datas["representation"]["imageUrl"]
+        item.info['plot'] = sub_category_desc
+        item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = sub_category_image
         item.set_callback(list_videos_category,
                           item_id=item_id,
                           section_type=section_type,
@@ -172,22 +179,17 @@ def list_sub_categories(plugin, item_id, category_urn, **kwargs):
 
 
 @Route.register
-def list_programs(plugin, item_id, category_url, **kwargs):
+def list_programs(plugin, item_id, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
     - ...
     """
-    resp = urlquick.get(category_url, max_age=-1).content.decode()
-    json_value = re.compile(r'__remixContext = (.*?);</script>').findall(resp)[0]
-    json_parser = json.loads(json_value)
+    params = {'pageSize': 'unlimited', 'vector': 'TVPLAY', }
+    resp = urlquick.get(URL_SHOWLIST % item_id, params=params, max_age=-1).content.decode()
+    json_parser = json.loads(resp)
 
-    if item_id == "rsi":
-        showOverview = "showOverview"
-    else:
-        showOverview = "showOverview-" + item_id[:3]
-
-    for program_datas in json_parser['state']['loaderData'][showOverview]["shows"]:
+    for program_datas in json_parser['showList']:
         program_title = program_datas["title"]
         if 'rts.ch' in program_datas["imageUrl"]:
             program_image = program_datas["imageUrl"] + '/scale/width/448'
