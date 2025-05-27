@@ -26,6 +26,13 @@ URL_LICENCE_KEY = '%s|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win
 GENERIC_HEADERS = {
     'User-Agent': web_utils.get_random_windows_ua(),
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+    'Connection': 'keep-alive',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-User': '?1',
+    'Sec-GPC': '1',
 }
 
 
@@ -142,10 +149,12 @@ def list_videos_by_season(plugin, item_id, season, season_datas, **kwargs):
     for video_datas in season_datas:
         if video_datas.find('.//h2') is not None:
             video_title = video_datas.find('.//h2').text
-            if 'http' in video_datas.find('.//img').get('src'):
-                video_image = video_datas.find('.//img').get('src')
-            else:
-                video_image = URL_TV5MAF_ROOT + video_datas.find('.//img').get('src')
+            video_image = ''
+            if video_datas.find('.//img') is not None:
+                if 'http' in video_datas.find('.//img').get('src'):
+                    video_image = video_datas.find('.//img').get('src')
+                else:
+                    video_image = URL_TV5MAF_ROOT + video_datas.find('.//img').get('src')
             if 'http' in video_datas.find('.//a').get('href'):
                 video_url = video_datas.find('.//a').get('href')
             else:
@@ -212,23 +221,11 @@ def get_video_url(plugin,
     final_video_url = None
     license_url = license_key = None
     for video_datas in json_parser:
-        final_video_url = video_datas['url']
-        # prefer non-drmed
-        if 'drm' not in video_datas['type']:
-            if download_mode is True:
-                return download.download_video(final_video_url)
-            else:
-                if 'dash' in video_datas['type']:
-                    manifest = 'mpd'
-                else:
-                    manifest = 'hls'
-                break
-
-        license_url = video_datas['drm']['keySystems']['widevine']['license']
         if 'dash' in video_datas['type']:
-            manifest = 'mpd'
-        else:
-            manifest = 'hls'
+            final_video_url = video_datas['url']
+            if 'drm' in video_datas:
+                license_url = video_datas['drm']['keySystems']['widevine']['license']
+            break
 
     if license_url is not None:
         license_key = URL_LICENCE_KEY % license_url
@@ -236,5 +233,5 @@ def get_video_url(plugin,
         license_key = None
 
     return resolver_proxy.get_stream_with_quality(
-        plugin, video_url=final_video_url, manifest_type=manifest,
+        plugin, video_url=final_video_url, manifest_type='mpd',
         license_url=license_key)
