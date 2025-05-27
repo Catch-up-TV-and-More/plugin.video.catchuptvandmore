@@ -116,7 +116,6 @@ def list_programs(plugin, item_id, category_url, page, **kwargs):
         item.set_callback(list_videos,
                           item_id=item_id,
                           program_url=program_url,
-                          is_downloadable=True,
                           page='1')
         item_post_treatment(item)
         yield item
@@ -127,7 +126,7 @@ def list_programs(plugin, item_id, category_url, page, **kwargs):
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url, page, download_mode=False, **kwargs):
+def list_videos(plugin, item_id, program_url, page, **kwargs):
     resp = urlquick.get(program_url + '?page=%s' % page,
                         headers=GENERIC_HEADERS,
                         max_age=-1)
@@ -147,8 +146,7 @@ def list_videos(plugin, item_id, program_url, page, download_mode=False, **kwarg
             item.info['plot'] = video_plot
         item.set_callback(get_video_url,
                           item_id=item_id,
-                          video_url=program_url,
-                          is_downloadable=True)
+                          video_url=program_url)
         yield item
         return
 
@@ -193,7 +191,7 @@ def list_videos(plugin, item_id, program_url, page, download_mode=False, **kwarg
 
 
 @Route.register
-def list_videos_category(plugin, item_id, page, download_mode=False, **kwargs):
+def list_videos_category(plugin, item_id, page, **kwargs):
     resp = urlquick.get(URL_TV5MONDE_ROOT +
                         '/toutes-les-videos?page=%s' % page,
                         headers=GENERIC_HEADERS,
@@ -250,23 +248,11 @@ def get_video_url(plugin,
     final_video_url = None
     license_url = license_key = None
     for video_datas in json_parser:
-        final_video_url = video_datas['url']
-        # prefer non-drmed
-        if 'drm' not in video_datas['type']:
-            if download_mode is True:
-                return download.download_video(final_video_url)
-            else:
-                if 'dash' in video_datas['type']:
-                    manifest = 'mpd'
-                else:
-                    manifest = 'hls'
-                break
-
-        license_url = video_datas['drm']['keySystems']['widevine']['license']
         if 'dash' in video_datas['type']:
-            manifest = 'mpd'
-        else:
-            manifest = 'hls'
+            final_video_url = video_datas['url']
+            if 'drm' in video_datas:
+                license_url = video_datas['drm']['keySystems']['widevine']['license']
+            break
 
     if license_url is not None:
         license_key = URL_LICENCE_KEY % license_url
@@ -274,7 +260,7 @@ def get_video_url(plugin,
         license_key = None
 
     return resolver_proxy.get_stream_with_quality(
-        plugin, video_url=final_video_url, manifest_type=manifest,
+        plugin, video_url=final_video_url, manifest_type='mpd',
         license_url=license_key)
 
 
@@ -282,7 +268,7 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
     region = Script.setting['tv5monde.region']
     if region == LIVETYPE['NOT_FBS']:
-        return resolver_proxy.get_stream_with_quality(plugin, video_url=M3U8_NOT_FBS)
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=M3U8_NOT_FBS, manifest_type="hls")
 
     live_id = ''
     for channel_name, live_id_value in list(LIST_LIVE_TV5MONDE.items()):
@@ -294,4 +280,4 @@ def get_live_url(plugin, item_id, **kwargs):
     live_json = re.compile(r'data-broadcast=\'(.*?)\'').findall(resp.text)[0]
     json_parser = json.loads(live_json)
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=json_parser[0]["url"])
+    return resolver_proxy.get_stream_with_quality(plugin, video_url=json_parser[0]["url"], manifest_type="hls")
