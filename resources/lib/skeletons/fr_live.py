@@ -50,12 +50,12 @@ menu = {
         'enabled': True,
         'order': 3
     },
-    'canalplus': {
-        'resolver': '/resources/lib/channels/fr/mycanal:get_live_url',
-        'label': 'Canal +',
-        'thumb': 'channels/fr/canalplus.png',
-        'fanart': 'channels/fr/canalplus_fanart.jpg',
-        'xmltv_id': 'C34.api.telerama.fr',
+    'france-4': {
+        'resolver': '/resources/lib/channels/fr/francetv:get_live_url',
+        'label': 'France 4',
+        'thumb': 'channels/fr/france4.png',
+        'fanart': 'channels/fr/france4_fanart.jpg',
+        'xmltv_id': 'C78.api.telerama.fr',
         'm3u_group': 'TNT',
         'm3u_order': 4,
         'enabled': True,
@@ -83,16 +83,16 @@ menu = {
         'enabled': True,
         'order': 6
     },
-    'c8': {
-        'resolver': '/resources/lib/channels/fr/mycanal:get_live_url',
-        'label': 'C8',
-        'thumb': 'channels/fr/c8.png',
-        'fanart': 'channels/fr/c8_fanart.jpg',
-        'xmltv_id': 'C445.api.telerama.fr',
+    'lcp': {
+        'resolver': '/resources/lib/channels/fr/lcp:get_live_url',
+        'label': 'LCP Assemblée Nationale',
+        'thumb': 'channels/fr/lcp.png',
+        'fanart': 'channels/fr/lcp_fanart.jpg',
+        'xmltv_id': 'C234.api.telerama.fr',
         'm3u_group': 'TNT',
         'm3u_order': 8,
         'enabled': True,
-        'order': 7
+        'order': 8
     },
     'w9': {
         'resolver': '/resources/lib/channels/fr/6play:get_live_url',
@@ -103,7 +103,7 @@ menu = {
         'm3u_group': 'TNT',
         'm3u_order': 9,
         'enabled': True,
-        'order': 8
+        'order': 9
     },
     'tmc': {
         'resolver': '/resources/lib/channels/fr/tf1plus:get_live_url',
@@ -114,7 +114,7 @@ menu = {
         'm3u_group': 'TNT',
         'm3u_order': 10,
         'enabled': True,
-        'order': 9
+        'order': 10
     },
     'tfx': {
         'resolver': '/resources/lib/channels/fr/tf1plus:get_live_url',
@@ -125,40 +125,18 @@ menu = {
         'm3u_group': 'TNT',
         'm3u_order': 11,
         'enabled': True,
-        'order': 10
+        'order': 11
     },
-    'nrj12': {
-        'resolver': '/resources/lib/channels/fr/nrj:get_live_url',
-        'label': 'NRJ 12',
-        'thumb': 'channels/fr/nrj12.png',
-        'fanart': 'channels/fr/nrj12_fanart.jpg',
-        'xmltv_id': 'C444.api.telerama.fr',
+    'gulli': {
+        'resolver': '/resources/lib/channels/fr/6play:get_live_url',
+        'label': 'Gulli',
+        'thumb': 'channels/fr/gulli.png',
+        'fanart': 'channels/fr/gulli_fanart.jpg',
+        'xmltv_id': 'C482.api.telerama.fr',
         'm3u_group': 'TNT',
         'm3u_order': 12,
         'enabled': True,
-        'order': 11
-    },
-    'lcp': {
-        'resolver': '/resources/lib/channels/fr/lcp:get_live_url',
-        'label': 'LCP Assemblée Nationale',
-        'thumb': 'channels/fr/lcp.png',
-        'fanart': 'channels/fr/lcp_fanart.jpg',
-        'xmltv_id': 'C234.api.telerama.fr',
-        'm3u_group': 'TNT',
-        'm3u_order': 13,
-        'enabled': True,
         'order': 12
-    },
-    'france-4': {
-        'resolver': '/resources/lib/channels/fr/francetv:get_live_url',
-        'label': 'France 4',
-        'thumb': 'channels/fr/france4.png',
-        'fanart': 'channels/fr/france4_fanart.jpg',
-        'xmltv_id': 'C78.api.telerama.fr',
-        'm3u_group': 'TNT',
-        'm3u_order': 14,
-        'enabled': True,
-        'order': 13
     },
     'BFM TV': {
         'resolver': '/resources/lib/channels/fr/bfmtv:get_live_url',
@@ -167,9 +145,9 @@ menu = {
         'fanart': 'channels/fr/bfmtv_fanart.jpg',
         'xmltv_id': 'C481.api.telerama.fr',
         'm3u_group': 'TNT',
-        'm3u_order': 15,
+        'm3u_order': 13,
         'enabled': True,
-        'order': 14
+        'order': 13
     },
     'cnews': {
         'resolver': '/resources/lib/channels/fr/cnews:get_live_url',
@@ -178,9 +156,31 @@ menu = {
         'fanart': 'channels/fr/cnews_fanart.jpg',
         'xmltv_id': 'C226.api.telerama.fr',
         'm3u_group': 'TNT',
-        'm3u_order': 16,
+        'm3u_order': 14,
+        'enabled': True,
+        'order': 14
+    },
+    'lci': {
+        'resolver': '/resources/lib/channels/fr/lci:get_live_url',
+        'label': 'LCI',
+        'thumb': 'channels/fr/lci.png',
+        'fanart': 'channels/fr/lci_fanart.jpg',
+        'xmltv_id': 'C112.api.telerama.fr',
+        'm3u_group': 'TNT',
+        'm3u_order': 15,
         'enabled': True,
         'order': 15
+    },
+    'franceinfo': {
+        'resolver': '/resources/lib/channels/fr/francetv:get_live_url',
+        'label': 'France Info',
+        'thumb': 'channels/fr/franceinfo.png',
+        'fanart': 'channels/fr/franceinfo_fanart.jpg',
+        'xmltv_id': 'C2111.api.telerama.fr',
+        'm3u_group': 'TNT',
+        'm3u_order': 16,
+        'enabled': True,
+        'order': 16
     },
     'cstar': {
         'resolver': '/resources/lib/channels/fr/mycanal:get_live_url',
@@ -191,18 +191,29 @@ menu = {
         'm3u_group': 'TNT',
         'm3u_order': 17,
         'enabled': True,
-        'order': 16
+        'order': 17
     },
-    'gulli': {
-        'resolver': '/resources/lib/channels/fr/6play:get_live_url',
-        'label': 'Gulli',
-        'thumb': 'channels/fr/gulli.png',
-        'fanart': 'channels/fr/gulli_fanart.jpg',
-        'xmltv_id': 'C482.api.telerama.fr',
+    't18': {
+        'resolver': '/resources/lib/channels/fr/t18:get_live_url',
+        'label': 'T18',
+        'thumb': 'channels/fr/t18.png',
+        'fanart': 'channels/fr/t18_fanart.png',
+        'xmltv_id': 'C4139.api.telerama.fr',
         'm3u_group': 'TNT',
         'm3u_order': 18,
         'enabled': True,
-        'order': 17
+        'order': 18
+    },
+    'novo19': {
+        'resolver': '/resources/lib/channels/fr/novo19:get_live_url',
+        'label': 'NOVO19',
+        'thumb': 'channels/fr/novo19.png',
+        'fanart': 'channels/fr/novo19_fanart.png',
+        'xmltv_id': '',
+        'm3u_group': 'TNT',
+        'm3u_order': 19,
+        'enabled': False,
+        'order': 19
     },
     'tf1-series-films': {
         'resolver': '/resources/lib/channels/fr/tf1plus:get_live_url',
@@ -211,9 +222,9 @@ menu = {
         'fanart': 'channels/fr/tf1seriesfilms_fanart.jpg',
         'xmltv_id': 'C1404.api.telerama.fr',
         'm3u_group': 'TNT',
-        'm3u_order': 18,
+        'm3u_order': 20,
         'enabled': True,
-        'order': 18
+        'order': 20
     },
     'lequipe': {
         'resolver': '/resources/lib/channels/fr/lequipe:get_live_url',
@@ -222,9 +233,9 @@ menu = {
         'fanart': 'channels/fr/lequipe_fanart.jpg',
         'xmltv_id': 'C1401.api.telerama.fr',
         'm3u_group': 'TNT',
-        'm3u_order': 19,
+        'm3u_order': 21,
         'enabled': True,
-        'order': 19
+        'order': 21
     },
     '6ter': {
         'resolver': '/resources/lib/channels/fr/6play:get_live_url',
@@ -233,9 +244,9 @@ menu = {
         'fanart': 'channels/fr/6ter_fanart.jpg',
         'xmltv_id': 'C1403.api.telerama.fr',
         'm3u_group': 'TNT',
-        'm3u_order': 20,
+        'm3u_order': 22,
         'enabled': True,
-        'order': 20
+        'order': 22
     },
     'RMC STORY': {
         'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
@@ -244,9 +255,9 @@ menu = {
         'fanart': 'channels/fr/rmcstory_fanart.jpg',
         'xmltv_id': 'C1402.api.telerama.fr',
         'm3u_group': 'TNT',
-        'm3u_order': 21,
+        'm3u_order': 23,
         'enabled': True,
-        'order': 21
+        'order': 23
     },
     'RMC Découverte': {
         'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
@@ -255,9 +266,9 @@ menu = {
         'fanart': 'channels/fr/rmcdecouverte_fanart.jpg',
         'xmltv_id': 'C1400.api.telerama.fr',
         'm3u_group': 'TNT',
-        'm3u_order': 22,
+        'm3u_order': 24,
         'enabled': True,
-        'order': 22
+        'order': 24
     },
     'cherie25': {
         'resolver': '/resources/lib/channels/fr/nrj:get_live_url',
@@ -265,28 +276,6 @@ menu = {
         'thumb': 'channels/fr/cherie25.png',
         'fanart': 'channels/fr/cherie25_fanart.jpg',
         'xmltv_id': 'C1399.api.telerama.fr',
-        'm3u_group': 'TNT',
-        'm3u_order': 23,
-        'enabled': True,
-        'order': 23
-    },
-    'lci': {
-        'resolver': '/resources/lib/channels/fr/lci:get_live_url',
-        'label': 'LCI',
-        'thumb': 'channels/fr/lci.png',
-        'fanart': 'channels/fr/lci_fanart.jpg',
-        'xmltv_id': 'C112.api.telerama.fr',
-        'm3u_group': 'TNT',
-        'm3u_order': 24,
-        'enabled': True,
-        'order': 24
-    },
-    'franceinfo': {
-        'resolver': '/resources/lib/channels/fr/francetv:get_live_url',
-        'label': 'France Info',
-        'thumb': 'channels/fr/franceinfo.png',
-        'fanart': 'channels/fr/franceinfo_fanart.jpg',
-        'xmltv_id': 'C2111.api.telerama.fr',
         'm3u_group': 'TNT',
         'm3u_order': 25,
         'enabled': True,
