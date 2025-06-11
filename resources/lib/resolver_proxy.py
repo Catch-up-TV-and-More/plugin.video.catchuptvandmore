@@ -507,10 +507,8 @@ def get_francetv_video_stream(plugin,
     video_datas = json_parser['video']
     # Implementer Caption (found case)
     # Implement DRM (found case)
-    if "akamai" in video_datas['token']:
-        url_token = video_datas['token']['akamai']
-    elif "drm" in video_datas['token']:
-        url_token = video_datas['token']['drm']
+    if video_datas["drm"] is True:
+        url_token = video_datas['token']
     else:
         url_token = URL_FRANCETV_TOKEN
 
