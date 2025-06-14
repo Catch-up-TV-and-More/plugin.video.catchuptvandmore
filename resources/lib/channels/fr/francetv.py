@@ -161,8 +161,13 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         item_post_treatment(item)
         return True
 
+    if type_ == 'collection':
+        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/collections/%s' % j['collection_path']))
+        item_post_treatment(item)
+        return True
+
     # This is a video
-    if type_ == 'integrale' or type_ == 'extrait' or type_ == 'unitaire':
+    if type_ == 'integrale' or type_ == 'extrait' or type_ == 'unitaire' or type_ == 'resume':
         si_id = populate_video_item(item, j)
         item.set_callback(get_video_url,
                           broadcast_id=si_id)
@@ -233,6 +238,14 @@ def populate_video_item(item, video):
         rating = "-" + rating
 
     item.info['mpaa'] = rating
+
+    duration = video.get('duration', None)
+    if duration is not None:
+        item.info['duration'] = duration
+
+    desc = video.get('description', None)
+    if desc is not None:
+        item.info['plot'] = desc
 
     if "text" in video and video['text']:
         item.info['plot'] = video['text']
