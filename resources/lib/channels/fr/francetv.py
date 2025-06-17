@@ -138,31 +138,43 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         populate_images(item, j['images'])
 
     # Then, based on type, try to guess the correct callback
+    # type_id = [(#type_, #category, #path),]
+    type_id = [
+        ('program', 'program', 'program_path'),
+        ('collection', 'collections', 'collection_path'),
+        ('categorie', 'sub-categories', 'url_complete'),
+        ('sous_categorie', 'sub-categories', 'url_complete'),
+        ('event', 'events', 'url_complete'),
+    ]
 
     # This is a new path
-    if type_ == 'program':
-        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/program/%s' % j['program_path']))
-        item_post_treatment(item)
-        return True
-
-    if type_ == 'sous_categorie' or type_ == 'categorie':
-        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/sub-categories/%s' % j['url_complete']))
-        item_post_treatment(item)
-        return True
+    for array in type_id:
+        if type_ == array[0]:
+            item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/%s/%s' % (array[1], j[array[2]])))
+            item_post_treatment(item)
+            return True
 
     if type_ == 'region':
-        item.set_callback(outre_mer_root, j['region_path'])
+        marker = j.get('marker', None)
+        zone = None
+        if marker is not None:
+            page = marker.get('page', None)
+            if page is not None:
+                zone = page.split('::')[0]
+        if zone is None:
+            item.set_callback(outre_mer_root, j['region_path'])
+        else:
+            if zone == 'region':
+                path = j['region_path'] + '/metropole'
+            else:
+                path = j['region_path'] + '/outre-mer'
+            item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/regions/%s' % path))
         item_post_treatment(item)
         return True
 
     if type_ == 'categories':
         item.label = 'Les sous-catégories'
         item.set_callback(list_generic_items, j['items'], next_page_item)
-        item_post_treatment(item)
-        return True
-
-    if type_ == 'collection':
-        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/collections/%s' % j['collection_path']))
         item_post_treatment(item)
         return True
 
@@ -173,6 +185,17 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
                           broadcast_id=si_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         return True
+
+    # This is an article
+    if type_ == 'article':
+        array = []
+        array.append(j)
+        item.set_callback(list_generic_items, array, next_page_item)
+        item_post_treatment(item)
+        return True
+
+    if type_ == 'dict' or type_ == 'live':
+        return False
 
     if 'items' in j:
         item.set_callback(list_generic_items, j['items'], next_page_item)
@@ -238,14 +261,7 @@ def populate_video_item(item, video):
         rating = "-" + rating
 
     item.info['mpaa'] = rating
-
-    duration = video.get('duration', None)
-    if duration is not None:
-        item.info['duration'] = duration
-
-    desc = video.get('description', None)
-    if desc is not None:
-        item.info['plot'] = desc
+    item.info['duration'] = video.get('duration', '')
 
     if "text" in video and video['text']:
         item.info['plot'] = video['text']
@@ -298,24 +314,20 @@ def categories(plugin, **kwargs):
     (e.g. séries & fictions, documentaires, ...)
     This folder will also list videos that are not associated with any channel
     """
-    categories = {
-        'Séries & fictions': 'series-et-fictions',
-        'Documentaires': 'documentaires',
-        'Cinéma': 'films',
-        'Info & société': 'actualites-et-societe',
-        'Culture': 'spectacles-et-culture',
-        'Sports': 'sport',
-        'Jeux & divertissements': 'jeux-et-divertissements',
-        'Art de vivre': 'vie-quotidienne',
-        'Enfants': 'enfants'
-    }
-
-    for category_label, category_path in categories.items():
-        item = Listitem()
-        item.label = category_label
-        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/categories/%s' % category_path))
-        item_post_treatment(item)
-        yield item
+    r = urlquick.get(URL_API_MOBILE('/generic/homepage'),
+                     params={'platform': 'apps_tv'})
+    j = json.loads(r.text)
+    j = j['collections']
+    for array in j:
+        if 'playlist_categories' == array['type']:
+            for categorie in array['items']:
+                item = Listitem()
+                if 'images' in categorie:
+                    populate_images(item, categorie['images'])
+                item.label = categorie.get('label')
+                item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/categories/%s' % categorie.get('url_complete')))
+                item_post_treatment(item)
+                yield item
 
 
 @Route.register
