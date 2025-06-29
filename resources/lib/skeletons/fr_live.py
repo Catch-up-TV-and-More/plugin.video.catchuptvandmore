@@ -139,7 +139,7 @@ menu = {
         'order': 12
     },
     'BFM TV': {
-        'resolver': '/resources/lib/channels/fr/bfmtv:get_live_url',
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
         'label': 'BFM TV',
         'thumb': 'channels/fr/bfmtv.png',
         'fanart': 'channels/fr/bfmtv_fanart.jpg',
