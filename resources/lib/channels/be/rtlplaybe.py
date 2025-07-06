@@ -327,7 +327,6 @@ def get_login_token(plugin, **kwargs):
         "ak_bmsc": ak_bmsc,
         "bm_sv": callback_cookie['bm_sv'],
         "lfvp_access_token": login_cookie[0]['lfvp_access_token'],
-        "lfvp_auth_token": login_cookie[0]['lfvp_auth_token'],
         "lfvp_device_id": lfvp_device_id,
         "lfvp_disabled_storefronts": "",
         "lfvp_id_token": login_cookie[0]['lfvp_id_token'],
@@ -337,6 +336,8 @@ def get_login_token(plugin, **kwargs):
         if 'lfvp_auth.profile' in profile_id:
             x_dpp_profile = re.match(r"^([a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12})", profile_id.get('lfvp_auth.profile'), re.IGNORECASE).group(1)
             login_token.update({"lfvp_auth.profile": x_dpp_profile, })
+        if 'lfvp_auth_token' in profile_id:
+            login_token.update({"lfvp_auth_token": profile_id.get('lfvp_auth_token'), })
 
     return login_token
 
