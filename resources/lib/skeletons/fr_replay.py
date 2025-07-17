@@ -40,7 +40,7 @@ menu = {
         "label": "myCANAL",
         "thumb": "channels/fr/mycanal.png",
         "fanart": "channels/fr/mycanal_fanart.jpg",
-        "enabled": True,
+        "enabled": False,
         "order": 3,
     },
     "TF1+": {

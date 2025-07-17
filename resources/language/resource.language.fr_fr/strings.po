@@ -311,6 +311,10 @@ msgctxt "#30098"
 msgid "Peruvian channels"
 msgstr "Chaînes péruviennes"
 
+msgctxt "#30099"
+msgid "UK channels"
+msgstr "Chaînes UK"
+
 # Websites (from 30130 to 30149)
 
 
@@ -437,9 +441,13 @@ msgctxt "#30181"
 msgid "Choose version"
 msgstr "Choix de la version"
 
-msgctxt "#3082"
+msgctxt "#30182"
 msgid "France 3 Régions: Choose region"
 msgstr "France 3 Régions : Choix de la sous-région"
+
+msgctxt "#30183"
+msgid "Channel4: Programmes: Sort By"
+msgstr ""
 
 msgctxt "#30192"
 msgid "BEST"

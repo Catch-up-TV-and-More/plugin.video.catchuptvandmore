@@ -13,7 +13,9 @@ from codequick import Resolver
 
 from resources.lib import resolver_proxy, web_utils
 
-URL_LIVES = 'https://cdnamd-hls-globecast.akamaized.net/live/ramdisk/%s/hls_snrt/%s.m3u8'
+URL_ROOT = 'https://snrtlive.ma'
+
+URL_LIVES = 'https://cdn-globecast.akamaized.net/live/eds/%s/hls_snrt/%s.m3u8'
 
 
 @Resolver.register
@@ -35,4 +37,9 @@ def get_live_url(plugin, item_id, **kwargs):
         id = "arriadia"
     video_url = URL_LIVES % (id, id)
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    headers = {
+        "User-Agent": web_utils.get_random_ua(),
+        "referer": URL_ROOT
+    }
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url, headers=headers)

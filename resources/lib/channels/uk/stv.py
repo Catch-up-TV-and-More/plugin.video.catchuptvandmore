@@ -14,7 +14,7 @@ import urlquick
 from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
 from kodi_six import xbmcplugin
-from resources.lib import resolver_proxy
+from resources.lib import resolver_proxy, web_utils, download
 from resources.lib.menu_utils import item_post_treatment
 
 PATTERN_PLAYER = re.compile(r"PLAYER_ID:\"(.*?)\"")
@@ -33,11 +33,13 @@ URL_VIDEOS_JSON = "https://player.api.stv.tv/v1/episodes"
 
 URL_BRIGHTCOVE_DATAS = "https://player.stv.tv/player-web/players/vod/bundle.js"
 
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
     """List categroies from https://player.stv.tv/categories/."""
-    resp = urlquick.get(URL_CATEGORIES_JSON)
+    resp = urlquick.get(URL_CATEGORIES_JSON, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
 
     # Most popular category
@@ -76,7 +78,7 @@ def list_programs(plugin, item_id, category_guid, **kwargs):
     - ...
     """
     params = {"category": category_guid}
-    resp = urlquick.get(URL_PROGRAMS_JSON, params=params)
+    resp = urlquick.get(URL_PROGRAMS_JSON, params=params, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
 
     for program_datas in json_parser["results"]:
@@ -102,7 +104,7 @@ def list_videos(plugin, item_id, program_guid=None, order_by=None, **kwargs):
         payload["programme_guid"] = program_guid
     if order_by:
         payload["orderBy"] = order_by
-    resp = urlquick.get(URL_VIDEOS_JSON, params=payload)
+    resp = urlquick.get(URL_VIDEOS_JSON, params=payload, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
 
     for video_datas in json_parser["results"]:
@@ -140,7 +142,7 @@ def list_videos(plugin, item_id, program_guid=None, order_by=None, **kwargs):
 
 @Resolver.register
 def get_video_url(plugin, item_id, video_id, subtitle, download_mode=False, **kwargs):
-    resp = urlquick.get(URL_BRIGHTCOVE_DATAS)
+    resp = urlquick.get(URL_BRIGHTCOVE_DATAS, headers=GENERIC_HEADERS, max_age=-1)
 
     data_account = PATTERN_ACCOUNT.findall(resp.text)[0]
     data_player = PATTERN_PLAYER.findall(resp.text)[0]
@@ -155,7 +157,7 @@ def get_live_url(plugin, item_id, **kwargs):
     if item_id == "stv_plusone":
         item_id = "stv-plus-1"
 
-    resp = urlquick.get(URL_LIVE_JSON % item_id)
+    resp = urlquick.get(URL_LIVE_JSON % item_id, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
     url = json_parser["results"]["streamUrl"]
-    return resolver_proxy.get_stream_with_quality(plugin, url, manifest_type="hls")
+    return resolver_proxy.get_stream_with_quality(plugin, url)

@@ -37,9 +37,9 @@ except ImportError:
 # Channels:
 #     * france.tv (https://www.france.tv/)
 
+URL_ROOT = 'https://www.france.tv'
 URL_API_MOBILE = utils.urljoin_partial("https://api-mobile.yatta.francetv.fr/")
 URL_API_FRONT = utils.urljoin_partial("http://api-front.yatta.francetv.fr")
-URL_LIVE = 'https://www.france.tv/%s/direct.html'
 
 
 @Route.register
@@ -138,20 +138,37 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         populate_images(item, j['images'])
 
     # Then, based on type, try to guess the correct callback
+    # type_id = [(#type_, #category, #path),]
+    type_id = [
+        ('program', 'program', 'program_path'),
+        ('collection', 'collections', 'collection_path'),
+        ('categorie', 'sub-categories', 'url_complete'),
+        ('sous_categorie', 'sub-categories', 'url_complete'),
+        ('event', 'events', 'url_complete'),
+    ]
 
     # This is a new path
-    if type_ == 'program':
-        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/program/%s' % j['program_path']))
-        item_post_treatment(item)
-        return True
-
-    if type_ == 'sous_categorie' or type_ == 'categorie':
-        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/sub-categories/%s' % j['url_complete']))
-        item_post_treatment(item)
-        return True
+    for array in type_id:
+        if type_ == array[0]:
+            item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/%s/%s' % (array[1], j[array[2]])))
+            item_post_treatment(item)
+            return True
 
     if type_ == 'region':
-        item.set_callback(outre_mer_root, j['region_path'])
+        marker = j.get('marker', None)
+        zone = None
+        if marker is not None:
+            page = marker.get('page', None)
+            if page is not None:
+                zone = page.split('::')[0]
+        if zone is None:
+            item.set_callback(outre_mer_root, j['region_path'])
+        else:
+            if zone == 'region':
+                path = j['region_path'] + '/metropole'
+            else:
+                path = j['region_path'] + '/outre-mer'
+            item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/regions/%s' % path))
         item_post_treatment(item)
         return True
 
@@ -162,12 +179,23 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
         return True
 
     # This is a video
-    if type_ == 'integrale' or type_ == 'extrait' or type_ == 'unitaire':
+    if type_ == 'integrale' or type_ == 'extrait' or type_ == 'unitaire' or type_ == 'resume':
         si_id = populate_video_item(item, j)
         item.set_callback(get_video_url,
                           broadcast_id=si_id)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         return True
+
+    # This is an article
+    if type_ == 'article':
+        array = []
+        array.append(j)
+        item.set_callback(list_generic_items, array, next_page_item)
+        item_post_treatment(item)
+        return True
+
+    if type_ == 'dict' or type_ == 'live':
+        return False
 
     if 'items' in j:
         item.set_callback(list_generic_items, j['items'], next_page_item)
@@ -233,6 +261,7 @@ def populate_video_item(item, video):
         rating = "-" + rating
 
     item.info['mpaa'] = rating
+    item.info['duration'] = video.get('duration', '')
 
     if "text" in video and video['text']:
         item.info['plot'] = video['text']
@@ -285,24 +314,20 @@ def categories(plugin, **kwargs):
     (e.g. séries & fictions, documentaires, ...)
     This folder will also list videos that are not associated with any channel
     """
-    categories = {
-        'Séries & fictions': 'series-et-fictions',
-        'Documentaires': 'documentaires',
-        'Cinéma': 'films',
-        'Info & société': 'actualites-et-societe',
-        'Culture': 'spectacles-et-culture',
-        'Sports': 'sport',
-        'Jeux & divertissements': 'jeux-et-divertissements',
-        'Art de vivre': 'vie-quotidienne',
-        'Enfants': 'enfants'
-    }
-
-    for category_label, category_path in categories.items():
-        item = Listitem()
-        item.label = category_label
-        item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/categories/%s' % category_path))
-        item_post_treatment(item)
-        yield item
+    r = urlquick.get(URL_API_MOBILE('/generic/homepage'),
+                     params={'platform': 'apps_tv'})
+    j = json.loads(r.text)
+    j = j['collections']
+    for array in j:
+        if 'playlist_categories' == array['type']:
+            for categorie in array['items']:
+                item = Listitem()
+                if 'images' in categorie:
+                    populate_images(item, categorie['images'])
+                item.label = categorie.get('label')
+                item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/categories/%s' % categorie.get('url_complete')))
+                item_post_treatment(item)
+                yield item
 
 
 @Route.register
@@ -407,11 +432,28 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+    fallback_id = {
+        "france-2": "006194ea-117d-4bcf-94a9-153d999c59ae",
+        "france-3": "29bdf749-7082-4426-a4f3-595cc436aa0d",
+        "france-4": "9a6a7670-dde9-4264-adbc-55b89558594b",
+        "france-5": "45007886-f3ff-4b3e-9706-1ef1014c5a60",
+        "franceinfo": "35be22fb-1569-43ff-857c-99bf81defa2e",
+    }
+    params = {'platform': 'apps'}
+    resp = urlquick.get(URL_API_MOBILE('/apps/channels/%s' % item_id), params=params, max_age=-1)
+    json_parser = json.loads(resp.text)
 
-    if item_id in ('spectacles-et-culture', 'france-2', 'france-3', 'france-4', 'france-5', 'franceinfo', 'paris-h24'):
-        resp = urlquick.get(URL_LIVE % item_id, headers={'User-Agent': web_utils.get_random_windows_ua()}, max_age=-1)
-        broadcast_id = re.compile(r'videoId\"\:\"(.*?)\"', re.DOTALL).findall(resp.text)[0]
-        return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
-
-    broadcast_id = 'SIM_France%s'
-    return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id % item_id.split('-')[1])
+    for collection in json_parser['collections']:
+        if 'live' == collection['type']:
+            if "channel_path" in collection:
+                channel_path = collection["items"][0]["channel"]["channel_path"]
+                broadcast_id = collection["items"][0]["channel"]["si_id"]
+            else:
+                if item_id in fallback_id:
+                    channel_path = item_id
+                    broadcast_id = fallback_id[item_id]
+                else:
+                    plugin.notify('ERROR', plugin.localize(30716))
+                    return False
+            if channel_path == item_id:
+                return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)

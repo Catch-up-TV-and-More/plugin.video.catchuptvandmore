@@ -202,7 +202,7 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE_SKYNEWS, headers=GENERIC_HEADERS, max_age=-1)
-    player = resp.parse().find(".//div[@class='sdc-site-video sdc-article-widget callfn']")
+    player = resp.parse().find(".//div[@class='sdc-article-widget sdc-site-video callfn']")
     data_account = player.get('data-account-id')
     data_player = player.get('data-player-id')
     data_video_id = player.get('data-video-id')

@@ -398,15 +398,15 @@ def get_live_url(plugin, item_id, **kwargs):
     }
     params = {
         'context': 'MYTF1',
-        'pver': '5010000',
+        'pver': '5029000',
         'platform': 'web',
         'device': 'desktop',
         'os': 'windows',
         'osVersion': '10.0',
         'topDomain': 'unknown',
-        'playerVersion': '5.10.0',
+        'playerVersion': '5.29.0',
         'productName': 'mytf1',
-        'productVersion': '2.59.1'
+        'productVersion': '3.37.0'
     }
 
     url_json = URL_VIDEO_STREAM % video_id
@@ -435,4 +435,5 @@ def get_live_url(plugin, item_id, **kwargs):
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url,
                                                   manifest_type="mpd", license_url=license_url,
-                                                  workaround=workaround, headers=license_headers)
+                                                  workaround=workaround, headers=headers_video_stream,
+                                                  custom_license_headers=license_headers)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.40~beta16" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.41~beta13" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -42,95 +42,57 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.40]
-[UK - UKTVPLAY] Fix datas for Brightcove
-[FR - LCP] Fix replay
-[UK - UKTVPLAY] Fix for channel_id (PR #1283) thanks @nictjir
-[FR - RMCBFMPLAY] Fix title (PR #1294 issue #1286) thanks @yapa69
-[BE - RTC] Fix replay and live (PR #1297) thanks @jmzambon
-[UK - BLAZE] Fix replay (PR #1293 issue #1282) thanks @nictjir
-[UK - UKTVPLAY] Fix replay (PR #1293 issue #1284) thanks @nictjir
-[FR - FRANCETV] Fix for replay and live thanks @SebMourlhou
-[SFRTV] Config URL has changed (PR #1309 issue #1307) thanks @SebMourlhou
-(PROJECT] Support proxy configuration (PR #1304) thanks @cedk
-[FR - MYCANAL] Fix json parser thanks @IceFreak66
-[WO - ALJAZEERA] Fix English stream
-[BE - RTLPlay] Fix live (PR #1314 issue #1303) thanks @darodi
-[WEBSITE - INA] Complete rewrite (PR #1316 issue #1265) thanks @darodi
-[WEBSITE - INA] Search and homepage (PR #1318 issue #1265) thanks @darodi
-[Project] Need manifest headers for Omega too in get_stream_with_quality (PR #1317) thanks @SebMourihou
-[CH - CANAL9] Live  Live (PR #1319 issue #936) thanks @darodi
-[CH - AlpenWelle plus] Live (PR #1330 issue #936) thanks @darodi
-[CH - CANALALPHA] Live (PR #1330 issue #936) thanks @darodi
-[CH - CARAC] Live (PR #1330 issue #936) thanks @darodi
-[CH - Blick] Live (PR #1330 issue #936) thanks @darodi
-[CH - Die Neue Zeit] Live (PR #1330 issue #936) thanks @darodi
-[CH - DieuTV] Live (PR #1330 issue #936) thanks @darodi
-[CH - DritaTV] Live (PR #1330 issue #936) thanks @darodi
-[WO - ARTE] Fix live out of bound exception (PR #1324) thanks @darodi
-[WO - icitelevision] Fix http error 406 (PR #1326) thanks @darodi
-[WO - DW] Fix live (PR #1326) thanks @darodi
-[WO - QVC] Fix live url (PR #1328) thanks @darodi
-[BE - TeleMB] Fix live url (PR #1330 issue #1329) thanks @darodi
-[BE - LN24] Fix live (PR #1331 issue #1329) thanks @darodi
-[FR - FRANCETV] Add drm replays (PR #1336) thanks @jeff2900
-[PROJECT] Fix SSLError DH_KEY_TOO_SMALL (PR #1336) thanks @jeff2900
-[UK - UKTVPLAY] Fix "NoneType object has no attribute group" (PR #1342 issue #1335) thanks @jeff2900
-[BE - TVCOM] Fix live (PR #1337) thanks @darodi
-[BE - Télésambre] Fix live (PR #1341) thanks @darodi
-[BE - TVLUX] Fix live (PR #1338) thanks @darodi
-[BE - ACTV] Fix live (PR #1340) thanks @darodi
-[BE - LN24] Fix live (PR #1339) thanks @darodi
-[FR - BIPTV] Fix live
-[UK - CHANNEL4] Fix series listing in replay (issue #1344)
-[FR - BIPTV] Clean-up
-[FR - TVVENDEE] FIx live
-[FR - TLC] Fix live
-[FR - LCI] Fix KeyError: 'next' (PR #1345) thanks @jeff2900
-[FR - MYTF1] Add LCI channel (PR #1345) thanks @jeff2900
-[FR - MYTF1] Fix display bad items (PR #1346) thanks @jeff2900
-[FR - NRJ] Fix replay (PR #1347) thanks @jeff2900
-[FR] Add channel paris-h24 (PR #1349) thanks @SebMourlhou
-[BO - BOLIVIATV] Add channel (PR #1348) thanks @jimmygilles
-[BO - ATB] Add channel (PR #1348) thanks @jimmygilles
-[BO - REDUNO] Add channel (PR #1348) thanks @jimmygilles
-[BO - TVUMSA] Add channel (PR #1348) thanks @jimmygilles
-[FR - CNEWS] Fix item where live is defined
-[FR - MYTF1] MYTF1 is TF1+ now
-[FR - CNEWS] Allow redirection in replay (issue #1351)
-[FR - TF1PLUS] Fix a typo and Frenchify credential request (issue #1353)
-[FR - TF1PLUS] Try to use widevine drm (issue #1352)
-[FR - CNEWS] Fix Error 403 (PR #1361 issue #1354) thanks @jeff2900
-[PROJECT] Updated random user_agents list (PR #1360) thanks @jeff2900
-[IT - RAIPLAY] Fix RaiPlay live TV (PR #1356) thanks @jmzambon
-[FR - TF1PLUS] Fix login (PR #1357 issue #1352) thanks @darodi
-[FR - TF1PLUS] Avoid Fairplay drm (PR #1357 issue #1352) thanks @darodi
-[CH - TELETICINO] Fix Teleticino live (PR #1364) thanks @jmzambon
-[FR - FRANCETV] Fix live freeze (PR #2900 issue #1020, issue #1376) thanks @jeff2900
-[IT - RAIPLAY] Fix RaiPlay live TV (PR #1369) thanks @jmzambon
-[FR - 6PLAY] Add replay up to 1080p (PR #1372) thanks @jeff2900
-[FR - FRANCETV] Fix error kodi 20 (PR #1378 issue #1374) thanks @jeff2900
-[UK - BLAZE] Fx replay and live (PR #1382) thanks @nictjir
-[PROJECT] Minor changes to English README (PR #1383) thanks @Sakeyjakey
-[FR] Fix ramdom headers (PR #1397) thanks @jeff2900
-[FR - FRANCETV] Fix replay drm  (PR #1398 issue #1387) thanks @jeff2900
-[FR - MYCANAL] Fix replay (PR #1399 issue #1395) thanks @jeff2900
-[JP - NTVNEWS24] Fix live
-[FR - SPORTENFRANCE] Fix live
-[FR - MOSELLETV] Viamoselle is MoselleTV now. Fix live
-[FR - VIAOCCITANIE] Fix live and begin to split via file
-[FR - VIAMATELE] Fix live and use its own file
-[JP - TVER] Fix TVTokyo channel (issue #1408) thanks @kalun85
-[UK - CHANNEL4] Fix replay (issue #1416)
-[PROJECT] Update user-agent
-[WO - FRANCE24] Fix live (issue #1417)
-[WO - TV5MONDE] Fix error 403 (PR #1422) thanks @jeff2900
-[FR - 6PLAY] Fix error 404 (PR #1421 issue ##1420) thanks @jeff2900
-[FR - FRANCE3REGIONS] FIx live (issue #1424)
-[FR - FRANCE3REGIONS] Fix replay (PR #1425) thanks @jeff2900
-[FR - RFMBMCPLAY] Remove problematic workaround (issue #1431)
-[FR - BFM2] Add live
-[FR - BFM] Add fallback for BFMs live
+[Version 0.2.41]
+[UK - CHANNEL4] Fix replay (PR #1465 issue #1464) thanks @ploughpuff
+[FR - 6PLAY] Fix replay (PR #1468 issue #1466) thanks @jeff2900
+[UK - CHANNEL4] Fix duplicates on Next Page and add Sort By setting (PR #1467 issue #1128) thanks @ploughpuff
+[UK - BLAZE] Fix replay (issue #1471)
+[UK - UKTVPLAY] Fix replay (PR #1470 issue #1393) @nictjir
+[FR - 6PLAY] Code improvement (PR #1472) thanks @jeff2900
+[WO - ARTE] Fix replay (PR #1476) thanks @jeff2900
+[FR - TF1PLUS] Fix drmed live (PR #1428 issue #1427) thanks @nitrorac
+[JP - TVER] Change API (issue #1481)
+[JP - TVER] Add user agent in headers (issue #1493)
+[FR - MYCANAL] Disabled since not working
+[PROJECT] BFM Ile-de-France is no longer available (issue #1491)
+[BE - RTBF] Fix replay (PR #1494 issue #1485) thanks @jeff2900
+[UK - STV] Allow some downloads (issue #1430)
+[CH - SRGSSR] Fix RTS replay (PR #1497) thanks @jeff2900
+[FR - FRANCETV] Enabled Replay dash stream (PR #1496) thanks @jeff2900
+[WO - TV5MONDE] Fix replay error 403 (PR #1499) thanks @jeff2900
+[WO - TV5MONDEAFRIQUE] Fix replay error 403 (PR #1500) thanks @jeff2900
+[CH - SRGSSR] Fix RTS replay (PR #1501) thanks @jeff2900
+[FR] Add TvMonaco
+[FR] Sort skeleton
+[VE - VENEZOLANA] Fix live
+[PE - ATV] Fix live
+[PE - ENLACE] Fix live
+[PE - PANAMERICANA] Fix live
+[BO - BOLIVIATV] Fix live
+[JP - JAPANNETSHOPPINGDX] Remove completely
+[JP] Add QVC
+[PROJECT] Fix the video path in Brightcove resolver
+[UK - SKYNEWS] Fix live
+[WO - TV5MONDE] Fix replay error 403 (PR #1506) thanks @jeff2900
+[WO - TV5MONDEAFRIQUE] Fix replay error 403 (PR #1507) thanks @jeff2900
+[BE - RTLPLAYBE] Fix missing videos (PR #1508 issue #1434) thanks @jeff2900
+[UK] Remove not available channels (issue #1515)
+[UK - FAILARMY] Fix live
+[UK - THEPETCOLLECTIVE] Fix live
+[UK] Change the country of some channels
+[WO - RT] Only Arabic language is available
+[UK - DUST] Remove completely
+[UK - BOXPLUS] Remove completely
+[GR - EPT] Fix live (issue #1327)
+[WO - EPTWORLD] Fix live (issue #1327)
+[GR - EPT] Add some channels
+[WO - AFRICA24] Fix live
+[FR] Add t18 live (PR #1522 issue #1520) thanks @jeff2900
+[FR] Add Novo19 skeleton (PR #1522 issue #1520) thanks @jeff2900
+[FR] Sort live skeleton by TNT order (PR #1522 issue #1520) thanks @jeff2900
+[FR - FRANCETV] Fix live missing channel_id (PR #1523) thanks @jeff2900
+[FR - FRANCETV] Fix replay drm (PR #1524) thanks @jeff2900
+[FR - FRANCETV] Fix replay items no found (PR #1526 issue #1519) thanks @jeff2900
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

@@ -50,10 +50,11 @@ def list_categories(plugin, item_id, **kwargs):
             "rounded position-relative mb-0 card-default']"):
 
         video_title = ''
-        if video_datas.find('.//object') is not None:
-            video_title = video_datas.find('.//object').get('alt')
-        video_image = video_datas.find('.//object').get('data')
-        video_id = video_datas.find('.//a').get('href')
+        if video_datas.find('.//img') is not None:
+            video_title = video_datas.find('.//img').get('alt')
+        video_image = video_datas.find('.//img').get('src')
+        xdata = video_datas.find('.//a').get('x-data')
+        video_id = re.compile(r"href\:\ \'(.*?)\'").findall(xdata)[0]
 
         item = Listitem()
         item.label = video_title
@@ -68,7 +69,7 @@ def list_categories(plugin, item_id, **kwargs):
 
 
 @Route.register
-def list_videos(plugin, item_id, video_id, video_image, **kwargs):
+def list_videos(plugin, item_id, video_id, **kwargs):
 
     resp = urlquick.get(video_id, headers=GENERIC_HEADERS, max_age=-1)
     streams = re.search('"streams":"(.+?)"', resp.text)
@@ -79,8 +80,9 @@ def list_videos(plugin, item_id, video_id, video_image, **kwargs):
         for video_datas in video_active.iterfind(".//div[@class='row py-5']"):
 
             video_title = ''
-            if video_datas.find('.//object') is not None:
-                video_title = video_datas.find('.//object').get('alt')
+            if video_datas.find('.//img') is not None:
+                video_title = video_datas.find('.//img').get('alt')
+                video_image = video_datas.find('.//img').get('src')
 
             epno = ''
             for epouter in video_datas.iterfind(".//span[@data-content-type='season-episode']"):
@@ -98,7 +100,7 @@ def list_videos(plugin, item_id, video_id, video_image, **kwargs):
             plot = ''
             for info in video_datas.iterfind(".//p[@class='text-secondary mb-0']"):
                 plot = info.text
-            for drm_details in video_datas.iterfind(".//a[@class='d-block open-player pointer']"):
+            for drm_details in video_datas.iterfind(".//span[@data-env='production']"):
                 streamKey = drm_details.get('data-key')
                 streamUvid = drm_details.get('data-uvid')
 

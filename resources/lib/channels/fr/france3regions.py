@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 import json
 import re
+import xml.etree.ElementTree as ET
 
 from kodi_six import xbmcgui
 from codequick import Listitem, Resolver, Route, Script, utils
@@ -74,6 +75,29 @@ CORRECT_MONTH = {
 
 @Route.register
 def list_programs(plugin, item_id, **kwargs):
+    resp = urlquick.get(URL_PROGRAMMES)
+    root = resp.parse()
+
+    for programs_datas in root.iterfind(".//li[@class='program_home__regionList__item']"):
+        program_title = programs_datas.find('.//span').text.strip()
+        program_url = programs_datas.find('.//a').get('href')
+        if 'http' in programs_datas.find('.//img').get('src'):
+            program_img = programs_datas.find('.//img').get('src')
+        else:
+            program_img = URL_ROOT + programs_datas.find('.//img').get('src')
+
+        item = Listitem()
+        item.label = program_title
+        item.art['thumb'] = item.art['landscape'] = program_img
+        item.set_callback(list_regions,
+                          item_id=item_id,
+                          program_url=program_url)
+        item_post_treatment(item)
+        yield item
+
+
+@Route.register
+def list_regions(plugin, item_id, program_url, **kwargs):
     """
     Build categories listing
     - Tous les programmes
@@ -81,87 +105,156 @@ def list_programs(plugin, item_id, **kwargs):
     - Informations
     - ...
     """
-    region = utils.ensure_unicode(Script.setting['france3regions.language'])
-    region = LIVE_FR3_REGIONS[region]
-    resp = urlquick.get(URL_EMISSIONS % region)
+    # region = utils.ensure_unicode(Script.setting['france3regions.language'])
+    # region = LIVE_FR3_REGIONS[region]
+    # resp = urlquick.get(URL_EMISSIONS % region)
+    resp = urlquick.get(program_url)
     root = resp.parse()
 
     for program_datas in root.iterfind(".//div[@class='slider ']"):
         program_title = program_datas.find('.//h2').text.strip()
         program_id = program_datas.find('.//h2').get('id')
+
         item = Listitem()
         item.label = program_title
-        item.set_callback(list_videos,
+        item.set_callback(list_categories,
                           item_id=item_id,
-                          program_url=URL_EMISSIONS % region,
+                          program_url=program_url,
                           program_id=program_id)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, program_url, program_id, **kwargs):
+def list_categories(plugin, item_id, program_url, program_id, **kwargs):
     resp = urlquick.get(program_url)
     root = resp.parse()
 
     for programs_datas in root.iterfind(".//div[@class='slider ']"):
         if program_id == programs_datas.find('.//h2').get('id'):
             for video_datas in programs_datas.iterfind(".//li"):
+                categories_url = video_datas.find('.//a').get('href')
+                if len(categories_url) == 0:
+                    continue
+                diffusion_id = URL_ROOT + categories_url
                 if video_datas.find('.//span') is not None:
                     video_title = video_datas.find('.//span').text.strip()
                 else:
-                    subtitle_value = video_datas.findall(".//div[2][@class='slider__programs__video__title']")
-                    for title_datas in subtitle_value:
-                        join_title1 = ' - '.join(title_datas.itertext()).replace('\n', '')
-                        join_title2 = ' '.join(join_title1.split())
-                    video_title = join_title2
-                id_diffusion = URL_ROOT + video_datas.find('.//a').get('href')
+                    video_title = video_datas.find(".//div[2][@class='slider__programs__video__title--program']")
 
                 video_image = ''
-                if video_datas.find('.//img').get('data-src'):
+                if video_datas.find('.//img') is not None:
                     if 'http' in video_datas.find('.//img').get('data-src'):
                         video_image = video_datas.find('.//img').get('data-src')
                     else:
                         video_image = URL_ROOT + video_datas.find('.//img').get('data-src')
-                else:
-                    if 'http' in video_datas.find('.//img').get('src'):
-                        video_image = video_datas.find('.//img').get('src')
-                    else:
-                        video_image = URL_ROOT + video_datas.find('.//img').get('src')
-
-                date_value = ''
-                duration_value = ''
-                if video_datas.find(".//div[@class='slider__programs__video__diffusion']") is not None:
-                    find_value = video_datas.find(".//div[@class='slider__programs__video__diffusion']").text.split(' ')
-                    join_value = ' '.join(find_value).replace('\n', '')
-                    find_duration = re.findall("\d+ min", join_value)[0]
-                    duration_value = find_duration.split(' ')[0]
 
                 item = Listitem()
                 item.label = video_title
                 item.art['thumb'] = item.art['landscape'] = video_image
-                item.label = video_title
-                item.art['thumb'] = item.art['landscape'] = video_image
-                if len(duration_value) > 0:
-                    item.info['duration'] = duration_value
-                if len(date_value) > 0:
-                    date_value = date_value + '/24'
-                    item.info.date(date_value, '%d/%m/%y')
-
-                item.set_callback(get_video_url,
+                item.set_callback(list_videos,
                                   item_id=item_id,
-                                  id_diffusion=id_diffusion)
+                                  diffusion_id=diffusion_id)
                 item_post_treatment(item, is_playable=True, is_downloadable=True)
                 yield item
+
+
+@Route.register
+def list_videos(plugin, item_id, diffusion_id, **kwargs):
+    resp = urlquick.get(diffusion_id, headers=GENERIC_HEADERS, max_age=-1)
+    # root = resp.parse()
+    try:
+        root = resp.parse("div", attrs={"class": "content__header"})
+    except RuntimeError:
+        yield None
+        return
+
+    if root is not None:
+        diffusion_id = diffusion_id
+        program_title = root.find('.//div[@class="content__header__data__text__description"]').text.strip()
+        program_image = root.find('.//img').get('src')
+        duration_tag = ET.tostring(root, encoding='utf-8').decode()
+        program_duration = re.findall(r'.* (\d+?) min', duration_tag)[0]
+
+        item = Listitem()
+        item.label = program_title
+        item.art['thumb'] = item.art['landscape'] = program_image
+        if len(program_duration) > 0:
+            item.info['duration'] = program_duration
+        item.set_callback(get_video_url,
+                          item_id=item_id,
+                          diffusion_id=diffusion_id)
+        item_post_treatment(item, is_playable=True, is_downloadable=True)
+        yield item
+
+    try:
+        root = resp.parse("div", attrs={"class": "content__replays"})
+    except RuntimeError:
+        yield None
+        return
+
+    if root.find(".//li[@class='program_list__list__item']") is not None:
+        for programs_datas in root.iterfind(".//li[@class='program_list__list__item']"):
+            program_title = programs_datas.find('.//a').get('alt').strip()
+            if 'http' in programs_datas.find('.//a').get('href'):
+                diffusion_id = programs_datas.find('.//a').get('href')
+            else:
+                diffusion_id = URL_ROOT + programs_datas.find('.//a').get('href')
+
+            if 'http' in programs_datas.find('.//img').get('data-src'):
+                program_image = programs_datas.find('.//img').get('data-src')
+            else:
+                program_image = URL_ROOT + programs_datas.find('.//img').get('data-src')
+
+            duration_tag = programs_datas.find('.//div[@class="program_list__list__item__data__diffusion"]').text.strip()
+            program_duration = re.findall(r'.* (\d+?)min', duration_tag)[0]
+
+            item = Listitem()
+            item.label = program_title
+            item.art['thumb'] = item.art['landscape'] = program_image
+            if len(program_duration) > 0:
+                item.info['duration'] = program_duration
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              diffusion_id=diffusion_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
+
+    if root.find(".//li[@class='program_list__list__item hidden']") is not None:
+        for programs_datas in root.iterfind(".//li[@class='program_list__list__item hidden']"):
+            program_title = programs_datas.find('.//a').get('alt').strip()
+            if 'http' in programs_datas.find('.//a').get('href'):
+                diffusion_id = programs_datas.find('.//a').get('href')
+            else:
+                diffusion_id = URL_ROOT + programs_datas.find('.//a').get('href')
+
+            if 'http' in programs_datas.find('.//img').get('data-src'):
+                program_image = programs_datas.find('.//img').get('data-src')
+            else:
+                program_image = URL_ROOT + programs_datas.find('.//img').get('data-src')
+
+            duration_tag = programs_datas.find('.//div[@class="program_list__list__item__data__diffusion"]').text.strip()
+            program_duration = re.findall(r'.* (\d+?)min', duration_tag)[0]
+
+            item = Listitem()
+            item.label = program_title
+            item.art['thumb'] = item.art['landscape'] = program_image
+            if len(program_duration) > 0:
+                item.info['duration'] = program_duration
+            item.set_callback(get_video_url,
+                              item_id=item_id,
+                              diffusion_id=diffusion_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=True)
+            yield item
 
 
 @Resolver.register
 def get_video_url(plugin,
                   item_id,
-                  id_diffusion,
+                  diffusion_id,
                   download_mode=False,
                   **kwargs):
-    resp = urlquick.get(id_diffusion, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(diffusion_id, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
     video_id = root.find('.//figure[@class="magneto"]').get('data-id')
 

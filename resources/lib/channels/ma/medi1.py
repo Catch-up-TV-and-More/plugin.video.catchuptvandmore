@@ -13,16 +13,15 @@ from codequick import Resolver
 
 from resources.lib import resolver_proxy, web_utils
 
-URL_LIVES = 'https://www.medi1tv.com/ar/live.aspx'
+URL_LIVES = 'https://idara.medi1tv.ma/rss/embed/medi1news-auto/live-medi1tv-%s.aspx'
+
+GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    resp = urlquick.get(URL_LIVES)
-    for possibility in resp.parse().findall('.//iframe'):
-        video_page = possibility.get('src')
-        if item_id in video_page:
-            resp2 = urlquick.get(video_page)
-            video_url = 'http:' + re.compile(r"file: \'(.*?)\'").findall(resp2.text)[0]
-            return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")
+    resp = urlquick.get(URL_LIVES % item_id, headers=GENERIC_HEADERS, max_age=-1)
+    video_url = 'https:' + re.compile(r"file: \'(.*?)\'").findall(resp.text)[0]
+
+    return resolver_proxy.get_stream_with_quality(plugin, video_url)
