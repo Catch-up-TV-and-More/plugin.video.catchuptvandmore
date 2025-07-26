@@ -36,17 +36,14 @@ TOKEN_GIGYA_WEB = "https://www.tf1.fr/token/gigya/web"
 # Find a way to get Id for each API call
 
 URL_ROOT = utils.urljoin_partial(TF1PLUS_ROOT)
-
 URL_VIDEO_STREAM = 'https://mediainfo.tf1.fr/mediainfocombo/%s'
-
 URL_API = 'https://www.tf1.fr/graphql/web'
+URL_SMARTTV = 'https://smart-tv.tf1.fr/catalog/fr-fr/smarttv'
+URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 
-URL_LICENCE_KEY = 'https://drm-wide.tf1.fr/proxy?id=%s'
 # videoId
-
-
 ACCOUNTS_LOGIN = "https://compte.tf1.fr/accounts.login"
 ACCOUNTS_BOOTSTRAP = "https://compte.tf1.fr/accounts.webSdkBootstrap"
 
@@ -72,7 +69,6 @@ def get_token(plugin):
         'sdkBuild': '13987',
         'format': 'json'
     }
-
     session.get(ACCOUNTS_BOOTSTRAP, headers=bootstrap_headers, params=bootstrap_params, max_age=-1)
     headers_login = {
         "User-Agent": web_utils.get_random_windows_ua(),
@@ -215,6 +211,7 @@ def handle_programs(program_items, category_id=None):
             is_item = True
             program_name = program_datas['name']
             program_slug = program_datas['slug']
+            program_id = program_datas['id']
             program_image = program_datas['decoration']['image']['sources'][0]['url']
             program_background = program_datas['decoration']['background']['sources'][0]['url']
 
@@ -223,7 +220,8 @@ def handle_programs(program_items, category_id=None):
             item.art['thumb'] = item.art['landscape'] = program_image
             item.art['fanart'] = program_background
             item.set_callback(list_program_categories,
-                              program_slug=program_slug)
+                              program_slug=program_slug,
+                              program_id=program_id)
             item_post_treatment(item)
             yield item
 
@@ -251,7 +249,6 @@ def handle_videos(video_items):
         item.info['plot'] = video_plot
         item.info['duration'] = video_duration
         item.info.date(video_datas['date'].split('T')[0], '%Y-%m-%d')
-
         item.set_callback(get_video_url,
                           video_id=video_id)
         item_post_treatment(item, is_playable=True, is_downloadable=False)
@@ -265,7 +262,6 @@ def list_programs(plugin, item_id, category_id, **kwargs):
     - Les feux de l'amour
     - ...
     """
-
     params = {
         'id': '483ce0f',
         'variables': '{"context":{"persona":"PERSONA_2","application":"WEB","device":"DESKTOP","os":"WINDOWS"},"filter":{"channel":"%s"},"offset":0,"limit":500}' % item_id
@@ -281,7 +277,7 @@ def list_programs(plugin, item_id, category_id, **kwargs):
 
 
 @Route.register
-def list_program_categories(plugin, program_slug, **kwargs):
+def list_program_categories(plugin, program_slug, program_id, **kwargs):
     """
     Build program categories
     - Toutes les vidéos
@@ -294,14 +290,109 @@ def list_program_categories(plugin, program_slug, **kwargs):
         item.label = video_type_title
         item.set_callback(list_videos,
                           program_slug=program_slug,
+                          program_id=program_id,
                           video_type_value=video_type_value,
                           offset='0')
         item_post_treatment(item)
         yield item
 
 
+def list_seasons(program_slug, program_id):
+    headers = {
+        'content-type': 'application/json',
+        'referer': 'https://www.tf1.fr/programmes-tv',
+        'User-Agent': web_utils.get_random_windows_ua()
+    }
+    params = {
+        'id': '379fec96081ab1a2',
+        'variables': '{"programId":"%s"}' % program_id
+    }
+    # Check valid url and id
+    response = urlquick.get(URL_SMARTTV, params=params, headers=headers, max_age=-1, raise_for_status=False)
+    if response.status_code != 200:
+        return
+    json_parser = response.json()
+    checked_ep = False
+    for data in json_parser['data']['programById']['editorialSections']:
+        if data.get('lists'):
+            program_desc = json_parser['data']['programById']['decoration']['description']
+            program_image = json_parser['data']['programById']['decoration']['image']['sourcesWithScales'][0]['url']
+            for array in data['lists']:
+                lists_id = array.get('id')
+                lists_total = array.get('total')
+                lists_label = array.get('decoration').get('label')
+
+                # Check valid url and id. Only first pass
+                if not checked_ep:
+                    checked_ep = True
+                    params_ep = {
+                        'id': '76bc5c35edb166fa637a6c6686cb05c7140d2a8b',
+                        'variables': '{"programSlug":"%s","listId":"%s","offset":0,"limit":%s}' % (program_slug, lists_id, lists_total)
+                    }
+                    response_ep = urlquick.get(URL_API, params=params_ep, headers=headers, max_age=-1, raise_for_status=False)
+                    if response_ep.status_code != 200:
+                        return
+
+                item = Listitem()
+                item.label = lists_label
+                item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = program_image
+                item.info['plot'] = program_desc
+                item.set_callback(list_episodes,
+                                  program_slug=program_slug,
+                                  lists_id=lists_id,
+                                  lists_total=lists_total)
+                item_post_treatment(item)
+                yield item
+            break
+
+
 @Route.register
-def list_videos(plugin, program_slug, video_type_value, offset, **kwargs):
+def list_episodes(plugin, program_slug, lists_id, lists_total, **kwargs):
+    headers = {
+        'content-type': 'application/json',
+        'referer': 'https://www.tf1.fr/programmes-tv',
+        'User-Agent': web_utils.get_random_windows_ua()
+    }
+    params = {
+        'id': '76bc5c35edb166fa637a6c6686cb05c7140d2a8b',
+        'variables': '{"programSlug":"%s","listId":"%s","offset":0,"limit":%s}' % (program_slug, lists_id, lists_total)
+    }
+    json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
+
+    for data in json_parser['data']['programBySlug']['editorialSections']:
+        for video_datas in data['listById']['items']:
+            video_title = video_datas['video']['decoration']['label']
+            try:
+                video_image = video_datas['image']['sourcesWithScales'][0]['url']
+            except Exception:
+                video_image = ''
+            video_plot = video_datas['video']['decoration']['summary']
+            video_duration = video_datas['video']['playingInfos']['duration']
+            video_id = video_datas['video']['id']
+
+            item = Listitem()
+            item.label = video_title
+            item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = video_image
+            item.info['plot'] = video_plot
+            item.info['duration'] = video_duration
+            # item.info.date(video_datas['date'].split('T')[0], '%Y-%m-%d')
+            item.set_callback(get_video_url,
+                              video_id=video_id)
+            item_post_treatment(item, is_playable=True, is_downloadable=False)
+            yield item
+
+
+@Route.register
+def list_videos(plugin, program_slug, program_id, video_type_value, offset, **kwargs):
+    is_seasons = False
+    if video_type_value == 'REPLAY':
+        for video_item in list_seasons(program_slug=program_slug, program_id=program_id):
+            is_seasons = True
+            yield video_item
+
+    if is_seasons:
+        return
+
     plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
     params = {
         'id': 'a6f9cf0e',
@@ -328,6 +419,7 @@ def list_videos(plugin, program_slug, video_type_value, offset, **kwargs):
 
     if len(video_items) == 20:
         yield Listitem.next_page(program_slug=program_slug,
+                                 program_id=program_id,
                                  video_type_value=video_type_value,
                                  offset=str(int(offset) + 1))
 
