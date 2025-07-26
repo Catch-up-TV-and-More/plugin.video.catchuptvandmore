@@ -15,6 +15,7 @@ from builtins import str
 
 import inputstreamhelper
 import urlquick
+
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
@@ -97,6 +98,9 @@ URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content
 # Referer, Token
 
 URL_LIVE_JSON = 'https://android.middleware.6play.fr/6play/v2/platforms/m6group_androidmob/services/6play/live'
+
+# Search
+URL_SEARCH = 'https://nhacvivxxk-dsn.algolia.net/1/indexes/*/queries'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 M6_HEADERS = {
@@ -196,6 +200,58 @@ def sixplay_root(plugin, **kwargs):
     item.set_callback(list_all_programs, 'm6')
     item_post_treatment(item)
     yield item
+
+    # Search feature
+    item = Listitem.search(search)
+    item_post_treatment(item)
+    yield item
+
+
+@Route.register
+def search(plugin, search_query, **kwargs):
+    if search_query is None or len(search_query) == 0:
+        return False
+
+    params = {
+        'x-algolia-agent': 'Algolia for JavaScript (4.24.0); Browser',
+    }
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'x-algolia-api-key': '6ef59fc6d78ac129339ab9c35edd41fa',
+        'x-algolia-application-id': 'NHACVIVXXK',
+    }
+    json_data = {
+        'requests': [
+            {
+                'indexName': 'rtlmutu_prod_bedrock_layout_items_v2_m6web_main',
+                'query': '%s' % search_query,
+                'params': 'clickAnalytics=true&hitsPerPage=50&facetFilters=[["metadata.item_type:program"], ["metadata.platforms_assets:m6group_web"]]',
+            }
+        ]
+    }
+    resp = urlquick.post(URL_SEARCH, headers=headers, params=params, json=json_data, max_age=-1)
+    json_parser = resp.json()
+
+    at_least_one_item = False
+    for data in json_parser['results']:
+        if len(data.get('hits')) > 0:
+            at_least_one_item = True
+            for array in data['hits']:
+                program_id = str(array['content']['id'])
+                program_title = array['item']['itemContent']['title']
+
+                item = Listitem()
+                item.label = program_title
+                item.set_callback(list_program_categories,
+                                  item_id='categories',
+                                  program_id=program_id)
+                item_post_treatment(item)
+                yield item
+
+    if not at_least_one_item:
+        plugin.notify(plugin.localize(30718), '')
+        yield False
 
 
 @Route.register
