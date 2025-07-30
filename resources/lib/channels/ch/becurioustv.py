@@ -84,13 +84,13 @@ def get_video_url(plugin,
 
     # Case Youtube
     if 'youtube' in stream_datas:
-        video_id = re.compile('www.youtube.com/embed/(.*?)[\?\"\&]').findall(
+        video_id = re.compile(r'www.youtube.com/embed/(.*?)[\?\"\&]').findall(
             stream_datas)[0]
         return resolver_proxy.get_stream_youtube(plugin, video_id,
                                                  download_mode)
     # Case Vimeo
     if 'vimeo' in stream_datas:
-        video_id = re.compile('player.vimeo.com/video/(.*?)[\?\"]').findall(
+        video_id = re.compile(r'player.vimeo.com/video/(.*?)[\?\"]').findall(
             stream_datas)[0]
         return resolver_proxy.get_stream_vimeo(plugin, video_id, download_mode)
 

@@ -46,7 +46,7 @@ URL_VIDEO_STREAM = 'https://movie-s.nhk.or.jp/ws/ws_program/api/%s/apiv/5/mode/j
 def get_api_key(item_id):
     # Get apikey
     resp = urlquick.get(URL_COMMONJS_NHK % item_id)
-    list_apikey = re.compile('nw_api_key\|\|"(.+?)"').findall(resp.text)
+    list_apikey = re.compile(r'nw_api_key\|\|"(.+?)"').findall(resp.text)
     return list_apikey[0]
 
 

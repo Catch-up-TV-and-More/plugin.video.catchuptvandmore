@@ -27,7 +27,7 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE[item_id])
 
     if item_id in ['dmax', 'tlc']:
-        video_url = re.compile('daionUrl : \'(.*?)\?.*?\'').findall(resp.text)[0]
+        video_url = re.compile(r'daionUrl : \'(.*?)\?.*?\'').findall(resp.text)[0]
         video_url = video_url.replace('dogus', 'dogus-live')
 
     elif item_id == 'eurostar':

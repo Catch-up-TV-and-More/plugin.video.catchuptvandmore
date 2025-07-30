@@ -266,7 +266,7 @@ def get_video_url(plugin,
                         url = stream.get('data-source')
             # Cas Yt
             else:
-                video_id = re.compile('youtube.com/embed/(.*?)\?').findall(
+                video_id = re.compile(r'youtube.com/embed/(.*?)\?').findall(
                     videos_html.text)[0]
                 url = resolver_proxy.get_stream_youtube(
                     plugin, video_id, False)

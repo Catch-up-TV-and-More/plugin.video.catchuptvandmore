@@ -66,7 +66,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
     url_player = resp.parse().find('.//iframe').get('src')
-    live_id = re.compile('v=(.*?)\&').findall(url_player)[0]
+    live_id = re.compile(r'v=(.*?)\&').findall(url_player)[0]
 
     datas = {
         'action': 'video_info',

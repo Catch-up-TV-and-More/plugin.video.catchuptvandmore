@@ -28,10 +28,10 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(video_url)
 
     if item_id == "tv8":
-        tokens = re.compile('(\?.*)').findall(resp.text)[0]
+        tokens = re.compile(r'(\?.*)').findall(resp.text)[0]
         video_url = live_url + "tv8hd.m3u8" + tokens
     elif item_id == "tv8int":
-        tokens = re.compile('(\?.*)').findall(resp.text)[0]
+        tokens = re.compile(r'(\?.*)').findall(resp.text)[0]
         video_url = live_url + "tv8int.m3u8" + tokens
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url, manifest_type="hls")

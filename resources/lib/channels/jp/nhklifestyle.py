@@ -113,10 +113,10 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(video_url)
-    if re.compile('player.php\?v=(.*?)&').findall(resp.text):
-        video_id = re.compile('player.php\?v=(.*?)&').findall(resp.text)[0]
+    if re.compile(r'player.php\?v=(.*?)&').findall(resp.text):
+        video_id = re.compile(r'player.php\?v=(.*?)&').findall(resp.text)[0]
     else:
-        video_id = re.compile('movie-s.nhk.or.jp/v/(.*?)\?').findall(
+        video_id = re.compile(r'movie-s.nhk.or.jp/v/(.*?)\?').findall(
             resp.text)[0]
     resp2 = urlquick.get(URL_API_KEY_NHK % video_id)
     api_key_value = re.compile('data-de-api-key="(.*?)"').findall(

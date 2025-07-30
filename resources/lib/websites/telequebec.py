@@ -134,7 +134,7 @@ def get_video_url(plugin, source, download_mode=False, **kwargs):
     resp = urlquick.get(VODPLAYER, headers=GENERIC_HEADERS, max_age=-1)
     vodplayer = resp.text
 
-    data_account = re.compile('https://players.brightcove.net\/(.*?)\/').findall(vodplayer)[0]
-    data_player = re.compile('this\;\_t\(r\,\"(.*?)\"').findall(vodplayer)[0]
+    data_account = re.compile(r'https://players.brightcove.net\/(.*?)\/').findall(vodplayer)[0]
+    data_player = re.compile(r'this\;\_t\(r\,\"(.*?)\"').findall(vodplayer)[0]
 
     return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, download_mode=download_mode)

@@ -33,7 +33,7 @@ def get_live_url(plugin, item_id, **kwargs):
     }
 
     client = urlquick.get(URL_ROOT % shortcut[item_id], headers=GENERIC_HEADERS, max_age=-1)
-    client_id = re.compile('client_id\=(.*?)\&').findall(client.text)[0]
+    client_id = re.compile(r'client_id\=(.*?)\&').findall(client.text)[0]
 
     params = {
         'callback': 'ava_',

@@ -25,6 +25,6 @@ GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE % item_id, headers=GENERIC_HEADERS, max_age=-1)
-    video_url = re.compile(r'\"streamUrl\"\:\"(.*?)\"').findall(resp.text)[0].replace('\/', '/')
+    video_url = re.compile(r'\"streamUrl\"\:\"(.*?)\"').findall(resp.text)[0].replace(r'\/', '/')
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url)

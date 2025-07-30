@@ -38,5 +38,5 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(source, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.text
-    video_url = re.compile("source\: \'(.*?)\'").findall(root)[0]
+    video_url = re.compile(r"source\: \'(.*?)\'").findall(root)[0]
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url)

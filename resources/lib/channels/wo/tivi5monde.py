@@ -167,7 +167,7 @@ def get_video_url(plugin,
     resp = urlquick.get(video_url,
                         headers={'User-Agent': web_utils.get_random_ua()},
                         max_age=-1)
-    stream_url = re.compile('contentUrl\"\: \"(.*?)\"').findall(resp.text)[0]
+    stream_url = re.compile(r'contentUrl\"\: \"(.*?)\"').findall(resp.text)[0]
 
     if download_mode:
         return download.download_video(stream_url)

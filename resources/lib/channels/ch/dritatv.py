@@ -22,7 +22,7 @@ url_constructor = urljoin_partial(URL_ROOT)
 URL_LIVE = url_constructor('/live-tv/')
 
 #  {"dataProvider":{"source":[{"url":"https:\/\/protokolldns.xyz\/dritaweb5587989\/index.m3u8"}
-ASSET_URL_PATTERN = re.compile('{"dataProvider":\\{"source":\\[\\{"url":"(.*?)"}')
+ASSET_URL_PATTERN = re.compile(r'{"dataProvider":\\{"source":\\[\\{"url":"(.*?)"}')
 
 
 @Route.register

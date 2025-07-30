@@ -22,5 +22,5 @@ URL_LIVE = URL_ROOT + '/canli-yayin'
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE)
-    live_id = re.compile('src=\"https://www.dailymotion.com/embed/video/(.*?)\?.*?\"').findall(resp.text)[0].split('?')[0]
+    live_id = re.compile(r'src=\"https://www.dailymotion.com/embed/video/(.*?)\?.*?\"').findall(resp.text)[0].split('?')[0]
     return resolver_proxy.get_stream_dailymotion(plugin, live_id, False)

@@ -80,7 +80,7 @@ def get_video_url(plugin, url, download_mode=False, **kwargs):
     root = resp.parse()
 
     complete_url = root.find('.//iframe[@itemprop="video"]').get('src')
-    video_id = re.compile('embed\/(.*?)\?rel').findall(complete_url)[0]
+    video_id = re.compile(r'embed\/(.*?)\?rel').findall(complete_url)[0]
 
     return resolver_proxy.get_stream_youtube(plugin, video_id, download_mode)
 
@@ -89,6 +89,6 @@ def get_video_url(plugin, url, download_mode=False, **kwargs):
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, headers={'User-Agent': web_utils.get_random_ua()}, max_age=-1)
-    video_url = re.compile('source src\=\"(.*?)\"').findall(resp.text)[0]
+    video_url = re.compile(r'source src\=\"(.*?)\"').findall(resp.text)[0]
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url)

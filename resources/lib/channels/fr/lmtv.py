@@ -24,6 +24,6 @@ GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_ROOT, headers=GENERIC_HEADERS, max_age=-1)
     twitch_url = resp.parse().find('.//iframe').get('src')
-    video_id = re.compile('channel=(.*?)\&').findall(twitch_url)[0]
+    video_id = re.compile(r'channel=(.*?)\&').findall(twitch_url)[0]
 
     return resolver_proxy.get_stream_twitch(plugin, video_id)

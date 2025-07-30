@@ -32,7 +32,7 @@ def list_categories(plugin, item_id, **kwargs):
 
     for category_datas in root.iterfind(".//h2"):
         category_title = category_datas.find('.//a').get('title').replace('ver todos los programas de ', '')
-        category_url = category_datas.find('.//a').get('href').replace('/1/', '/\%/')
+        category_url = category_datas.find('.//a').get('href').replace('/1/', r'/\%/')
 
         item = Listitem()
         item.label = category_title

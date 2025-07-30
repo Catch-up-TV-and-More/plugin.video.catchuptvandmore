@@ -357,7 +357,7 @@ def get_stream_vimeo(plugin,
             max_age=-1)
     json_vimeo = json.loads(
         '{' +
-        re.compile('var config = \{(.*?)};').findall(html_vimeo.text)[0] +
+        re.compile(r'var config = \{(.*?)};').findall(html_vimeo.text)[0] +
         '}')
     hls_json = json_vimeo["request"]["files"]["hls"]
     default_cdn = hls_json["default_cdn"]
