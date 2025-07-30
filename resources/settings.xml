@@ -148,6 +148,10 @@
             <setting label="30264" type="text" id="uk.channel4.login" default=""/>
             <setting label="30265" type="text" id="uk.channel4.password" option="hidden" default=""/>
 
+            <setting label="30266" type="action" action="RunPlugin(plugin://$ID/resources/lib/channels/uk/my5/sign_in_account)" option="close"/>
+            <setting label="30267" type="action" action="RunPlugin(plugin://$ID/resources/lib/channels/uk/my5/sign_out_account)" option="close"/>
+            <setting label="" type="text" id="uk.chan5.session-token" default="" visible="false"/>
+
             <setting label="30250" type="text" id="uktvplay.login" default=""/>
             <setting label="30251" type="text" id="uktvplay.password" option="hidden" default=""/>
 

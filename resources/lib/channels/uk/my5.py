@@ -13,7 +13,7 @@ import time
 
 import xbmcplugin
 
-from codequick import Listitem, Resolver, Route
+from codequick import Listitem, Resolver, Route, Script, utils
 
 try:
     import urllib.parse
@@ -46,6 +46,14 @@ ONEOFF = CORONA_URL + 'shows/%s/episodes/next.json'
 LIC_BASE = 'https://cassie.channel5.com/api/v2'
 LICC_URL = LIC_BASE + '/%s/my5desktopng/%s.json?timestamp=%s'
 KEYURL = "https://player.akamaized.net/html5player/core/html5-c5-player.js"
+
+TXT_ENTER_UNAME = 30733
+TXT_ENTER_PASSW = 30734
+TXT_LOGIN_SUCCESS = 30735
+TXT_LOGOUT_SUCCESS = 30736
+TXT_INFORMATION = 30600
+TXT_ACCOUNT_REQUIRED = 30604
+PUBLIC_SITE = 'www.channel5.com'
 
 # Connect and receive timeouts for HTTP requests.
 REQ_TIMEOUT = (3.5, 7)
@@ -515,3 +523,163 @@ def availability(end_time):
         hours_available = int(t_available / 3600)
         return '[COLOR orange]Only {} hour{} available.[/COLOR]'.format(
             hours_available, 's' if hours_available != 1 else '')
+
+
+# -----------------------------------------------------------------------------
+#           CHANNEL 5 ACCOUNT
+# -----------------------------------------------------------------------------
+
+
+def get_session_token(msg_on_fail=True):
+    """Return the locally stored session token, which is needed to request user-related
+    data from channel5.
+
+    Args:
+        msg_on_fail (bool):
+            When `True` the user is asked to sign in when no token is available.
+            When False the function fails silently.
+    Returns:
+        str
+    """
+    sess_token = Script.setting.get_string('uk.chan5.session-token')
+    if sess_token:
+        return sess_token
+    else:
+        Script.log("[UK-Chan5] No session token in settings, user has to log in")
+        if not msg_on_fail:
+            return None
+        import xbmcgui
+        xbmcgui.Dialog().ok(
+            Script.localize(TXT_INFORMATION),
+            Script.localize(TXT_ACCOUNT_REQUIRED) % ('Channel5 (UK)', ('%s' % PUBLIC_SITE)))
+        return None
+
+
+def enter_credentials(uname, passw):
+    """Open the keyboard and ask the user to enter his username and password."""
+    new_username = utils.keyboard(Script.localize(TXT_ENTER_UNAME), uname or '')
+    if new_username:
+        new_passw = utils.keyboard(Script.localize(TXT_ENTER_PASSW), passw or '', hidden=True)
+    else:
+        new_passw = ''
+    return new_username, new_passw
+
+
+def aws_authenticate(req_data):
+    """Perform an authentication request and return a dict of tokens.
+
+    Depending on req_data, does either a new log in with a username and password,
+    or a token refresh.
+
+    """
+    try:
+        headers = {
+            "User-Agent": web_utils.get_random_ua(),
+            'x-amz-target': 'AWSCognitoIdentityProviderService.InitiateAuth',
+            'content-type': 'application/x-amz-json-1.1',
+            'cache-control': 'max-age=0'
+        }
+        # Post credentials
+        resp = urlquick.post(
+            'https://cognito-idp.eu-west-2.amazonaws.com',
+            headers=headers,
+            json=req_data,
+            timeout=REQ_TIMEOUT,
+            max_age=-1
+        )
+        resp.raise_for_status()
+        data = json.loads(resp.content)
+        return data['AuthenticationResult']
+    except urlquick.HTTPError as e:
+        Script.log("[UK-Chan5] Failed to authenticate: %r - %s",
+                   (e, e.response.content), lvl=Script.ERROR)
+        try:
+            resp_data = e.response.json()
+            msg = resp_data.get('message') or resp_data['__type']
+            Script.log("[UK-Chan5] Authentication error msg '%s' from error data '%s'",
+                       (msg, resp_data), Script.ERROR)
+        except Exception as err:
+            Script.log("[UK-Chan5] Failed to parse error: %r",
+                       (err, ), Script.ERROR)
+            raise e
+        raise urlquick.HTTPError(msg)
+
+
+def request_session_token(id_token):
+    """Request a session token from channel5.
+    This token is needed to request authenticated data from channel5.
+
+    """
+    headers = GENERIC_HEADERS
+    resp = urlquick.post(
+        'https://userservice-api.channel5.com/user/validateCognitoToken',
+        headers=headers,
+        json={'cognitoIdToken': id_token},
+        timeout=REQ_TIMEOUT,
+        max_age=-1
+    )
+    resp.raise_for_status()
+    data = json.loads(resp.content)
+    sess_token = data['sessionToken']
+    return sess_token
+
+
+def perform_signin_request(uname, passw):
+    """Sign in to a Channel5 account with `uname` and `passw`.
+
+    First obtain a set of tokens from AWS and then use the IdToken to
+    get a session token from channel5.
+
+    """
+    Script.log("[UK-Chan5] Trying to sign in to account", lvl=Script.INFO)
+    req_data = {
+        "AuthFlow": "USER_PASSWORD_AUTH",
+        "ClientId": "10ap8l6jp0vhreaac79c3qr1lq",
+        "AuthParameters": {"USERNAME": uname, "PASSWORD": passw},
+        "ClientMetadata": {}
+    }
+
+    auth_result = aws_authenticate(req_data)
+    sess_token = request_session_token(auth_result['IdToken'])
+    # Store the session token for later use.
+    Script.setting['uk.chan5.session-token'] = sess_token
+    Script.log("[UK-Chan5] Sign in successful.", lvl=Script.INFO)
+    return True
+
+
+@Script.register
+def sign_in_account(addon):
+    """Entry point for the action 'Log in to channel5 account' in settings.
+
+    Ask the user to enter his username and password, try to log in and inform the
+    user of success or failure. On failure, keep asking for username or password
+    until log in succeeds, or the user cancels the keyboard.
+
+    """
+    import xbmcgui
+    import xbmc
+
+    uname = None
+    passw = None
+
+    while True:
+        uname, passw = enter_credentials(uname, passw)
+        if not all((uname, passw)):
+            addon.log("[UK-Chan5] Login canceled by user", lvl=Script.INFO)
+            return
+        try:
+            perform_signin_request(uname, passw)
+            xbmcgui.Dialog().ok('Channel5', Script.localize(TXT_LOGIN_SUCCESS))
+            xbmc.executebuiltin('Container.Refresh')
+            return
+        except urlquick.HTTPError as e:
+            addon.notify("Error", str(e), display_time=7000)
+
+
+@Script.register
+def sign_out_account(_):
+    """Entry point for the action 'Log out from channel5 account' in settings."""
+    import xbmcgui
+
+    Script.setting['uk.chan5.session-token'] = ''
+    xbmcgui.Dialog().ok('Channel5', Script.localize(TXT_LOGOUT_SUCCESS))

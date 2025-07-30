@@ -598,6 +598,14 @@ msgctxt "#30265"
 msgid "Channel 4 Password"
 msgstr ""
 
+msgctxt "#30266"
+msgid "Log in to Channel5"
+msgstr ""
+
+msgctxt "#30267"
+msgid "Log out of Channel5"
+msgstr ""
+
 
 # TV integration (from 30270 to 30289)
 
@@ -991,6 +999,22 @@ msgstr ""
 
 msgctxt "#30732"
 msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
+msgstr ""
+
+msgctxt "#30733"
+msgid "Enter email"
+msgstr ""
+
+msgctxt "#30734"
+msgid "Enter password"
+msgstr ""
+
+msgctxt "#30735"
+msgid "Logged in successfully"
+msgstr ""
+
+msgctxt "#30736"
+msgid "Logged out successfully"
 msgstr ""
 
 
