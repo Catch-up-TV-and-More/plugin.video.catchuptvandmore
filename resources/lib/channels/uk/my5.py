@@ -207,16 +207,12 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
         elif root['filters']['type'] == 'Show':
             ids = root['filters']['ids']
             w_params = {
-                'limit': str(item_number),
+                'limit': len(ids),
                 'offset': '0',
                 'platform': 'my5desktop',
-                'friendly': '1'
+                'friendly': '1',
+                'ids[]': ids
             }
-            for i in range(item_number):
-                try:
-                    w_params.update({'ids[]': ids[i]})
-                except (IndexError, ValueError):
-                    pass
             resp = urlquick.get(URL_SHOWS, headers=GENERIC_HEADERS, params=w_params, max_age=-1)
             root = json.loads(resp.text)
             for watchable in root['shows']:
@@ -233,16 +229,12 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
         elif root['filters']['type'] == 'Watchable':
             ids = root['filters']['ids']
             w_params = {
-                'limit': str(item_number),
+                'limit': len(ids),
                 'offset': '0',
                 'platform': 'my5desktop',
-                'friendly': '1'
+                'friendly': '1',
+                'ids[]': ids
             }
-            for i in range(item_number):
-                try:
-                    w_params.update({'ids[]': ids[i]})
-                except (IndexError, ValueError):
-                    pass
             resp = urlquick.get(URL_WATCHABLE, headers=GENERIC_HEADERS, params=w_params, max_age=-1)
             root = json.loads(resp.text)
 
