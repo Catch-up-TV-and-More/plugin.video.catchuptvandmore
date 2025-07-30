@@ -283,39 +283,82 @@ def get_login_token(plugin, **kwargs):
         'username': login,
         'password': password,
     }
-    response = urlquick.post(URL_SSO_LOGIN, headers=GENERIC_HEADERS, json=json_data, timeout=10, max_age=-1)
-    json_parser = response.json()
-    if json_parser['httpStatusCode'] == 400:
+    
+    try:
+        response = urlquick.post(URL_SSO_LOGIN, headers=GENERIC_HEADERS, json=json_data, timeout=10, max_age=-1)
+        
+        if response.status_code != 200:
+            xbmcgui.Dialog().ok(
+                plugin.localize(30600),
+                f'RTL Play login failed: HTTP {response.status_code}. Please check your internet connection.')
+            return None
+            
+        json_parser = response.json()
+        
+        if json_parser.get('httpStatusCode') == 400:
+            xbmcgui.Dialog().ok(
+                plugin.localize(30600),
+                'RTL Play login failed: Invalid credentials. Please check your username and password in addon settings.')
+            return None
+            
+        if 'data' not in json_parser or 'userAccount' not in json_parser['data']:
+            xbmcgui.Dialog().ok(
+                plugin.localize(30600),
+                'RTL Play login failed: Unexpected response format. The service may have changed.')
+            return None
+
+        sso_token = json_parser['data']['userAccount']['session']['encryptedToken']
+        sso_cookies = response.cookies.get_dict()
+
+    except Exception as e:
         xbmcgui.Dialog().ok(
             plugin.localize(30600),
-            plugin.localize(30604) % ('RTLPlay (BE)', ('%s' % PUBLIC_SITE)))
+            f'RTL Play login error: {str(e)}. Please try again later.')
         return None
 
-    sso_token = json_parser['data']['userAccount']['session']['encryptedToken']
-    sso_cookies = response.cookies.get_dict()
-
     # SSO auth
-    params = {
-        'redirectUrl': sso_url[1].replace('https://sso.rtl.be', ''),
-        'token': sso_token,
-    }
-    response = urlquick.get(URL_SSO_AUTH, params=params, cookies=sso_cookies, headers=GENERIC_HEADERS, timeout=REQUESTS_TIMEOUT, max_age=-1)
-    sso_code = re.findall(r'name=\"code\" value=\"(.*)\"', response.content.decode())
-    sso_state = re.findall(r'name=\"state\" value=\"(.*)\"', response.content.decode())
+    try:
+        params = {
+            'redirectUrl': sso_url[1].replace('https://sso.rtl.be', '') if len(sso_url) > 1 else '',
+            'token': sso_token,
+        }
+        response = urlquick.get(URL_SSO_AUTH, params=params, cookies=sso_cookies, headers=GENERIC_HEADERS, timeout=REQUESTS_TIMEOUT, max_age=-1)
+        
+        if response.status_code != 200:
+            xbmcgui.Dialog().ok(
+                plugin.localize(30600),
+                f'RTL Play SSO authentication failed: HTTP {response.status_code}')
+            return None
+            
+        response_content = response.content.decode()
+        sso_code = re.findall(r'name=\"code\" value=\"(.*)\"', response_content)
+        sso_state = re.findall(r'name=\"state\" value=\"(.*)\"', response_content)
+        
+        if not sso_code or not sso_state:
+            xbmcgui.Dialog().ok(
+                plugin.localize(30600),
+                'RTL Play SSO authentication failed: Could not extract auth codes')
+            return None
 
-    # RTLPlay callback
-    cookies = {
-        'lfvp_device_id': lfvp_device_id,
-        'lfvp_disabled_storefronts': lfvp_disabled_storefronts,
-        'ak_bmsc': ak_bmsc,
-        'lfvp_auth.redirect_uri': BASE_URL,
-        'lfvp_auth.state': sso_state[0],
-    }
-    data = {
-        'code': sso_code[0],
-        'state': sso_state[0],
-        'iss': 'https://sso.rtl.be/oidc/',
-    }
+        # RTLPlay callback
+        cookies = {
+            'lfvp_device_id': lfvp_device_id,
+            'lfvp_disabled_storefronts': lfvp_disabled_storefronts,
+            'ak_bmsc': ak_bmsc,
+            'lfvp_auth.redirect_uri': BASE_URL,
+            'lfvp_auth.state': sso_state[0],
+        }
+        data = {
+            'code': sso_code[0],
+            'state': sso_state[0],
+            'iss': 'https://sso.rtl.be/oidc/',
+        }
+        
+    except Exception as e:
+        xbmcgui.Dialog().ok(
+            plugin.localize(30600),
+            f'RTL Play SSO error: {str(e)}')
+        return None
     response = requests.post(BASE_URL + '/login-callback', cookies=cookies, headers=GENERIC_HEADERS, data=data, allow_redirects=True, timeout=REQUESTS_TIMEOUT)
     login_cookie = []
     if response.history:
@@ -362,92 +405,200 @@ def get_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
 def get_final_video_url(plugin, item_id, video_url):
     login_token = get_login_token(plugin)
     if login_token is None:
-        return False
+        return None, None, None
 
     is_live = "/direct/" in video_url and "/player/" not in video_url
-    response = urlquick.get(video_url, headers=RTLPLAY_HEADERS, cookies=login_token, max_age=-1)
+    
+    # Use generic headers for the initial request to avoid detection
+    headers = GENERIC_HEADERS.copy()
+    response = urlquick.get(video_url, headers=headers, cookies=login_token, max_age=-1)
+    
+    # Check if we're redirected to authentication
+    if response.status_code in [302, 303, 307, 308] or 'sso.rtl.be' in response.url:
+        plugin.notify('ERROR', 'RTL Play authentication required. Please configure your login credentials in addon settings.')
+        return None, None, None
+    
     if response.status_code != 200:
         return None, None, None
 
-    response = response.content.decode()
-    pattern = re.search(r'apiKey: "([^"]*)"', response)
-    if pattern is not None:
-        api_key = pattern.group(1)
-    else:
-        api_key = None
-
-    pattern = re.search(r'token: "([^"]*)"', response)
-    if pattern is not None:
-        bearer_token = pattern.group(1)
-    else:
-        bearer_token = None
-
-    if is_live:
-        for r1, r2 in [(r"playerData\s*=", "assetId"), (r"channel\s*:", "id")]:
-            pattern_r1 = re.search(r1 + "[^{}]+{([^{}]+)}", response)
-            if pattern_r1 is not None:
-                content_id = pattern_r1.group(1)
-                pattern_r2 = re.search(r2 + "[^\"']+[\"']([^\"']+)[\"']", content_id)
-                if pattern_r2 is not None:
-                    content_id = pattern_r2.group(1)
-                    assert len(content_id) > 0
-                    break
-                else:
-                    content_id = None
-            else:
-                content_id = None
-    else:
-        content_id = re.search(r"/player/([^/?]*)", video_url).group(1)
-
-    if bearer_token is None or api_key is None:
-        return None, None, None
-
-    headers_cfg = RTLPLAY_HEADERS
-    headers_cfg.update({'x-api-key': api_key, })
-    headers_cfg.update({'popcorn-sdk-version': POPCORN_SDK, })
-    headers_cfg.update({'authorization': 'Bearer ' + bearer_token, })
-    params_cfg = {'startPosition': '0.0', 'autoPlay': 'true'}
-    # json_cfg = {'deviceType': 'web', 'zone': 'rtlplay'}
-    json_cfg = {"deviceType": "android-phone", "zone": "rtlplay"}
-    response = urlquick.post(URL_CONFIG % content_id,
-                             params=params_cfg,
-                             headers=headers_cfg,
-                             json=json_cfg,
-                             timeout=REQUESTS_TIMEOUT,
-                             max_age=-1)
-    if response.status_code == 403:
-        return None, None, None
-
-    response = json.loads(response.content.decode())
-
-    if response.get("code", None) == 103 and "available" in response.get("type", "").lower():
-        return None, None, None
-    if response.get("code", None) == 104 and "found" in response.get("type", "").lower():
-        return None, None, None
-
-    response = response["video"]
-    manifest = None
-    lic_token = None
-    license_url = None
-    for stream in response["streams"]:
-        if stream["type"] != "dash" or ".mpd" not in stream["url"]:
-            continue
-        manifest = stream["url"]
-
-        drm = stream.get("drm", None)
-        if drm is None:
+    response_text = response.content.decode()
+    
+    # Try multiple patterns for API key extraction (updated for new site structure)
+    api_key = None
+    api_key_patterns = [
+        r'apiKey["\']?\s*:\s*["\']([^"\']+)["\']',
+        r'"apiKey"\s*:\s*"([^"]+)"',
+        r'apiKey\s*=\s*["\']([^"\']+)["\']',
+        r'api[_-]?key["\']?\s*:\s*["\']([^"\']+)["\']',
+        r'x-api-key["\']?\s*:\s*["\']([^"\']+)["\']'
+    ]
+    
+    for pattern in api_key_patterns:
+        match = re.search(pattern, response_text, re.IGNORECASE)
+        if match:
+            api_key = match.group(1)
+            break
+    
+    # Try multiple patterns for token extraction
+    bearer_token = None
+    token_patterns = [
+        r'token["\']?\s*:\s*["\']([^"\']+)["\']',
+        r'"token"\s*:\s*"([^"]+)"',
+        r'bearer[_-]?token["\']?\s*:\s*["\']([^"\']+)["\']',
+        r'authorization["\']?\s*:\s*["\']Bearer\s+([^"\']+)["\']',
+        r'access[_-]?token["\']?\s*:\s*["\']([^"\']+)["\']'
+    ]
+    
+    for pattern in token_patterns:
+        match = re.search(pattern, response_text, re.IGNORECASE)
+        if match:
+            bearer_token = match.group(1)
             break
 
-        for k in drm:
-            if "widevine" in k.lower():
-                drm = drm[k]
+    # Extract content ID with updated patterns
+    content_id = None
+    if is_live:
+        # Try multiple approaches for live content ID extraction
+        content_id_patterns = [
+            (r"playerData\s*=", r"assetId[\"']?\s*:\s*[\"']([^\"']+)[\"']"),
+            (r"channel\s*:", r"id[\"']?\s*:\s*[\"']([^\"']+)[\"']"),
+            (r"data-content-id\s*=\s*[\"']([^\"']+)[\"']", None),
+            (r"contentId[\"']?\s*:\s*[\"']([^\"']+)[\"']", None),
+            (r"assetId[\"']?\s*:\s*[\"']([^\"']+)[\"']", None)
+        ]
+        
+        for pattern_pair in content_id_patterns:
+            if pattern_pair[1] is None:
+                # Direct pattern
+                match = re.search(pattern_pair[0], response_text, re.IGNORECASE)
+                if match:
+                    content_id = match.group(1)
+                    break
+            else:
+                # Two-step pattern (find section, then extract ID)
+                section_match = re.search(pattern_pair[0] + "[^{}]+{([^{}]+)}", response_text)
+                if section_match:
+                    section_content = section_match.group(1)
+                    id_match = re.search(pattern_pair[1], section_content)
+                    if id_match:
+                        content_id = id_match.group(1)
+                        if len(content_id) > 0:
+                            break
+        
+        # Fallback: try to extract from URL or use channel mapping
+        if not content_id and item_id in LIVE_CHANNEL:
+            content_id = LIVE_CHANNEL[item_id]
+    else:
+        # For non-live content, extract from URL
+        match = re.search(r"/player/([^/?]*)", video_url)
+        if match:
+            content_id = match.group(1)
+
+    # Validate that we have the required data
+    if not content_id:
+        plugin.notify('ERROR', 'Could not extract content ID from RTL Play page')
+        return None, None, None
+        
+    if not bearer_token or not api_key:
+        # Try alternative approach: use the LFVP API directly
+        return get_stream_via_lfvp_api(plugin, item_id, content_id)
+
+    # Continue with original approach if we have all required data
+    headers_cfg = RTLPLAY_HEADERS.copy()
+    headers_cfg.update({'x-api-key': api_key})
+    headers_cfg.update({'popcorn-sdk-version': POPCORN_SDK})
+    headers_cfg.update({'authorization': 'Bearer ' + bearer_token})
+    
+    params_cfg = {'startPosition': '0.0', 'autoPlay': 'true'}
+    json_cfg = {"deviceType": "android-phone", "zone": "rtlplay"}
+    
+    try:
+        response = urlquick.post(URL_CONFIG % content_id,
+                                 params=params_cfg,
+                                 headers=headers_cfg,
+                                 json=json_cfg,
+                                 timeout=REQUESTS_TIMEOUT,
+                                 max_age=-1)
+        
+        if response.status_code == 403:
+            plugin.notify('ERROR', 'RTL Play access forbidden - check authentication')
+            return None, None, None
+        
+        if response.status_code != 200:
+            plugin.notify('ERROR', f'RTL Play API error: {response.status_code}')
+            return None, None, None
+
+        response_data = json.loads(response.content.decode())
+
+        if response_data.get("code", None) == 103 and "available" in response_data.get("type", "").lower():
+            plugin.notify('ERROR', 'Content not available')
+            return None, None, None
+        if response_data.get("code", None) == 104 and "found" in response_data.get("type", "").lower():
+            plugin.notify('ERROR', 'Content not found')
+            return None, None, None
+
+        if "video" not in response_data:
+            plugin.notify('ERROR', 'Invalid video response from RTL Play')
+            return None, None, None
+
+        video_data = response_data["video"]
+        manifest = None
+        lic_token = None
+        license_url = None
+        
+        for stream in video_data.get("streams", []):
+            if stream.get("type") != "dash" or ".mpd" not in stream.get("url", ""):
+                continue
+            manifest = stream["url"]
+
+            drm = stream.get("drm", None)
+            if drm is None:
                 break
 
-        lic_token = drm["drmtoday"]["authToken"]
-        license_url = drm["licenseUrl"]
-        break
+            for k in drm:
+                if "widevine" in k.lower():
+                    drm = drm[k]
+                    break
 
-    return manifest, license_url, lic_token
+            lic_token = drm.get("drmtoday", {}).get("authToken")
+            license_url = drm.get("licenseUrl")
+            break
+
+        return manifest, license_url, lic_token
+        
+    except Exception as e:
+        plugin.notify('ERROR', f'RTL Play stream error: {str(e)}')
+        return None, None, None
+
+
+def get_stream_via_lfvp_api(plugin, item_id, content_id):
+    """Fallback method using LFVP API directly"""
+    try:
+        # Try to get stream info via LFVP API as fallback
+        headers = RTLPLAY_HEADERS.copy()
+        
+        # For live channels, try to construct the API call
+        if item_id in LIVE_CHANNEL:
+            api_url = f"{URL_LFVP_API}/RTL_PLAY/live/{LIVE_CHANNEL[item_id]}"
+        else:
+            api_url = f"{URL_LFVP_API}/RTL_PLAY/detail/{content_id}"
+            
+        response = urlquick.get(api_url, headers=headers, timeout=REQUESTS_TIMEOUT, max_age=-1)
+        
+        if response.status_code == 200:
+            data = json.loads(response.content.decode())
+            
+            # Extract stream URL if available
+            stream_url = data.get('streamUrl') or data.get('videoUrl') or data.get('url')
+            if stream_url:
+                return stream_url, None, None
+                
+        plugin.notify('ERROR', 'RTL Play fallback method failed')
+        return None, None, None
+        
+    except Exception as e:
+        plugin.notify('ERROR', f'RTL Play fallback error: {str(e)}')
+        return None, None, None
 
 
 @Resolver.register
