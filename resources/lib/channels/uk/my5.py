@@ -345,8 +345,23 @@ def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
     iv, data = ivdata(LICFULL_URL, auth)
     video_url, drm_url, sub_url = part2(iv, aesKey, data)
 
+    # Currently (Kodi 21.1), dash embedded subtitles from channel5 are not shown.
+    # However, if the same subtitle url is passed to Kodi separately, it does work.
+    subs_url = None
+    if plugin.setting.get_boolean('active_subtitle'):
+        resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
+        dash_manifest = resp.text
+        # Find the subtitles 'base url' in the manifest, which is actually the file name, rather than the base.
+        match = re.search(r'<AdaptationSet mimeType="text/vtt"[^>]*>.+?<BaseURL>(.+?)</BaseURL>',
+                          dash_manifest, re.DOTALL)
+        if match:
+            # Construct the full url from the real base and the file name.
+            subs_url = '/'.join((video_url.rsplit('/', maxsplit=1)[0],
+                                 match[1]))
+
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
-                                                  manifest_type='mpd', headers=lic_headers)
+                                                  manifest_type='mpd', headers=lic_headers,
+                                                  subtitles=subs_url)
 
 
 @Resolver.register
