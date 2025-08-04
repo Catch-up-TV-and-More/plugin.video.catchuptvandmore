@@ -49,17 +49,36 @@ def list_categories(plugin, item_id, **kwargs):
             ".//div[@class='slider-card card bg-transparent border-0 "
             "rounded position-relative mb-0 card-default']"):
 
-        video_title = ''
-        if video_datas.find('.//img') is not None:
-            video_title = video_datas.find('.//img').get('alt')
-        video_image = video_datas.find('.//img').get('src')
         xdata = video_datas.find('.//a').get('x-data')
         video_id = re.compile(r"href\:\ \'(.*?)\'").findall(xdata)[0]
+
+        rounded_div = video_datas.find(".//div[@class='rounded overflow-hidden']")
+        if not rounded_div:
+            continue
+        video_title = ''
+        video_sub_title = ''
+        plot = ''
+        img = rounded_div.find('.//img')
+        video_image = img.get('src')
+
+        p_sub_title = rounded_div.find(".//span[@data-content-type='episodes']")
+        if p_sub_title is not None:
+            for child in p_sub_title:
+                if child.tag == 'span':
+                    video_sub_title = ' '.join(t.strip() for t in child.text.strip().split('\n'))
+
+        # Somehow the xpath ".//p[@class='overlay-text mb-0']" won't find anything.
+        for child in rounded_div.iterfind('.//p'):
+            cls = child.get('class')
+            if cls == 'overlay-title':
+                video_title = child.text
+            elif cls == 'overlay-text mb-0':
+                plot = ' '.join(t.strip() for t in child.text.strip().split('\n'))
 
         item = Listitem()
         item.label = video_title
         item.art['thumb'] = item.art['landscape'] = video_image
-
+        item.info['plot'] = '\n\n'.join(t for t in (plot, video_sub_title) if t)
         item.set_callback(list_videos,
                           item_id=item_id,
                           video_id=video_id,
@@ -99,14 +118,14 @@ def list_videos(plugin, item_id, video_id, **kwargs):
 
             plot = ''
             for info in video_datas.iterfind(".//p[@class='text-secondary mb-0']"):
-                plot = info.text
+                plot = info.text.strip()
             for drm_details in video_datas.iterfind(".//span[@data-env='production']"):
                 streamKey = drm_details.get('data-key')
                 streamUvid = drm_details.get('data-uvid')
 
             item = Listitem()
             item.label = video_title
-            item.info['plot'] = epno + ' ' + plot
+            item.info['plot'] = '\n'.join((epno, plot))
             item.info['duration'] = seconds
             item.art['thumb'] = item.art['landscape'] = video_image
 
