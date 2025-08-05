@@ -190,13 +190,27 @@ def list_programs(plugin, url, zone_id):
     response = urlquick.get(url, headers=ARTE_API_HEADERS, max_age=-1)
     json_parser = response.json()
 
-    for zone in json_parser['zones']:
-        if zone_id == zone['id']:
-            data = zone['content']['data']
-            break
-    for data in zone['content']['data']:
-        item = handle_programs(data)
-        yield item
+    if zone_id != 'pagination_link_next':
+        for zone in json_parser['zones']:
+            if zone_id == zone['id']:
+                data = zone['content']['data']
+                break
+        for data in zone['content']['data']:
+            item = handle_programs(data)
+            yield item
+
+        if zone['content'].get('pagination') is not None:
+            url_next = zone['content']['pagination']['links']['next']
+            yield Listitem.next_page(url=url_next, zone_id='pagination_link_next')
+    else:
+        for data in json_parser['data']:
+            item = handle_programs(data)
+            yield item
+
+        if json_parser.get('pagination') is not None:
+            if json_parser['pagination']['links'].get('next') is not None:
+                url_next = json_parser['pagination']['links']['next']
+                yield Listitem.next_page(url=url_next, zone_id='pagination_link_next')
 
 
 @Resolver.register
