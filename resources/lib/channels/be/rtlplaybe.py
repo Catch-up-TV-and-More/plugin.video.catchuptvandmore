@@ -402,7 +402,7 @@ def get_final_video_url(plugin, item_id, video_url):
     if bearer_token is None or api_key is None:
         return None, None, None
 
-    headers_cfg = RTLPLAY_HEADERS
+    headers_cfg = RTLPLAY_HEADERS.copy()
     headers_cfg.update({'x-api-key': api_key, })
     headers_cfg.update({'popcorn-sdk-version': POPCORN_SDK, })
     headers_cfg.update({'authorization': 'Bearer ' + bearer_token, })
