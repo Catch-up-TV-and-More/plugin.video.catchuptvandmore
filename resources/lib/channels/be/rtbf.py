@@ -303,8 +303,14 @@ def main_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
         'User-Agent': web_utils.get_random_ua(),
         'Authorization': 'Bearer {}'.format(session_token)
     }
+    response = urlquick.get(url, headers=headers, params=params, max_age=-1, raise_for_status=False)
+    if response.status_code != 200:
+        plugin.notify(plugin.localize(30600), plugin.localize(30716))
+        return False
 
-    video_format = urlquick.get(url, headers=headers, params=params, max_age=-1).json()['formats']
+    json_paser = json.loads(response.text)
+    video_format = json_paser['formats']
+
     if video_format is None:
         plugin.notify('ERROR', plugin.localize(30721))
         return False
@@ -559,11 +565,13 @@ def get_video_redbee(plugin, video_id, is_drm):
         xbmcgui.Dialog().ok(plugin.localize(30600), plugin.localize(30602))
         return False
 
+    certificate_data = None
     if 'drm' in video_format:
         license_server_url = video_format['drm']['com.widevine.alpha']['licenseServerUrl']
-        certificate_url = video_format['drm']['com.widevine.alpha']['certificateUrl']
-        resp_cert = urlquick.get(certificate_url, headers=GENERIC_HEADERS, max_age=-1).text
-        certificate_data = base64.b64encode(resp_cert.encode("utf-8")).decode("utf-8")
+        certificate_url = video_format['drm']['com.widevine.alpha'].get('certificateUrl')
+        if len(certificate_url) > 0:
+            resp_cert = urlquick.get(certificate_url, headers=GENERIC_HEADERS, max_age=-1).text
+            certificate_data = base64.b64encode(resp_cert.encode("utf-8")).decode("utf-8")
     else:
         return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type="mpd")
 
@@ -575,7 +583,9 @@ def get_video_redbee(plugin, video_id, is_drm):
         'Content-Type': ''
     }
 
-    input_stream_properties = {"server_certificate": certificate_data}
+    input_stream_properties = {}
+    if certificate_data is not None:
+        input_stream_properties = {"server_certificate": certificate_data}
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, manifest_type='mpd', headers=headers,
                                                   license_url=license_server_url,
@@ -840,8 +850,13 @@ def get_redbee_format(plugin, media_id, session_token, is_drm):
         'User-Agent': web_utils.get_random_ua(),
         'Authorization': 'Bearer {}'.format(session_token)
     }
+    response = urlquick.get(url, headers=headers, max_age=-1, raise_for_status=False)
+    if response.status_code != 200:
+        plugin.notify(plugin.localize(30600), plugin.localize(30716))
+        return None, True
 
-    formats = urlquick.get(url, headers=headers, max_age=-1).json()['formats']
+    json_paser = json.loads(response.text)
+    formats = json_paser['formats']
 
     if not is_drm:
         for fmt in formats:
