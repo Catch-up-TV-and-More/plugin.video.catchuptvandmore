@@ -50,6 +50,7 @@ KEYURL = "https://player.akamaized.net/html5player/core/html5-c5-player.js"
 
 # Connect and receive timeouts for HTTP requests.
 REQ_TIMEOUT = (3.5, 7)
+DFLT_CACHE_TIME = 600
 DFLT_SORT_METHODS = (xbmcplugin.SORT_METHOD_UNSORTED, xbmcplugin.SORT_METHOD_TITLE_IGNORE_THE)
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
@@ -145,7 +146,7 @@ def part2(iv, aesKey, rdata):
 def list_categories(plugin, **kwargs):
     plugin.add_sort_methods(*DFLT_SORT_METHODS)
     resp = urlquick.get(FEEDS_API % 'PLC_My5SubGenreBrowsePageSubNav', headers=GENERIC_HEADERS,
-                        params=feeds_api_params, timeout=REQ_TIMEOUT, max_age=-1)
+                        params=feeds_api_params, timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
     root = json.loads(resp.text)
     offset = "0"
     for category in root['filters']['contents']:
@@ -171,7 +172,7 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
             'friendly': '1',
         }
         resp = urlquick.get(URL_SHOWS, headers=GENERIC_HEADERS, params=w_params,
-                            timeout=REQ_TIMEOUT, max_age=-1)
+                            timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
         root = json.loads(resp.text)
 
         for emission in root['shows']:
@@ -194,12 +195,11 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
             yield Listitem.next_page(browse_name=browse_name, offset=offset)
     else:
         resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params,
-                            timeout=REQ_TIMEOUT, max_age=-1)
+                            timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
         root = json.loads(resp.text)
 
         if root['filters']['type'] == 'Collection':
             offset = 0
-            # need a try as sometimes the web page reports more total_items than there is listed
             try:
                 for collection in root['filters']['contents']:
                     item = Listitem()
@@ -219,8 +219,9 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
                 'friendly': '1',
                 'ids[]': ids
             }
+            # Get details of the already fetched list of show ids.
             resp = urlquick.get(URL_SHOWS, headers=GENERIC_HEADERS, params=w_params,
-                                timeout=REQ_TIMEOUT, max_age=-1)
+                                timeout=REQ_TIMEOUT)
             root = json.loads(resp.text)
             for watchable in root['shows']:
                 item = Listitem()
@@ -242,8 +243,9 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
                 'friendly': '1',
                 'ids[]': ids
             }
+            # Get details of the already fetched list of watchable ids.
             resp = urlquick.get(URL_WATCHABLE, headers=GENERIC_HEADERS, params=w_params,
-                                timeout=REQ_TIMEOUT, max_age=-1)
+                                timeout=REQ_TIMEOUT)
             root = json.loads(resp.text)
 
             for watchable in root['watchables']:
@@ -262,10 +264,14 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
 @Route.register(redirect_single_item=True, autosort=False, content_type="videos")
 def list_collections(plugin, browse_name, offset, **kwargs):
     plugin.add_sort_methods(*DFLT_SORT_METHODS)
+
+    # Get subgenre ID of this collection
     resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params,
-                        timeout=REQ_TIMEOUT, max_age=-1)
+                        timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
     root = json.loads(resp.text)
     subgenre = root['filters']['vod_subgenres']
+
+    # Get the actual content of the collection based on the subgenre ID.
     view_all_params = {
         'platform': 'my5desktop',
         'friendly': '1',
@@ -274,7 +280,7 @@ def list_collections(plugin, browse_name, offset, **kwargs):
         'vod_subgenres[]': subgenre
     }
     resp = urlquick.get(URL_VIEW_ALL, headers=GENERIC_HEADERS, params=view_all_params,
-                        timeout=REQ_TIMEOUT, max_age=-1)
+                        timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
     root = json.loads(resp.text)
 
     for emission in root['shows']:
@@ -300,8 +306,9 @@ def list_collections(plugin, browse_name, offset, **kwargs):
 @Route.register(redirect_single_item=True, autosort=False, content_type="videos")
 def list_seasons(plugin, fname, pid, title, **kwargs):
     plugin.add_sort_methods(*DFLT_SORT_METHODS)
+
     resp = urlquick.get(URL_SEASONS % fname, headers=GENERIC_HEADERS, params=view_api_params,
-                        timeout=REQ_TIMEOUT, max_age=-1)
+                        timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
     root = json.loads(resp.text)
 
     for season in root['seasons']:
@@ -317,8 +324,9 @@ def list_seasons(plugin, fname, pid, title, **kwargs):
 @Route.register(autosort=False, content_type="episodes")
 def list_episodes(plugin, fname, season_number, **kwargs):
     plugin.add_sort_methods(*(DFLT_SORT_METHODS + (xbmcplugin.SORT_METHOD_DURATION, )))
+
     resp = urlquick.get(URL_EPISODES % (fname, season_number), headers=GENERIC_HEADERS,
-                        params=view_api_params, timeout=REQ_TIMEOUT, max_age=-1)
+                        params=view_api_params, timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
     root = json.loads(resp.text)
 
     for episode in root['episodes']:
