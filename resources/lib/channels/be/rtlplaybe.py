@@ -4,7 +4,7 @@
 # Copyright: (c) 2023, darodi
 # GNU General Public License v2.0+ (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 
-# This file is part of IPTV-Lucas
+# This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
 
@@ -710,3 +710,4 @@ def get_live_url_with_drm_options(plugin, item_id, video_id, **kwargs):
         print(f"[RTL-ANDROID-TV] Erreur: {e}")
         # Fallback vers fonction originale
         return get_live_url(plugin, item_id, video_id, **kwargs)
+
