@@ -200,8 +200,9 @@ def list_programs(plugin, url, zone_id):
             yield item
 
         if zone['content'].get('pagination') is not None:
-            url_next = zone['content']['pagination']['links']['next']
-            yield Listitem.next_page(url=url_next, zone_id='pagination_link_next')
+            if zone['content']['pagination']['links'].get('next') is not None:
+                url_next = zone['content']['pagination']['links']['next']
+                yield Listitem.next_page(url=url_next, zone_id='pagination_link_next')
     else:
         for data in json_parser['data']:
             item = handle_programs(data)
