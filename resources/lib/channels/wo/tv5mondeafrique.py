@@ -213,7 +213,7 @@ def get_video_url(plugin,
     video_url = json_parser[0]["url"]
     video_token = json_parser[0]["token"]
 
-    headers = GENERIC_HEADERS
+    headers = GENERIC_HEADERS.copy()
     headers.update({'Authorization': 'Bearer ' + video_token})
     resp = urlquick.get(URL_TV5MAF_PLAYER % video_url, headers=headers, max_age=-1)
     json_parser = resp.json()
