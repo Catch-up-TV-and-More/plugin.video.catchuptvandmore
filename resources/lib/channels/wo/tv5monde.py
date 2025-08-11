@@ -237,7 +237,7 @@ def get_video_url(plugin,
         api_url = json_parser[0]["url"]
         api_token = json_parser[0]["token"]
 
-    headers = GENERIC_HEADERS
+    headers = GENERIC_HEADERS.copy()
     headers.update({'Authorization': 'Bearer ' + api_token})
     resp = urlquick.get(URL_TV5MONDE_API % api_url,
                         headers=headers,
