@@ -11,6 +11,7 @@ import base64
 import urlquick
 import time
 
+import xbmc
 import xbmcplugin
 
 from codequick import Listitem, Resolver, Route, Script, utils
@@ -77,6 +78,16 @@ lic_headers = {
     'Referer': 'https://www.channel5.com/',
     'Content-Type': '',
 }
+
+
+# A cached list of show ID's currently on channel 5's MyList
+# Possible value types:
+#   None: uninitialised
+#   False: initialised, but unavailable (user is not signed in)
+#   List: intialised with current shows obtained from channel 5 (could still be an empty list)
+# Note:
+#   This only works well in production where 'reuselanguageinvoker' is enabled.
+my_list_ids = None
 
 
 def getdata(ui, media):
@@ -152,6 +163,10 @@ def part2(iv, aesKey, rdata):
 
 @Route.register(autosort=False, content_type="videos")
 def list_main_page(plugin, **kwargs):
+    yield Listitem.from_dict(
+        list_submenu_my5,
+        'My 5'
+    )
     yield from list_hero_items(plugin)
     yield Listitem.from_dict(
         callback=list_collections,
@@ -171,6 +186,29 @@ def list_hero_items(plugin):
         title = li.label
         li.info['title'] = f'[B][COLOR orange]{title}[/COLOR][/B]'
         yield li
+
+
+@Route.register(autosort=False, content_type="videos")
+def list_submenu_my5(plugin, **kwargs):
+    """List collections for which a user account is required."""
+    yield Listitem.from_dict(
+        list_my_list_shows,
+        'My List'
+    )
+
+
+@Route.register
+def list_my_list_shows(plugin, **_):
+    """List all items currently on channel5's MyList."""
+    my_shows = request_user_collection('mylist', show_login_msg=True)
+    if not my_shows:
+        yield False
+        return
+    # Update the cached list of ID's
+    global my_list_ids
+    my_list_ids = [s['id'] for s in my_shows]
+    for show in my_shows:
+        yield parse_show(show)
 
 
 @Route.register
@@ -280,35 +318,50 @@ def search_shows(plugin, params, offset=0):
     data = json.loads(resp.text)
 
     for emission in data['shows']:
-        title = emission['title']
-        fname = emission['f_name']
-        show_id = emission['id']
+        yield parse_show(emission)
 
-        item = Listitem()
-        item.label = title
-        item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % show_id
-        item.info['plot'] = emission['s_desc']
-        item.info['genre'] = emission['genre']
-        if "standalone" in emission:
-            # The item is playable
-            item.set_callback(get_video_url,
-                              fname=fname,
-                              season_f_name="",
-                              show_id='',
-                              standalone="yes")
-        else:
-            item.set_callback(list_seasons,
-                              fname=fname,
-                              pid=show_id,
-                              title=title)
-        item_post_treatment(item)
-        yield item
     if 'next_page_url' in data:
         item = Listitem.next_page(callback=search_shows,
                                   params=params,
                                   offset=data['next_offset'])
         item.property['SpecialSort'] = 'bottom'
         yield item
+
+
+def parse_show(show_data):
+    """Parse a dictionary with data of one show and return a
+    Codequick Listitem
+
+    Args:
+        show_data (dict)
+    Returns:
+        Listitem: codequick listitem
+
+    """
+    title = show_data['title']
+    fname = show_data['f_name']
+    show_id = show_data['id']
+
+    item = Listitem()
+    item.label = title
+    item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % show_id
+    item.info['plot'] = show_data['s_desc']
+    item.info['genre'] = show_data['genre']
+    if "standalone" in show_data:
+        # The item is playable
+        item.set_callback(get_video_url,
+                          fname=fname,
+                          season_f_name="",
+                          show_id='',
+                          standalone="yes")
+    else:
+        item.set_callback(list_seasons,
+                          fname=fname,
+                          pid=show_id,
+                          title=title)
+    mylist_ctx_mnu(item, show_id, fname)
+    item_post_treatment(item)
+    return item
 
 
 @Route.register(content_type="videos")
@@ -349,6 +402,7 @@ def list_seasons(plugin, fname, pid, title, **kwargs):
         item.label = ' '.join((title, '- Season', season_number))
         item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % pid
         item.set_callback(list_episodes, fname=fname, season_number=season_number)
+        mylist_ctx_mnu(item, pid, fname)
         item_post_treatment(item)
         yield item
 
@@ -429,6 +483,7 @@ def parse_watchable(watchable, from_episode_list=False):
                       season_f_name=watchable.get('sea_f_name', ''),
                       show_id=watchable_id,
                       standalone="no")
+    mylist_ctx_mnu(item, watchable['sh_id'], show_title)
     item_post_treatment(item)
     return item
 
@@ -437,6 +492,136 @@ def parse_watchable(watchable, from_episode_list=False):
 def do_search(plugin, search_query, **_):
     yield from search_shows(plugin, {'query': search_query, 'limit': '20'})
 
+
+def request_user_collection(collection_name, show_login_msg=True):
+    """Perform an authenticated request to get a collection of user-specific shows.
+
+    Provides content for 'MyList' and other account related lists.
+
+    Args:
+        collection_name (str):
+            The name of the collection to fetch
+        show_login_msg (bool):
+            Whether to ask the user to log in when he's not yet signed in.
+    Returns:
+        list:
+            A list of dicts. Depending on the type of collection the dicts contain
+            either show data, or watchables.
+
+    """
+    session_tkn = get_session_token(show_login_msg)
+    if not session_tkn:
+        return []
+
+    try:
+        resp = urlquick.get('https://corona.channel5.com/collections/%s.json' % collection_name,
+                            headers={'User-Agent': web_utils.get_random_ua(),
+                                     'Authorization': 'Bearer ' + session_tkn,
+                                     'Pragma': 'no-cache',
+                                     'Cache-Control': 'no-cache'
+                                     },
+                            params={'platform': 'my5desktop', 'friendly': 'true',
+                                    'milkshake': 'include', 'limit': 256},
+                            timeout=REQ_TIMEOUT,
+                            max_age=-1)
+        shows = json.loads(resp.content)['content']
+        return shows
+    except urlquick.HTTPError as err:
+        # Normal response when a list is empty.
+        if err.response.status_code == 404:
+            return []
+        else:
+            raise
+
+
+# -----------------------------------------------------------------------------
+#           CHANNEL 5's MyList
+# -----------------------------------------------------------------------------
+
+def get_my_list():
+    """Request a list of IDs of shows currently on channel 5's MyList and
+    save it in a module level variable for further use during the lifetime
+    of the add-on.
+
+    """
+    global my_list_ids
+    my_shows = request_user_collection('mylist', show_login_msg=False)
+    my_list_ids = [s['id'] for s in my_shows]
+
+
+def mylist_ctx_mnu(list_item, show_id, show_title, retry=True):
+    """Add a context menu item to ``listitem`` to add or removed the item
+    to channel 5's MyList, depending on whether it is already on the list.
+
+    .. Note ::
+
+        This works best in production where reuselanguageinvoker is enabled
+        and the global variable ``my_list_ids`` keeps its value until another
+        addon is opened. During development, each time a folder is opened the
+        list must be requested from the web, which slows things down a bit.
+    """
+    try:
+        if show_id in my_list_ids:
+            list_item.context.script(edit_mylist,
+                                     "Remove from 5's MyList",
+                                     operation='remove',
+                                     show_id=show_id, )
+        else:
+            list_item.context.script(edit_mylist,
+                                     "Add to 5's MyList",
+                                     operation='add',
+                                     show_id=show_id,
+                                     show_title=show_title)
+    except TypeError:
+        if retry and my_list_ids is None:
+            # The cache has not been initialised yet. Get the list and try again.
+            get_my_list()
+            mylist_ctx_mnu(list_item, show_id, show_title, retry=False)
+
+
+@Script.register
+def edit_mylist(plugin, operation, show_id, show_title=None):
+    """Add or remove an item from channel 5's 'MyList'.
+
+    Entry point for the context menu 'Add to/Remove from 5's MyList', present
+    on shows and watchable items.
+    """
+    session_tkn = get_session_token(True)
+    if not session_tkn:
+        return
+
+    if operation == 'add':
+        method = 'put'
+        body = {
+            'platform': 'My5 Web',
+            'showTitle': show_title
+        }
+    elif operation == 'remove':
+        method = 'delete'
+        body = None
+    else:
+        msg = f"Parameter 'operation' must be either 'add' or 'remove', not '{operation}'."
+        plugin.log("[UK - Chan5] Error edit_my_list: " + msg, plugin.ERROR)
+        raise ValueError(msg)
+
+    resp = urlquick.request(
+        method=method,
+        url='https://userservice-api.channel5.com/favourites/' + show_id,
+        headers={'User-Agent': web_utils.get_random_ua(),
+                 'Authorization': 'Bearer ' + session_tkn,
+                 'Pragma': 'no-cache',
+                 'Cache-Control': 'no-cache'},
+        json=body,
+        timeout=REQ_TIMEOUT,
+        max_age=-1)
+    if 200 <= resp.status_code < 300:
+        get_my_list()
+        xbmc.executebuiltin('Container.Refresh')
+
+
+# -----------------------------------------------------------------------------
+#           Resolvers
+# -----------------------------------------------------------------------------
 
 @Resolver.register
 def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
@@ -495,6 +680,11 @@ def get_live_url(plugin, item_id, **kwargs):
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
                                                   manifest_type='mpd', headers=lic_headers)
+
+
+# -----------------------------------------------------------------------------
+#           Utilities
+# -----------------------------------------------------------------------------
 
 
 def availability(end_time):
@@ -669,6 +859,8 @@ def sign_in_account(addon):
             return
         try:
             perform_signin_request(uname, passw)
+            global my_list_ids
+            my_list_ids = None
             xbmcgui.Dialog().ok('Channel5', Script.localize(TXT_LOGIN_SUCCESS))
             xbmc.executebuiltin('Container.Refresh')
             return
@@ -681,5 +873,7 @@ def sign_out_account(_):
     """Entry point for the action 'Log out from channel5 account' in settings."""
     import xbmcgui
 
+    global my_list_ids
+    my_list_ids = False
     Script.setting['uk.chan5.session-token'] = ''
     xbmcgui.Dialog().ok('Channel5', Script.localize(TXT_LOGOUT_SUCCESS))
