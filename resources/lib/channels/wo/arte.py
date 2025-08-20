@@ -157,7 +157,7 @@ def handle_programs(data):
     except Exception:
         pass
 
-    if data['kind']['code'] in ['SHOWS', 'SHOW']:
+    if data.get('kind') is not None and data['kind']['code'] in ['SHOWS', 'SHOW']:
         item.set_callback(get_video_url, video_id=data['programId'])
         item_post_treatment(item, is_playable=True, is_downloadable=True)
     else:
@@ -197,6 +197,10 @@ def list_programs(plugin, url, zone_id):
                 break
         for data in zone['content']['data']:
             item = handle_programs(data)
+            yield item
+
+        if zone.get('link') is not None and zone['link'].get('page')[:3] == "RC-":
+            item = handle_programs(zone.get('link'))
             yield item
 
         if zone['content'].get('pagination') is not None:
