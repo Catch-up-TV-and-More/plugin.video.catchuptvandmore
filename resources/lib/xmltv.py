@@ -583,8 +583,8 @@ def download_xmltv_file(country_id, date, xmltv_fp):
 
 
 def delete_xmltv_file(country_id, day_delta=0):
-    """Delete XMLTV file of dountry_id at day = today + day_delta."""
-    day_to_delete = datetime.date.today() + datetime.timedelta(days=day_delta)
+    """Delete XMLTV file of country_id at day = today + day_delta."""
+    day_to_delete = datetime.datetime.now(pytz.UTC).date() + datetime.timedelta(days=day_delta)
     dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
     for fn in files:
         if xmltv_infos[country_id]['keyword'] not in fn:
@@ -612,7 +612,7 @@ def get_xmltv_filepath(country_id, day_delta=0):
 
     # Remove old xmltv files of this country
     dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
-    today = datetime.date.today()
+    today = datetime.datetime.now(pytz.UTC).date()
     for fn in files:
         if country_xmltv_infos['keyword'] not in fn:
             continue
@@ -626,7 +626,7 @@ def get_xmltv_filepath(country_id, day_delta=0):
             pass
 
     # Compute dst filepath
-    xmltv_date = datetime.date.today() + datetime.timedelta(days=day_delta)
+    xmltv_date = today + datetime.timedelta(days=day_delta)
     xmltv_date_s = xmltv_date.strftime('%Y%m%d')
     xmltv_fn = country_xmltv_infos['keyword'] + xmltv_date_s + '.xml'
     Script.log('xmltv filename: {}'.format(xmltv_fn))
