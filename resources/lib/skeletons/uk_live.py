@@ -67,6 +67,7 @@ menu = {
         'label': 'STV',
         'thumb': 'channels/uk/stv.png',
         'fanart': 'channels/uk/stv_fanart.jpg',
+        'xmltv_id': '103.freeview.co.uk',
         'enabled': True,
         'order': 6
     },
