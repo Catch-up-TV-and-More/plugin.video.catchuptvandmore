@@ -261,9 +261,12 @@ def get_video_url(plugin,
                   **kwargs):
 
     resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
-
-    video_id = re.compile(r'"embedUrl":"https:.?/.?/www.dailymotion.com.?/video.?\/(.*)[\?\"]').findall(resp.text)[0]
-    return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode)
+    if re.compile(r'"embedUrl":"https:.?/.?/www.dailymotion.com.?/video.?\/(.*)[\?\"]').findall(resp.text):
+        video_id = re.compile(r'"embedUrl":"https:.?/.?/www.dailymotion.com.?/video.?\/(.*)[\?\"]').findall(resp.text)[0]
+        return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode)
+    else:
+        plugin.notify(plugin.localize(30600), plugin.localize(30716))
+        return False
 
 
 @Resolver.register
