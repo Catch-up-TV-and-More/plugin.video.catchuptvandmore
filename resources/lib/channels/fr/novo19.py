@@ -108,20 +108,30 @@ def list_videos(plugin, item_id, video_url, **kwargs):
         yield item
 
     if at_least_one_item is False:
-        program_title = root.find(".//div[@class='text-text-primary utils-texts-fipTitleWeb utils-oneLine']").text
-        program_url_split = video_url.split('/')
+        data = response.parse("script", attrs={"id": "__NEXT_DATA__"})
+        json_parser = json.loads(data.text)
+        program_id = json_parser['props']['pageProps']['serverData']['page']['content']['id']
+        program_title = json_parser['props']['pageProps']['serverData']['page']['content']['title']
+        program_desc = json_parser['props']['pageProps']['serverData']['page']['content']['description']
+        program_image = json_parser['props']['pageProps']['serverData']['page']['content']['background']['src']
+        program_date = json_parser['props']['pageProps']['serverData']['page']['content']['releaseDate']
+        program_duration = json_parser['props']['pageProps']['serverData']['page']['content']['duration']
 
         item = Listitem()
         item.label = program_title
+        item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = program_image
+        item.info['plot'] = program_desc
+        item.info['year'] = program_date
+        item.info['duration'] = program_duration
         item.set_callback(get_video_url,
-                          video_id=program_url_split[len(program_url_split) - 1])
+                          video_id=program_id)
         item_post_treatment(item)
         yield item
 
 
 @Resolver.register
 def get_video_url(plugin, video_id):
-    return get_video_redbee(plugin, video_id)
+    return get_video_redbee(plugin, video_id, is_drm=True)
 
 
 def get_redbee_token():
@@ -133,13 +143,18 @@ def get_redbee_token():
         'deviceId': DEVICEID,
     }
     response = urlquick.post(REDBEE_BASE_URL + '/auth/anonymous', headers=GENERIC_HEADERS, json=json_data, max_age=-1).json()
-    return response['sessionToken']
+    if response.get('sessionToken'):
+        return True, response.get('sessionToken')
+    else:
+        return False, None
 
 
 @Route.register
-def get_video_redbee(plugin, video_id):
-    session_token = get_redbee_token()
-    is_drm = True
+def get_video_redbee(plugin, video_id, is_drm):
+    is_ok, session_token = get_redbee_token()
+    if is_ok is False:
+        return False
+
     video_format, forced_drm = get_redbee_format(plugin, video_id, session_token, is_drm)
     if video_format is None:
         return False
@@ -208,4 +223,4 @@ def get_redbee_format(plugin, media_id, session_token, is_drm):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    return get_video_redbee(plugin, 'novo19_565BFFb')
+    return get_video_redbee(plugin, 'novo19_565BFFb', is_drm=True)
