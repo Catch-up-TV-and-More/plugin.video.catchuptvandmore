@@ -108,7 +108,7 @@ menu = {
         "order": 11,
     },
     "lequipe": {
-        "route": "/resources/lib/channels/fr/lequipe:list_programs",
+        "route": "/resources/lib/channels/fr/lequipe:list_categories",
         "label": "L'Équipe",
         "thumb": "channels/fr/lequipe.png",
         "fanart": "channels/fr/lequipe_fanart.jpg",
