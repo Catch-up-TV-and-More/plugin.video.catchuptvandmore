@@ -19,8 +19,10 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT = 'https://novo19.ouest-france.fr'
 URL_CATEGORIES = URL_ROOT + '/categories'
+URL_CATEGORIES_PLUS = URL_ROOT + '/voir-plus/rail/categories/'
 REDBEE_BASE_URL = 'https://exposure.api.redbee.live/v2/customer/OuestFrance/businessunit/novoplus'
 
+PATTERN_KEY_ID = re.compile(r"([a-f\d]{8}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{12}_[a-f\d]{7})", re.IGNORECASE)
 DEVICEID = str(uuid.UUID(int=uuid.getnode()))
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
@@ -34,99 +36,167 @@ def list_categories(plugin, item_id, **kwargs):
     - ...
     """
     response = urlquick.get(URL_CATEGORIES, headers=GENERIC_HEADERS, max_age=-1)
-    root = response.parse()
+    root = response.parse("script", attrs={"id": "__NEXT_DATA__"})
+    json_parser = json.loads(root.text)
 
-    for category_datas in root.iterfind(".//div[@class='mb-3 flex justify-between align-middle']"):
-        if category_datas.find(".//a") is None:
+    for category_datas in json_parser['props']['pageProps']['serverData']['page']['rails']:
+        category_title = category_datas.get('title')
+        if category_title is None or category_title == "Nos podcasts":
             continue
-        category_label = category_datas.find(".//h3").text
-        category_url = URL_ROOT + category_datas.find(".//a").get('href')
 
-        item = Listitem()
-        item.label = category_label
-        item.set_callback(list_programs,
-                          item_id=item_id,
-                          category_url=category_url)
-        item_post_treatment(item)
-        yield item
+        category_type = category_datas.get('type')
+        if category_type == 'CAROUSEL':
+            category_id = URL_CATEGORIES_PLUS + category_datas.get('id')
+            category_image = category_datas.get('src')
+
+            item = Listitem()
+            item.label = category_title
+            item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = category_image
+            item.set_callback(list_programs,
+                              category_url=category_id)
+            item_post_treatment(item)
+            yield item
 
 
 @Route.register
-def list_programs(plugin, item_id, category_url, **kwargs):
+def list_programs(plugin, category_url, **kwargs):
     """
     Build programs listing
     - Journal de 20H
     - Cash investigation
     """
     response = urlquick.get(category_url, headers=GENERIC_HEADERS, max_age=-1)
-    root = response.parse()
+    root = response.parse("script", attrs={"id": "__NEXT_DATA__"})
+    json_parser = json.loads(root.text)
 
-    for program_datas in root.iterfind(".//a[@class='tile']"):
-        program_title = program_datas.find(".//p").text
-        program_label = program_datas.find(".//h3").text
-        program_url = URL_ROOT + program_datas.get('href')
-        program_image = URL_ROOT + program_datas.find(".//img").get('src')
+    for key, value in json_parser['props']['pageProps']['initialState']['api']['queries'].items():
+        if key[:7] == 'bffTile':
+            for program_datas in value['data']['tiles']:
+                program_id = program_datas.get('id')
+                if program_id is None:
+                    continue
+                program_type = program_datas.get('type')
+                program_url = URL_ROOT + program_datas.get('href')
+                program_title = program_datas.get('title')
+                program_subtitle = program_datas.get('subtitle')
+                program_desc = program_datas.get('description')
+                program_image = program_datas['thumbnail'].get('src')
+                program_date = program_datas.get('releaseDate')
+                program_duration = program_datas.get('durarion')
+
+                if program_subtitle:
+                    program_label = program_subtitle + ' - ' + program_title
+                else:
+                    program_label = program_title
+
+                item = Listitem()
+                item.label = program_label
+                item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = program_image
+                if program_desc:
+                    item.info['plot'] = program_desc
+                if program_date:
+                    item.info['year'] = program_date
+                if program_duration:
+                    item.info['duration'] = program_duration
+                if program_type == 'SERIE':
+                    item.set_callback(list_seasons,
+                                      video_url=program_url)
+                else:
+                    item.set_callback(get_video_url,
+                                      video_id=program_id)
+                item_post_treatment(item)
+                yield item
+
+
+@Route.register
+def list_seasons(plugin, video_url, **kwargs):
+    response = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
+    root = response.parse("script", attrs={"id": "__NEXT_DATA__"})
+    json_parser = json.loads(root.text)
+    at_least_one_item = False
+
+    for seasons in json_parser['props']['pageProps']['serverData']['page']['rails']:
+        season_id = seasons.get('id')
+        if season_id == 'reco':
+            continue
+        season_title = seasons.get('title')
+        season_image = seasons.get('src')
+
+        at_least_one_item = True
+        item = Listitem()
+        item.label = season_title
+        item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = season_image
+        item.set_callback(list_videos,
+                          video_url=video_url,
+                          season=season_id)
+        item_post_treatment(item)
+        yield item
+
+    # No season
+    if at_least_one_item is False:
+        video_id = json_parser['props']['pageProps']['serverData']['page']['content'].get('id')
+        video_title = json_parser['props']['pageProps']['serverData']['page']['content'].get('title')
+        video_desc = json_parser['props']['pageProps']['serverData']['page']['content'].get('description')
+        video_image = json_parser['props']['pageProps']['serverData']['page']['content']['background'].get('src')
+        video_date = json_parser['props']['pageProps']['serverData']['page']['content'].get('releaseDate')
+        video_duration = json_parser['props']['pageProps']['serverData']['page']['content'].get('duration')
 
         item = Listitem()
-        item.label = program_title + ' - ' + program_label
-        item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = program_image
-        item.set_callback(list_videos,
-                          item_id=item_id,
-                          video_url=program_url)
+        item.label = video_title
+        item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = video_image
+        if video_desc:
+            item.info['plot'] = video_desc
+        if video_date:
+            item.info['year'] = video_date
+        if video_duration:
+            item.info['duration'] = video_duration
+        item.set_callback(get_video_url,
+                          video_id=video_id)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_videos(plugin, item_id, video_url, **kwargs):
-    """
-    Build programs listing
-    - Journal de 20H
-    - Cash investigation
-    """
+def list_videos(plugin, video_url, season, **kwargs):
     response = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
-    root = response.parse()
-    at_least_one_item = False
+    root = response.parse("script", attrs={"id": "__NEXT_DATA__"})
+    json_parser = json.loads(root.text)
+    video_url_all = None
+    for key, value in json_parser['props']['pageProps']['initialState']['api']['queries'].items():
+        if key[:7] == 'bffTile':
+            found_items = PATTERN_KEY_ID.findall(key)
+            if len(found_items) == 0 or found_items[len(found_items) - 1] != season:
+                continue
+            for videos_datas in value['data']['tiles']:
+                video_id = videos_datas.get('id')
+                if video_id is None:
+                    continue
+                video_title = videos_datas.get('title')
+                video_subtitle = videos_datas.get('subtitle')
+                video_desc = videos_datas.get('description')
+                video_image = videos_datas['thumbnail'].get('src')
+                video_date = videos_datas.get('releaseDate')
+                video_duration = videos_datas.get('duration')
+                if value['data'].get('more'):
+                    video_url_all = URL_ROOT + value['data']['more'].get('href')
 
-    for program_datas in root.iterfind(".//a[@class='tile']"):
-        program_title = program_datas.find(".//p").text
-        program_label = program_datas.find(".//h3").text
-        program_url = program_datas.get('href')
-        program_image = URL_ROOT + program_datas.find(".//img").get('src')
-        program_url_split = program_url.split('/')
+                item = Listitem()
+                item.label = video_subtitle + ' - ' + video_title
+                item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = video_image
+                if video_desc:
+                    item.info['plot'] = video_desc
+                if video_date:
+                    item.info['year'] = video_date
+                if video_duration:
+                    item.info['duration'] = video_duration
+                item.set_callback(get_video_url,
+                                  video_id=video_id)
+                item_post_treatment(item)
+                yield item
 
-        if program_url_split[1] == 'details':
-            continue
-
-        at_least_one_item = True
-        item = Listitem()
-        item.label = program_title + ' - ' + program_label
-        item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = program_image
-        item.set_callback(get_video_url,
-                          video_id=program_url_split[2])
-        item_post_treatment(item)
-        yield item
-
-    if at_least_one_item is False:
-        data = response.parse("script", attrs={"id": "__NEXT_DATA__"})
-        json_parser = json.loads(data.text)
-        program_id = json_parser['props']['pageProps']['serverData']['page']['content']['id']
-        program_title = json_parser['props']['pageProps']['serverData']['page']['content']['title']
-        program_desc = json_parser['props']['pageProps']['serverData']['page']['content']['description']
-        program_image = json_parser['props']['pageProps']['serverData']['page']['content']['background']['src']
-        program_date = json_parser['props']['pageProps']['serverData']['page']['content']['releaseDate']
-        program_duration = json_parser['props']['pageProps']['serverData']['page']['content']['duration']
-
-        item = Listitem()
-        item.label = program_title
-        item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = program_image
-        item.info['plot'] = program_desc
-        item.info['year'] = program_date
-        item.info['duration'] = program_duration
-        item.set_callback(get_video_url,
-                          video_id=program_id)
-        item_post_treatment(item)
-        yield item
+    if video_url_all:
+        yield Listitem.next_page(video_url=video_url_all,
+                                 season=season)
 
 
 @Resolver.register
