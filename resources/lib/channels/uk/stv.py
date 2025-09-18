@@ -77,7 +77,8 @@ def list_programs(plugin, item_id, category_guid, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    params = {"category": category_guid}
+    params = {"category": category_guid,
+              "limit": "1000"}
     resp = urlquick.get(URL_PROGRAMS_JSON, params=params, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
 
