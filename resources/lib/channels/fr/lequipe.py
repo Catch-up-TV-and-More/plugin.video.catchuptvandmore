@@ -183,3 +183,29 @@ def get_video_url(plugin, video_url, download_mode=False, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     return resolver_proxy.get_stream_dailymotion(plugin, 'x2lefik', False, EMBEDER_URL % 'x2lefik')
+
+
+@Route.register
+def get_multi_live_url(plugin, item_id, **kwargs):
+    resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
+    root = resp.parse()
+    for video_list in root.iterfind('.//a[@class="Link"]'):
+        item = Listitem()
+        for div_title in video_list.iterfind('.//div'):
+            if div_title is not None and div_title.get('class') == "ArticleTags__items js-ob-internal-reco":
+                for d_title in div_title.iterfind('.//div[@class="ArticleTags__item"]'):
+                    if 'font' not in d_title.get('style'):
+                        item.label = d_title.text
+                item.info['plot'] = video_list.find('.//h2[@class="ColeaderWidget__title"]').text
+                item.art["thumb"] = item.art["thumb"] = video_list.find(".//img").get('src')
+                video_id = re.compile(r'live\/(.*?)$').findall(video_list.get('href'))[0]
+                item.set_callback(get_multi_video_url, item_id, video_id=video_id)
+                item_post_treatment(item)
+                yield item
+
+
+@Resolver.register
+def get_multi_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
+
+    embeder = EMBEDER_URL % video_id
+    return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode, embeder)
