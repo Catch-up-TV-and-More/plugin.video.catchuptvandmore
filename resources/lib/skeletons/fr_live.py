@@ -270,11 +270,11 @@ menu = {
         'enabled': True,
         'order': 24
     },
-    'cherie25': {
-        'resolver': '/resources/lib/channels/fr/nrj:get_live_url',
-        'label': 'Chérie 25',
-        'thumb': 'channels/fr/cherie25.png',
-        'fanart': 'channels/fr/cherie25_fanart.jpg',
+    'RMC Life': {
+        'resolver': '/resources/lib/channels/fr/rmcbfmplay:get_live_url',
+        'label': 'RMC Life',
+        'thumb': 'channels/fr/rmclife.png',
+        'fanart': 'channels/fr/rmclife_fanart.jpg',
         'xmltv_id': 'C1399.api.telerama.fr',
         'm3u_group': 'TNT',
         'm3u_order': 25,
