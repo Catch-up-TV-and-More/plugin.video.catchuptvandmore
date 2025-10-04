@@ -331,6 +331,29 @@ def get_stream_dailymotion(plugin,
 
         if "qualities" not in json_parser:
             plugin.notify('ERROR', plugin.localize(30716))
+        elif get_kodi_version() < 22:
+            # Simple workaround to fix no audio with m3u8 tag: #EXT-X-VERSION:7
+            cc = json_parser['qualities']
+            cc = list(cc.items())
+            cc = sorted(cc, key=lambda s: s[0], reverse=True)
+            for source, json_source in cc:
+                source = source.split("@")[0]
+                for item in json_source:
+                    m_url = item.get('url')
+                    if source == "auto":
+                        mbtext = urlquick.get(m_url, headers=GENERIC_HEADERS, max_age=-1).text
+                        mb = re.findall('NAME="([^"]+)",PROGRESSIVE-URI="([^"]+)"', mbtext)
+                        if not mb:
+                            mb = re.findall(r'NAME="([^"]+)".*\n([^\n]+)', mbtext)
+                        mb = sorted([x for x in mb if x[0].isdigit()], key=lambda x: int(x[0]), reverse=True)
+                        for quality, strurl in mb:
+                            quality = quality.split("@")[0]
+                            if int(quality) <= 1080:
+                                strurl = '{0}'.format(strurl.split('#cell')[0])
+                                strurltext = urlquick.get(strurl, headers=GENERIC_HEADERS, max_age=-1).text
+                                xversion = re.findall('#EXT-X-VERSION:(\d+)', strurltext)[0]
+                                if int(xversion) == 7:
+                                    return strurl
 
         url = json_parser["qualities"]["auto"][0]["url"]
         return get_stream_with_quality(plugin, url)
