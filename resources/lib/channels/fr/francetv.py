@@ -80,7 +80,13 @@ def channels(plugin, **kwargs):
         ('channels/franceinfo', 'franceinfo:', 'franceinfo.png', 'franceinfo_fanart.jpg'),
         ('channels/slash', 'France tv Slash', 'slash.png', 'slash_fanart.jpg'),
         ('categories/enfants', 'Okoo', 'okoo.png', 'okoo_fanart.jpg'),
-        ('channels/spectacles-et-culture', 'Culturebox', 'culturebox.png', 'culturebox_fanart.jpg')
+        ('channels/spectacles-et-culture', 'Culturebox', 'culturebox.png', 'culturebox_fanart.jpg'),
+        ('categories/arte', 'Arte', '../wo/arte.png', '../wo/arte_fanart.jpg'),
+        ('categories/lcp', 'LCP Assemblée Nationale', 'lcp.png', 'lcp_fanart.jpg'),
+        ('categories/public-senat', 'Public Sénat', 'publicsenat.png', 'publicsenat_fanart.jpg'),
+        ('categories/tv5-monde', 'TV5 Monde', '../wo/tv5monde.png', '../wo/tv5monde_fanart.jpg'),
+        ('categories/france-24', 'France 24', 'france24.png', 'france24_fanart.jpg'),
+        ('categories/ina', 'ina', '../../websites/ina.png', '../../websites/ina_fanart.jpg'),
     ]
 
     for channel_infos in channels:
@@ -457,3 +463,67 @@ def get_live_url(plugin, item_id, **kwargs):
                     return False
             if channel_path == item_id:
                 return resolver_proxy.get_francetv_live_stream(plugin, broadcast_id)
+
+
+@Route.register
+def get_multi_live_url(plugin, item_id, **kwargs):
+    params = {'platform': 'apps'}
+    resp = urlquick.get(URL_API_MOBILE('/generic/directs'), params=params, max_age=-1)
+    json_parser = json.loads(resp.text)
+
+    at_least_one_item = False
+    for items in json_parser['items']:
+        channel_program = channel_episode_title = ''
+        item = Listitem()
+        if items.get('channel'):
+            if 'images' in items:
+                populate_images(item, items['images'])
+            channel_episode_title = items.get('episode_title', '')
+            if items.get('program'):
+                channel_program = items['program'].get('label', '')
+                populate_images(item, items['program']['images'])
+            channel_label = items['channel'].get("label")
+            if channel_program and channel_episode_title:
+                channel_label = channel_label + ' - ' + channel_program + ' - ' + channel_episode_title
+            elif channel_program:
+                channel_label = channel_label + ' - ' + channel_program
+            elif channel_episode_title:
+                channel_label = channel_label + ' - ' + channel_episode_title
+            channel_id = items['channel'].get("si_id")
+
+            at_least_one_item = True
+            item.label = channel_label
+            item.set_callback(get_multi_video_url, channel_id)
+            item_post_treatment(item)
+            yield item
+        elif items.get('partner'):
+            if 'images' in items:
+                populate_images(item, items['images'])
+            channel_episode_title = items.get('episode_title', '')
+            if items.get('program'):
+                channel_program = items['program'].get('label', '')
+                populate_images(item, items['program']['images'])
+            channel_label = items['partner'].get("label")
+            if channel_program and channel_episode_title:
+                channel_label = channel_label + ' - ' + channel_program + ' - ' + channel_episode_title
+            elif channel_program:
+                channel_label = channel_label + ' - ' + channel_program
+            elif channel_episode_title:
+                channel_label = channel_label + ' - ' + channel_episode_title
+            channel_id = items['partner'].get("si_id")
+
+            at_least_one_item = True
+            item.label = channel_label
+            item.set_callback(get_multi_video_url, channel_id)
+            item_post_treatment(item)
+            yield item
+
+    if not at_least_one_item:
+        item = Listitem()
+        item.label = Script.localize(30896)
+        yield item
+
+
+@Resolver.register
+def get_multi_video_url(plugin, channel_id, **kwargs):
+    return resolver_proxy.get_francetv_live_stream(plugin, channel_id)
