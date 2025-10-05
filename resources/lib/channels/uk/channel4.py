@@ -84,7 +84,9 @@ def list_programs(plugin, url, offset, **kwargs):
 
     nboffset = int(offset) + len(programs["brands"]["items"])
     if nboffset < programs_number:
-        yield Listitem.next_page(url=url, offset=str(nboffset))
+        item = Listitem.next_page(url=url, offset=str(nboffset))
+        item.property['SpecialSort'] = 'bottom'
+        yield item
 
 
 @Route.register
