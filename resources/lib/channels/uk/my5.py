@@ -192,7 +192,9 @@ def list_subcategories(plugin, browse_name, offset, **kwargs):
             yield item
         if 'next_page_url' in root:
             offset = str(int(offset) + int(root['limit']))
-            yield Listitem.next_page(browse_name=browse_name, offset=offset)
+            item = Listitem.next_page(browse_name=browse_name, offset=offset)
+            item.property['SpecialSort'] = 'bottom'
+            yield item
     else:
         resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params,
                             timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
@@ -300,7 +302,9 @@ def list_collections(plugin, browse_name, offset, **kwargs):
         yield item
     if 'next_page_url' in root:
         offset = str(int(offset) + int(view_all_params['limit']))
-        yield Listitem.next_page(browse_name=browse_name, offset=offset)
+        item = Listitem.next_page(browse_name=browse_name, offset=offset)
+        item.property['SpecialSort'] = 'bottom'
+        yield item
 
 
 @Route.register(redirect_single_item=True, autosort=False, content_type="videos")
