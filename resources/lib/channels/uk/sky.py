@@ -150,10 +150,12 @@ def list_videos_sports(plugin, item_id, category_url, start, end, **kwargs):
 
     if at_least_one_item == VIDEO_PER_PAGE:
         # More videos...
-        yield Listitem.next_page(item_id=item_id,
-                                 category_url=category_url,
-                                 start=end,
-                                 end=end + VIDEO_PER_PAGE)
+        item = Listitem.next_page(item_id=item_id,
+                                  category_url=category_url,
+                                  start=end,
+                                  end=end + VIDEO_PER_PAGE)
+        item.property['SpecialSort'] = 'bottom'
+        yield item
     elif at_least_one_item == 0:
         plugin.notify(plugin.localize(30718), '')
         yield False
