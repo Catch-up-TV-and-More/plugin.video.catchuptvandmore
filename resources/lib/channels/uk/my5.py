@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2022, Joaopa, nictjir  GNU General Public License v2.0+
+# Copyright: (c) 2022-2025, Joaopa, nictjir, dimkroon  GNU General Public License v2.0+
 # (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 # This file is part of Catch-up TV & More
 
@@ -37,7 +37,6 @@ BASIS_URL = CORONA_URL + 'shows/%s/seasons'
 URL_SEASONS = BASIS_URL + '.json'
 URL_EPISODES = BASIS_URL + '/%s/episodes.json'
 FEEDS_API = 'https://feeds-api.channel5.com/collections/%s/concise.json'
-URL_VIEW_ALL = CORONA_URL + 'shows/search.json'
 URL_WATCHABLE = CORONA_URL + 'watchables/search.json'
 URL_SHOWS = CORONA_URL + 'shows/search.json'
 BASE_IMG = 'https://api-images.channel5.com/otis/images'
@@ -52,6 +51,7 @@ KEYURL = "https://player.akamaized.net/html5player/core/html5-c5-player.js"
 REQ_TIMEOUT = (3.5, 7)
 DFLT_CACHE_TIME = 600
 DFLT_SORT_METHODS = (xbmcplugin.SORT_METHOD_UNSORTED, xbmcplugin.SORT_METHOD_TITLE_IGNORE_THE)
+DFLT_PAGE_SIZE = 50
 
 GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 feeds_api_params = {
@@ -142,19 +142,41 @@ def part2(iv, aesKey, rdata):
     return getUseful(dataToParse)
 
 
+@Route.register(autosort=False, content_type="videos")
+def list_main_page(plugin, **kwargs):
+    yield from list_hero_items(plugin)
+    yield Listitem.from_dict(
+        callback=list_collections,
+        label='Collections',
+        params={'browse_name': 'PLC_My5DesktopFASTHomePageSubNav'}
+    )
+    yield Listitem.from_dict(
+        callback=list_categories,
+        label='Categories'
+    )
+    yield Listitem.search(do_search)
+
+
+def list_hero_items(plugin):
+    """List the hero items normally presented on the home page of the website."""
+    for li in list_collections(plugin, 'PLC_My5DesktopHeroRail'):
+        title = li.label
+        li.info['title'] = f'[B][COLOR orange]{title}[/COLOR][/B]'
+        yield li
+
+
 @Route.register
 def list_categories(plugin, **kwargs):
     plugin.add_sort_methods(*DFLT_SORT_METHODS)
     resp = urlquick.get(FEEDS_API % 'PLC_My5SubGenreBrowsePageSubNav', headers=GENERIC_HEADERS,
                         params=feeds_api_params, timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
     root = json.loads(resp.text)
-    offset = "0"
     for category in root['filters']['contents']:
         try:
             item = Listitem()
             item.label = category['title']
             browse_name = category['id']
-            item.set_callback(list_subcategories, browse_name=browse_name, offset=offset)
+            item.set_callback(list_collections, browse_name=browse_name)
             item_post_treatment(item)
             yield item
         except (ValueError, AttributeError):
@@ -162,149 +184,147 @@ def list_categories(plugin, **kwargs):
 
 
 @Route.register(redirect_single_item=True, autosort=False, content_type="videos")
-def list_subcategories(plugin, browse_name, offset, **kwargs):
+def list_collections(plugin, browse_name, **kwargs):
+    """List the contents of a collection, category, or sub-collection.
+
+    """
     plugin.add_sort_methods(*DFLT_SORT_METHODS)
+
     if (browse_name == "PLC_My5AllShows"):
         w_params = {
-            'limit': '25',
-            'offset': str(offset),
-            'platform': 'my5desktop',
-            'friendly': '1',
+            'limit': DFLT_PAGE_SIZE,
         }
-        resp = urlquick.get(URL_SHOWS, headers=GENERIC_HEADERS, params=w_params,
-                            timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
-        root = json.loads(resp.text)
+        yield from search_shows(plugin, w_params)
+        return
 
-        for emission in root['shows']:
-            item = Listitem()
-            title = emission['title']
-            item.label = title
-            item.info['plot'] = emission['s_desc']
-            fname = emission['f_name']
-            picture_id = emission['id']
-            item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % picture_id
-            if "standalone" in emission:
-                item.set_callback(get_video_url, fname=fname, season_f_name="",
-                                  show_id="show_id", standalone="yes")
-            else:
-                item.set_callback(list_seasons, fname=fname, pid=picture_id, title=title)
-            item_post_treatment(item)
-            yield item
-        if 'next_page_url' in root:
-            offset = str(int(offset) + int(root['limit']))
-            item = Listitem.next_page(browse_name=browse_name, offset=offset)
-            item.property['SpecialSort'] = 'bottom'
-            yield item
-    else:
-        resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params,
-                            timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
-        root = json.loads(resp.text)
-
-        if root['filters']['type'] == 'Collection':
-            offset = 0
-            try:
-                for collection in root['filters']['contents']:
-                    item = Listitem()
-                    item.label = collection['title']
-                    browse_name = collection['id']
-                    item.set_callback(list_collections, browse_name=browse_name, offset=offset)
-                    item_post_treatment(item)
-                    yield item
-            except (ValueError, AttributeError):
-                pass
-        elif root['filters']['type'] == 'Show':
-            ids = root['filters']['ids']
-            w_params = {
-                'limit': len(ids),
-                'offset': '0',
-                'platform': 'my5desktop',
-                'friendly': '1',
-                'ids[]': ids
-            }
-            # Get details of the already fetched list of show ids.
-            resp = urlquick.get(URL_SHOWS, headers=GENERIC_HEADERS, params=w_params,
-                                timeout=REQ_TIMEOUT)
-            root = json.loads(resp.text)
-            for watchable in root['shows']:
-                item = Listitem()
-                item.label = watchable['title']
-                item.info['plot'] = watchable['s_desc']
-                item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % watchable['id']
-                show_id = watchable['id']
-                fname = watchable['f_name']
-                item.set_callback(get_video_url, fname=fname, season_f_name="season_f_name",
-                                  show_id=show_id, standalone="yes")
-                item_post_treatment(item)
-                yield item
-        elif root['filters']['type'] == 'Watchable':
-            ids = root['filters']['ids']
-            w_params = {
-                'limit': len(ids),
-                'offset': '0',
-                'platform': 'my5desktop',
-                'friendly': '1',
-                'ids[]': ids
-            }
-            # Get details of the already fetched list of watchable ids.
-            resp = urlquick.get(URL_WATCHABLE, headers=GENERIC_HEADERS, params=w_params,
-                                timeout=REQ_TIMEOUT)
-            root = json.loads(resp.text)
-
-            for watchable in root['watchables']:
-                item = Listitem()
-                item.label = watchable['sh_title']
-                item.info['plot'] = watchable['s_desc']
-                item.info['duration'] = int(int(watchable['len']) // 1000)
-                item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % watchable['sh_id']
-                show_id = watchable['id']
-                item.set_callback(get_video_url, fname="fname", season_f_name="season_f_name",
-                                  show_id=show_id, standalone="no")
-                item_post_treatment(item)
-                yield item
-
-
-@Route.register(redirect_single_item=True, autosort=False, content_type="videos")
-def list_collections(plugin, browse_name, offset, **kwargs):
-    plugin.add_sort_methods(*DFLT_SORT_METHODS)
-
-    # Get subgenre ID of this collection
     resp = urlquick.get(FEEDS_API % browse_name, headers=GENERIC_HEADERS, params=feeds_api_params,
                         timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
     root = json.loads(resp.text)
-    subgenre = root['filters']['vod_subgenres']
+    filters = root['filters']
+    items_type = filters['type']
+    subgenres = filters.get('vod_subgenres')
 
-    # Get the actual content of the collection based on the subgenre ID.
-    view_all_params = {
-        'platform': 'my5desktop',
-        'friendly': '1',
-        'limit': '25',
+    if subgenres:
+        # Get the actual content of the collection based on the subgenre ID(s).
+        # This is a type 'Show', but instead of a list of id's, it has vod_subgenres.
+        req_params = {
+            'limit': DFLT_PAGE_SIZE,
+            'vod_subgenres[]': filters.get('vod_subgenres')
+        }
+        yield from search_shows(plugin, req_params)
+
+    elif items_type == 'Show':
+        ids = filters.get('ids')
+        req_params = {
+            'limit': len(ids),
+            'ids[]': ids
+        }
+        yield from search_shows(plugin, req_params)
+
+    elif items_type == 'Collection':
+        try:
+            for collection in filters['contents']:
+                item = Listitem()
+                item.label = collection['title']
+                if collection.get('live'):
+                    item.set_callback(get_live_url, item_id=collection['channel'])
+                else:
+                    browse_name = collection['id']
+                    if browse_name in ('PLC_My5DesktopHeroRail',
+                                       'PLC_My5ContinueWatchingRail',
+                                       'PLC_My5DesktopRecommendationsRail'):
+                        continue
+                    item.set_callback(list_collections, browse_name=browse_name)
+                item_post_treatment(item)
+                yield item
+        except (ValueError, AttributeError):
+            pass
+
+    elif items_type == 'Watchable':
+        ids = filters.get('ids')
+        yield from search_watchables(plugin, ids)
+    else:
+        yield False
+        return
+
+
+@Route.register(content_type="videos")
+def search_shows(plugin, params, offset=0):
+    """List shows obtained from the search endpoint for shows.
+
+    This provides content for many listings, like collections, categories,
+    and of course search.
+    Query string parameters ``params`` define the search criteria, which can
+    be a list of show id's, a list of subcategory id's, a or search term.
+
+    """
+    std_params = {
         'offset': offset,
-        'vod_subgenres[]': subgenre
+        'platform': 'my5desktop',
+        'friendly': '1'
     }
-    resp = urlquick.get(URL_VIEW_ALL, headers=GENERIC_HEADERS, params=view_all_params,
-                        timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
-    root = json.loads(resp.text)
+    std_params.update(params)
+    resp = urlquick.get(url=URL_SHOWS,
+                        headers=GENERIC_HEADERS,
+                        params=std_params,
+                        timeout=REQ_TIMEOUT,
+                        max_age=DFLT_CACHE_TIME)
+    data = json.loads(resp.text)
 
-    for emission in root['shows']:
-        item = Listitem()
+    for emission in data['shows']:
         title = emission['title']
-        item.label = title
-        item.info['plot'] = emission['s_desc']
         fname = emission['f_name']
-        picture_id = emission['id']
-        item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % picture_id
+        show_id = emission['id']
+
+        item = Listitem()
+        item.label = title
+        item.art['thumb'] = item.art['landscape'] = SHOW_IMG_URL % show_id
+        item.info['plot'] = emission['s_desc']
+        item.info['genre'] = emission['genre']
         if "standalone" in emission:
-            item.set_callback(get_video_url, fname=fname, season_f_name="",
-                              show_id="show_id", standalone="yes")
+            # The item is playable
+            item.set_callback(get_video_url,
+                              fname=fname,
+                              season_f_name="",
+                              show_id='',
+                              standalone="yes")
         else:
-            item.set_callback(list_seasons, fname=fname, pid=picture_id, title=title)
+            item.set_callback(list_seasons,
+                              fname=fname,
+                              pid=show_id,
+                              title=title)
         item_post_treatment(item)
         yield item
-    if 'next_page_url' in root:
-        offset = str(int(offset) + int(view_all_params['limit']))
-        item = Listitem.next_page(browse_name=browse_name, offset=offset)
+    if 'next_page_url' in data:
+        item = Listitem.next_page(callback=search_shows,
+                                  params=params,
+                                  offset=data['next_offset'])
         item.property['SpecialSort'] = 'bottom'
         yield item
+
+
+@Route.register(content_type="videos")
+def search_watchables(plugin, ids):
+    """List playable items obtained from the search endpoint for watchables.
+
+    This provides content for some collections and categories.
+
+    """
+    w_params = {
+        'limit': len(ids),
+        'offset': '0',
+        'platform': 'my5desktop',
+        'friendly': '1',
+        'ids[]': ids
+    }
+    # Get details of the already fetched list of watchable ids.
+    resp = urlquick.get(URL_WATCHABLE,
+                        headers=GENERIC_HEADERS,
+                        params=w_params,
+                        timeout=REQ_TIMEOUT)
+    root = json.loads(resp.text)
+    for watchable in root['watchables']:
+        yield parse_watchable(watchable)
 
 
 @Route.register(redirect_single_item=True, autosort=False, content_type="videos")
@@ -332,22 +352,82 @@ def list_episodes(plugin, fname, season_number, **kwargs):
     resp = urlquick.get(URL_EPISODES % (fname, season_number), headers=GENERIC_HEADERS,
                         params=view_api_params, timeout=REQ_TIMEOUT, max_age=DFLT_CACHE_TIME)
     root = json.loads(resp.text)
-
     for episode in root['episodes']:
-        item = Listitem()
-        picture_id = episode['id']
-        item.art['thumb'] = item.art['landscape'] = IMG_URL % picture_id
-        item.label = episode['title']
-        item.info['plot'] = episode['s_desc']
-        t = int(int(episode['len']) // 1000)
-        item.info['duration'] = t
-        season_f_name = episode['sea_f_name']
-        fname = episode['f_name']
-        show_id = episode['id']
-        item.set_callback(get_video_url, fname=fname, season_f_name=season_f_name,
-                          show_id=show_id, standalone="no")
-        item_post_treatment(item)
-        yield item
+        yield parse_watchable(episode, from_episode_list=True)
+
+
+def parse_watchable(watchable, from_episode_list=False):
+    """Parse data of a single watchable item and return a codequick Listitem.
+
+    Parse item data for functions that retrieve watchables, like
+    `search_watchables()` and `list_episodes()`.
+
+    Watchables can are various types of items, like episodes of series, or one-offs
+    like documentaties, or films.
+
+    Listitem label and description are handled differently depending on the origin of the
+    watchable data. If the watchable originates from listing the contents of a series,
+    we just use the title of the episode as label for the listitem.
+    When the data is from another list, like a collection, the title of the programme the
+    watchable belongs to is use as Listitem label, because episode titles like 'episode 4',
+    have no meaning in this context. In that case more info about the origin or episode
+    title, etc is provided in the description.
+
+    Args:
+        watchable (dict)
+        from_episode_list (bool): True when watchable data originates from season listing.
+    Returns:
+        Listitem: codequick listitem
+
+    """
+    title = watchable['title']
+    show_title = watchable['sh_title']
+    season_nr = watchable.get('sea_num')
+    description = watchable.get('m_desc') or watchable.get('s_desc', show_title)
+    watchable_id = watchable['id']
+    # Field 'adv' can be absent, None, a normal string, empty string, or a single space character.
+    advice = (watchable.get('adv') or '').strip()
+    title_line = None
+
+    item = Listitem()
+    item.art['thumb'] = item.art['landscape'] = IMG_URL % watchable_id
+    if from_episode_list:
+        item.label = title
+    else:
+        item.label = show_title
+        if season_nr:
+            # This watchable is part of a series
+            title_line = f"series {watchable.get('sea_num', '')} - {title}"
+            # Create a context menu to go to episode's programme folder
+            item.context.container(list_seasons,
+                                   'View all episodes',
+                                   fname=watchable['sh_f_name'],
+                                   pid=watchable['sh_id'],
+                                   title=show_title)
+
+    item.info['plot'] = '\n'.join(txt for txt in (
+        title_line,
+        ' ' if title_line else None,
+        description,
+        ' ',
+        advice,
+        availability(watchable.get('vod_e'))
+    ) if txt)
+    t = int(int(watchable['len']) // 1000)
+    item.info['duration'] = t
+    item.info['genre'] = watchable['genre']
+    item.set_callback(get_video_url,
+                      fname=watchable.get('f_name', ''),
+                      season_f_name=watchable.get('sea_f_name', ''),
+                      show_id=watchable_id,
+                      standalone="no")
+    item_post_treatment(item)
+    return item
+
+
+@Route.register(content_type="videos")
+def do_search(plugin, search_query, **_):
+    yield from search_shows(plugin, {'query': search_query, 'limit': '20'})
 
 
 @Resolver.register
@@ -407,3 +487,31 @@ def get_live_url(plugin, item_id, **kwargs):
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
                                                   manifest_type='mpd', headers=lic_headers)
+
+
+def availability(end_time):
+    """Return a human-readable string indicating how long the programme is
+    still available.
+
+    Args:
+        end_time (float): Timestamp when availability ends.
+    Returns:
+        str
+
+    """
+    if not end_time:
+        return ''
+    t_available = end_time - time.time()
+    days_available = int(t_available / 86400)
+    if days_available > 365:
+        return 'Available for over a year.'
+    elif days_available > 30:
+        months = int(days_available // 30)
+        return 'Available for {} month{}.'.format(months, 's' if months > 1 else '')
+    elif days_available >= 1:
+        return '[COLOR orange]Only {} day{} available.[/COLOR]'.format(
+            days_available, 's' if days_available > 1 else '')
+    else:
+        hours_available = int(t_available / 3600)
+        return '[COLOR orange]Only {} hour{} available.[/COLOR]'.format(
+            hours_available, 's' if hours_available != 1 else '')
