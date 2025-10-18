@@ -8,13 +8,17 @@
 
 from __future__ import unicode_literals
 
+import base64
 import json
 import random
 import re
 import sys
 from builtins import str
 import requests
+from datetime import datetime, timezone
 
+# noinspection PyUnresolvedReferences
+import xbmcvfs
 # noinspection PyUnresolvedReferences
 import urlquick
 # noinspection PyUnresolvedReferences
@@ -70,13 +74,13 @@ GENERIC_HEADERS = {
 }
 
 RTLPLAY_HEADERS = {
-    'User-Agent': 'RTL_PLAY/21.250624 (com.tapptic.rtl.tvi; build:20529; Android TV 30) okhttp/4.12.0',
+    'User-Agent': 'RTL_PLAY/22.251009 (com.tapptic.rtl.tvi; build:20873; Android 30)',
     'Accept': '*/*',
     'Accept-Encoding': 'gzip',
     'Connection': 'Keep-Alive',
     'Content-Type': 'application/json; charset=UTF-8',
     'lfvp-device-segment': 'TV>Android',
-    'x-app-version': '21',
+    'x-app-version': '22',
 }
 
 
@@ -181,26 +185,14 @@ def list_program_categories(plugin, item_id, program_id, **kwargs):
     - Saison 1
     - ...
     """
-    resp = urlquick.get(URL_LFVP_API + '/RTL_PLAY/detail/' + program_id, headers=RTLPLAY_HEADERS, max_age=-1).content.decode()
+    resp = urlquick.get(URL_LFVP_API + '/RTL_PLAY/detail3/' + program_id, headers=RTLPLAY_HEADERS, max_age=-1).content.decode()
     json_parser = json.loads(resp)
 
     channel_image = json_parser.get('landscapeTeaserImageUrl')
     channel_id = json_parser.get('id')
-    channel_title = json_parser.get('name')
+    channel_title = json_parser.get('title').get('label')
     channel_desc = json_parser.get('description')
-    for item_season in json_parser.get('seasonIndices', []):
-        item = Listitem()
-        item.label = 'Saison ' + str(item_season)
-        item.info['plot'] = channel_desc
-        item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = channel_image
-        item.set_callback(list_videos,
-                          item_id=item_id,
-                          program_id=program_id,
-                          season_id=item_season)
-        item_post_treatment(item)
-        yield item
-
-    if not json_parser.get('seasonIndices', []):
+    if not json_parser.get('seasonPicker', []):
         item = Listitem()
         item.label = channel_title
         item.info['plot'] = channel_desc
@@ -211,6 +203,18 @@ def list_program_categories(plugin, item_id, program_id, **kwargs):
                           video_id=channel_id)
         item_post_treatment(item, is_playable=True, is_downloadable=False)
         yield item
+    else:
+        for item_season in json_parser.get('seasonPicker').get('indices', []):
+            item = Listitem()
+            item.label = 'Saison ' + str(item_season)
+            item.info['plot'] = channel_desc
+            item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = channel_image
+            item.set_callback(list_videos,
+                              item_id=item_id,
+                              program_id=program_id,
+                              season_id=item_season)
+            item_post_treatment(item)
+            yield item
 
 
 @Route.register
@@ -220,13 +224,13 @@ def list_videos(plugin, item_id, program_id, season_id, **kwargs):
     else:
         params = None
 
-    resp = urlquick.get(URL_LFVP_API + '/RTL_PLAY/detail/' + program_id, headers=RTLPLAY_HEADERS, params=params, max_age=-1).content.decode()
+    resp = urlquick.get(URL_LFVP_API + '/RTL_PLAY/detail3/' + program_id, headers=RTLPLAY_HEADERS, params=params, max_age=-1).content.decode()
     json_parser = json.loads(resp)
 
     at_least_one_item = False
-    for array in json_parser.get('selectedSeason').get('episodes'):
+    for array in json_parser.get('seasonPicker').get('selected').get('episodes'):
         video_id = array.get('id')
-        video_title = array.get('name')
+        video_title = array.get('title')
         video_desc = array.get('description')
         video_image = array.get('imageUrl')
         video_duration = array.get('durationSeconds')
@@ -248,8 +252,48 @@ def list_videos(plugin, item_id, program_id, season_id, **kwargs):
         yield False
 
 
+def is_valid_token():
+    with xbmcvfs.File('special://userdata/addon_data/plugin.video.catchuptvandmore/tokenrtlplay', 'r') as f1:
+        token_ = f1.read()
+        f1.close()
+
+    if len(token_) == 0:
+        return None
+
+    LOGIN_TOKEN = json.loads(token_)
+    if LOGIN_TOKEN.get('lfvp_access_token') is not None:
+        # Verify our token to see if it's still valid.
+        b64str = LOGIN_TOKEN.get('lfvp_access_token')
+        bstr = []
+        for i in b64str.split("."):
+            bstr.append(base64.b64decode(i + '=' * (-len(i) % 4)))
+
+        # Check expiration time
+        lfvp_access_token_b64 = json.loads(bstr[1])
+        exp = round(datetime.fromtimestamp(lfvp_access_token_b64.get('exp'), tz=timezone.utc).timestamp())
+        now = round(datetime.utcnow().timestamp())
+
+        if exp > now:
+            return LOGIN_TOKEN
+
+    return None
+
+
+def save_token(buffer):
+    with xbmcvfs.File('special://userdata/addon_data/plugin.video.catchuptvandmore/tokenrtlplay', 'wb') as f1:
+        result = json.dump(buffer, f1, ensure_ascii=False, indent=4)
+        f1.close()
+
+    return result
+
+
 @Resolver.register
 def get_login_token(plugin, **kwargs):
+    # Check is valide token
+    LOGIN_TOKEN = is_valid_token()
+    if LOGIN_TOKEN:
+        return LOGIN_TOKEN
+
     login = plugin.setting.get_string('rtlplaybe.login')
     password = plugin.setting.get_string('rtlplaybe.password')
     if login == '' or password == '':
@@ -338,6 +382,8 @@ def get_login_token(plugin, **kwargs):
             login_token.update({"lfvp_auth.profile": x_dpp_profile, })
         if 'lfvp_auth_token' in profile_id:
             login_token.update({"lfvp_auth_token": profile_id.get('lfvp_auth_token'), })
+
+    save_token(login_token)
 
     return login_token
 
