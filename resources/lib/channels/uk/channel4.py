@@ -206,7 +206,7 @@ def get_live_url(plugin, item_id, **kwargs):
             break
 
     # Attempt to expose HD resolutions
-    if url:
+    if url and "manifest_sd.mpd" in url:
         new_url = url.replace("manifest_sd.mpd", "manifest.mpd")
         try:
             response = requests.head(new_url, allow_redirects=True, timeout=5)
