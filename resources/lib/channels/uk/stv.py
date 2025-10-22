@@ -166,9 +166,6 @@ def get_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE_JSON % item_id, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
     streams = json_parser.get("results", {}).get("streams", [])
-    streams = sorted(
-        streams,
-        key=lambda entry: DEVICE_PRIORITY.get(entry.get("device"), float('inf'))
-    )
+    streams = sorted(streams, key=lambda entry: DEVICE_PRIORITY.get(entry.get("device"), float('inf')))
     url = streams[0].get("streamUrl") if streams else None
     return resolver_proxy.get_stream_with_quality(plugin, url)
