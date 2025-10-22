@@ -11,7 +11,7 @@ import base64
 import re
 import json
 from builtins import str
-
+import requests
 from codequick import Listitem, Script, Resolver, Route
 import urlquick
 
@@ -203,8 +203,17 @@ def get_live_url(plugin, item_id, **kwargs):
         if field['name'] == 'dashwv-live-stream-iso-dash-sp-tl':
             token = field['streams'][0]['token']
             url = field['streams'][0]['uri']
-            url = url.replace("manifest_sd.mpd", "manifest.mpd") if url else url
             break
+
+    # Attempt to expose HD resolutions
+    if url:
+        new_url = url.replace("manifest_sd.mpd", "manifest.mpd")
+        try:
+            response = requests.head(new_url, allow_redirects=True, timeout=5)
+            if response.status_code == 200:
+                url = new_url
+        except requests.RequestException as e:
+            print(f"Request failed: {e}")
 
     cipher = AES.new(bytes('n9cLieYkqwzNCqvi', 'UTF-8'), AES.MODE_CBC, bytes('odzcU3WdUiXLucVd', 'UTF-8'))
     full_decoded_token = unpad(cipher.decrypt(base64.b64decode(token)), 16, style='pkcs7').decode('UTF-8')
