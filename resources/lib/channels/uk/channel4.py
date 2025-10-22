@@ -203,6 +203,7 @@ def get_live_url(plugin, item_id, **kwargs):
         if field['name'] == 'dashwv-live-stream-iso-dash-sp-tl':
             token = field['streams'][0]['token']
             url = field['streams'][0]['uri']
+            url = url.replace("manifest_sd.mpd", "manifest.mpd") if url else url
             break
 
     cipher = AES.new(bytes('n9cLieYkqwzNCqvi', 'UTF-8'), AES.MODE_CBC, bytes('odzcU3WdUiXLucVd', 'UTF-8'))
