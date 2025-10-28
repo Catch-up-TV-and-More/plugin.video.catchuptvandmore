@@ -21,7 +21,7 @@ PATTERN_PLAYER = re.compile(r"PLAYER_ID:\"(.*?)\"")
 PATTERN_ACCOUNT = re.compile(r"ACCOUNT_ID:\"(.*?)\"")
 PATTERN_KEY = re.compile(r"POLICY_KEY:\"(.*?)\"")
 # Live
-URL_LIVE_JSON = "https://player.api.stv.tv/v1/streams/%s/"
+URL_LIVE_JSON = "https://player.api.stv.tv/v1/channels/%s/"
 # channel name
 
 URL_CATEGORIES_JSON = "https://player.api.stv.tv/v1/categories"
@@ -35,6 +35,11 @@ URL_BRIGHTCOVE_DATAS = "https://player.stv.tv/player-web/players/vod/bundle.js"
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
+DEVICE_PRIORITY = {
+    "fvp_dash": 0,
+    "desktop": 1,
+    "mobile": 2
+}
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
@@ -160,5 +165,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE_JSON % item_id, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = json.loads(resp.text)
-    url = json_parser["results"]["streamUrl"]
+    streams = json_parser.get("results", {}).get("streams", [])
+    best_stream = min(streams, key=lambda entry: DEVICE_PRIORITY.get(entry.get("device"), float('inf')), default=None)
+    url = best_stream.get("streamUrl") if best_stream else None
     return resolver_proxy.get_stream_with_quality(plugin, url)
