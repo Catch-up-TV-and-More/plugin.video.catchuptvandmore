@@ -32,7 +32,7 @@ menu = {
         'thumb': 'channels/uk/dave.png',
         'fanart': 'channels/uk/dave_fanart.jpg',
         'xmltv_id': '19.freeview.co.uk',
-        'enabled': True,
+        'enabled': False,
         'order': 2
     },
     'yesterday': {
@@ -41,7 +41,7 @@ menu = {
         'thumb': 'channels/uk/yesterday.png',
         'fanart': 'channels/uk/yesterday_fanart.jpg',
         'xmltv_id': '27.freeview.co.uk',
-        'enabled': True,
+        'enabled': False,
         'order': 3
     },
     'drama': {
@@ -50,7 +50,7 @@ menu = {
         'thumb': 'channels/uk/drama.png',
         'fanart': 'channels/uk/drama_fanart.jpg',
         'xmltv_id': '20.freeview.co.uk',
-        'enabled': True,
+        'enabled': False,
         'order': 4
     },
     'skynews': {
@@ -128,7 +128,7 @@ menu = {
         'label': 'Birmingham Local TV',
         'thumb': 'channels/uk/birminghamlocal.png',
         'fanart': 'channels/uk/birminghamlocal_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 13
     },
     'bristollocal': {
@@ -136,7 +136,7 @@ menu = {
         'label': 'Bristol Local TV',
         'thumb': 'channels/uk/bristollocal.png',
         'fanart': 'channels/uk/bristollocal_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 14
     },
     'cardifflocal': {
@@ -144,7 +144,7 @@ menu = {
         'label': 'Cardiff Local TV',
         'thumb': 'channels/uk/cardifflocal.png',
         'fanart': 'channels/uk/cardifflocal_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 15
     },
     'leedslocal': {
@@ -152,7 +152,7 @@ menu = {
         'label': 'Leeds Local TV',
         'thumb': 'channels/uk/leedslocal.png',
         'fanart': 'channels/uk/leedslocal_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 16
     },
     'liverpoollocal': {
@@ -160,7 +160,7 @@ menu = {
         'label': 'Liverpool Local TV',
         'thumb': 'channels/uk/liverpoollocal.png',
         'fanart': 'channels/uk/liverpoollocal_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 17
     },
     'northwaleslocal': {
@@ -168,7 +168,7 @@ menu = {
         'label': 'North Wales Local TV',
         'thumb': 'channels/uk/northwaleslocal.png',
         'fanart': 'channels/uk/northwaleslocal_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 18
     },
     'teessidelocal': {
@@ -176,7 +176,7 @@ menu = {
         'label': 'Teesside Local TV',
         'thumb': 'channels/uk/teessidelocal.png',
         'fanart': 'channels/uk/teessidelocal_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 19
     },
     'twlocal': {
@@ -184,7 +184,7 @@ menu = {
         'label': 'Tyne & Wear Local TV',
         'thumb': 'channels/uk/twlocal.png',
         'fanart': 'channels/uk/twlocal_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 20
     },
     'really': {
