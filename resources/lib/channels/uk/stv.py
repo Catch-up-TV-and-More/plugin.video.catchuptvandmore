@@ -41,6 +41,7 @@ DEVICE_PRIORITY = {
     "mobile": 2
 }
 
+
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
     """List categroies from https://player.stv.tv/categories/."""
@@ -168,4 +169,5 @@ def get_live_url(plugin, item_id, **kwargs):
     streams = json_parser.get("results", {}).get("streams", [])
     best_stream = min(streams, key=lambda entry: DEVICE_PRIORITY.get(entry.get("device"), float('inf')), default=None)
     url = best_stream.get("streamUrl") if best_stream else None
+
     return resolver_proxy.get_stream_with_quality(plugin, url)
