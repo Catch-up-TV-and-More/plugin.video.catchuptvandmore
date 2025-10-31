@@ -75,6 +75,7 @@ menu = {
         'resolver': '/resources/lib/channels/uk/stv:get_live_url',
         'label': 'STV +1',
         'thumb': 'channels/uk/stv_plusone.png',
+        'xmltv_id': '35.freeview.co.uk',
         'enabled': True,
         'order': 7
     },
