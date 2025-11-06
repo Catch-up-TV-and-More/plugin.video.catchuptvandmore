@@ -363,15 +363,21 @@ def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
     video_url, drm_url, sub_url = part2(iv, aesKey, data)
 
     # Attempt to expose FHD resolutions
-    sd_tt_mpd = "_SD-tt.mpd"
-    if video_url and sd_tt_mpd in video_url:
-        new_url = video_url.replace(sd_tt_mpd, "-tt.mpd")
-        try:
-            resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
-            if resp.text:
-                video_url = new_url
-        except Exception:
-            pass
+    if video_url:
+        replacements = {
+            "_SD-tt.mpd": "-tt.mpd",
+            "_SD.mpd": ".mpd"
+        }
+        for old, new in replacements.items():
+            if old in video_url:
+                new_url = video_url.replace(old, new)
+                try:
+                    resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
+                    if resp.text:
+                        video_url = new_url
+                        break
+                except Exception:
+                    pass
 
     # Currently (Kodi 21.1), dash embedded subtitles from channel5 are not shown.
     # However, if the same subtitle url is passed to Kodi separately, it does work.
