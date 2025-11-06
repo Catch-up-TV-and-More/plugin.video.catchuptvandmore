@@ -372,7 +372,7 @@ def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
             if old in video_url:
                 new_url = video_url.replace(old, new)
                 try:
-                    resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
+                    resp = urlquick.get(new_url, headers=GENERIC_HEADERS, max_age=-1)
                     if resp.text:
                         video_url = new_url
                         break
