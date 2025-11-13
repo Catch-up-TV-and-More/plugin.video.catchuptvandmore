@@ -55,7 +55,7 @@ def list_categories(plugin, **kwargs):
                     url_item = d['url'].replace('http', 'https').replace(URL_PROGRAMS, URL_ROOT)
                     item = Listitem()
                     item.label = url_item.replace('/', ' ').split()[-1].title()
-                    item.art["thumb"] = item.art["landscape"] = d['image']['href']
+                    item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = d['image']['href']
                     item.set_callback(list_programs, url=url_item, offset='0')
                     item_post_treatment(item)
                     yield item
@@ -77,7 +77,7 @@ def list_programs(plugin, url, offset, **kwargs):
     for program in programs["brands"]["items"]:
         item = Listitem()
         item.label = program["labelText"]
-        item.art["thumb"] = item.art["landscape"] = program["imageLink"]
+        item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = program["imageLink"]
         item.set_callback(list_seasons, url=program["hrefLink"])
         item.info["plot"] = program["overlayText"]
         item_post_treatment(item)
@@ -107,7 +107,7 @@ def list_seasons(plugin, url, **kwargs):
                             item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
                         else:
                             item.label = episode['title'] + " ({})".format(episode['originalTitle'])
-                        item.art['thumb'] = item.art['landscape'] = episode['image']['src']
+                        item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = episode['image']['src']
                         item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
                         item.info['plot'] = episode['summary']
                         item_post_treatment(item)
@@ -122,7 +122,7 @@ def list_seasons(plugin, url, **kwargs):
                         image = datas['images']['image16x9']['src']
                     else:
                         image = datas['images']['hero']['landscape']
-                    item.art["thumb"] = item.art["landscape"] = image
+                    item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = image
                     item.set_callback(get_episodes_list, series, series_number, datas)
                     item.info['plot'] = season['summary']
                     item_post_treatment(item)
@@ -139,7 +139,7 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
                 item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
             else:
                 item.label = episode['title'] + " ({})".format(episode['originalTitle'])
-            item.art['thumb'] = item.art['landscape'] = episode['image']['src']
+            item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = episode['image']['src']
             item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
             item.info['plot'] = episode['summary']
             item_post_treatment(item)
