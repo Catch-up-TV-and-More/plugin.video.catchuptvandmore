@@ -145,6 +145,9 @@
         <setting label="30084" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
+            <setting label="30264" type="text" id="uk.channel4.login" default=""/>
+            <setting label="30265" type="text" id="uk.channel4.password" option="hidden" default=""/>
+
             <setting label="30250" type="text" id="uktvplay.login" default=""/>
             <setting label="30251" type="text" id="uktvplay.password" option="hidden" default=""/>
 

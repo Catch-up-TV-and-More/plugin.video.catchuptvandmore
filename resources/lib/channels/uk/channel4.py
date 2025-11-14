@@ -10,7 +10,9 @@ from __future__ import unicode_literals
 import base64
 import re
 import json
+import time
 from builtins import str
+from kodi_six import xbmcvfs
 
 import requests
 from codequick import Listitem, Script, Resolver, Route
@@ -31,17 +33,135 @@ try:
 except ImportError:
     from Cryptodome.Util.Padding import unpad
 
+CACHE_FILE = 'special://userdata/addon_data/plugin.video.catchuptvandmore/channel4_auth.json'
 URL_ROOT = 'https://www.channel4.com'
+AUTH_ENV = 'https://api.channel4.com'
+URL_AUTH_TOKEN = AUTH_ENV + '/online/v2/auth/token'
 URL_CATEGORIES = URL_ROOT + '/api/homepage'
 URL_PROGRAMS = 'https://www.channel4.com/programmes'
-URL_VOD = URL_ROOT + '/vod/stream/'
+URL_VOD_API = AUTH_ENV + '/online/v1/vod/stream/{programme_id}?client={client}'
+URL_VOD_WEB = URL_ROOT + '/vod/stream/'
 URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/widevine/acquire'
 
 URL_LIVE = URL_ROOT + '/simulcast/channels/%s'
 
+AUTH_TOKEN_HEADERS = {"authorization": f"Basic MzZVVUN0OThWTVF2QkFnUTI3QXU4ekdIbDMxTjlMUTE6Sllzd3lIdkdlNjJWbGlrVw=="}
 BASIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 LICENSE_HEADERS = "User-Agent=%s&Content-Type=application/json&Referer=%s" % (web_utils.get_random_ua(), URL_ROOT)
 
+KEYS = {
+    'amazonfire-dash': {
+        'key': 'K2C8Q09D7HJ385AB',
+        'iv': 'B3LKVU05F3IDLVME'
+    },
+    'web': {
+        'key': 'n9cLieYkqwzNCqvi',
+        'iv': 'odzcU3WdUiXLucVd'
+    }
+}
+
+def get_token_if_valid(channel4_auth):
+    if channel4_auth and channel4_auth.get('accessToken'):
+        issued_at = channel4_auth.get('issuedAt')
+        expires_in = channel4_auth.get('expiresIn')
+        if issued_at and expires_in:
+            expiration_time = (int(issued_at) / 1000) + int(expires_in)
+            if expiration_time > time.time():
+                return channel4_auth.get('accessToken')
+    return None
+
+def get_refresh_token_if_refreshable(channel4_auth):
+    if channel4_auth and channel4_auth.get('refreshToken'):
+        refresh_token_issued_at = channel4_auth.get('refreshTokenIssuedAt')
+        refresh_token_expires_in = channel4_auth.get('refreshTokenExpiresIn')
+        if refresh_token_issued_at and refresh_token_expires_in:
+            expiration_time = (int(refresh_token_issued_at) / 1000) + int(refresh_token_expires_in)
+            if expiration_time > time.time():
+                return channel4_auth.get('refreshToken')
+    return None
+
+def get_access_token(plugin):
+    try:
+        if plugin.setting.get_string('uk.channel4.login') and plugin.setting.get_string('uk.channel4.password'):
+            channel4_auth = load_channel4_auth()
+            token = get_token_if_valid(channel4_auth)
+            if token:
+                return token
+            refresh_token = get_refresh_token_if_refreshable(channel4_auth)
+            if refresh_token:
+                token = refresh(plugin, refresh_token)
+                if token:
+                    return token
+            token = login(plugin)
+            if token:
+                return token
+    except Exception:
+        pass
+
+    return None
+
+
+def refresh(plugin, refresh_token):
+    print("Refreshing channel4_auth using refresh token " + refresh_token)
+    data = {
+        "grant_type": "refresh_token",
+        "username": plugin.setting.get_string('uk.channel4.login'),
+        "password": plugin.setting.get_string('uk.channel4.password'),
+        "refresh_token": refresh_token,
+    }
+    r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data)
+    try:
+        res = r.json()
+    except Exception:
+        error_text = 'Failed to refresh token.' + ' ' + r.text
+        Script.log(error_text)
+        plugin.notify('ERROR', 'Channel 4 : ' + error_text)
+
+    if "error" in res:
+        error_text = 'Failed to refresh token.' + ' ' + res['errorMessage']
+        Script.log(error_text)
+        plugin.notify('ERROR', 'Channel 4 : ' + error_text)
+
+    print("Refreshed channel4_auth using refresh token " + refresh_token)
+    channel4_auth = res
+    save_channel4_auth(channel4_auth)
+    return channel4_auth.get('accessToken', None)
+
+def login(plugin):
+    print("Obtaining channel4_auth using login")
+    data = {
+        "grant_type": "password",
+        "username": plugin.setting.get_string('uk.channel4.login'),
+        "password": plugin.setting.get_string('uk.channel4.password'),
+    }
+    r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data)
+    try:
+        res = r.json()
+    except Exception:
+        Script.log('Failed to login. ' + r.text)
+        plugin.notify('ERROR', 'Channel 4 : ' + plugin.localize(30711) + '. ' + r.text)
+
+    if res and "error" in res:
+        Script.log('Failed to login. ' + res['errorMessage'])
+        plugin.notify('ERROR', 'Channel 4 : ' + plugin.localize(30711) + '. ' + res['errorMessage'])
+
+    print("Obtained channel4_auth using login")
+    channel4_auth = res
+    save_channel4_auth(channel4_auth)
+    return channel4_auth.get('accessToken', None)
+
+def load_channel4_auth():
+    with xbmcvfs.File(CACHE_FILE, 'r') as f1:
+        channel4_auth = f1.read()
+        f1.close()
+        if channel4_auth:
+            return json.loads(channel4_auth)
+    return None
+
+def save_channel4_auth(channel4_auth):
+    with xbmcvfs.File(CACHE_FILE, 'wb') as f1:
+        json.dump(channel4_auth, f1, ensure_ascii=False, indent=4)
+        f1.close()
 
 @Route.register
 def list_categories(plugin, **kwargs):
@@ -148,12 +268,22 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
 
 @Resolver.register
 def get_video(plugin, programmeId, assetId, **kwargs):
-    url_video_json = URL_VOD + '{}'.format(programmeId)
-    resp = urlquick.get(url_video_json, max_age=-1)
+    access_token = get_access_token(plugin)
+    if access_token: # Allows higher bitrate 1080p
+        client = 'amazonfire-dash'
+        url_video_json = URL_VOD_API.format(programme_id=programmeId, client=client)
+        headers = { "authorization": f"Bearer {access_token}"}
+    else:
+        client = 'web'
+        url_video_json = URL_VOD_WEB + '{}'.format(programmeId)
+        headers = None
+
+    resp = urlquick.get(url_video_json, max_age=-1, headers=headers)
 
     json_video = json.loads(resp.text)
+    supported_video_profiles = {'bigscreendashwv-dyn-stream-1', 'dashwv-dyn-stream-1'}
     for field in json_video['videoProfiles']:
-        if field['name'] == 'dashwv-dyn-stream-1':
+        if field['name'] in supported_video_profiles:
             token = field['streams'][0]['token']
             url = field['streams'][0]['uri']
             break
@@ -166,7 +296,8 @@ def get_video(plugin, programmeId, assetId, **kwargs):
                 subtitle_url = field['url']
                 break
 
-    cipher = AES.new(bytes('n9cLieYkqwzNCqvi', 'UTF-8'), AES.MODE_CBC, bytes('odzcU3WdUiXLucVd', 'UTF-8'))
+    keys = KEYS[client]
+    cipher = AES.new(bytes(keys['key'], 'UTF-8'), AES.MODE_CBC, bytes(keys['iv'], 'UTF-8'))
     decoded_token = unpad(cipher.decrypt(base64.b64decode(token)), 16, style='pkcs7').decode('UTF-8').split('|')[1]
 
     payload = json.dumps({
@@ -216,7 +347,8 @@ def get_live_url(plugin, item_id, **kwargs):
         except Exception:
             pass
 
-    cipher = AES.new(bytes('n9cLieYkqwzNCqvi', 'UTF-8'), AES.MODE_CBC, bytes('odzcU3WdUiXLucVd', 'UTF-8'))
+    keys = KEYS['web']
+    cipher = AES.new(bytes(keys['key'], 'UTF-8'), AES.MODE_CBC, bytes(keys['iv'], 'UTF-8'))
     full_decoded_token = unpad(cipher.decrypt(base64.b64decode(token)), 16, style='pkcs7').decode('UTF-8')
     decoded_token = re.compile(r'\&t\=(.*?)$').findall(full_decoded_token)[0]
 
