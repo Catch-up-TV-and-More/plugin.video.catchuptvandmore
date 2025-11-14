@@ -11,6 +11,8 @@ import time
 from builtins import str
 from datetime import datetime
 
+import json
+
 # noinspection PyUnresolvedReferences
 import urlquick
 # noinspection PyUnresolvedReferences
@@ -119,7 +121,8 @@ def tf1plus_root(plugin, **kwargs):
         ('tmc', 'TMC', 'tmc.png', 'tmc_fanart.jpg'),
         ('tfx', 'TFX', 'tfx.png', 'tfx_fanart.jpg'),
         ('tf1-series-films', 'TF1 Séries Films', 'tf1seriesfilms.png', 'tf1seriesfilms_fanart.jpg'),
-        ('lci', 'LCI', 'lci.png', 'lci_fanart.jpg')
+        ('lci', 'LCI', 'lci.png', 'lci_fanart.jpg'),
+        ('all', 'ALL', 'mytf1.png', 'mytf1_fanart.png')
     ]
 
     for channel_infos in channels:
@@ -262,17 +265,53 @@ def list_programs(plugin, item_id, category_id, **kwargs):
     - Les feux de l'amour
     - ...
     """
-    params = {
-        'id': '483ce0f',
-        'variables': '{"context":{"persona":"PERSONA_2","application":"WEB","device":"DESKTOP","os":"WINDOWS"},"filter":{"channel":"%s"},"offset":0,"limit":500}' % item_id
-    }
     headers = {
         'content-type': 'application/json',
         'referer': 'https://www.tf1.fr/programmes-tv',
         'User-Agent': web_utils.get_random_windows_ua()
     }
-    json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
-    for program_item in handle_programs(json_parser['data']['programs']['items'], category_id):
+    
+    base_variables = {
+        "context": {
+            "persona": "PERSONA_2",
+            "application": "WEB",
+            "device": "DESKTOP",
+            "os": "WINDOWS"
+        },
+        "filter": {
+            "channel": ''
+        },
+        "offset": 0,
+        "limit": 500
+    }
+    
+    all_items = []  
+    max_pages = 10 if item_id == 'all' else 1
+
+    for i in range(max_pages):
+        offset = i if item_id == 'all' else 0
+        variables = base_variables.copy()
+        variables["filter"] = variables["filter"].copy()
+        variables["filter"]["channel"] = item_id if item_id != 'all' else ''
+        variables["offset"] = offset
+        
+        params = {
+            'id': '483ce0f',
+            "variables": json.dumps(variables)
+        }
+
+        json_parser = urlquick.get(URL_API, params=params, headers=headers, max_age=-1).json()
+        items = json_parser['data']['programs']['items']
+        
+        if not items:
+            break
+
+        all_items.extend(items)
+        
+        if len(items) < 500:
+            break
+
+    for program_item in handle_programs(all_items, category_id):
         yield program_item
 
 
