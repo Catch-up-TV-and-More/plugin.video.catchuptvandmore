@@ -586,6 +586,13 @@ msgctxt "#30263"
 msgid "SFR TV password"
 msgstr ""
 
+msgctxt "#30264"
+msgid "Channel 4 Login"
+msgstr ""
+
+msgctxt "#30265"
+msgid "Channel 4 Password"
+msgstr ""
 
 # TV integration (from 30270 to 30289)
 
