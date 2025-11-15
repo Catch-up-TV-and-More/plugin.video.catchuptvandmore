@@ -102,7 +102,6 @@ def get_access_token(plugin):
 
 
 def refresh(plugin, refresh_token):
-    print("Refreshing channel4_auth using refresh token " + refresh_token)
     data = {
         "grant_type": "refresh_token",
         "username": plugin.setting.get_string('uk.channel4.login'),
@@ -122,13 +121,11 @@ def refresh(plugin, refresh_token):
         Script.log(error_text)
         plugin.notify('ERROR', 'Channel 4 : ' + error_text)
 
-    print("Refreshed channel4_auth using refresh token " + refresh_token)
     channel4_auth = res
     save_channel4_auth(channel4_auth)
     return channel4_auth.get('accessToken', None)
 
 def login(plugin):
-    print("Obtaining channel4_auth using login")
     data = {
         "grant_type": "password",
         "username": plugin.setting.get_string('uk.channel4.login'),
@@ -145,7 +142,6 @@ def login(plugin):
         Script.log('Failed to login. ' + res['errorMessage'])
         plugin.notify('ERROR', 'Channel 4 : ' + plugin.localize(30711) + '. ' + res['errorMessage'])
 
-    print("Obtained channel4_auth using login")
     channel4_auth = res
     save_channel4_auth(channel4_auth)
     return channel4_auth.get('accessToken', None)
