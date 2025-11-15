@@ -37,8 +37,7 @@ CACHE_FILE = 'special://userdata/addon_data/plugin.video.catchuptvandmore/channe
 URL_ROOT = 'https://www.channel4.com'
 AUTH_ENV = 'https://api.channel4.com'
 URL_AUTH_TOKEN = AUTH_ENV + '/online/v2/auth/token'
-URL_CATEGORIES = URL_ROOT + '/api/homepage'
-URL_PROGRAMS = 'https://www.channel4.com/programmes'
+URL_CATEGORIES = URL_ROOT + '/categories'
 URL_VOD_API = AUTH_ENV + '/online/v1/vod/stream/{programme_id}?client={client}'
 URL_VOD_WEB = URL_ROOT + '/vod/stream/'
 URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/widevine/acquire'
@@ -161,20 +160,22 @@ def save_channel4_auth(channel4_auth):
 
 @Route.register
 def list_categories(plugin, **kwargs):
-    resp = urlquick.get(URL_CATEGORIES, headers=BASIC_HEADERS, max_age=-1)
-    json_parser = json.loads(resp.text)
-
-    for b in json_parser['slices']:
-        for key, value in b.items():
-            if key == 'title' and value == 'The category is...':
-                for d in b['sliceItems']:
-                    url_item = d['url'].replace('http', 'https').replace(URL_PROGRAMS, URL_ROOT)
-                    item = Listitem()
-                    item.label = url_item.replace('/', ' ').split()[-1].title()
-                    item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = d['image']['href']
-                    item.set_callback(list_programs, url=url_item, offset='0')
-                    item_post_treatment(item)
-                    yield item
+    html_text = urlquick.get(URL_CATEGORIES, headers=BASIC_HEADERS, max_age=-1).parse()
+    for script in html_text.iterfind('.//script'):
+        script_text = script.text
+        if script_text is not None and script_text.split()[0] == 'window.__PARAMS__':
+            data = json.loads(re.sub(r'^.*?{', '{', script_text).replace("undefined", "{}"))
+            initial_data = data.get('initialData', {})
+            if initial_data:
+                category_links = initial_data.get('categoryLinks', [])
+                if category_links:
+                    for category_link in category_links:
+                        item = Listitem()
+                        item.label = category_link.get('tagName')
+                        url_item = URL_ROOT + category_link.get('href')
+                        item.set_callback(list_programs, url=url_item, offset='0')
+                        item_post_treatment(item)
+                        yield item
 
 
 @Route.register
