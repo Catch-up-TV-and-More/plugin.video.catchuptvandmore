@@ -165,9 +165,48 @@ def save_channel4_auth(channel4_auth):
         json.dump(channel4_auth, f1, ensure_ascii=False, indent=4)
         f1.close()
 
+@Route.register(content_type="videos")
+def do_search(plugin, search_query):
+    PREDICTIVE_SEARCH_URL = "https://all4nav.channel4.com/v1/api/search"
+    params = {
+        "expand": "default",
+        "q": search_query,
+        "limit": 100,
+        "offset": 0
+    }
+
+    search_json = json.loads(urlquick.get(PREDICTIVE_SEARCH_URL, headers=BASIC_HEADERS, params=params, max_age=-1).text)
+    if search_json:
+        if "results" in search_json:
+            results = search_json.get("results", [])
+            if results:
+                for result in results:
+                    if result:
+                        brand = result.get("brand")
+                        label = brand.get("label")
+                        item = Listitem()
+                        item.label = brand.get("title")
+                        thumbnail_url = brand.get("thumbnailUrl")
+                        thumbnail_url = web_utils.remove_params(thumbnail_url)  # Remove params lowering resolution
+                        item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = thumbnail_url
+                        url = brand.get("href")
+                        plot = brand.get("description")
+                        if label:
+                            plot = plot + '\n\n' + label
+                        item.info["plot"] = plot
+                        item.set_callback(list_seasons, url=url)
+                        item_post_treatment(item)
+                        yield item
 
 @Route.register
-def list_categories(plugin, **kwargs):
+def main_menu(plugin, **kwargs):
+    yield Listitem.search(do_search)
+
+    for item in get_category_list_items():
+        yield item
+
+def get_category_list_items():
+    category_list_items = []
     html_text = urlquick.get(URL_CATEGORIES, headers=BASIC_HEADERS, max_age=-1).parse()
     for script in html_text.iterfind('.//script'):
         script_text = script.text
@@ -183,7 +222,8 @@ def list_categories(plugin, **kwargs):
                         url_item = URL_ROOT + category_link.get('href')
                         item.set_callback(list_programs, url=url_item, offset='0')
                         item_post_treatment(item)
-                        yield item
+                        category_list_items.append(item)
+    return category_list_items
 
 
 @Route.register
