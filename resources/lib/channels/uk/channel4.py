@@ -37,14 +37,15 @@ CACHE_FILE = 'special://userdata/addon_data/plugin.video.catchuptvandmore/channe
 URL_ROOT = 'https://www.channel4.com'
 AUTH_ENV = 'https://api.channel4.com'
 URL_AUTH_TOKEN = AUTH_ENV + '/online/v2/auth/token'
-URL_CATEGORIES = URL_ROOT + '/categories'
+URL_CATEGORIES = URL_ROOT + '/api/homepage'
+URL_PROGRAMS = 'https://www.channel4.com/programmes'
 URL_VOD_API = AUTH_ENV + '/online/v1/vod/stream/{programme_id}?client={client}'
 URL_VOD_WEB = URL_ROOT + '/vod/stream/'
 URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/widevine/acquire'
 
 URL_LIVE = URL_ROOT + '/simulcast/channels/%s'
 
-AUTH_TOKEN_HEADERS = {"authorization": f"Basic MzZVVUN0OThWTVF2QkFnUTI3QXU4ekdIbDMxTjlMUTE6Sllzd3lIdkdlNjJWbGlrVw=="}
+AUTH_TOKEN_HEADERS = {"authorization": "Basic MzZVVUN0OThWTVF2QkFnUTI3QXU4ekdIbDMxTjlMUTE6Sllzd3lIdkdlNjJWbGlrVw=="}
 BASIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 LICENSE_HEADERS = "User-Agent=%s&Content-Type=application/json&Referer=%s" % (web_utils.get_random_ua(), URL_ROOT)
 
@@ -59,6 +60,7 @@ KEYS = {
     }
 }
 
+
 def get_token_if_valid(channel4_auth):
     if channel4_auth and channel4_auth.get('accessToken'):
         issued_at = channel4_auth.get('issuedAt')
@@ -69,6 +71,7 @@ def get_token_if_valid(channel4_auth):
                 return channel4_auth.get('accessToken')
     return None
 
+
 def get_refresh_token_if_refreshable(channel4_auth):
     if channel4_auth and channel4_auth.get('refreshToken'):
         refresh_token_issued_at = channel4_auth.get('refreshTokenIssuedAt')
@@ -78,6 +81,7 @@ def get_refresh_token_if_refreshable(channel4_auth):
             if expiration_time > time.time():
                 return channel4_auth.get('refreshToken')
     return None
+
 
 def get_access_token(plugin):
     try:
@@ -124,6 +128,7 @@ def refresh(plugin, refresh_token):
     save_channel4_auth(channel4_auth)
     return channel4_auth.get('accessToken', None)
 
+
 def login(plugin):
     data = {
         "grant_type": "password",
@@ -145,6 +150,7 @@ def login(plugin):
     save_channel4_auth(channel4_auth)
     return channel4_auth.get('accessToken', None)
 
+
 def load_channel4_auth():
     with xbmcvfs.File(CACHE_FILE, 'r') as f1:
         channel4_auth = f1.read()
@@ -153,10 +159,12 @@ def load_channel4_auth():
             return json.loads(channel4_auth)
     return None
 
+
 def save_channel4_auth(channel4_auth):
     with xbmcvfs.File(CACHE_FILE, 'wb') as f1:
         json.dump(channel4_auth, f1, ensure_ascii=False, indent=4)
         f1.close()
+
 
 @Route.register
 def list_categories(plugin, **kwargs):
@@ -197,6 +205,12 @@ def list_programs(plugin, url, offset, **kwargs):
         item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = program["imageLink"]
         item.set_callback(list_seasons, url=program["hrefLink"])
         item.info["plot"] = program["overlayText"]
+        expanded_tile = program.get("expandedTile")
+        if expanded_tile:
+            if "summary" in expanded_tile and expanded_tile["summary"]:
+                item.info["plot"] = expanded_tile["summary"]
+            if "genres" in expanded_tile and expanded_tile['genres']:
+                item.info['genre'] = expanded_tile["genres"]
         item_post_treatment(item)
         yield item
 
@@ -215,6 +229,10 @@ def list_seasons(plugin, url, **kwargs):
         script_text = script.text
         if script_text is not None and script_text.split()[0] == 'window.__PARAMS__':
             datas = json.loads(re.sub(r'^.*?{', '{', script_text).replace("undefined", "{}"))['initialData']['brand']
+            genres = []
+            if "categories" in datas and datas['categories']:
+                genres = [genre["displayName"].strip() for genre in datas["categories"]]
+            fanart = datas.get('images', {}).get('hero', {}).get('landscape', {}).get('src', None)
             if bool(datas['allSeriesCount']) is False or len(datas['series']) == 0:
                 for episode in datas['episodes']:
                     if episode.get('assetId'):
@@ -224,9 +242,18 @@ def list_seasons(plugin, url, **kwargs):
                             item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
                         else:
                             item.label = episode['title'] + " ({})".format(episode['originalTitle'])
-                        item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = episode['image']['src']
+                        item.art['thumb'] = item.art['landscape'] = episode['image']['src']
+                        item.art['fanart'] = fanart
                         item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
                         item.info['plot'] = episode['summary']
+                        if 'bottomText' in episode and episode['bottomText']:
+                            item.info['plot'] = item.info['plot'] + '\n\n' + episode['bottomText']
+                        if 'durationLabel' in episode and episode['durationLabel']:
+                            try:
+                                item.info['duration'] = int(episode['durationLabel'].split()[0]) * 60
+                            except Exception:
+                                pass
+                        item.info['genre'] = genres
                         item_post_treatment(item)
                         yield item
             else:
@@ -238,16 +265,24 @@ def list_seasons(plugin, url, **kwargs):
                     if 'image16x9' in datas['images']:
                         image = datas['images']['image16x9']['src']
                     else:
-                        image = datas['images']['hero']['landscape']
-                    item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = image
+                        image = datas['images']['hero']['landscape']['src']
+                    item.art['thumb'] = item.art['landscape'] = image
+                    item.art['fanart'] = fanart
                     item.set_callback(get_episodes_list, series, series_number, datas)
                     item.info['plot'] = season['summary']
+                    if 'bottomText' in season and season['bottomText']:
+                        item.info['plot'] = item.info['plot'] + '\n\n' + season['bottomText']
+                    item.info['genre'] = genres
                     item_post_treatment(item)
                     yield item
 
 
 @Route.register
 def get_episodes_list(plugin, series, series_number, datas, **kwargs):
+    genres = []
+    if "categories" in datas and datas['categories']:
+        genres = [genre["displayName"].strip() for genre in datas["categories"]]
+    fanart = datas.get('images', {}).get('hero', {}).get('landscape', {}).get('src', None)
     for episode in datas['episodes']:
         if episode['seriesNumber'] == series_number and episode.get('assetId'):
             item = Listitem()
@@ -256,9 +291,18 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
                 item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
             else:
                 item.label = episode['title'] + " ({})".format(episode['originalTitle'])
-            item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = episode['image']['src']
+            item.art['thumb'] = item.art['landscape'] = episode['image']['src']
+            item.art['fanart'] = fanart
             item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
             item.info['plot'] = episode['summary']
+            if 'bottomText' in episode and episode['bottomText']:
+                item.info['plot'] = item.info['plot'] + '\n\n' + episode['bottomText']
+            if 'durationLabel' in episode and episode['durationLabel']:
+                try:
+                    item.info['duration'] = int(episode['durationLabel'].split()[0]) * 60
+                except Exception:
+                    pass
+            item.info['genre'] = genres
             item_post_treatment(item)
             yield item
 
@@ -266,10 +310,10 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
 @Resolver.register
 def get_video(plugin, programmeId, assetId, **kwargs):
     access_token = get_access_token(plugin)
-    if access_token: # Allows higher bitrate 1080p
+    if access_token:  # Allows higher bitrate 1080p
         client = 'amazonfire-dash'
         url_video_json = URL_VOD_API.format(programme_id=programmeId, client=client)
-        headers = { "authorization": f"Bearer {access_token}"}
+        headers = {"authorization": f"Bearer {access_token}"}
     else:
         client = 'web'
         url_video_json = URL_VOD_WEB + '{}'.format(programmeId)
