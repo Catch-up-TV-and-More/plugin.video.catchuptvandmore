@@ -130,9 +130,8 @@ def clear_cache(plugin):
     urlquick.cache_cleanup(-1)
     Script.notify(plugin.localize(30371), '')
 
-    # Remove all tv guides
     dirs, files = xbmcvfs.listdir(Script.get_info('profile'))
     for fn in files:
-        if '.xml' in fn and fn != 'settings.xml':
-            Script.log('Remove xmltv file: {}'.format(fn))
+        if ('.xml' in fn and fn != 'settings.xml') or '.json' in fn:
+            Script.log('Remove file: {}'.format(fn))
             xbmcvfs.delete(os.path.join(Script.get_info('profile'), fn))
