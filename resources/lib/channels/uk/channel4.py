@@ -196,6 +196,12 @@ def list_programs(plugin, url, offset, **kwargs):
         item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = program["imageLink"]
         item.set_callback(list_seasons, url=program["hrefLink"])
         item.info["plot"] = program["overlayText"]
+        expanded_tile = program.get("expandedTile")
+        if expanded_tile:
+            if "summary" in expanded_tile and expanded_tile["summary"]:
+                item.info["plot"] = expanded_tile["summary"]
+            if "genres" in expanded_tile and expanded_tile['genres']:
+                item.info['genre'] = expanded_tile["genres"]
         item_post_treatment(item)
         yield item
 
@@ -214,6 +220,10 @@ def list_seasons(plugin, url, **kwargs):
         script_text = script.text
         if script_text is not None and script_text.split()[0] == 'window.__PARAMS__':
             datas = json.loads(re.sub(r'^.*?{', '{', script_text).replace("undefined", "{}"))['initialData']['brand']
+            genres = []
+            if "categories" in datas and datas['categories']:
+                genres = [genre["displayName"].strip() for genre in datas["categories"]]
+            fanart = datas.get('images', {}).get('hero', {}).get('landscape', {}).get('src', None)
             if bool(datas['allSeriesCount']) is False or len(datas['series']) == 0:
                 for episode in datas['episodes']:
                     if episode.get('assetId'):
@@ -223,9 +233,18 @@ def list_seasons(plugin, url, **kwargs):
                             item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
                         else:
                             item.label = episode['title'] + " ({})".format(episode['originalTitle'])
-                        item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = episode['image']['src']
+                        item.art['thumb'] = item.art['landscape'] = episode['image']['src']
+                        item.art['fanart'] = fanart
                         item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
                         item.info['plot'] = episode['summary']
+                        if 'bottomText' in episode and episode['bottomText']:
+                            item.info['plot'] = item.info['plot'] + '\n\n' + episode['bottomText']
+                        if 'durationLabel' in episode and episode['durationLabel']:
+                            try:
+                                item.info['duration'] = int(episode['durationLabel'].split()[0]) * 60
+                            except Exception:
+                                pass
+                        item.info['genre'] = genres
                         item_post_treatment(item)
                         yield item
             else:
@@ -237,16 +256,24 @@ def list_seasons(plugin, url, **kwargs):
                     if 'image16x9' in datas['images']:
                         image = datas['images']['image16x9']['src']
                     else:
-                        image = datas['images']['hero']['landscape']
-                    item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = image
+                        image = datas['images']['hero']['landscape']['src']
+                    item.art['thumb'] = item.art['landscape'] = image
+                    item.art['fanart'] = fanart
                     item.set_callback(get_episodes_list, series, series_number, datas)
                     item.info['plot'] = season['summary']
+                    if 'bottomText' in season and season['bottomText']:
+                        item.info['plot'] = item.info['plot'] + '\n\n' + season['bottomText']
+                    item.info['genre'] = genres
                     item_post_treatment(item)
                     yield item
 
 
 @Route.register
 def get_episodes_list(plugin, series, series_number, datas, **kwargs):
+    genres = []
+    if "categories" in datas and datas['categories']:
+        genres = [genre["displayName"].strip() for genre in datas["categories"]]
+    fanart = datas.get('images', {}).get('hero', {}).get('landscape', {}).get('src', None)
     for episode in datas['episodes']:
         if episode['seriesNumber'] == series_number and episode.get('assetId'):
             item = Listitem()
@@ -255,9 +282,18 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
                 item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
             else:
                 item.label = episode['title'] + " ({})".format(episode['originalTitle'])
-            item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = episode['image']['src']
+            item.art['thumb'] = item.art['landscape'] = episode['image']['src']
+            item.art['fanart'] = fanart
             item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
             item.info['plot'] = episode['summary']
+            if 'bottomText' in episode and episode['bottomText']:
+                item.info['plot'] = item.info['plot'] + '\n\n' + episode['bottomText']
+            if 'durationLabel' in episode and episode['durationLabel']:
+                try:
+                    item.info['duration'] = int(episode['durationLabel'].split()[0]) * 60
+                except Exception:
+                    pass
+            item.info['genre'] = genres
             item_post_treatment(item)
             yield item
 
