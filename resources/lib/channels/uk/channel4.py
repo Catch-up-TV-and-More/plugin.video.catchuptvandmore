@@ -45,7 +45,7 @@ URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/wide
 
 URL_LIVE = URL_ROOT + '/simulcast/channels/%s'
 
-AUTH_TOKEN_HEADERS = {"authorization": f"Basic MzZVVUN0OThWTVF2QkFnUTI3QXU4ekdIbDMxTjlMUTE6Sllzd3lIdkdlNjJWbGlrVw=="}
+AUTH_TOKEN_HEADERS = {"authorization": "Basic MzZVVUN0OThWTVF2QkFnUTI3QXU4ekdIbDMxTjlMUTE6Sllzd3lIdkdlNjJWbGlrVw=="}
 BASIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 LICENSE_HEADERS = "User-Agent=%s&Content-Type=application/json&Referer=%s" % (web_utils.get_random_ua(), URL_ROOT)
 
@@ -60,6 +60,7 @@ KEYS = {
     }
 }
 
+
 def get_token_if_valid(channel4_auth):
     if channel4_auth and channel4_auth.get('accessToken'):
         issued_at = channel4_auth.get('issuedAt')
@@ -70,6 +71,7 @@ def get_token_if_valid(channel4_auth):
                 return channel4_auth.get('accessToken')
     return None
 
+
 def get_refresh_token_if_refreshable(channel4_auth):
     if channel4_auth and channel4_auth.get('refreshToken'):
         refresh_token_issued_at = channel4_auth.get('refreshTokenIssuedAt')
@@ -79,6 +81,7 @@ def get_refresh_token_if_refreshable(channel4_auth):
             if expiration_time > time.time():
                 return channel4_auth.get('refreshToken')
     return None
+
 
 def get_access_token(plugin):
     try:
@@ -125,6 +128,7 @@ def refresh(plugin, refresh_token):
     save_channel4_auth(channel4_auth)
     return channel4_auth.get('accessToken', None)
 
+
 def login(plugin):
     data = {
         "grant_type": "password",
@@ -146,6 +150,7 @@ def login(plugin):
     save_channel4_auth(channel4_auth)
     return channel4_auth.get('accessToken', None)
 
+
 def load_channel4_auth():
     with xbmcvfs.File(CACHE_FILE, 'r') as f1:
         channel4_auth = f1.read()
@@ -154,10 +159,12 @@ def load_channel4_auth():
             return json.loads(channel4_auth)
     return None
 
+
 def save_channel4_auth(channel4_auth):
     with xbmcvfs.File(CACHE_FILE, 'wb') as f1:
         json.dump(channel4_auth, f1, ensure_ascii=False, indent=4)
         f1.close()
+
 
 @Route.register
 def list_categories(plugin, **kwargs):
@@ -301,10 +308,10 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
 @Resolver.register
 def get_video(plugin, programmeId, assetId, **kwargs):
     access_token = get_access_token(plugin)
-    if access_token: # Allows higher bitrate 1080p
+    if access_token:  # Allows higher bitrate 1080p
         client = 'amazonfire-dash'
         url_video_json = URL_VOD_API.format(programme_id=programmeId, client=client)
-        headers = { "authorization": f"Bearer {access_token}"}
+        headers = {"authorization": f"Bearer {access_token}"}
     else:
         client = 'web'
         url_video_json = URL_VOD_WEB + '{}'.format(programmeId)
