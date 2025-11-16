@@ -78,7 +78,7 @@ menu = {
         "label": "UK Local TV",
         "thumb": "channels/uk/uklocaltv.png",
         "fanart": "channels/uk/uklocaltv_fanart.jpg",
-        "enabled": True,
+        "enabled": False,
         "order": 8,
     },
     "discoveryplus": {
