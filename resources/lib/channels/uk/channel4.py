@@ -17,6 +17,7 @@ from kodi_six import xbmcvfs
 import requests
 from codequick import Listitem, Script, Resolver, Route
 import urlquick
+from urllib.parse import urlparse, urlunparse
 
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
@@ -452,3 +453,12 @@ def get_live_url(plugin, item_id, **kwargs):
     item.property['inputstream.adaptive.license_key'] = '%s|%s|%s|JBlicense' % (URL_LICENSE, LICENSE_HEADERS, payload)
 
     return item
+
+def remove_params(url):
+    try:
+        if url:
+            parsed_url = urlparse(url)
+            return urlunparse(parsed_url._replace(query=''))
+    except Exception:
+        pass
+    return url
