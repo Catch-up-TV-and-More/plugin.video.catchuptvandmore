@@ -60,6 +60,15 @@ KEYS = {
     }
 }
 
+def remove_params(url):
+    try:
+        if url:
+            parsed_url = urlparse(url)
+            return urlunparse(parsed_url._replace(query=''))
+    except Exception:
+        pass
+    return url
+
 
 def get_token_if_valid(channel4_auth):
     if channel4_auth and channel4_auth.get('accessToken'):
@@ -165,6 +174,7 @@ def save_channel4_auth(channel4_auth):
         json.dump(channel4_auth, f1, ensure_ascii=False, indent=4)
         f1.close()
 
+
 @Route.register(content_type="videos")
 def do_search(plugin, search_query):
     PREDICTIVE_SEARCH_URL = "https://all4nav.channel4.com/v1/api/search"
@@ -198,12 +208,14 @@ def do_search(plugin, search_query):
                         item_post_treatment(item)
                         yield item
 
+
 @Route.register
 def main_menu(plugin, **kwargs):
     yield Listitem.search(do_search)
 
     for item in get_category_list_items():
         yield item
+
 
 def get_category_list_items():
     category_list_items = []
@@ -453,12 +465,3 @@ def get_live_url(plugin, item_id, **kwargs):
     item.property['inputstream.adaptive.license_key'] = '%s|%s|%s|JBlicense' % (URL_LICENSE, LICENSE_HEADERS, payload)
 
     return item
-
-def remove_params(url):
-    try:
-        if url:
-            parsed_url = urlparse(url)
-            return urlunparse(parsed_url._replace(query=''))
-    except Exception:
-        pass
-    return url
