@@ -44,8 +44,8 @@
     <news>
 [Version 0.2.41]
 [UK - CHANNEL4] Fix replay (PR #1465 issue #1464) thanks @ploughpuff
-[FR - 6PLAY] Fix replay (PR #1468 issue #1466) thanks @jeff2900
-[UK - CHANNEL4] Fix duplicates on Next Page and add Sort By setting (PR #1467 issue #1128) thanks @ploughpuff
+[FR - 6PLAY] Fix replay (PR #1468 issue #1466) thanks @jeff2900
+[UK - CHANNEL4] Fix duplicates on Next Page and add Sort By setting (PR #1467 issue #1128) thanks @ploughpuff
 [UK - BLAZE] Fix replay (issue #1471)
 [UK - UKTVPLAY] Fix replay (PR #1470 issue #1393) @nictjir
 [FR - 6PLAY] Code improvement (PR #1472) thanks @jeff2900
@@ -93,7 +93,7 @@
 [FR - FRANCETV] Fix live missing channel_id (PR #1523) thanks @jeff2900
 [FR - FRANCETV] Fix replay drm (PR #1524) thanks @jeff2900
 [FR - FRANCETV] Fix replay items no found (PR #1526 issue #1519) thanks @jeff2900
-[BE - RTLPLAYBE] Replay Fix KeyError: 'lfvp_auth_token' (PR #1534] thanks @jeff2900
+[BE - RTLPLAYBE] Replay Fix KeyError: 'lfvp_auth_token' (PR #1534] thanks @jeff2900
 [WO - ARTE] Replay add Search (PR #1541) thanks @jeff2900
 [FR - 6PLAY] Replay add Search (PR #1543) thanks @jeff2900
 [FR - TF1PLUS] Replay add sorting by Seasons (PR #1544) thanks @jeff2900
@@ -136,13 +136,13 @@ UK - MY5] Replay: Keep the 'next page' item on the bottom regardless of sort met
 [UK - CHANNEL4] Expose 1080p live streams (PR #1612 issue #1606) thanks @CasperMcFadden95
 [PROJECT] Disable broken UK live channels (PR #1613) thanks @CasperMcFadden95
 [LU - RTL] Corrected the path to channel URL for Luxembourg's RTL channels (PR #1614) thanks @qvalette
-[UK - STV+1] Add EPG (PR #1615) thanks @CasperMcFadden95
-[UK - MY5] Expose 1080p VOD streams (PR #1616) thanks @CasperMcFadden95
+[UK - STV+1] Add EPG (PR #1615) thanks @dimkroon
+[UK - MY5] Expose 1080p VOD streams (PR #1616) thanks @CasperMcFadden95
 [UK - CHANNEL4] Set fanart (PR #1619) thanks @CasperMcFadden95
 [FR - TF1PLUS] Add all channel to aggregate programs from all TF1 group channels (PR #1620) thanks @tguillaume02
 [UK- Channel 4] Use amazonfire-dash API if login provided to expose higher quality VOD (PR #1621 issue #1618) thanks @CasperMcFadden95
 [UK - Channel 4] Set more ListItem info (PR #1623) thanks @CasperMcFadden95
-[UK - Channel 4] Use same categories URL as website (PR #1624) thanks @CasperMcFadden95
+[UK - Channel 4] Use same categories URL as website (PR #1624) thanks @CasperMcFadden95
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
