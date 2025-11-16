@@ -60,6 +60,7 @@ KEYS = {
     }
 }
 
+
 def remove_params(url):
     try:
         if url:
