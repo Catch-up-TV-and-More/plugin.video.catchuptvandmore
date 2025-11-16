@@ -33,7 +33,7 @@ URL_VIDEOS_JSON = "https://player.api.stv.tv/v1/episodes"
 
 URL_BRIGHTCOVE_DATAS = "https://player.stv.tv/player-web/players/vod/bundle.js"
 
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua(), 'stv-drm': 'true'}
 
 DEVICE_PRIORITY = {
     "fvp_dash": 0,
@@ -132,6 +132,8 @@ def list_videos(plugin, item_id, program_guid=None, order_by=None, **kwargs):
         except Exception:
             subtitle = None
 
+        drm_enabled = bool(video_datas["programme"].get("drmEnabled", False))
+
         item = Listitem()
         item.label = video_title
         item.art["thumb"] = item.art["landscape"] = video_image
@@ -142,18 +144,18 @@ def list_videos(plugin, item_id, program_guid=None, order_by=None, **kwargs):
             date_value = video_datas["schedule"]["startTime"].split("T")[0]
             item.info.date(date_value, "%Y-%m-%d")
 
-        item.set_callback(get_video_url, item_id=item_id, video_id=video_id, subtitle=subtitle)
+        item.set_callback(get_video_url, item_id=item_id, video_id=video_id, subtitle=subtitle, drm_enabled=drm_enabled)
         item_post_treatment(item, is_playable=True, is_downloadable=True)
         yield item
 
 
 @Resolver.register
-def get_video_url(plugin, item_id, video_id, subtitle, download_mode=False, **kwargs):
+def get_video_url(plugin, item_id, video_id, subtitle, drm_enabled, download_mode=False, **kwargs):
     resp = urlquick.get(URL_BRIGHTCOVE_DATAS, headers=GENERIC_HEADERS, max_age=-1)
-
-    data_account = PATTERN_ACCOUNT.findall(resp.text)[0]
-    data_player = PATTERN_PLAYER.findall(resp.text)[0]
-    key = PATTERN_KEY.findall(resp.text)[0]
+    index = 1 if drm_enabled else 0
+    data_account = PATTERN_ACCOUNT.findall(resp.text)[index]
+    data_player = PATTERN_PLAYER.findall(resp.text)[index]
+    key = PATTERN_KEY.findall(resp.text)[index]
     data_video_id = video_id
 
     return resolver_proxy.get_brightcove_video_json(plugin, data_account, data_player, data_video_id, key, download_mode, subtitle)
