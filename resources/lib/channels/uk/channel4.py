@@ -187,7 +187,7 @@ def do_search(plugin, search_query):
                         item = Listitem()
                         item.label = brand.get("title")
                         thumbnail_url = brand.get("thumbnailUrl")
-                        thumbnail_url = web_utils.remove_params(thumbnail_url)  # Remove params lowering resolution
+                        thumbnail_url = remove_params(thumbnail_url)  # Remove params lowering resolution
                         item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = thumbnail_url
                         url = brand.get("href")
                         plot = brand.get("description")
