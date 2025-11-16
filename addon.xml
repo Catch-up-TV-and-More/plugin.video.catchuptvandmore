@@ -136,7 +136,7 @@ UK - MY5] Replay: Keep the 'next page' item on the bottom regardless of sort met
 [UK - CHANNEL4] Expose 1080p live streams (PR #1612 issue #1606) thanks @CasperMcFadden95
 [PROJECT] Disable broken UK live channels (PR #1613) thanks @CasperMcFadden95
 [LU - RTL] Corrected the path to channel URL for Luxembourg's RTL channels (PR #1614) thanks @qvalette
-[UK - STV+1] Add EPG (PR #1615) thanks @CasperMcFadden95
+[UK - STV+1] Add EPG (PR #1615) thanks @dimkroon
 [UK - MY5] Expose 1080p VOD streams (PR #1616) thanks @CasperMcFadden95
 [UK - CHANNEL4] Set fanart (PR #1619) thanks @CasperMcFadden95
 [FR - TF1PLUS] Add all channel to aggregate programs from all TF1 group channels (PR #1620) thanks @tguillaume02
