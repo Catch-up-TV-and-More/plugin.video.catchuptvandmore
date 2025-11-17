@@ -153,8 +153,9 @@ def tv_guide_menu(plugin, item_id, **kwargs):
             now_playing = guide_infos[0]
 
             # Title
-            if 'title' in now_playing:
-                item.label = item.label + ' — ' + now_playing['title']
+            show_title = now_playing.get('title')
+            if show_title:
+                item.info['title'] = f'{item.label}    [COLOR orange]{show_title}[/COLOR]'
 
             # Credits
             credits = []
