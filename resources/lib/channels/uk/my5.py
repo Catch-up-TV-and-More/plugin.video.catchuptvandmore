@@ -195,6 +195,10 @@ def list_submenu_my5(plugin, **kwargs):
         list_my_list_shows,
         'My List'
     )
+    yield Listitem.from_dict(
+        list_recommendations,
+        "We think you'll like..."
+    )
 
 
 @Route.register
@@ -207,6 +211,17 @@ def list_my_list_shows(plugin, **_):
     # Update the cached list of ID's
     global my_list_ids
     my_list_ids = [s['id'] for s in my_shows]
+    for show in my_shows:
+        yield parse_show(show)
+
+
+@Route.register
+def list_recommendations(plugin, **_):
+    """List recommendations based on previously watched video's."""
+    my_shows = request_user_collection('recommendations', show_login_msg=True)
+    if not my_shows:
+        yield False
+        return
     for show in my_shows:
         yield parse_show(show)
 
