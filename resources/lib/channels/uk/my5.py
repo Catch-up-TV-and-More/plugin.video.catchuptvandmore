@@ -196,6 +196,11 @@ def list_submenu_my5(plugin, **kwargs):
         'My List'
     )
     yield Listitem.from_dict(
+        list_continue_watching,
+        "Continue watching",
+        params={'_cache_to_disc_': False}
+    )
+    yield Listitem.from_dict(
         list_recommendations,
         "We think you'll like..."
     )
@@ -224,6 +229,30 @@ def list_recommendations(plugin, **_):
         return
     for show in my_shows:
         yield parse_show(show)
+
+
+@Route.register
+def list_continue_watching(_):
+    watchables = request_user_collection('continuewatching', show_login_msg=True)
+    for watchable in watchables:
+        li = parse_watchable(watchable, from_episode_list=False)
+        resume_point = watchable.get('resume_point')
+        if resume_point:
+            resume_time = resume_point['resumeTimeInSeconds']
+            total_time = resume_point['durationInSeconds']
+            li.property.update({
+                'ResumeTime': str(resume_time),
+                'TotalTime': str(total_time)
+            })
+            li.info['title'] = ''.join((watchable['sh_title'],
+                                        ' - [I]',
+                                        str(int((total_time - resume_time) / 60)),
+                                        ' mins left[/I]'))
+            # More accurate duration than the watchable parser provides.
+            li.info['duration'] = total_time
+        else:
+            li.info['title'] = watchable['sh_title'] + ' - [I]next episode[/I]'
+        yield li
 
 
 @Route.register
@@ -539,7 +568,8 @@ def request_user_collection(collection_name, show_login_msg=True):
                                     'milkshake': 'include', 'limit': 256},
                             timeout=REQ_TIMEOUT,
                             max_age=-1)
-        shows = json.loads(resp.content)['content']
+        data = json.loads(resp.content)
+        shows = data.get('content') or data['watchables']
         return shows
     except urlquick.HTTPError as err:
         # Normal response when a list is empty.
