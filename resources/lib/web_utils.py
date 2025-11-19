@@ -24,6 +24,8 @@ except ImportError:  # Python 2
     # noinspection PyUnresolvedReferences
     from urllib import unquote_plus
 
+from urllib.parse import urlparse, urlunparse
+
 if sys.version_info.major >= 3 and sys.version_info.minor >= 4:
     import html as html_parser
 elif sys.version_info.major >= 3:
@@ -119,3 +121,15 @@ def geoip():
     Script.notify(Script.get_info('name'), Script.localize(30724), icon=Script.NOTIFY_WARNING)
     Script.log('Failed to get country code based on IP address', lvl=Script.WARNING)
     return None
+
+
+def remove_params(url, check_url = False, headers = None):
+    try:
+        if url:
+            parsed_url = urlparse(url)
+            new_url = urlunparse(parsed_url._replace(query=''))
+            if not check_url or urlquick.get(new_url, headers=headers, max_age=-1).text:
+                return new_url
+    except Exception:
+        pass
+    return url

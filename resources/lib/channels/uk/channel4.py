@@ -60,17 +60,6 @@ KEYS = {
     }
 }
 
-
-def remove_params(url):
-    try:
-        if url:
-            parsed_url = urlparse(url)
-            return urlunparse(parsed_url._replace(query=''))
-    except Exception:
-        pass
-    return url
-
-
 def get_token_if_valid(channel4_auth):
     if channel4_auth and channel4_auth.get('accessToken'):
         issued_at = channel4_auth.get('issuedAt')
@@ -198,7 +187,7 @@ def do_search(plugin, search_query):
                         item = Listitem()
                         item.label = brand.get("title")
                         thumbnail_url = brand.get("thumbnailUrl")
-                        thumbnail_url = remove_params(thumbnail_url)  # Remove params lowering resolution
+                        thumbnail_url = web_utils.remove_params(thumbnail_url)  # Remove params lowering resolution
                         item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = thumbnail_url
                         url = brand.get("href")
                         plot = brand.get("description")
