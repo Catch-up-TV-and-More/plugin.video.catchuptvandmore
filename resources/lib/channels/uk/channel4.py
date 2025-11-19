@@ -384,7 +384,7 @@ def get_video(plugin, programmeId, assetId, **kwargs):
 
     subtitle_url = ''
     if plugin.setting.get_boolean('active_subtitle'):
-        supported_subtitles_formats = ['srt_009', 'sami_001']
+        supported_subtitles_formats = ['webvtt_007', 'srt_009', 'sami_001']
         for field in json_video['subtitlesAssets']:
             if field['format'] in supported_subtitles_formats:
                 subtitle_url = field['url']
