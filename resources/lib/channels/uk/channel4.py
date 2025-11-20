@@ -387,10 +387,13 @@ def get_video(plugin, programmeId, assetId, **kwargs):
         supported_subtitles_formats = ['srt_009', 'sami_001']
         if get_kodi_version() >= 20:
             supported_subtitles_formats.insert(0, 'webvtt_007')
-        for field in json_video['subtitlesAssets']:
-            if field['format'] in supported_subtitles_formats:
-                subtitle_url = field['url']
+        for subtitle_format in supported_subtitles_formats:
+            if subtitle_url:
                 break
+            for field in json_video['subtitlesAssets']:
+                if field['format'] == subtitle_format:
+                    subtitle_url = field['url']
+                    break
 
     keys = KEYS[client]
     cipher = AES.new(bytes(keys['key'], 'UTF-8'), AES.MODE_CBC, bytes(keys['iv'], 'UTF-8'))
