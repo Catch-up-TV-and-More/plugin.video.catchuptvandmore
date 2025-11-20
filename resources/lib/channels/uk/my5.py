@@ -711,6 +711,11 @@ def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
             subs_url = '/'.join((video_url.rsplit('/', maxsplit=1)[0],
                                  match[1]))
 
+    from resources.lib.prog_mon import start_progress_monitor
+    plugin.register_delayed(start_progress_monitor,
+                            callback=report_play_time,
+                            callb_kwargs={'show_id': show_id},
+                            video_url=video_url,)
     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
                                                   manifest_type='mpd', headers=lic_headers,
                                                   subtitles=subs_url)
@@ -922,3 +927,27 @@ def sign_out_account(_):
     my_list_ids = False
     Script.setting['uk.chan5.session-token'] = ''
     xbmcgui.Dialog().ok('Channel5', Script.localize(TXT_LOGOUT_SUCCESS))
+
+
+def report_play_time(evt, show_id):
+    if evt.evt_type not in ('heartbeat', 'stopped'):
+        return True
+    session_tkn = get_session_token()
+    if not session_tkn:
+        return False
+
+    try:
+        urlquick.put(
+            url='https://userservice-api.channel5.com/resumePoints/' + show_id,
+            headers={'User-Agent': web_utils.get_random_ua(),
+                     'authorization': 'Bearer ' + session_tkn},
+            json={'durationInSeconds': int(evt.total_time),
+                  'platform': 'My5 Web',
+                  'resumeTimeInSeconds': int(evt.play_time)},
+            timeout=REQ_TIMEOUT
+        )
+    except urlquick.HTTPError as err:
+        Script.log("[UK-Chan5] Error reporting playing time: %r.",
+                   (err, ), lvl=Script.DEBUG)
+        return False
+    return True
