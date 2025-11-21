@@ -460,43 +460,43 @@ xmltv_infos = {
     'fr_live':
         {
             'method': 'CUTV_xmltv_github',
-            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_{}.xml',
-            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_fr_{}_md5.txt',
+            'url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_fr_{}.xml',
+            'md5_url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_fr_{}_md5.txt',
             'keyword': 'tv_guide_fr_'
         },
     'be_live':
         {
             'method': 'CUTV_xmltv_github',
-            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}.xml',
-            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_be_{}_md5.txt',
+            'url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_be_{}.xml',
+            'md5_url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_be_{}_md5.txt',
             'keyword': 'tv_guide_be_'
         },
     'ch_live':
         {
             'method': 'CUTV_xmltv_github',
-            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_ch_{}.xml',
-            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_ch_{}_md5.txt',
+            'url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_ch_{}.xml',
+            'md5_url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_ch_{}_md5.txt',
             'keyword': 'tv_guide_ch_'
         },
     'uk_live':
         {
             'method': 'CUTV_xmltv_github',
-            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_uk_{}.xml',
-            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_uk_{}_md5.txt',
+            'url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_uk_{}.xml',
+            'md5_url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_uk_{}_md5.txt',
             'keyword': 'tv_guide_uk_'
         },
     'it_live':
         {
             'method': 'CUTV_xmltv_github',
-            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_it_{}.xml',
-            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_it_{}_md5.txt',
+            'url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_it_{}.xml',
+            'md5_url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_it_{}_md5.txt',
             'keyword': 'tv_guide_it_'
         },
     'wo_live':
         {
             'method': 'CUTV_xmltv_github',
-            'url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_wo_{}.xml',
-            'md5_url': 'https://github.com/Catch-up-TV-and-More/xmltv/raw/master/tv_guide_wo_{}_md5.txt',
+            'url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_wo_{}.xml',
+            'md5_url': 'https://raw.githubusercontent.com/Catch-up-TV-and-More/xmltv/master/tv_guide_wo_{}_md5.txt',
             'keyword': 'tv_guide_wo_'
         },
     'ca_live':
