@@ -231,7 +231,7 @@ msgstr "בוליביה"
 
 msgctxt "#30077"
 msgid "Saudi Arabia"
-msgstr "Saudi Arabia"
+msgstr "ערב הסעודית"
 
 # Channels (from 30080 to 30129)
 
