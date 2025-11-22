@@ -206,6 +206,13 @@ def main_menu(plugin, **kwargs):
     for item in get_category_list_items():
         yield item
 
+def get_media_type(programme_type):
+    if programme_type == 'FM':
+        return 'movie'
+    if programme_type in {'FB', 'MSU', 'MST', 'SSU'}:
+        return 'episode'
+    return 'video'
+
 
 def get_category_list_items():
     category_list_items = []
@@ -284,10 +291,15 @@ def list_seasons(plugin, url, **kwargs):
                             item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
                         else:
                             item.label = episode['title'] + " ({})".format(episode['originalTitle'])
+                        item.info['season'] = episode.get('seriesNumber')
+                        item.info['episode'] = episode.get('episodeNumber')
+                        item.info['mediatype'] = get_media_type(datas.get('programmeType'))
                         item.art['thumb'] = item.art['landscape'] = episode['image']['src']
                         item.art['fanart'] = fanart
                         item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
                         item.info['plot'] = episode['summary']
+                        if 'guidance' in episode and episode['guidance']:
+                            item.info['plot'] = item.info['plot'] + '\n\n' + episode['guidance']
                         if 'bottomText' in episode and episode['bottomText']:
                             item.info['plot'] = item.info['plot'] + '\n\n' + episode['bottomText']
                         if 'durationLabel' in episode and episode['durationLabel']:
@@ -315,6 +327,8 @@ def list_seasons(plugin, url, **kwargs):
                     if 'bottomText' in season and season['bottomText']:
                         item.info['plot'] = item.info['plot'] + '\n\n' + season['bottomText']
                     item.info['genre'] = genres
+                    item.info['mediatype'] = 'season'
+                    item.info['season'] = series_number
                     item_post_treatment(item)
                     yield item
 
@@ -333,10 +347,15 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
                 item.label = episode['title'].replace(toreplace[0], '') + " ({})".format(episode['originalTitle'])
             else:
                 item.label = episode['title'] + " ({})".format(episode['originalTitle'])
+            item.info['season'] = episode.get('seriesNumber')
+            item.info['episode'] = episode.get('episodeNumber')
+            item.info['mediatype'] = get_media_type(datas.get('programmeType'))
             item.art['thumb'] = item.art['landscape'] = episode['image']['src']
             item.art['fanart'] = fanart
             item.set_callback(get_video, programmeId=episode['programmeId'], assetId=episode['assetId'])
             item.info['plot'] = episode['summary']
+            if 'guidance' in episode and episode['guidance']:
+                item.info['plot'] = item.info['plot'] + '\n\n' + episode['guidance']
             if 'bottomText' in episode and episode['bottomText']:
                 item.info['plot'] = item.info['plot'] + '\n\n' + episode['bottomText']
             if 'durationLabel' in episode and episode['durationLabel']:
