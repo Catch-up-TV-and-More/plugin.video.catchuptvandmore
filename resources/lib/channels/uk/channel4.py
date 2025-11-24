@@ -36,6 +36,7 @@ except ImportError:
 CACHE_FILE = 'special://userdata/addon_data/plugin.video.catchuptvandmore/channel4_auth.json'
 URL_ROOT = 'https://www.channel4.com'
 AUTH_ENV = 'https://api.channel4.com'
+PREDICTIVE_SEARCH_URL = "https://all4nav.channel4.com/v1/api/search"
 URL_API_HOMEPAGE = 'https://www.channel4.com/api/homepage'
 URL_AUTH_TOKEN = AUTH_ENV + '/online/v2/auth/token'
 URL_CATEGORIES = URL_ROOT + '/categories'
@@ -169,7 +170,6 @@ def save_channel4_auth(channel4_auth):
 
 @Route.register(content_type="videos")
 def do_search(plugin, search_query):
-    PREDICTIVE_SEARCH_URL = "https://all4nav.channel4.com/v1/api/search"
     params = {
         "expand": "default",
         "q": search_query,
