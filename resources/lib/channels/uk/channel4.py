@@ -36,8 +36,10 @@ except ImportError:
 CACHE_FILE = 'special://userdata/addon_data/plugin.video.catchuptvandmore/channel4_auth.json'
 URL_ROOT = 'https://www.channel4.com'
 AUTH_ENV = 'https://api.channel4.com'
+URL_API_HOMEPAGE = 'https://www.channel4.com/api/homepage'
 URL_AUTH_TOKEN = AUTH_ENV + '/online/v2/auth/token'
 URL_CATEGORIES = URL_ROOT + '/categories'
+URL_PROGRAMMES = URL_ROOT + '/programmes'
 URL_VOD_API = AUTH_ENV + '/online/v1/vod/stream/{programme_id}?client={client}'
 URL_VOD_WEB = URL_ROOT + '/vod/stream/'
 URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/widevine/acquire'
@@ -203,8 +205,48 @@ def do_search(plugin, search_query):
 def main_menu(plugin, **kwargs):
     yield Listitem.search(do_search)
 
-    for item in get_category_list_items():
-        yield item
+    yield Listitem.from_dict(
+        callback=list_categories,
+        label='Categories'
+    )
+
+    try:
+        json_data = json.loads(requests.get(URL_API_HOMEPAGE, headers=BASIC_HEADERS).text)
+        for slice in json_data['slices']:
+            if slice:
+                label = slice.get('title')
+                if label:
+                    yield Listitem.from_dict(
+                        callback=list_slice,
+                        label=label,
+                        params={'slice': slice}
+                    )
+                else:
+                    for slice_item in slice['sliceItems']:
+                        item = Listitem()
+                        title = slice_item.get('title')
+                        item.label = title
+
+                        item.info['plot'] = slice_item['summary']
+                        item.art['thumb'] = item.art['landscape'] = slice_item["image"]["href"]
+                        slice_item_type = slice_item.get('type')
+                        if slice_item_type == 'brand':
+                            item.info['genre'] = slice_item.get('brand', {}).get('categories', [])
+                            item.art['fanart'] = get_brand_fan_art(slice_item)
+                            url_item = URL_PROGRAMMES + '/' + slice_item.get('brand').get('websafeTitle')
+                            item.set_callback(list_seasons, url=url_item)
+                            item_post_treatment(item)
+                            yield item
+    except Exception:
+        pass
+
+def get_brand_fan_art(slice_item):
+    images = slice_item.get('brand', {}).get('images', [])
+    if images:
+        for image in images:
+            if image.get('imageType') == 'PRIMARY_HERO' or 'Apple_TV' in image.get('title'):
+                return image.get('href')
+    return None
 
 
 def get_media_type(programme_type):
@@ -215,8 +257,8 @@ def get_media_type(programme_type):
     return 'video'
 
 
-def get_category_list_items():
-    category_list_items = []
+@Route.register
+def list_categories(plugin, **kwargs):
     html_text = urlquick.get(URL_CATEGORIES, headers=BASIC_HEADERS, max_age=-1).parse()
     for script in html_text.iterfind('.//script'):
         script_text = script.text
@@ -232,9 +274,37 @@ def get_category_list_items():
                         url_item = URL_ROOT + category_link.get('href')
                         item.set_callback(list_programs, url=url_item, offset='0')
                         item_post_treatment(item)
-                        category_list_items.append(item)
-    return category_list_items
+                        yield item
 
+@Route.register
+def list_slice(plugin, slice, **kwargs):
+    for slice_item in slice['sliceItems']:
+        slice_item_type = slice_item.get('type')
+
+        if slice_item_type == 'ip':
+            continue
+
+        item = Listitem()
+
+        if slice_item_type != 'slot':
+            item.label = slice_item.get('title')
+            item.info['plot'] = slice_item['summary']
+            item.art['thumb'] = item.art['landscape'] = slice_item["image"]["href"]
+
+        if slice_item_type == 'brand':
+            item.info['genre'] = slice_item.get('brand', {}).get('categories', [])
+            item.art['fanart'] = get_brand_fan_art(slice_item)
+            url_item = URL_PROGRAMMES + '/' + slice_item.get('brand').get('websafeTitle')
+            item.set_callback(list_seasons, url=url_item)
+        elif slice_item_type == 'freeform':
+            url_item = slice_item.get('url')
+            item.set_callback(list_programs, url=url_item, offset='0')
+        elif slice_item_type == 'slot':
+            slot_tx_channel = slice_item.get('slot').get('slotTXChannel')
+            item.label = slot_tx_channel
+            item.set_callback(get_live_url, item_id=slot_tx_channel)
+        item_post_treatment(item)
+        yield item
 
 @Route.register
 def list_programs(plugin, url, offset, **kwargs):
