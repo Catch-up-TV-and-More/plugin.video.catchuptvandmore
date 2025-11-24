@@ -226,8 +226,7 @@ def main_menu(plugin, **kwargs):
                         item = Listitem()
                         title = slice_item.get('title')
                         item.label = title
-
-                        item.info['plot'] = slice_item['summary']
+                        item.info['plot'] = get_slice_item_plot(slice_item)
                         item.art['thumb'] = item.art['landscape'] = slice_item["image"]["href"]
                         slice_item_type = slice_item.get('type')
                         if slice_item_type == 'brand':
@@ -239,6 +238,15 @@ def main_menu(plugin, **kwargs):
                             yield item
     except Exception:
         pass
+
+
+def get_slice_item_plot(slice_item):
+    plot = slice_item.get('summary')
+    editorial_label = slice_item.get('editorialLabel')
+    if editorial_label:
+        plot = plot + '\n\n' + editorial_label
+    return plot
+
 
 def get_brand_fan_art(slice_item):
     images = slice_item.get('brand', {}).get('images', [])
@@ -288,7 +296,7 @@ def list_slice(plugin, slice, **kwargs):
 
         if slice_item_type != 'slot':
             item.label = slice_item.get('title')
-            item.info['plot'] = slice_item['summary']
+            item.info['plot'] = get_slice_item_plot(slice_item)
             item.art['thumb'] = item.art['landscape'] = slice_item["image"]["href"]
 
         if slice_item_type == 'brand':
