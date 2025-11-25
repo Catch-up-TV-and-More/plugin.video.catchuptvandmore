@@ -268,9 +268,10 @@ def get_media_type(programme_type):
 
 def extract_yyyy_mm_dd_date_str(date_label):
     try:
-        date_str = date_label.replace("First shown: ", "").strip()
-        date_obj = datetime.strptime(date_str, "%a %d %b %Y")
-        return date_obj.strftime("%Y-%m-%d")
+        if date_label:
+            date_str = date_label.replace("First shown: ", "").strip()
+            date_obj = datetime.strptime(date_str, "%a %d %b %Y")
+            return date_obj.strftime("%Y-%m-%d")
     except Exception:
         pass
     return None
