@@ -419,9 +419,6 @@ def list_seasons(plugin, url, **kwargs):
                     item.art['fanart'] = fanart
                     item.set_callback(get_episodes_list, series, series_number, datas)
                     item.info['plot'] = season['summary']
-                    yyyy_mm_dd_date_str = extract_yyyy_mm_dd_date_str(season.get('dateLabel'))
-                    if yyyy_mm_dd_date_str:
-                        item.info.date(yyyy_mm_dd_date_str, '%Y-%m-%d')
                     item.info['genre'] = genres
                     item.info['mediatype'] = 'season'
                     item.info['season'] = series_number
