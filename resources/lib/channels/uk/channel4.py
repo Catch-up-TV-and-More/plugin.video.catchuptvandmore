@@ -21,6 +21,7 @@ import urlquick
 
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
 from resources.lib.menu_utils import item_post_treatment
+from resources.lib.py_utils import datetime_strptime
 
 from resources.lib import resolver_proxy, web_utils
 
@@ -270,7 +271,7 @@ def extract_yyyy_mm_dd_date_str(date_label):
     try:
         if date_label:
             date_str = date_label.replace("First shown: ", "").strip()
-            date_obj = datetime.strptime(date_str, "%a %d %b %Y")
+            date_obj = datetime_strptime(date_str, "%a %d %b %Y")
             return date_obj.strftime("%Y-%m-%d")
     except Exception:
         pass
