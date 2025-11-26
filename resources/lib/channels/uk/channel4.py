@@ -12,7 +12,6 @@ import re
 import json
 import time
 from builtins import str
-from datetime import datetime
 from kodi_six import xbmcvfs
 
 import requests
