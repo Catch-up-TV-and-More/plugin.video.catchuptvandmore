@@ -13,14 +13,10 @@ import urlquick
 import uuid
 from builtins import str
 from codequick import Listitem, Script, Resolver, Route
+from urllib.parse import quote
 
 from resources.lib import resolver_proxy
 from resources.lib.menu_utils import item_post_treatment
-
-try:
-    from urllib.parse import quote
-except ImportError:
-    from urllib import quote
 
 URL_ROOT = 'https://tptvencore.co.uk'
 API_CLIENT = 'https://prod.suggestedtv.com/api/client'
