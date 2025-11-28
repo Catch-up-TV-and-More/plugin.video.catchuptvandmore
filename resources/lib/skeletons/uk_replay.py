@@ -105,4 +105,12 @@ menu = {
         "enabled": True,
         "order": 11,
     },
+    "tptvencore": {
+        "route": "/resources/lib/channels/uk/tptvencore:main_menu",
+        "label": "Talking Pictures TV Encore",
+        "thumb": "https://image-cdn.suggestedtv.com/api/client/v1/image/fab8eb03-eb6a-4261-969d-016065b0c9a6?tenant=ENCORE&mode=fit&format=png&width=1280&height=720",
+        "fanart": "",
+        "enabled": True,
+        "order": 12,
+    },
 }
