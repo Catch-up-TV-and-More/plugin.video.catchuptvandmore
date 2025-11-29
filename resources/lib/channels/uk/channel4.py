@@ -88,6 +88,9 @@ def get_refresh_token_if_refreshable(channel4_auth):
 
 def get_access_token(plugin):
     try:
+        anonymous_token = get_anonymous_token(plugin)
+        if anonymous_token:
+            return anonymous_token
         if plugin.setting.get_string('uk.channel4.login') and plugin.setting.get_string('uk.channel4.password'):
             channel4_auth = load_channel4_auth()
             token = get_token_if_valid(channel4_auth)
@@ -151,6 +154,24 @@ def login(plugin):
 
     channel4_auth = res
     save_channel4_auth(channel4_auth)
+    return channel4_auth.get('accessToken', None)
+
+def get_anonymous_token(plugin):
+    data = {
+        "grant_type": "client_credentials",
+    }
+    r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data)
+    try:
+        res = r.json()
+    except Exception:
+        Script.log('Failed to get anonymous token. ' + r.text)
+        plugin.notify('ERROR', 'Channel 4 : ' + plugin.localize(30711) + '. ' + r.text)
+
+    if res and "error" in res:
+        Script.log('Failed to get anonymous token. ' + res['errorMessage'])
+        plugin.notify('ERROR', 'Channel 4 : ' + plugin.localize(30711) + '. ' + res['errorMessage'])
+
+    channel4_auth = res
     return channel4_auth.get('accessToken', None)
 
 
