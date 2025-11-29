@@ -46,7 +46,8 @@ URL_VOD_API = AUTH_ENV + '/online/v1/vod/stream/{programme_id}?client={client}'
 URL_VOD_WEB = URL_ROOT + '/vod/stream/'
 URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/widevine/acquire'
 
-URL_LIVE = URL_ROOT + '/simulcast/channels/%s'
+URL_LIVE_API = AUTH_ENV + '/online/v1/live/simulcast/{item_id}?client={client}&quality=HD'
+URL_LIVE_WEB = URL_ROOT + '/simulcast/channels/%s'
 
 AUTH_TOKEN_HEADERS = {"authorization": "Basic MzZVVUN0OThWTVF2QkFnUTI3QXU4ekdIbDMxTjlMUTE6Sllzd3lIdkdlNjJWbGlrVw=="}
 BASIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
@@ -549,8 +550,17 @@ def get_video(plugin, programmeId, assetId, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    url_video_json = URL_LIVE % item_id
-    resp = urlquick.get(url_video_json, max_age=-1)
+    access_token = get_access_token(plugin)
+    if access_token:
+        client = 'amazonfire-dash'
+        url_video_json = URL_LIVE_API.format(item_id=item_id, client=client)
+        headers = {"authorization": f"Bearer {access_token}"}
+    else:
+        client = 'web'
+        url_video_json = URL_LIVE_WEB % item_id
+        headers = None
+
+    resp = urlquick.get(url_video_json, headers=headers, max_age=-1)
 
     json_video = json.loads(resp.text)
     for field in json_video['channelInfo']['videoProfiles']:
@@ -559,17 +569,7 @@ def get_live_url(plugin, item_id, **kwargs):
             url = field['streams'][0]['uri']
             break
 
-    # Attempt to expose HD resolutions
-    if url and "manifest_sd.mpd" in url:
-        new_url = url.replace("manifest_sd.mpd", "manifest.mpd")
-        try:
-            response = requests.head(new_url, allow_redirects=True, timeout=5)
-            if response.status_code == 200:
-                url = new_url
-        except Exception:
-            pass
-
-    keys = KEYS['web']
+    keys = KEYS[client]
     cipher = AES.new(bytes(keys['key'], 'UTF-8'), AES.MODE_CBC, bytes(keys['iv'], 'UTF-8'))
     full_decoded_token = unpad(cipher.decrypt(base64.b64decode(token)), 16, style='pkcs7').decode('UTF-8')
     decoded_token = re.compile(r'\&t\=(.*?)$').findall(full_decoded_token)[0]
