@@ -88,9 +88,6 @@ def get_refresh_token_if_refreshable(channel4_auth):
 
 def get_access_token(plugin):
     try:
-        anonymous_token = get_anonymous_token(plugin)
-        if anonymous_token:
-            return anonymous_token
         if plugin.setting.get_string('uk.channel4.login') and plugin.setting.get_string('uk.channel4.password'):
             channel4_auth = load_channel4_auth()
             token = get_token_if_valid(channel4_auth)
@@ -104,6 +101,9 @@ def get_access_token(plugin):
             token = login(plugin)
             if token:
                 return token
+        anonymous_token = get_anonymous_token(plugin)
+        if anonymous_token:
+            return anonymous_token
     except Exception:
         pass
 
