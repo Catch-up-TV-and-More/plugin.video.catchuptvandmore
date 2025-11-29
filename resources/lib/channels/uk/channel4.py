@@ -394,7 +394,8 @@ def list_seasons(plugin, url, **kwargs):
                         if 'guidance' in episode and episode['guidance']:
                             item.info['plot'] = item.info['plot'] + '\n\n' + episode['guidance']
                         yyyy_mm_dd_date_str = extract_yyyy_mm_dd_date_str(episode.get('dateLabel'))
-                        item.info.date(yyyy_mm_dd_date_str, '%Y-%m-%d')
+                        if yyyy_mm_dd_date_str:
+                            item.info.date(yyyy_mm_dd_date_str, '%Y-%m-%d')
                         if 'durationLabel' in episode and episode['durationLabel']:
                             try:
                                 item.info['duration'] = int(episode['durationLabel'].split()[0]) * 60
@@ -448,7 +449,8 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
             if 'guidance' in episode and episode['guidance']:
                 item.info['plot'] = item.info['plot'] + '\n\n' + episode['guidance']
             yyyy_mm_dd_date_str = extract_yyyy_mm_dd_date_str(episode.get('dateLabel'))
-            item.info.date(yyyy_mm_dd_date_str, '%Y-%m-%d')
+            if yyyy_mm_dd_date_str:
+                item.info.date(yyyy_mm_dd_date_str, '%Y-%m-%d')
             if 'durationLabel' in episode and episode['durationLabel']:
                 try:
                     item.info['duration'] = int(episode['durationLabel'].split()[0]) * 60
