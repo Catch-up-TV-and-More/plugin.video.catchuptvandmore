@@ -11,6 +11,7 @@ import hashlib
 import hmac
 import json
 import re
+import requests
 import time
 import urlquick
 import xbmc
@@ -333,8 +334,8 @@ def generate_authorization(auth_params):
 @Resolver.register
 def get_stream(plugin, product_id, **kwargs):
     playout_params = {'outputParameter': 'vmap', 'country': COUNTRY}
-    playout_json = json.loads(urlquick.get(PRODUCT_PLAYOUT_URL.format(product_id=product_id), headers=get_basic_headers(),
-                                           params=playout_params, max_age=-1).text)
+    playout_json = json.loads(requests.get(PRODUCT_PLAYOUT_URL.format(product_id=product_id), headers=get_basic_headers(),
+                     params=playout_params).text)
 
     faults = playout_json.get('faults', [])
     if faults is None:
