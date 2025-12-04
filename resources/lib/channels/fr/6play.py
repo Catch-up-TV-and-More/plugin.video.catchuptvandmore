@@ -73,7 +73,7 @@ URL_JSON_VIDEO = 'https://android.middleware.6play.fr/6play/v2/platforms/' \
 
 URL_IMG = 'https://images.6play.fr/v1/images/%s/raw'
 
-URL_COMPTE_LOGIN = 'https://login.6play.fr/accounts.login'
+URL_COMPTE_LOGIN = 'https://login-gigya.m6.fr/accounts.login'
 # https://login.6play.fr/accounts.login?loginID=*****&password=*******&targetEnv=mobile&format=jsonp&apiKey=3_hH5KBv25qZTd_sURpixbQW6a4OsiIzIEF2Ei_2H7TXTGLJb_1Hr4THKZianCQhWK&callback=jsonp_3bbusffr388pem4
 # TODO get value Callback
 # callback: jsonp_3bbusffr388pem4
