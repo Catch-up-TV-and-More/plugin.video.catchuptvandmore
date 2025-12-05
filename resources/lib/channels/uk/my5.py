@@ -932,7 +932,7 @@ def sign_out_account(_):
 def report_play_time(evt, show_id):
     if evt.evt_type not in ('heartbeat', 'stopped'):
         return True
-    session_tkn = get_session_token()
+    session_tkn = get_session_token(False)
     if not session_tkn:
         return False
 
