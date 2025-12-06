@@ -81,7 +81,7 @@ menu = {
     },
     'C4': {
         'resolver': '/resources/lib/channels/uk/channel4:get_live_url',
-        'label': 'Channel4',
+        'label': 'Channel 4',
         'thumb': 'channels/uk/channel4.png',
         'fanart': 'channels/uk/channel4_fanart.jpg',
         'xmltv_id': '4.freeview.co.uk',
