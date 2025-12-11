@@ -6,6 +6,7 @@
 
 from __future__ import unicode_literals
 
+# noinspection PyUnresolvedReferences
 from codequick import Resolver
 
 from resources.lib import resolver_proxy
