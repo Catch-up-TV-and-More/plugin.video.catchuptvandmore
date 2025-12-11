@@ -17,7 +17,7 @@ from __future__ import unicode_literals
 root = 'live_tv'
 
 menu = {
-    'alAoula': {
+    'al-aoula': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Al Aoula',
         'thumb': 'channels/ma/alaoula.png',
