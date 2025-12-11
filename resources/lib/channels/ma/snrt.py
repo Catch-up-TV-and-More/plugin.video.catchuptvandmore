@@ -5,41 +5,11 @@
 # This file is part of Catch-up TV & More
 
 from __future__ import unicode_literals
-import re
-import urlquick
 
-# noinspection PyUnresolvedReferences
 from codequick import Resolver
 
-from resources.lib import resolver_proxy, web_utils
-
-URL_ROOT = 'https://snrtlive.ma'
-
-URL_LIVES = 'https://cdn-globecast.akamaized.net/live/eds/%s/hls_snrt/%s.m3u8'
-
+from resources.lib import resolver_proxy
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
-    if item_id == "alAoula":
-        id = "al_aoula_inter"
-    if item_id == "alMaghribia":
-        id = "al_maghribia_snrt"
-    if item_id == "laayoune":
-        id = "al_aoula_laayoune"
-    if item_id == "tamazight":
-        id = "tamazight_tv8_snrt"
-    if item_id == "assadissa":
-        id = "assadissa"
-    if item_id == "athaqafia":
-        id = "arrabiaa"
-    if item_id == "arryadia":
-        id = "arriadia"
-    video_url = URL_LIVES % (id, id)
-
-    headers = {
-        "User-Agent": web_utils.get_random_ua(),
-        "referer": URL_ROOT
-    }
-
-    return resolver_proxy.get_stream_with_quality(plugin, video_url, headers=headers)
+    return resolver_proxy.get_embedded_easybroadcast_stream(plugin, f'https://snrtlive.ma/fr/{item_id}')
