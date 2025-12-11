@@ -85,6 +85,12 @@ URL_REPLAY_ARTE = 'https://api.arte.tv/api/player/v2/config/%s/%s'
 
 GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 
+EASY_BROADCAST_EVENT_URL_REG_EX = (
+    r'https?://(?:[\w\-]+\.)?player\.easybroadcast\.io/events/(?P<id>[\w\-]+)'
+)
+EASY_BROADCAST_EVENT_EMBED_REG_EX = (
+    rf'<iframe[^>]*?\bsrc\s*=\s*["\'](?P<url>{EASY_BROADCAST_EVENT_URL_REG_EX})'
+)
 
 def __get_non_ia_stream_with_quality(plugin, url, manifest_type="hls", headers=None, map_audio=False,
                                      append_query_string=False, verify=True, subtitles=None):
@@ -310,6 +316,39 @@ def get_stream_kaltura(plugin,
                        video_url,
                        download_mode=False):
     return get_stream_default(plugin, video_url, download_mode)
+
+def get_embedded_easybroadcast_stream(plugin, url):
+    page_html = urlquick.get(url, headers=GENERIC_HEADERS, max_age=-1).text
+    match = re.search(EASY_BROADCAST_EVENT_EMBED_REG_EX, page_html)
+    if match:
+        url = match.group('url')
+        return get_easybroadcast_stream(plugin, url)
+    return None
+
+def get_easybroadcast_stream(plugin, url):
+    match = re.match(EASY_BROADCAST_EVENT_URL_REG_EX, url)
+    if match:
+        event_id = match.group('id')
+
+        base_url = url.split('/events/')[0]
+        api_url = f'{base_url}/api/events/{event_id}'
+
+        metadata = json.loads(urlquick.get(api_url, max_age=-1).text)
+
+        m3u8_url = metadata.get('stream')
+        if metadata.get('token_authentication', False):
+            token_api_url = f'https://token.easybroadcast.io/all?url={m3u8_url}'
+            token = urlquick.get(token_api_url, max_age=-1).text.strip()
+            m3u8_url = m3u8_url + '?' + token
+
+            force_best = True # Kodi has a bug that strips the token from the URL
+            if force_best:
+                m3u8 = M3u8(m3u8_url)
+                url_quality, bitrate = m3u8.get_url_and_bitrate_for_quality()
+                m3u8_url = url_quality + '?' + token
+
+        return m3u8_url
+    return None
 
 
 # DailyMotion Part
