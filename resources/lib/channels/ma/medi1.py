@@ -20,8 +20,10 @@ GENERIC_HEADERS = {"User-Agent": web_utils.get_random_ua()}
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-
-    resp = urlquick.get(URL_LIVES % item_id, headers=GENERIC_HEADERS, max_age=-1)
-    video_url = 'https:' + re.compile(r"file: \'(.*?)\'").findall(resp.text)[0]
+    if item_id == 'maghreb':
+        video_url = 'https://cdn.live.easybroadcast.io/abr_corp/83_medi1tv-maghreb_jnbspmg/playlist_dvr.m3u8'
+    else:
+        resp = urlquick.get(URL_LIVES % item_id, headers=GENERIC_HEADERS, max_age=-1)
+        video_url = re.compile(r'https?:\/\/[^\s]+\.m3u8(?:\?[^\s]*)?').findall(resp.text)[0]
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url)
