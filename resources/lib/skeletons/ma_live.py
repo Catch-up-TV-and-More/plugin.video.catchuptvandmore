@@ -117,7 +117,7 @@ menu = {
         'label': 'M24',
         'thumb': 'channels/ma/m24.png',
         'fanart': 'channels/ma/m24_fanart.jpg',
-        'enabled': True,
+        'enabled': False,
         'order': 12
     }
 }
