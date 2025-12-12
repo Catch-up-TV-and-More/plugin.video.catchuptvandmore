@@ -92,8 +92,8 @@ menu = {
     "watchfreeuk": {
         "route": "/resources/lib/channels/uk/watchfreeuk:main_menu",
         "label": "Watch Free UK",
-        "thumb": "https://www.watchfreeuk.co.uk/static/images/logos/watch-free-uk-logo.png",
-        "fanart": "https://www.watchfreeuk.co.uk/static/images/logos/watch-free-uk-logo.png",
+        "thumb": "channels/uk/watchfreeuk.png",
+        "fanart": "channels/uk/watchreeuk_fanart.jpg",     # (same typo as file in resources)
         "enabled": True,
         "order": 10,
     },
