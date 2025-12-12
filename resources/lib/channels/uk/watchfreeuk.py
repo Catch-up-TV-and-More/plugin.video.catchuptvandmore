@@ -128,7 +128,7 @@ def params_from_x_data(x_data):
     # Find lines of key/value pairs. However, the xml parser may have disregarded newline
     # characters, so allow the text to be one single line.
     for line in re.finditer(r"(\w+:\s.*?)(?:,\s|\s{2,})", param_str, re.DOTALL):
-        key, val = line[1].split(': ')
+        key, val = line[1].split(': ', 1)
         key = key.strip()
         # Replace backslash-escaped characters, except unicode escapes.
         val = re.sub(r'\\([^u])', r'\1', val)
