@@ -27,7 +27,7 @@ def get_live_url(plugin, item_id, **kwargs):
     else:
         if final_language == 'FR':
             channel_config_url = URL_CHANNEL_CONFIG_JS % 'francais'
-        if final_language == 'EN':
+        elif final_language == 'EN':
             json_url = URL_LIVE_JSON % 'en'
         elif final_language == 'AR':
             channel_config_url = URL_CHANNEL_CONFIG_JS % 'arabic'
