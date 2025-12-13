@@ -24,16 +24,17 @@ def get_live_url(plugin, item_id, **kwargs):
     channel_config_url = None
     if item_id == 'cgtndocumentary':
         json_url = URL_LIVE_JSON % 'doc'
-    elif final_language == 'EN':
-        json_url = URL_LIVE_JSON % 'en'
-    elif final_language == 'FR':
-        channel_config_url = URL_CHANNEL_CONFIG_JS % 'francais'
-    elif final_language == 'AR':
-        channel_config_url = URL_CHANNEL_CONFIG_JS % 'arabic'
-    elif final_language == 'ES':
-        channel_config_url = URL_CHANNEL_CONFIG_JS % 'espanol'
-    elif final_language == 'RU':
-        channel_config_url = URL_CHANNEL_CONFIG_JS % 'russian'
+    else:
+        if final_language == 'FR':
+            channel_config_url = URL_CHANNEL_CONFIG_JS % 'francais'
+        if final_language == 'EN':
+            json_url = URL_LIVE_JSON % 'en'
+        elif final_language == 'AR':
+            channel_config_url = URL_CHANNEL_CONFIG_JS % 'arabic'
+        elif final_language == 'ES':
+            channel_config_url = URL_CHANNEL_CONFIG_JS % 'espanol'
+        elif final_language == 'RU':
+            channel_config_url = URL_CHANNEL_CONFIG_JS % 'russian'
 
     if json_url:
         json_data = json.loads(urlquick.get(json_url, max_age=-1).text)
