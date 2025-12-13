@@ -329,7 +329,7 @@ def get_live_url(plugin, item_id, **kwargs):
         ('RT Arabic', 'https://rtarabic.com/rtmobile3/video', 'arabic'),
         ('RT Balkan', 'https://rt.rs/rtmobile/video', 'serbian'),
         ('RT DE', 'https://ger.mobileapiru.com/rtmobile/video', 'german'),
-        ('RT Documentary', 'https://eng.mobileapiru.com/rtmobile/video' 'rtd'),
+        ('RT Documentary', 'https://eng.mobileapiru.com/rtmobile/video', 'rtd'),
         ('RT English', 'https://eng.mobileapiru.com/rtmobile/video', 'news'),
         ('RT en Español', 'https://eps.mobileapiru.com/mobiledata/v3/video', 'spanish'),
         ('RT en Français', 'https://fra.mobileapiru.com/rtmobile/v3/video', 'france'),
