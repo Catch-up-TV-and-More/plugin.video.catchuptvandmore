@@ -6,8 +6,10 @@
 
 from __future__ import unicode_literals
 from builtins import str
+import json
 import re
 
+import xbmcgui
 from codequick import Listitem, Resolver, Route, Script
 import urlquick
 
@@ -20,15 +22,7 @@ from resources.lib.menu_utils import item_post_treatment
 
 URL_ROOT_FR = 'https://francais.rt.com'
 
-URL_LIVE_FR = URL_ROOT_FR + '/en-direct'
-
 URL_ROOT_EN = 'https://www.rt.com'
-
-URL_LIVE_EN = URL_ROOT_EN + '/on-air/'
-
-URL_LIVE_AR = 'https://arabic.rt.com/live/'
-
-URL_LIVE_ES = 'https://actualidad.rt.com/en_vivo'
 
 DESIRED_LANGUAGE = Script.setting['rt.language']
 
@@ -331,10 +325,27 @@ def get_video_url(plugin,
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+    channels = [
+        ('RT Arabic', 'https://rtarabic.com/rtmobile3/video', 'arabic'),
+        ('RT Balkan', 'https://rt.rs/rtmobile/video', 'serbian'),
+        ('RT DE', 'https://ger.mobileapiru.com/rtmobile/video', 'german'),
+        ('RT Documentary', 'https://eng.mobileapiru.com/rtmobile/video' 'rtd'),
+        ('RT English', 'https://eng.mobileapiru.com/rtmobile/video', 'news'),
+        ('RT en Español', 'https://eps.mobileapiru.com/mobiledata/v3/video', 'spanish'),
+        ('RT en Français', 'https://fra.mobileapiru.com/rtmobile/v3/video', 'france'),
+    ]
 
-    url_live = URL_LIVE_AR
-    resp = urlquick.get(url_live, headers=GENERIC_HEADERS, max_age=-1)
-    root = resp.parse("div", attrs={"class": "live-player__main-video main-video"})
-    video_url = root.get('data-src')
+    selected_item_index = xbmcgui.Dialog().select(Script.localize(30174), list(map(lambda x: x[0], channels)))
+    if selected_item_index == -1:
+        return False
 
-    return resolver_proxy.get_stream_with_quality(plugin, video_url)
+    selected_item = channels[selected_item_index]
+    url = selected_item[1]
+    id = selected_item[2]
+
+    stream_json = json.loads(urlquick.get(url, max_age=-1).text)
+    for entry in stream_json.get('data'):
+        if entry.get('id') == id:
+            url_live = entry.get('url')
+            return resolver_proxy.get_stream_default(plugin, url_live)
+    return None
