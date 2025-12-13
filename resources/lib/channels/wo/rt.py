@@ -346,5 +346,5 @@ def get_live_url(plugin, item_id, **kwargs):
     stream_json = json.loads(urlquick.get(url, max_age=-1).text)
     for entry in stream_json.get('data'):
         if entry.get('id') == id:
-            return entry.get('url')
+            return resolver_proxy.get_stream_with_quality(plugin, entry.get('url'))
     return None
