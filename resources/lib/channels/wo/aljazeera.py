@@ -120,7 +120,7 @@ def play_video(plugin, url):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    # label, data_account, policy_key
+    # label, data_account, data_video_id, policy_key
     channels = [
         ('English', '665003303001', '6368602483112', 'BCpkADawqM39agLpp-TuKJ3fi2ac40ghRBmnV3-bKKuO6oZSDAbOgt4HRS5TzFxLH2NA0XQdsoWQjrOYvmD2bVLQSYjxRgHufXokniy4kOamHBQs6UIbDSYvj2M'),
         ('البث الحي', '665001584001', '6368600638112', 'BCpkADawqM2WV_cMXnGg7cQ_h8ZF7RlC8EyY4uVca2LT3ze4PrU4MCCuj3F7TA2rOsSXAXgLDcWKavBi2M5_R7HRDOAnsQ1OX4yzxA00cLv37ggu76kll4P_eX4'),
