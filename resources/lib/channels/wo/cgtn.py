@@ -10,6 +10,7 @@ import json
 import re
 
 import urlquick
+
 from codequick import Resolver, Script
 
 PATTERN_M3U8 = re.compile(r'https?://[^\s]+\.m3u8')
