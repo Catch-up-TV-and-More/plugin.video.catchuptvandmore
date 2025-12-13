@@ -120,12 +120,13 @@ def play_video(plugin, url):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    # label, function_name, video_id
+    # label, data_account, data_video_id, policy_key
     channels = [
-        ('English', 'get_stream_youtube', 'gCNeDWCI0vo'),
-        ('الوثائقية', 'get_stream_youtube', 'TiPYdMXt_XI'),
-        ('قناة مباشر', 'get_stream_youtube', 'eksOMqVMINo'),
-        ('البث الحي', 'get_brightcove_video_json', '')
+        ('English', '665003303001', '6368602483112', 'BCpkADawqM39agLpp-TuKJ3fi2ac40ghRBmnV3-bKKuO6oZSDAbOgt4HRS5TzFxLH2NA0XQdsoWQjrOYvmD2bVLQSYjxRgHufXokniy4kOamHBQs6UIbDSYvj2M'),
+        ('البث الحي', '665001584001', '6368600638112', 'BCpkADawqM2WV_cMXnGg7cQ_h8ZF7RlC8EyY4uVca2LT3ze4PrU4MCCuj3F7TA2rOsSXAXgLDcWKavBi2M5_R7HRDOAnsQ1OX4yzxA00cLv37ggu76kll4P_eX4'),
+        ('مباشر', '665001583001', '6370624210112', 'BCpkADawqM3-mf-wtx3o2OyUO_rI0qQbwaOS7dYFdpc1YuwqTkZ1nGAvsoh3cY-xy7sYClcentYFPnrwSOMY9On5JA7D8e8ZyGUzr6z8L3jUhq7bwi_ti-sTr2Y'),
+        ("مباشر ٢٤", '665001583001', '6370624101112', 'BCpkADawqM3-mf-wtx3o2OyUO_rI0qQbwaOS7dYFdpc1YuwqTkZ1nGAvsoh3cY-xy7sYClcentYFPnrwSOMY9On5JA7D8e8ZyGUzr6z8L3jUhq7bwi_ti-sTr2Y'),
+        ('الوثائقية', '665003304001', '6331807548112', 'BCpkADawqM0RB0gEqEq3X7zpY7rETaVT5N3M56sHHOvBpaZVZm5_IyHVIUJs94TO3_x3NLKeHepeAvOA55bU_BS2iQpJuE96s993tHcUMAxEI53ZUcl4xpM_Ha8'),
     ]
 
     selected_item = xbmcgui.Dialog().select(Script.localize(30174), list(map(lambda x: x[0], channels)))
@@ -133,10 +134,9 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
 
     selected_item = channels[selected_item]
-    function_name = selected_item[1]
-    if function_name == 'get_stream_youtube':
-        return resolver_proxy.get_stream_youtube(plugin, selected_item[2], False)
 
-    return resolver_proxy.get_brightcove_video_json(plugin, "665001584001", None, "5146642090001",
-                                                    policy_key=POLICY_KEY,
+    data_account = selected_item[1]
+    data_video_id = selected_item[2]
+    policy_key = selected_item[3]
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account, None, data_video_id, policy_key=policy_key,
                                                     download_mode=False, subtitles=None)
