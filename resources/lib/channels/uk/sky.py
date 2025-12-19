@@ -150,7 +150,7 @@ def list_videos_news(plugin, **kwargs):
 
                         last_updated = item.get('lastUpdated')
                         if last_updated:
-                            listitem.info.date(last_updated.split('T')[0], '%Y-%m-%d')
+                            listitem.info['date'] = last_updated
 
                         label = item.get('label')
                         duration = label.get('duration')
