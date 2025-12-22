@@ -678,47 +678,42 @@ def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
 
     LICFULL_URL, auth, aesKey = getdata(show_id, 'media')
     iv, data = ivdata(LICFULL_URL, auth)
-    video_url, drm_url, sub_url = part2(iv, aesKey, data)
+    sd_video_url, drm_url, sub_url = part2(iv, aesKey, data)
 
     # Attempt to expose FHD resolutions
-    if video_url:
-        replacements = {
-            "_SD-tt.mpd": "-tt.mpd",
-            "_SD.mpd": ".mpd"
-        }
-        for old, new in replacements.items():
-            if old in video_url:
-                new_url = video_url.replace(old, new)
-                try:
-                    resp = urlquick.get(new_url, headers=GENERIC_HEADERS, max_age=-1)
-                    if resp.text:
-                        video_url = new_url
-                        break
-                except Exception:
-                    pass
+    fhd_video_url = sd_video_url.replace('_SD', '')
 
-    # Currently (Kodi 21.1), dash embedded subtitles from channel5 are not shown.
-    # However, if the same subtitle url is passed to Kodi separately, it does work.
-    subs_url = None
-    if plugin.setting.get_boolean('active_subtitle'):
-        resp = urlquick.get(video_url, headers=GENERIC_HEADERS, max_age=-1)
-        dash_manifest = resp.text
-        # Find the subtitles 'base url' in the manifest, which is actually the file name, rather than the base.
-        match = re.search(r'<AdaptationSet mimeType="text/vtt"[^>]*>.+?<BaseURL>(.+?)</BaseURL>',
-                          dash_manifest, re.DOTALL)
-        if match:
-            # Construct the full url from the real base and the file name.
-            subs_url = '/'.join((video_url.rsplit('/', maxsplit=1)[0],
-                                 match[1]))
+    for video_url in (fhd_video_url, sd_video_url):
+        try:
+            resp = urlquick.get(video_url, headers=GENERIC_HEADERS, timeout=REQ_TIMEOUT, max_age=-1)
+        except urlquick.HTTPError as err:
+            plugin.log("[UK - Chan5] Failed to get VOD manifest {}: {!r}".format(video_url, err), plugin.DEBUG)
+            if video_url == fhd_video_url:
+                continue
+            else:
+                raise
 
-    from resources.lib.prog_mon import start_progress_monitor
-    plugin.register_delayed(start_progress_monitor,
-                            callback=report_play_time,
-                            callb_kwargs={'show_id': show_id},
-                            video_url=video_url,)
-    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
-                                                  manifest_type='mpd', headers=lic_headers,
-                                                  subtitles=subs_url)
+        # Currently (Kodi 21.1), dash embedded subtitles from channel5 are not shown.
+        # However, if the same subtitle url is passed to Kodi separately, it does work.
+        subs_url = None
+        if plugin.setting.get_boolean('active_subtitle'):
+            dash_manifest = resp.text
+            # Find the subtitles 'base url' in the manifest, which is actually the file name, rather than the base.
+            match = re.search(r'<AdaptationSet mimeType="text/vtt"[^>]*>.+?<BaseURL>(.+?)</BaseURL>',
+                              dash_manifest, re.DOTALL)
+            if match:
+                # Construct the full url from the real base and the file name.
+                subs_url = '/'.join((video_url.rsplit('/', maxsplit=1)[0],
+                                     match[1]))
+
+        from resources.lib.prog_mon import start_progress_monitor
+        plugin.register_delayed(start_progress_monitor,
+                                callback=report_play_time,
+                                callb_kwargs={'show_id': show_id},
+                                video_url=video_url,)
+        return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=drm_url,
+                                                      manifest_type='mpd', headers=lic_headers,
+                                                      subtitles=subs_url)
 
 
 @Resolver.register
