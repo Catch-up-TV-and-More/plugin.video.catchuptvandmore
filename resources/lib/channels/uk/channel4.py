@@ -12,6 +12,8 @@ import re
 import json
 import time
 from builtins import str
+
+import xbmcgui
 from kodi_six import xbmcvfs
 
 import requests
@@ -180,27 +182,31 @@ def do_search(plugin, search_query):
     }
 
     search_json = json.loads(urlquick.get(PREDICTIVE_SEARCH_URL, headers=BASIC_HEADERS, params=params, max_age=-1).text)
-    if search_json:
-        if "results" in search_json:
-            results = search_json.get("results", [])
-            if results:
-                for result in results:
-                    if result:
-                        brand = result.get("brand")
-                        label = brand.get("label")
-                        item = Listitem()
-                        item.label = brand.get("title")
-                        thumbnail_url = brand.get("thumbnailUrl")
-                        thumbnail_url = web_utils.remove_params(thumbnail_url)  # Remove params lowering resolution
-                        item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = thumbnail_url
-                        url = brand.get("href")
-                        plot = brand.get("description")
-                        if label:
-                            plot = plot + '\n\n' + label
-                        item.info["plot"] = plot
-                        item.set_callback(list_seasons, url=url)
-                        item_post_treatment(item)
-                        yield item
+
+    results = search_json.get("results", [])
+    if isinstance(results, dict):
+        # No results found
+        xbmcgui.Dialog().ok('No Matches', results.get('summary', 'No items found'))
+        yield False
+        return
+
+    for result in results:
+        if result:
+            brand = result["brand"]
+            label = brand.get("label")
+            item = Listitem()
+            item.label = brand.get("title")
+            thumbnail_url = brand.get("thumbnailUrl")
+            thumbnail_url = web_utils.remove_params(thumbnail_url)  # Remove params lowering resolution
+            item.art['thumb'] = item.art['landscape'] = item.art['fanart'] = thumbnail_url
+            url = brand.get("href")
+            plot = brand.get("description")
+            if label:
+                plot = plot + '\n\n' + label
+            item.info["plot"] = plot
+            item.set_callback(list_seasons, url=url)
+            item_post_treatment(item)
+            yield item
 
 
 @Route.register
