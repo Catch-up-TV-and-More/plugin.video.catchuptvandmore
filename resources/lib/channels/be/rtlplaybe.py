@@ -74,13 +74,13 @@ GENERIC_HEADERS = {
 }
 
 RTLPLAY_HEADERS = {
-    'User-Agent': 'RTL_PLAY/22.251009 (com.tapptic.rtl.tvi; build:20873; Android 30)',
+    'User-Agent': 'RTL_PLAY/23.251217 (com.tapptic.rtl.tvi; build:26234; Android 30)',
     'Accept': '*/*',
     'Accept-Encoding': 'gzip',
     'Connection': 'Keep-Alive',
     'Content-Type': 'application/json; charset=UTF-8',
     'lfvp-device-segment': 'TV>Android',
-    'x-app-version': '22',
+    'x-app-version': '23',
 }
 
 
@@ -263,13 +263,11 @@ def is_valid_token():
     LOGIN_TOKEN = json.loads(token_)
     if LOGIN_TOKEN.get('lfvp_access_token') is not None:
         # Verify our token to see if it's still valid.
-        b64str = LOGIN_TOKEN.get('lfvp_access_token')
-        bstr = []
-        for i in b64str.split("."):
-            bstr.append(base64.b64decode(i + '=' * (-len(i) % 4)))
+        bstr = LOGIN_TOKEN.get('lfvp_access_token').split(".")[1]
+        b64str = base64.b64decode(bstr + '=' * (-len(bstr) % 4))
 
         # Check expiration time
-        lfvp_access_token_b64 = json.loads(bstr[1])
+        lfvp_access_token_b64 = json.loads(b64str)
         exp = round(datetime.fromtimestamp(lfvp_access_token_b64.get('exp'), tz=timezone.utc).timestamp())
         now = round(datetime.utcnow().timestamp())
 
