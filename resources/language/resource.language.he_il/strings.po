@@ -237,6 +237,10 @@ msgctxt "#30078"
 msgid "Macedonia"
 msgstr "מוּקדוֹן"
 
+msgctxt "#30079"
+msgid "Ireland"
+msgstr "אירלנד"
+
 # Channels (from 30080 to 30129)
 
 msgctxt "#30080"

@@ -230,5 +230,12 @@ menu = {
         'thumb': 'channels/sa.png',
         'enabled': True,
         'order': 29
+    },
+    'ie_live': {
+        'route': '/resources/lib/main:generic_menu',
+        'label': 30079,
+        'thumb': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Flag_of_Ireland.svg/960px-Flag_of_Ireland.svg.png',
+        'enabled': True,
+        'order': 30
     }
 }

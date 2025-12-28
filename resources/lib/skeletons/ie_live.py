@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+# Copyright: (c) 2025
+# GNU General Public License v2.0+ (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
+
+# This file is part of Catch-up TV & More
+
+from __future__ import unicode_literals
+
+# The following dictionaries describe
+# the addon's tree architecture.
+# * Key: item id
+# * Value: item infos
+#     - route (folder)/resolver (playable URL): Callback function to run once this item is selected
+#     - thumb: Item thumb path relative to "media" folder
+#     - fanart: Item fanart path relative to "media" folder
+
+root = 'live_tv'
+
+menu = {
+    'tg4': {
+        'resolver': '/resources/lib/channels/ie/tg4:get_live_url',
+        'label': 'TG4',
+        'thumb': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/TG4_logo.svg/960px-TG4_logo.svg.png',
+        'fanart': '',
+        'xmltv_id': '',
+        'enabled': True,
+        'order': 1
+    }, 'cula4': {
+        'resolver': '/resources/lib/channels/ie/cula4:get_live_url',
+        'label': 'Cúla4',
+        'thumb': 'https://cula4.com/favicon/apple-touch-icon.png',
+        'fanart': '',
+        'xmltv_id': '',
+        'enabled': True,
+        'order': 2
+    },
+}

@@ -446,18 +446,17 @@ def get_brightcove_video_json(plugin,
                               policy_key=None,
                               download_mode=False,
                               subtitles=None,
-                              params=None):
+                              params=None,
+                              headers={}):
     if policy_key is None:
         # Method to get JSON from 'edge.api.brightcove.com'
         key = get_brightcove_policy_key(data_account, data_player)
     else:
         key = policy_key
 
-    headers = {
-        'User-Agent': web_utils.get_random_windows_ua(),
-        'Accept': 'application/json;pk=%s' % key,
-        'X-Forwarded-For': plugin.setting.get_string('header_x-forwarded-for')
-    }
+    headers['User-Agent'] = web_utils.get_random_windows_ua()
+    headers['Accept'] = 'application/json;pk=%s' % key
+    headers['X-Forwarded-For'] = plugin.setting.get_string('header_x-forwarded-for')
 
     resp = urlquick.get(URL_BRIGHTCOVE_VIDEO_JSON % (data_account, data_video_id),
                         headers=headers, params=params, max_age=-1)
