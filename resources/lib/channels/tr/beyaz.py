@@ -21,6 +21,7 @@ PATTERN_M3U8 = re.compile(r'https?://[^\s"\']+\.m3u8(?:\?[^\s"\']+)?')
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
+
     resp = urlquick.get(URL_LIVE)
     video_url = PATTERN_M3U8.findall(resp.text)[0]
     return resolver_proxy.get_stream_with_quality(plugin, video_url)
