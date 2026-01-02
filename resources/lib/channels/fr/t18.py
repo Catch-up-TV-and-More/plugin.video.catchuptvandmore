@@ -72,7 +72,7 @@ def list_programs(plugin, category_url, **kwargs):
         }
         resp = urlquick.get(URL_ROOT + data_pagination_url, params=params, headers=headers, max_age=-1)
         json_parser = json.loads(resp.text)
-        print("URL_LICENCE_KEY - json_parser= %s" % json_parser)
+
         for video_datas in json_parser:
             program_label = video_datas.get('title')
             program_url = video_datas.get('url')
