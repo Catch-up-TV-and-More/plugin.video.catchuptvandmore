@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 import json
 
 # noinspection PyUnresolvedReferences
-from codequick import Listitem, Resolver, Script
+from codequick import Resolver, Script
 import urlquick
 
 from resources.lib import resolver_proxy
