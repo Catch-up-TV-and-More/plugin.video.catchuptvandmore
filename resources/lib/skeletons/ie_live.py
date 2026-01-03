@@ -20,7 +20,7 @@ menu = {
     'tg4': {
         'resolver': '/resources/lib/channels/ie/tg4:get_live_url',
         'label': 'TG4',
-        'thumb': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/TG4_logo.svg/960px-TG4_logo.svg.png',
+        'thumb': 'channels/uk/tg4.png',
         'fanart': '',
         'xmltv_id': '',
         'enabled': True,
@@ -28,7 +28,7 @@ menu = {
     }, 'cula4': {
         'resolver': '/resources/lib/channels/ie/cula4:get_live_url',
         'label': 'Cúla4',
-        'thumb': 'https://cula4.com/favicon/apple-touch-icon.png',
+        'thumb': 'channels/uk/cula4.png',
         'fanart': '',
         'xmltv_id': '',
         'enabled': True,
