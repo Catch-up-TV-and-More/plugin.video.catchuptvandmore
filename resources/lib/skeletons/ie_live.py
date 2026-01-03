@@ -20,7 +20,7 @@ menu = {
     'tg4': {
         'resolver': '/resources/lib/channels/ie/tg4:get_live_url',
         'label': 'TG4',
-        'thumb': 'channels/uk/tg4.png',
+        'thumb': 'channels/ie/tg4.png',
         'fanart': '',
         'xmltv_id': '',
         'enabled': True,
@@ -28,7 +28,7 @@ menu = {
     }, 'cula4': {
         'resolver': '/resources/lib/channels/ie/cula4:get_live_url',
         'label': 'Cúla4',
-        'thumb': 'channels/uk/cula4.png',
+        'thumb': 'channels/ie/cula4.png',
         'fanart': '',
         'xmltv_id': '',
         'enabled': True,
