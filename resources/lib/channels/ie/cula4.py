@@ -6,14 +6,30 @@
 
 from __future__ import unicode_literals
 
+import re
 import urlquick
 from codequick import Resolver
 
 from resources.lib import resolver_proxy
 
+URL_ROOT = 'https://cula4.com'
+
+URL_LIVE = URL_ROOT + '/live'
+
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    return resolver_proxy.get_brightcove_video_json(plugin, data_account='1555966122001', data_video_id='6383455473112',
-                                                    data_player='iAWGFfVCr', headers={'origin': 'https://cula4.com',
-                                                                                      'referer': 'https://cula4.com'})
+    html_text = urlquick.get(URL_LIVE, max_age=-1).text
+
+    data_video_id = re.search(r'videoId\s*:\s*"(\d+)"', html_text).group(1)
+
+    data_account = re.search(r'accountId\s*:\s*"(\d+)"', html_text).group(1)
+
+    data_player = re.search(r'playerId\s*:\s*"([^"]+)"', html_text).group(1)
+
+    headers = {
+        'origin': URL_ROOT,
+        'referer': URL_ROOT
+    }
+    return resolver_proxy.get_brightcove_video_json(plugin, data_account=data_account, data_video_id=data_video_id,
+                                                    data_player=data_player, headers=headers)
