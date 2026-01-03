@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.41~beta31" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.41~beta32" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -225,7 +225,11 @@ PROJECT] Fix translations (PR #1642) thanks @dimkroon
 [FR - BFMTV] Fix BFM locales live (issue #1681)
 [FR - T18] Fix live (issue #1687)
 [UK - CHANNEL4] Replay: fix search without results (PR #1688) thanks @dimkroon
-
+[FR - TELEGRENOBLE] Fix live
+[BE - RTLPLAYBE] Updated API 23 (PR #1689) thanks @jeff2900
+[PROJECT] Update README (PR #1692 issue #1603) thanks @CasperMcFadden95
+[TR - BEYAZ] Fix live (PR #1691) thanks @CasperMcFadden95
+[FR - T18] Add replay feature (PR #1694 issue #1693) thanks @jeff2900
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>

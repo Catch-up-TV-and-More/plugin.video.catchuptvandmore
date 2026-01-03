@@ -7,13 +7,13 @@
 ![CI](https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore/workflows/CI/badge.svg?branch=dev)
 
 ## Description
-[Catch-Up TV & More](https://kodi.tv/addon/plugins-video-add-ons/catch-tv-more) est un plugin vidéo pour le media center Kodi (ex XBMC).
-Cette extension regroupe l'ensemble des vidéos des différents services et chaînes de Replay TV (rattrapage TV). De plus, cette extension vous permet d'accéder rapidement aux vidéos et contenus proposés par certains sites internet.
-Catch-Up TV & More est compatible avec les versions de Kodi "17 Krypton" et supérieures.
+[Catch-Up TV & More](https://kodi.tv/addons/omega/plugin.video.catchuptvandmore) est un greffon vidéo pour le centre multimédia Kodi (ex XBMC).
+Cette extension regroupe l'ensemble des vidéos des différents services et chaînes de rattrapage TV. De plus, cette extension vous permet d'accéder rapidement aux vidéos et contenus proposés par certains sites internet.
+Catch-Up TV & More est compatible avec les versions de Kodi "19 Matrix" et supérieures.
 
-*[Catch-Up TV & More](https://kodi.tv/addon/plugins-video-add-ons/catch-tv-more) is a video addon for the Kodi media center (formerly XBMC).*
+*[Catch-Up TV & More](https://kodi.tv/addons/omega/plugin.video.catchuptvandmore) is a video addon for the Kodi media center (formerly XBMC).*
 *This plugin brings together all the videos of various services and channels of catch-up TV. Furthermore, this addon allows you to quickly access the videos and content offered by certain websites.*
-Catch-Up TV & More is compatible with Kodi "17 Krypton" and higher versions.
+Catch-Up TV & More is compatible with Kodi "19 Matrix" and higher versions.
 
 ## Comment installer Catch-up TV & More — *How-to install Catch-up TV & More*
 
@@ -31,10 +31,10 @@ Catch-Up TV & More is compatible with Kodi "17 Krypton" and higher versions.
 * **English**: <https://catch-up-tv-and-more.github.io/websites/>
 
 ## Bugs et améliorations — *Bugs and improvements*
-Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenus ! GitHub ou e-mail.
+Retours de bugs, propositions d'améliorations ou d'ajout de contenus sont les bienvenus ! GitHub.
 ⚠️Veuillez tester la dernière version beta avant de soumettre un bug.⚠️
 
-*Bug reports, suggestions for improvements and content additions are welcome! GitHub or e-mail.*
+*Bug reports, suggestions for improvements and content additions are welcome! GitHub.*
 *⚠️Please try the latest beta version before issuing a bug.⚠️*
 
 
