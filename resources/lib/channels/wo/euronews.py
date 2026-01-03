@@ -11,24 +11,22 @@ import json
 from codequick import Listitem, Resolver, Script
 import urlquick
 
-from resources.lib import web_utils
-from resources.lib.kodi_utils import INPUTSTREAM_PROP
+from resources.lib import resolver_proxy
 
 # TODO
 # Replay add emissions
 
-URL_LIVE_API = 'https://api.euronews.com/v2/apps/androidPhoneEuronews-6.3/languages/%s/livestream'
+URL_LIVE_API = 'https://api.euronews.com/v2/apps/androidPhoneEuronews-6.3/languages/%s/livestream/%s'
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
     final_language = kwargs.get('language', Script.setting['euronews.language'])
     lang = final_language.lower()
-    url_live_json = URL_LIVE_API % lang
+    url_live_json = URL_LIVE_API % (lang, lang)
     json_parser = urlquick.get(url_live_json, max_age=-1).json()
     video_url = json_parser['primary']
 
-    item = Listitem()
+    item = resolver_proxy.__get_non_ia_stream_with_quality(plugin, video_url)
     item.path = video_url
-    item.property[INPUTSTREAM_PROP] = 'inputstream.ffmpegdirect'
 
-    return video_url
+    return item
