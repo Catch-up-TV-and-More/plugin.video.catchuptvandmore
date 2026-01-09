@@ -81,7 +81,6 @@ def get_live_url(plugin, item_id, **kwargs):
     video_url = 'https://cloud.odysee.live/content/fe06b3cdc9412e359368b2455b6ea5e93856e382/master.m3u8'
     headers = {
         'referer': 'https://odysee.com',
-        'origin': 'https://odysee.com'
     }
     return resolver_proxy.get_stream_with_quality(plugin,
                                                   video_url,
