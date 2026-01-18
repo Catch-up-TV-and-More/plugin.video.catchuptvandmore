@@ -451,9 +451,16 @@ def get_live_url(plugin, item_id, **kwargs):
 
     for collection in json_parser['collections']:
         if 'live' == collection['type']:
-            if "channel_path" in collection:
-                channel_path = collection["items"][0]["channel"]["channel_path"]
-                broadcast_id = collection["items"][0]["channel"]["si_id"]
+            items_channel = collection['items'][0].get('channel')
+            items_partner = collection['items'][0].get('partner')
+            if items_channel is not None and 'channel_path' in items_channel:
+                channel_path = items_channel.get("channel_path")
+                broadcast_id = items_channel.get("si_id")
+            elif items_partner is not None and 'partner_path' in items_partner:
+                channel_path = items_partner.get("partner_path")
+                if channel_path in ['lcp', 'public-senat']:
+                    channel_path = 'lcp'
+                broadcast_id = items_partner.get("si_id")
             else:
                 if item_id in fallback_id:
                     channel_path = item_id

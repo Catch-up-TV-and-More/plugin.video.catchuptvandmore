@@ -84,7 +84,7 @@ menu = {
         "order": 6
     },
     "lcp": {
-        "resolver": "/resources/lib/channels/fr/lcp:get_live_url",
+        "resolver": "/resources/lib/channels/fr/francetv:get_live_url",
         "label": "LCP Assemblée Nationale",
         "thumb": "channels/fr/lcp.png",
         "fanart": "channels/fr/lcp_fanart.jpg",
