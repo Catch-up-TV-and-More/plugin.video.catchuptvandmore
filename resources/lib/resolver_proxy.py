@@ -375,11 +375,28 @@ def get_stream_dailymotion(plugin,
                     if not mb:
                         mb = re.findall(r'NAME="(\d+).*\n([^\n]+)', mbtext)
                     mb = sorted([x for x in mb if x[0].isdigit()], key=lambda x: int(x[0]), reverse=True)
-                    for quality, strurl in mb:
-                        quality = quality.split("@")[0]
-                        if int(quality) <= 1080:
-                            strurl = '{0}'.format(strurl.split('#cell')[0])
-                            return strurl
+                    if Quality['BEST'] == plugin.setting.get_string('quality'):
+                        strurl = mb[0][1]
+                        strurl = '{0}'.format(strurl.split('#cell')[0])
+                        return strurl
+                    elif Quality['WORST'] == plugin.setting.get_string('quality'):
+                        strurl = mb[len(mb) - 1][1]
+                        strurl = '{0}'.format(strurl.split('#cell')[0])
+                        return strurl
+                    elif Quality['DIALOG'] == plugin.setting.get_string('quality'):
+                        stream = []
+                        for quality, strurl in mb:
+                            stream.append(quality)
+                        choose_stream = xbmcgui.Dialog().select(Script.localize(30180), stream)
+                        strurl = mb[choose_stream][1]
+                        strurl = '{0}'.format(strurl.split('#cell')[0])
+                        return strurl
+                    else:  # DEFAULT
+                        for quality, strurl in mb:
+                            quality = quality.split("@")[0]
+                            if int(quality) <= 1080:
+                                strurl = '{0}'.format(strurl.split('#cell')[0])
+                                return strurl
 
         url = json_parser["qualities"]["auto"][0]["url"]
         return get_stream_with_quality(plugin, url)
