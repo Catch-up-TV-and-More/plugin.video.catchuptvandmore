@@ -93,4 +93,3 @@ def get_live_url(plugin, item_id, **kwargs):
     url = re.compile(r'STREAMING_FLUX_URL = \'(.*?)\'').findall(resp.text)[0]
 
     return resolver_proxy.get_stream_with_quality(plugin, url)
-

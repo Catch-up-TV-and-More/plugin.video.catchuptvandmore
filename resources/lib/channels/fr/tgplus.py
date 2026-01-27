@@ -17,13 +17,13 @@ from resources.lib.menu_utils import item_post_treatment
 # TODO
 # Add Replay
 
-URL_ROOT = "https://www.telegrenoble.net"
+URL_ROOT = ":https://tgplus.fr"
 
 URL_LIVE = URL_ROOT + '/direct.html'
 
-URL_LIVE_PLAYER = URL_ROOT + '/player/direct'
+URL_ROOT_LIVE = 'https://tgplus.fr'
 
-URL_ACCECPT_COOKIES = URL_ROOT + '/scripts/acceptCookies.php'
+URL_LIVE_PLAYER = URL_ROOT_LIVE + '/direct'
 
 URL_REPLAY = URL_ROOT + '/replay.html'
 
@@ -93,16 +93,9 @@ def get_video_url(plugin, video_url, download_mode=False, **kwargs):
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
 
-    session = urlquick.session()
-    resp = session.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
-    data = {
-        'cookiesAccepted': '1',
-    }
+    resp = urlquick.get(URL_LIVE_PLAYER, headers=GENERIC_HEADERS, max_age=-1)
 
-    resp = session.post(URL_ACCECPT_COOKIES, headers=GENERIC_HEADERS, data=data, max_age=-1)
-    resp = session.post(URL_LIVE_PLAYER, headers=GENERIC_HEADERS, max_age=-1)
-
-    youtube_id = resp.parse("iframe").get('src')
+    youtube_id = resp.parse("iframe").get('data-src-cmplz')
     video_id = re.compile(r'embed\/(.*?)\?').findall(youtube_id)[0]
 
     return resolver_proxy.get_stream_youtube(plugin, video_id, False)

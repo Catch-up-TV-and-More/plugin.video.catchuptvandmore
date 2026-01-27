@@ -481,15 +481,6 @@ menu = {
         "enabled": True,
         "order": 42
     },
-    "telegrenoble": {
-        "resolver": "/resources/lib/channels/fr/telegrenoble:get_live_url",
-        "label": "TéléGrenoble",
-        "thumb": "channels/fr/telegrenoble.png",
-        "fanart": "channels/fr/telegrenoble_fanart.jpg",
-        "m3u_group": "Région",
-        "enabled": True,
-        "order": 43
-    },
     "telenantes": {
         "resolver": "/resources/lib/channels/fr/telenantes:get_live_url",
         "label": "TéléNantes",
@@ -498,7 +489,7 @@ menu = {
         "xmltv_id": "C491.api.telerama.fr",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 44
+        "order": 43
     },
     "telepaese": {
         "resolver": "/resources/lib/channels/fr/telepaese:get_live_url",
@@ -507,13 +498,22 @@ menu = {
         "fanart": "channels/fr/telepaese_fanart.png",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 45
+        "order": 44
     },
     "tl7": {
         "resolver": "/resources/lib/channels/fr/tl7:get_live_url",
         "label": "Télévision Loire 7",
         "thumb": "channels/fr/tl7.png",
         "fanart": "channels/fr/tl7_fanart.jpg",
+        "m3u_group": "Région",
+        "enabled": True,
+        "order": 45
+    },
+    "tgplus": {
+        "resolver": "/resources/lib/channels/fr/tgplus:get_live_url",
+        "label": "TG+",
+        "thumb": "channels/fr/tgplus.png",
+        "fanart": "channels/fr/tgplusfanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
         "order": 46
