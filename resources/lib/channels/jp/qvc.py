@@ -28,8 +28,8 @@ GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 def get_live_url(plugin, item_id, **kwargs):
 
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
-    data_json = json.loads(re.compile(r'oLiveStreams\=(.*?)\,live').findall(resp.text)[0])
+    data_json = json.loads(re.compile(r'oLiveStreams\=(.*?)\,liveDefaultChannel').findall(resp.text)[0])
 
-    video_url = 'https:' + data_json['QVC']['url']
+    video_url = data_json['QVC']['url']
 
     return resolver_proxy.get_stream_with_quality(plugin, video_url)
