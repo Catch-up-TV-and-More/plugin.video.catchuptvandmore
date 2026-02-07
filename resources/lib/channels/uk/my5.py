@@ -117,7 +117,8 @@ def getdata(ui, media):
             sout = sout + chr(k)
         y = y + 1
 
-    m = re.compile(r'SSL_MA..(.{24})..(.{24})').findall(sout)[0]
+    matches = re.compile(r'([A-Za-z0-9+/]{22}==).*?([A-Za-z0-9+/]{22}==)').findall(sout)
+    m = matches[0]
     h = HMAC.new(base64.urlsafe_b64decode(str(m[0])), digestmod=SHA256)
     h.update(hmac_update)
     auth = base64.urlsafe_b64encode(h.digest()).decode('utf-8')[:-1].replace("+", "-").replace("/", "_")
