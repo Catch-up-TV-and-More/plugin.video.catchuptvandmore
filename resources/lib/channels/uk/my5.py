@@ -558,26 +558,22 @@ def request_user_collection(collection_name, show_login_msg=True):
     if not session_tkn:
         return []
 
-    try:
-        resp = urlquick.get('https://corona.channel5.com/collections/%s.json' % collection_name,
-                            headers={'User-Agent': web_utils.get_random_ua(),
-                                     'Authorization': 'Bearer ' + session_tkn,
-                                     'Pragma': 'no-cache',
-                                     'Cache-Control': 'no-cache'
-                                     },
-                            params={'platform': 'my5desktop', 'friendly': 'true',
-                                    'milkshake': 'include', 'limit': 256},
-                            timeout=REQ_TIMEOUT,
-                            max_age=-1)
-        data = json.loads(resp.content)
-        shows = data.get('content') or data['watchables']
-        return shows
-    except urlquick.HTTPError as err:
-        # Normal response when a list is empty.
-        if err.response.status_code == 404:
-            return []
-        else:
-            raise
+    resp = urlquick.get('https://corona.channel5.com/collections/%s.json' % collection_name,
+                        headers={'User-Agent': web_utils.get_random_ua(),
+                                 'Authorization': 'Bearer ' + session_tkn,
+                                 'Pragma': 'no-cache',
+                                 'Cache-Control': 'no-cache'
+                                 },
+                        params={'platform': 'my5desktop', 'friendly': 'true',
+                                'milkshake': 'include', 'limit': 256},
+                        timeout=REQ_TIMEOUT,
+                        max_age=-1)
+    data = json.loads(resp.content)
+    # Only 'continue watching' has its data in field 'watchables'.
+    shows = data.get('content')
+    if shows is None:
+        shows = data['watchables']
+    return shows
 
 
 # -----------------------------------------------------------------------------
