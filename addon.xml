@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta01" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta02" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -47,6 +47,11 @@
 [JP - QVC] Fix live
 [FR - LCP] Fix live error (PR #1705) thanks @jeff2900
 [UK - MY5] Change HMAC key retrival (PR #1715 issue #1713) thanks @nictjir
+[MA - MEDI1TV] Fix live (PR #1718) thanks @asperMcFadden95
+[FR - FRANCETV] Kodi22 fix live error 403 (PR #1717) thanks @jeff2900
+[FR - T18] Fix replay AttributeError (PR #1722) thanks @ jeff2900
+[UK - MY5] Replay: empty lists no longer return HTTP 404 status (PR #1724 issue #1721) thanks @dinkroom
+[FR - TGPLUS] Fix live
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
