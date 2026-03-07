@@ -119,11 +119,11 @@ def getdata(ui, media):
 
     matches = re.compile(r'([A-Za-z0-9+/]{22}==).*?([A-Za-z0-9+/]{22}==)').findall(sout)
     m = matches[0]
-    h = HMAC.new(base64.urlsafe_b64decode(str(m[0])), digestmod=SHA256)
+    h = HMAC.new(base64.urlsafe_b64decode(str(m[1])), digestmod=SHA256)
     h.update(hmac_update)
     auth = base64.urlsafe_b64encode(h.digest()).decode('utf-8')[:-1].replace("+", "-").replace("/", "_")
 
-    return CALL_URL, auth, m[1]
+    return CALL_URL, auth, m[0]
 
 
 def ivdata(lic_full, auth):
