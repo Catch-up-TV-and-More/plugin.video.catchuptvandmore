@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta02" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta03" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -52,6 +52,10 @@
 [FR - T18] Fix replay AttributeError (PR #1722) thanks @ jeff2900
 [UK - MY5] Replay: empty lists no longer return HTTP 404 status (PR #1724 issue #1721) thanks @dinkroom
 [FR - TGPLUS] Fix live
+[UK - MY5] Swapped order of HMAC and AES (PR #1725 issue #1726) thanks @dinkroom
+[WEB - TARATATA] Improves video quality (PR #1728 issue #1377) thanks @jeff2900
+[FR - EUROPE1] FIx live
+[FR - MOSELLETV] Fix live
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
