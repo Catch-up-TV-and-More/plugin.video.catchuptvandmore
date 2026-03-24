@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta03" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta04" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -56,6 +56,9 @@
 [WEB - TARATATA] Improves video quality (PR #1728 issue #1377) thanks @jeff2900
 [FR - EUROPE1] FIx live
 [FR - MOSELLETV] Fix live
+[FR - TNTV] Fix live
+[UK - MY5] Swap and retry HMAC key with stored order (PR #1730 issue #1732) thanks @dinkroom
+[FR - TV7BORDEAUX] Fix live
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
