@@ -8,6 +8,8 @@ from __future__ import unicode_literals
 import re
 import json
 import base64
+from datetime import datetime, timedelta, timezone
+
 import urlquick
 import time
 
@@ -31,7 +33,8 @@ except ImportError:
     from Cryptodome.Hash import HMAC, SHA256
 
 from resources.lib.menu_utils import item_post_treatment
-from resources.lib import web_utils, resolver_proxy
+from resources.lib.py_utils import datetime_strptime
+from resources.lib import web_utils, resolver_proxy, kodi_utils
 
 CORONA_URL = 'https://corona.channel5.com/'
 BASIS_URL = CORONA_URL + 'shows/%s/seasons'
@@ -330,7 +333,11 @@ def list_collections(plugin, browse_name, **kwargs):
                 item = Listitem()
                 item.label = collection['title']
                 if collection.get('live'):
-                    item.set_callback(get_live_url, item_id=collection['channel'])
+                    chan_id = collection['channel']
+                    item.art['thumb'] = BASE_IMG + f'/channel/{chan_id}/512x512.png'
+                    item.set_callback(get_live_url, item_id=chan_id)
+                    if chan_id.startswith('5-EVENTS-'):
+                        add_special_live_event_info(item, chan_id)
                 else:
                     browse_name = collection['id']
                     if browse_name in ('PLC_My5DesktopHeroRail',
@@ -383,6 +390,46 @@ def search_shows(plugin, params, offset=0):
                                   offset=data['next_offset'])
         item.property['SpecialSort'] = 'bottom'
         yield item
+
+
+def add_special_live_event_info(listitem: Listitem, chan_id):
+    """Get additional info about a special events FAST channel.
+
+    Will be used to display more useful info in the collection 'live channel',
+    because this collection itself only provides rather cryptic channel names
+    like '5 event 01' for special events channels.
+
+    """
+    try:
+        strp_fmt = '%Y-%m-%dT%H:%M:%S.000Z'
+        now = datetime.now(timezone.utc)
+        resp = urlquick.get(url=CORONA_URL + f'channels/{chan_id}/epg.json?',
+                            headers=GENERIC_HEADERS,
+                            params={'start': now.strftime(strp_fmt),
+                                    'end': (now + timedelta(days=1)).strftime(strp_fmt),
+                                    'platform': 'my5desktop'},
+                            timeout=REQ_TIMEOUT,
+                            max_age=DFLT_CACHE_TIME)
+        shows_list = json.loads(resp.content)['transmissions']
+        listitem.label = shows_list[0]['channelName']
+        descriptions = [shows_list[0]['showTitle']]
+        local_tz = kodi_utils.get_local_zone()
+        web_dt_fmt = '%Y-%m-%dT%H:%M:%S%z'
+        local_dt_fmt = ''.join((
+            '[B]',
+            xbmc.getRegion('dateshort'),
+            ' ',
+            xbmc.getRegion('time').replace(':%S', '').replace('%I%I:', '%I:'),
+            '[/B]'
+        ))
+        for pgm in shows_list[:3]:
+            descriptions.append(' ')
+            start_t = datetime_strptime(pgm['start'], web_dt_fmt)
+            descriptions.append(start_t.astimezone(local_tz).strftime(local_dt_fmt))
+            descriptions.append(pgm['description'])
+        listitem.info['plot'] = '\n'.join(descriptions)
+    except (KeyError, IndexError, urlquick.RequestException, json.JSONDecodeError):
+        pass
 
 
 def parse_show(show_data):
