@@ -201,7 +201,7 @@ def get_local_zone():
 
         try:
             _local_timezone = ZoneInfo(get_setting('locale.timezone'))
-        except ValueError:
+        except (TypeError, ValueError):
             # To be Matrix compatible
             tzlocal = importlib.import_module('tzlocal')
             _local_timezone = tzlocal.get_localzone()
