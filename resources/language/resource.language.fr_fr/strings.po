@@ -123,7 +123,7 @@ msgid "Internet service providers"
 msgstr "Fournisseurs d'accès internet"
 
 
-# Countries (from 30050 to 30079)
+# Countries (from 30050 to 30099)
 
 msgctxt "#30050"
 msgid "France"

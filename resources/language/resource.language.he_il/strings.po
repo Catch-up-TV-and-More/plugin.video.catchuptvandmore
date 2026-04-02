@@ -119,7 +119,7 @@ msgid "Favourites"
 msgstr ""
 
 
-# Countries (from 30050 to 30079)
+# Countries (from 30050 to 30099)
 
 msgctxt "#30050"
 msgid "France"
