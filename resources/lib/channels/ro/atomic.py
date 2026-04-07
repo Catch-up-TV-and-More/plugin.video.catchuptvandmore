@@ -6,17 +6,24 @@
 
 from __future__ import unicode_literals
 
+import re
+
 # noinspection PyUnresolvedReferences
 from codequick import Resolver
 
+import urlquick
+
 from resources.lib import resolver_proxy
 
-URL_LIVE = {
-    'atomic-academy': 'https://atomic.streamnet.ro/academia.m3u8',
-    'atomic-tv': 'https://atomic.streamnet.ro/atomictv.m3u8',
-}
+URL_ROOT = 'https://atomic.streamnet.ro/'
+
+# Order on the page: atomic-tv first, atomic-academy second
+CHANNEL_ORDER = ['atomic-tv', 'atomic-academy']
 
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    return resolver_proxy.get_stream_with_quality(plugin, URL_LIVE[item_id])
+    resp = urlquick.get(URL_ROOT, max_age=-1)
+    sources = re.findall(r'<source[^>]+src=["\']([^"\']+)["\']', resp.text)
+    urls = dict(zip(CHANNEL_ORDER, sources))
+    return resolver_proxy.get_stream_with_quality(plugin, urls[item_id])
