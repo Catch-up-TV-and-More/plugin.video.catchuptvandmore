@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta04" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta05" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -60,6 +60,10 @@
 [FR - TNTV] Fix live
 [UK - MY5] Swap and retry HMAC key with stored order (PR #1730 issue #1732) thanks @dinkroom
 [FR - TV7BORDEAUX] Fix live
+[UK - WATCHFREEUK] Fix page legend has no items (PR #1735) thanks @dinkroom
+[PROJECT] Get local timezone from Kodi settings (PR #1737) thanks @dinkroom
+[UK - MY5] Replay: Improved display of special events FAST (PR #1737 issue #1736) thanks @dinkroom
+[RO] Added support for Romanian channels (PR #1738) thanks @qvalette
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
