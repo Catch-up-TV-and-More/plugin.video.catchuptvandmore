@@ -72,7 +72,7 @@ GENERIC_HEADERS = {
 }
 
 RTLPLAY_HEADERS = {
-    'User-Agent': 'RTL_PLAY/25.260415 (com.tapptic.rtl.tvi; build:30644; Android 30',
+    'User-Agent': 'RTL_PLAY/25.260415 (com.tapptic.rtl.tvi; build:30644; Android 30)',
     'Accept': '*/*',
     'Accept-Encoding': 'gzip',
     'Connection': 'Keep-Alive',
