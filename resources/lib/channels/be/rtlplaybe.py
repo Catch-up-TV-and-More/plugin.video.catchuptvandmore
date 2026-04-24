@@ -373,7 +373,7 @@ def get_final_video_url(plugin, item_id, video_url):
         return False
 
     is_live = "/direct/" in video_url and "/player/" not in video_url
-    response = urlquick.get(video_url, headers=RTLPLAY_HEADERS, cookies=login_token, max_age=-1)
+    response = urlquick.get(video_url, headers=RTLPLAY_HEADERS, cookies=login_token, max_age=-1, raise_for_status=False)
     if response.status_code != 200:
         return None, None, None
 
@@ -409,8 +409,10 @@ def get_final_video_url(plugin, item_id, video_url):
                              headers=headers_cfg,
                              json=json_cfg,
                              timeout=REQUESTS_TIMEOUT,
-                             max_age=-1)
+                             max_age=-1,
+                             raise_for_status=False)
     if response.status_code == 403:
+        plugin.notify('ERROR', plugin.localize(30713))
         return None, None, None
 
     response = json.loads(response.content.decode())
