@@ -564,11 +564,11 @@ msgstr "UKTVPlay wachtwoord"
 
 msgctxt "#30252"
 msgid "RMCBFM Play Login"
-msgstr ""
+msgstr "RMCBFM Play gebruikersnaam"
 
 msgctxt "#30253"
 msgid "RMCBFM Play Password"
-msgstr ""
+msgstr "RMCBFM Play wachtwoord"
 
 msgctxt "#30254"
 msgid "TV guides"
@@ -576,11 +576,11 @@ msgstr ""
 
 msgctxt "#30255"
 msgid "Schedules Direct login"
-msgstr ""
+msgstr "Schedules Direct gebruikersnaam"
 
 msgctxt "#30256"
 msgid "Schedules Direct password"
-msgstr ""
+msgstr "Schedules Direct  wachtwoord"
 
 msgctxt "#30257"
 msgid "Schedules Direct lineup"
@@ -588,35 +588,35 @@ msgstr ""
 
 msgctxt "#30258"
 msgid "RTBF auvio Login"
-msgstr ""
+msgstr "RTBF auvio gebruikersnaam"
 
 msgctxt "#30259"
 msgid "RTBF auvio Password"
-msgstr ""
+msgstr "RTBF wachtwoord"
 
 msgctxt "#30260"
 msgid "TF1+ Login"
-msgstr ""
+msgstr "TF1+ gebruikersnaam"
 
 msgctxt "#30261"
 msgid "TF1+ Password"
-msgstr ""
+msgstr "TF1+ wachtwoord"
 
 msgctxt "#30262"
 msgid "SFR TV login"
-msgstr ""
+msgstr "SFR TV gebruikersnaam"
 
 msgctxt "#30263"
 msgid "SFR TV password"
-msgstr ""
+msgstr "SFR TV wachtwoord"
 
 msgctxt "#30264"
 msgid "Channel 4 Login"
-msgstr ""
+msgstr "Channel 4 gebruikersnaam"
 
 msgctxt "#30265"
 msgid "Channel 4 Password"
-msgstr ""
+msgstr "Channel 4 wachtwoord"
 
 
 # TV integration (from 30270 to 30289)

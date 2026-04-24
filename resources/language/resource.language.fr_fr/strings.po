@@ -524,7 +524,7 @@ msgstr "Renommer automatiquement la vidéo (répertoire de téléchargement requ
 
 msgctxt "#30242"
 msgid "VRT NU Login"
-msgstr "Login VRT NU"
+msgstr "Identifiant VRT NU"
 
 msgctxt "#30243"
 msgid "VRT NU Password"
@@ -532,7 +532,7 @@ msgstr "Mot de passe VRT NU"
 
 msgctxt "#30244"
 msgid "6play Login"
-msgstr "Login 6play"
+msgstr "Identifiant 6play"
 
 msgctxt "#30245"
 msgid "6play Password"
@@ -540,7 +540,7 @@ msgstr "Mot de passe 6play"
 
 msgctxt "#30246"
 msgid "RTLplay Login"
-msgstr "Login RTLplay"
+msgstr "Identifiant RTLplay"
 
 msgctxt "#30247"
 msgid "RTLplay Password"
@@ -548,7 +548,7 @@ msgstr "Mot de passe RTLplay"
 
 msgctxt "#30248"
 msgid "ABWeb Login"
-msgstr "Login ABWeb"
+msgstr "Identifiant ABWeb"
 
 msgctxt "#30249"
 msgid "ABWeb Password"
@@ -556,7 +556,7 @@ msgstr "Mot de passe ABWeb"
 
 msgctxt "#30250"
 msgid "UKTVPlay Login"
-msgstr "Login UKTVPlay"
+msgstr "Identifiant UKTVPlay"
 
 msgctxt "#30251"
 msgid "UKTVPlay Password"
@@ -564,7 +564,7 @@ msgstr "Mot de passe UKTVPlay"
 
 msgctxt "#30252"
 msgid "RMCBFM Play Login"
-msgstr "Login RMCBFM Play"
+msgstr "Identifiant RMCBFM Play"
 
 msgctxt "#30253"
 msgid "RMCBFM Play Password"
@@ -576,7 +576,7 @@ msgstr "Guides TV"
 
 msgctxt "#30255"
 msgid "Schedules Direct login"
-msgstr "Login Schedules Direct"
+msgstr "Identifiant Schedules Direct"
 
 msgctxt "#30256"
 msgid "Schedules Direct password"
@@ -584,11 +584,11 @@ msgstr "Mot de passe Schedules Direct"
 
 msgctxt "#30257"
 msgid "Schedules Direct lineup"
-msgstr "Lineup Schedules Direct"
+msgstr "Programmation Schedules Direct"
 
 msgctxt "#30258"
 msgid "RTBF auvio Login"
-msgstr "Login RTBF auvio"
+msgstr "Identifiant RTBF auvio"
 
 msgctxt "#30259"
 msgid "RTBF auvio Password"
@@ -604,7 +604,7 @@ msgstr "Mot de passe TF1+"
 
 msgctxt "#30262"
 msgid "SFR TV login"
-msgstr "Login SFR TV"
+msgstr "Identifiant SFR TV"
 
 msgctxt "#30263"
 msgid "SFR TV password"
@@ -612,11 +612,11 @@ msgstr "Mot de passe SFR TV"
 
 msgctxt "#30264"
 msgid "Channel 4 Login"
-msgstr ""
+msgstr "Identifiant Channel 4"
 
 msgctxt "#30265"
 msgid "Channel 4 Password"
-msgstr ""
+msgstr "Mot de passe Channel 4"
 
 
 # TV integration (from 30270 to 30289)
