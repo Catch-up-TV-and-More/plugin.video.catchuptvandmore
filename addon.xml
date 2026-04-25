@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta05" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta06" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -64,6 +64,13 @@
 [PROJECT] Get local timezone from Kodi settings (PR #1737) thanks @dinkroom
 [UK - MY5] Replay: Improved display of special events FAST (PR #1737 issue #1736) thanks @dinkroom
 [RO] Added support for Romanian channels (PR #1738) thanks @qvalette
+[BE - RTLPLAYBE] Updated API 25 and fixed login (PR #1743) thanks @jeff2900
+[CH - LATELE] Fix live (PR #1744) thanks @CorentinWicht
+[CH - LEMANBLEU] Fix live and replay (PR #1744) thanks @CorentinWicht
+[BE - RTLPLAYBE] Added geoblocked stream error message (PR #1747) thanks @jeff2900
+[WO - ALJAZEERA] Add 2الجزيرة (PR #1746) thanks @CasperMcFadden95
+[PROJECT] Better localization
+[CH - LATELE] Do not hardcode live url
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
