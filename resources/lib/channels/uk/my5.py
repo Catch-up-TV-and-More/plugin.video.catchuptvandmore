@@ -3,25 +3,19 @@
 # (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 # This file is part of Catch-up TV & More
 
-from __future__ import unicode_literals
-
 import re
 import json
 import base64
+import time
+import urllib.parse
 from datetime import datetime, timedelta, timezone
 
-import urlquick
-import time
-
 import xbmc
+import xbmcgui
 import xbmcplugin
 
+import urlquick
 from codequick import Listitem, Resolver, Route, Script, utils
-
-try:
-    import urllib.parse
-except ImportError:
-    import urllib
 
 try:
     from Crypto.Cipher import AES
@@ -131,7 +125,7 @@ def ivdata(item_id, media_type, keys):
 
         h = HMAC.new(base64.urlsafe_b64decode(hmac_key), digestmod=SHA256)
         h.update(hmac_update)
-        auth = base64.urlsafe_b64encode(h.digest()).decode('utf-8')[:-1].replace("+", "-").replace("/", "_")
+        auth = base64.urlsafe_b64encode(h.digest()).decode('ascii')[:-1]
 
         params = {'auth': auth}
         try:
@@ -528,7 +522,7 @@ def parse_watchable(watchable, from_episode_list=False):
     Parse item data for functions that retrieve watchables, like
     `search_watchables()` and `list_episodes()`.
 
-    Watchables can are various types of items, like episodes of series, or one-offs
+    Watchables can be various types of items, like episodes of series, or one-offs
     like documentaties, or films.
 
     Listitem label and description are handled differently depending on the origin of the
@@ -701,9 +695,7 @@ def edit_mylist(plugin, operation, show_id, show_title=None):
         method = 'delete'
         body = None
     else:
-        msg = f"Parameter 'operation' must be either 'add' or 'remove', not '{operation}'."
-        plugin.log("[UK - Chan5] Error edit_my_list: " + msg, plugin.ERROR)
-        raise ValueError(msg)
+        raise ValueError(f"[UK - Chan5] Invalid MyList edit operation '{operation}'.")
 
     resp = urlquick.request(
         method=method,
@@ -742,8 +734,7 @@ def get_video_url(plugin, fname, season_f_name, show_id, standalone, **kwargs):
     for video_url in (fhd_video_url, sd_video_url):
         try:
             resp = urlquick.get(video_url, headers=GENERIC_HEADERS, timeout=REQ_TIMEOUT, max_age=-1)
-        except urlquick.HTTPError as err:
-            plugin.log("[UK - Chan5] Failed to get VOD manifest {}: {!r}".format(video_url, err), plugin.DEBUG)
+        except urlquick.HTTPError:
             if video_url == fhd_video_url:
                 continue
             else:
@@ -794,7 +785,7 @@ def availability(end_time):
     still available.
 
     Args:
-        end_time (float): Timestamp when availability ends.
+        end_time (float | None): Timestamp when availability ends.
     Returns:
         str
 
@@ -838,12 +829,10 @@ def get_session_token(msg_on_fail=True):
         return sess_token
     else:
         Script.log("[UK-Chan5] No session token in settings, user has to log in")
-        if not msg_on_fail:
-            return None
-        import xbmcgui
-        xbmcgui.Dialog().ok(
-            Script.localize(TXT_INFORMATION),
-            Script.localize(TXT_ACCOUNT_REQUIRED) % ('Channel5 (UK)', ('%s' % PUBLIC_SITE)))
+        if msg_on_fail:
+            xbmcgui.Dialog().ok(
+                Script.localize(TXT_INFORMATION),
+                Script.localize(TXT_ACCOUNT_REQUIRED) % ('Channel5 (UK)', ('%s' % PUBLIC_SITE)))
         return None
 
 
@@ -883,17 +872,10 @@ def aws_authenticate(req_data):
         data = json.loads(resp.content)
         return data['AuthenticationResult']
     except urlquick.HTTPError as e:
-        Script.log("[UK-Chan5] Failed to authenticate: %r - %s",
-                   (e, e.response.content), lvl=Script.ERROR)
-        try:
-            resp_data = e.response.json()
-            msg = resp_data.get('message') or resp_data['__type']
-            Script.log("[UK-Chan5] Authentication error msg '%s' from error data '%s'",
-                       (msg, resp_data), Script.ERROR)
-        except Exception as err:
-            Script.log("[UK-Chan5] Failed to parse error: %r",
-                       (err, ), Script.ERROR)
-            raise e
+        resp_data = e.response.json()
+        msg = resp_data.get('message') or resp_data['__type']
+        Script.log("[UK-Chan5] Authentication error msg '%s' from error data '%s'",
+                   (msg, resp_data), Script.ERROR)
         raise urlquick.HTTPError(msg)
 
 
@@ -923,7 +905,6 @@ def perform_signin_request(uname, passw):
     get a session token from channel5.
 
     """
-    Script.log("[UK-Chan5] Trying to sign in to account", lvl=Script.INFO)
     req_data = {
         "AuthFlow": "USER_PASSWORD_AUTH",
         "ClientId": "10ap8l6jp0vhreaac79c3qr1lq",
@@ -935,7 +916,6 @@ def perform_signin_request(uname, passw):
     sess_token = request_session_token(auth_result['IdToken'])
     # Store the session token for later use.
     Script.setting['uk.chan5.session-token'] = sess_token
-    Script.log("[UK-Chan5] Sign in successful.", lvl=Script.INFO)
     return True
 
 
@@ -948,9 +928,6 @@ def sign_in_account(addon):
     until log in succeeds, or the user cancels the keyboard.
 
     """
-    import xbmcgui
-    import xbmc
-
     uname = None
     passw = None
 
@@ -973,9 +950,8 @@ def sign_in_account(addon):
 @Script.register
 def sign_out_account(_):
     """Entry point for the action 'Log out from channel5 account' in settings."""
-    import xbmcgui
-
     global my_list_ids
+
     my_list_ids = False
     Script.setting['uk.chan5.session-token'] = ''
     xbmcgui.Dialog().ok('Channel5', Script.localize(TXT_LOGOUT_SUCCESS))
