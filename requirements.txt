@@ -9,7 +9,7 @@ pytest
 pytz
 requests
 sakee
-setuptools >= 41
+setuptools >= 82.0.1
 six
 #typing-extensions == 3.7.4.1; python_version != '2.7'
 tzlocal
