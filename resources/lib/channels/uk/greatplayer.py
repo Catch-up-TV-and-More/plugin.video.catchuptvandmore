@@ -49,9 +49,11 @@ def get_anonymous_token():
     return None
 
 
-COOKIES = {
-    'one-token': get_anonymous_token().get('token'),
-}
+def cookies():
+    cks = getattr(cookies, '_cookies', None)
+    if cks is None:
+        cookies._cookies = cks = {'one-token': get_anonymous_token().get('token')}
+    return cks
 
 
 @Route.register
@@ -124,7 +126,7 @@ def main_menu(plugin, **kwargs):
 
 @Resolver.register
 def get_video(plugin, url, **kwargs):
-    json_video = json.loads(urlquick.get(url, cookies=COOKIES, max_age=-1).text)
+    json_video = json.loads(urlquick.get(url, cookies=cookies(), max_age=-1).text)
     video_streams = json_video.get('playbackInfo', {}).get('videoStreams', [])
     for video_stream in video_streams:
         if video_stream.get('label') == 'DASH-WIDEVINE':
