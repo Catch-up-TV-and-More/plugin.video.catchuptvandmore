@@ -53,12 +53,13 @@ def check_geo_block(resp):
         # page with a title tag is returned.
         return root
 
-    if 'Service Unavailable' in page_title.text:
+    title_txt = page_title.text
+    if 'Service Unavailable' in title_txt:
         urlhash = urlquick.hash_url(resp.request)
         urlquick.CacheHTTPAdapter(urlquick.CACHE_LOCATION).del_cache(urlhash)
-        err = urlquick.HTTPError(page_title)
+        err = urlquick.HTTPError(title_txt)
         err.code = 403
-        err.msg = page_title
+        err.msg = title_txt
         raise err
     return root
 
