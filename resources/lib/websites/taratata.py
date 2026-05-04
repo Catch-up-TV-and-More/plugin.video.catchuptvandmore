@@ -242,7 +242,7 @@ def get_video_url(plugin,
                   download_mode=False,
                   **kwargs):
     """Get video URL and start video player"""
-    m3u8_url = None
+    value_jwplayer_id = None
     url_selected = ''
     all_datas_videos_quality = []
     all_datas_videos_path = []
@@ -265,8 +265,7 @@ def get_video_url(plugin,
             if value_jwplayer_id != '':
                 for stream in root.iterfind(".//div[@class='jwplayer']"):
                     if stream.get('id') == value_jwplayer_id:
-                        url = stream.get('data-source')
-                        m3u8_url = stream.get('data-url')
+                        url = stream.get('data-url')
             # Cas Yt
             else:
                 video_id = re.compile('youtube.com/embed/(.*?)\?').findall(
@@ -292,8 +291,23 @@ def get_video_url(plugin,
                 plugin, id_diffusion, download_mode=download_mode)
 
     final_url = ''
-    if m3u8_url is not None:
-        mbtext = urlquick.get(m3u8_url, max_age=-1).text
+    if len(all_datas_videos_quality) > 1:
+        seleted_item = xbmcgui.Dialog().select(
+            plugin.localize(30709),
+            all_datas_videos_quality)
+        if seleted_item == -1:
+            return False
+        url_selected = all_datas_videos_path[seleted_item]
+        final_url = url_selected
+    else:
+        final_url = all_datas_videos_path[0]
+
+    if download_mode:
+        return download.download_video(final_url)
+
+    if value_jwplayer_id:
+        jwplayer_url = final_url.split("|")[0]
+        mbtext = urlquick.get(jwplayer_url, max_age=-1).text
         mb = re.findall('NAME="([^"]+)",PROGRESSIVE-URI="([^"]+)"', mbtext)
         if not mb:
             mb = re.findall(r'RESOLUTION=([0-9x]+).*\n([^\n]+)', mbtext)
@@ -325,18 +339,5 @@ def get_video_url(plugin,
                 if int(quality) <= 1080:
                     return strurl[1]
 
-    if len(all_datas_videos_quality) > 1:
-        seleted_item = xbmcgui.Dialog().select(
-            plugin.localize(30709),
-            all_datas_videos_quality)
-        if seleted_item == -1:
-            return False
-        url_selected = all_datas_videos_path[seleted_item]
-        final_url = url_selected
     else:
-        final_url = all_datas_videos_path[0]
-
-    if download_mode:
-        return download.download_video(final_url)
-
-    return final_url
+        return final_url
