@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta06" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta07" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -71,6 +71,10 @@
 [WO - ALJAZEERA] Add 2الجزيرة (PR #1746) thanks @CasperMcFadden95
 [PROJECT] Better localization
 [CH - LATELE] Do not hardcode live url
+[FR - TF1PLUS] Fixed error is_category if search is empty (PR #1752) thanks @jeff2900
+[UK - MY5] chores (PR #1750) thanks @dinkroom
+[UK - WATCHFREEUK] Fix geoblock error message (PR #1753) thanks @dinkroom
+[WEB - TARATATA] In the Live section, Live/Mosaic option has been restored (PR #1756 issue #1755) thanks @jeff2900
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
