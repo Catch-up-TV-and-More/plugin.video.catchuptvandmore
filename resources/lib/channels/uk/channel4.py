@@ -667,6 +667,7 @@ def parse_api_item_episode(episode_item, parent_list=None):
         item.context.script(remove_from_history, 'Remove from history', programme_id=programme_id)
     add_my_list_context_menu(item, brand_ws_title)
     item_post_treatment(item)
+    item.params['_title_'] = ''
     return item
 
 
@@ -818,6 +819,7 @@ def list_seasons(plugin, url, **kwargs):
                         item.info['genre'] = genres
                         add_my_list_context_menu(item, brand_name)
                         item_post_treatment(item)
+                        item.params['_title_'] = ''
                         yield item
             else:
                 series = datas['series']
@@ -876,6 +878,7 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
             item.info['genre'] = genres
             add_my_list_context_menu(item, brand_name)
             item_post_treatment(item)
+            item.params['_title_'] = ''
             yield item
 
 
