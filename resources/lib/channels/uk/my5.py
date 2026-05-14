@@ -192,10 +192,15 @@ def list_main_page(plugin, **kwargs):
 
 def list_hero_items(plugin):
     """List the hero items normally presented on the home page of the website."""
-    for li in list_collections(plugin, 'PLC_My5DesktopHeroRail'):
-        title = li.label
-        li.info['title'] = f'[B][COLOR orange]{title}[/COLOR][/B]'
-        yield li
+    try:
+        for li in list_corona_collection('PLC_My5DesktopFeaturedRail'):
+            if li:
+                title = li.label
+                li.info['title'] = f'[B][COLOR orange]{title}[/COLOR][/B]'
+            yield li
+    except Exception:
+        # Do not allow an error in hero items to crash the whole channel
+        pass
 
 
 @Route.register(autosort=False, content_type="videos")
@@ -334,7 +339,8 @@ def list_collections(plugin, browse_name, **kwargs):
                         add_special_live_event_info(item, chan_id)
                 else:
                     browse_name = collection['id']
-                    if browse_name in ('PLC_My5DesktopHeroRail',
+                    if browse_name in ('PLC_My5DesktopFeaturedRail',
+                                       'PLC_My5DesktopHeroRail',
                                        'PLC_My5ContinueWatchingRail',
                                        'PLC_My5DesktopRecommendationsRail'):
                         continue
@@ -350,6 +356,30 @@ def list_collections(plugin, browse_name, **kwargs):
     else:
         yield False
         return
+
+
+def list_corona_collection(browse_name):
+    """List a collection obtained from the corona subdomain.
+
+    Unlike data from feed-api end points, responses from this domain already include all data.
+    Currently, only used by the hero rail, but expect more to follow in the future.
+    """
+    resp = urlquick.get(''.join((CORONA_URL, 'collections/', browse_name, '.json')),
+                        headers=GENERIC_HEADERS,
+                        params={'platform': 'my5desktop',
+                                'friendly': '1',
+                                'include_show': '1'},
+                        timeout=REQ_TIMEOUT,
+                        max_age=DFLT_CACHE_TIME)
+    data = json.loads(resp.content)
+    for item in data['content']:
+        item_type = item.get('type')
+        if item_type == 'Watchable':
+            yield parse_watchable(item)
+        elif item_type == 'Show':
+            yield parse_show(item)
+        else:
+            continue
 
 
 @Route.register(content_type="videos")
