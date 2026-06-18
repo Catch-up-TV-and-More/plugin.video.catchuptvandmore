@@ -103,7 +103,7 @@ def get_the_platform_list_item(manifest, pid, account, token) -> Listitem:
     return item
 
 
-def get_live_media_url(guid: str) -> Any:
+def get_live_media_url(guid: str) -> str:
     start_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
     end_ms = start_ms + int(timedelta(days=1).total_seconds() * 1000)
     url = (
