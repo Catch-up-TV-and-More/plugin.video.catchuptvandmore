@@ -29,7 +29,7 @@ def get_account() -> str:
 def get_token() -> str:
     return requests.get('https://www.rte.ie/servicelayer/api/anonymouslogin').json()["mpx_token"]
 
-def get_manifest_and_pid(media_url: str, account: str, token: str) -> (str, str):
+def get_manifest_and_pid(plugin, media_url: str, account: str, token: str) -> (str, str):
     headers = {
         'authorization': 'Basic ' + base64.b64encode((account + ':' + token).encode()).decode(),
     }
@@ -49,7 +49,7 @@ def get_manifest_and_pid(media_url: str, account: str, token: str) -> (str, str)
 
     if "GeoLocationBlocked" in media_html:
         plugin.notify("ERROR", plugin.localize(30713))
-        return None
+        return None, None
 
     manifest_match = re.search(r'src="(https?://[^/"]+[^"]*?\.mpd\?[^"]+)"', media_html)
     pid_match = re.search(r'(?<=\bpid=)[^|"]+', media_html)
@@ -58,14 +58,17 @@ def get_manifest_and_pid(media_url: str, account: str, token: str) -> (str, str)
         manifest = html.unescape(manifest_match.group(1))
         pid = pid_match.group(0)
         return manifest, pid
-    return None
+    return None, None
 
 
-def build_rte_list_item(media_url: str) -> Listitem:
+def build_rte_list_item(plugin, media_url: str) -> Listitem:
     account = get_account()
     token = get_token()
 
-    manifest, pid = get_manifest_and_pid(media_url, account, token)
+    manifest, pid = get_manifest_and_pid(plugin, media_url, account, token)
+
+    if manifest is None or pid is None:
+        return None
 
     return get_the_platform_list_item(manifest, pid, account, token)
 
@@ -121,8 +124,10 @@ def get_live_media_url(guid: str) -> Any:
 def get_live_url(plugin, item_id, **kwargs):
     media_url = get_live_media_url(item_id)
 
-    item = build_rte_list_item(media_url)
-    item.label = get_selected_item_label()
-    item.art.update(get_selected_item_art())
-    item.info.update(get_selected_item_info())
-    return item
+    item = build_rte_list_item(plugin, media_url)
+    if item:
+        item.label = get_selected_item_label()
+        item.art.update(get_selected_item_art())
+        item.info.update(get_selected_item_info())
+        return item
+    return None
