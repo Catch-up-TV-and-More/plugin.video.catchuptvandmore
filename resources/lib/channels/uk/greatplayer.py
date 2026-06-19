@@ -127,11 +127,20 @@ def get_video(plugin, url, **kwargs):
     json_video = json.loads(urlquick.get(url, cookies=COOKIES, max_age=-1).text)
     video_streams = json_video.get('playbackInfo', {}).get('videoStreams', [])
     for video_stream in video_streams:
-        if video_stream.get('streamType') == 'DASH':
+        if video_stream.get('label') == 'DASH-WIDEVINE':
             drms = video_stream.get('drms', [])
             for drm in drms:
                 if drm.get('type') == 'WIDEVINE':
                     video_url = video_stream.get('url')
                     license_url = drm.get('licenseUrl')
-                    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url, license_url=license_url)
+                    custom_license_headers = {}
+                    license_token_headers = drm.get("licenseTokenHeaders", [])
+                    for header in license_token_headers:
+                        name = header.get("name")
+                        value = header.get("value")
+                        if name:
+                            custom_license_headers[name] = value
+                    return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url,
+                                                                  custom_license_headers=custom_license_headers,
+                                                                  license_url=license_url)
     return None
