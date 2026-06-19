@@ -21,15 +21,23 @@ from resources.lib.kodi_utils import (INPUTSTREAM_PROP, get_selected_item_art,
                                       get_selected_item_info,
                                       get_selected_item_label)
 
-def get_account() -> str:
-    json_response = requests.get("https://www.rte.ie/wordpress/wp-content/uploads/standard/web/config.json").json()
+URL_ROOT = 'https://www.rte.ie'
+WEB_CONFIG_JSON = URL_ROOT + "/wordpress/wp-content/uploads/standard/web/config.json"
+URL_API_ANONYMOUS_LOGIN = URL_ROOT + '/servicelayer/api/anonymouslogin'
+URL_LICENSE = "https://widevine.entitlement.eu.theplatform.com/wv/web/ModularDrm"
+URL_ALL_LIVE_SCHEDULES = "https://feed.entertainment.tv.theplatform.eu/f/1uC-gC/rte-prd-prd-all-schedules"
+LICENSE_HEADERS = "Content-Type=application/json"
+
+
+def get_account():
+    json_response = requests.get("%s" % WEB_CONFIG_JSON).json()
     return json_response["mpx_config"]["account_id"]
 
 
-def get_token() -> str:
-    return requests.get('https://www.rte.ie/servicelayer/api/anonymouslogin').json()["mpx_token"]
+def get_token():
+    return requests.get(URL_API_ANONYMOUS_LOGIN).json()["mpx_token"]
 
-def get_manifest_and_pid(plugin, media_url: str, account: str, token: str) -> (str, str):
+def get_manifest_and_pid(plugin, media_url, account, token):
     headers = {
         'authorization': 'Basic ' + base64.b64encode((account + ':' + token).encode()).decode(),
     }
@@ -61,7 +69,7 @@ def get_manifest_and_pid(plugin, media_url: str, account: str, token: str) -> (s
     return None, None
 
 
-def build_rte_list_item(plugin, media_url: str) -> Listitem:
+def build_rte_list_item(plugin, media_url) -> Listitem:
     account = get_account()
     token = get_token()
 
@@ -81,11 +89,7 @@ def get_the_platform_list_item(manifest, pid, account, token) -> Listitem:
         "schema": "1.0",
     }
 
-    widevine_license_acquisition_url = "https://widevine.entitlement.eu.theplatform.com/wv/web/ModularDrm"
-
-    license_headers = "Content-Type=application/json"
-
-    license_url = f"{widevine_license_acquisition_url}?{urlencode(params)}"
+    license_url = f"{URL_LICENSE}?{urlencode(params)}"
 
     payload = json.dumps({
         "getWidevineLicense": {
@@ -99,18 +103,19 @@ def get_the_platform_list_item(manifest, pid, account, token) -> Listitem:
     item.property[INPUTSTREAM_PROP] = 'inputstream.adaptive'
     item.property['inputstream.adaptive.manifest_type'] = 'mpd'
     item.property['inputstream.adaptive.license_type'] = 'com.widevine.alpha'
-    item.property['inputstream.adaptive.license_key'] = '%s|%s|%s|JBlicense' % (license_url, license_headers, payload)
+    item.property['inputstream.adaptive.license_key'] = '%s|%s|%s|JBlicense' % (license_url, LICENSE_HEADERS, payload)
     return item
 
 
-def get_live_media_url(guid: str) -> str:
+def get_live_media_url(guid):
     start_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
     end_ms = start_ms + int(timedelta(days=1).total_seconds() * 1000)
-    url = (
-        "https://feed.entertainment.tv.theplatform.eu/f/1uC-gC/"
-        f"rte-prd-prd-all-schedules?byListingTime={start_ms}~{end_ms}"
-    )
-    schedules_json = requests.get(url).json()
+
+    params = {
+        "byListingTime": f"{start_ms}~{end_ms}"
+    }
+
+    schedules_json = requests.get(URL_ALL_LIVE_SCHEDULES, params).json()
     entry = next(
         (r for r in schedules_json.get('entries', []) if r.get('guid') == guid),
         None
