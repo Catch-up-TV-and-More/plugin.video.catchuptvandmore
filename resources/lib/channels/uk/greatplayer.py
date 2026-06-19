@@ -133,13 +133,7 @@ def get_video(plugin, url, **kwargs):
                 if drm.get('type') == 'WIDEVINE':
                     video_url = video_stream.get('url')
                     license_url = drm.get('licenseUrl')
-                    custom_license_headers = {}
-                    license_token_headers = drm.get("licenseTokenHeaders", [])
-                    for header in license_token_headers:
-                        name = header.get("name")
-                        value = header.get("value")
-                        if name:
-                            custom_license_headers[name] = value
+                    custom_license_headers = {h.get("name"): h.get("value") for h in drm.get("licenseTokenHeaders", [])}
                     return resolver_proxy.get_stream_with_quality(plugin, video_url=video_url,
                                                                   custom_license_headers=custom_license_headers,
                                                                   license_url=license_url)
