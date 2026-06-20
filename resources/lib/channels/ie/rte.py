@@ -25,26 +25,28 @@ from resources.lib import web_utils
 
 URL_ROOT = 'https://www.rte.ie'
 WEB_CONFIG_JSON = URL_ROOT + "/wordpress/wp-content/uploads/standard/web/config.json"
-URL_API_ANONYMOUS_LOGIN = URL_ROOT + '/servicelayer/api/anonymouslogin'
 URL_LICENSE = "https://widevine.entitlement.eu.theplatform.com/wv/web/ModularDrm"
-URL_ALL_LIVE_SCHEDULES = "https://feed.entertainment.tv.theplatform.eu/f/1uC-gC/rte-prd-prd-all-schedules"
 LICENSE_HEADERS = "Content-Type=application/json"
 
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
+CONFIG_JSON = requests.get(WEB_CONFIG_JSON).json()
+ACCOUNT_ID = CONFIG_JSON["mpx_config"]["account_id"]
 
+FEED_URLS = {
+    feed["type"]: feed["endpoint"]
+    for feed in CONFIG_JSON["mpx_config"]["feeds"]
+}
 
-def get_account():
-    json_response = requests.get("%s" % WEB_CONFIG_JSON, headers=GENERIC_HEADERS).json()
-    return json_response["mpx_config"]["account_id"]
-
-
+def get_feed_url(feed_type):
+    try:
+        return FEED_URLS[feed_type]
+    except KeyError:
+        raise ValueError(f"No feed found for type '{feed_type}'")
 def get_token():
-    return requests.get(URL_API_ANONYMOUS_LOGIN, headers=GENERIC_HEADERS).json()["mpx_token"]
+    return requests.get(CONFIG_JSON["anonymous_autologin_url"]).json()["mpx_token"]
 
-
-def get_manifest_and_pid(plugin, media_url, account, token):
+def get_manifest_and_pid(plugin, media_url, token):
     headers = {
-        'authorization': 'Basic ' + base64.b64encode((account + ':' + token).encode()).decode(),
+        'authorization': 'Basic ' + base64.b64encode((ACCOUNT_ID + ':' + token).encode()).decode(),
     }
 
     params = {
@@ -75,21 +77,20 @@ def get_manifest_and_pid(plugin, media_url, account, token):
 
 
 def build_rte_list_item(plugin, media_url) -> Listitem:
-    account = get_account()
     token = get_token()
 
-    manifest, pid = get_manifest_and_pid(plugin, media_url, account, token)
+    manifest, pid = get_manifest_and_pid(plugin, media_url, token)
 
     if manifest is None or pid is None:
         return None
 
-    return get_the_platform_list_item(manifest, pid, account, token)
+    return get_the_platform_list_item(manifest, pid, token)
 
 
-def get_the_platform_list_item(manifest, pid, account, token) -> Listitem:
+def get_the_platform_list_item(manifest, pid, token) -> Listitem:
     params = {
         "token": token,
-        "account": account,
+        "account": ACCOUNT_ID,
         "form": "json",
         "schema": "1.0",
     }
@@ -117,16 +118,18 @@ def get_live_media_url(guid):
     end_ms = start_ms + int(timedelta(days=1).total_seconds() * 1000)
 
     params = {
-        "byListingTime": f"{start_ms}~{end_ms}"
+        "byListingTime": f"{start_ms}~{end_ms}",
+        "byCallSign": guid,
+        "maxListings": 30,
     }
 
-    schedules_json = requests.get(URL_ALL_LIVE_SCHEDULES, headers=GENERIC_HEADERS, params=params).json()
+    schedules_json = requests.get(get_feed_url('allStationsSchedule'), params).json()
     entry = next(
         (r for r in schedules_json.get('entries', []) if r.get('guid') == guid),
         None
     )
     media_pid = entry['plchannelschedule$listings'][0]['rtelisting$mediaPid']
-    media_url = 'https://link.eu.theplatform.com/s/1uC-gC/media/' + media_pid
+    media_url = get_feed_url('LinearBaseUrl') + media_pid
     return media_url
 
 
