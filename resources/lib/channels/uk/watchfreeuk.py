@@ -212,7 +212,7 @@ def main_menu(plugin, **__):
         params={'url': BASE_URL + '/'}
     )
     yield Listitem.from_dict(
-        callback=list_page,
+        callback=list_home_page,
         label='True Crime',
         params={'url': BASE_URL + '/page/true-crime'}
     )
