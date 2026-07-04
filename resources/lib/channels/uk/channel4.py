@@ -534,15 +534,9 @@ def get_video(plugin, programmeId, assetId, **kwargs):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    access_token = get_access_token(plugin)
-    if access_token:
-        client = 'amazonfire-dash'
-        url_video_json = URL_LIVE_API.format(item_id=item_id, client=client)
-        headers = {"authorization": f"Bearer {access_token}"}
-    else:
-        client = 'web'
-        url_video_json = URL_LIVE_WEB % item_id
-        headers = None
+    client = 'web'
+    url_video_json = URL_LIVE_WEB % item_id
+    headers = None
 
     resp = urlquick.get(url_video_json, headers=headers, max_age=-1)
 
@@ -552,6 +546,16 @@ def get_live_url(plugin, item_id, **kwargs):
             token = field['streams'][0]['token']
             url = field['streams'][0]['uri']
             break
+
+    # Attempt to expose HD resolutions
+    if url and "manifest_sd.mpd" in url:
+        new_url = url.replace("manifest_sd.mpd", "manifest.mpd")
+        try:
+            response = requests.head(new_url, allow_redirects=True, timeout=5)
+            if response.status_code == 200:
+                url = new_url
+        except requests.RequestException as e:
+            print(f"Request failed: {e}")
 
     keys = KEYS[client]
     cipher = AES.new(bytes(keys['key'], 'UTF-8'), AES.MODE_CBC, bytes(keys['iv'], 'UTF-8'))
