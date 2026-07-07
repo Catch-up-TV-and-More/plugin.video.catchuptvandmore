@@ -112,8 +112,6 @@ def get_access_token(plugin):
 def refresh(plugin, refresh_token):
     data = {
         "grant_type": "refresh_token",
-        "username": plugin.setting.get_string('uk.channel4.login'),
-        "password": plugin.setting.get_string('uk.channel4.password'),
         "refresh_token": refresh_token,
     }
     r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data)
