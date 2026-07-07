@@ -50,7 +50,7 @@ URL_LICENSE = 'https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/wide
 
 URL_LIVE_WEB = URL_ROOT + '/simulcast/channels/%s'
 
-AUTH_TOKEN_HEADERS = {"authorization": "Basic MzZVVUN0OThWTVF2QkFnUTI3QXU4ekdIbDMxTjlMUTE6Sllzd3lIdkdlNjJWbGlrVw=="}
+AUTH_TOKEN_HEADERS = {"authorization": "Basic eUExTHB6dGtHZUhaRDZuU2E3QzFBQUY2dkhwelZOblU6UXFFbUVnVVVVT1hUa3piNg=="}
 BASIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 LICENSE_HEADERS = "User-Agent=%s&Content-Type=application/json&Referer=%s" % (web_utils.get_random_ua(), URL_ROOT)
 
