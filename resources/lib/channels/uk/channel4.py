@@ -65,6 +65,9 @@ KEYS = {
     }
 }
 
+REQ_TIMEOUT = (3.5, 10)
+DFLT_CACHE_TIME = 600
+
 
 def get_token_if_valid(channel4_auth):
     if channel4_auth and channel4_auth.get('accessToken'):
@@ -116,7 +119,7 @@ def refresh(refresh_token):
         "password": Script.setting.get_string('uk.channel4.password'),
         "refresh_token": refresh_token,
     }
-    r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data)
+    r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data, timeout=REQ_TIMEOUT)
     try:
         res = r.json()
     except Exception:
@@ -140,7 +143,7 @@ def login():
         "username": Script.setting.get_string('uk.channel4.login'),
         "password": Script.setting.get_string('uk.channel4.password'),
     }
-    r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data)
+    r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data, timeout=REQ_TIMEOUT)
     try:
         res = r.json()
     except Exception:
@@ -178,7 +181,12 @@ def do_search(plugin, search_query):
         "offset": 0
     }
 
-    search_json = json.loads(urlquick.get(PREDICTIVE_SEARCH_URL, headers=BASIC_HEADERS, params=params, max_age=-1).text)
+    resp = urlquick.get(PREDICTIVE_SEARCH_URL,
+                        headers=BASIC_HEADERS,
+                        params=params,
+                        timeout=REQ_TIMEOUT,
+                        max_age=-1)
+    search_json = json.loads(resp.text)
 
     results = search_json.get("results", [])
     if isinstance(results, dict):
@@ -216,7 +224,11 @@ def main_menu(plugin, **kwargs):
     )
 
     try:
-        json_data = json.loads(requests.get(URL_API_HOMEPAGE, headers=BASIC_HEADERS).text)
+        resp = urlquick.get(URL_API_HOMEPAGE,
+                            headers=BASIC_HEADERS,
+                            timeout=REQ_TIMEOUT,
+                            max_age=DFLT_CACHE_TIME)
+        json_data = json.loads(resp.text)
         for slice in json_data['slices']:
             if slice:
                 label = slice.get('title')
@@ -283,7 +295,10 @@ def extract_yyyy_mm_dd_date_str(date_label):
 
 @Route.register
 def list_categories(plugin, **kwargs):
-    html_text = urlquick.get(URL_CATEGORIES, headers=BASIC_HEADERS, max_age=-1).parse()
+    html_text = urlquick.get(URL_CATEGORIES,
+                             headers=BASIC_HEADERS,
+                             timeout=REQ_TIMEOUT,
+                             max_age=DFLT_CACHE_TIME).parse()
     for script in html_text.iterfind('.//script'):
         script_text = script.text
         if script_text is not None and script_text.split()[0] == 'window.__PARAMS__':
@@ -342,7 +357,12 @@ def list_programs(plugin, url, offset, **kwargs):
         'offset': offset,
         'sort': Script.setting['uk.channel4.programmes.sort.by']
     }
-    programs = json.loads(urlquick.get(url, headers=BASIC_HEADERS, params=params, max_age=-1).text)
+    resp = urlquick.get(url,
+                        headers=BASIC_HEADERS,
+                        params=params,
+                        timeout=REQ_TIMEOUT,
+                        max_age=DFLT_CACHE_TIME)
+    programs = json.loads(resp.text)
     programs_number = programs['noOfShows']
 
     for program in programs["brands"]["items"]:
@@ -369,7 +389,10 @@ def list_programs(plugin, url, offset, **kwargs):
 
 @Route.register
 def list_seasons(plugin, url, **kwargs):
-    html_text = urlquick.get(url, headers=BASIC_HEADERS, max_age=-1).parse()
+    html_text = urlquick.get(url,
+                             headers=BASIC_HEADERS,
+                             timeout=REQ_TIMEOUT,
+                             max_age=DFLT_CACHE_TIME).parse()
 
     for script in html_text.iterfind('.//script'):
         script_text = script.text
@@ -477,7 +500,7 @@ def get_video(plugin, programmeId, assetId, **kwargs):
         url_video_json = URL_VOD_WEB + str(programmeId)
         headers = None
 
-    resp = urlquick.get(url_video_json, max_age=-1, headers=headers)
+    resp = urlquick.get(url_video_json, headers=headers, timeout=REQ_TIMEOUT, max_age=-1)
 
     json_video = json.loads(resp.text)
     supported_video_profiles = {'bigscreendashwv-dyn-stream-1', 'dashwv-dyn-stream-1'}
@@ -535,7 +558,7 @@ def get_live_url(plugin, item_id, **kwargs):
     url_video_json = URL_LIVE_WEB % item_id
     headers = None
 
-    resp = urlquick.get(url_video_json, headers=headers, max_age=-1)
+    resp = urlquick.get(url_video_json, headers=headers, timeout=REQ_TIMEOUT, max_age=-1)
 
     json_video = json.loads(resp.text)
     for field in json_video['channelInfo']['videoProfiles']:
