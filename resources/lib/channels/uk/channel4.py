@@ -492,7 +492,7 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
 @Resolver.register
 def get_video(plugin, programmeId, assetId, **kwargs):
     access_token = get_access_token()
-    if access_token:  # Allows higher bitrate 1080p
+    if access_token and Script.setting.get_boolean('uk.channel4.high_quality'):  # Allows higher bitrate 1080p
         client = 'amazonfire-dash'
         url_video_json = URL_VOD_API.format(programme_id=programmeId, client=client)
         headers = {"authorization": f"Bearer {access_token}"}

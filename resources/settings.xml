@@ -91,6 +91,7 @@
             <!-- UK channels -->
             <setting label="30119" type="lsep" subsetting="true" visible="eq(1,true)"/>
                 <setting label="30183" type="labelenum" id="uk.channel4.programmes.sort.by" values="popular|az|recently-added" default="popular"/>
+                <setting label="30185" type="bool" id="uk.channel4.high_quality" default="false" />
                 <!-- Hidden setting to store the order in which hmac and aes keys appear in data obtained from the web. -->
                 <setting label="" type="bool" id="uk.my5.key_order_reversed" default="false"  visible="false"/>
 

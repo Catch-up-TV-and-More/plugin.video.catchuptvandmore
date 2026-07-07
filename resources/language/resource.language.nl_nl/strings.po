@@ -469,6 +469,10 @@ msgctxt "#30184"
 msgid "quality: "
 msgstr "kwaliteit: "
 
+msgctxt "#30185"
+msgid "Channel 4: Enable high quality (disable when geo blocked)"
+msgstr "Channel 4: Hoge kwaliteit inschakelen (zet uit bij geo-blocks)"
+
 msgctxt "#30192"
 msgid "BEST"
 msgstr ""
