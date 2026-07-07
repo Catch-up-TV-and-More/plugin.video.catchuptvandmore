@@ -112,7 +112,7 @@ def get_access_token():
     return None
 
 
-def refresh(plugin, refresh_token):
+def refresh(refresh_token):
     data = {
         "grant_type": "refresh_token",
         "refresh_token": refresh_token,
