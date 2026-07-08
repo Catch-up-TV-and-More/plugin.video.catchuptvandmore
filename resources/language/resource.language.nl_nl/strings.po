@@ -615,12 +615,12 @@ msgid "SFR TV password"
 msgstr "SFR TV wachtwoord"
 
 msgctxt "#30264"
-msgid "Channel 4 Login"
-msgstr "Channel 4 gebruikersnaam"
+msgid "Log in to Channel 4"
+msgstr "Log in op Channel 4"
 
 msgctxt "#30265"
-msgid "Channel 4 Password"
-msgstr "Channel 4 wachtwoord"
+msgid "Log out of Channel 4"
+msgstr "Uitloggen bij Channel 4"
 
 
 # TV integration (from 30270 to 30289)
@@ -1016,6 +1016,26 @@ msgstr ""
 msgctxt "#30732"
 msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
 msgstr ""
+
+msgctxt "#30733"
+msgid "Enter email"
+msgstr "Voor email in"
+
+msgctxt "#30734"
+msgid "Enter password"
+msgstr "Voer wachtwoord in"
+
+msgctxt "#30735"
+msgid "Logged in successfully"
+msgstr "Inloggen is gelukt"
+
+msgctxt "#30736"
+msgid "Logged out successfully"
+msgstr "Uitloggen is gelukt"
+
+msgctxt "#30737"
+msgid "You are already logged out."
+msgstr "Je bent al uitgelogd"
 
 
 # Favourites (from 30800 to 30859)

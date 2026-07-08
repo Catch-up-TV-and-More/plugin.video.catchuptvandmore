@@ -611,12 +611,12 @@ msgid "SFR TV password"
 msgstr ""
 
 msgctxt "#30264"
-msgid "Channel 4 Login"
-msgstr ""
+msgid "Log in to Channel 4"
+msgstr "התחבר ל-Channel4"
 
 msgctxt "#30265"
-msgid "Channel 4 Password"
-msgstr ""
+msgid "Log out of Channel 4"
+msgstr "התנתק מ-Channel4"
 
 # TV integration (from 30270 to 30289)
 
@@ -1011,6 +1011,26 @@ msgstr ""
 msgctxt "#30732"
 msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
 msgstr ""
+
+msgctxt "#30733"
+msgid "Enter email"
+msgstr "הזן כתובת דוא\"ל"
+
+msgctxt "#30734"
+msgid "Enter password"
+msgstr "הזן סיסמה"
+
+msgctxt "#30735"
+msgid "Logged in successfully"
+msgstr "הכניסה בוצעה בהצלחה"
+
+msgctxt "#30736"
+msgid "Logged out successfully"
+msgstr "התנתק בהצלחה"
+
+msgctxt "#30737"
+msgid "You are already logged out."
+msgstr "כבר יצאת מהמערכת"
 
 
 # Favourites (from 30800 to 30859)
