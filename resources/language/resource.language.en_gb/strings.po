@@ -615,11 +615,11 @@ msgid "SFR TV password"
 msgstr ""
 
 msgctxt "#30264"
-msgid "Channel 4 Login"
+msgid "Log in to Channel 4"
 msgstr ""
 
 msgctxt "#30265"
-msgid "Channel 4 Password"
+msgid "Log out of Channel 4"
 msgstr ""
 
 msgctxt "#30266"
@@ -1039,6 +1039,10 @@ msgstr ""
 
 msgctxt "#30736"
 msgid "Logged out successfully"
+msgstr ""
+
+msgctxt "#30737"
+msgid "You are already logged out."
 msgstr ""
 
 

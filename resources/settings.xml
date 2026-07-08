@@ -148,8 +148,8 @@
         <setting label="30104" type="lsep" subsetting="true" visible="eq(1,true)"/>
         <!--<setting label="" type="bool" id="be" default="true" visible="false"/>-->
 
-            <setting label="30264" type="text" id="uk.channel4.login" default=""/>
-            <setting label="30265" type="text" id="uk.channel4.password" option="hidden" default=""/>
+            <setting label="30264" type="action" action="RunPlugin(plugin://$ID/resources/lib/channels/uk/channel4/sign_in_account)" option="close"/>
+            <setting label="30265" type="action" action="RunPlugin(plugin://$ID/resources/lib/channels/uk/channel4/sign_out_account)" option="close"/>
 
             <setting label="30266" type="action" action="RunPlugin(plugin://$ID/resources/lib/channels/uk/my5/sign_in_account)" option="close"/>
             <setting label="30267" type="action" action="RunPlugin(plugin://$ID/resources/lib/channels/uk/my5/sign_out_account)" option="close"/>

@@ -13,11 +13,12 @@ import json
 import time
 from builtins import str
 
+import xbmc
 import xbmcgui
 from kodi_six import xbmcvfs
 
 import requests
-from codequick import Listitem, Script, Resolver, Route
+from codequick import Listitem, Script, Resolver, Route, utils
 import urlquick
 
 from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, get_selected_item_label, get_selected_item_info, INPUTSTREAM_PROP
@@ -68,107 +69,195 @@ KEYS = {
 REQ_TIMEOUT = (3.5, 10)
 DFLT_CACHE_TIME = 600
 
+TXT_INFORMATION = 30600
+TXT_ACCOUNT_REQUIRED = 30604
+TXT_ENTER_UNAME = 30733
+TXT_ENTER_PASSW = 30734
+TXT_LOGIN_SUCCESS = 30735
+TXT_LOGOUT_SUCCESS = 30736
+TXT_ALREADY_LOGGED_OUT = 30737
+
+
+# -----------------------------------------------------------------------------
+#           AUTHENTICATION
+# -----------------------------------------------------------------------------
 
 def get_token_if_valid(channel4_auth):
     if channel4_auth and channel4_auth.get('accessToken'):
-        issued_at = channel4_auth.get('issuedAt')
-        expires_in = channel4_auth.get('expiresIn')
-        if issued_at and expires_in:
-            expiration_time = (int(issued_at) / 1000) + int(expires_in)
-            if expiration_time > time.time():
-                return channel4_auth.get('accessToken')
+        issued_at = channel4_auth['issuedAt']
+        expires_in = channel4_auth['expiresIn']
+        expiration_time = (int(issued_at) / 1000) + int(expires_in)
+        if expiration_time > time.time():
+            return channel4_auth.get('accessToken')
     return None
 
 
-def get_refresh_token_if_refreshable(channel4_auth):
-    if channel4_auth and channel4_auth.get('refreshToken'):
-        refresh_token_issued_at = channel4_auth.get('refreshTokenIssuedAt')
-        refresh_token_expires_in = channel4_auth.get('refreshTokenExpiresIn')
-        if refresh_token_issued_at and refresh_token_expires_in:
-            expiration_time = (int(refresh_token_issued_at) / 1000) + int(refresh_token_expires_in)
-            if expiration_time > time.time():
-                return channel4_auth.get('refreshToken')
-    return None
-
-
-def get_access_token():
+def get_access_token(silent=True):
     try:
-        if Script.setting.get_string('uk.channel4.login') and Script.setting.get_string('uk.channel4.password'):
-            channel4_auth = load_channel4_auth()
-            token = get_token_if_valid(channel4_auth)
+        channel4_auth = getattr(get_access_token, '_channel4_auth', None)
+        if channel4_auth is None:
+            channel4_auth = get_access_token._channel4_auth = load_channel4_auth()
+        token = get_token_if_valid(channel4_auth)
+        if token:
+            return token
+        refresh_token = channel4_auth.get('refreshToken')
+        if refresh_token:
+            token = refresh(refresh_token)
             if token:
                 return token
-            refresh_token = get_refresh_token_if_refreshable(channel4_auth)
-            if refresh_token:
-                token = refresh(refresh_token)
-                if token:
-                    return token
-            token = login()
-            if token:
-                return token
-    except Exception:
-        pass
+    except Exception as e:
+        if not silent and not getattr(e, 'recoverable', None):
+            raise e
+        else:
+            Script.log('[UK-CHAN4] Failed to get an access token: %r', (e,), lvl=Script.ERROR)
 
+    # User is not logged in.
+    if not silent:
+        xbmcgui.Dialog().ok(
+            Script.localize(TXT_INFORMATION),
+            Script.localize(TXT_ACCOUNT_REQUIRED) % ('Channel 4 (UK)', URL_ROOT + '/register'))
     return None
 
 
 def refresh(refresh_token):
+    """Perform a token refresh at the backend"""
     data = {
         "grant_type": "refresh_token",
         "refresh_token": refresh_token,
     }
     r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data, timeout=REQ_TIMEOUT)
     try:
-        res = r.json()
-    except Exception:
-        error_text = 'Failed to refresh token.' + ' ' + r.text
-        Script.log('[UK-CHAN4] ' + error_text)
-        Script.notify('ERROR', 'Channel 4 : ' + error_text)
+        res = json.loads(r.content)
+        if "error" in res:
+            e = RuntimeError(f'Failed to refresh token - {res["errorCode"]}: {res["errorMessage"]}')
+            setattr(e, 'recoverable', r.status_code == 401)
+            raise e
+    except (json.JSONDecodeError, KeyError):
+        r.raise_for_status()
 
-    if "error" in res:
-        error_text = 'Failed to refresh token.' + ' ' + res['errorMessage']
-        Script.log('[UK-CHAN4] ' + error_text)
-        Script.notify('ERROR', 'Channel 4 : ' + error_text)
-
-    channel4_auth = res
-    save_channel4_auth(channel4_auth)
-    return channel4_auth.get('accessToken', None)
+    # noinspection unbound-local-variable
+    save_channel4_auth(res)
+    return res['accessToken']
 
 
-def login():
+def login(uname, passw):
+    """Perform a login request to the backend with email and password.
+
+    Return a dict with tokens on success, or None on a failure that could be resolved by
+    re-trying with a different username, or password. Any other error will raise an exception.
+    """
     data = {
         "grant_type": "password",
-        "username": Script.setting.get_string('uk.channel4.login'),
-        "password": Script.setting.get_string('uk.channel4.password'),
+        "username": uname,
+        "password": passw,
     }
     r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data, timeout=REQ_TIMEOUT)
+    # Both actual content and most error responses are JSON.
     try:
-        res = r.json()
-    except Exception:
-        Script.log('[UK-CHAN4] Failed to login. ' + r.text)
-        Script.notify('ERROR', 'Channel 4 : ' + Script.localize(30711) + '. ' + r.text)
+        res = json.loads(r.content)
 
-    if res and "error" in res:
-        Script.log('[UK-CHAN4] Failed to login. ' + res['errorMessage'])
-        Script.notify('ERROR', 'Channel 4 : ' + Script.localize(30711) + '. ' + res['errorMessage'])
+        if "error" in res:
+            if res['errorCode'] == 10002:
+                err_message = 'Invalid email'
+            else:
+                err_message = res['errorMessage']
+            Script.log('[UK-CHAN4] Failed to login: ' + res['errorMessage'])
+            Script.notify('Channel 4 ERROR', err_message, icon=Script.NOTIFY_ERROR, display_time=7000)
+            return None
+    except (json.JSONDecodeError, KeyError):
+        r.raise_for_status()
 
-    channel4_auth = res
-    save_channel4_auth(channel4_auth)
-    return channel4_auth.get('accessToken', None)
+    save_channel4_auth(res)
+    return res['accessToken']
+
+
+def revoke_token(refresh_tkn):
+    """Perform the usual procedure of logging out by revoking the refresh token."""
+    try:
+        urlquick.post(AUTH_ENV + '/online/v2/auth/revoke',
+                      headers=AUTH_TOKEN_HEADERS,
+                      data={'token_type_hint': 'refresh_token',
+                            'token': refresh_tkn,
+                            'grant_type': 'refresh_token'},
+                      timeout=(3.5, 2),
+                      max_age=-1)
+    except requests.RequestException:
+        pass
+
+
+def enter_credentials(uname, passw):
+    """Open the keyboard and ask the user to enter their username and password."""
+    new_username = utils.keyboard(Script.localize(TXT_ENTER_UNAME), uname or '')
+    if new_username:
+        new_passw = utils.keyboard(Script.localize(TXT_ENTER_PASSW), passw or '', hidden=True)
+    else:
+        new_passw = ''
+    return new_username, new_passw
+
+
+@Script.register
+def sign_in_account(addon):
+    """Entry point for the action 'Log in to channel 4 account' in settings.
+
+    Ask the user to enter his username and password, try to log in and inform the
+    user of success or failure. On failure, keep asking for username or password
+    until log in succeeds, or the user cancels the keyboard.
+
+    """
+    uname = None
+    passw = None
+
+    while True:
+        uname, passw = enter_credentials(uname, passw)
+        if not all((uname, passw)):
+            return
+        if login(uname, passw):
+            xbmcgui.Dialog().ok('Channel 4', Script.localize(TXT_LOGIN_SUCCESS))
+            xbmc.executebuiltin('Container.Refresh')
+            return
+
+
+@Script.register
+def sign_out_account(_):
+    """Entry point for the action 'Log out from channel 4 account' in settings."""
+    auth_data = load_channel4_auth()
+    refresh_tkn = auth_data.get('refreshToken')
+    save_channel4_auth({})
+    if refresh_tkn:
+        revoke_token(refresh_tkn)
+        xbmcgui.Dialog().ok('Channel 4', Script.localize(TXT_LOGOUT_SUCCESS))
+    else:
+        xbmcgui.Dialog().ok('Channel 4', Script.localize(TXT_ALREADY_LOGGED_OUT))
 
 
 def load_channel4_auth():
-    with xbmcvfs.File(CACHE_FILE, 'r') as f1:
-        channel4_auth = f1.read()
-    if channel4_auth:
-        return json.loads(channel4_auth)
-    return None
+    try:
+        with xbmcvfs.File(CACHE_FILE, 'r') as f1:
+            channel4_auth = f1.read()
+            return json.loads(channel4_auth)
+    except (OSError, json.JSONDecodeError) as err:
+        Script.log(f'[UK-CHAN4] Error reading token file: {err!r}.')
+        return {}
 
 
 def save_channel4_auth(channel4_auth):
+    # Remove redundant data.
+    try:
+        channel4_auth['user'] = {
+            'uuid': channel4_auth['user']['uuid'],
+            'displayName': channel4_auth['user']['displayName']
+        }
+        del channel4_auth['securityToken']
+    except KeyError:
+        pass
+    get_access_token._channel4_auth = channel4_auth
     with xbmcvfs.File(CACHE_FILE, 'w') as f1:
         json.dump(channel4_auth, f1, ensure_ascii=False, indent=4)
 
+
+# -----------------------------------------------------------------------------
+#           CONTENT
+# -----------------------------------------------------------------------------
 
 @Route.register(content_type="videos")
 def do_search(plugin, search_query):
@@ -486,6 +575,10 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
             item_post_treatment(item)
             yield item
 
+
+# -----------------------------------------------------------------------------
+#           PLAY STREAM
+# -----------------------------------------------------------------------------
 
 @Resolver.register
 def get_video(plugin, programmeId, assetId, **kwargs):
