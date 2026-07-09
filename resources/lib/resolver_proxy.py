@@ -316,7 +316,7 @@ def get_stream_kaltura(plugin,
     return get_stream_default(plugin, video_url, download_mode)
 
 
-def get_easybroadcast_stream(plugin, url):
+def get_easybroadcast_event_stream(plugin, url):
     EASY_BROADCAST_EVENT_URL_REG_EX = (
         r'https?://(?:[\w\-]+\.)?player\.easybroadcast\.io/events/(?P<id>[\w\-]+)'
     )
@@ -330,18 +330,23 @@ def get_easybroadcast_stream(plugin, url):
         metadata = json.loads(urlquick.get(api_url, max_age=-1).text)
 
         m3u8_url = metadata.get('stream')
-        if metadata.get('token_authentication', False):
-            token_api_url = f'https://token.easybroadcast.io/all?url={m3u8_url}'
-            token = urlquick.get(token_api_url, headers=GENERIC_HEADERS, max_age=-1).text.strip()
-            m3u8_url = m3u8_url + '?' + token
+        token_authentication = metadata.get('token_authentication', False)
+        return get_easybroadcast_m3u8_stream(plugin, m3u8_url, token_authentication)
+    return None
 
-            m3u8 = M3u8(m3u8_url)
-            url_quality, bitrate = m3u8.get_url_and_bitrate_for_quality()
-            # https://snrtlive.ma playlists don't include the token in the quality url & needs to be manually added back
-            if 'token' not in url_quality:
-                m3u8_url = url_quality + '?' + token
 
-        return get_stream_with_quality(plugin, video_url=m3u8_url)
+def get_easybroadcast_m3u8_stream(plugin, m3u8_url, token_authentication):
+    if token_authentication:
+        token_api_url = f'https://token.easybroadcast.io/all?url={m3u8_url}'
+        token = urlquick.get(token_api_url, max_age=-1).text.strip()
+        m3u8_url = m3u8_url + '?' + token
+
+        m3u8 = M3u8(m3u8_url)
+        url_quality, bitrate = m3u8.get_url_and_bitrate_for_quality()
+        # https://snrtlive.ma playlists don't include the token in the quality url & needs to be manually added back
+        if 'token' not in url_quality:
+            m3u8_url = url_quality + '?' + token
+    return get_stream_with_quality(plugin, video_url=m3u8_url)
 
 
 # DailyMotion Part

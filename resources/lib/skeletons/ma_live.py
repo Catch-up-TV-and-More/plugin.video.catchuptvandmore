@@ -44,6 +44,24 @@ menu = {
         'enabled': True,
         'order': 3,
     },
+    '73_arryadia-tnt_zcmwjdc': {
+        'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
+        'label': 'Arryadia TNT',
+        'thumb': 'channels/ma/arryadiatnt.png',
+        'fanart': '',
+        'm3u_group': 'Maroc',
+        'enabled': True,
+        'order': 4,
+    },
+    '133_arryadia-hd1_gmrvdlq': {
+        'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
+        'label': 'Arryadia HD1',
+        'thumb': 'channels/ma/arryadiahd1.png',
+        'fanart': '',
+        'm3u_group': 'Maroc',
+        'enabled': True,
+        'order': 5,
+    },
     'athaqafia': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Athaqafia',
@@ -51,7 +69,7 @@ menu = {
         'fanart': 'channels/ma/athaqafia_live_fanart.jpg',
         'm3u_group': 'Maroc',
         'enabled': True,
-        'order': 4,
+        'order': 6,
     },
     'alMaghribia': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
@@ -60,7 +78,7 @@ menu = {
         'fanart': 'channels/ma/almaghribia_live_fanart.jpg',
         'm3u_group': 'Maroc',
         'enabled': True,
-        'order': 5,
+        'order': 7,
     },
     'assadissa': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
@@ -69,7 +87,7 @@ menu = {
         'fanart': 'channels/ma/assadissa_live_fanart.jpg',
         'm3u_group': 'Maroc',
         'enabled': True,
-        'order': 6,
+        'order': 8,
     },
     'tamazight': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
@@ -78,7 +96,7 @@ menu = {
         'fanart': 'channels/ma/tamazight_live_fanart.jpg',
         'm3u_group': 'Maroc',
         'enabled': True,
-        'order': 7,
+        'order': 9,
     },
     'télémaroc': {
         'resolver': '/resources/lib/channels/ma/telemaroc:get_live_url',
@@ -86,7 +104,7 @@ menu = {
         'thumb': 'channels/ma/telemaroc.png',
         'fanart': 'channels/ma/telemaroc_fanart.jpg',
         'enabled': True,
-        'order': 8
+        'order': 10
     },
     'MEDI1TV Maghreb': {
         'resolver': '/resources/lib/channels/ma/medi1:get_live_url',
@@ -94,7 +112,7 @@ menu = {
         'thumb': 'channels/ma/medi1.png',
         'fanart': 'channels/ma/medi1maghreb_fanart.jpg',
         'enabled': True,
-        'order': 9
+        'order': 11
     },
     'MEDI1TV Arabic': {
         'resolver': '/resources/lib/channels/ma/medi1:get_live_url',
@@ -102,7 +120,7 @@ menu = {
         'thumb': 'channels/ma/medi1.png',
         'fanart': 'channels/ma/medi1arabic_fanart.jpg',
         'enabled': True,
-        'order': 10
+        'order': 12
     },
     'MEDI1TV Afrique': {
         'resolver': '/resources/lib/channels/ma/medi1:get_live_url',
@@ -110,7 +128,7 @@ menu = {
         'thumb': 'channels/ma/medi1afrique.png',
         'fanart': 'channels/ma/medi1afrique_fanart.jpg',
         'enabled': True,
-        'order': 11
+        'order': 13
     },
     'm24': {
         'resolver': '/resources/lib/channels/ma/m24:get_live_url',
@@ -118,6 +136,6 @@ menu = {
         'thumb': 'channels/ma/m24.png',
         'fanart': 'channels/ma/m24_fanart.jpg',
         'enabled': True,
-        'order': 12
+        'order': 14
     }
 }
