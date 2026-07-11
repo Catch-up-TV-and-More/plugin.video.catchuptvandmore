@@ -465,6 +465,9 @@ msgctxt "#30184"
 msgid "quality: "
 msgstr "אֵיכוּת: "
 
+msgctxt "#30185"
+msgid "Channel 4: Enable high quality (disable when geo blocked)"
+msgstr "Channel 4: הפעל איכות גבוהה (השבת כאשר יש חסימה גיאוגרפית)"
 
 msgctxt "#30192"
 msgid "BEST"
