@@ -241,6 +241,7 @@ def main_menu(plugin, **kwargs):
                         item = Listitem()
                         title = slice_item.get('title')
                         item.label = title
+                        item.info['title'] = f'[B][COLOR orange]{title}[/COLOR][/B]'
                         item.info['plot'] = get_slice_item_plot(slice_item)
                         item.art['thumb'] = item.art['landscape'] = slice_item["image"]["href"]
                         slice_item_type = slice_item.get('type')
