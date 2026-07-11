@@ -17,7 +17,7 @@ from __future__ import unicode_literals
 root = 'live_tv'
 
 menu = {
-    'al-aoula': {
+    '57': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Al Aoula',
         'thumb': 'channels/ma/alaoula.png',
@@ -26,16 +26,16 @@ menu = {
         'enabled': True,
         'order': 1,
     },
-    'laayoune': {
+    '58': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
-        'label': 'Al Aoula Laayoune',
+        'label': 'Al Aoula Laâyoune',
         'thumb': 'channels/ma/laayoune.png',
         'fanart': 'channels/ma/laayoune_live_fanart.jpg',
         'm3u_group': 'Maroc',
         'enabled': True,
         'order': 2,
     },
-    'arryadia': {
+    '59': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Arryadia',
         'thumb': 'channels/ma/arryadia.png',
@@ -44,25 +44,25 @@ menu = {
         'enabled': True,
         'order': 3,
     },
-    '73_arryadia-tnt_zcmwjdc': {
+    '60': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Arryadia TNT',
-        'thumb': 'channels/ma/arryadiatnt.png',
-        'fanart': '',
+        'thumb': 'channels/ma/arryadia.png',
+        'fanart': 'channels/ma/arryadia_live_fanart.jpg',
         'm3u_group': 'Maroc',
         'enabled': True,
         'order': 4,
     },
-    '133_arryadia-hd1_gmrvdlq': {
+    '66': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Arryadia HD1',
-        'thumb': 'channels/ma/arryadiahd1.png',
-        'fanart': '',
+        'thumb': 'channels/ma/arryadia.png',
+        'fanart': 'channels/ma/arryadia_live_fanart.jpg',
         'm3u_group': 'Maroc',
         'enabled': True,
         'order': 5,
     },
-    'athaqafia': {
+    '61': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Athaqafia',
         'thumb': 'channels/ma/athaqafia.png',
@@ -71,7 +71,7 @@ menu = {
         'enabled': True,
         'order': 6,
     },
-    'alMaghribia': {
+    '62': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Al Maghribia',
         'thumb': 'channels/ma/almaghribia.png',
@@ -80,7 +80,7 @@ menu = {
         'enabled': True,
         'order': 7,
     },
-    'assadissa': {
+    '63': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Assadissa',
         'thumb': 'channels/ma/assadissa.png',
@@ -89,7 +89,7 @@ menu = {
         'enabled': True,
         'order': 8,
     },
-    'tamazight': {
+    '64': {
         'resolver': '/resources/lib/channels/ma/snrt:get_live_url',
         'label': 'Tamazight',
         'thumb': 'channels/ma/tamazight.png',
