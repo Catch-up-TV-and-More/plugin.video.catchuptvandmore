@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Copyright: (c) 2022, Joaopa
+# Copyright: (c) 2023-2026 team CUTVM
 # GNU General Public License v2.0+ (see LICENSE.txt or https://www.gnu.org/licenses/gpl-2.0.txt)
 
 # This file is part of Catch-up TV & More
 # Partially based on Diazole's work (https://github.com/Diazole/c4-dl)
 
-from __future__ import unicode_literals
 
 import base64
 import re
@@ -24,7 +24,7 @@ from resources.lib.kodi_utils import get_kodi_version, get_selected_item_art, ge
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.py_utils import datetime_strptime
 
-from resources.lib import resolver_proxy, web_utils
+from resources.lib import web_utils
 
 try:
     from Crypto.Cipher import AES
@@ -88,19 +88,19 @@ def get_refresh_token_if_refreshable(channel4_auth):
     return None
 
 
-def get_access_token(plugin):
+def get_access_token():
     try:
-        if plugin.setting.get_string('uk.channel4.login') and plugin.setting.get_string('uk.channel4.password'):
+        if Script.setting.get_string('uk.channel4.login') and Script.setting.get_string('uk.channel4.password'):
             channel4_auth = load_channel4_auth()
             token = get_token_if_valid(channel4_auth)
             if token:
                 return token
             refresh_token = get_refresh_token_if_refreshable(channel4_auth)
             if refresh_token:
-                token = refresh(plugin, refresh_token)
+                token = refresh(refresh_token)
                 if token:
                     return token
-            token = login(plugin)
+            token = login()
             if token:
                 return token
     except Exception:
@@ -119,35 +119,35 @@ def refresh(plugin, refresh_token):
         res = r.json()
     except Exception:
         error_text = 'Failed to refresh token.' + ' ' + r.text
-        Script.log(error_text)
-        plugin.notify('ERROR', 'Channel 4 : ' + error_text)
+        Script.log('[UK-CHAN4] ' + error_text)
+        Script.notify('ERROR', 'Channel 4 : ' + error_text)
 
     if "error" in res:
         error_text = 'Failed to refresh token.' + ' ' + res['errorMessage']
-        Script.log(error_text)
-        plugin.notify('ERROR', 'Channel 4 : ' + error_text)
+        Script.log('[UK-CHAN4] ' + error_text)
+        Script.notify('ERROR', 'Channel 4 : ' + error_text)
 
     channel4_auth = res
     save_channel4_auth(channel4_auth)
     return channel4_auth.get('accessToken', None)
 
 
-def login(plugin):
+def login():
     data = {
         "grant_type": "password",
-        "username": plugin.setting.get_string('uk.channel4.login'),
-        "password": plugin.setting.get_string('uk.channel4.password'),
+        "username": Script.setting.get_string('uk.channel4.login'),
+        "password": Script.setting.get_string('uk.channel4.password'),
     }
     r = requests.post(URL_AUTH_TOKEN, headers=AUTH_TOKEN_HEADERS, data=data)
     try:
         res = r.json()
     except Exception:
-        Script.log('Failed to login. ' + r.text)
-        plugin.notify('ERROR', 'Channel 4 : ' + plugin.localize(30711) + '. ' + r.text)
+        Script.log('[UK-CHAN4] Failed to login. ' + r.text)
+        Script.notify('ERROR', 'Channel 4 : ' + Script.localize(30711) + '. ' + r.text)
 
     if res and "error" in res:
-        Script.log('Failed to login. ' + res['errorMessage'])
-        plugin.notify('ERROR', 'Channel 4 : ' + plugin.localize(30711) + '. ' + res['errorMessage'])
+        Script.log('[UK-CHAN4] Failed to login. ' + res['errorMessage'])
+        Script.notify('ERROR', 'Channel 4 : ' + Script.localize(30711) + '. ' + res['errorMessage'])
 
     channel4_auth = res
     save_channel4_auth(channel4_auth)
@@ -157,16 +157,14 @@ def login(plugin):
 def load_channel4_auth():
     with xbmcvfs.File(CACHE_FILE, 'r') as f1:
         channel4_auth = f1.read()
-        f1.close()
-        if channel4_auth:
-            return json.loads(channel4_auth)
+    if channel4_auth:
+        return json.loads(channel4_auth)
     return None
 
 
 def save_channel4_auth(channel4_auth):
-    with xbmcvfs.File(CACHE_FILE, 'wb') as f1:
+    with xbmcvfs.File(CACHE_FILE, 'w') as f1:
         json.dump(channel4_auth, f1, ensure_ascii=False, indent=4)
-        f1.close()
 
 
 @Route.register(content_type="videos")
@@ -467,14 +465,14 @@ def get_episodes_list(plugin, series, series_number, datas, **kwargs):
 
 @Resolver.register
 def get_video(plugin, programmeId, assetId, **kwargs):
-    access_token = get_access_token(plugin)
+    access_token = get_access_token()
     if access_token:  # Allows higher bitrate 1080p
         client = 'amazonfire-dash'
         url_video_json = URL_VOD_API.format(programme_id=programmeId, client=client)
         headers = {"authorization": f"Bearer {access_token}"}
     else:
         client = 'web'
-        url_video_json = URL_VOD_WEB + '{}'.format(programmeId)
+        url_video_json = URL_VOD_WEB + str(programmeId)
         headers = None
 
     resp = urlquick.get(url_video_json, max_age=-1, headers=headers)
@@ -552,7 +550,7 @@ def get_live_url(plugin, item_id, **kwargs):
             if response.status_code == 200:
                 url = new_url
         except requests.RequestException as e:
-            print(f"Request failed: {e}")
+            Script.log(f'[UK-CHAN4] Requesting HD live manifest failed: {e!r}')
 
     keys = KEYS[client]
     cipher = AES.new(bytes(keys['key'], 'UTF-8'), AES.MODE_CBC, bytes(keys['iv'], 'UTF-8'))
