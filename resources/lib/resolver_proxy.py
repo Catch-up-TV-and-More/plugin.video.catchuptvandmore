@@ -440,21 +440,23 @@ def get_stream_vimeo(plugin,
     url_vimeo = URL_VIMEO_BY_ID % video_id
 
     if referer is not None:
-        html_vimeo = urlquick.get(url_vimeo,
-                                  headers={
-                                      'User-Agent': web_utils.get_random_windows_ua(),
-                                      'Referer': referer
-                                  },
-                                  max_age=-1)
+        headers = {
+            'User-Agent': web_utils.get_random_windows_ua(),
+            'Referer': referer
+        }
     else:
-        html_vimeo = urlquick.get(
-            url_vimeo,
-            headers={'User-Agent': web_utils.get_random_windows_ua()},
-            max_age=-1)
-    json_vimeo = json.loads(
-        '{' +
-        re.compile('var config = \{(.*?)};').findall(html_vimeo.text)[0] +
-        '}')
+        headers = GENERIC_HEADERS
+
+    resp = urlquick.get(url_vimeo, headers=headers, max_age=-1)
+    root = resp.parse()
+
+    for script in root.iterfind(".//script"):
+        if (script.text is not None) and ('window.playerConfig = ' in script.text):
+            text = script.text
+            start = text.find('{', text.find('window.playerConfig ='))
+            end = text.rfind('}')
+            json_vimeo = json.loads(text[start:end + 1])
+
     hls_json = json_vimeo["request"]["files"]["hls"]
     default_cdn = hls_json["default_cdn"]
     final_video_url = hls_json["cdns"][default_cdn]["url"]
