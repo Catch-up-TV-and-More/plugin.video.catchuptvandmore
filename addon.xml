@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta09" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta10" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -80,6 +80,17 @@
 [IE] Add RTE live (PR #1766 issue #1765) thanks @CasperMcFadden95
 [UK - GREATPLAYER] Fix video (PR #1767) thanks @CasperMcFadden95
 [UK - WATCHFREEUK] Fix main menu 'True Crime' (PR #1770) thanks @dinkroom
+[UK - CHANNEL4] Simplify get_live_url by using endpoint that requires no auth (PR #1773) thanks @CasperMcFadden95
+[UK - CHANNEL4] Use amazonfire-dash basic authorization token (PR #1777) thanks @CasperMcFadden95
+[UK - CHANNEL4] Don't send unnecessary credentials when refreshing token (PR #1776) thanks @CasperMcFadden95
+[MA - SNRT] Add Arryadia TNT and Arryadia HD 1 (PR #1778) thanks @CasperMcFadden95
+[UK - CHANNEL4] Chores (PR #1775) thanks @dinkroom
+[UK - CHANNEL4] Set a timeout on all requests and a small cache time on most (PR #1775) thanks @dinkroom
+[UK - CHANNEL4] Replay: Coloured hero items (PR #1775) thanks @dinkroom
+[UK - CHANNEL4] Replay: Add setting to allow higher bandwidth video (PR #1775) thanks @dinkroom
+[FR] WEO no longer exists
+[FR - BFMTV] Fix live
+[FR - TLC] Fix live
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
