@@ -623,11 +623,11 @@ msgid "Log out of Channel 4"
 msgstr ""
 
 msgctxt "#30266"
-msgid "Log in to Channel5"
+msgid "Log in to 5"
 msgstr ""
 
 msgctxt "#30267"
-msgid "Log out of Channel5"
+msgid "Log out of 5"
 msgstr ""
 
 
