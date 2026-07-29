@@ -67,7 +67,7 @@ menu = {
     },
     "my5": {
         "route": "/resources/lib/channels/uk/my5:list_main_page",
-        "label": "My 5",
+        "label": "5",
         "thumb": "channels/uk/my5.png",
         "fanart": "channels/uk/my5_fanart.jpg",
         "enabled": True,

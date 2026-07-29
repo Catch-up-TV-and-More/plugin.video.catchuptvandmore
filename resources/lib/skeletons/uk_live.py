@@ -244,7 +244,7 @@ menu = {
     },
     'C5': {
         'resolver': '/resources/lib/channels/uk/my5:get_live_url',
-        'label': 'Channel 5 from My5',
+        'label': '5',
         'thumb': 'channels/uk/five.png',
         'fanart': 'channels/uk/five_fanart.jpg',
         'xmltv_id': '5.freeview.co.uk',
@@ -253,7 +253,7 @@ menu = {
     },
     'C6': {
         'resolver': '/resources/lib/channels/uk/my5:get_live_url',
-        'label': '5 Star from My5',
+        'label': '5 Star',
         'thumb': 'channels/uk/fivestar.png',
         'fanart': 'channels/uk/fivestar_fanart.jpg',
         'xmltv_id': '32.freeview.co.uk',
@@ -262,7 +262,7 @@ menu = {
     },
     'C7': {
         'resolver': '/resources/lib/channels/uk/my5:get_live_url',
-        'label': '5 USA from My5',
+        'label': '5 USA',
         'thumb': 'channels/uk/fiveusa.png',
         'fanart': 'channels/uk/fiveusa_fanart.jpg',
         'xmltv_id': '21.freeview.co.uk',
@@ -271,7 +271,7 @@ menu = {
     },
     'C0': {
         'resolver': '/resources/lib/channels/uk/my5:get_live_url',
-        'label': '5 Action from My5',
+        'label': '5 Action',
         'thumb': 'channels/uk/5action.png',
         'fanart': 'channels/uk/5action_fanart.jpg',
         'xmltv_id': '33.freeview.co.uk',
@@ -280,7 +280,7 @@ menu = {
     },
     'C8': {
         'resolver': '/resources/lib/channels/uk/my5:get_live_url',
-        'label': '5 Select from My5',
+        'label': '5 Select',
         'thumb': 'channels/uk/5select.png',
         'fanart': 'channels/uk/5select_fanart.jpg',
         'xmltv_id': '46.freeview.co.uk',

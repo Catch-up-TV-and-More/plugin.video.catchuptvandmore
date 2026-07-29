@@ -622,6 +622,13 @@ msgctxt "#30265"
 msgid "Log out of Channel 4"
 msgstr "Se déconnecter de Channel 4"
 
+msgctxt "#30266"
+msgid "Log in to 5"
+msgstr "Se connecter à 5"
+
+msgctxt "#30267"
+msgid "Log out of 5"
+msgstr "Se déconnecter de 5"
 
 # TV integration (from 30270 to 30289)
 

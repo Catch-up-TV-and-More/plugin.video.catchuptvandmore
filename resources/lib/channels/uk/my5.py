@@ -862,7 +862,7 @@ def get_session_token(msg_on_fail=True):
         if msg_on_fail:
             xbmcgui.Dialog().ok(
                 Script.localize(TXT_INFORMATION),
-                Script.localize(TXT_ACCOUNT_REQUIRED) % ('Channel5 (UK)', ('%s' % PUBLIC_SITE)))
+                Script.localize(TXT_ACCOUNT_REQUIRED) % ('5 (UK)', PUBLIC_SITE))
         return None
 
 
@@ -970,7 +970,7 @@ def sign_in_account(addon):
             perform_signin_request(uname, passw)
             global my_list_ids
             my_list_ids = None
-            xbmcgui.Dialog().ok('Channel5', Script.localize(TXT_LOGIN_SUCCESS))
+            xbmcgui.Dialog().ok('5', Script.localize(TXT_LOGIN_SUCCESS))
             xbmc.executebuiltin('Container.Refresh')
             return
         except urlquick.HTTPError as e:
@@ -984,7 +984,7 @@ def sign_out_account(_):
 
     my_list_ids = False
     Script.setting['uk.chan5.session-token'] = ''
-    xbmcgui.Dialog().ok('Channel5', Script.localize(TXT_LOGOUT_SUCCESS))
+    xbmcgui.Dialog().ok('5', Script.localize(TXT_LOGOUT_SUCCESS))
 
 
 def report_play_time(evt, show_id):

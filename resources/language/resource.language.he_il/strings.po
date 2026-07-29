@@ -618,6 +618,14 @@ msgctxt "#30265"
 msgid "Log out of Channel 4"
 msgstr "התנתק מ-Channel4"
 
+msgctxt "#30266"
+msgid "Log in to 5"
+msgstr "התחבר ל-5"
+
+msgctxt "#30267"
+msgid "Log out of 5"
+msgstr "התנתק מ-5"
+
 # TV integration (from 30270 to 30289)
 
 msgctxt "#30270"
