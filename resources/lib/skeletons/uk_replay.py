@@ -59,7 +59,7 @@ menu = {
     },
     "uktvplay": {
         "route": "/resources/lib/channels/uk/uktvplay:list_categories",
-        "label": "UKTV Play",
+        "label": "U",
         "thumb": "channels/uk/uktvplay.png",
         "fanart": "channels/uk/uktvplay_fanart.jpg",
         "enabled": True,
