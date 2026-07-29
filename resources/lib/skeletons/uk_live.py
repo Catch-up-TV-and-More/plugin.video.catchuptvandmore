@@ -28,7 +28,7 @@ menu = {
     },
     'dave': {
         'resolver': '/resources/lib/channels/uk/uktvplay:get_live_url',
-        'label': 'Dave',
+        'label': 'U&Dave',
         'thumb': 'channels/uk/dave.png',
         'fanart': 'channels/uk/dave_fanart.jpg',
         'xmltv_id': '19.freeview.co.uk',
@@ -37,7 +37,7 @@ menu = {
     },
     'yesterday': {
         'resolver': '/resources/lib/channels/uk/uktvplay:get_live_url',
-        'label': 'Yesterday',
+        'label': 'U&Yesterday',
         'thumb': 'channels/uk/yesterday.png',
         'fanart': 'channels/uk/yesterday_fanart.jpg',
         'xmltv_id': '27.freeview.co.uk',
@@ -46,7 +46,7 @@ menu = {
     },
     'drama': {
         'resolver': '/resources/lib/channels/uk/uktvplay:get_live_url',
-        'label': 'Drama',
+        'label': 'U&Drama',
         'thumb': 'channels/uk/drama.png',
         'fanart': 'channels/uk/drama_fanart.jpg',
         'xmltv_id': '20.freeview.co.uk',
