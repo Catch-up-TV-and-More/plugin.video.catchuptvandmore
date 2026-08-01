@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta11" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.42~beta12" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -93,9 +93,16 @@
 [FR - TLC] Fix live
 [FR - GONG] Fix live
 [WO - ARTE] Favorites: Fix TypeError: unexpected keyword argument (PR #1779) thanks@jeff2900
-[UK - CHANNEL4] Fixed merge artifact (PR #1784 isssue 1723) thanks @dinkroom
-[UK - CHANNEL4] Update account login (PR #1784 issue 1723) thanks @dinkroom
-[UK - CHANNEL4] Replay: Implement My4 (PR #1784 issue 1723) thanks @dinkroom
+[UK - CHANNEL4] Fixed merge artifact (PR #1784 isssue #1723) thanks @dinkroom
+[UK - CHANNEL4] Update account login (PR #1784 issue #1723) thanks @dinkroom
+[UK - CHANNEL4] Replay: Implement My4 (PR #1784 issue #1723) thanks @dinkroom
+[UK - MY5] Follow the rebranding of "My5" to "5" (PR #1785) thanks @dinkroom
+[UK - UKTVPlay] Follow the rebranding of "UKTV Play" to "U" (PR #1785) thanks @dinkroom
+[UK - GREATPLAYER] avoid web requests on import (PR #1786) thanks @dinkroom
+[UK - TPTVENCORE] avoid web requests on import (PR #1786) thanks @dinkroom
+[FR - CNEWS] avoid foreign Addon instance to support testing (PR #1786) thanks @dinkroom
+[WO - TV5MONDEPLUS] avoid web requests on import (PR #1786) thanks @dinkroom
+[FR - 6PLAY] Fixed API_KEY error (PR #1789 issue #1788) thanks @jeff2900
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
