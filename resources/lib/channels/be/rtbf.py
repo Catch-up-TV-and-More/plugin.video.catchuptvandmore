@@ -242,9 +242,12 @@ def main_list_programs(plugin, item_id, category_url, category_id, **kwargs):
                     item_post_treatment(item, is_playable=True, is_downloadable=False)
                     yield item
     else:
-        if 'content' in json_parser['data']:
+        content = json_parser['data'].get('content')
+        if not content:
+            yield False
+        else:
             category_type = json_parser['data']['type']
-            for array in json_parser['data']['content']:
+            for array in content:
                 if 'assetId' in array:
                     asset_id = array['assetId']
 
