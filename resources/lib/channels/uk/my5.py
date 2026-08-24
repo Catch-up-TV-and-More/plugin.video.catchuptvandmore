@@ -106,8 +106,8 @@ def getdata():
             sout = sout + chr(k)
         y = y + 1
 
-    matches = re.compile(r'([A-Za-z0-9+/]{22}==).*?([A-Za-z0-9+/]{22}==)').findall(sout)
-    return matches[0]
+    matches = re.findall(r'(?:\W\W|^)([A-Za-z0-9+/]{22}==)(?:\W\W|$)', sout)
+    return matches
 
 
 def ivdata(item_id, media_type, keys):
