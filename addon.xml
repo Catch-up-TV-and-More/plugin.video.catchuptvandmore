@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta00" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta01" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -43,66 +43,9 @@
     <email>catch.up.tv.and.more at gmail dot com</email>
     <source>https://github.com/Catch-up-TV-and-More/plugin.video.catchuptvandmore</source>
     <news>
-[Version 0.2.41]
-[FR - TELEGRENOBLE] TELEGRENOBLE is TG+ now
-[JP - QVC] Fix live
-[FR - LCP] Fix live error (PR #1705) thanks @jeff2900
-[UK - MY5] Change HMAC key retrival (PR #1715 issue #1713) thanks @nictjir
-[MA - MEDI1TV] Fix live (PR #1718) thanks @asperMcFadden95
-[FR - FRANCETV] Kodi22 fix live error 403 (PR #1717) thanks @jeff2900
-[FR - T18] Fix replay AttributeError (PR #1722) thanks @ jeff2900
-[UK - MY5] Replay: empty lists no longer return HTTP 404 status (PR #1724 issue #1721) thanks @dinkroom
-[FR - TGPLUS] Fix live
-[UK - MY5] Swapped order of HMAC and AES (PR #1725 issue #1726) thanks @dinkroom
-[WEB - TARATATA] Improves video quality (PR #1728 issue #1377) thanks @jeff2900
-[FR - EUROPE1] FIx live
-[FR - MOSELLETV] Fix live
-[FR - TNTV] Fix live
-[UK - MY5] Swap and retry HMAC key with stored order (PR #1730 issue #1732) thanks @dinkroom
-[FR - TV7BORDEAUX] Fix live
-[UK - WATCHFREEUK] Fix page legend has no items (PR #1735) thanks @dinkroom
-[PROJECT] Get local timezone from Kodi settings (PR #1737) thanks @dinkroom
-[UK - MY5] Replay: Improved display of special events FAST (PR #1737 issue #1736) thanks @dinkroom
-[RO] Added support for Romanian channels (PR #1738) thanks @qvalette
-[BE - RTLPLAYBE] Updated API 25 and fixed login (PR #1743) thanks @jeff2900
-[CH - LATELE] Fix live (PR #1744) thanks @CorentinWicht
-[CH - LEMANBLEU] Fix live and replay (PR #1744) thanks @CorentinWicht
-[BE - RTLPLAYBE] Added geoblocked stream error message (PR #1747) thanks @jeff2900
-[WO - ALJAZEERA] Add 2الجزيرة (PR #1746) thanks @CasperMcFadden95
-[PROJECT] Better localization
-[CH - LATELE] Do not hardcode live url
-[FR - TF1PLUS] Fixed error is_category if search is empty (PR #1752) thanks @jeff2900
-[UK - MY5] chores (PR #1750) thanks @dinkroom
-[UK - WATCHFREEUK] Fix geoblock error message (PR #1753) thanks @dinkroom
-[WEB - TARATATA] In the Live section, Live/Mosaic option has been restored (PR #1756 issue #1755) thanks @jeff2900
-[UK - MY5] Replay: Fix hero items (PR #1760 issue #1761) thanks @dinkroom
-[PROJECT] Removed outdated general HTTP error handling (PR #1759 issue #1754) thanks @dinkroom
-[IE] Add RTE live (PR #1766 issue #1765) thanks @CasperMcFadden95
-[UK - GREATPLAYER] Fix video (PR #1767) thanks @CasperMcFadden95
-[UK - WATCHFREEUK] Fix main menu 'True Crime' (PR #1770) thanks @dinkroom
-[UK - CHANNEL4] Simplify get_live_url by using endpoint that requires no auth (PR #1773) thanks @CasperMcFadden95
-[UK - CHANNEL4] Use amazonfire-dash basic authorization token (PR #1777) thanks @CasperMcFadden95
-[UK - CHANNEL4] Don't send unnecessary credentials when refreshing token (PR #1776) thanks @CasperMcFadden95
-[MA - SNRT] Add Arryadia TNT and Arryadia HD 1 (PR #1778) thanks @CasperMcFadden95
-[UK - CHANNEL4] Chores (PR #1775) thanks @dinkroom
-[UK - CHANNEL4] Set a timeout on all requests and a small cache time on most (PR #1775) thanks @dinkroom
-[UK - CHANNEL4] Replay: Coloured hero items (PR #1775) thanks @dinkroom
-[UK - CHANNEL4] Replay: Add setting to allow higher bandwidth video (PR #1775) thanks @dinkroom
-[FR] WEO no longer exists
-[FR - BFMTV] Fix live
-[FR - TLC] Fix live
-[FR - GONG] Fix live
-[WO - ARTE] Favorites: Fix TypeError: unexpected keyword argument (PR #1779) thanks@jeff2900
-[UK - CHANNEL4] Fixed merge artifact (PR #1784 isssue #1723) thanks @dinkroom
-[UK - CHANNEL4] Update account login (PR #1784 issue #1723) thanks @dinkroom
-[UK - CHANNEL4] Replay: Implement My4 (PR #1784 issue #1723) thanks @dinkroom
-[UK - MY5] Follow the rebranding of "My5" to "5" (PR #1785) thanks @dinkroom
-[UK - UKTVPlay] Follow the rebranding of "UKTV Play" to "U" (PR #1785) thanks @dinkroom
-[UK - GREATPLAYER] avoid web requests on import (PR #1786) thanks @dinkroom
-[UK - TPTVENCORE] avoid web requests on import (PR #1786) thanks @dinkroom
-[FR - CNEWS] avoid foreign Addon instance to support testing (PR #1786) thanks @dinkroom
-[WO - TV5MONDEPLUS] avoid web requests on import (PR #1786) thanks @dinkroom
-[FR - 6PLAY] Fixed API_KEY error (PR #1789 issue #1788) thanks @jeff2900
+[Version 0.2.43]
+[BE - RTBF] Handle empty Auvio content (PR #1792) thanks @Therand90
+[UK - MY5] Improve key finding regex (PR #1795 issue #1794) thanks @dimkroon
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
