@@ -278,6 +278,11 @@ def error_handler(exception):
     # Parameters found in Kodi URL during this error
     params = get_params_in_query(sys.argv[2])
 
+    # If we come from fav menu we
+    # suggest that the user deletes this item
+    if 'from_fav' in params:
+        fav.ask_to_delete_error_fav_item(params['item_hash'])
+
     # If it's an HTTPError
     if isinstance(exception, urlquick.HTTPError):
         # If error code is in avoid_log_uploader, then return
@@ -285,11 +290,6 @@ def error_handler(exception):
         avoid_log_uploader = [403, 404]
         if exception.response.status_code in avoid_log_uploader:
             return
-
-    # If we come from fav menu we
-    # suggest user to delete this item
-    if 'from_fav' in params:
-        fav.ask_to_delete_error_fav_item(params['item_hash'])
 
     # Else, we ask the user if he wants
     # to share his log to addon devs
