@@ -243,7 +243,7 @@ msgstr "Macedonië"
 
 msgctxt "#30079"
 msgid "Ireland"
-msgstr "Irland"
+msgstr "Ierland"
 
 msgctxt "#30080"
 msgid "Romania"
@@ -886,8 +886,8 @@ msgid "This content is DRM protected. The download mode doesn't work for this ki
 msgstr "Deze inhoud is DRM beveiligd. Downloaden is niet mogelijk met een dergelijke beveiliging. Bedankt voor uw begrip."
 
 msgctxt "#30604"
-msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
-msgstr "Toegang tot deze inhoud vereist een account %s. U kunt de gegevens hiervoor verstrekken in de instellingen van deze add-on. Wanneer u geen account heeft kunt u deze aanmaken op het volgende adres %s."
+msgid "Access to this content requires a %s account. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url: %s."
+msgstr "Voor deze inhoud is een %s account nodig. U kunt de gegevens hiervoor verstrekken in de instellingen van deze add-on. Wanneer u geen account heeft kunt u deze aanmaken op het volgende adres: %s."
 
 msgctxt "#30605"
 msgid "You can now use Kodi's TV feature to watch live TV channels from Catch-up TV & More, follow the tutorial at https://catch-up-tv-and-more.github.io/live_tv_installation/."
@@ -942,7 +942,7 @@ msgstr "Kies video kwaliteit"
 
 msgctxt "#30710"
 msgid "Video stream no longer exists"
-msgstr "Video stream niet langer beschikbaar"
+msgstr "Video stream niet meer beschikbaar"
 
 msgctxt "#30711"
 msgid "Authentication failed"
@@ -990,7 +990,7 @@ msgstr "Inhoud vereist een abonnement"
 
 msgctxt "#30723"
 msgid "An error occurred while getting TV guide"
-msgstr "Er trap een fout op bij het ophalen van de Tv-gids"
+msgstr "Er trad een fout op bij het ophalen van de TV-gids"
 
 msgctxt "#30724"
 msgid "Failed to guess your country based on your IP"
@@ -1021,8 +1021,8 @@ msgid "Homepage"
 msgstr ""
 
 msgctxt "#30732"
-msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
-msgstr ""
+msgid "This content requires payment. To buy or rent it, go to the %s website at this URL: %s"
+msgstr "Dit item moet betaald worden. Ga naar de %s website via de volgende adres om het te kopen of the huren: %s."
 
 msgctxt "#30733"
 msgid "Enter email"
@@ -1114,8 +1114,8 @@ msgid "Access denied (Geographical restriction?)"
 msgstr "Toegang geweigerd (geografische beperking?)"
 
 msgctxt "#30894"
-msgid "This resource requires a payment or a subscription"
-msgstr "Deze bron vereist een betaling of abonnement"
+msgid "This resource requires payment or a subscription"
+msgstr "Voor deze bron is een betaling of abonnement nodig"
 
 msgctxt "#30895"
 msgid "This resource is no longer available"
