@@ -567,12 +567,12 @@ msgid "UKTVPlay Password"
 msgstr "UKTVPlay wachtwoord"
 
 msgctxt "#30252"
-msgid "RMCBFM Play Login"
-msgstr "RMCBFM Play gebruikersnaam"
+msgid "RMC+ Login"
+msgstr "RMC+ gebruikersnaam"
 
 msgctxt "#30253"
-msgid "RMCBFM Play Password"
-msgstr "RMCBFM Play wachtwoord"
+msgid "RMC+ Password"
+msgstr "RMC+ wachtwoord"
 
 msgctxt "#30254"
 msgid "TV guides"
