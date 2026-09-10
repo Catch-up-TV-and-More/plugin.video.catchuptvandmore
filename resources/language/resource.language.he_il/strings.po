@@ -882,7 +882,7 @@ msgid "This content is DRM protected. The download mode doesn't work for this ki
 msgstr ""
 
 msgctxt "#30604"
-msgid "Access to this content requires an account %s. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url %s."
+msgid "Access to this content requires a %s account. You can provide your credentials for it in the settings of this add-on. If you don't have an account, you can create one at this url: %s."
 msgstr ""
 
 msgctxt "#30605"
@@ -1017,7 +1017,7 @@ msgid "Homepage"
 msgstr ""
 
 msgctxt "#30732"
-msgid "This content requires a payment. To buy or rent it, go to %s website at this URL : %s"
+msgid "This content requires payment. To buy or rent it, go to the %s website at this URL: %s"
 msgstr ""
 
 msgctxt "#30733"
@@ -1110,7 +1110,7 @@ msgid "Access denied (Geographical restriction?)"
 msgstr ""
 
 msgctxt "#30894"
-msgid "This resource requires a payment or a subscription"
+msgid "This resource requires payment or a subscription"
 msgstr ""
 
 msgctxt "#30895"
