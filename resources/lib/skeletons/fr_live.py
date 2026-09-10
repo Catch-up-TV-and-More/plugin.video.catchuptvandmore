@@ -249,7 +249,7 @@ menu = {
         "order": 21
     },
     "RMC STORY": {
-        "resolver": "/resources/lib/channels/fr/rmcbfmplay:get_live_url",
+        "resolver": "/resources/lib/channels/fr/rmcplus:get_live_url",
         "label": "RMC Story",
         "thumb": "channels/fr/rmcstory.png",
         "fanart": "channels/fr/rmcstory_fanart.jpg",
@@ -260,7 +260,7 @@ menu = {
         "order": 22
     },
     "RMC Découverte": {
-        "resolver": "/resources/lib/channels/fr/rmcbfmplay:get_live_url",
+        "resolver": "/resources/lib/channels/fr/rmcplus:get_live_url",
         "label": "RMC Découverte",
         "thumb": "channels/fr/rmcdecouverte.png",
         "fanart": "channels/fr/rmcdecouverte_fanart.jpg",
@@ -271,7 +271,7 @@ menu = {
         "order": 23
     },
     "RMC Life": {
-        "resolver": "/resources/lib/channels/fr/rmcbfmplay:get_live_url",
+        "resolver": "/resources/lib/channels/fr/rmcplus:get_live_url",
         "label": "RMC Life",
         "thumb": "channels/fr/rmclife.png",
         "fanart": "channels/fr/rmclife_fanart.png",

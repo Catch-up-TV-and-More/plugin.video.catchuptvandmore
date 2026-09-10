@@ -567,11 +567,11 @@ msgid "UKTVPlay Password"
 msgstr ""
 
 msgctxt "#30252"
-msgid "RMCBFM Play Login"
+msgid "RMC+ Login"
 msgstr ""
 
 msgctxt "#30253"
-msgid "RMCBFM Play Password"
+msgid "RMC+ Password"
 msgstr ""
 
 msgctxt "#30254"

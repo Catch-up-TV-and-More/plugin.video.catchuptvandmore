@@ -51,11 +51,11 @@ menu = {
         "enabled": False,
         "order": 4,
     },
-    "rmcbfmplay": {
-        "route": "/resources/lib/channels/fr/rmcbfmplay:rmcbfmplay_root",
-        "label": "RMC BFM Play",
-        "thumb": "channels/fr/rmcbfmplay.png",
-        "fanart": "channels/fr/rmcbfmplay_fanart.jpg",
+    "rmcplus": {
+        "route": "/resources/lib/channels/fr/rmcplus:rmcplus_root",
+        "label": "RMC+",
+        "thumb": "channels/fr/rmcplus.png",
+        "fanart": "channels/fr/rmcplus_fanart.png",
         "enabled": True,
         "order": 5,
     },
