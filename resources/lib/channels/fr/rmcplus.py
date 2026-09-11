@@ -29,7 +29,8 @@ LIVE_CHANNEL = {
     "RMC STORY": "rmc_story",
     "RMC Découverte": "rmc_decouverte",
     "RMC Life": "rmc_life",
-    "TECH": "bfm_tech"
+    "TECH": "bfm_tech",
+    "BFM2": "bfm2"
 }
 
 LIVE_CHANNEL_JSON = {
@@ -37,7 +38,8 @@ LIVE_CHANNEL_JSON = {
     "RMC STORY": "rmc_story",
     "RMC Découverte": "rmc_decouverte",
     "RMC Life": "rmc_life",
-    "TECH": "bfm_tech"
+    "TECH": "bfm_tech",
+    "BFM2": "bfm_2"
 }
 
 def get_login_token(plugin):

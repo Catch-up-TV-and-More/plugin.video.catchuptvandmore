@@ -17,7 +17,6 @@ from resources.lib import download, resolver_proxy, web_utils
 from resources.lib.addon_utils import Quality
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.py_utils import old_div
-from resources.lib.channels.fr import rmcbfmplay
 
 
 # TO DO
@@ -196,10 +195,10 @@ def get_video_url(plugin,
 def get_live_url(plugin, item_id, **kwargs):
 
     try:
-        if (plugin.setting.get_string('rmcbfmplay.login') != '') and \
-           (plugin.setting.get_string('rmcbfmplay.password') != '') and \
+        if (plugin.setting.get_string('rmcplus.login') != '') and \
+           (plugin.setting.get_string('rmcplus.password') != '') and \
            (item_id in ['BFM TV', 'BFM Business', 'BFM2']):
-            return rmcbfmplay.bfm_player(plugin, item_id)
+            return rmcplus.bfm_player(plugin, item_id)
 
     except Exception:
         pass
