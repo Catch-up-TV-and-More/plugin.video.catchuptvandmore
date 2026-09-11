@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta01" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta02" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -46,6 +46,13 @@
 [Version 0.2.43]
 [BE - RTBF] Handle empty Auvio content (PR #1792) thanks @Therand90
 [UK - MY5] Improve key finding regex (PR #1795 issue #1794) thanks @dimkroon
+[PROJECT] Suggest to remove from favourites on HTTP errors (PR #1797) thanks @dimkroon
+[FR - RMC+] Add live and replay (PR #1799 issue #1796) thanks @jeff2900
+[PROJECT] Update translations (PR #1800) thanks @dimkroon
+[UK - CHANNEL4] Replay: consistent callback urls for playable items (PR #1801) thanks @dimkroon
+[UK - MY5] Replay: consistent callback urls for playable items items (PR #1801) thanks @dimkroon
+[FR - TECH and CO] Fix live
+[FR - RMCBFMPLAY] Remove completely
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
