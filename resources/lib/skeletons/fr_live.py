@@ -658,8 +658,8 @@ menu = {
         "enabled": True,
         "order": 61
     },
-    "TECH & CO": {
-        "resolver": "/resources/lib/channels/fr/rmcbfmplay:get_live_url",
+    "TECH": {
+        "resolver": "/resources/lib/channels/fr/rmcplus:get_live_url",
         "label": "TECH & CO",
         "thumb": "channels/fr/01net.png",
         "fanart": "channels/fr/01net_fanart.jpg",

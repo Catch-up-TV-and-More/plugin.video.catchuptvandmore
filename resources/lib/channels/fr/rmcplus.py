@@ -22,15 +22,23 @@ URL_CLIENTID = 'https://www.rmcplus.fr/_next/static/chunks/0lucft_--p463.js'
 URL_LICENCE_KEY = 'https://lic.drmtoday.com/license-proxy-widevine/cenc/|Content-Type=&User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3041.0 Safari/537.36&Host=lic.drmtoday.com&x-dt-auth-token=%s|R{SSM}|JBlicense'
 
 # GENERIC_HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36'}
-GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua(), }
+GENERIC_HEADERS = {'User-Agent': web_utils.get_random_windows_ua()}
 
 LIVE_CHANNEL = {
     "BFM TV": "bfmtv",
     "RMC STORY": "rmc_story",
     "RMC Découverte": "rmc_decouverte",
     "RMC Life": "rmc_life",
+    "TECH": "bfm_tech"
 }
 
+LIVE_CHANNEL_JSON = {
+    "BFM TV": "bfmtv",
+    "RMC STORY": "rmc_story",
+    "RMC Découverte": "rmc_decouverte",
+    "RMC Life": "rmc_life",
+    "TECH": "bfm_tech"
+}
 
 def get_login_token(plugin):
     if plugin.setting.get_string('rmcplus.login') == '' or plugin.setting.get_string('rmcplus.password') == '':
@@ -458,7 +466,7 @@ def get_live_url(plugin, item_id, **kwargs):
     final_video_url = final_video_format = license_url = None
     for datas in resp.json().get('sections'):
         live_id = datas.get('id')
-        if live_id == LIVE_CHANNEL[item_id]:
+        if live_id == LIVE_CHANNEL_JSON[item_id]:
             if datas.get('video'):
                 final_video_url = datas['video'].get('url')
                 final_video_format = datas['video'].get('format')
