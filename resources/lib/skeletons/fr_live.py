@@ -303,11 +303,19 @@ menu = {
     },
     "france-tv": {
         "route": "/resources/lib/channels/fr/francetv:get_multi_live_url",
-        "label": "France TV - Directs",
+        "label": "France TV  Multpile directs",
         "thumb": "channels/fr/francetv.png",
         "fanart": "channels/fr/francetv_fanart.jpg",
         "enabled": True,
         "order": 27
+    },
+    "rmc-plus": {
+        "route": "/resources/lib/channels/fr/rmcplus:get_multi_live_url",
+        "label": "RMC+  Multiple directs",
+        "thumb": "channels/fr/rmcplus.png",
+        "fanart": "channels/fr/rmcplus_fanart.png",
+        "enabled": True,
+        "order": 28
     },
     "francetvsport": {
         "route": "/resources/lib/channels/fr/francetvsport:list_lives",
@@ -316,7 +324,7 @@ menu = {
         "fanart": "channels/fr/francetvsport_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 28
+        "order": 29
     },
     "france3regions": {
         "resolver": "/resources/lib/channels/fr/france3regions:get_live_url",
@@ -325,7 +333,7 @@ menu = {
         "fanart": "channels/fr/france3regions_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 29
+        "order": 30
     },
     "la_1ere": {
         "resolver": "/resources/lib/channels/fr/la_1ere:get_live_url",
@@ -357,7 +365,7 @@ menu = {
             "Wallis et Futuna": {}
         },
         "enabled": True,
-        "order": 30
+        "order": 31
     },
     "antennereunion": {
         "resolver": "/resources/lib/channels/fr/antennereunion:get_live_url",
@@ -366,7 +374,7 @@ menu = {
         "fanart": "channels/fr/antennereunion_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 31
+        "order": 32
     },
     "tntv": {
         "resolver": "/resources/lib/channels/fr/tntv:get_live_url",
@@ -375,7 +383,7 @@ menu = {
         "fanart": "channels/fr/tntv_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 32
+        "order": 33
     },
     "matele": {
         "resolver": "/resources/lib/channels/fr/via_matele:get_live_url",
@@ -384,7 +392,7 @@ menu = {
         "fanart": "channels/fr/viamatele_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 33
+        "order": 34
     },
     "viavosges": {
         "resolver": "/resources/lib/channels/fr/via:get_live_url",
@@ -393,7 +401,7 @@ menu = {
         "fanart": "channels/fr/viavosges_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 34
+        "order": 35
     },
     "BFM_regions": {
         "resolver": "/resources/lib/channels/fr/bfmtv:get_live_url",
@@ -414,7 +422,7 @@ menu = {
             "BFM TOULON VAR": {}
         },
         "enabled": True,
-        "order": 35
+        "order": 36
     },
     "tv8montblanc": {
         "resolver": "/resources/lib/channels/fr/tv8montblanc:get_live_url",
@@ -423,7 +431,7 @@ menu = {
         "fanart": "channels/fr/tv8montblanc_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 36
+        "order": 37
     },
     "biptv": {
         "resolver": "/resources/lib/channels/fr/biptv:get_live_url",
@@ -432,7 +440,7 @@ menu = {
         "fanart": "channels/fr/biptv_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 37
+        "order": 38
     },
     "figarotv": {
         "resolver": "/resources/lib/channels/fr/figarotv:get_live_url",
@@ -441,7 +449,7 @@ menu = {
         "fanart": "channels/fr/figarotv_ile_de_france_fanart.png",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 38
+        "order": 39
     },
     "20minutes": {
         "resolver": "/resources/lib/channels/fr/20minutes:get_live_url",
@@ -450,7 +458,7 @@ menu = {
         "fanart": "channels/fr/20minutes_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 39
+        "order": 40
     },
     "lmtv": {
         "resolver": "/resources/lib/channels/fr/lmtv:get_live_url",
@@ -460,7 +468,7 @@ menu = {
         "xmltv_id": "C535.api.telerama.fr",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 40
+        "order": 41
     },
     "moselletv": {
         "resolver": "/resources/lib/channels/fr/moselletv:get_live_url",
@@ -470,7 +478,7 @@ menu = {
         "xmltv_id": "C1045.api.telerama.fr",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 41
+        "order": 42
     },
     "tebeo": {
         "resolver": "/resources/lib/channels/fr/tebeo:get_live_url",
@@ -479,7 +487,7 @@ menu = {
         "fanart": "channels/fr/tebeo&tebesud_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 42
+        "order": 43
     },
     "telenantes": {
         "resolver": "/resources/lib/channels/fr/telenantes:get_live_url",
@@ -489,7 +497,7 @@ menu = {
         "xmltv_id": "C491.api.telerama.fr",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 43
+        "order": 44
     },
     "telepaese": {
         "resolver": "/resources/lib/channels/fr/telepaese:get_live_url",
@@ -498,7 +506,7 @@ menu = {
         "fanart": "channels/fr/telepaese_fanart.png",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 44
+        "order": 45
     },
     "tl7": {
         "resolver": "/resources/lib/channels/fr/tl7:get_live_url",
@@ -507,7 +515,7 @@ menu = {
         "fanart": "channels/fr/tl7_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 45
+        "order": 46
     },
     "tgplus": {
         "resolver": "/resources/lib/channels/fr/tgplus:get_live_url",
@@ -516,7 +524,7 @@ menu = {
         "fanart": "channels/fr/tgplusfanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 46
+        "order": 47
     },
     "tlc": {
         "resolver": "/resources/lib/channels/fr/tlc:get_live_url",
@@ -525,7 +533,7 @@ menu = {
         "fanart": "channels/fr/tlc_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 47
+        "order": 48
     },
     "tv7bordeaux": {
         "resolver": "/resources/lib/channels/fr/tv7bordeaux:get_live_url",
@@ -535,7 +543,7 @@ menu = {
         "xmltv_id": "C273.api.telerama.fr",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 48
+        "order": 49
     },
     "tv7colmar": {
         "resolver": "/resources/lib/channels/fr/tv7colmar:get_live_url",
@@ -544,7 +552,7 @@ menu = {
         "fanart": "channels/fr/tv7colmar_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 49
+        "order": 50
     },
     "tvmonaco": {
         "resolver": "/resources/lib/channels/fr/tvmonaco:get_live_url",
@@ -553,7 +561,7 @@ menu = {
         "fanart": "channels/fr/tvmonaco_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 50
+        "order": 51
     },
     "tvpifr": {
         "resolver": "/resources/lib/channels/fr/tvpifr:get_live_url",
@@ -562,7 +570,7 @@ menu = {
         "fanart": "channels/fr/tvpifr_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 51
+        "order": 52
     },
     "tvr": {
         "resolver": "/resources/lib/channels/fr/tvr:get_live_url",
@@ -572,7 +580,7 @@ menu = {
         "xmltv_id": "C539.api.telerama.fr",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 52
+        "order": 53
     },
     "tvt": {
         "resolver": "/resources/lib/channels/fr/tvt:get_live_url",
@@ -582,7 +590,7 @@ menu = {
         "xmltv_id": "C540.api.telerama.fr",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 53
+        "order": 54
     },
     "tvvendee": {
         "resolver": "/resources/lib/channels/fr/tvvendee:get_live_url",
@@ -591,7 +599,7 @@ menu = {
         "fanart": "channels/fr/tvvendee_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 54
+        "order": 55
     },
     "tvv78": {
         "resolver": "/resources/lib/channels/fr/tv78:get_live_url",
@@ -600,7 +608,7 @@ menu = {
         "fanart": "channels/fr/tv78_fanart.jpg",
         "m3u_group": "Région",
         "enabled": True,
-        "order": 55
+        "order": 56
     },
     "luckyjack": {
         "resolver": "/resources/lib/channels/fr/abweb:get_live_url",
@@ -609,7 +617,7 @@ menu = {
         "fanart": "channels/fr/luckyjack_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": False,
-        "order": 56
+        "order": 57
     },
     "mb": {
         "resolver": "/resources/lib/channels/fr/6play:get_live_url",
@@ -619,7 +627,7 @@ menu = {
         "xmltv_id": "C184.api.telerama.fr",
         "m3u_group": "Satellite/FAI",
         "enabled": False,
-        "order": 57
+        "order": 58
     },
     "BFM Business": {
         "resolver": "/resources/lib/channels/fr/bfmtv:get_live_url",
@@ -629,7 +637,7 @@ menu = {
         "xmltv_id": "C1073.api.telerama.fr",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 58
+        "order": 59
     },
     "BFM2": {
         "resolver": "/resources/lib/channels/fr/bfmtv:get_live_url",
@@ -638,7 +646,7 @@ menu = {
         "fanart": "channels/fr/bfm2_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 59
+        "order": 60
     },
     "cnews_prime": {
         "resolver": "/resources/lib/channels/fr/cnews:get_live_url",
@@ -647,7 +655,7 @@ menu = {
         "fanart": "channels/fr/cnews_prime_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 60
+        "order": 61
     },
     "bsmart": {
         "resolver": "/resources/lib/channels/fr/bsmart:get_live_url",
@@ -656,7 +664,7 @@ menu = {
         "fanart": "channels/fr/bsmart_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 61
+        "order": 62
     },
     "TECH": {
         "resolver": "/resources/lib/channels/fr/rmcplus:get_live_url",
@@ -665,7 +673,7 @@ menu = {
         "fanart": "channels/fr/01net_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 62
+        "order": 63
     },
     "gong": {
         "resolver": "/resources/lib/channels/fr/gong/get_live_url",
@@ -674,7 +682,7 @@ menu = {
         "fanart": "channels/fr/gong_fanart.png",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 63
+        "order": 64
     },
     "kto": {
         "resolver": "/resources/lib/channels/fr/kto:get_live_url",
@@ -684,7 +692,7 @@ menu = {
         "xmltv_id": "C110.api.telerama.fr",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 64
+        "order": 65
     },
     "europe1": {
         "resolver": "/resources/lib/channels/fr/europe1:get_live_url",
@@ -693,7 +701,7 @@ menu = {
         "fanart": "channels/fr/europe1_fanart.jpg",
         "m3u_group": "Radio",
         "enabled": True,
-        "order": 65
+        "order": 66
     },
     "franceinter": {
         "resolver": "/resources/lib/channels/fr/franceinter:get_live_url",
@@ -702,7 +710,7 @@ menu = {
         "fanart": "channels/fr/franceinter_fanart.jpg",
         "m3u_group": "Radio",
         "enabled": True,
-        "order": 66
+        "order": 67
     },
     "funradio": {
         "resolver": "/resources/lib/channels/fr/rtl:get_live_url",
@@ -711,7 +719,7 @@ menu = {
         "fanart": "channels/fr/funradio_fanart.jpg",
         "m3u_group": "Radio",
         "enabled": True,
-        "order": 67
+        "order": 68
     },
     "rtl": {
         "resolver": "/resources/lib/channels/fr/rtl:get_live_url",
@@ -720,7 +728,7 @@ menu = {
         "fanart": "channels/fr/rtl_fanart.jpg",
         "m3u_group": "Radio",
         "enabled": True,
-        "order": 68
+        "order": 69
     },
     "rtl2": {
         "resolver": "/resources/lib/channels/fr/rtl:get_live_url",
@@ -729,7 +737,7 @@ menu = {
         "fanart": "channels/fr/rtl2_fanart.jpg",
         "m3u_group": "Radio",
         "enabled": True,
-        "order": 69
+        "order": 70
     },
     "sudradio": {
         "resolver": "/resources/lib/channels/fr/sudradio:get_live_url",
@@ -738,7 +746,7 @@ menu = {
         "fanart": "channels/fr/sudradio_fanart.jpg",
         "m3u_group": "Radio",
         "enabled": True,
-        "order": 70
+        "order": 71
     },
     "sportenfrance": {
         "resolver": "/resources/lib/channels/fr/sportenfrance:get_live_url",
@@ -747,7 +755,7 @@ menu = {
         "fanart": "channels/fr/sportenfrance_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 71
+        "order": 72
     },
     "lequipelive": {
         "route": "/resources/lib/channels/fr/lequipe:get_multi_live_url",
@@ -756,7 +764,7 @@ menu = {
         "fanart": "channels/fr/lequipelive_fanart.png",
         "m3u_group": "TNT",
         "enabled": True,
-        "order": 72
+        "order": 73
     },
     "equidia-live2": {
         "resolver": "/resources/lib/channels/fr/equidia:get_live_url",
@@ -766,7 +774,7 @@ menu = {
         "xmltv_id": "C64.api.telerama.fr",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 73
+        "order": 74
     },
     "equidia-racingtrot": {
         "resolver": "/resources/lib/channels/fr/equidia:get_live_url",
@@ -775,7 +783,7 @@ menu = {
         "fanart": "channels/fr/equidiaracingtrot_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 74
+        "order": 75
     },
     "equidia-racingmag": {
         "resolver": "/resources/lib/channels/fr/equidia:get_live_url",
@@ -784,7 +792,7 @@ menu = {
         "fanart": "channels/fr/equidiaracingmag_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 75
+        "order": 76
     },
     "equidia-racinggalop": {
         "resolver": "/resources/lib/channels/fr/equidia:get_live_url",
@@ -793,7 +801,7 @@ menu = {
         "fanart": "channels/fr/equidiaracinggalop_fanart.jpg",
         "m3u_group": "Satellite/FAI",
         "enabled": True,
-        "order": 76
+        "order": 77
     },
     "equidia-racing": {
         "resolver": "/resources/lib/channels/fr/equidia:get_live_url",
@@ -812,6 +820,6 @@ menu = {
             "8": {}
         },
         "enabled": True,
-        "order": 77
+        "order": 78
     }
 }
