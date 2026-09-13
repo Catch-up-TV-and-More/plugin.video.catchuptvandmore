@@ -33,14 +33,6 @@ LIVE_CHANNEL = {
     "BFM2": "bfm2"
 }
 
-LIVE_CHANNEL_JSON = {
-    "BFM TV": "bfmtv",
-    "RMC STORY": "rmc_story",
-    "RMC Découverte": "rmc_decouverte",
-    "RMC Life": "rmc_life",
-    "TECH": "bfm_tech",
-    "BFM2": "bfm_2"
-}
 
 def get_login_token(plugin):
     if plugin.setting.get_string('rmcplus.login') == '' or plugin.setting.get_string('rmcplus.password') == '':
@@ -129,25 +121,25 @@ def channels(plugin, **kwargs):
         if type_tuile == "categorie" and titre.startswith("Nos"):
             items = datas.get('items')
             if items:
-                for item in items:
-                    if 'background_image' in item:
-                        channel_image = item['background_image'].get('url')
-                        channel_title = item['background_image'].get('alt')
-                        if len(channel_title) == 0:
-                            channel_title = item.get('id')
-                    if 'call_to_actions' in item:
-                        channel_url = item['call_to_actions'][0].get('endpoint')
+                for array in items:
+                    if 'background_image' in array:
+                        array_image = array['background_image'].get('url')
+                        array_title = array['background_image'].get('alt')
+                        if len(array_title) == 0:
+                            array_title = array.get('id')
+                    if 'call_to_actions' in array:
+                        array_url = array['call_to_actions'][0].get('endpoint')
 
-                    if channel_url is None:
+                    if array_url is None:
                         continue
-                    if 'http' not in channel_url:
-                        channel_url = URL_ROOT + channel_url + URL_ROOT_PARAMS
+                    if 'http' not in array_url:
+                        array_url = URL_ROOT + array_url + URL_ROOT_PARAMS
 
                     item = Listitem()
-                    item.label = channel_title
-                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = channel_image
+                    item.label = array_title
+                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = array_image
                     item.set_callback(list_programs,
-                                      category_url=channel_url)
+                                      category_url=array_url)
                     item_post_treatment(item)
                     yield item
 
@@ -173,25 +165,25 @@ def categories(plugin, **kwargs):
         if type_tuile == "categorie" and titre.startswith("Cat"):
             items = datas.get('items')
             if items:
-                for item in items:
-                    if 'background_image' in item:
-                        category_image = item['background_image'].get('url')
-                        category_title = item['background_image'].get('alt')
-                        if len(category_title) == 0:
-                            category_title = item.get('id')
-                    if 'call_to_actions' in item:
-                        category_url = item['call_to_actions'][0].get('endpoint')
+                for array in items:
+                    if 'background_image' in array:
+                        array_image = array['background_image'].get('url')
+                        array_title = array['background_image'].get('alt')
+                        if len(array_title) == 0:
+                            array_title = array.get('id')
+                    if 'call_to_actions' in array:
+                        array_url = array['call_to_actions'][0].get('endpoint')
 
-                    if category_url is None:
+                    if array_url is None:
                         continue
-                    if 'http' not in category_url:
-                        category_url = URL_ROOT + category_url + URL_ROOT_PARAMS
+                    if 'http' not in array_url:
+                        array_url = URL_ROOT + array_url + URL_ROOT_PARAMS
 
                     item = Listitem()
-                    item.label = category_title
-                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = category_image
+                    item.label = array_title
+                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = array_image
                     item.set_callback(list_programs,
-                                      category_url=category_url)
+                                      category_url=array_url)
                     item_post_treatment(item)
                     yield item
 
@@ -217,23 +209,23 @@ def search(plugin, search_query, **kwargs):
             if items:
                 for array in items:
                     if 'background_image' in array:
-                        search_image = array['background_image'].get('url')
-                        search_title = array['background_image'].get('alt')
-                        if len(search_title) == 0:
-                            search_title = array.get('id')
+                        array_image = array['background_image'].get('url')
+                        array_title = array['background_image'].get('alt')
+                        if len(array_title) == 0:
+                            array_title = array.get('id')
                     if 'call_to_actions' in array:
-                        search_url = array['call_to_actions'][0].get('endpoint')
-                    if search_url is None:
+                        array_url = array['call_to_actions'][0].get('endpoint')
+                    if array_url is None:
                         continue
-                    if 'http' not in search_url:
-                        search_url = URL_ROOT + search_url + URL_ROOT_PARAMS
+                    if 'http' not in array_url:
+                        array_url = URL_ROOT + array_url + URL_ROOT_PARAMS
 
                     at_least_one_item = True
                     item = Listitem()
-                    item.label = search_title
-                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = search_image
+                    item.label = array_title
+                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = array_image
                     item.set_callback(list_videos,
-                                      video_url=search_url)
+                                      video_url=array_url)
                     item_post_treatment(item)
                 yield item
 
@@ -254,28 +246,28 @@ def list_programs(plugin, category_url, **kwargs):
     for datas in resp.json().get('sections'):
         items = datas.get('items')
         if items:
-            for item in items:
-                if 'background_image' in item:
-                    program_image = item['background_image'].get('url')
-                    program_title = item['background_image'].get('alt')
-                    if len(program_title) == 0:
-                        program_title = item.get('titre')
-                if 'call_to_actions' in item:
-                    program_url = item['call_to_actions'][0].get('endpoint')
-                if program_url is None:
+            for array in items:
+                if 'background_image' in array:
+                    array_image = array['background_image'].get('url')
+                    array_title = array['background_image'].get('alt')
+                    if len(array_title) == 0:
+                        array_title = array.get('titre')
+                if 'call_to_actions' in array:
+                    array_url = array['call_to_actions'][0].get('endpoint')
+                if array_url is None:
                     continue
-                if 'http' not in program_url:
-                    program_url = URL_ROOT + program_url + URL_ROOT_PARAMS
+                if 'http' not in array_url:
+                    array_url = URL_ROOT + array_url + URL_ROOT_PARAMS
 
                 item = Listitem()
-                item.label = program_title
-                item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = program_image
-                if 'page_type=player' in program_url:
+                item.label = array_title
+                item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = array_image
+                if 'page_type=player' in array_url:
                     item.set_callback(get_video_url,
-                                      video_url=program_url)
+                                      video_url=array_url)
                 else:
                     item.set_callback(list_videos,
-                                      video_url=program_url)
+                                      video_url=array_url)
                 item_post_treatment(item)
                 yield item
 
@@ -445,14 +437,14 @@ def get_video_url(plugin, video_url, **kwargs):
 
 
 @Resolver.register
-def get_live_url(plugin, item_id, **kwargs):
+def get_live_url(plugin, item_id, ismulti=False, **kwargs):
     token = get_login_token(plugin)
     if not token:
         return False
 
     params = {
         'page_type': 'player',
-        'page_id': LIVE_CHANNEL[item_id],
+        'page_id': item_id if ismulti is True else LIVE_CHANNEL[item_id],
         'model': 'androidtv-ott',
     }
     headers = {
@@ -467,19 +459,48 @@ def get_live_url(plugin, item_id, **kwargs):
 
     final_video_url = final_video_format = license_url = None
     for datas in resp.json().get('sections'):
-        live_id = datas.get('id')
-        if live_id == LIVE_CHANNEL_JSON[item_id]:
-            if datas.get('video'):
-                final_video_url = datas['video'].get('url')
-                final_video_format = datas['video'].get('format')
-                if final_video_format != 'hls':
-                    final_video_format = 'mpd'
-                isdrm = datas['video'].get('drm')
-                if isdrm:
-                    play_token = datas['video'].get('drm').get('play_token')
-                    license_url = URL_LICENCE_KEY % play_token
+        if datas.get('video'):
+            final_video_url = datas['video'].get('url')
+            final_video_format = datas['video'].get('format')
+            if final_video_format != 'hls':
+                final_video_format = 'mpd'
+            isdrm = datas['video'].get('drm')
+            if isdrm:
+                play_token = datas['video'].get('drm').get('play_token')
+                license_url = URL_LICENCE_KEY % play_token
 
     if final_video_url:
         return resolver_proxy.get_stream_with_quality(
             plugin, video_url=final_video_url, manifest_type=final_video_format,
             license_url=license_url)
+
+
+@Route.register
+def get_multi_live_url(plugin, item_id, **kwargs):
+    params = {
+        'source': 'cms',
+        'type': 'rail',
+        'page_id': 'accueil',
+        'model': 'androidtv-ott',
+    }
+    resp = urlquick.get(URL_ROOT + '/composant/contenu/curated-carrou-accueil-chaines-live', params=params, headers=GENERIC_HEADERS, max_age=-1)
+
+    for array in resp.json().get('items'):
+        live_id = array.get('id')
+        live_titre = array.get('titre')
+        if 'background_image' in array:
+            live_image = array['background_image'].get('url')
+        if 'etiquette' in array:
+            logo_image = array['etiquette']['boutique'].get('url')
+        if live_titre is None:
+            continue
+
+        item = Listitem()
+        item.label = live_id.upper().replace('_', ' ')
+        item.info['title'] = f'{item.label}    [COLOR orange]{live_titre}[/COLOR]'
+        item.art['thumb'] = logo_image
+        item.art['landscape'] = item.art["fanart"] = live_image
+        item.set_callback(get_live_url,
+                          item_id=live_id, ismulti=True)
+        item_post_treatment(item)
+        yield item
