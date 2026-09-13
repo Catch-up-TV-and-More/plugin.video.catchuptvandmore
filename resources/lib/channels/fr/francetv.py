@@ -277,6 +277,8 @@ def populate_video_item(item, video):
 
     if "saison" in video and video['saison']:
         item.info['season'] = video['saison']
+    elif "season" in video and video['season']:
+        item.info['season'] = video['season']
 
     if "episode" in video and video['episode']:
         # Now we know for sure we are dealing with an episode
@@ -484,15 +486,16 @@ def get_multi_live_url(plugin, item_id, **kwargs):
                 populate_images(item, items['program']['images'])
             channel_label = items['channel'].get("label")
             if channel_program and channel_episode_title:
-                channel_label = channel_label + ' - ' + channel_program + ' - ' + channel_episode_title
+                channel_titre = f'{channel_label}    [COLOR orange]{channel_program} - {channel_episode_title}[/COLOR]'
             elif channel_program:
-                channel_label = channel_label + ' - ' + channel_program
+                channel_titre = f'{channel_label}    [COLOR orange]{channel_program}[/COLOR]'
             elif channel_episode_title:
-                channel_label = channel_label + ' - ' + channel_episode_title
+                channel_titre = f'{channel_label}    [COLOR orange]{channel_episode_title}[/COLOR]'
             channel_id = items['channel'].get("si_id")
 
             at_least_one_item = True
             item.label = channel_label
+            item.info['title'] = channel_titre
             item.set_callback(get_multi_video_url, channel_id)
             item_post_treatment(item)
             yield item
@@ -505,15 +508,16 @@ def get_multi_live_url(plugin, item_id, **kwargs):
                 populate_images(item, items['program']['images'])
             channel_label = items['partner'].get("label")
             if channel_program and channel_episode_title:
-                channel_label = channel_label + ' - ' + channel_program + ' - ' + channel_episode_title
+                channel_titre = f'{channel_label}    [COLOR orange]{channel_program} - {channel_episode_title}[/COLOR]'
             elif channel_program:
-                channel_label = channel_label + ' - ' + channel_program
+                channel_titre = f'{channel_label}    [COLOR orange]{channel_program}[/COLOR]'
             elif channel_episode_title:
-                channel_label = channel_label + ' - ' + channel_episode_title
+                channel_titre = f'{channel_label}    [COLOR orange]{channel_episode_title}[/COLOR]'
             channel_id = items['partner'].get("si_id")
 
             at_least_one_item = True
             item.label = channel_label
+            item.info['title'] = channel_titre
             item.set_callback(get_multi_video_url, channel_id)
             item_post_treatment(item)
             yield item
