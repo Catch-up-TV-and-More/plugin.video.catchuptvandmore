@@ -189,16 +189,24 @@ def get_live_url(plugin, item_id, **kwargs):
 def get_multi_live_url(plugin, item_id, **kwargs):
     resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
     root = resp.parse()
+
     for video_list in root.iterfind('.//a[@class="Link"]'):
-        item = Listitem()
         for div_title in video_list.iterfind('.//div'):
             if div_title is not None and div_title.get('class') == "ArticleTags__items js-ob-internal-reco":
-                for d_title in div_title.iterfind('.//div[@class="ArticleTags__item"]'):
-                    if 'font' not in d_title.get('style'):
-                        item.label = d_title.text
-                item.info['plot'] = video_list.find('.//h2[@class="ColeaderWidget__title"]').text
-                item.art["thumb"] = item.art["thumb"] = video_list.find(".//img").get('src')
+                video_item = video_list.findtext('.//div[@class="ArticleTags__item"]')
+                video_title = video_list.findtext('.//h2[@class="ColeaderWidget__title"]')
+                video_desc = video_list.findtext('.//div[@class="ColeaderWidget__heading--description min--desktop"]')
+                video_image = video_list.find(".//img").get('src')
                 video_id = re.compile(r'live\/(.*?)$').findall(video_list.get('href'))[0]
+                if video_id in ['eurosport-1', 'eurosport-2', 'ligue1-1']:
+                    continue
+
+                item = Listitem()
+                if video_item:
+                    item.label = video_item
+                    item.info['title'] = f'{video_item}    [COLOR orange]{video_title}[/COLOR]'
+                item.info['plot'] = video_desc
+                item.art["thumb"] = item.art["thumb"] = video_image
                 item.set_callback(get_multi_video_url, item_id, video_id=video_id)
                 item_post_treatment(item)
                 yield item
