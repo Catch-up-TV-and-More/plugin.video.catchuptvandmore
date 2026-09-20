@@ -82,6 +82,13 @@ def get_login_token(plugin):
 
 @Route.register
 def rmcplus_root(plugin, **kwargs):
+    # Lives
+    item = Listitem()
+    item.label = 'Directs'
+    item.set_callback(get_multi_live_url)
+    item_post_treatment(item)
+    yield item
+
     # Channels
     item = Listitem()
     item.label = Script.localize(30006)
@@ -476,7 +483,7 @@ def get_live_url(plugin, item_id, ismulti=False, **kwargs):
 
 
 @Route.register
-def get_multi_live_url(plugin, item_id, **kwargs):
+def get_multi_live_url(plugin, **kwargs):
     params = {
         'source': 'cms',
         'type': 'rail',
