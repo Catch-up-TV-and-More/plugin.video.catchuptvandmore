@@ -30,6 +30,13 @@ GENERIC_HEADERS = {'User-Agent': web_utils.get_random_ua()}
 
 @Route.register
 def list_categories(plugin, item_id, **kwargs):
+    # Lives
+    item = Listitem()
+    item.label = 'Directs'
+    item.set_callback(get_multi_live_url)
+    item_post_treatment(item)
+    yield item
+
     params = {
         'path': '/tv/',
         'platform': 'ctv',
@@ -186,8 +193,9 @@ def get_live_url(plugin, item_id, **kwargs):
 
 
 @Route.register
-def get_multi_live_url(plugin, item_id, **kwargs):
-    resp = urlquick.get(URL_LIVE, headers=GENERIC_HEADERS, max_age=-1)
+def get_multi_live_url(plugin, **kwargs):
+    headers = {'user-agent': 'Dalvik/2.1.0 (Linux; U; Android 11; Fire TV build/RD2A.211001.002) MOBILE-LEQUIPE/ANDROID/TABLETTE/10.50.1/NONABONNE/CONNECTE/0123456789abcdef'}
+    resp = urlquick.get(URL_LIVE, headers=headers, max_age=-1)
     root = resp.parse()
 
     for video_list in root.iterfind('.//a[@class="Link"]'):
@@ -198,7 +206,7 @@ def get_multi_live_url(plugin, item_id, **kwargs):
                 video_desc = video_list.findtext('.//div[@class="ColeaderWidget__heading--description min--desktop"]')
                 video_image = video_list.find(".//img").get('src')
                 video_id = re.compile(r'live\/(.*?)$').findall(video_list.get('href'))[0]
-                if video_id in ['eurosport-1', 'eurosport-2', 'ligue1-1']:
+                if any(c in video_id for c in ['eurosport', 'ligue1']):
                     continue
 
                 item = Listitem()
@@ -207,13 +215,13 @@ def get_multi_live_url(plugin, item_id, **kwargs):
                     item.info['title'] = f'{video_item}    [COLOR orange]{video_title}[/COLOR]'
                 item.info['plot'] = video_desc
                 item.art["thumb"] = item.art["thumb"] = video_image
-                item.set_callback(get_multi_video_url, item_id, video_id=video_id)
+                item.set_callback(get_multi_video_url, video_id=video_id)
                 item_post_treatment(item)
                 yield item
 
 
 @Resolver.register
-def get_multi_video_url(plugin, item_id, video_id, download_mode=False, **kwargs):
+def get_multi_video_url(plugin, video_id, download_mode=False, **kwargs):
 
     embeder = EMBEDER_URL % video_id
     return resolver_proxy.get_stream_dailymotion(plugin, video_id, download_mode, embeder)
