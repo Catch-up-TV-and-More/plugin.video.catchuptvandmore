@@ -44,6 +44,13 @@ URL_API_FRONT = utils.urljoin_partial("http://api-front.yatta.francetv.fr")
 
 @Route.register
 def francetv_root(plugin, **kwargs):
+    # Lives
+    item = Listitem()
+    item.label = 'Directs'
+    item.set_callback(get_multi_live_url)
+    item_post_treatment(item)
+    yield item
+
     # Channels
     item = Listitem()
     item.label = Script.localize(30006)
@@ -468,7 +475,7 @@ def get_live_url(plugin, item_id, **kwargs):
 
 
 @Route.register
-def get_multi_live_url(plugin, item_id, **kwargs):
+def get_multi_live_url(plugin, **kwargs):
     params = {'platform': 'apps'}
     resp = urlquick.get(URL_API_MOBILE('/generic/directs'), params=params, max_age=-1)
     json_parser = json.loads(resp.text)
