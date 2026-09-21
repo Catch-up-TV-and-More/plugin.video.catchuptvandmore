@@ -52,7 +52,7 @@ menu = {
     "stv": {
         "route": "/resources/lib/channels/uk/stv:list_categories",
         "label": "STV",
-        "thumb": "channels/uk/stv.png",
+        "thumb": "channels/uk/stv_player.png",
         "fanart": "channels/uk/stv_fanart.jpg",
         "enabled": True,
         "order": 5,
