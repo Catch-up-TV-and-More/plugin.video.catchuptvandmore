@@ -45,7 +45,7 @@ menu = {
         "route": "/resources/lib/channels/uk/channel4:main_menu",
         "label": "Channel 4",
         "thumb": "channels/uk/channel4.png",
-        "fanart": "channels/uk/channel4_fanart.jpg",
+        "fanart": "channels/uk/channel4_fanart.png",
         "enabled": True,
         "order": 4,
     },
