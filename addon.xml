@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta02" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta03" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -53,6 +53,14 @@
 [UK - MY5] Replay: consistent callback urls for playable items items (PR #1801) thanks @dimkroon
 [FR - TECH and CO] Fix live
 [FR - RMCBFMPLAY] Remove completely
+[FR - FRANCETV] Add colored EPG (PR #1803) thanks @jeff2900
+[FR - RMC+] Add multiple live item feature (PR #1802) thanks @jeff2900
+[FR - LEQUIPE] Add colored EPG to 'L'Équipe Live' channel (PR #1804) thanks @jeff2900
+[FR - FRANCETV] Suggestion: add Live streams group to replay section item (PR #1805) thanks @jeff2900
+[FR - LEQUIPE] Fix live and remove non-free channels (PR #1806) thanks @jeff2900
+[FR - RMC+] Suggestion: add Live streams group to replay section item (PR #1807) thanks @jeff2900
+[UK - CHANNEL4] Different icon images for live and VOD (PR #1808) thanks @dimkroon
+[UK - STV] Different icon images for live and VOD (PR #1808) thanks @dimkroon
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
