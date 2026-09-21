@@ -17,7 +17,7 @@ from resources.lib import download, resolver_proxy, web_utils
 from resources.lib.addon_utils import Quality
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.py_utils import old_div
-
+from resources.lib.channels.fr import rmcplus
 
 # TO DO
 
