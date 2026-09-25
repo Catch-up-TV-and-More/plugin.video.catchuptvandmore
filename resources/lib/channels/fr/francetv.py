@@ -168,21 +168,16 @@ def set_item_callback_based_on_type(item, type_, j, next_page_item=None):
             return True
 
     if type_ == 'region':
-        marker = j.get('marker', None)
-        zone = None
-        if marker is not None:
-            page = marker.get('page', None)
-            if page is not None:
-                zone = page.split('::')[0]
-        if zone is None:
-            item.set_callback(outre_mer_root, j['region_path'])
-        else:
-            if zone == 'region':
+        if j.get('region_path'):
+            if j['region_path'].startswith('france-3'):
                 path = j['region_path'] + '/metropole'
-            else:
+                item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/regions/%s' % path))
+            elif j['region_path'].startswith('la1ere'):
                 path = j['region_path'] + '/outre-mer'
-            item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/regions/%s' % path))
-        item_post_treatment(item)
+                item.set_callback(grab_json_collections, URL_API_MOBILE('/apps/regions/%s' % path))
+            else:
+                item.set_callback(outre_mer_root, j['region_path'])
+            item_post_treatment(item)
         return True
 
     if type_ == 'categories':
