@@ -141,7 +141,7 @@ def rmcplus_root(plugin, **kwargs):
     item_post_treatment(item)
     yield item
 
-    # Themes
+    # Thematics
     item = Listitem()
     item.label = Script.localize(30738)
     item.set_callback(thematics)
