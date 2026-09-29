@@ -103,6 +103,13 @@ def rmcplus_root(plugin, **kwargs):
     item_post_treatment(item)
     yield item
 
+    # Themes
+    item = Listitem()
+    item.label = Script.localize(30738)
+    item.set_callback(thematics)
+    item_post_treatment(item)
+    yield item
+
     # Search feature
     item = Listitem.search(search)
     item_post_treatment(item)
@@ -194,6 +201,48 @@ def categories(plugin, **kwargs):
                     item_post_treatment(item)
                     yield item
 
+
+@Route.register
+def thematics(plugin, **kwargs):
+    """
+    Build thematics listing
+    - Documentaires
+    - Fiction
+    - ...
+    """
+    params = {
+        'page_type': 'default',
+        'page_id': 'thematique',
+        'model': 'androidtv-ott',
+    }
+    resp = urlquick.get(URL_ROOT + '/page', params=params, headers=GENERIC_HEADERS, max_age=-1)
+
+    for datas in resp.json().get('sections'):
+        type_tuile = datas.get('type_tuile')
+        titre = datas.get('titre')
+        if type_tuile == "categorie":
+            items = datas.get('items')
+            if items:
+                for array in items:
+                    if 'background_image' in array:
+                        array_image = array['background_image'].get('url')
+                        array_title = array['background_image'].get('alt')
+                        if len(array_title) == 0:
+                            array_title = array.get('id')
+                    if 'call_to_actions' in array:
+                        array_url = array['call_to_actions'][0].get('endpoint')
+
+                    if array_url is None:
+                        continue
+                    if 'http' not in array_url:
+                        array_url = URL_ROOT + array_url + URL_ROOT_PARAMS
+
+                    item = Listitem()
+                    item.label = array_title
+                    item.set_callback(list_programs,
+                                      category_url=array_url)
+                    item_post_treatment(item)
+                    yield item
 
 @Route.register
 def search(plugin, search_query, **kwargs):
