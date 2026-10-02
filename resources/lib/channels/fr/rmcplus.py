@@ -79,6 +79,7 @@ def get_login_token(plugin):
     idtoken = resp.json()['AuthenticationResult'].get('IdToken')
     return idtoken
 
+
 def page_request(plugin, page_id, cat_prefix):
     """
     Generic request method to /page
@@ -117,6 +118,7 @@ def page_request(plugin, page_id, cat_prefix):
                                       category_url=array_url)
                     item_post_treatment(item)
                     yield item
+
 
 @Route.register
 def rmcplus_root(plugin, **kwargs):
@@ -185,6 +187,7 @@ def thematics(plugin, **kwargs):
     """
     items = page_request(plugin, 'thematique', "")
     return items
+
 
 @Route.register
 def search(plugin, search_query, **kwargs):
