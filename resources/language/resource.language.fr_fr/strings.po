@@ -1044,6 +1044,10 @@ msgctxt "#30737"
 msgid "You are already logged out."
 msgstr "Vous êtes déjà déconnecté."
 
+msgctxt "#30738"
+msgid "Thematics"
+msgstr "Thématiques"
+
 
 # Favourites (from 30800 to 30859)
 

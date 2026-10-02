@@ -80,6 +80,46 @@ def get_login_token(plugin):
     return idtoken
 
 
+def page_request(plugin, page_id, cat_prefix):
+    """
+    Generic request method to /page
+    """
+    params = {
+        'page_type': 'default',
+        'page_id': page_id,
+        'model': 'androidtv-ott',
+    }
+    resp = urlquick.get(URL_ROOT + '/page', params=params, headers=GENERIC_HEADERS, max_age=-1)
+
+    for datas in resp.json().get('sections'):
+        type_tuile = datas.get('type_tuile')
+        titre = datas.get('titre')
+        if type_tuile == "categorie" and titre.startswith(cat_prefix):
+            items = datas.get('items')
+            if items:
+                for array in items:
+                    if 'background_image' in array:
+                        array_image = array['background_image'].get('url')
+                        array_title = array['background_image'].get('alt')
+                        if len(array_title) == 0:
+                            array_title = array.get('id')
+                    if 'call_to_actions' in array:
+                        array_url = array['call_to_actions'][0].get('endpoint')
+
+                    if array_url is None:
+                        continue
+                    if 'http' not in array_url:
+                        array_url = URL_ROOT + array_url + URL_ROOT_PARAMS
+
+                    item = Listitem()
+                    item.label = array_title
+                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = array_image
+                    item.set_callback(list_programs,
+                                      category_url=array_url)
+                    item_post_treatment(item)
+                    yield item
+
+
 @Route.register
 def rmcplus_root(plugin, **kwargs):
     # Lives
@@ -103,6 +143,13 @@ def rmcplus_root(plugin, **kwargs):
     item_post_treatment(item)
     yield item
 
+    # Thematics
+    item = Listitem()
+    item.label = Script.localize(30738)
+    item.set_callback(thematics)
+    item_post_treatment(item)
+    yield item
+
     # Search feature
     item = Listitem.search(search)
     item_post_treatment(item)
@@ -114,41 +161,8 @@ def channels(plugin, **kwargs):
     """
     List all rmc+ channels
     """
-    # (item_id, label, thumb, fanart)
-    params = {
-        'page_type': 'default',
-        'page_id': 'categories',
-        'model': 'androidtv-ott',
-    }
-    resp = urlquick.get(URL_ROOT + '/page', params=params, headers=GENERIC_HEADERS, max_age=-1)
-
-    for datas in resp.json().get('sections'):
-        type_tuile = datas.get('type_tuile')
-        titre = datas.get('titre')
-        if type_tuile == "categorie" and titre.startswith("Nos"):
-            items = datas.get('items')
-            if items:
-                for array in items:
-                    if 'background_image' in array:
-                        array_image = array['background_image'].get('url')
-                        array_title = array['background_image'].get('alt')
-                        if len(array_title) == 0:
-                            array_title = array.get('id')
-                    if 'call_to_actions' in array:
-                        array_url = array['call_to_actions'][0].get('endpoint')
-
-                    if array_url is None:
-                        continue
-                    if 'http' not in array_url:
-                        array_url = URL_ROOT + array_url + URL_ROOT_PARAMS
-
-                    item = Listitem()
-                    item.label = array_title
-                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = array_image
-                    item.set_callback(list_programs,
-                                      category_url=array_url)
-                    item_post_treatment(item)
-                    yield item
+    items = page_request(plugin, 'categories', "Nos")
+    return items
 
 
 @Route.register
@@ -159,40 +173,20 @@ def categories(plugin, **kwargs):
     - Nos films
     - ...
     """
-    params = {
-        'page_type': 'default',
-        'page_id': 'categories',
-        'model': 'androidtv-ott',
-    }
-    resp = urlquick.get(URL_ROOT + '/page', params=params, headers=GENERIC_HEADERS, max_age=-1)
+    items = page_request(plugin, 'categories', "Cat")
+    return items
 
-    for datas in resp.json().get('sections'):
-        type_tuile = datas.get('type_tuile')
-        titre = datas.get('titre')
-        if type_tuile == "categorie" and titre.startswith("Cat"):
-            items = datas.get('items')
-            if items:
-                for array in items:
-                    if 'background_image' in array:
-                        array_image = array['background_image'].get('url')
-                        array_title = array['background_image'].get('alt')
-                        if len(array_title) == 0:
-                            array_title = array.get('id')
-                    if 'call_to_actions' in array:
-                        array_url = array['call_to_actions'][0].get('endpoint')
 
-                    if array_url is None:
-                        continue
-                    if 'http' not in array_url:
-                        array_url = URL_ROOT + array_url + URL_ROOT_PARAMS
-
-                    item = Listitem()
-                    item.label = array_title
-                    item.art['thumb'] = item.art['landscape'] = item.art["fanart"] = array_image
-                    item.set_callback(list_programs,
-                                      category_url=array_url)
-                    item_post_treatment(item)
-                    yield item
+@Route.register
+def thematics(plugin, **kwargs):
+    """
+    Build thematics listing
+    - Documentaires
+    - Fiction
+    - ...
+    """
+    items = page_request(plugin, 'thematique', "")
+    return items
 
 
 @Route.register
