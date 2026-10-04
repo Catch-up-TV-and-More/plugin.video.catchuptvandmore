@@ -106,7 +106,7 @@ def getdata():
             sout = sout + chr(k)
         y = y + 1
 
-    matches = re.findall(r'(?:\W\W|^)([A-Za-z0-9+/]{22}==)(?:\W\W|$)', sout)
+    matches = re.findall(r'(?:[\W_][\W_]|^)([A-Za-z0-9+/]{22}==)(?:[\W_][\W_]|$)', sout)
     return matches
 
 
