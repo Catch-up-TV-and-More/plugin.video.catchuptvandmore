@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta03" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta04" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -61,6 +61,11 @@
 [FR - RMC+] Suggestion: add Live streams group to replay section item (PR #1807) thanks @jeff2900
 [UK - CHANNEL4] Different icon images for live and VOD (PR #1808) thanks @dimkroon
 [UK - STV] Different icon images for live and VOD (PR #1808) thanks @dimkroon
+[FR - BFMTV] Fix an import error
+[FR - FRANCETV] Restore categories in France 3 Régions and Outre-mer La 1ère (PR #1809) thanks @jeff2900
+[FR - RMC+] Add Thematics to RMC+ replays (PR #1811) thanks @dyd0u
+[FR - LEQUIPE] Fixed error 'No items found' in 'L'Équipe Live' channel (PR #1813) thanks @jeff2900
+[UK - MY5] Improve key finding regex again (PR #1814 issue #1812) thanks @dimkroon
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
