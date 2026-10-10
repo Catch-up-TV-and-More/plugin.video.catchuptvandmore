@@ -479,29 +479,34 @@ def get_live_url(plugin, item_id, ismulti=False, **kwargs):
 @Route.register
 def get_multi_live_url(plugin, **kwargs):
     params = {
-        'source': 'cms',
-        'type': 'rail',
-        'page_id': 'accueil',
-        'model': 'androidtv-ott',
+        'page_type': 'direct',
+        'page_id': 'bfmtv',
+        'fromMenu': 'true',
+        'model': 'androidtv-ott'
     }
-    resp = urlquick.get(URL_ROOT + '/composant/contenu/curated-carrou-accueil-chaines-live', params=params, headers=GENERIC_HEADERS, max_age=-1)
+    resp = urlquick.get(URL_ROOT + '/page', params=params, headers=GENERIC_HEADERS, max_age=-1)
 
-    for array in resp.json().get('items'):
-        live_id = array.get('id')
-        live_titre = array.get('titre')
-        if 'background_image' in array:
-            live_image = array['background_image'].get('url')
-        if 'etiquette' in array:
-            logo_image = array['etiquette']['boutique'].get('url')
-        if live_titre is None:
-            continue
-
-        item = Listitem()
-        item.label = live_id.upper().replace('_', ' ')
-        item.info['title'] = f'{item.label}    [COLOR orange]{live_titre}[/COLOR]'
-        item.art['thumb'] = logo_image
-        item.art['landscape'] = item.art["fanart"] = live_image
-        item.set_callback(get_live_url,
-                          item_id=live_id, ismulti=True)
-        item_post_treatment(item)
-        yield item
+    live_titre = live_image = logo_image = live_id = None
+    for array in resp.json().get('sections'):
+        live_type = array.get('type_tuile')
+        if live_type == 'direct':
+            for datas in array.get('items'):
+                live_titre = datas.get('titre')
+                if datas.get('background_image'):
+                    live_image = datas['background_image'].get('url')
+                if datas.get('etiquette'):
+                    logo_image = datas['etiquette']['boutique'].get('url')
+                if datas.get('call_to_actions'):
+                    live_url = datas['call_to_actions'][0].get('endpoint')
+                    live_id = re.compile(r'page_id=(\w+)&').findall(live_url)[0]
+                if live_id is None:
+                    continue
+                item = Listitem()
+                item.label = live_id.upper().replace('_', ' ')
+                item.info['title'] = f'{item.label}    [COLOR orange]{live_titre}[/COLOR]'
+                item.art['thumb'] = logo_image
+                item.art['landscape'] = item.art["fanart"] = live_image
+                item.set_callback(get_live_url,
+                                  item_id=live_id, ismulti=True)
+                item_post_treatment(item)
+                yield item
