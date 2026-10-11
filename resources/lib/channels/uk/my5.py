@@ -193,7 +193,7 @@ def list_main_page(plugin, **kwargs):
 def list_hero_items(plugin):
     """List the hero items normally presented on the home page of the website."""
     try:
-        for li in list_corona_collection('PLC_My5DesktopFeaturedRail'):
+        for li in list_corona_collection(plugin, 'PLC_My5DesktopFeaturedRail'):
             if li:
                 title = li.label
                 li.info['title'] = f'[B][COLOR orange]{title}[/COLOR][/B]'
@@ -344,7 +344,10 @@ def list_collections(plugin, browse_name, **kwargs):
                                        'PLC_My5ContinueWatchingRail',
                                        'PLC_My5DesktopRecommendationsRail'):
                         continue
-                    item.set_callback(list_collections, browse_name=browse_name)
+                    if collection.get('hybrid'):
+                        item.set_callback(list_corona_collection, browse_name=browse_name)
+                    else:
+                        item.set_callback(list_collections, browse_name=browse_name)
                 item_post_treatment(item)
                 yield item
         except (ValueError, AttributeError):
@@ -358,11 +361,11 @@ def list_collections(plugin, browse_name, **kwargs):
         return
 
 
-def list_corona_collection(browse_name):
+@Route.register
+def list_corona_collection(_, browse_name):
     """List a collection obtained from the corona subdomain.
 
     Unlike data from feed-api end points, responses from this domain already include all data.
-    Currently, only used by the hero rail, but expect more to follow in the future.
     """
     resp = urlquick.get(''.join((CORONA_URL, 'collections/', browse_name, '.json')),
                         headers=GENERIC_HEADERS,
