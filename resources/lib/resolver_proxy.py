@@ -382,6 +382,15 @@ def get_stream_dailymotion(plugin,
     if "qualities" not in json_parser:
         plugin.notify('ERROR', plugin.localize(30716))
 
+    if get_kodi_version() >= 22:
+        headers_isa = {
+            'User-Agent': web_utils.get_random_windows_ua(),
+            'Referer': 'https://www.dailymotion.com/',
+            'Accept': '*/*',
+        }
+        url = json_parser["qualities"]["auto"][0]["url"]
+        return get_stream_with_quality(plugin, url, headers=headers_isa)
+
     cc = json_parser['qualities']
     cc = list(cc.items())
     cc = sorted(cc, key=lambda s: s[0], reverse=True)
@@ -427,7 +436,7 @@ def get_stream_dailymotion(plugin,
                 else:  # DEFAULT
                     for quality, strurl in mb:
                         quality = quality.split("@")[0]
-                        if int(quality) <= 1080:
+                        if int(quality) <= 720:
                             strurl = '{0}'.format(strurl.split('#cell')[0])
                             return strurl
 
