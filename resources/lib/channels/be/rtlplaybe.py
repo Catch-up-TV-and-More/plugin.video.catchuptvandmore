@@ -78,7 +78,7 @@ RTLPLAY_HEADERS = {
     'Connection': 'Keep-Alive',
     'Content-Type': 'application/json; charset=UTF-8',
     'lfvp-device-segment': 'TV>Android',
-    'x-app-version': '25',
+    'x-app-version': '28',
 }
 
 
