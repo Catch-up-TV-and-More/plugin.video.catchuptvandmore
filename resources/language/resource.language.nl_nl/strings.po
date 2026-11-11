@@ -607,11 +607,11 @@ msgid "TF1+ Password"
 msgstr "TF1+ wachtwoord"
 
 msgctxt "#30262"
-msgid "SFR TV login"
+msgid "SFR TV token service URL"
 msgstr "SFR TV gebruikersnaam"
 
 msgctxt "#30263"
-msgid "SFR TV password"
+msgid "SFR TV token service API key"
 msgstr "SFR TV wachtwoord"
 
 msgctxt "#30264"
@@ -896,6 +896,10 @@ msgstr "U kunt nu Kodi's TV functionaliteit gebruiken om live TV kanalen via Cat
 msgctxt "#30606"
 msgid "Do you want to see this information next time?"
 msgstr "Wilt u deze informatie een volgende keer zien?"
+
+msgctxt "#30607"
+msgid "Access to this content requires a %s account and your own %s token service. Configure the service in the settings of this add-on."
+msgstr "Voor deze inhoud is een %s account nodig en je eigen %s-tokenservice nodig. Configureer de service in de instellingen van deze add-on."
 
 
 # Others (from 30700 to 30799)

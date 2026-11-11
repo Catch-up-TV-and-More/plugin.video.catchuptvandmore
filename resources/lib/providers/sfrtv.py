@@ -1,27 +1,22 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import base64
 from datetime import datetime
 import importlib
-import json
-import os
+import time
 import urlquick
 from codequick import Listitem, Resolver, Route, Script
-from codequick.storage import Cache
+from codequick.storage import PersistentDict
 from kodi_six import xbmcgui
 from resources.lib import resolver_proxy
 from resources.lib.addon_utils import get_item_media_path
 from resources.lib.menu_utils import item_post_treatment
 from resources.lib.main import tv_guide_menu
 
-CACHE_FILE = os.path.join(Route.get_info("profile"), u".sfrtv_cache.sqlite")
+PERSISTENT_DICT_NAME = 'sfrtv.pickle'
+TOKEN_MARGIN = 60
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 '
               'Safari/537.36')  # fixed as the list of connected devices is limited
-TOKEN_MAX_AGE = 840  # 14 minutes to be under the 15 mn token validity limit
-CONFIG_URL = 'https://tv.sfr.fr/assets/configs/config.json'
-LOGIN_URL = 'https://www.sfr.fr/cas/login'
-ACCESS_TOKEN_URL = 'https://www.sfr.fr/cas/oidc/authorize'
 USER_PROFILE_URL = 'https://ws-backendtv.sfr.fr/heimdall-core/public/api/v2/userProfiles'
 SERVICE_URL = 'https://ws-backendtv.sfr.fr/sekai-service-plan/public/v2/service-list'
 LICENSE_URL = 'https://ws-backendtv.sfr.fr/asgard-drm-widevine/public/licence'
@@ -46,16 +41,11 @@ CUSTOMDATA_VOD = ('description={}&deviceId=byPassARTHIUS&deviceName=Chrome-119.0
                   '&osName=Windows&osVersion=10&persistent=false&resolution=1600x900&tokenType=castoken'
                   '&tokenSSO={}&entitlementId={}&type={}')
 MAX_CONTENTS = 20
+REQUEST_MAX_AGE = 840
 REQUEST_TIMEOUT = 30
 REPLAY_MENU_ID = 'RefMenuItem::gen8-replay-v2'
 VOD_MENU_ID = 'RefMenuItem::gen8-vod-v2'
 PAID_CONTENT_INDICATORS = ['inPackRented', 'inRent', 'inSVodSubscribed']
-
-
-def get_sfrtv_config(plugin):
-    return urlquick.get(CONFIG_URL,
-                        headers={'User-Agent': USER_AGENT},
-                        timeout=REQUEST_TIMEOUT).json()
 
 
 def get_sfrtv_user_profile(plugin, token):
@@ -73,139 +63,58 @@ def get_sfrtv_user_profile(plugin, token):
                         timeout=REQUEST_TIMEOUT).json()
 
 
-def get_credentials_from_config(plugin, with_dialog):
-    username = plugin.setting.get_string('sfrtv.login')
-    password = plugin.setting.get_string('sfrtv.password')
+def get_token_config(plugin, with_dialog):
+    token_url = plugin.setting.get_string('sfrtv.token-service-url')
+    api_key = plugin.setting.get_string('sfrtv.token-service-api-key')
 
-    if not username or not password:
+    if not token_url or not api_key:
         if with_dialog:
             xbmcgui.Dialog().ok(plugin.localize(30600),
-                                plugin.localize(30604) % ('SFR TV', 'https://tv.sfr.fr'))
+                                plugin.localize(30607) % ('SFR TV', 'SFR'))
         return None, None
 
-    return username, password
+    return token_url, api_key
 
 
 def get_token(plugin, with_dialog=True):
-    username, password = get_credentials_from_config(plugin, with_dialog)
-    if not username or not password:
+    token_url, api_key = get_token_config(plugin, with_dialog)
+    if not token_url or not api_key:
         return None
 
-    # Unable to use urlquick cache due to authentication redirects
-    cache = Cache(CACHE_FILE, TOKEN_MAX_AGE)
+    with PersistentDict(PERSISTENT_DICT_NAME) as store:
+        entry = store.get('token')
+        if isinstance(entry, dict) and entry.get('valid_until', 0) > time.time():
+            return entry['token']
 
-    if 'token' in cache:
-        return cache['token']
-
-    sfrtv_config = get_sfrtv_config(plugin)
-    sfrtv_client_id = sfrtv_config['auth']['OIDC_CLIENT_ID']
-
-    session = urlquick.Session()
-
-    params = {
-        'client_id': sfrtv_client_id,
-        'scope': 'openid',
-        'response_type': 'token',
-        'redirect_uri': 'https://tv.sfr.fr/'
-    }
-    headers = {
-        'user-agent': USER_AGENT,
-        'authority': 'www.sfr.fr',
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-        'referer': 'https://tv.sfr.fr/',
-    }
-    resp = session.get(ACCESS_TOKEN_URL,
-                       params=params,
-                       headers=headers,
-                       max_age=-1,
-                       timeout=REQUEST_TIMEOUT)
-
-    root = resp.parse()
-    form_elt = root.find(".//form[@name='loginForm']")
-    lt = form_elt.find(".//input[@name='lt']").get('value')
-    lrt = form_elt.find(".//input[@name='lrt']").get('value')
-    execution = form_elt.find(".//input[@name='execution']").get('value')
-    event_id = form_elt.find(".//input[@name='_eventId']").get('value')
-
-    params = {
-        'domain': 'mire-sfr',
-        'service': 'https://www.sfr.fr/cas/oidc/callbackAuthorize'
-    }
-    headers = {
-        'user-agent': USER_AGENT,
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'authority': 'www.sfr.fr',
-        'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-        'content-type': 'application/x-www-form-urlencoded',
-        'origin': 'https://www.sfr.fr',
-        'referer': resp.url,
-    }
-    data = {
-        'lt': lt,
-        'execution': execution,
-        'lrt': lrt,
-        '_eventId': event_id,
-        'username': username,
-        'password': password,
-        'remember-me': 'on',
-        'identifier': ''
-    }
-    session.post(
-        LOGIN_URL,
-        params=params,
-        headers=headers,
-        data=data,
-        max_age=-1,
-        timeout=REQUEST_TIMEOUT
-    )
-
-    params = {
-        'client_id': sfrtv_client_id,
-        'scope': 'openid',
-        'response_type': 'token',
-        'redirect_uri': 'https://tv.sfr.fr/',
-        'token': 'true',
-        'gateway': 'true'
-    }
-    headers = {
-        'user-agent': USER_AGENT,
-        'authority': 'www.sfr.fr',
-        'accept': 'application/json, text/plain, */*',
-        'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-        'origin': 'https://tv.sfr.fr',
-        'referer': 'https://tv.sfr.fr/',
-    }
-    resp = session.get(ACCESS_TOKEN_URL,
-                       params=params,
-                       headers=headers,
-                       max_age=-1,
-                       timeout=REQUEST_TIMEOUT)
-    access_token_b64_bytes = resp.content
-    access_token_b64 = access_token_b64_bytes.decode('ascii')
-    if not access_token_b64:
+    resp = urlquick.get(token_url,
+                        headers={'Authorization': 'Bearer ' + api_key},
+                        max_age=-1,
+                        timeout=REQUEST_TIMEOUT)
+    try:
+        data = resp.json()
+    except ValueError:
         if with_dialog:
-            xbmcgui.Dialog().ok(plugin.localize(30600),
-                                plugin.localize(30711))
+            xbmcgui.Dialog().ok('SFR token service', 'Invalid response')
         return None
-    access_token_b64_second_part = access_token_b64.split('.')[1]
-    access_token_b64_second_part_bytes = access_token_b64_second_part.encode('ascii')
-    missing_padding = len(access_token_b64_second_part_bytes) % 4
-    if missing_padding:
-        access_token_b64_second_part_bytes += b'=' * (4 - missing_padding)
-    access_token_second_part_bytes = base64.b64decode(access_token_b64_second_part_bytes)
-    access_token_second_part_json = access_token_second_part_bytes.decode('utf-8')
-    access_token_second_part = json.loads(access_token_second_part_json)
-    token = access_token_second_part['tu']
 
-    cache['token'] = token
+    token = data.get('token') if isinstance(data, dict) else None
+    if not token:
+        if with_dialog:
+            xbmcgui.Dialog().ok('SFR token service', 'Response without token')
+        return None
+
+    expires_in = data.get('expires_in')
+    if expires_in:
+        with PersistentDict(PERSISTENT_DICT_NAME) as store:
+            store['token'] = {'token': token, 'valid_until': time.time() + expires_in - TOKEN_MARGIN}
+
     return token
 
 
 @Route.register(autosort=False)
 def provider_root(plugin, **kwargs):
-    username, password = get_credentials_from_config(plugin, True)
-    if not username or not password:
+    token_url, api_key = get_token_config(plugin, True)
+    if not token_url or not api_key:
         yield False
         return
 
@@ -284,7 +193,7 @@ def get_spot_content(plugin, spot_id, token=None):
     return urlquick.get(SPOT_CONTENT_URL.format(spot_id),
                         params=params,
                         headers=headers,
-                        max_age=(TOKEN_MAX_AGE if token else -1),
+                        max_age=(REQUEST_MAX_AGE if token else -1),
                         timeout=REQUEST_TIMEOUT).json()
 
 
@@ -727,7 +636,7 @@ def get_spot_more_content(plugin, spot_id, token, page=0, size=MAX_CONTENTS):
     return urlquick.get(SPOT_MORE_URL.format(spot_id),
                         params=params,
                         headers=headers,
-                        max_age=TOKEN_MAX_AGE,
+                        max_age=REQUEST_MAX_AGE,
                         timeout=REQUEST_TIMEOUT).json()
 
 
@@ -770,7 +679,7 @@ def get_tile_content(plugin, tile_id, token, page=0, size=MAX_CONTENTS):
     return urlquick.get(TILE_CONTENT_URL.format(tile_id),
                         params=params,
                         headers=headers,
-                        max_age=TOKEN_MAX_AGE,
+                        max_age=REQUEST_MAX_AGE,
                         timeout=REQUEST_TIMEOUT).json()
 
 
@@ -849,7 +758,7 @@ def get_active_services(plugin, token):
     services = urlquick.get(SERVICE_URL,
                             params=params,
                             headers=headers,
-                            max_age=TOKEN_MAX_AGE,
+                            max_age=REQUEST_MAX_AGE,
                             timeout=REQUEST_TIMEOUT).json()
     active_services = list(filter(lambda c: c['access'], services))
     return active_services
@@ -938,13 +847,7 @@ def get_live_url(plugin, service_id, token):
         if serv['serviceId'] == service_id:
             for stream in serv['streams']:
                 if stream['drm'] == 'WIDEVINE':
-                    # Workaround for IA bug : https://github.com/xbmc/inputstream.adaptive/issues/804
-                    response = urlquick.get(stream['url'],
-                                            headers={'User-Agent': USER_AGENT},
-                                            max_age=-1,
-                                            timeout=REQUEST_TIMEOUT)
-                    live_url = response.xml().find('{urn:mpeg:dash:schema:mpd:2011}Location').text
-                    return live_url
+                    return stream['url']
     return None
 
 

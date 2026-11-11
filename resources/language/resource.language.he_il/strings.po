@@ -603,11 +603,11 @@ msgid "TF1+ Password"
 msgstr ""
 
 msgctxt "#30262"
-msgid "SFR TV login"
+msgid "SFR TV token service URL"
 msgstr ""
 
 msgctxt "#30263"
-msgid "SFR TV password"
+msgid "SFR TV token service API key"
 msgstr ""
 
 msgctxt "#30264"
@@ -891,6 +891,10 @@ msgstr ""
 
 msgctxt "#30606"
 msgid "Do you want to see this information next time?"
+msgstr ""
+
+msgctxt "#30607"
+msgid "Access to this content requires a %s account and your own %s token service. Configure the service in the settings of this add-on."
 msgstr ""
 
 

@@ -160,8 +160,8 @@
 
         <setting label="30034" type="lsep" subsetting="true" visible="eq(1,true)"/>
 
-            <setting label="30262" type="text" id="sfrtv.login" default=""/>
-            <setting label="30263" type="text" id="sfrtv.password" option="hidden" default=""/>
+            <setting label="30262" type="text" id="sfrtv.token-service-url" default=""/>
+            <setting label="30263" type="text" id="sfrtv.token-service-api-key" option="hidden" default=""/>
 
         <setting label="30254" type="lsep" subsetting="true" visible="eq(1,true)"/>
 
