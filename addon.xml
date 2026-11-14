@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta06" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta07" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -70,6 +70,9 @@
 [FR - RMC+] Fixed error 404 in 'Multiple directs' item (PR #1815 issue #1817) thanks @jeff2900
 [UK - WATCHFREEUK] Implement new website (PR #1818) thanks @dimkroon
 [PROJECT] In kodi 22.0, use ISA to bypass the issue of missing sound with Dailymotion.com (PR #1820 issue #1819) thanks @jeff2900
+[BE - RTLPLAYBE] Update required API app version to 28 (PR #)1823) thanks @Therand90
+[SFR TV] Get tokens from a personal token service (PR #1824 issue #)1385) thanks @sebmourlhou
+
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
