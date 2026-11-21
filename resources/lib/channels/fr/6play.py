@@ -19,7 +19,7 @@ import urlquick
 # noinspection PyUnresolvedReferences
 from codequick import Listitem, Resolver, Route, Script
 # noinspection PyUnresolvedReferences
-from kodi_six import xbmcgui
+from kodi_six import xbmcgui, xbmcplugin
 
 from resources.lib import download, resolver_proxy, web_utils
 from resources.lib.kodi_utils import get_kodi_version
@@ -146,6 +146,17 @@ def get_login_token(plugin, **kwargs):
     uuid_jsonparser = json.loads(uuid_json.text)
     login_token = uuid_jsonparser["token"]
     return account_id, login_token
+
+
+def natural_title_key(entry):
+    """Sort key ignoring case and comparing digit runs as numbers (Episode 2 < Episode 10)"""
+    title = entry.get('title') or ''
+    return [(0, int(t), '') if t.isdigit() else (1, 0, t)
+            for t in re.split(r'(\d+)', title.lower()) if t]
+
+
+def is_series_category(category_name):
+    return (category_name or '').strip().lower() in ('séries', 'series')
 
 
 @Route.register
@@ -316,7 +327,8 @@ def list_categories(plugin, item_id, **kwargs):
                         item.label = category_name
                         item.set_callback(list_programs,
                                           item_id=item_id,
-                                          category_id=category_id)
+                                          category_id=category_id,
+                                          sort_by_title=is_series_category(category_name))
                         item_post_treatment(item)
                         yield item
                     break
@@ -339,7 +351,8 @@ def list_categories(plugin, item_id, **kwargs):
                 item.label = category_name
                 item.set_callback(list_programs,
                                   item_id=item_id,
-                                  category_id=category_id)
+                                  category_id=category_id,
+                                  sort_by_title=is_series_category(category_name))
                 item_post_treatment(item)
                 yield item
         else:
@@ -350,14 +363,22 @@ def list_categories(plugin, item_id, **kwargs):
 
 
 @Route.register
-def list_programs(plugin, item_id, category_id, **kwargs):
+def list_programs(plugin, item_id, category_id, sort_by_title=False, **kwargs):
     """
     Build programs listing
     - Les feux de l'amour
     - ...
     """
+    if sort_by_title:
+        # Keep the order given by the addon (the API returns programs unsorted
+        # and Kodi would otherwise re-sort them by air date)
+        plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
+
     resp = urlquick.get(URL_CATEGORY % category_id, headers=GENERIC_HEADERS, max_age=-1)
     json_parser = resp.json()
+
+    if sort_by_title:
+        json_parser = sorted(json_parser, key=natural_title_key)
 
     for array in json_parser:
         item = Listitem()
@@ -366,13 +387,14 @@ def list_programs(plugin, item_id, category_id, **kwargs):
         populate_item(item, array)
         item.set_callback(list_program_categories,
                           item_id=item_id,
-                          program_id=program_id)
+                          program_id=program_id,
+                          sort_by_title=sort_by_title)
         item_post_treatment(item)
         yield item
 
 
 @Route.register
-def list_program_categories(plugin, item_id, program_id, **kwargs):
+def list_program_categories(plugin, item_id, program_id, sort_by_title=False, **kwargs):
     """
     Build program categories
     - Toutes les vidéos
@@ -392,7 +414,8 @@ def list_program_categories(plugin, item_id, program_id, **kwargs):
         item.set_callback(list_videos,
                           item_id=item_id,
                           program_id=program_id,
-                          sub_category_id=sub_category_id)
+                          sub_category_id=sub_category_id,
+                          sort_by_title=sort_by_title)
         item_post_treatment(item)
         yield item
 
@@ -401,7 +424,8 @@ def list_program_categories(plugin, item_id, program_id, **kwargs):
     item.set_callback(list_videos,
                       item_id=item_id,
                       program_id=program_id,
-                      sub_category_id=None)
+                      sub_category_id=None,
+                      sort_by_title=sort_by_title)
     item_post_treatment(item)
     yield item
 
@@ -432,7 +456,10 @@ def populate_item(item, clip_dict):
 
 
 @Route.register
-def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
+def list_videos(plugin, item_id, program_id, sub_category_id, sort_by_title=False, **kwargs):
+    if sort_by_title:
+        plugin.add_sort_methods(xbmcplugin.SORT_METHOD_UNSORTED)
+
     if sub_category_id is None:
         url = URL_VIDEOS2 % program_id
     else:
@@ -446,6 +473,9 @@ def list_videos(plugin, item_id, program_id, sub_category_id, **kwargs):
         yield False
 
     at_least_one_item = False
+    if sort_by_title:
+        json_parser = sorted(json_parser, key=natural_title_key)
+
     for video in json_parser:
         video_id = str(video['id'])
 
