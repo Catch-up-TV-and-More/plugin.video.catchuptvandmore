@@ -350,7 +350,7 @@ def list_collections(plugin, browse_name, **kwargs):
                         item.set_callback(list_collections, browse_name=browse_name)
                 item_post_treatment(item)
                 yield item
-        except (ValueError, AttributeError):
+        except (KeyError, ValueError, AttributeError):
             pass
 
     elif items_type == 'Watchable':
@@ -381,6 +381,14 @@ def list_corona_collection(_, browse_name):
             yield parse_watchable(item)
         elif item_type == 'Show':
             yield parse_show(item)
+        elif item_type == 'Channel' and item.get('live'):
+            chan_id = item['id']
+            li = Listitem()
+            li.label = item.get('name', chan_id)
+            li.art['thumb'] = BASE_IMG + f'/channel/{chan_id}/512x512.png'
+            li.set_callback(get_live_url, item_id=chan_id)
+            item_post_treatment(li)
+            yield li
         else:
             continue
 

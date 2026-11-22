@@ -274,17 +274,215 @@ menu = {
         'label': '5 Action',
         'thumb': 'channels/uk/5action.png',
         'fanart': 'channels/uk/5action_fanart.jpg',
-        'xmltv_id': '33.freeview.co.uk',
+        'xmltv_id': '46.freeview.co.uk',
         'enabled': True,
         'order': 30
     },
     'C8': {
         'resolver': '/resources/lib/channels/uk/my5:get_live_url',
-        'label': '5 Select',
+        'label': '5 Drama',
         'thumb': 'channels/uk/5select.png',
         'fanart': 'channels/uk/5select_fanart.jpg',
-        'xmltv_id': '46.freeview.co.uk',
+        'xmltv_id': '33.freeview.co.uk',
         'enabled': True,
         'order': 31
+    },
+    'C5CH02': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Police Interceptors',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH02/512x512.png',
+        'xmltv_id': 'C5CH02',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 32
+    },
+    'C5CH01': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Cops',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH01/512x512.png',
+        'xmltv_id': 'C5CH01',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 33
+    },
+    'C5CH18': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Christmas In Summer',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH18/512x512.png',
+        'xmltv_id': 'C5CH18',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 34
+    },
+    'C5CH16': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Movies',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH16/512x512.png',
+        'xmltv_id': 'C5CH16',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 35
+    },
+    'C5CH05': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Bargain-Loving Brits',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH05/512x512.png',
+        'xmltv_id': 'C5CH05',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 36
+    },
+    'C5CH07': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 A&E',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH07/512x512.png',
+        'xmltv_id': 'C5CH07',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 37
+    },
+    'C5CH10': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Crime',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH10/512x512.png',
+        'xmltv_id': 'C5CH10',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 38
+    },
+    'C5CH04': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Medical',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH04/512x512.png',
+        'xmltv_id': 'C5CH04',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 39
+    },
+    'C5CH03': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Trucking Hell',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH03/512x512.png',
+        'xmltv_id': 'C5CH03',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 40
+    },
+    'C5CH06': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 Yorkshire Vet',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH06/512x512.png',
+        'xmltv_id': 'C5CH06',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 41
+    },
+    'C5CH09': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': '5 History',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH09/512x512.png',
+        'xmltv_id': 'C5CH09',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 42
+    },
+    'C5CH14': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'MTV Reality',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH14/512x512.png',
+        'xmltv_id': 'C5CH14',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 43
+    },
+    'C5CH11': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'Milkshake!',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/C5CH11/512x512.png',
+        'xmltv_id': 'C5CH11',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 44
+    },
+    '3P-HEARST-FAST-01': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'Inside Crime',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/3P-HEARST-FAST-01/512x512.png',
+        'xmltv_id': '3P-HEARST-FAST-01',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 45
+    },
+    '3P-HEARST-FAST-02': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'Mystery TV',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/3P-HEARST-FAST-02/512x512.png',
+        'xmltv_id': '3P-HEARST-FAST-02',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 46
+    },
+    '3P-AMC-FAST-03': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'True Crime UK',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/3P-AMC-FAST-03/512x512.png',
+        'xmltv_id': '3P-AMC-FAST-03',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 47
+    },
+    '3P-AMC-FAST-04': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'Love After Lockup',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/3P-AMC-FAST-04/512x512.png',
+        'xmltv_id': '3P-AMC-FAST-04',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 48
+    },
+    '3P-AMC-FAST-01': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'AMC Reality',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/3P-AMC-FAST-01/512x512.png',
+        'xmltv_id': '3P-AMC-FAST-01',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 49
+    },
+    '3P-AMC-FAST-02': {
+        'resolver': '/resources/lib/channels/uk/my5:get_live_url',
+        'label': 'AMC Cupid',
+        'thumb': 'https://api-images.channel5.com/otis/images/channel/3P-AMC-FAST-02/512x512.png',
+        'xmltv_id': '3P-AMC-FAST-02',
+        'epg_source': 'my5',
+        'enabled': True,
+        'order': 50
+    },
+    'great-romance': {
+        'resolver': '/resources/lib/channels/uk/stv:get_live_url',
+        'label': 'Great! Christmas',
+        'thumb': 'https://player.api.stv.tv/v1/images/975027/rendition/?redirect=true&width=512&height=512',
+        'xmltv_id': 'great-romance',
+        'epg_source': 'stv',
+        'enabled': True,
+        'order': 51
+    },
+    'great-mystery': {
+        'resolver': '/resources/lib/channels/uk/stv:get_live_url',
+        'label': 'Great! Mystery',
+        'thumb': 'https://player.api.stv.tv/v1/images/906988/rendition/?redirect=true&width=512&height=512',
+        'xmltv_id': 'great-mystery',
+        'epg_source': 'stv',
+        'enabled': True,
+        'order': 52
+    },
+    'great-movies': {
+        'resolver': '/resources/lib/channels/uk/stv:get_live_url',
+        'label': 'Great! Movies',
+        'thumb': 'https://player.api.stv.tv/v1/images/906994/rendition/?redirect=true&width=512&height=512',
+        'xmltv_id': 'great-movies',
+        'epg_source': 'stv',
+        'enabled': True,
+        'order': 53
     },
 }
