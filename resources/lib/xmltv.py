@@ -30,6 +30,7 @@ from codequick import Script
 from kodi_six import xbmcvfs
 from resources.lib.py_utils import compute_md5, datetime_strptime
 from resources.lib.xmltv_utils.sd_json import SD_JSON
+from resources.lib.xmltv_utils import my5_epg, stv_epg
 from resources.lib.kodi_utils import get_local_zone
 
 try:
@@ -648,6 +649,28 @@ def get_xmltv_filepath(country_id, day_delta=0):
     return xmltv_fp
 
 
+# Channels can opt in to an EPG fetched from the broadcaster's own API with an
+# ``'epg_source'`` key in their skeleton. Their ``xmltv_id`` is the channel id of that API.
+API_EPG_SOURCES = {
+    'my5': my5_epg,
+    'stv': stv_epg,
+}
+
+
+def get_api_programmes(country_id, start, end):
+    """Programmes of the channels of country_id whose EPG comes from a broadcaster's API."""
+    try:
+        channels_dict = importlib.import_module('resources.lib.skeletons.' + country_id).menu
+    except ImportError:
+        return []
+    programmes = []
+    for source, module in API_EPG_SOURCES.items():
+        ids = {infos['xmltv_id']: infos['xmltv_id'] for infos in channels_dict.values()
+               if infos.get('epg_source') == source and infos.get('enabled', False) and infos.get('xmltv_id')}
+        programmes.extend(module.get_programmes(ids, start, end))
+    return programmes
+
+
 def grab_programmes(country_id, day_delta):
     """Retrieve programmes of channels of country_id at day today + day_detla.
 
@@ -665,6 +688,10 @@ def grab_programmes(country_id, day_delta):
 
         # Grab programmes in xmltv file
         programmes = read_programmes(xmltv_fp)
+        day_start = datetime.datetime.combine(
+            datetime.datetime.now(pytz.UTC).date() + datetime.timedelta(days=day_delta),
+            datetime.time.min)
+        programmes.extend(get_api_programmes(country_id, day_start, day_start + datetime.timedelta(days=1)))
         programmes_post_treated = []
         for programme in programmes:
             programmes_post_treated.append(programme_post_treatment_iptvmanager(programme))
@@ -701,6 +728,7 @@ def grab_current_programmes(country_id, time_range=0, time_format='%Hh%M'):
         if now.hour + time_range > 24:
             xmltv_fp = get_xmltv_filepath(country_id, 1)
             programmes.extend(read_current_programmes(xmltv_fp, time_range=time_range))
+        programmes.extend(get_api_programmes(country_id, now, now + datetime.timedelta(hours=time_range)))
         if not programmes:
             return {}
 
