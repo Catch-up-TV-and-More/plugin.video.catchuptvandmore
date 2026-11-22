@@ -53,6 +53,9 @@ menu = {
                 'xmltv_id': 'euronews.rai.it'
             },
             'ES': {},
+            'PL': {
+                'xmltv_id': 'Euronews.pl'
+            },
             'PT': {},
             'RU': {},
             'RO': {},
