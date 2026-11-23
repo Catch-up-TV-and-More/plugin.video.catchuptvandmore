@@ -131,10 +131,10 @@ jobs:
           asset_name: plugin.video.catchuptvandmore-no-openvpn.zip
           asset_content_type: application/zip
        
-      - name: Set up Python 3.8
+      - name: Set up Python 3.12
         uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: 3.12
 
       - name: Check out repository.catchuptvandmore repository
         uses: actions/checkout@v7

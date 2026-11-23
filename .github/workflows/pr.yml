@@ -14,10 +14,10 @@ jobs:
     steps:
       - name: Check out plugin repository
         uses: actions/checkout@v7
-      - name: Set up Python 3.8
+      - name: Set up Python 3.12
         uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: 3.12
       - name: Run flake8
         uses: py-actions/flake8@v2
         with:
@@ -38,10 +38,10 @@ jobs:
         with:
           path: simulator
           repository: Catch-up-TV-and-More/catchuptvandmore-test
-      - name: Set up Python 3.8
+      - name: Set up Python 3.12
         uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: 3.12
       - name: Install dependencies
         working-directory: simulator
         run: pip install -r requirements.txt
@@ -57,10 +57,10 @@ jobs:
   #   steps:
   #     - name: Check out plugin repository
   #       uses: actions/checkout@v7
-  #     - name: Set up Python 3.8
+  #     - name: Set up Python 3.12
   #       uses: actions/setup-python@v7
   #       with:
-  #         python-version: 3.8
+  #         python-version: 3.12
   #     - name: Install kodi-addon-checker
   #       run: pip install kodi-addon-checker==0.0.16
   #     - name: Run kodi-addon-checker
