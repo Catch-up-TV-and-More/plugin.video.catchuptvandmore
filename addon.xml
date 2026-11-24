@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta07" provider-name="SylvainCecchetto,wwark,joaopa">
+<addon id="plugin.video.catchuptvandmore" name="Catch-up TV &amp; More" version="0.2.43~beta08" provider-name="SylvainCecchetto,wwark,joaopa">
   <requires>
     <!-- xbmc.python -->
     <import addon="script.module.codequick" version="0.9.13"/>
@@ -72,7 +72,10 @@
 [PROJECT] In kodi 22.0, use ISA to bypass the issue of missing sound with Dailymotion.com (PR #1820 issue #1819) thanks @jeff2900
 [BE - RTLPLAYBE] Update required API app version to 28 (PR #)1823) thanks @Therand90
 [SFR TV] Get tokens from a personal token service (PR #1824 issue #)1385) thanks @sebmourlhou
-
+[FR - 6play] Sort Séries programs and their videos by title (PR #1827) thanks @vletoux
+[PROJECT] EPG support for MY5 and STV channels (PR #1828) thanks @jackalski
+[PROJECT] EPG support for TVP channels (PR #1828) thanks @jackalski
+[FR - NOVO19] Update replay API and add search feature (PR #1829) thanks @jeff2900
 ----
 Visit WebSite - http://mpdb.tv/#home which host the french forum used by users of CU TV and More
     </news>
