@@ -41,7 +41,6 @@ LIVE_TVP3_REGIONS = {
 # from kodi catchuptvandmore item_id to tvp channel id
 CHANNEL_ID_MAP = {
     'tvpinfo': 1455,
-    'ua1': 58759123,
     'tvppolonia': 1773,
     'tvpworld': 51656487,
     'tvp1': 1729,
@@ -65,6 +64,57 @@ CHANNEL_ID_MAP = {
     'tvpwilno': 44418549,
     'tvpalfa': 51656487
 }
+
+# Live channels of vod.tvp.pl: from kodi catchuptvandmore item_id to vod.tvp.pl live product id
+VOD_LIVE_IDS = {
+    'tvpabc': 399704,
+    'tvpabc2': 399727,
+    'tvpkryminaly': 2543050,
+    'tvpmilosc': 2724087,
+    'tvpmuzyka': 2999109,
+    'tvpkultura': 399700,
+    'tvpkobieta': 399701,
+    'tvpsport': 399702,
+    'tvphistoria': 399703,
+    'tvpdokument': 399721,
+    'tvpnauka': 399722,
+    'tvprozrywka': 399724,
+    'tvphistoria2': 399725,
+    'tvpkultura2': 399728,
+    'belsat': 399729,
+    'tvpsejm': 1065594,
+    'tvpsenat': 1065595,
+}
+
+# Same live products on vod.tvp.pl for the channels of CHANNEL_ID_MAP. Used when the
+# channel is not (or no longer) listed on the old tvpstream page.
+VOD_LIVE_FALLBACK_IDS = {
+    'tvp1': 399697,
+    'tvp2': 399698,
+    'tvpinfo': 399699,
+    'tvppolonia': 399723,
+    'tvpwilno': 999687,
+    'tvpworld': 399731,
+    'tvpalfa': 399726,
+    'tvp3-bialystok': 399732,
+    'tvp3-bydgoszcz': 399740,
+    'tvp3-gdansk': 399741,
+    'tvp3-gorzow-wielkopolski': 399742,
+    'tvp3-katowice': 399743,
+    'tvp3-kielce': 399745,
+    'tvp3-krakow': 399746,
+    'tvp3-lodz': 399747,
+    'tvp3-lublin': 399748,
+    'tvp3-olsztyn': 399749,
+    'tvp3-opole': 399750,
+    'tvp3-poznan': 399751,
+    'tvp3-rzeszow': 399752,
+    'tvp3-szczecin': 399753,
+    'tvp3-warszawa': 399754,
+    'tvp3-wroclaw': 399755,
+}
+
+URL_VOD_LIVE_PLAYLIST = 'https://vod.tvp.pl/api/products/%s/videos/playlist'
 
 URL_REPLAY = {
     'catalog': 'https://vod.tvp.pl/api/products/vods',
@@ -195,16 +245,21 @@ def get_channels():
         return None
 
 
+def _get_internal_id(item_id, **kwargs):
+    """Resolve the TVP3 region, if any, to the key used in CHANNEL_ID_MAP."""
+    if "tvp3" == item_id:
+        tvp3_region = kwargs.get('language', Script.setting['tvp3.language'])
+        item_id = LIVE_TVP3_REGIONS[tvp3_region]
+    return item_id
+
+
 def get_channel_id(item_id, **kwargs):
     """
     Get the id of the channel in TVP page from id internal to catchuptvandmore plugin.
     TVP3 is a channel shared for every regions.
     Channel region info taken from additional parameter
     """
-    if "tvp3" == item_id:
-        tvp3_region = kwargs.get('language', Script.setting['tvp3.language'])
-        item_id = LIVE_TVP3_REGIONS[tvp3_region]
-    return CHANNEL_ID_MAP[item_id]
+    return CHANNEL_ID_MAP[_get_internal_id(item_id, **kwargs)]
 
 
 def _get_live_id(channels, channel_id):
@@ -253,16 +308,13 @@ def _get_live_stream_url(live_id):
 
 @Resolver.register
 def get_live_url(plugin, item_id, **kwargs):
-    channels = get_channels()
-    if channels is None:
-        plugin.notify('INFO', plugin.localize(30716))
-        return False
+    channels = get_channels() or []
 
-    live_id = _get_live_id(channels, get_channel_id(item_id, **kwargs))
+    channel_id = get_channel_id(item_id, **kwargs)
+    live_id = _get_live_id(channels, channel_id)
     if live_id is None:
-        # Stream is not available - channel not found on scrapped page
-        plugin.notify('INFO', plugin.localize(30716))
-        return False
+        # Channel not (or no longer) on the scrapped page, try vod.tvp.pl
+        return _play_vod_live(plugin, VOD_LIVE_FALLBACK_IDS.get(_get_internal_id(item_id, **kwargs)))
 
     live_stream_url = _get_live_stream_url(live_id)
     if live_stream_url is None:
@@ -273,3 +325,43 @@ def get_live_url(plugin, item_id, **kwargs):
         return False
 
     return live_stream_url
+
+
+@Resolver.register
+def get_vod_live_url(plugin, item_id, **kwargs):
+    """Play a live channel of vod.tvp.pl (FAST and thematic channels)."""
+    return _play_vod_live(plugin, VOD_LIVE_IDS.get(item_id))
+
+
+def _play_vod_live(plugin, live_id):
+    if live_id is None:
+        plugin.notify('INFO', plugin.localize(30716))
+        return False
+
+    headers = {'User-Agent': web_utils.get_random_ua()}
+    try:
+        resp = urlquick.get(URL_VOD_LIVE_PLAYLIST % live_id,
+                            params={'videoType': 'LIVE', 'lang': 'PL', 'platform': 'BROWSER'},
+                            headers=headers, max_age=-1, timeout=30)
+        data = resp.json()
+    except Exception:
+        plugin.notify('INFO', plugin.localize(30716))
+        return False
+
+    sources = data.get('sources') or {}
+    drm = data.get('drm') or {}
+    widevine = (drm.get('WIDEVINE') or {}).get('src')
+    if widevine and sources.get('DASH'):
+        # Protected stream
+        return resolver_proxy.get_stream_with_quality(
+            plugin, video_url=sources['DASH'][0]['src'], manifest_type='mpd',
+            license_url=widevine, headers=headers)
+    if sources.get('HLS'):
+        return resolver_proxy.get_stream_with_quality(
+            plugin, video_url=sources['HLS'][0]['src'], manifest_type='hls', headers=headers)
+    if sources.get('DASH'):
+        return resolver_proxy.get_stream_with_quality(
+            plugin, video_url=sources['DASH'][0]['src'], manifest_type='mpd', headers=headers)
+
+    plugin.notify('INFO', plugin.localize(30716))
+    return False

@@ -30,7 +30,7 @@ from codequick import Script
 from kodi_six import xbmcvfs
 from resources.lib.py_utils import compute_md5, datetime_strptime
 from resources.lib.xmltv_utils.sd_json import SD_JSON
-from resources.lib.xmltv_utils import my5_epg, stv_epg
+from resources.lib.xmltv_utils import my5_epg, stv_epg, tvp_epg
 from resources.lib.kodi_utils import get_local_zone
 
 try:
@@ -650,10 +650,12 @@ def get_xmltv_filepath(country_id, day_delta=0):
 
 
 # Channels can opt in to an EPG fetched from the broadcaster's own API with an
-# ``'epg_source'`` key in their skeleton. Their ``xmltv_id`` is the channel id of that API.
+# ``'epg_source'`` key in their skeleton. ``xmltv_id`` is the id of the channel in the
+# generated guide, ``epg_id`` (default: the xmltv_id) its id in that API.
 API_EPG_SOURCES = {
     'my5': my5_epg,
     'stv': stv_epg,
+    'tvp': tvp_epg,
 }
 
 
@@ -665,8 +667,14 @@ def get_api_programmes(country_id, start, end):
         return []
     programmes = []
     for source, module in API_EPG_SOURCES.items():
-        ids = {infos['xmltv_id']: infos['xmltv_id'] for infos in channels_dict.values()
-               if infos.get('epg_source') == source and infos.get('enabled', False) and infos.get('xmltv_id')}
+        ids = {}
+        for infos in channels_dict.values():
+            if infos.get('epg_source') != source or not infos.get('enabled', False):
+                continue
+            # A channel can have one entry per language, each with its own ids
+            for entry in infos.get('available_languages', {}).values() or [infos]:
+                if entry.get('xmltv_id'):
+                    ids[entry['xmltv_id']] = entry.get('epg_id', entry['xmltv_id'])
         programmes.extend(module.get_programmes(ids, start, end))
     return programmes
 
@@ -681,7 +689,12 @@ def grab_programmes(country_id, day_delta):
         list: Programmes.
     """
     if country_id not in xmltv_infos:
-        return []
+        # No XMLTV file for this country, but some channels may have an EPG from an API
+        day_start = datetime.datetime.combine(
+            datetime.datetime.now(pytz.UTC).date() + datetime.timedelta(days=day_delta),
+            datetime.time.min, tzinfo=pytz.UTC)
+        programmes = get_api_programmes(country_id, day_start, day_start + datetime.timedelta(days=1))
+        return [programme_post_treatment_iptvmanager(p) for p in programmes]
     try:
         # Download, if needed, xmltv file
         xmltv_fp = get_xmltv_filepath(country_id, day_delta=day_delta)
@@ -690,7 +703,7 @@ def grab_programmes(country_id, day_delta):
         programmes = read_programmes(xmltv_fp)
         day_start = datetime.datetime.combine(
             datetime.datetime.now(pytz.UTC).date() + datetime.timedelta(days=day_delta),
-            datetime.time.min)
+            datetime.time.min, tzinfo=pytz.UTC)
         programmes.extend(get_api_programmes(country_id, day_start, day_start + datetime.timedelta(days=1)))
         programmes_post_treated = []
         for programme in programmes:
@@ -716,18 +729,19 @@ def grab_current_programmes(country_id, time_range=0, time_format='%Hh%M'):
     Returns:
         dict: (key: xmltv_id, value: list of current programmes)
     """
-    if country_id not in xmltv_infos:
-        return {}
     try:
-        # Download, if needed, xmltv file of today and possibly the next day
-        # Grab current programmes in xmltv file
-        xmltv_fp = get_xmltv_filepath(country_id)
-        programmes = read_current_programmes(xmltv_fp, time_range=time_range)
-
         now = datetime.datetime.now(tz=pytz.UTC)
-        if now.hour + time_range > 24:
-            xmltv_fp = get_xmltv_filepath(country_id, 1)
-            programmes.extend(read_current_programmes(xmltv_fp, time_range=time_range))
+        if country_id in xmltv_infos:
+            # Download, if needed, xmltv file of today and possibly the next day
+            # Grab current programmes in xmltv file
+            xmltv_fp = get_xmltv_filepath(country_id)
+            programmes = read_current_programmes(xmltv_fp, time_range=time_range)
+
+            if now.hour + time_range > 24:
+                xmltv_fp = get_xmltv_filepath(country_id, 1)
+                programmes.extend(read_current_programmes(xmltv_fp, time_range=time_range))
+        else:
+            programmes = []
         programmes.extend(get_api_programmes(country_id, now, now + datetime.timedelta(hours=time_range)))
         if not programmes:
             return {}
@@ -750,5 +764,6 @@ def grab_current_programmes(country_id, time_range=0, time_format='%Hh%M'):
             Script.localize(30723),
             display_time=7000)
         Script.log('xmltv module failed with error: {}'.format(e), lvl=Script.ERROR)
-        delete_xmltv_file(country_id)
+        if country_id in xmltv_infos:
+            delete_xmltv_file(country_id)
         return {}
